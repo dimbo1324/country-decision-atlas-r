@@ -48,6 +48,7 @@ ENV/
 __pypackages__/
 .pyenv/
 .next/
+**/.next/
 out/
 build/
 dist/
@@ -220,13 +221,13 @@ infra/tmp/
 Session.vim
 .netrwhist
 *~
-\
+\#*\#
 /.emacs.desktop
 /.emacs.desktop.lock
 *.elc
 auto-save-list/
 tramp
-.\
+.\#*
 .DS_Store
 .AppleDouble
 .LSOverride

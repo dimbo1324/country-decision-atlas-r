@@ -1,0 +1,17 @@
+{
+  "name": "country-decision-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev": "pnpm --filter @country-decision-atlas/web dev",
+    "build": "pnpm --filter @country-decision-atlas/web build",
+    "lint": "pnpm --filter @country-decision-atlas/web lint",
+    "typecheck": "pnpm --filter @country-decision-atlas/web typecheck",
+    "format": "prettier --write \"**/*.{css,js,json,jsx,md,mjs,ts,tsx,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{css,js,json,jsx,md,mjs,ts,tsx,yaml,yml}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

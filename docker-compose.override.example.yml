@@ -1,0 +1,20 @@
+# Copy this file to docker-compose.override.yml for local-only overrides.
+# Do not commit real secrets or machine-specific paths.
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  meilisearch:
+    ports:
+      - "7700:7700"
+
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
