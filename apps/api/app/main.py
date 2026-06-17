@@ -12,7 +12,9 @@ from app.core.config import get_settings
 from app.core.database import close_database_pool, open_database_pool
 
 
-def error_response(status_code: int, code: str, message: str, details: Any = None) -> JSONResponse:
+def error_response(
+    status_code: int, code: str, message: str, details: Any = None
+) -> JSONResponse:
     return JSONResponse(
         status_code=status_code,
         content={"error": {"code": code, "message": message, "details": details}},
@@ -55,8 +57,12 @@ async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
-    return error_response(422, "validation_error", "Request validation failed.", exc.errors())
+async def validation_exception_handler(
+    _: Request, exc: RequestValidationError
+) -> JSONResponse:
+    return error_response(
+        422, "validation_error", "Request validation failed.", exc.errors()
+    )
 
 
 @app.exception_handler(LookupError)
