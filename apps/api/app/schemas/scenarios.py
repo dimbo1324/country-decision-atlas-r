@@ -1,10 +1,7 @@
 from datetime import datetime
 from uuid import UUID
-
 from app.schemas.common import LocaleResolution, Pagination
 from pydantic import BaseModel
-
-
 class ScenarioCriterion(BaseModel):
     id: UUID
     scenario_id: UUID
@@ -14,8 +11,6 @@ class ScenarioCriterion(BaseModel):
     is_required: bool
     created_at: datetime
     updated_at: datetime
-
-
 class Scenario(BaseModel):
     id: UUID
     slug: str
@@ -25,8 +20,6 @@ class Scenario(BaseModel):
     created_at: datetime
     updated_at: datetime
     criteria: list[ScenarioCriterion] = []
-
-
 class ScenarioListResponse(BaseModel):
     items: list[Scenario]
     pagination: Pagination

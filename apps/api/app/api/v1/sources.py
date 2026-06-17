@@ -1,8 +1,6 @@
 from typing import Annotated, Any
-
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.sources import (
     count_evidence_items,
@@ -12,10 +10,7 @@ from app.repositories.sources import (
 )
 from app.schemas.common import Pagination
 from app.schemas.sources import EvidenceItemListResponse, SourceListResponse
-
 router = APIRouter(tags=["sources"])
-
-
 @router.get("/sources", response_model=SourceListResponse)
 async def read_sources(
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -28,8 +23,6 @@ async def read_sources(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
     )
-
-
 @router.get("/evidence-items", response_model=EvidenceItemListResponse)
 async def read_evidence_items(
     connection: Annotated[Connection[Any], Depends(get_connection)],

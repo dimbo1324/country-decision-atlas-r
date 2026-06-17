@@ -6,7 +6,6 @@ ON CONFLICT (code) DO UPDATE
 SET name = EXCLUDED.name,
     native_name = EXCLUDED.native_name,
     is_active = TRUE;
-
 INSERT INTO countries (
     slug,
     iso2,
@@ -51,7 +50,6 @@ SET iso2 = EXCLUDED.iso2,
     capital = EXCLUDED.capital,
     currency_code = EXCLUDED.currency_code,
     is_active = TRUE;
-
 INSERT INTO country_profiles (
     country_id,
     summary,
@@ -81,7 +79,6 @@ SET summary = EXCLUDED.summary,
     business_overview = EXCLUDED.business_overview,
     quality_of_life_overview = EXCLUDED.quality_of_life_overview,
     risk_overview = EXCLUDED.risk_overview;
-
 INSERT INTO scenarios (slug, name, description)
 VALUES
     ('residence', 'Residence', 'Evaluate residence pathways and practical requirements.'),
@@ -93,7 +90,6 @@ ON CONFLICT (slug) DO UPDATE
 SET name = EXCLUDED.name,
     description = EXCLUDED.description,
     is_active = TRUE;
-
 INSERT INTO scenario_criteria (scenario_id, key, label, weight, is_required)
 SELECT scenarios.id, criteria.key, criteria.label, criteria.weight, criteria.is_required
 FROM scenarios
@@ -112,7 +108,6 @@ ON CONFLICT (scenario_id, key) DO UPDATE
 SET label = EXCLUDED.label,
     weight = EXCLUDED.weight,
     is_required = EXCLUDED.is_required;
-
 INSERT INTO sources (
     title,
     url,
@@ -172,7 +167,6 @@ SET title = EXCLUDED.title,
     locale_id = EXCLUDED.locale_id,
     reliability_level = EXCLUDED.reliability_level,
     accessed_at = EXCLUDED.accessed_at;
-
 INSERT INTO evidence_items (
     source_id,
     country_id,
@@ -241,7 +235,6 @@ JOIN countries ON countries.slug = evidence_rows.country_slug
 WHERE NOT EXISTS (
     SELECT 1 FROM evidence_items WHERE evidence_items.url = evidence_rows.url
 );
-
 INSERT INTO legal_signals (
     country_id,
     title,
@@ -317,7 +310,6 @@ SET summary = EXCLUDED.summary,
     confidence_level = EXCLUDED.confidence_level,
     effective_date = EXCLUDED.effective_date,
     published_at = EXCLUDED.published_at;
-
 INSERT INTO legal_signal_evidence (legal_signal_id, evidence_item_id)
 SELECT legal_signals.id, evidence_items.id
 FROM legal_signals
@@ -325,7 +317,6 @@ JOIN countries ON countries.id = legal_signals.country_id
 JOIN evidence_items ON evidence_items.country_id = countries.id
 WHERE legal_signals.status = 'draft'
 ON CONFLICT DO NOTHING;
-
 INSERT INTO country_scores (country_id, scenario_id, score, score_label, summary)
 SELECT
     countries.id,
@@ -352,7 +343,6 @@ ON CONFLICT (country_id, scenario_id) DO UPDATE
 SET score = EXCLUDED.score,
     score_label = EXCLUDED.score_label,
     summary = EXCLUDED.summary;
-
 INSERT INTO translations (entity_type, entity_id, field_name, locale_id, translated_value, status)
 SELECT entity_type, entity_id, field_name, locale_id, translated_value, 'approved'
 FROM (
@@ -387,7 +377,6 @@ FROM (
 ON CONFLICT (entity_type, entity_id, field_name, locale_id) DO UPDATE
 SET translated_value = EXCLUDED.translated_value,
     status = EXCLUDED.status;
-
 INSERT INTO translation_glossary (
     source_locale_id,
     target_locale_id,

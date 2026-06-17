@@ -1,8 +1,6 @@
 from typing import Any
-
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
-
 COUNTRY_SELECT = """
 SELECT
     c.id,
@@ -28,8 +26,6 @@ LEFT JOIN translations t_name
     AND t_name.locale_id = l.id
     AND t_name.status IN ('reviewed', 'approved')
 """
-
-
 def list_countries(
     connection: Connection[Any],
     locale: str,
@@ -46,13 +42,9 @@ def list_countries(
         """,
         (locale, limit, offset),
     )
-
-
 def count_countries(connection: Connection[Any]) -> int:
     row = fetch_one(connection, "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE")
     return int(row["total"]) if row else 0
-
-
 def get_country(
     connection: Connection[Any],
     country_id: str,
@@ -66,8 +58,6 @@ def get_country(
         """,
         (locale, country_id, country_id),
     )
-
-
 def get_profile(
     connection: Connection[Any],
     country_id: str,

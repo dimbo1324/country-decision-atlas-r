@@ -1,9 +1,6 @@
 from typing import Any
-
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
-
-
 def list_sources(
     connection: Connection[Any],
     limit: int,
@@ -31,13 +28,9 @@ def list_sources(
         """,
         (limit, offset),
     )
-
-
 def count_sources(connection: Connection[Any]) -> int:
     row = fetch_one(connection, "SELECT COUNT(*) AS total FROM sources")
     return int(row["total"]) if row else 0
-
-
 def list_evidence_items(
     connection: Connection[Any],
     limit: int,
@@ -65,8 +58,6 @@ def list_evidence_items(
         """,
         (limit, offset),
     )
-
-
 def count_evidence_items(connection: Connection[Any]) -> int:
     row = fetch_one(connection, "SELECT COUNT(*) AS total FROM evidence_items")
     return int(row["total"]) if row else 0

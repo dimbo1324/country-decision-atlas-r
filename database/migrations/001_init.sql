@@ -1,5 +1,4 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -7,7 +6,6 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 CREATE TABLE IF NOT EXISTS locales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     code TEXT NOT NULL UNIQUE,
@@ -18,7 +16,6 @@ CREATE TABLE IF NOT EXISTS locales (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT locales_code_format CHECK (code ~ '^[a-z]{2}(-[A-Z]{2})?$')
 );
-
 CREATE TABLE IF NOT EXISTS countries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     slug TEXT NOT NULL UNIQUE,
@@ -35,7 +32,6 @@ CREATE TABLE IF NOT EXISTS countries (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT countries_slug_format CHECK (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$')
 );
-
 CREATE TABLE IF NOT EXISTS country_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     country_id UUID NOT NULL UNIQUE REFERENCES countries(id) ON DELETE CASCADE,
@@ -49,7 +45,6 @@ CREATE TABLE IF NOT EXISTS country_profiles (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-
 CREATE TABLE IF NOT EXISTS sources (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
@@ -65,7 +60,6 @@ CREATE TABLE IF NOT EXISTS sources (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT sources_reliability_level_check CHECK (reliability_level IN ('low', 'medium', 'high'))
 );
-
 CREATE TABLE IF NOT EXISTS evidence_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     source_id UUID NOT NULL REFERENCES sources(id) ON DELETE CASCADE,
@@ -81,7 +75,6 @@ CREATE TABLE IF NOT EXISTS evidence_items (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT evidence_confidence_level_check CHECK (confidence_level IN ('low', 'medium', 'high'))
 );
-
 CREATE TABLE IF NOT EXISTS legal_signals (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     country_id UUID NOT NULL REFERENCES countries(id) ON DELETE CASCADE,
@@ -117,14 +110,12 @@ CREATE TABLE IF NOT EXISTS legal_signals (
     CONSTRAINT legal_signals_confidence_check CHECK (confidence_level IN ('low', 'medium', 'high')),
     CONSTRAINT legal_signals_country_title_unique UNIQUE (country_id, title)
 );
-
 CREATE TABLE IF NOT EXISTS legal_signal_evidence (
     legal_signal_id UUID NOT NULL REFERENCES legal_signals(id) ON DELETE CASCADE,
     evidence_item_id UUID NOT NULL REFERENCES evidence_items(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (legal_signal_id, evidence_item_id)
 );
-
 CREATE TABLE IF NOT EXISTS scenarios (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     slug TEXT NOT NULL UNIQUE,
@@ -135,7 +126,6 @@ CREATE TABLE IF NOT EXISTS scenarios (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT scenarios_slug_format CHECK (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$')
 );
-
 CREATE TABLE IF NOT EXISTS scenario_criteria (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     scenario_id UUID NOT NULL REFERENCES scenarios(id) ON DELETE CASCADE,
@@ -148,7 +138,6 @@ CREATE TABLE IF NOT EXISTS scenario_criteria (
     CONSTRAINT scenario_criteria_weight_check CHECK (weight >= 0),
     CONSTRAINT scenario_criteria_unique_key UNIQUE (scenario_id, key)
 );
-
 CREATE TABLE IF NOT EXISTS country_scores (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     country_id UUID NOT NULL REFERENCES countries(id) ON DELETE CASCADE,
@@ -161,7 +150,6 @@ CREATE TABLE IF NOT EXISTS country_scores (
     CONSTRAINT country_scores_score_check CHECK (score >= 0 AND score <= 100),
     CONSTRAINT country_scores_unique_country_scenario UNIQUE (country_id, scenario_id)
 );
-
 CREATE TABLE IF NOT EXISTS translations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     entity_type TEXT NOT NULL,
@@ -175,7 +163,6 @@ CREATE TABLE IF NOT EXISTS translations (
     CONSTRAINT translations_status_check CHECK (status IN ('draft', 'reviewed', 'approved', 'missing')),
     CONSTRAINT translations_unique_field UNIQUE (entity_type, entity_id, field_name, locale_id)
 );
-
 CREATE TABLE IF NOT EXISTS translation_jobs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     entity_type TEXT NOT NULL,
@@ -191,7 +178,6 @@ CREATE TABLE IF NOT EXISTS translation_jobs (
         status IN ('queued', 'running', 'completed', 'failed', 'cancelled')
     )
 );
-
 CREATE TABLE IF NOT EXISTS translation_glossary (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     source_locale_id UUID NOT NULL REFERENCES locales(id) ON DELETE CASCADE,
@@ -208,7 +194,6 @@ CREATE TABLE IF NOT EXISTS translation_glossary (
         context
     )
 );
-
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email TEXT NOT NULL UNIQUE,
@@ -218,7 +203,6 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT users_role_check CHECK (role IN ('user', 'editor', 'admin'))
 );
-
 CREATE TABLE IF NOT EXISTS watchlists (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -226,7 +210,6 @@ CREATE TABLE IF NOT EXISTS watchlists (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT watchlists_unique_user_country UNIQUE (user_id, country_id)
 );
-
 CREATE INDEX IF NOT EXISTS idx_locales_code ON locales(code);
 CREATE INDEX IF NOT EXISTS idx_countries_slug ON countries(slug);
 CREATE INDEX IF NOT EXISTS idx_countries_iso2 ON countries(iso2);
@@ -249,7 +232,6 @@ CREATE INDEX IF NOT EXISTS idx_translations_entity_key ON translations(
 );
 CREATE INDEX IF NOT EXISTS idx_translation_jobs_status ON translation_jobs(status);
 CREATE INDEX IF NOT EXISTS idx_watchlists_user_id ON watchlists(user_id);
-
 DO $$
 DECLARE
     table_name TEXT;

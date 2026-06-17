@@ -1,5 +1,4 @@
 const signals = ["Immigration", "Cost", "Safety", "Healthcare", "Work", "Tax"];
-
 export default function Home() {
   return (
     <main className="shell">
@@ -11,7 +10,6 @@ export default function Home() {
           data contracts, and scoring workflows are built out.
         </p>
       </section>
-
       <section className="signalGrid" aria-label="Decision signals">
         {signals.map((signal) => (
           <article key={signal}>

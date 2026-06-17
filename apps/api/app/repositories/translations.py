@@ -1,10 +1,7 @@
 from typing import Any
-
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.schemas.translations import TranslationJobCreate
 from psycopg import Connection
-
-
 def list_translations(
     connection: Connection[Any],
     limit: int,
@@ -29,13 +26,9 @@ def list_translations(
         """,
         (limit, offset),
     )
-
-
 def count_translations(connection: Connection[Any]) -> int:
     row = fetch_one(connection, "SELECT COUNT(*) AS total FROM translations")
     return int(row["total"]) if row else 0
-
-
 def create_translation_job(
     connection: Connection[Any],
     payload: TranslationJobCreate,
