@@ -1,6 +1,8 @@
 from typing import Annotated, Any
+
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
+
 from app.core.database import get_connection
 from app.repositories.sources import (
     count_evidence_items,
@@ -10,7 +12,11 @@ from app.repositories.sources import (
 )
 from app.schemas.common import Pagination
 from app.schemas.sources import EvidenceItemListResponse, SourceListResponse
+from app.services import decision_engine
+
 router = APIRouter(tags=["sources"])
+
+
 @router.get("/sources", response_model=SourceListResponse)
 async def read_sources(
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -23,6 +29,8 @@ async def read_sources(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
     )
+
+
 @router.get("/evidence-items", response_model=EvidenceItemListResponse)
 async def read_evidence_items(
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -35,3 +43,21 @@ async def read_evidence_items(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
     )
+
+
+@router.get("/sources/{source_id}")
+async def read_source(
+    source_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+) -> dict[str, Any]:
+    return decision_engine.get_source(connection, source_id)
+
+
+@router.get("/sources/{source_id}/evidence", response_model=EvidenceItemListResponse)
+async def read_source_evidence(
+    source_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> EvidenceItemListResponse:
+    return decision_engine.get_source_evidence(connection, source_id, limit, offset)

@@ -1,6 +1,9 @@
 from typing import Any
+
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
+
+
 def list_country_scores(
     connection: Connection[Any],
     country_id: str,
@@ -39,6 +42,8 @@ def list_country_scores(
         """,
         (locale, country_id, country_id, limit, offset),
     )
+
+
 def count_country_scores(connection: Connection[Any], country_id: str) -> int:
     row = fetch_one(
         connection,
@@ -51,6 +56,8 @@ def count_country_scores(connection: Connection[Any], country_id: str) -> int:
         (country_id, country_id),
     )
     return int(row["total"]) if row else 0
+
+
 def run_scenario(
     connection: Connection[Any],
     scenario_slug: str,

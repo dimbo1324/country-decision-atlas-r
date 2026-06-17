@@ -1,6 +1,9 @@
 from functools import lru_cache
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
     app_name: str = "Country Decision Atlas"
@@ -13,12 +16,16 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     default_locale: str = "en"
     supported_locales: str = "en,ru"
+
     @property
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.api_cors_origins.split(",") if origin.strip()]
+
     @property
     def supported_locale_codes(self) -> set[str]:
         return {locale.strip() for locale in self.supported_locales.split(",") if locale.strip()}
+
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings()

@@ -1,7 +1,10 @@
 from datetime import date, datetime
 from uuid import UUID
+
 from app.schemas.common import Pagination
 from pydantic import BaseModel
+
+
 class Source(BaseModel):
     id: UUID
     title: str
@@ -15,9 +18,13 @@ class Source(BaseModel):
     accessed_at: date | None = None
     created_at: datetime
     updated_at: datetime
+
+
 class SourceListResponse(BaseModel):
     items: list[Source]
     pagination: Pagination
+
+
 class EvidenceItem(BaseModel):
     id: UUID
     source_id: UUID
@@ -31,6 +38,8 @@ class EvidenceItem(BaseModel):
     published_at: date | None = None
     created_at: datetime
     updated_at: datetime
+
+
 class EvidenceItemListResponse(BaseModel):
     items: list[EvidenceItem]
     pagination: Pagination

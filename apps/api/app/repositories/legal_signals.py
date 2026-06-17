@@ -1,7 +1,10 @@
 from typing import Any
+
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
+
+
 def list_legal_signals(
     connection: Connection[Any],
     country_id: str,
@@ -33,6 +36,8 @@ def list_legal_signals(
         """,
         (country_id, country_id, limit, offset),
     )
+
+
 def count_legal_signals(connection: Connection[Any], country_id: str) -> int:
     row = fetch_one(
         connection,
@@ -45,6 +50,8 @@ def count_legal_signals(connection: Connection[Any], country_id: str) -> int:
         (country_id, country_id),
     )
     return int(row["total"]) if row else 0
+
+
 def create_legal_signal(
     connection: Connection[Any],
     payload: LegalSignalCreate,

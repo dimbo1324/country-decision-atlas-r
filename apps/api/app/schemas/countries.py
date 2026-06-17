@@ -1,7 +1,10 @@
 from datetime import datetime
 from uuid import UUID
+
 from app.schemas.common import LocaleResolution, Pagination
 from pydantic import BaseModel, Field
+
+
 class Country(BaseModel):
     id: UUID
     slug: str
@@ -16,6 +19,8 @@ class Country(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+
 class CountryProfile(BaseModel):
     id: UUID
     country_id: UUID
@@ -28,25 +33,37 @@ class CountryProfile(BaseModel):
     risk_overview: str | None = None
     created_at: datetime
     updated_at: datetime
+
+
 class CountryListResponse(BaseModel):
     items: list[Country]
     pagination: Pagination
     locale: LocaleResolution
+
+
 class CountryResponse(BaseModel):
     item: Country
     locale: LocaleResolution
+
+
 class CountryProfileResponse(BaseModel):
     item: CountryProfile
     locale: LocaleResolution
+
+
 class ScenarioRunInput(BaseModel):
     scenario_slug: str
     country_ids: list[UUID] = Field(min_length=1)
+
+
 class ScenarioRunCountryResult(BaseModel):
     country_id: UUID
     country_slug: str
     score: float
     score_label: str
     summary: str | None = None
+
+
 class ScenarioRunResult(BaseModel):
     scenario_slug: str
     results: list[ScenarioRunCountryResult]
