@@ -190,6 +190,8 @@ logs/
 *.log
 *.log.*
 log/
+runtime/*.log
+runtime/**/*.log
 runtime/
 .tmp/
 tmp/
