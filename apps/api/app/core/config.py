@@ -10,16 +10,21 @@ class Settings(BaseSettings):
     app_name: str = "Country Decision Atlas"
     app_env: str = "local"
     app_debug: bool = True
-    app_host: str = "0.0.0.0"
-    app_port: int = 8000
     api_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
-    api_rate_limit_per_minute: int = 120
     database_url: str = Field(
         default="postgresql://country_atlas:change-me@localhost:5433/country_atlas"
     )
     redis_url: str = "redis://localhost:6379/0"
-    meilisearch_host: str = "http://localhost:7700"
-    source_refresh_enabled: bool = False
+    default_locale: str = "en"
+    supported_locales: str = "en,ru"
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.api_cors_origins.split(",") if origin.strip()]
+
+    @property
+    def supported_locale_codes(self) -> set[str]:
+        return {locale.strip() for locale in self.supported_locales.split(",") if locale.strip()}
 
 
 @lru_cache(maxsize=1)
