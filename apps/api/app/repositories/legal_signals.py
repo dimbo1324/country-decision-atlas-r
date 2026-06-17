@@ -1,4 +1,5 @@
 from app.core.database import execute_one, fetch_all, fetch_one
+from app.schemas.common import localized_column, validate_locale
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
 from typing import Any
@@ -7,17 +8,23 @@ from typing import Any
 def list_legal_signals(
     connection: Connection[Any],
     country_id: str,
+    locale: str,
     limit: int,
     offset: int,
 ) -> list[dict[str, Any]]:
+    requested_locale = validate_locale(locale)
+    title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
+    summary_column = localized_column(
+        requested_locale, "ls.summary_en", "ls.summary_ru"
+    )
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             ls.id,
             ls.country_id,
-            ls.title,
-            ls.summary,
+            COALESCE({title_column}, ls.title_en, ls.title, '') AS title,
+            COALESCE({summary_column}, ls.summary_en, ls.summary, '') AS summary,
             ls.signal_type,
             ls.sentiment,
             ls.severity,
@@ -26,7 +33,13 @@ def list_legal_signals(
             ls.effective_date,
             ls.published_at,
             ls.created_at,
-            ls.updated_at
+            ls.updated_at,
+            {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
+            CASE
+                WHEN {title_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
+                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END AS translation_status
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.id::text = %s OR c.slug = %s

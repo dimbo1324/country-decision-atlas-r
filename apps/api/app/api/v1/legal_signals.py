@@ -23,11 +23,11 @@ router = APIRouter(
 async def read_country_legal_signals(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = "en",
+    locale: LocaleCode = LocaleCode.en,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalListResponse:
-    rows = list_legal_signals(connection, country_id, limit, offset)
+    rows = list_legal_signals(connection, country_id, locale, limit, offset)
     total = count_legal_signals(connection, country_id)
     return LegalSignalListResponse(
         items=rows,
@@ -43,7 +43,7 @@ top_level_router = APIRouter(prefix="/legal-signals", tags=["legal_signals"])
 async def read_legal_signals(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     country_slug: str | None = None,
-    locale: LocaleCode = "en",
+    locale: LocaleCode = LocaleCode.en,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalDetailListResponse:
@@ -59,7 +59,7 @@ async def read_legal_signals(
 async def read_legal_signal(
     signal_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = "en",
+    locale: LocaleCode = LocaleCode.en,
 ) -> LegalSignalDetailResponse:
     return decision_engine.get_legal_signal(connection, signal_id, locale)
 

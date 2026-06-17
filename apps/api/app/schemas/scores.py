@@ -1,4 +1,4 @@
-from app.schemas.common import LocaleResolution, Pagination
+from app.schemas.common import LocaleResolution, Pagination, TranslationStatus
 from datetime import datetime
 from pydantic import BaseModel
 from uuid import UUID
@@ -13,6 +13,7 @@ class CountryScore(BaseModel):
     score: float
     score_label: str
     summary: str | None = None
+    translation_status: TranslationStatus
     created_at: datetime
     updated_at: datetime
 

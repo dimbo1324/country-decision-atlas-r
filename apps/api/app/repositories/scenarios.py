@@ -1,4 +1,5 @@
 from app.core.database import fetch_all, fetch_one
+from app.schemas.common import validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -9,6 +10,7 @@ def list_scenarios(
     limit: int,
     offset: int,
 ) -> list[dict[str, Any]]:
+    requested_locale = validate_locale(locale)
     rows = fetch_all(
         connection,
         """
@@ -33,7 +35,7 @@ def list_scenarios(
         ORDER BY s.slug
         LIMIT %s OFFSET %s
         """,
-        (locale, limit, offset),
+        (requested_locale.value, limit, offset),
     )
     criteria = fetch_all(
         connection,

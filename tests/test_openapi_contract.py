@@ -47,10 +47,12 @@ def test_openapi_contract_uses_locale_resolution_schema() -> None:
     contract = load_contract()
     schemas = contract["components"]["schemas"]
     assert "LocaleResolution" in schemas
-    assert schemas["LocaleResolution"]["properties"]["translation_status"]["enum"] == [
-        "source",
-        "translated",
+    assert schemas["LocaleCode"]["enum"] == ["en", "ru"]
+    assert schemas["TranslationStatus"]["enum"] == [
+        "exact",
+        "fallback",
         "missing",
+        "not_applicable",
     ]
 
 

@@ -4,2368 +4,2353 @@
  */
 
 export interface paths {
-  "/health": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Health */
+        get: operations["health_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Health */
-    get: operations["health_health_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Countries */
+        get: operations["read_countries_api_v1_countries_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Countries */
-    get: operations["read_countries_api_v1_countries_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country */
+        get: operations["read_country_api_v1_countries__country_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country */
-    get: operations["read_country_api_v1_countries__country_id__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_id}/profile": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_id}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Profile */
+        get: operations["read_country_profile_api_v1_countries__country_id__profile_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country Profile */
-    get: operations["read_country_profile_api_v1_countries__country_id__profile_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_id}/scores": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_id}/scores": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Scores */
+        get: operations["read_country_scores_api_v1_countries__country_id__scores_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country Scores */
-    get: operations["read_country_scores_api_v1_countries__country_id__scores_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_slug}/card": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_slug}/card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Card */
+        get: operations["read_country_card_api_v1_countries__country_slug__card_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country Card */
-    get: operations["read_country_card_api_v1_countries__country_slug__card_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_slug}/sources": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_slug}/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Sources */
+        get: operations["read_country_sources_api_v1_countries__country_slug__sources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country Sources */
-    get: operations["read_country_sources_api_v1_countries__country_slug__sources_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/countries/{country_id}/legal-signals": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/countries/{country_id}/legal-signals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Legal Signals */
+        get: operations["read_country_legal_signals_api_v1_countries__country_id__legal_signals_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Country Legal Signals */
-    get: operations["read_country_legal_signals_api_v1_countries__country_id__legal_signals_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/legal-signals": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/legal-signals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Legal Signals */
+        get: operations["read_legal_signals_api_v1_legal_signals_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Legal Signals */
-    get: operations["read_legal_signals_api_v1_legal_signals_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/legal-signals/{signal_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/legal-signals/{signal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Legal Signal */
+        get: operations["read_legal_signal_api_v1_legal_signals__signal_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Legal Signal */
-    get: operations["read_legal_signal_api_v1_legal_signals__signal_id__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/legal-signals/{signal_id}/evidence": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/legal-signals/{signal_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Legal Signal Evidence */
+        get: operations["read_legal_signal_evidence_api_v1_legal_signals__signal_id__evidence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Legal Signal Evidence */
-    get: operations["read_legal_signal_evidence_api_v1_legal_signals__signal_id__evidence_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/scenarios": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/scenarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Scenarios */
+        get: operations["read_scenarios_api_v1_scenarios_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Scenarios */
-    get: operations["read_scenarios_api_v1_scenarios_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/scenario-runs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/scenario-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Scenario Run */
+        post: operations["create_scenario_run_api_v1_scenario_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Create Scenario Run */
-    post: operations["create_scenario_run_api_v1_scenario_runs_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/scenarios/{slug}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/scenarios/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Scenario Detail */
+        get: operations["read_scenario_detail_api_v1_scenarios__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Scenario Detail */
-    get: operations["read_scenario_detail_api_v1_scenarios__slug__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/scenarios/{slug}/countries": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/scenarios/{slug}/countries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Scenario Countries */
+        get: operations["read_scenario_countries_api_v1_scenarios__slug__countries_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Scenario Countries */
-    get: operations["read_scenario_countries_api_v1_scenarios__slug__countries_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/sources": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Sources */
+        get: operations["read_sources_api_v1_sources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Sources */
-    get: operations["read_sources_api_v1_sources_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/evidence-items": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/evidence-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Evidence Items */
+        get: operations["read_evidence_items_api_v1_evidence_items_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Evidence Items */
-    get: operations["read_evidence_items_api_v1_evidence_items_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/sources/{source_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/sources/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Source */
+        get: operations["read_source_api_v1_sources__source_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Source */
-    get: operations["read_source_api_v1_sources__source_id__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/sources/{source_id}/evidence": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/sources/{source_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Source Evidence */
+        get: operations["read_source_evidence_api_v1_sources__source_id__evidence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Source Evidence */
-    get: operations["read_source_evidence_api_v1_sources__source_id__evidence_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/translations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/translations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Translations */
+        get: operations["read_translations_api_v1_translations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read Translations */
-    get: operations["read_translations_api_v1_translations_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/legal-signals": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/legal-signals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Create Legal Signal */
+        post: operations["admin_create_legal_signal_api_v1_admin_legal_signals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Admin Create Legal Signal */
-    post: operations["admin_create_legal_signal_api_v1_admin_legal_signals_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/translations/jobs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/translations/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Create Translation Job */
+        post: operations["admin_create_translation_job_api_v1_admin_translations_jobs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Admin Create Translation Job */
-    post: operations["admin_create_translation_job_api_v1_admin_translations_jobs_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/user-stories": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/user-stories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read User Stories */
+        get: operations["read_user_stories_api_v1_user_stories_get"];
+        put?: never;
+        /** Create User Story */
+        post: operations["create_user_story_api_v1_user_stories_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read User Stories */
-    get: operations["read_user_stories_api_v1_user_stories_get"];
-    put?: never;
-    /** Create User Story */
-    post: operations["create_user_story_api_v1_user_stories_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/user-stories/{story_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/user-stories/{story_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read User Story */
+        get: operations["read_user_story_api_v1_user_stories__story_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Read User Story */
-    get: operations["read_user_story_api_v1_user_stories__story_id__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/decision/compare": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decision/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Compare Countries */
+        post: operations["compare_countries_api_v1_decision_compare_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Compare Countries */
-    post: operations["compare_countries_api_v1_decision_compare_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/decision/run": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decision/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Decision */
+        post: operations["run_decision_api_v1_decision_run_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Run Decision */
-    post: operations["run_decision_api_v1_decision_run_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /** Country */
-    Country: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Slug */
-      slug: string;
-      /** Iso2 */
-      iso2: string;
-      /** Iso3 */
-      iso3: string;
-      /** Name */
-      name: string;
-      /** Official Name */
-      official_name?: string | null;
-      /** Region */
-      region?: string | null;
-      /** Subregion */
-      subregion?: string | null;
-      /** Capital */
-      capital?: string | null;
-      /** Currency Code */
-      currency_code?: string | null;
-      /** Is Active */
-      is_active: boolean;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
+    schemas: {
+        /** Country */
+        Country: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Iso2 */
+            iso2: string;
+            /** Iso3 */
+            iso3: string;
+            /** Name */
+            name: string;
+            /** Official Name */
+            official_name?: string | null;
+            /** Region */
+            region?: string | null;
+            /** Subregion */
+            subregion?: string | null;
+            /** Capital */
+            capital?: string | null;
+            /** Currency Code */
+            currency_code?: string | null;
+            /** Is Active */
+            is_active: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CountryCard */
+        CountryCard: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Locale */
+            locale: string;
+            /** Executive Summary */
+            executive_summary: string;
+            /** Migration Overview */
+            migration_overview: string;
+            /** Tax Overview */
+            tax_overview: string;
+            /** Cost Of Living Overview */
+            cost_of_living_overview: string;
+            /** Business Overview */
+            business_overview: string;
+            /** Safety Overview */
+            safety_overview: string;
+            /** Legal Signals Summary */
+            legal_signals_summary: string;
+            /** Risk Summary */
+            risk_summary: string;
+            /** Source Summary */
+            source_summary: string;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CountryCardResponse */
+        CountryCardResponse: {
+            item: components["schemas"]["CountryCard"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryListResponse */
+        CountryListResponse: {
+            /** Items */
+            items: components["schemas"]["Country"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryProfile */
+        CountryProfile: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Summary */
+            summary: string;
+            /** Residence Overview */
+            residence_overview?: string | null;
+            /** Citizenship Overview */
+            citizenship_overview?: string | null;
+            /** Tax Overview */
+            tax_overview?: string | null;
+            /** Business Overview */
+            business_overview?: string | null;
+            /** Quality Of Life Overview */
+            quality_of_life_overview?: string | null;
+            /** Risk Overview */
+            risk_overview?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CountryProfileResponse */
+        CountryProfileResponse: {
+            item: components["schemas"]["CountryProfile"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryResponse */
+        CountryResponse: {
+            item: components["schemas"]["Country"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryScore */
+        CountryScore: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Scenario Name */
+            scenario_name: string;
+            /** Score */
+            score: number;
+            /** Score Label */
+            score_label: string;
+            /** Summary */
+            summary?: string | null;
+            translation_status: components["schemas"]["TranslationStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CountryScoreBreakdown */
+        CountryScoreBreakdown: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Score Id
+             * Format: uuid
+             */
+            country_score_id: string;
+            /** Criterion */
+            criterion: string;
+            /** Score */
+            score: number;
+            /** Weight */
+            weight: number;
+            /** Weighted Score */
+            weighted_score: number;
+            /** Explanation */
+            explanation: string;
+            /** Explanation En */
+            explanation_en: string;
+            /** Explanation Ru */
+            explanation_ru: string;
+            /** Source Ids */
+            source_ids: string[];
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** @default not_applicable */
+            translation_status: components["schemas"]["TranslationStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CountryScoreListResponse */
+        CountryScoreListResponse: {
+            /** Items */
+            items: components["schemas"]["CountryScore"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionCompareInput */
+        DecisionCompareInput: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Country Slugs */
+            country_slugs: string[];
+            /** @default en */
+            locale: components["schemas"]["LocaleCode"];
+        };
+        /** DecisionCompareResult */
+        DecisionCompareResult: {
+            scenario: components["schemas"]["DecisionScenario"];
+            /** Countries */
+            countries: components["schemas"]["DecisionCountryScore"][];
+            /** Recommended Country */
+            recommended_country: string | null;
+            /**
+             * Recommendation Type
+             * @enum {string}
+             */
+            recommendation_type: "winner" | "tie" | "low_confidence";
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** Explanation */
+            explanation: string;
+            /** Caveat */
+            caveat: string;
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionCountryScore */
+        DecisionCountryScore: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Country Name */
+            country_name: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Scenario Name */
+            scenario_name: string;
+            /** Score */
+            score: number;
+            /** Explanation */
+            explanation: string;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            translation_status: components["schemas"]["TranslationStatus"];
+            /** Breakdowns */
+            breakdowns: components["schemas"]["CountryScoreBreakdown"][];
+            /**
+             * Source References
+             * @default []
+             */
+            source_references: components["schemas"]["Source"][];
+        };
+        /** DecisionCountryScoreListResponse */
+        DecisionCountryScoreListResponse: {
+            /** Items */
+            items: components["schemas"]["DecisionCountryScore"][];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionRunCountry */
+        DecisionRunCountry: {
+            country: components["schemas"]["DecisionCountryScore"];
+            /** Rank */
+            rank: number;
+            /** Risks */
+            risks: string[];
+            /** Key Legal Signals */
+            key_legal_signals: {
+                [key: string]: unknown;
+            }[];
+            /** Source References */
+            source_references: components["schemas"]["Source"][];
+        };
+        /** DecisionRunInput */
+        DecisionRunInput: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Candidate Country Slugs */
+            candidate_country_slugs: string[];
+            /** @default en */
+            locale: components["schemas"]["LocaleCode"];
+        };
+        /** DecisionRunResult */
+        DecisionRunResult: {
+            scenario: components["schemas"]["DecisionScenario"];
+            /** Origin Country Slug */
+            origin_country_slug: string | null;
+            /** Ranked Candidates */
+            ranked_candidates: components["schemas"]["DecisionRunCountry"][];
+            /** Recommended Country */
+            recommended_country: string | null;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** Explanation */
+            explanation: string;
+            /** Caveat */
+            caveat: string;
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionScenario */
+        DecisionScenario: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Weights */
+            weights: {
+                [key: string]: number;
+            };
+        };
+        /** DecisionScenarioResponse */
+        DecisionScenarioResponse: {
+            item: components["schemas"]["DecisionScenario"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** EvidenceItem */
+        EvidenceItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Source Id
+             * Format: uuid
+             */
+            source_id: string;
+            /** Country Id */
+            country_id?: string | null;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Url */
+            url?: string | null;
+            /** Quote */
+            quote?: string | null;
+            /** Evidence Type */
+            evidence_type: string;
+            /** Confidence Level */
+            confidence_level: string;
+            /** Published At */
+            published_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** EvidenceItemListResponse */
+        EvidenceItemListResponse: {
+            /** Items */
+            items: components["schemas"]["EvidenceItem"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /** EvidenceListResponse */
+        EvidenceListResponse: {
+            /** Items */
+            items: components["schemas"]["EvidenceItem"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /** LegalSignal */
+        LegalSignal: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Signal Type
+             * @enum {string}
+             */
+            signal_type: "law" | "bill" | "policy" | "court_decision" | "administrative_change" | "political_signal" | "other";
+            /**
+             * Sentiment
+             * @enum {string}
+             */
+            sentiment: "positive" | "neutral" | "negative" | "mixed" | "unknown";
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high" | "critical";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "proposed" | "adopted" | "rejected" | "active" | "expired" | "unknown";
+            /**
+             * Confidence Level
+             * @enum {string}
+             */
+            confidence_level: "low" | "medium" | "high";
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** LegalSignalCreate */
+        LegalSignalCreate: {
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Signal Type
+             * @enum {string}
+             */
+            signal_type: "law" | "bill" | "policy" | "court_decision" | "administrative_change" | "political_signal" | "other";
+            /**
+             * Sentiment
+             * @default unknown
+             * @enum {string}
+             */
+            sentiment: "positive" | "neutral" | "negative" | "mixed" | "unknown";
+            /**
+             * Severity
+             * @default low
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high" | "critical";
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "proposed" | "adopted" | "rejected" | "active" | "expired" | "unknown";
+            /**
+             * Confidence Level
+             * @default low
+             * @enum {string}
+             */
+            confidence_level: "low" | "medium" | "high";
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Published At */
+            published_at?: string | null;
+        };
+        /** LegalSignalDetail */
+        LegalSignalDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Signal Type */
+            signal_type: string;
+            /** Impact Direction */
+            impact_direction: string;
+            /** Impact Level */
+            impact_level: string;
+            /** Affected Groups */
+            affected_groups: string[];
+            /** Published Date */
+            published_date?: string | null;
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Confidence */
+            confidence: string;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** LegalSignalDetailListResponse */
+        LegalSignalDetailListResponse: {
+            /** Items */
+            items: components["schemas"]["LegalSignalDetail"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** LegalSignalDetailResponse */
+        LegalSignalDetailResponse: {
+            item: components["schemas"]["LegalSignalDetail"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** LegalSignalListResponse */
+        LegalSignalListResponse: {
+            /** Items */
+            items: components["schemas"]["LegalSignal"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** LegalSignalResponse */
+        LegalSignalResponse: {
+            item: components["schemas"]["LegalSignal"];
+        };
+        /**
+         * LocaleCode
+         * @enum {string}
+         */
+        LocaleCode: "en" | "ru";
+        /** LocaleResolution */
+        LocaleResolution: {
+            requested_locale: components["schemas"]["LocaleCode"];
+            resolved_locale: components["schemas"]["LocaleCode"];
+            translation_status: components["schemas"]["TranslationStatus"];
+        };
+        /** Pagination */
+        Pagination: {
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Scenario */
+        Scenario: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: string | null;
+            /** Is Active */
+            is_active: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Criteria
+             * @default []
+             */
+            criteria: components["schemas"]["ScenarioCriterion"][];
+        };
+        /** ScenarioCriterion */
+        ScenarioCriterion: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Weight */
+            weight: number;
+            /** Is Required */
+            is_required: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** ScenarioListResponse */
+        ScenarioListResponse: {
+            /** Items */
+            items: components["schemas"]["Scenario"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** ScenarioRunCountryResult */
+        ScenarioRunCountryResult: {
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Score */
+            score: number;
+            /** Score Label */
+            score_label: string;
+            /** Summary */
+            summary?: string | null;
+        };
+        /** ScenarioRunInput */
+        ScenarioRunInput: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Country Ids */
+            country_ids: string[];
+        };
+        /** ScenarioRunResult */
+        ScenarioRunResult: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Results */
+            results: components["schemas"]["ScenarioRunCountryResult"][];
+        };
+        /** Source */
+        Source: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Source Type */
+            source_type: string;
+            /** Publisher */
+            publisher?: string | null;
+            /** Country Id */
+            country_id?: string | null;
+            /** Locale Id */
+            locale_id?: string | null;
+            /** Reliability Level */
+            reliability_level: string;
+            /** Published At */
+            published_at?: string | null;
+            /** Accessed At */
+            accessed_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** SourceListResponse */
+        SourceListResponse: {
+            /** Items */
+            items: components["schemas"]["Source"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /** SourceListWithLocaleResponse */
+        SourceListWithLocaleResponse: {
+            /** Items */
+            items: components["schemas"]["Source"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** Translation */
+        Translation: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Entity Type */
+            entity_type: string;
+            /**
+             * Entity Id
+             * Format: uuid
+             */
+            entity_id: string;
+            /** Field Name */
+            field_name: string;
+            /**
+             * Locale Id
+             * Format: uuid
+             */
+            locale_id: string;
+            /** Translated Value */
+            translated_value: string;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TranslationJob */
+        TranslationJob: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Entity Type */
+            entity_type: string;
+            /**
+             * Entity Id
+             * Format: uuid
+             */
+            entity_id: string;
+            /** Source Locale Id */
+            source_locale_id?: string | null;
+            /**
+             * Target Locale Id
+             * Format: uuid
+             */
+            target_locale_id: string;
+            /** Status */
+            status: string;
+            /** Provider */
+            provider?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TranslationJobCreate */
+        TranslationJobCreate: {
+            /** Entity Type */
+            entity_type: string;
+            /**
+             * Entity Id
+             * Format: uuid
+             */
+            entity_id: string;
+            /**
+             * Source Locale Code
+             * @default en
+             */
+            source_locale_code: string;
+            /** Target Locale Code */
+            target_locale_code: string;
+            /** Provider */
+            provider?: string | null;
+        };
+        /** TranslationJobResponse */
+        TranslationJobResponse: {
+            item: components["schemas"]["TranslationJob"];
+        };
+        /** TranslationListResponse */
+        TranslationListResponse: {
+            /** Items */
+            items: components["schemas"]["Translation"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /**
+         * TranslationStatus
+         * @enum {string}
+         */
+        TranslationStatus: "exact" | "fallback" | "missing" | "not_applicable";
+        /** UserStory */
+        UserStory: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Origin Country Id */
+            origin_country_id?: string | null;
+            /**
+             * Destination Country Id
+             * Format: uuid
+             */
+            destination_country_id: string;
+            /** City */
+            city?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Scenario */
+            scenario: string;
+            /** Budget Initial Usd */
+            budget_initial_usd?: string | null;
+            /** Budget Monthly Usd */
+            budget_monthly_usd?: string | null;
+            /** Legal Path */
+            legal_path?: string | null;
+            /** Documents Used */
+            documents_used: string[];
+            /** Problems */
+            problems?: string | null;
+            /** Positive Outcome */
+            positive_outcome?: string | null;
+            /** Negative Outcome */
+            negative_outcome?: string | null;
+            /** Advice */
+            advice?: string | null;
+            /** Satisfaction Score */
+            satisfaction_score?: string | null;
+            /** Verification Status */
+            verification_status: string;
+            /** Status */
+            status: string;
+            /** Is Synthetic */
+            is_synthetic: boolean;
+            /** Notes */
+            notes: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** UserStoryCreate */
+        UserStoryCreate: {
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Destination Country Slug */
+            destination_country_slug: string;
+            /** City */
+            city?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Scenario */
+            scenario: string;
+            /** Budget Initial Usd */
+            budget_initial_usd?: number | string | null;
+            /** Budget Monthly Usd */
+            budget_monthly_usd?: number | string | null;
+            /** Legal Path */
+            legal_path?: string | null;
+            /**
+             * Documents Used
+             * @default []
+             */
+            documents_used: string[];
+            /** Problems */
+            problems?: string | null;
+            /** Positive Outcome */
+            positive_outcome?: string | null;
+            /** Negative Outcome */
+            negative_outcome?: string | null;
+            /** Advice */
+            advice?: string | null;
+            /** Satisfaction Score */
+            satisfaction_score?: number | string | null;
+            /**
+             * Is Synthetic
+             * @default true
+             */
+            is_synthetic: boolean;
+            /**
+             * Notes
+             * @default Synthetic example for MVP demonstration only.
+             */
+            notes: string;
+        };
+        /** UserStoryListResponse */
+        UserStoryListResponse: {
+            /** Items */
+            items: components["schemas"]["UserStory"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /** UserStoryResponse */
+        UserStoryResponse: {
+            item: components["schemas"]["UserStory"];
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
     };
-    /** CountryCard */
-    CountryCard: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Locale */
-      locale: string;
-      /** Executive Summary */
-      executive_summary: string;
-      /** Migration Overview */
-      migration_overview: string;
-      /** Tax Overview */
-      tax_overview: string;
-      /** Cost Of Living Overview */
-      cost_of_living_overview: string;
-      /** Business Overview */
-      business_overview: string;
-      /** Safety Overview */
-      safety_overview: string;
-      /** Legal Signals Summary */
-      legal_signals_summary: string;
-      /** Risk Summary */
-      risk_summary: string;
-      /** Source Summary */
-      source_summary: string;
-      /** Status */
-      status: string;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** CountryCardResponse */
-    CountryCardResponse: {
-      item: components["schemas"]["CountryCard"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** CountryListResponse */
-    CountryListResponse: {
-      /** Items */
-      items: components["schemas"]["Country"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** CountryProfile */
-    CountryProfile: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Summary */
-      summary: string;
-      /** Residence Overview */
-      residence_overview?: string | null;
-      /** Citizenship Overview */
-      citizenship_overview?: string | null;
-      /** Tax Overview */
-      tax_overview?: string | null;
-      /** Business Overview */
-      business_overview?: string | null;
-      /** Quality Of Life Overview */
-      quality_of_life_overview?: string | null;
-      /** Risk Overview */
-      risk_overview?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** CountryProfileResponse */
-    CountryProfileResponse: {
-      item: components["schemas"]["CountryProfile"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** CountryResponse */
-    CountryResponse: {
-      item: components["schemas"]["Country"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** CountryScore */
-    CountryScore: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /**
-       * Scenario Id
-       * Format: uuid
-       */
-      scenario_id: string;
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Scenario Name */
-      scenario_name: string;
-      /** Score */
-      score: number;
-      /** Score Label */
-      score_label: string;
-      /** Summary */
-      summary?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** CountryScoreBreakdown */
-    CountryScoreBreakdown: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Score Id
-       * Format: uuid
-       */
-      country_score_id: string;
-      /** Criterion */
-      criterion: string;
-      /** Score */
-      score: number;
-      /** Weight */
-      weight: number;
-      /** Weighted Score */
-      weighted_score: number;
-      /** Explanation En */
-      explanation_en: string;
-      /** Explanation Ru */
-      explanation_ru: string;
-      /** Source Ids */
-      source_ids: string[];
-      /**
-       * Confidence
-       * @enum {string}
-       */
-      confidence: "high" | "medium" | "low";
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** CountryScoreListResponse */
-    CountryScoreListResponse: {
-      /** Items */
-      items: components["schemas"]["CountryScore"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** DecisionCompareInput */
-    DecisionCompareInput: {
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Country Slugs */
-      country_slugs: string[];
-      /**
-       * Locale
-       * @default en
-       * @enum {string}
-       */
-      locale: "en" | "ru";
-    };
-    /** DecisionCompareResult */
-    DecisionCompareResult: {
-      scenario: components["schemas"]["DecisionScenario"];
-      /** Countries */
-      countries: components["schemas"]["DecisionCountryScore"][];
-      /** Recommended Country */
-      recommended_country: string | null;
-      /**
-       * Recommendation Type
-       * @enum {string}
-       */
-      recommendation_type: "winner" | "tie" | "low_confidence";
-      /**
-       * Confidence
-       * @enum {string}
-       */
-      confidence: "high" | "medium" | "low";
-      /** Explanation */
-      explanation: string;
-      /** Caveat */
-      caveat: string;
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** DecisionCountryScore */
-    DecisionCountryScore: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Country Slug */
-      country_slug: string;
-      /** Country Name */
-      country_name: string;
-      /**
-       * Scenario Id
-       * Format: uuid
-       */
-      scenario_id: string;
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Scenario Name */
-      scenario_name: string;
-      /** Score */
-      score: number;
-      /** Explanation */
-      explanation: string;
-      /**
-       * Confidence
-       * @enum {string}
-       */
-      confidence: "high" | "medium" | "low";
-      /**
-       * Calculated At
-       * Format: date-time
-       */
-      calculated_at: string;
-      /** Breakdowns */
-      breakdowns: components["schemas"]["CountryScoreBreakdown"][];
-      /**
-       * Source References
-       * @default []
-       */
-      source_references: components["schemas"]["Source"][];
-    };
-    /** DecisionRunCountry */
-    DecisionRunCountry: {
-      country: components["schemas"]["DecisionCountryScore"];
-      /** Rank */
-      rank: number;
-      /** Risks */
-      risks: string[];
-      /** Key Legal Signals */
-      key_legal_signals: {
-        [key: string]: unknown;
-      }[];
-      /** Source References */
-      source_references: components["schemas"]["Source"][];
-    };
-    /** DecisionRunInput */
-    DecisionRunInput: {
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Origin Country Slug */
-      origin_country_slug?: string | null;
-      /** Candidate Country Slugs */
-      candidate_country_slugs: string[];
-      /**
-       * Locale
-       * @default en
-       * @enum {string}
-       */
-      locale: "en" | "ru";
-    };
-    /** DecisionRunResult */
-    DecisionRunResult: {
-      scenario: components["schemas"]["DecisionScenario"];
-      /** Origin Country Slug */
-      origin_country_slug: string | null;
-      /** Ranked Candidates */
-      ranked_candidates: components["schemas"]["DecisionRunCountry"][];
-      /** Recommended Country */
-      recommended_country: string | null;
-      /**
-       * Confidence
-       * @enum {string}
-       */
-      confidence: "high" | "medium" | "low";
-      /** Explanation */
-      explanation: string;
-      /** Caveat */
-      caveat: string;
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** DecisionScenario */
-    DecisionScenario: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Slug */
-      slug: string;
-      /** Title */
-      title: string;
-      /** Description */
-      description: string;
-      /** Weights */
-      weights: {
-        [key: string]: number;
-      };
-    };
-    /** EvidenceItem */
-    EvidenceItem: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Source Id
-       * Format: uuid
-       */
-      source_id: string;
-      /** Country Id */
-      country_id?: string | null;
-      /** Title */
-      title: string;
-      /** Summary */
-      summary: string;
-      /** Url */
-      url?: string | null;
-      /** Quote */
-      quote?: string | null;
-      /** Evidence Type */
-      evidence_type: string;
-      /** Confidence Level */
-      confidence_level: string;
-      /** Published At */
-      published_at?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** EvidenceItemListResponse */
-    EvidenceItemListResponse: {
-      /** Items */
-      items: components["schemas"]["EvidenceItem"][];
-      pagination: components["schemas"]["Pagination"];
-    };
-    /** EvidenceListResponse */
-    EvidenceListResponse: {
-      /** Items */
-      items: components["schemas"]["EvidenceItem"][];
-      pagination: components["schemas"]["Pagination"];
-    };
-    /** HTTPValidationError */
-    HTTPValidationError: {
-      /** Detail */
-      detail?: components["schemas"]["ValidationError"][];
-    };
-    /** LegalSignal */
-    LegalSignal: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Title */
-      title: string;
-      /** Summary */
-      summary: string;
-      /**
-       * Signal Type
-       * @enum {string}
-       */
-      signal_type:
-        | "law"
-        | "bill"
-        | "policy"
-        | "court_decision"
-        | "administrative_change"
-        | "political_signal"
-        | "other";
-      /**
-       * Sentiment
-       * @enum {string}
-       */
-      sentiment: "positive" | "neutral" | "negative" | "mixed" | "unknown";
-      /**
-       * Severity
-       * @enum {string}
-       */
-      severity: "low" | "medium" | "high" | "critical";
-      /**
-       * Status
-       * @enum {string}
-       */
-      status:
-        | "draft"
-        | "proposed"
-        | "adopted"
-        | "rejected"
-        | "active"
-        | "expired"
-        | "unknown";
-      /**
-       * Confidence Level
-       * @enum {string}
-       */
-      confidence_level: "low" | "medium" | "high";
-      /** Effective Date */
-      effective_date?: string | null;
-      /** Published At */
-      published_at?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** LegalSignalCreate */
-    LegalSignalCreate: {
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Title */
-      title: string;
-      /** Summary */
-      summary: string;
-      /**
-       * Signal Type
-       * @enum {string}
-       */
-      signal_type:
-        | "law"
-        | "bill"
-        | "policy"
-        | "court_decision"
-        | "administrative_change"
-        | "political_signal"
-        | "other";
-      /**
-       * Sentiment
-       * @default unknown
-       * @enum {string}
-       */
-      sentiment: "positive" | "neutral" | "negative" | "mixed" | "unknown";
-      /**
-       * Severity
-       * @default low
-       * @enum {string}
-       */
-      severity: "low" | "medium" | "high" | "critical";
-      /**
-       * Status
-       * @default draft
-       * @enum {string}
-       */
-      status:
-        | "draft"
-        | "proposed"
-        | "adopted"
-        | "rejected"
-        | "active"
-        | "expired"
-        | "unknown";
-      /**
-       * Confidence Level
-       * @default low
-       * @enum {string}
-       */
-      confidence_level: "low" | "medium" | "high";
-      /** Effective Date */
-      effective_date?: string | null;
-      /** Published At */
-      published_at?: string | null;
-    };
-    /** LegalSignalDetail */
-    LegalSignalDetail: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Title */
-      title: string;
-      /** Summary */
-      summary: string;
-      /** Signal Type */
-      signal_type: string;
-      /** Impact Direction */
-      impact_direction: string;
-      /** Impact Level */
-      impact_level: string;
-      /** Affected Groups */
-      affected_groups: string[];
-      /** Published Date */
-      published_date?: string | null;
-      /** Effective Date */
-      effective_date?: string | null;
-      /** Source Id */
-      source_id?: string | null;
-      /** Confidence */
-      confidence: string;
-      /** Status */
-      status: string;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** LegalSignalDetailListResponse */
-    LegalSignalDetailListResponse: {
-      /** Items */
-      items: components["schemas"]["LegalSignalDetail"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** LegalSignalDetailResponse */
-    LegalSignalDetailResponse: {
-      item: components["schemas"]["LegalSignalDetail"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** LegalSignalListResponse */
-    LegalSignalListResponse: {
-      /** Items */
-      items: components["schemas"]["LegalSignal"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** LegalSignalResponse */
-    LegalSignalResponse: {
-      item: components["schemas"]["LegalSignal"];
-    };
-    /** LocaleResolution */
-    LocaleResolution: {
-      /** Requested Locale */
-      requested_locale: string;
-      /** Resolved Locale */
-      resolved_locale: string;
-      /**
-       * Translation Status
-       * @enum {string}
-       */
-      translation_status: "source" | "translated" | "missing";
-    };
-    /** Pagination */
-    Pagination: {
-      /** Limit */
-      limit: number;
-      /** Offset */
-      offset: number;
-      /** Total */
-      total: number;
-    };
-    /** Scenario */
-    Scenario: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Slug */
-      slug: string;
-      /** Name */
-      name: string;
-      /** Description */
-      description?: string | null;
-      /** Is Active */
-      is_active: boolean;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-      /**
-       * Criteria
-       * @default []
-       */
-      criteria: components["schemas"]["ScenarioCriterion"][];
-    };
-    /** ScenarioCriterion */
-    ScenarioCriterion: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /**
-       * Scenario Id
-       * Format: uuid
-       */
-      scenario_id: string;
-      /** Key */
-      key: string;
-      /** Label */
-      label: string;
-      /** Weight */
-      weight: number;
-      /** Is Required */
-      is_required: boolean;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** ScenarioListResponse */
-    ScenarioListResponse: {
-      /** Items */
-      items: components["schemas"]["Scenario"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** ScenarioRunCountryResult */
-    ScenarioRunCountryResult: {
-      /**
-       * Country Id
-       * Format: uuid
-       */
-      country_id: string;
-      /** Country Slug */
-      country_slug: string;
-      /** Score */
-      score: number;
-      /** Score Label */
-      score_label: string;
-      /** Summary */
-      summary?: string | null;
-    };
-    /** ScenarioRunInput */
-    ScenarioRunInput: {
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Country Ids */
-      country_ids: string[];
-    };
-    /** ScenarioRunResult */
-    ScenarioRunResult: {
-      /** Scenario Slug */
-      scenario_slug: string;
-      /** Results */
-      results: components["schemas"]["ScenarioRunCountryResult"][];
-    };
-    /** Source */
-    Source: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Title */
-      title: string;
-      /** Url */
-      url: string;
-      /** Source Type */
-      source_type: string;
-      /** Publisher */
-      publisher?: string | null;
-      /** Country Id */
-      country_id?: string | null;
-      /** Locale Id */
-      locale_id?: string | null;
-      /** Reliability Level */
-      reliability_level: string;
-      /** Published At */
-      published_at?: string | null;
-      /** Accessed At */
-      accessed_at?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** SourceListResponse */
-    SourceListResponse: {
-      /** Items */
-      items: components["schemas"]["Source"][];
-      pagination: components["schemas"]["Pagination"];
-    };
-    /** SourceListWithLocaleResponse */
-    SourceListWithLocaleResponse: {
-      /** Items */
-      items: components["schemas"]["Source"][];
-      pagination: components["schemas"]["Pagination"];
-      locale: components["schemas"]["LocaleResolution"];
-    };
-    /** Translation */
-    Translation: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Entity Type */
-      entity_type: string;
-      /**
-       * Entity Id
-       * Format: uuid
-       */
-      entity_id: string;
-      /** Field Name */
-      field_name: string;
-      /**
-       * Locale Id
-       * Format: uuid
-       */
-      locale_id: string;
-      /** Translated Value */
-      translated_value: string;
-      /** Status */
-      status: string;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** TranslationJob */
-    TranslationJob: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Entity Type */
-      entity_type: string;
-      /**
-       * Entity Id
-       * Format: uuid
-       */
-      entity_id: string;
-      /** Source Locale Id */
-      source_locale_id?: string | null;
-      /**
-       * Target Locale Id
-       * Format: uuid
-       */
-      target_locale_id: string;
-      /** Status */
-      status: string;
-      /** Provider */
-      provider?: string | null;
-      /** Error Message */
-      error_message?: string | null;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** TranslationJobCreate */
-    TranslationJobCreate: {
-      /** Entity Type */
-      entity_type: string;
-      /**
-       * Entity Id
-       * Format: uuid
-       */
-      entity_id: string;
-      /**
-       * Source Locale Code
-       * @default en
-       */
-      source_locale_code: string;
-      /** Target Locale Code */
-      target_locale_code: string;
-      /** Provider */
-      provider?: string | null;
-    };
-    /** TranslationJobResponse */
-    TranslationJobResponse: {
-      item: components["schemas"]["TranslationJob"];
-    };
-    /** TranslationListResponse */
-    TranslationListResponse: {
-      /** Items */
-      items: components["schemas"]["Translation"][];
-      pagination: components["schemas"]["Pagination"];
-    };
-    /** UserStory */
-    UserStory: {
-      /**
-       * Id
-       * Format: uuid
-       */
-      id: string;
-      /** Origin Country Id */
-      origin_country_id?: string | null;
-      /**
-       * Destination Country Id
-       * Format: uuid
-       */
-      destination_country_id: string;
-      /** City */
-      city?: string | null;
-      /** Year */
-      year?: number | null;
-      /** Scenario */
-      scenario: string;
-      /** Budget Initial Usd */
-      budget_initial_usd?: string | null;
-      /** Budget Monthly Usd */
-      budget_monthly_usd?: string | null;
-      /** Legal Path */
-      legal_path?: string | null;
-      /** Documents Used */
-      documents_used: string[];
-      /** Problems */
-      problems?: string | null;
-      /** Positive Outcome */
-      positive_outcome?: string | null;
-      /** Negative Outcome */
-      negative_outcome?: string | null;
-      /** Advice */
-      advice?: string | null;
-      /** Satisfaction Score */
-      satisfaction_score?: string | null;
-      /** Verification Status */
-      verification_status: string;
-      /** Status */
-      status: string;
-      /** Is Synthetic */
-      is_synthetic: boolean;
-      /** Notes */
-      notes: string;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /**
-       * Updated At
-       * Format: date-time
-       */
-      updated_at: string;
-    };
-    /** UserStoryCreate */
-    UserStoryCreate: {
-      /** Origin Country Slug */
-      origin_country_slug?: string | null;
-      /** Destination Country Slug */
-      destination_country_slug: string;
-      /** City */
-      city?: string | null;
-      /** Year */
-      year?: number | null;
-      /** Scenario */
-      scenario: string;
-      /** Budget Initial Usd */
-      budget_initial_usd?: number | string | null;
-      /** Budget Monthly Usd */
-      budget_monthly_usd?: number | string | null;
-      /** Legal Path */
-      legal_path?: string | null;
-      /**
-       * Documents Used
-       * @default []
-       */
-      documents_used: string[];
-      /** Problems */
-      problems?: string | null;
-      /** Positive Outcome */
-      positive_outcome?: string | null;
-      /** Negative Outcome */
-      negative_outcome?: string | null;
-      /** Advice */
-      advice?: string | null;
-      /** Satisfaction Score */
-      satisfaction_score?: number | string | null;
-      /**
-       * Is Synthetic
-       * @default true
-       */
-      is_synthetic: boolean;
-      /**
-       * Notes
-       * @default Synthetic example for MVP demonstration only.
-       */
-      notes: string;
-    };
-    /** UserStoryListResponse */
-    UserStoryListResponse: {
-      /** Items */
-      items: components["schemas"]["UserStory"][];
-      pagination: components["schemas"]["Pagination"];
-    };
-    /** UserStoryResponse */
-    UserStoryResponse: {
-      item: components["schemas"]["UserStory"];
-    };
-    /** ValidationError */
-    ValidationError: {
-      /** Location */
-      loc: (string | number)[];
-      /** Message */
-      msg: string;
-      /** Error Type */
-      type: string;
-      /** Input */
-      input?: unknown;
-      /** Context */
-      ctx?: Record<string, never>;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  health_health_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    health_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_countries_api_v1_countries_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": {
-            [key: string]: string;
-          };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
     };
-  };
-  read_countries_api_v1_countries_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
+    read_country_api_v1_countries__country_id__get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                country_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_country_profile_api_v1_countries__country_id__profile_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                country_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CountryListResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProfileResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_api_v1_countries__country_id__get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        country_id: string;
-      };
-      cookie?: never;
+    read_country_scores_api_v1_countries__country_id__scores_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                country_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryScoreListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_country_card_api_v1_countries__country_slug__card_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CountryResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryCardResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_profile_api_v1_countries__country_id__profile_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        country_id: string;
-      };
-      cookie?: never;
+    read_country_sources_api_v1_countries__country_slug__sources_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SourceListWithLocaleResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_country_legal_signals_api_v1_countries__country_id__legal_signals_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                country_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CountryProfileResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalSignalListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_scores_api_v1_countries__country_id__scores_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path: {
-        country_id: string;
-      };
-      cookie?: never;
+    read_legal_signals_api_v1_legal_signals_get: {
+        parameters: {
+            query?: {
+                country_slug?: string | null;
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalSignalDetailListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_legal_signal_api_v1_legal_signals__signal_id__get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                signal_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CountryScoreListResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalSignalDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_card_api_v1_countries__country_slug__card_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        country_slug: string;
-      };
-      cookie?: never;
+    read_legal_signal_evidence_api_v1_legal_signals__signal_id__evidence_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                signal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_scenarios_api_v1_scenarios_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CountryCardResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_sources_api_v1_countries__country_slug__sources_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path: {
-        country_slug: string;
-      };
-      cookie?: never;
+    create_scenario_run_api_v1_scenario_runs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScenarioRunInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioRunResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_scenario_detail_api_v1_scenarios__slug__get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["SourceListWithLocaleResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionScenarioResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_country_legal_signals_api_v1_countries__country_id__legal_signals_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path: {
-        country_id: string;
-      };
-      cookie?: never;
+    read_scenario_countries_api_v1_scenarios__slug__countries_get: {
+        parameters: {
+            query?: {
+                locale?: components["schemas"]["LocaleCode"];
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionCountryScoreListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_sources_api_v1_sources_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["LegalSignalListResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SourceListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_legal_signals_api_v1_legal_signals_get: {
-    parameters: {
-      query?: {
-        country_slug?: string | null;
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
+    read_evidence_items_api_v1_evidence_items_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceItemListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_source_api_v1_sources__source_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["LegalSignalDetailListResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_legal_signal_api_v1_legal_signals__signal_id__get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        signal_id: string;
-      };
-      cookie?: never;
+    read_source_evidence_api_v1_sources__source_id__evidence_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceItemListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    read_translations_api_v1_translations_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["LegalSignalDetailResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_legal_signal_evidence_api_v1_legal_signals__signal_id__evidence_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        signal_id: string;
-      };
-      cookie?: never;
+    admin_create_legal_signal_api_v1_admin_legal_signals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LegalSignalCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalSignalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    admin_create_translation_job_api_v1_admin_translations_jobs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["EvidenceListResponse"];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslationJobCreate"];
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_scenarios_api_v1_scenarios_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
+    read_user_stories_api_v1_user_stories_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    create_user_story_api_v1_user_stories_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["ScenarioListResponse"];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStoryCreate"];
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  create_scenario_run_api_v1_scenario_runs_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    read_user_story_api_v1_user_stories__story_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                story_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ScenarioRunInput"];
-      };
+    compare_countries_api_v1_decision_compare_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionCompareInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionCompareResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    run_decision_api_v1_decision_run_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["ScenarioRunResult"];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionRunInput"];
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionRunResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  read_scenario_detail_api_v1_scenarios__slug__get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        slug: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DecisionScenario"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_scenario_countries_api_v1_scenarios__slug__countries_get: {
-    parameters: {
-      query?: {
-        locale?: "en" | "ru";
-      };
-      header?: never;
-      path: {
-        slug: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DecisionCountryScore"][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_sources_api_v1_sources_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SourceListResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_evidence_items_api_v1_evidence_items_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EvidenceItemListResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_source_api_v1_sources__source_id__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        source_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            [key: string]: unknown;
-          };
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_source_evidence_api_v1_sources__source_id__evidence_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path: {
-        source_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EvidenceItemListResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_translations_api_v1_translations_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TranslationListResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  admin_create_legal_signal_api_v1_admin_legal_signals_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LegalSignalCreate"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LegalSignalResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  admin_create_translation_job_api_v1_admin_translations_jobs_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["TranslationJobCreate"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TranslationJobResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_user_stories_api_v1_user_stories_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UserStoryListResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  create_user_story_api_v1_user_stories_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UserStoryCreate"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UserStoryResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  read_user_story_api_v1_user_stories__story_id__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        story_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UserStoryResponse"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  compare_countries_api_v1_decision_compare_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["DecisionCompareInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DecisionCompareResult"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  run_decision_api_v1_decision_run_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["DecisionRunInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DecisionRunResult"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
 }

@@ -6,11 +6,11 @@ paths:
   /health:
     get:
       tags:
-        - system
+      - system
       summary: Health
       operationId: health_health_get
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
@@ -22,672 +22,619 @@ paths:
   /api/v1/countries:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Countries
       operationId: read_countries_api_v1_countries_get
       parameters:
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CountryListResponse"
-        "422":
+                $ref: '#/components/schemas/CountryListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Country
       operationId: read_country_api_v1_countries__country_id__get
       parameters:
-        - name: country_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Id
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: country_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CountryResponse"
-        "422":
+                $ref: '#/components/schemas/CountryResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}/profile:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Country Profile
       operationId: read_country_profile_api_v1_countries__country_id__profile_get
       parameters:
-        - name: country_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Id
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: country_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CountryProfileResponse"
-        "422":
+                $ref: '#/components/schemas/CountryProfileResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}/scores:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Country Scores
       operationId: read_country_scores_api_v1_countries__country_id__scores_get
       parameters:
-        - name: country_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Id
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: country_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CountryScoreListResponse"
-        "422":
+                $ref: '#/components/schemas/CountryScoreListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_slug}/card:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Country Card
       operationId: read_country_card_api_v1_countries__country_slug__card_get
       parameters:
-        - name: country_slug
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Slug
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CountryCardResponse"
-        "422":
+                $ref: '#/components/schemas/CountryCardResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_slug}/sources:
     get:
       tags:
-        - countries
+      - countries
       summary: Read Country Sources
       operationId: read_country_sources_api_v1_countries__country_slug__sources_get
       parameters:
-        - name: country_slug
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Slug
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SourceListWithLocaleResponse"
-        "422":
+                $ref: '#/components/schemas/SourceListWithLocaleResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}/legal-signals:
     get:
       tags:
-        - legal_signals
+      - legal_signals
       summary: Read Country Legal Signals
       operationId: read_country_legal_signals_api_v1_countries__country_id__legal_signals_get
       parameters:
-        - name: country_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Country Id
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: country_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LegalSignalListResponse"
-        "422":
+                $ref: '#/components/schemas/LegalSignalListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/legal-signals:
     get:
       tags:
-        - legal_signals
+      - legal_signals
       summary: Read Legal Signals
       operationId: read_legal_signals_api_v1_legal_signals_get
       parameters:
-        - name: country_slug
-          in: query
-          required: false
-          schema:
-            anyOf:
-              - type: string
-              - type: "null"
-            title: Country Slug
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LegalSignalDetailListResponse"
-        "422":
+                $ref: '#/components/schemas/LegalSignalDetailListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/legal-signals/{signal_id}:
     get:
       tags:
-        - legal_signals
+      - legal_signals
       summary: Read Legal Signal
       operationId: read_legal_signal_api_v1_legal_signals__signal_id__get
       parameters:
-        - name: signal_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Signal Id
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Signal Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LegalSignalDetailResponse"
-        "422":
+                $ref: '#/components/schemas/LegalSignalDetailResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/legal-signals/{signal_id}/evidence:
     get:
       tags:
-        - legal_signals
+      - legal_signals
       summary: Read Legal Signal Evidence
       operationId: read_legal_signal_evidence_api_v1_legal_signals__signal_id__evidence_get
       parameters:
-        - name: signal_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Signal Id
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Signal Id
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EvidenceListResponse"
-        "422":
+                $ref: '#/components/schemas/EvidenceListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/scenarios:
     get:
       tags:
-        - scenarios
+      - scenarios
       summary: Read Scenarios
       operationId: read_scenarios_api_v1_scenarios_get
       parameters:
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ScenarioListResponse"
-        "422":
+                $ref: '#/components/schemas/ScenarioListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/scenario-runs:
     post:
       tags:
-        - scenarios
+      - scenarios
       summary: Create Scenario Run
       operationId: create_scenario_run_api_v1_scenario_runs_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ScenarioRunInput"
+              $ref: '#/components/schemas/ScenarioRunInput'
         required: true
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ScenarioRunResult"
-        "422":
+                $ref: '#/components/schemas/ScenarioRunResult'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/scenarios/{slug}:
     get:
       tags:
-        - scenarios
+      - scenarios
       summary: Read Scenario Detail
       operationId: read_scenario_detail_api_v1_scenarios__slug__get
       parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Slug
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DecisionScenario"
-        "422":
+                $ref: '#/components/schemas/DecisionScenarioResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/scenarios/{slug}/countries:
     get:
       tags:
-        - scenarios
+      - scenarios
       summary: Read Scenario Countries
       operationId: read_scenario_countries_api_v1_scenarios__slug__countries_get
       parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Slug
-        - name: locale
-          in: query
-          required: false
-          schema:
-            enum:
-              - en
-              - ru
-            type: string
-            default: en
-            title: Locale
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocaleCode'
+          default: en
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/DecisionCountryScore"
-                title:
-                  Response Read Scenario Countries Api V1 Scenarios  Slug  Countries
-                  Get
-        "422":
+                $ref: '#/components/schemas/DecisionCountryScoreListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/sources:
     get:
       tags:
-        - sources
+      - sources
       summary: Read Sources
       operationId: read_sources_api_v1_sources_get
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SourceListResponse"
-        "422":
+                $ref: '#/components/schemas/SourceListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/evidence-items:
     get:
       tags:
-        - sources
+      - sources
       summary: Read Evidence Items
       operationId: read_evidence_items_api_v1_evidence_items_get
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EvidenceItemListResponse"
-        "422":
+                $ref: '#/components/schemas/EvidenceItemListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/sources/{source_id}:
     get:
       tags:
-        - sources
+      - sources
       summary: Read Source
       operationId: read_source_api_v1_sources__source_id__get
       parameters:
-        - name: source_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Source Id
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Id
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
@@ -695,182 +642,182 @@ paths:
                 type: object
                 additionalProperties: true
                 title: Response Read Source Api V1 Sources  Source Id  Get
-        "422":
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/sources/{source_id}/evidence:
     get:
       tags:
-        - sources
+      - sources
       summary: Read Source Evidence
       operationId: read_source_evidence_api_v1_sources__source_id__evidence_get
       parameters:
-        - name: source_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Source Id
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EvidenceItemListResponse"
-        "422":
+                $ref: '#/components/schemas/EvidenceItemListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/translations:
     get:
       tags:
-        - translations
+      - translations
       summary: Read Translations
       operationId: read_translations_api_v1_translations_get
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TranslationListResponse"
-        "422":
+                $ref: '#/components/schemas/TranslationListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/admin/legal-signals:
     post:
       tags:
-        - admin
+      - admin
       summary: Admin Create Legal Signal
       operationId: admin_create_legal_signal_api_v1_admin_legal_signals_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LegalSignalCreate"
+              $ref: '#/components/schemas/LegalSignalCreate'
         required: true
       responses:
-        "201":
+        '201':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LegalSignalResponse"
-        "422":
+                $ref: '#/components/schemas/LegalSignalResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/admin/translations/jobs:
     post:
       tags:
-        - admin
+      - admin
       summary: Admin Create Translation Job
       operationId: admin_create_translation_job_api_v1_admin_translations_jobs_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TranslationJobCreate"
+              $ref: '#/components/schemas/TranslationJobCreate'
         required: true
       responses:
-        "201":
+        '201':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TranslationJobResponse"
-        "422":
+                $ref: '#/components/schemas/TranslationJobResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/user-stories:
     get:
       tags:
-        - user_stories
+      - user_stories
       summary: Read User Stories
       operationId: read_user_stories_api_v1_user_stories_get
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            minimum: 1
-            default: 50
-            title: Limit
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-            title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserStoryListResponse"
-        "422":
+                $ref: '#/components/schemas/UserStoryListResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
     post:
       tags:
-        - user_stories
+      - user_stories
       summary: Create User Story
       operationId: create_user_story_api_v1_user_stories_post
       requestBody:
@@ -878,96 +825,96 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserStoryCreate"
+              $ref: '#/components/schemas/UserStoryCreate'
       responses:
-        "201":
+        '201':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserStoryResponse"
-        "422":
+                $ref: '#/components/schemas/UserStoryResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/user-stories/{story_id}:
     get:
       tags:
-        - user_stories
+      - user_stories
       summary: Read User Story
       operationId: read_user_story_api_v1_user_stories__story_id__get
       parameters:
-        - name: story_id
-          in: path
-          required: true
-          schema:
-            type: string
-            title: Story Id
+      - name: story_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Story Id
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserStoryResponse"
-        "422":
+                $ref: '#/components/schemas/UserStoryResponse'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/decision/compare:
     post:
       tags:
-        - decision
+      - decision
       summary: Compare Countries
       operationId: compare_countries_api_v1_decision_compare_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DecisionCompareInput"
+              $ref: '#/components/schemas/DecisionCompareInput'
         required: true
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DecisionCompareResult"
-        "422":
+                $ref: '#/components/schemas/DecisionCompareResult'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/decision/run:
     post:
       tags:
-        - decision
+      - decision
       summary: Run Decision
       operationId: run_decision_api_v1_decision_run_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DecisionRunInput"
+              $ref: '#/components/schemas/DecisionRunInput'
         required: true
       responses:
-        "200":
+        '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DecisionRunResult"
-        "422":
+                $ref: '#/components/schemas/DecisionRunResult'
+        '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
     Country:
@@ -990,28 +937,28 @@ components:
           title: Name
         official_name:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Official Name
         region:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Region
         subregion:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Subregion
         capital:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Capital
         currency_code:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Currency Code
         is_active:
           type: boolean
@@ -1026,14 +973,14 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - slug
-        - iso2
-        - iso3
-        - name
-        - is_active
-        - created_at
-        - updated_at
+      - id
+      - slug
+      - iso2
+      - iso3
+      - name
+      - is_active
+      - created_at
+      - updated_at
       title: Country
     CountryCard:
       properties:
@@ -1088,49 +1035,49 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_id
-        - locale
-        - executive_summary
-        - migration_overview
-        - tax_overview
-        - cost_of_living_overview
-        - business_overview
-        - safety_overview
-        - legal_signals_summary
-        - risk_summary
-        - source_summary
-        - status
-        - created_at
-        - updated_at
+      - id
+      - country_id
+      - locale
+      - executive_summary
+      - migration_overview
+      - tax_overview
+      - cost_of_living_overview
+      - business_overview
+      - safety_overview
+      - legal_signals_summary
+      - risk_summary
+      - source_summary
+      - status
+      - created_at
+      - updated_at
       title: CountryCard
     CountryCardResponse:
       properties:
         item:
-          $ref: "#/components/schemas/CountryCard"
+          $ref: '#/components/schemas/CountryCard'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - item
-        - locale
+      - item
+      - locale
       title: CountryCardResponse
     CountryListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/Country"
+            $ref: '#/components/schemas/Country'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: CountryListResponse
     CountryProfile:
       properties:
@@ -1147,33 +1094,33 @@ components:
           title: Summary
         residence_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Residence Overview
         citizenship_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Citizenship Overview
         tax_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Tax Overview
         business_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Business Overview
         quality_of_life_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Quality Of Life Overview
         risk_overview:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Risk Overview
         created_at:
           type: string
@@ -1185,33 +1132,33 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_id
-        - summary
-        - created_at
-        - updated_at
+      - id
+      - country_id
+      - summary
+      - created_at
+      - updated_at
       title: CountryProfile
     CountryProfileResponse:
       properties:
         item:
-          $ref: "#/components/schemas/CountryProfile"
+          $ref: '#/components/schemas/CountryProfile'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - item
-        - locale
+      - item
+      - locale
       title: CountryProfileResponse
     CountryResponse:
       properties:
         item:
-          $ref: "#/components/schemas/Country"
+          $ref: '#/components/schemas/Country'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - item
-        - locale
+      - item
+      - locale
       title: CountryResponse
     CountryScore:
       properties:
@@ -1241,9 +1188,11 @@ components:
           title: Score Label
         summary:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Summary
+        translation_status:
+          $ref: '#/components/schemas/TranslationStatus'
         created_at:
           type: string
           format: date-time
@@ -1254,15 +1203,16 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_id
-        - scenario_id
-        - scenario_slug
-        - scenario_name
-        - score
-        - score_label
-        - created_at
-        - updated_at
+      - id
+      - country_id
+      - scenario_id
+      - scenario_slug
+      - scenario_name
+      - score
+      - score_label
+      - translation_status
+      - created_at
+      - updated_at
       title: CountryScore
     CountryScoreBreakdown:
       properties:
@@ -1286,6 +1236,9 @@ components:
         weighted_score:
           type: number
           title: Weighted Score
+        explanation:
+          type: string
+          title: Explanation
         explanation_en:
           type: string
           title: Explanation En
@@ -1300,10 +1253,13 @@ components:
         confidence:
           type: string
           enum:
-            - high
-            - medium
-            - low
+          - high
+          - medium
+          - low
           title: Confidence
+        translation_status:
+          $ref: '#/components/schemas/TranslationStatus'
+          default: not_applicable
         created_at:
           type: string
           format: date-time
@@ -1314,35 +1270,36 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_score_id
-        - criterion
-        - score
-        - weight
-        - weighted_score
-        - explanation_en
-        - explanation_ru
-        - source_ids
-        - confidence
-        - created_at
-        - updated_at
+      - id
+      - country_score_id
+      - criterion
+      - score
+      - weight
+      - weighted_score
+      - explanation
+      - explanation_en
+      - explanation_ru
+      - source_ids
+      - confidence
+      - created_at
+      - updated_at
       title: CountryScoreBreakdown
     CountryScoreListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/CountryScore"
+            $ref: '#/components/schemas/CountryScore'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: CountryScoreListResponse
     DecisionCompareInput:
       properties:
@@ -1356,44 +1313,40 @@ components:
           minItems: 2
           title: Country Slugs
         locale:
-          type: string
-          enum:
-            - en
-            - ru
-          title: Locale
+          $ref: '#/components/schemas/LocaleCode'
           default: en
       type: object
       required:
-        - scenario_slug
-        - country_slugs
+      - scenario_slug
+      - country_slugs
       title: DecisionCompareInput
     DecisionCompareResult:
       properties:
         scenario:
-          $ref: "#/components/schemas/DecisionScenario"
+          $ref: '#/components/schemas/DecisionScenario'
         countries:
           items:
-            $ref: "#/components/schemas/DecisionCountryScore"
+            $ref: '#/components/schemas/DecisionCountryScore'
           type: array
           title: Countries
         recommended_country:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Recommended Country
         recommendation_type:
           type: string
           enum:
-            - winner
-            - tie
-            - low_confidence
+          - winner
+          - tie
+          - low_confidence
           title: Recommendation Type
         confidence:
           type: string
           enum:
-            - high
-            - medium
-            - low
+          - high
+          - medium
+          - low
           title: Confidence
         explanation:
           type: string
@@ -1402,17 +1355,17 @@ components:
           type: string
           title: Caveat
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - scenario
-        - countries
-        - recommended_country
-        - recommendation_type
-        - confidence
-        - explanation
-        - caveat
-        - locale
+      - scenario
+      - countries
+      - recommended_country
+      - recommendation_type
+      - confidence
+      - explanation
+      - caveat
+      - locale
       title: DecisionCompareResult
     DecisionCountryScore:
       properties:
@@ -1449,44 +1402,61 @@ components:
         confidence:
           type: string
           enum:
-            - high
-            - medium
-            - low
+          - high
+          - medium
+          - low
           title: Confidence
         calculated_at:
           type: string
           format: date-time
           title: Calculated At
+        translation_status:
+          $ref: '#/components/schemas/TranslationStatus'
         breakdowns:
           items:
-            $ref: "#/components/schemas/CountryScoreBreakdown"
+            $ref: '#/components/schemas/CountryScoreBreakdown'
           type: array
           title: Breakdowns
         source_references:
           items:
-            $ref: "#/components/schemas/Source"
+            $ref: '#/components/schemas/Source'
           type: array
           title: Source References
           default: []
       type: object
       required:
-        - id
-        - country_id
-        - country_slug
-        - country_name
-        - scenario_id
-        - scenario_slug
-        - scenario_name
-        - score
-        - explanation
-        - confidence
-        - calculated_at
-        - breakdowns
+      - id
+      - country_id
+      - country_slug
+      - country_name
+      - scenario_id
+      - scenario_slug
+      - scenario_name
+      - score
+      - explanation
+      - confidence
+      - calculated_at
+      - translation_status
+      - breakdowns
       title: DecisionCountryScore
+    DecisionCountryScoreListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DecisionCountryScore'
+          type: array
+          title: Items
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - items
+      - locale
+      title: DecisionCountryScoreListResponse
     DecisionRunCountry:
       properties:
         country:
-          $ref: "#/components/schemas/DecisionCountryScore"
+          $ref: '#/components/schemas/DecisionCountryScore'
         rank:
           type: integer
           title: Rank
@@ -1503,16 +1473,16 @@ components:
           title: Key Legal Signals
         source_references:
           items:
-            $ref: "#/components/schemas/Source"
+            $ref: '#/components/schemas/Source'
           type: array
           title: Source References
       type: object
       required:
-        - country
-        - rank
-        - risks
-        - key_legal_signals
-        - source_references
+      - country
+      - rank
+      - risks
+      - key_legal_signals
+      - source_references
       title: DecisionRunCountry
     DecisionRunInput:
       properties:
@@ -1521,8 +1491,8 @@ components:
           title: Scenario Slug
         origin_country_slug:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Origin Country Slug
         candidate_country_slugs:
           items:
@@ -1531,42 +1501,38 @@ components:
           minItems: 1
           title: Candidate Country Slugs
         locale:
-          type: string
-          enum:
-            - en
-            - ru
-          title: Locale
+          $ref: '#/components/schemas/LocaleCode'
           default: en
       type: object
       required:
-        - scenario_slug
-        - candidate_country_slugs
+      - scenario_slug
+      - candidate_country_slugs
       title: DecisionRunInput
     DecisionRunResult:
       properties:
         scenario:
-          $ref: "#/components/schemas/DecisionScenario"
+          $ref: '#/components/schemas/DecisionScenario'
         origin_country_slug:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Origin Country Slug
         ranked_candidates:
           items:
-            $ref: "#/components/schemas/DecisionRunCountry"
+            $ref: '#/components/schemas/DecisionRunCountry'
           type: array
           title: Ranked Candidates
         recommended_country:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Recommended Country
         confidence:
           type: string
           enum:
-            - high
-            - medium
-            - low
+          - high
+          - medium
+          - low
           title: Confidence
         explanation:
           type: string
@@ -1575,17 +1541,17 @@ components:
           type: string
           title: Caveat
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - scenario
-        - origin_country_slug
-        - ranked_candidates
-        - recommended_country
-        - confidence
-        - explanation
-        - caveat
-        - locale
+      - scenario
+      - origin_country_slug
+      - ranked_candidates
+      - recommended_country
+      - confidence
+      - explanation
+      - caveat
+      - locale
       title: DecisionRunResult
     DecisionScenario:
       properties:
@@ -1609,12 +1575,23 @@ components:
           title: Weights
       type: object
       required:
-        - id
-        - slug
-        - title
-        - description
-        - weights
+      - id
+      - slug
+      - title
+      - description
+      - weights
       title: DecisionScenario
+    DecisionScenarioResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/DecisionScenario'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - item
+      - locale
+      title: DecisionScenarioResponse
     EvidenceItem:
       properties:
         id:
@@ -1627,9 +1604,9 @@ components:
           title: Source Id
         country_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Country Id
         title:
           type: string
@@ -1639,13 +1616,13 @@ components:
           title: Summary
         url:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Url
         quote:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Quote
         evidence_type:
           type: string
@@ -1655,9 +1632,9 @@ components:
           title: Confidence Level
         published_at:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Published At
         created_at:
           type: string
@@ -1669,48 +1646,48 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - source_id
-        - title
-        - summary
-        - evidence_type
-        - confidence_level
-        - created_at
-        - updated_at
+      - id
+      - source_id
+      - title
+      - summary
+      - evidence_type
+      - confidence_level
+      - created_at
+      - updated_at
       title: EvidenceItem
     EvidenceItemListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/EvidenceItem"
+            $ref: '#/components/schemas/EvidenceItem'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
       type: object
       required:
-        - items
-        - pagination
+      - items
+      - pagination
       title: EvidenceItemListResponse
     EvidenceListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/EvidenceItem"
+            $ref: '#/components/schemas/EvidenceItem'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
       type: object
       required:
-        - items
-        - pagination
+      - items
+      - pagination
       title: EvidenceListResponse
     HTTPValidationError:
       properties:
         detail:
           items:
-            $ref: "#/components/schemas/ValidationError"
+            $ref: '#/components/schemas/ValidationError'
           type: array
           title: Detail
       type: object
@@ -1734,60 +1711,60 @@ components:
         signal_type:
           type: string
           enum:
-            - law
-            - bill
-            - policy
-            - court_decision
-            - administrative_change
-            - political_signal
-            - other
+          - law
+          - bill
+          - policy
+          - court_decision
+          - administrative_change
+          - political_signal
+          - other
           title: Signal Type
         sentiment:
           type: string
           enum:
-            - positive
-            - neutral
-            - negative
-            - mixed
-            - unknown
+          - positive
+          - neutral
+          - negative
+          - mixed
+          - unknown
           title: Sentiment
         severity:
           type: string
           enum:
-            - low
-            - medium
-            - high
-            - critical
+          - low
+          - medium
+          - high
+          - critical
           title: Severity
         status:
           type: string
           enum:
-            - draft
-            - proposed
-            - adopted
-            - rejected
-            - active
-            - expired
-            - unknown
+          - draft
+          - proposed
+          - adopted
+          - rejected
+          - active
+          - expired
+          - unknown
           title: Status
         confidence_level:
           type: string
           enum:
-            - low
-            - medium
-            - high
+          - low
+          - medium
+          - high
           title: Confidence Level
         effective_date:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Effective Date
         published_at:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Published At
         created_at:
           type: string
@@ -1799,17 +1776,17 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_id
-        - title
-        - summary
-        - signal_type
-        - sentiment
-        - severity
-        - status
-        - confidence_level
-        - created_at
-        - updated_at
+      - id
+      - country_id
+      - title
+      - summary
+      - signal_type
+      - sentiment
+      - severity
+      - status
+      - confidence_level
+      - created_at
+      - updated_at
       title: LegalSignal
     LegalSignalCreate:
       properties:
@@ -1826,71 +1803,71 @@ components:
         signal_type:
           type: string
           enum:
-            - law
-            - bill
-            - policy
-            - court_decision
-            - administrative_change
-            - political_signal
-            - other
+          - law
+          - bill
+          - policy
+          - court_decision
+          - administrative_change
+          - political_signal
+          - other
           title: Signal Type
         sentiment:
           type: string
           enum:
-            - positive
-            - neutral
-            - negative
-            - mixed
-            - unknown
+          - positive
+          - neutral
+          - negative
+          - mixed
+          - unknown
           title: Sentiment
           default: unknown
         severity:
           type: string
           enum:
-            - low
-            - medium
-            - high
-            - critical
+          - low
+          - medium
+          - high
+          - critical
           title: Severity
           default: low
         status:
           type: string
           enum:
-            - draft
-            - proposed
-            - adopted
-            - rejected
-            - active
-            - expired
-            - unknown
+          - draft
+          - proposed
+          - adopted
+          - rejected
+          - active
+          - expired
+          - unknown
           title: Status
           default: draft
         confidence_level:
           type: string
           enum:
-            - low
-            - medium
-            - high
+          - low
+          - medium
+          - high
           title: Confidence Level
           default: low
         effective_date:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Effective Date
         published_at:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Published At
       type: object
       required:
-        - country_id
-        - title
-        - summary
-        - signal_type
+      - country_id
+      - title
+      - summary
+      - signal_type
       title: LegalSignalCreate
     LegalSignalDetail:
       properties:
@@ -1924,21 +1901,21 @@ components:
           title: Affected Groups
         published_date:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Published Date
         effective_date:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Effective Date
         source_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Source Id
         confidence:
           type: string
@@ -1956,92 +1933,91 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - country_id
-        - title
-        - summary
-        - signal_type
-        - impact_direction
-        - impact_level
-        - affected_groups
-        - confidence
-        - status
-        - created_at
-        - updated_at
+      - id
+      - country_id
+      - title
+      - summary
+      - signal_type
+      - impact_direction
+      - impact_level
+      - affected_groups
+      - confidence
+      - status
+      - created_at
+      - updated_at
       title: LegalSignalDetail
     LegalSignalDetailListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/LegalSignalDetail"
+            $ref: '#/components/schemas/LegalSignalDetail'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: LegalSignalDetailListResponse
     LegalSignalDetailResponse:
       properties:
         item:
-          $ref: "#/components/schemas/LegalSignalDetail"
+          $ref: '#/components/schemas/LegalSignalDetail'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - item
-        - locale
+      - item
+      - locale
       title: LegalSignalDetailResponse
     LegalSignalListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/LegalSignal"
+            $ref: '#/components/schemas/LegalSignal'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: LegalSignalListResponse
     LegalSignalResponse:
       properties:
         item:
-          $ref: "#/components/schemas/LegalSignal"
+          $ref: '#/components/schemas/LegalSignal'
       type: object
       required:
-        - item
+      - item
       title: LegalSignalResponse
+    LocaleCode:
+      type: string
+      enum:
+      - en
+      - ru
+      title: LocaleCode
     LocaleResolution:
       properties:
         requested_locale:
-          type: string
-          title: Requested Locale
+          $ref: '#/components/schemas/LocaleCode'
         resolved_locale:
-          type: string
-          title: Resolved Locale
+          $ref: '#/components/schemas/LocaleCode'
         translation_status:
-          type: string
-          enum:
-            - source
-            - translated
-            - missing
-          title: Translation Status
+          $ref: '#/components/schemas/TranslationStatus'
       type: object
       required:
-        - requested_locale
-        - resolved_locale
-        - translation_status
+      - requested_locale
+      - resolved_locale
+      - translation_status
       title: LocaleResolution
     Pagination:
       properties:
@@ -2060,9 +2036,9 @@ components:
           title: Total
       type: object
       required:
-        - limit
-        - offset
-        - total
+      - limit
+      - offset
+      - total
       title: Pagination
     Scenario:
       properties:
@@ -2078,8 +2054,8 @@ components:
           title: Name
         description:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Description
         is_active:
           type: boolean
@@ -2094,18 +2070,18 @@ components:
           title: Updated At
         criteria:
           items:
-            $ref: "#/components/schemas/ScenarioCriterion"
+            $ref: '#/components/schemas/ScenarioCriterion'
           type: array
           title: Criteria
           default: []
       type: object
       required:
-        - id
-        - slug
-        - name
-        - is_active
-        - created_at
-        - updated_at
+      - id
+      - slug
+      - name
+      - is_active
+      - created_at
+      - updated_at
       title: Scenario
     ScenarioCriterion:
       properties:
@@ -2139,31 +2115,31 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - scenario_id
-        - key
-        - label
-        - weight
-        - is_required
-        - created_at
-        - updated_at
+      - id
+      - scenario_id
+      - key
+      - label
+      - weight
+      - is_required
+      - created_at
+      - updated_at
       title: ScenarioCriterion
     ScenarioListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/Scenario"
+            $ref: '#/components/schemas/Scenario'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: ScenarioListResponse
     ScenarioRunCountryResult:
       properties:
@@ -2182,15 +2158,15 @@ components:
           title: Score Label
         summary:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Summary
       type: object
       required:
-        - country_id
-        - country_slug
-        - score
-        - score_label
+      - country_id
+      - country_slug
+      - score
+      - score_label
       title: ScenarioRunCountryResult
     ScenarioRunInput:
       properties:
@@ -2206,8 +2182,8 @@ components:
           title: Country Ids
       type: object
       required:
-        - scenario_slug
-        - country_ids
+      - scenario_slug
+      - country_ids
       title: ScenarioRunInput
     ScenarioRunResult:
       properties:
@@ -2216,13 +2192,13 @@ components:
           title: Scenario Slug
         results:
           items:
-            $ref: "#/components/schemas/ScenarioRunCountryResult"
+            $ref: '#/components/schemas/ScenarioRunCountryResult'
           type: array
           title: Results
       type: object
       required:
-        - scenario_slug
-        - results
+      - scenario_slug
+      - results
       title: ScenarioRunResult
     Source:
       properties:
@@ -2241,35 +2217,35 @@ components:
           title: Source Type
         publisher:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Publisher
         country_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Country Id
         locale_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Locale Id
         reliability_level:
           type: string
           title: Reliability Level
         published_at:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Published At
         accessed_at:
           anyOf:
-            - type: string
-              format: date
-            - type: "null"
+          - type: string
+            format: date
+          - type: 'null'
           title: Accessed At
         created_at:
           type: string
@@ -2281,44 +2257,44 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - title
-        - url
-        - source_type
-        - reliability_level
-        - created_at
-        - updated_at
+      - id
+      - title
+      - url
+      - source_type
+      - reliability_level
+      - created_at
+      - updated_at
       title: Source
     SourceListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/Source"
+            $ref: '#/components/schemas/Source'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
       type: object
       required:
-        - items
-        - pagination
+      - items
+      - pagination
       title: SourceListResponse
     SourceListWithLocaleResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/Source"
+            $ref: '#/components/schemas/Source'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
         locale:
-          $ref: "#/components/schemas/LocaleResolution"
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
-        - items
-        - pagination
-        - locale
+      - items
+      - pagination
+      - locale
       title: SourceListWithLocaleResponse
     Translation:
       properties:
@@ -2356,15 +2332,15 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - entity_type
-        - entity_id
-        - field_name
-        - locale_id
-        - translated_value
-        - status
-        - created_at
-        - updated_at
+      - id
+      - entity_type
+      - entity_id
+      - field_name
+      - locale_id
+      - translated_value
+      - status
+      - created_at
+      - updated_at
       title: Translation
     TranslationJob:
       properties:
@@ -2381,9 +2357,9 @@ components:
           title: Entity Id
         source_locale_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Source Locale Id
         target_locale_id:
           type: string
@@ -2394,13 +2370,13 @@ components:
           title: Status
         provider:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Provider
         error_message:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Error Message
         created_at:
           type: string
@@ -2412,13 +2388,13 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - entity_type
-        - entity_id
-        - target_locale_id
-        - status
-        - created_at
-        - updated_at
+      - id
+      - entity_type
+      - entity_id
+      - target_locale_id
+      - status
+      - created_at
+      - updated_at
       title: TranslationJob
     TranslationJobCreate:
       properties:
@@ -2438,37 +2414,45 @@ components:
           title: Target Locale Code
         provider:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Provider
       type: object
       required:
-        - entity_type
-        - entity_id
-        - target_locale_code
+      - entity_type
+      - entity_id
+      - target_locale_code
       title: TranslationJobCreate
     TranslationJobResponse:
       properties:
         item:
-          $ref: "#/components/schemas/TranslationJob"
+          $ref: '#/components/schemas/TranslationJob'
       type: object
       required:
-        - item
+      - item
       title: TranslationJobResponse
     TranslationListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/Translation"
+            $ref: '#/components/schemas/Translation'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
       type: object
       required:
-        - items
-        - pagination
+      - items
+      - pagination
       title: TranslationListResponse
+    TranslationStatus:
+      type: string
+      enum:
+      - exact
+      - fallback
+      - missing
+      - not_applicable
+      title: TranslationStatus
     UserStory:
       properties:
         id:
@@ -2477,9 +2461,9 @@ components:
           title: Id
         origin_country_id:
           anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Origin Country Id
         destination_country_id:
           type: string
@@ -2487,33 +2471,33 @@ components:
           title: Destination Country Id
         city:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: City
         year:
           anyOf:
-            - type: integer
-            - type: "null"
+          - type: integer
+          - type: 'null'
           title: Year
         scenario:
           type: string
           title: Scenario
         budget_initial_usd:
           anyOf:
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Budget Initial Usd
         budget_monthly_usd:
           anyOf:
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Budget Monthly Usd
         legal_path:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Legal Path
         documents_used:
           items:
@@ -2522,29 +2506,29 @@ components:
           title: Documents Used
         problems:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Problems
         positive_outcome:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Positive Outcome
         negative_outcome:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Negative Outcome
         advice:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Advice
         satisfaction_score:
           anyOf:
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Satisfaction Score
         verification_status:
           type: string
@@ -2568,62 +2552,62 @@ components:
           title: Updated At
       type: object
       required:
-        - id
-        - destination_country_id
-        - scenario
-        - documents_used
-        - verification_status
-        - status
-        - is_synthetic
-        - notes
-        - created_at
-        - updated_at
+      - id
+      - destination_country_id
+      - scenario
+      - documents_used
+      - verification_status
+      - status
+      - is_synthetic
+      - notes
+      - created_at
+      - updated_at
       title: UserStory
     UserStoryCreate:
       properties:
         origin_country_slug:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Origin Country Slug
         destination_country_slug:
           type: string
           title: Destination Country Slug
         city:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: City
         year:
           anyOf:
-            - type: integer
-              maximum: 2100.0
-              minimum: 1990.0
-            - type: "null"
+          - type: integer
+            maximum: 2100.0
+            minimum: 1990.0
+          - type: 'null'
           title: Year
         scenario:
           type: string
           title: Scenario
         budget_initial_usd:
           anyOf:
-            - type: number
-              minimum: 0.0
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Budget Initial Usd
         budget_monthly_usd:
           anyOf:
-            - type: number
-              minimum: 0.0
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Budget Monthly Usd
         legal_path:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Legal Path
         documents_used:
           items:
@@ -2633,32 +2617,32 @@ components:
           default: []
         problems:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Problems
         positive_outcome:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Positive Outcome
         negative_outcome:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Negative Outcome
         advice:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
           title: Advice
         satisfaction_score:
           anyOf:
-            - type: number
-              maximum: 10.0
-              minimum: 0.0
-            - type: string
-              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-            - type: "null"
+          - type: number
+            maximum: 10.0
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
           title: Satisfaction Score
         is_synthetic:
           type: boolean
@@ -2670,38 +2654,38 @@ components:
           default: Synthetic example for MVP demonstration only.
       type: object
       required:
-        - destination_country_slug
-        - scenario
+      - destination_country_slug
+      - scenario
       title: UserStoryCreate
     UserStoryListResponse:
       properties:
         items:
           items:
-            $ref: "#/components/schemas/UserStory"
+            $ref: '#/components/schemas/UserStory'
           type: array
           title: Items
         pagination:
-          $ref: "#/components/schemas/Pagination"
+          $ref: '#/components/schemas/Pagination'
       type: object
       required:
-        - items
-        - pagination
+      - items
+      - pagination
       title: UserStoryListResponse
     UserStoryResponse:
       properties:
         item:
-          $ref: "#/components/schemas/UserStory"
+          $ref: '#/components/schemas/UserStory'
       type: object
       required:
-        - item
+      - item
       title: UserStoryResponse
     ValidationError:
       properties:
         loc:
           items:
             anyOf:
-              - type: string
-              - type: integer
+            - type: string
+            - type: integer
           type: array
           title: Location
         msg:
@@ -2717,7 +2701,7 @@ components:
           title: Context
       type: object
       required:
-        - loc
-        - msg
-        - type
+      - loc
+      - msg
+      - type
       title: ValidationError

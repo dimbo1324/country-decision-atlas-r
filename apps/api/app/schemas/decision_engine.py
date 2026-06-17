@@ -1,4 +1,9 @@
-from app.schemas.common import LocaleResolution, Pagination
+from app.schemas.common import (
+    LocaleCode,
+    LocaleResolution,
+    Pagination,
+    TranslationStatus,
+)
 from app.schemas.sources import EvidenceItem, Source
 from datetime import date, datetime
 from decimal import Decimal
@@ -37,10 +42,12 @@ class CountryScoreBreakdown(BaseModel):
     score: float
     weight: float
     weighted_score: float
+    explanation: str
     explanation_en: str
     explanation_ru: str
     source_ids: list[str]
     confidence: Literal["high", "medium", "low"]
+    translation_status: TranslationStatus = TranslationStatus.not_applicable
     created_at: datetime
     updated_at: datetime
 
@@ -57,6 +64,7 @@ class DecisionCountryScore(BaseModel):
     explanation: str
     confidence: Literal["high", "medium", "low"]
     calculated_at: datetime
+    translation_status: TranslationStatus
     breakdowns: list[CountryScoreBreakdown]
     source_references: list[Source] = []
 
@@ -69,10 +77,20 @@ class DecisionScenario(BaseModel):
     weights: dict[str, float]
 
 
+class DecisionScenarioResponse(BaseModel):
+    item: DecisionScenario
+    locale: LocaleResolution
+
+
+class DecisionCountryScoreListResponse(BaseModel):
+    items: list[DecisionCountryScore]
+    locale: LocaleResolution
+
+
 class DecisionCompareInput(BaseModel):
     scenario_slug: str
     country_slugs: list[str] = Field(min_length=2)
-    locale: Literal["en", "ru"] = "en"
+    locale: LocaleCode = LocaleCode.en
 
 
 class DecisionCompareResult(BaseModel):
@@ -90,7 +108,7 @@ class DecisionRunInput(BaseModel):
     scenario_slug: str
     origin_country_slug: str | None = None
     candidate_country_slugs: list[str] = Field(min_length=1)
-    locale: Literal["en", "ru"] = "en"
+    locale: LocaleCode = LocaleCode.en
 
 
 class DecisionRunCountry(BaseModel):

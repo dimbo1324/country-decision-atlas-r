@@ -1,4 +1,5 @@
 from app.core.database import fetch_all, fetch_one
+from app.schemas.common import validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -36,6 +37,7 @@ def list_countries(
     limit: int,
     offset: int,
 ) -> list[dict[str, Any]]:
+    requested_locale = validate_locale(locale)
     return fetch_all(
         connection,
         COUNTRY_SELECT
@@ -44,7 +46,7 @@ def list_countries(
         ORDER BY c.name
         LIMIT %s OFFSET %s
         """,
-        (locale, limit, offset),
+        (requested_locale.value, limit, offset),
     )
 
 
@@ -60,13 +62,14 @@ def get_country(
     country_id: str,
     locale: str,
 ) -> dict[str, Any] | None:
+    requested_locale = validate_locale(locale)
     return fetch_one(
         connection,
         COUNTRY_SELECT
         + """
         WHERE c.id::text = %s OR c.slug = %s
         """,
-        (locale, country_id, country_id),
+        (requested_locale.value, country_id, country_id),
     )
 
 

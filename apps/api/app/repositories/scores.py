@@ -1,4 +1,5 @@
 from app.core.database import fetch_all, fetch_one
+from app.schemas.common import localized_column, validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -10,21 +11,33 @@ def list_country_scores(
     limit: int,
     offset: int,
 ) -> list[dict[str, Any]]:
+    requested_locale = validate_locale(locale)
+    scenario_name_column = localized_column(
+        requested_locale, "s.title_en", "s.title_ru"
+    )
+    summary_column = localized_column(
+        requested_locale, "cs.explanation_en", "cs.explanation_ru"
+    )
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             cs.id,
             cs.country_id,
             cs.scenario_id,
             s.slug AS scenario_slug,
-            COALESCE(t_name.translated_value, s.name) AS scenario_name,
+            COALESCE({scenario_name_column}, t_name.translated_value, s.name, '') AS scenario_name,
             cs.score::float AS score,
             cs.score_label,
-            cs.summary,
+            COALESCE({summary_column}, cs.summary, '') AS summary,
             cs.created_at,
             cs.updated_at,
-            t_name.translated_value IS NOT NULL AS is_translated
+            {scenario_name_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
+            CASE
+                WHEN {scenario_name_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
+                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END AS translation_status
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -39,7 +52,7 @@ def list_country_scores(
         ORDER BY s.slug
         LIMIT %s OFFSET %s
         """,
-        (locale, country_id, country_id, limit, offset),
+        (requested_locale.value, country_id, country_id, limit, offset),
     )
 
 
