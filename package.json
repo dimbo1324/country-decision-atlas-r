@@ -9,8 +9,9 @@
     "lint": "pnpm --filter @country-decision-atlas/web lint",
     "typecheck": "pnpm --filter @country-decision-atlas/web typecheck",
     "contracts:generate": "openapi-typescript contracts/openapi.yaml -o packages/contracts/generated/types.ts && prettier --write packages/contracts/generated/types.ts",
-    "format": "prettier --write \"**/*.{css,js,json,jsx,mjs,ts,tsx,yaml,yml}\"",
-    "format:check": "prettier --check \"**/*.{css,js,json,jsx,mjs,ts,tsx,yaml,yml}\""
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build"
   },
   "devDependencies": {
     "openapi-typescript": "^7.4.2",

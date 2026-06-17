@@ -1,11 +1,12 @@
 from functools import lru_cache
-
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
     app_name: str = "Country Decision Atlas"
     app_env: str = "local"
     app_debug: bool = True
@@ -19,11 +20,19 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        return [origin.strip() for origin in self.api_cors_origins.split(",") if origin.strip()]
+        return [
+            origin.strip()
+            for origin in self.api_cors_origins.split(",")
+            if origin.strip()
+        ]
 
     @property
     def supported_locale_codes(self) -> set[str]:
-        return {locale.strip() for locale in self.supported_locales.split(",") if locale.strip()}
+        return {
+            locale.strip()
+            for locale in self.supported_locales.split(",")
+            if locale.strip()
+        }
 
 
 @lru_cache(maxsize=1)

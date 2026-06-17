@@ -1,9 +1,8 @@
-import json
-from typing import Any
-
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.schemas.decision_engine import UserStoryCreate
+import json
 from psycopg import Connection
+from typing import Any
 
 
 def get_country_card(
@@ -65,7 +64,9 @@ def get_country_card(
     )
 
 
-def get_scenario(connection: Connection[Any], slug: str, locale: str) -> dict[str, Any] | None:
+def get_scenario(
+    connection: Connection[Any], slug: str, locale: str
+) -> dict[str, Any] | None:
     title_column = "title_ru" if locale == "ru" else "title_en"
     description_column = "description_ru" if locale == "ru" else "description_en"
     return fetch_one(
@@ -233,7 +234,9 @@ def list_legal_signals(
     title_column = "ls.title_ru" if locale == "ru" else "ls.title_en"
     summary_column = "ls.summary_ru" if locale == "ru" else "ls.summary_en"
     country_filter = "AND c.slug = %s" if country_slug else ""
-    params: tuple[Any, ...] = (country_slug, limit, offset) if country_slug else (limit, offset)
+    params: tuple[Any, ...] = (
+        (country_slug, limit, offset) if country_slug else (limit, offset)
+    )
     return fetch_all(
         connection,
         f"""
@@ -264,7 +267,9 @@ def list_legal_signals(
     )
 
 
-def count_legal_signals(connection: Connection[Any], country_slug: str | None = None) -> int:
+def count_legal_signals(
+    connection: Connection[Any], country_slug: str | None = None
+) -> int:
     if country_slug:
         row = fetch_one(
             connection,
@@ -401,7 +406,9 @@ def count_evidence_for_source(connection: Connection[Any], source_id: str) -> in
     return int(row["total"]) if row else 0
 
 
-def list_user_stories(connection: Connection[Any], limit: int, offset: int) -> list[dict[str, Any]]:
+def list_user_stories(
+    connection: Connection[Any], limit: int, offset: int
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """
@@ -473,7 +480,9 @@ def get_user_story(connection: Connection[Any], story_id: str) -> dict[str, Any]
     )
 
 
-def create_user_story(connection: Connection[Any], payload: UserStoryCreate) -> dict[str, Any]:
+def create_user_story(
+    connection: Connection[Any], payload: UserStoryCreate
+) -> dict[str, Any]:
     return execute_one(
         connection,
         """

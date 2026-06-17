@@ -1,17 +1,28 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends, HTTPException, Query
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.common import build_locale
-from app.repositories.countries import count_countries, get_country, get_profile, list_countries
+from app.repositories.countries import (
+    count_countries,
+    get_country,
+    get_profile,
+    list_countries,
+)
 from app.repositories.scores import count_country_scores, list_country_scores
 from app.schemas.common import LocaleCode, Pagination
-from app.schemas.countries import CountryListResponse, CountryProfileResponse, CountryResponse
-from app.schemas.decision_engine import CountryCardResponse, SourceListWithLocaleResponse
+from app.schemas.countries import (
+    CountryListResponse,
+    CountryProfileResponse,
+    CountryResponse,
+)
+from app.schemas.decision_engine import (
+    CountryCardResponse,
+    SourceListWithLocaleResponse,
+)
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
+from fastapi import APIRouter, Depends, HTTPException, Query
+from psycopg import Connection
+from typing import Annotated, Any
+
 
 router = APIRouter(prefix="/countries", tags=["countries"])
 
@@ -90,4 +101,6 @@ async def read_country_sources(
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> SourceListWithLocaleResponse:
-    return decision_engine.get_country_sources(connection, country_slug, locale, limit, offset)
+    return decision_engine.get_country_sources(
+        connection, country_slug, locale, limit, offset
+    )

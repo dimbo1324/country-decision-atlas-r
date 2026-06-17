@@ -1,12 +1,13 @@
 from pathlib import Path
 from typing import Any, cast
-
 import yaml
 
 
 def load_contract() -> dict[str, Any]:
     contract_path = Path("contracts/openapi.yaml")
-    return cast(dict[str, Any], yaml.safe_load(contract_path.read_text(encoding="utf-8")))
+    return cast(
+        dict[str, Any], yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    )
 
 
 def test_openapi_contract_has_required_paths() -> None:

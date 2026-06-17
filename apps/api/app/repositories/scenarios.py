@@ -1,7 +1,6 @@
-from typing import Any
-
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
+from typing import Any
 
 
 def list_scenarios(
@@ -54,12 +53,16 @@ def list_scenarios(
     )
     criteria_by_scenario: dict[str, list[dict[str, Any]]] = {}
     for criterion in criteria:
-        criteria_by_scenario.setdefault(str(criterion["scenario_id"]), []).append(criterion)
+        criteria_by_scenario.setdefault(str(criterion["scenario_id"]), []).append(
+            criterion
+        )
     for row in rows:
         row["criteria"] = criteria_by_scenario.get(str(row["id"]), [])
     return rows
 
 
 def count_scenarios(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM scenarios WHERE is_active = TRUE")
+    row = fetch_one(
+        connection, "SELECT COUNT(*) AS total FROM scenarios WHERE is_active = TRUE"
+    )
     return int(row["total"]) if row else 0

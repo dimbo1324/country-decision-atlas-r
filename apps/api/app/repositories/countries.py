@@ -1,7 +1,7 @@
-from typing import Any
-
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
+from typing import Any
+
 
 COUNTRY_SELECT = """
 SELECT
@@ -49,7 +49,9 @@ def list_countries(
 
 
 def count_countries(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE")
+    row = fetch_one(
+        connection, "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE"
+    )
     return int(row["total"]) if row else 0
 
 

@@ -1,8 +1,3 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.schemas.decision_engine import (
     DecisionCompareInput,
@@ -11,6 +6,10 @@ from app.schemas.decision_engine import (
     DecisionRunResult,
 )
 from app.services import decision_engine
+from fastapi import APIRouter, Depends
+from psycopg import Connection
+from typing import Annotated, Any
+
 
 router = APIRouter(prefix="/decision", tags=["decision"])
 

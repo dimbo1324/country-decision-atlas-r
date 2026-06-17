@@ -1,8 +1,3 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends, Query
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.common import build_locale
 from app.repositories.scenarios import count_scenarios, list_scenarios
@@ -12,6 +7,10 @@ from app.schemas.countries import ScenarioRunInput, ScenarioRunResult
 from app.schemas.decision_engine import DecisionCountryScore, DecisionScenario
 from app.schemas.scenarios import ScenarioListResponse
 from app.services import decision_engine
+from fastapi import APIRouter, Depends, Query
+from psycopg import Connection
+from typing import Annotated, Any
+
 
 router = APIRouter(tags=["scenarios"])
 

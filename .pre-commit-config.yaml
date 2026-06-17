@@ -1,17 +1,40 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
-      - id: check-added-large-files
-      - id: check-merge-conflict
-      - id: check-toml
-      - id: check-yaml
-      - id: end-of-file-fixer
       - id: trailing-whitespace
+        exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
+      - id: end-of-file-fixer
+        exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
+      - id: check-yaml
+        exclude: ^(docs/|contracts/openapi\.yaml$)
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+        exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.9
+    rev: v0.12.0
     hooks:
-      - id: ruff
-        args: [--fix]
+      - id: ruff-check
+        args: ["--fix"]
+        files: ^apps/(api|worker)/.*\.py$
       - id: ruff-format
+        files: ^apps/(api|worker)/.*\.py$
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        files: \.(js|jsx|ts|tsx|json|yml|yaml|css|scss)$
+        exclude: ^(docs/|README.*|.*\.md$|.*\.txt$|packages/contracts/generated/|contracts/openapi\.yaml$)
+
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.4.0
+    hooks:
+      - id: sqlfluff-fix
+        args: ["--dialect", "postgres"]
+        files: ^database/.*\.sql$

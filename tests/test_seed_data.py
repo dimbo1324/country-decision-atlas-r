@@ -1,9 +1,12 @@
 from pathlib import Path
 
+
 SEED_SQL = Path("database/migrations/004_seed_country_decision_data.sql").read_text(
     encoding="utf-8"
 )
-SCHEMA_SQL = Path("database/migrations/003_country_decision_engine.sql").read_text(encoding="utf-8")
+SCHEMA_SQL = Path("database/migrations/003_country_decision_engine.sql").read_text(
+    encoding="utf-8"
+)
 
 
 def test_seed_contains_required_countries_and_scenarios() -> None:

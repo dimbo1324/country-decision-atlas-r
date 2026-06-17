@@ -1,4 +1,4 @@
-.PHONY: help install dev api worker migrate contracts infra-up infra-down lint format test typecheck
+.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test typecheck quality
 
 help:
 	@echo "Country Decision Atlas"
@@ -15,10 +15,15 @@ help:
 	@echo "  make lint        Run Python and frontend linters"
 	@echo "  make format      Format Python and frontend files"
 	@echo "  make test        Run Python tests"
+	@echo "  make quality     Run full local quality checks"
+	@echo "  make install-hooks Install pre-commit hooks"
 
 install:
 	python -m pip install -e ".[dev]"
 	pnpm install
+
+install-hooks:
+	pre-commit install
 
 dev:
 	@echo "Run 'make infra-up', then run 'make api' and 'pnpm dev' in separate terminals."
@@ -42,17 +47,30 @@ infra-down:
 	docker compose down
 
 lint:
-	python -m ruff check apps packages scripts
+	python -m ruff check apps packages scripts tests
 	pnpm lint
+	python -m sqlfluff lint database --dialect postgres
 
 format:
-	python -m ruff format apps packages scripts
-	python -m ruff check --fix apps packages scripts
+	python -m ruff check apps packages scripts tests --fix
+	python -m ruff format apps packages scripts tests
 	pnpm format
+	python -m sqlfluff fix database --dialect postgres
 
 test:
 	python -m pytest
 
 typecheck:
-	python -m mypy apps packages
+	python -m mypy apps packages scripts tests
 	pnpm typecheck
+
+quality:
+	python -m ruff check apps packages scripts tests
+	python -m ruff format --check apps packages scripts tests
+	python -m mypy apps packages scripts tests
+	python -m pytest
+	pnpm format:check
+	pnpm lint
+	pnpm typecheck
+	pnpm build
+	python -m sqlfluff lint database --dialect postgres

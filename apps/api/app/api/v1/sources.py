@@ -1,8 +1,3 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends, Query
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.sources import (
     count_evidence_items,
@@ -13,6 +8,10 @@ from app.repositories.sources import (
 from app.schemas.common import Pagination
 from app.schemas.sources import EvidenceItemListResponse, SourceListResponse
 from app.services import decision_engine
+from fastapi import APIRouter, Depends, Query
+from psycopg import Connection
+from typing import Annotated, Any
+
 
 router = APIRouter(tags=["sources"])
 

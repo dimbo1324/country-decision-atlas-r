@@ -1,11 +1,14 @@
-from typing import Annotated, Any
-
+from app.core.database import get_connection
+from app.schemas.decision_engine import (
+    UserStoryCreate,
+    UserStoryListResponse,
+    UserStoryResponse,
+)
+from app.services import decision_engine
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
+from typing import Annotated, Any
 
-from app.core.database import get_connection
-from app.schemas.decision_engine import UserStoryCreate, UserStoryListResponse, UserStoryResponse
-from app.services import decision_engine
 
 router = APIRouter(prefix="/user-stories", tags=["user_stories"])
 

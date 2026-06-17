@@ -1,8 +1,7 @@
-from typing import Any
-
 from app.core.database import fetch_one
 from app.schemas.common import LocaleResolution, locale_resolution
 from psycopg import Connection
+from typing import Any
 
 
 def row_has_translation(rows: list[dict[str, Any]]) -> bool:

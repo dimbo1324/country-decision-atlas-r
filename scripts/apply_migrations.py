@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import psycopg
 from typing import Any
 
-import psycopg
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 MIGRATIONS_DIR = ROOT_DIR / "database" / "migrations"
-DEFAULT_DATABASE_URL = "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
+DEFAULT_DATABASE_URL = (
+    "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
+)
 
 
 def migration_files() -> list[Path]:

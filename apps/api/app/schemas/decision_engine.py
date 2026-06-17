@@ -1,11 +1,10 @@
-from datetime import date, datetime
-from decimal import Decimal
-from typing import Any, Literal
-from uuid import UUID
-
 from app.schemas.common import LocaleResolution, Pagination
 from app.schemas.sources import EvidenceItem, Source
+from datetime import date, datetime
+from decimal import Decimal
 from pydantic import BaseModel, Field
+from typing import Any, Literal
+from uuid import UUID
 
 
 class CountryCard(BaseModel):

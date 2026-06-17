@@ -33,7 +33,8 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    command: python -m uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port 8000
+    command:
+      python -m uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port 8000
     environment:
       APP_NAME: ${APP_NAME:-Country Decision Atlas}
       APP_ENV: ${APP_ENV:-local}

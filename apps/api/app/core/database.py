@@ -1,10 +1,10 @@
-from collections.abc import Iterator, Sequence
-from typing import Any, cast
-
 from app.core.config import Settings, get_settings
+from collections.abc import Iterator, Sequence
 from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
+from typing import Any, cast
+
 
 _pool: ConnectionPool[Any] | None = None
 

@@ -1,9 +1,9 @@
+from app.schemas.common import LocaleResolution, Pagination
 from datetime import date, datetime
+from pydantic import BaseModel
 from typing import Literal
 from uuid import UUID
 
-from app.schemas.common import LocaleResolution, Pagination
-from pydantic import BaseModel
 
 SignalType = Literal[
     "law",
@@ -16,7 +16,9 @@ SignalType = Literal[
 ]
 Sentiment = Literal["positive", "neutral", "negative", "mixed", "unknown"]
 Severity = Literal["low", "medium", "high", "critical"]
-SignalStatus = Literal["draft", "proposed", "adopted", "rejected", "active", "expired", "unknown"]
+SignalStatus = Literal[
+    "draft", "proposed", "adopted", "rejected", "active", "expired", "unknown"
+]
 ConfidenceLevel = Literal["low", "medium", "high"]
 
 

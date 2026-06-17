@@ -1,7 +1,3 @@
-from typing import Any
-
-from psycopg import Connection
-
 from app.repositories import decision_engine as repository
 from app.schemas.common import LocaleResolution, Pagination, locale_resolution
 from app.schemas.decision_engine import (
@@ -21,6 +17,9 @@ from app.schemas.decision_engine import (
     UserStoryResponse,
 )
 from app.schemas.sources import EvidenceItemListResponse
+from psycopg import Connection
+from typing import Any
+
 
 CAVEAT = (
     "This MVP decision output is not legal, tax, immigration, investment, or safety advice. "
@@ -78,9 +77,15 @@ def list_legal_signals(
     limit: int,
     offset: int,
 ) -> tuple[list[dict[str, Any]], Pagination, LocaleResolution]:
-    rows = repository.list_legal_signals(connection, locale, country_slug, limit, offset)
+    rows = repository.list_legal_signals(
+        connection, locale, country_slug, limit, offset
+    )
     total = repository.count_legal_signals(connection, country_slug)
-    return rows, Pagination(limit=limit, offset=offset, total=total), _locale(rows, locale)
+    return (
+        rows,
+        Pagination(limit=limit, offset=offset, total=total),
+        _locale(rows, locale),
+    )
 
 
 def get_legal_signal(
@@ -92,7 +97,9 @@ def get_legal_signal(
     return LegalSignalDetailResponse(item=row, locale=_locale([row], locale))
 
 
-def get_legal_signal_evidence(connection: Connection[Any], signal_id: str) -> EvidenceListResponse:
+def get_legal_signal_evidence(
+    connection: Connection[Any], signal_id: str
+) -> EvidenceListResponse:
     rows = repository.list_evidence_for_legal_signal(connection, signal_id)
     return EvidenceListResponse(
         items=rows,
@@ -136,7 +143,9 @@ def get_user_story(connection: Connection[Any], story_id: str) -> UserStoryRespo
     return UserStoryResponse(item=row)
 
 
-def create_user_story(connection: Connection[Any], payload: UserStoryCreate) -> UserStoryResponse:
+def create_user_story(
+    connection: Connection[Any], payload: UserStoryCreate
+) -> UserStoryResponse:
     row = repository.create_user_story(connection, payload)
     connection.commit()
     return UserStoryResponse(item=row)
@@ -146,13 +155,17 @@ def compare_countries(
     connection: Connection[Any], payload: DecisionCompareInput
 ) -> DecisionCompareResult:
     scenario_row = get_scenario(connection, payload.scenario_slug, payload.locale)
-    rows = repository.list_scenario_countries(connection, payload.scenario_slug, payload.locale)
+    rows = repository.list_scenario_countries(
+        connection, payload.scenario_slug, payload.locale
+    )
     rows = [row for row in rows if row["country_slug"] in payload.country_slugs]
     countries = _attach_breakdowns_and_sources(connection, rows)
     if len(countries) != len(set(payload.country_slugs)):
         raise LookupError("One or more country scores were not found")
     recommendation_type, recommended_country, confidence = _recommend(countries)
-    explanation = _compare_explanation(countries, recommended_country, recommendation_type)
+    explanation = _compare_explanation(
+        countries, recommended_country, recommendation_type
+    )
     return DecisionCompareResult(
         scenario=_scenario_model(scenario_row),
         countries=countries,
@@ -165,10 +178,16 @@ def compare_countries(
     )
 
 
-def run_decision(connection: Connection[Any], payload: DecisionRunInput) -> DecisionRunResult:
+def run_decision(
+    connection: Connection[Any], payload: DecisionRunInput
+) -> DecisionRunResult:
     scenario_row = get_scenario(connection, payload.scenario_slug, payload.locale)
-    rows = repository.list_scenario_countries(connection, payload.scenario_slug, payload.locale)
-    rows = [row for row in rows if row["country_slug"] in payload.candidate_country_slugs]
+    rows = repository.list_scenario_countries(
+        connection, payload.scenario_slug, payload.locale
+    )
+    rows = [
+        row for row in rows if row["country_slug"] in payload.candidate_country_slugs
+    ]
     countries = _attach_breakdowns_and_sources(connection, rows)
     if not countries:
         raise LookupError("Candidate country scores were not found")
@@ -192,7 +211,9 @@ def run_decision(connection: Connection[Any], payload: DecisionRunInput) -> Deci
         ranked_candidates=ranked,
         recommended_country=recommended_country,
         confidence=confidence,
-        explanation=_compare_explanation(countries, recommended_country, recommendation_type),
+        explanation=_compare_explanation(
+            countries, recommended_country, recommendation_type
+        ),
         caveat=CAVEAT,
         locale=_locale([scenario_row], payload.locale),
     )
@@ -208,7 +229,9 @@ def _attach_breakdowns_and_sources(
     )
     breakdowns_by_score: dict[str, list[dict[str, Any]]] = {}
     for breakdown in breakdown_rows:
-        breakdowns_by_score.setdefault(str(breakdown["country_score_id"]), []).append(breakdown)
+        breakdowns_by_score.setdefault(str(breakdown["country_score_id"]), []).append(
+            breakdown
+        )
     sources_by_country: dict[str, list[dict[str, Any]]] = {}
     for source in source_rows:
         for row in rows:
@@ -247,7 +270,9 @@ def _recommend(
 
 
 def _compare_explanation(
-    countries: list[DecisionCountryScore], recommended_country: str | None, recommendation_type: str
+    countries: list[DecisionCountryScore],
+    recommended_country: str | None,
+    recommendation_type: str,
 ) -> str:
     ordered = sorted(countries, key=lambda item: item.score, reverse=True)
     if recommendation_type == "tie" or recommended_country is None:
@@ -261,5 +286,7 @@ def _compare_explanation(
 def _risks_for_country(country: DecisionCountryScore) -> list[str]:
     weak = [item.criterion for item in country.breakdowns if item.score < 50]
     if not weak:
-        return ["No low-scoring criteria in the MVP breakdown; expert review is still required."]
+        return [
+            "No low-scoring criteria in the MVP breakdown; expert review is still required."
+        ]
     return [f"Low or uncertain criterion: {criterion}" for criterion in weak[:4]]

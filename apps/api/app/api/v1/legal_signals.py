@@ -1,8 +1,3 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends, Query
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.common import build_locale
 from app.repositories.legal_signals import count_legal_signals, list_legal_signals
@@ -14,8 +9,14 @@ from app.schemas.decision_engine import (
 )
 from app.schemas.legal_signals import LegalSignalListResponse
 from app.services import decision_engine
+from fastapi import APIRouter, Depends, Query
+from psycopg import Connection
+from typing import Annotated, Any
 
-router = APIRouter(prefix="/countries/{country_id}/legal-signals", tags=["legal_signals"])
+
+router = APIRouter(
+    prefix="/countries/{country_id}/legal-signals", tags=["legal_signals"]
+)
 
 
 @router.get("", response_model=LegalSignalListResponse)
@@ -49,7 +50,9 @@ async def read_legal_signals(
     rows, pagination, locale_meta = decision_engine.list_legal_signals(
         connection, locale, country_slug, limit, offset
     )
-    return LegalSignalDetailListResponse(items=rows, pagination=pagination, locale=locale_meta)
+    return LegalSignalDetailListResponse(
+        items=rows, pagination=pagination, locale=locale_meta
+    )
 
 
 @top_level_router.get("/{signal_id}", response_model=LegalSignalDetailResponse)

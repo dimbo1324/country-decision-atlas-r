@@ -1,8 +1,7 @@
-from typing import Any
-
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
+from typing import Any
 
 
 def list_legal_signals(

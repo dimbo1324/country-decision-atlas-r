@@ -1,7 +1,6 @@
-from typing import Any
-
 from app.core.database import fetch_all, fetch_one
 from psycopg import Connection
+from typing import Any
 
 
 def list_country_scores(

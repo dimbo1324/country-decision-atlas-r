@@ -1,6 +1,6 @@
+from pydantic import BaseModel, Field
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
 
 LocaleCode = Literal["en", "ru"]
 

@@ -1,8 +1,7 @@
-from datetime import datetime
-from uuid import UUID
-
 from app.schemas.common import LocaleResolution, Pagination
+from datetime import datetime
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 
 class Country(BaseModel):

@@ -38,8 +38,7 @@ export default async function ComparePage() {
             <h2>{result.data.scenario.title}</h2>
             <p>{result.data.explanation}</p>
             <strong>
-              {result.data.recommended_country ??
-                result.data.recommendation_type}
+              {result.data.recommended_country ?? result.data.recommendation_type}
             </strong>
           </article>
           <section className="dataGrid">

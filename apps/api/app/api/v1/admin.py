@@ -1,13 +1,12 @@
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends
-from psycopg import Connection
-
 from app.core.database import get_connection
 from app.repositories.legal_signals import create_legal_signal
 from app.repositories.translations import create_translation_job
 from app.schemas.legal_signals import LegalSignalCreate, LegalSignalResponse
 from app.schemas.translations import TranslationJobCreate, TranslationJobResponse
+from fastapi import APIRouter, Depends
+from psycopg import Connection
+from typing import Annotated, Any
+
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -22,7 +21,9 @@ async def admin_create_legal_signal(
     return LegalSignalResponse(item=row)
 
 
-@router.post("/translations/jobs", response_model=TranslationJobResponse, status_code=201)
+@router.post(
+    "/translations/jobs", response_model=TranslationJobResponse, status_code=201
+)
 async def admin_create_translation_job(
     payload: TranslationJobCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],

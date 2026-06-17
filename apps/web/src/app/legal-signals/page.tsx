@@ -28,8 +28,7 @@ export default async function LegalSignalsPage() {
             <article className="dataCard" key={signal.id}>
               <span>{signal.title}</span>
               <small>
-                {signal.signal_type} / {signal.impact_direction} /{" "}
-                {signal.impact_level}
+                {signal.signal_type} / {signal.impact_direction} / {signal.impact_level}
               </small>
             </article>
           ))}
