@@ -98,6 +98,51 @@
         "python -m ruff format apps packages scripts tests",
         "python -m mypy apps packages scripts tests"
       ]
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-country-card-and-decision-flow",
+      "task": "feat/web-country-card-and-decision-flow",
+      "branch": "feat/web-country-card-and-decision-flow",
+      "title": "Start country card and decision flow",
+      "summary": [
+        "Started first real frontend user path: countries list → country card → decision run → ranked result.",
+        "Rewrites country/[slug]/page.tsx to use the new CountryReadModelResponse read-model structure.",
+        "Adds feature components for country card display and decision run form/results.",
+        "Implements /decision as client component with POST /api/v1/decision/run and ranked result UI."
+      ],
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "web-country-card-and-decision-flow",
+      "task": "feat/web-country-card-and-decision-flow",
+      "branch": "feat/web-country-card-and-decision-flow",
+      "title": "Complete country card and decision flow",
+      "summary": [
+        "Rewrote /countries/[slug]/page.tsx using CountryReadModelResponse read-model; removed all stale card.data.item usage.",
+        "Created features/country-card/ with 9 typed components: CountryHeader, CountryProfileSections, CountryScores, ScoreBreakdown, CountryLegalSignals, CountrySources, CountryEvidenceSummary, CountryUserStoriesSummary, LocaleStatusBadge.",
+        "Rewrote /decision/page.tsx as client component; created features/decision-run/ with DecisionRunForm, DecisionResults, DecisionResultCard, DecisionBreakdown, DecisionSources, DecisionWarnings.",
+        "DecisionRunForm loads countries/scenarios via API, runs POST /api/v1/decision/run, renders ranked explainable results with strengths, weaknesses, risk warnings, breakdown, and sources.",
+        "Added resolveLocale helper to shared/lib/locale.ts and shared/lib/format.ts with formatDate, formatScore, formatWeight.",
+        "Updated /countries page: added EmptyState for empty list, iso2 display, improved error typing.",
+        "Extended styles.css with all new component classes.",
+        "No backend changes required; OpenAPI contract unchanged; generated types unchanged."
+      ],
+      "status": "completed",
+      "checks": [
+        "pnpm typecheck",
+        "pnpm lint",
+        "pnpm build",
+        "python -m pytest",
+        "python -m ruff check apps packages scripts tests --fix",
+        "python -m ruff format apps packages scripts tests",
+        "python -m mypy apps packages scripts tests"
+      ]
     }
   ]
 }

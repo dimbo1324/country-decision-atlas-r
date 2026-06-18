@@ -1,89 +1,93 @@
-import { apiGet } from "../../lib/api";
+import { countriesApi } from "../../../shared/api";
+import { normalizeLocale } from "../../../shared/lib/locale";
+import { ErrorState } from "../../../shared/ui/ErrorState";
+import {
+  CountryHeader,
+  CountryEvidenceSummary,
+  CountryLegalSignals,
+  CountryProfileSections,
+  CountryScores,
+  CountrySources,
+  CountryUserStoriesSummary,
+  LocaleStatusBadge,
+} from "../../../features/country-card";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-type CountryCardResponse = {
-  item: {
-    executive_summary: string;
-    migration_overview: string;
-    business_overview: string;
-    safety_overview: string;
-    risk_summary: string;
-    source_summary: string;
-  };
-};
-
-type ScoreResponse = {
-  items: Array<{
-    scenario_slug: string;
-    scenario_name: string;
-    score: number;
-    score_label: string;
-  }>;
-};
-
-export default async function CountryPage({ params }: PageProps) {
+export default async function CountryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const [card, scores] = await Promise.all([
-    apiGet<CountryCardResponse>(`/api/v1/countries/${slug}/card?locale=en`),
-    apiGet<ScoreResponse>(`/api/v1/countries/${slug}/scores?locale=en`),
-  ]);
+  const resolvedSearchParams = await searchParams;
+  const rawLocale = resolvedSearchParams["locale"];
+  const locale = normalizeLocale(
+    typeof rawLocale === "string" ? rawLocale : undefined,
+  );
+
+  let card;
+  try {
+    card = await countriesApi.getCountryCard(slug, locale);
+  } catch (err: unknown) {
+    const errProp =
+      err instanceof Error
+        ? err.message
+        : (err as { error?: { code?: string; message?: string } });
+    return (
+      <div className="pageShell">
+        <header className="pageHeader">
+          <p className="eyebrow">Country</p>
+          <h1>{slug}</h1>
+        </header>
+        <ErrorState error={errProp} />
+      </div>
+    );
+  }
 
   return (
-    <main className="pageShell">
-      <header className="pageHeader">
-        <p className="eyebrow">Country card</p>
-        <h1>{slug}</h1>
-      </header>
+    <div className="pageShell">
+      <CountryHeader country={card.country} />
 
-      {card.ok ? (
-        <section className="detailStack">
-          <article className="widePanel">
-            <h2>Executive summary</h2>
-            <p>{card.data.item.executive_summary}</p>
-          </article>
-          <div className="twoColumn">
-            <article>
-              <h2>Migration</h2>
-              <p>{card.data.item.migration_overview}</p>
-            </article>
-            <article>
-              <h2>Business</h2>
-              <p>{card.data.item.business_overview}</p>
-            </article>
-            <article>
-              <h2>Safety</h2>
-              <p>{card.data.item.safety_overview}</p>
-            </article>
-            <article>
-              <h2>Risks</h2>
-              <p>{card.data.item.risk_summary}</p>
-            </article>
-          </div>
-          <article className="widePanel">
-            <h2>Sources</h2>
-            <p>{card.data.item.source_summary}</p>
-          </article>
+      <div className="cardSections">
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Profile</h2>
+          <CountryProfileSections profile={card.profile} />
         </section>
-      ) : (
-        <p className="notice">{card.error}</p>
-      )}
 
-      {scores.ok ? (
-        <section className="dataGrid">
-          {scores.data.items.map((score) => (
-            <article className="dataCard" key={score.scenario_slug}>
-              <span>{score.scenario_name}</span>
-              <strong>{score.score}</strong>
-              <small>{score.score_label}</small>
-            </article>
-          ))}
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Scores</h2>
+          <CountryScores scores={card.scores} />
         </section>
-      ) : null}
-    </main>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Legal signals</h2>
+          <CountryLegalSignals legalSignals={card.legal_signals} />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Sources</h2>
+          <CountrySources sources={card.sources} />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Evidence summary</h2>
+          <CountryEvidenceSummary evidenceSummary={card.evidence_summary} />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">User stories summary</h2>
+          <CountryUserStoriesSummary
+            userStoriesSummary={card.user_stories_summary}
+          />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Translation status</h2>
+          <LocaleStatusBadge locale={card.locale} />
+        </section>
+      </div>
+    </div>
   );
 }

@@ -15,3 +15,7 @@ export function getLocaleFromSearchParams(
   const raw = searchParams["locale"];
   return normalizeLocale(typeof raw === "string" ? raw : undefined);
 }
+
+export function resolveLocale(value?: string | null): SupportedLocale {
+  return value === "ru" ? "ru" : "en";
+}

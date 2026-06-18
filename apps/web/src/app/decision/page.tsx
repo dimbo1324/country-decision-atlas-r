@@ -1,3 +1,7 @@
+"use client";
+
+import { DecisionRunForm } from "../../features/decision-run";
+
 export default function DecisionPage() {
   return (
     <div className="pageShell">
@@ -5,9 +9,7 @@ export default function DecisionPage() {
         <p className="eyebrow">Decision</p>
         <h1>Decision engine</h1>
       </header>
-      <p className="notice">
-        Full decision page coming in feat/web-decision-page.
-      </p>
+      <DecisionRunForm />
     </div>
   );
 }
