@@ -514,6 +514,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/data-quality/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Read Data Quality Report */
+        get: operations["admin_read_data_quality_report_api_v1_admin_data_quality_report_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/user-stories": {
         parameters: {
             query?: never;
@@ -1040,6 +1057,30 @@ export interface components {
             items: components["schemas"]["CountryScore"][];
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DataQualityIssue */
+        DataQualityIssue: {
+            /** Code */
+            code: string;
+            /** Severity */
+            severity: string;
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id?: string | null;
+            /** Message */
+            message: string;
+            /** Details */
+            details?: {
+                [key: string]: unknown;
+            };
+        };
+        /** DataQualityReport */
+        DataQualityReport: {
+            /** Valid */
+            valid: boolean;
+            /** Issues */
+            issues?: components["schemas"]["DataQualityIssue"][];
         };
         /** DecisionBreakdownItem */
         DecisionBreakdownItem: {
@@ -3280,6 +3321,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_read_data_quality_report_api_v1_admin_data_quality_report_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataQualityReport"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

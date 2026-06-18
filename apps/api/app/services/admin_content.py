@@ -13,6 +13,14 @@ from app.schemas.admin_content import (
     UserStoryPatch,
 )
 from app.schemas.common import PublicationStatus
+from app.services.data_quality import (
+    raise_if_critical_issues,
+    validate_country_card_for_publish,
+    validate_evidence_item_for_publish,
+    validate_legal_signal_for_publish,
+    validate_source_for_publish,
+    validate_user_story_for_publish,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -25,7 +33,7 @@ def create_source(
     data = _model_data(payload)
     data["country_id"] = _country_id_or_none(connection, data.pop("country_slug", None))
     if data.get("status") == PublicationStatus.published.value:
-        _validate_source_for_publish(data)
+        raise_if_critical_issues(validate_source_for_publish(data))
     row = repository.create_source(connection, data)
     _audit(connection, "source", row, "created", changed_by, {"after": row})
     return row
@@ -39,9 +47,10 @@ def patch_source(
 ) -> dict[str, Any]:
     before = _require(repository.get_source_for_admin(connection, source_id), "Source")
     data = _model_data(payload, exclude_unset=True)
+    candidate = {**before, **data}
+    if candidate.get("status") == PublicationStatus.published.value:
+        raise_if_critical_issues(validate_source_for_publish(candidate))
     after = _require(repository.patch_source(connection, source_id, data), "Source")
-    if after.get("status") == PublicationStatus.published.value:
-        _validate_source_for_publish(after)
     _audit(
         connection,
         "source",
@@ -63,7 +72,7 @@ def create_evidence_item(
     _validate_source_exists(connection, data.get("source_id"))
     _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
     if data.get("status") == PublicationStatus.published.value:
-        _validate_evidence_for_publish(data)
+        raise_if_critical_issues(validate_evidence_item_for_publish(data))
     row = repository.create_evidence_item(connection, data)
     _audit(connection, "evidence_item", row, "created", changed_by, {"after": row})
     return row
@@ -82,12 +91,13 @@ def patch_evidence_item(
     data = _model_data(payload, exclude_unset=True)
     _validate_source_exists(connection, data.get("source_id"))
     _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
+    candidate = {**before, **data}
+    if candidate.get("status") == PublicationStatus.published.value:
+        raise_if_critical_issues(validate_evidence_item_for_publish(candidate))
     after = _require(
         repository.patch_evidence_item(connection, evidence_item_id, data),
         "Evidence item",
     )
-    if after.get("status") == PublicationStatus.published.value:
-        _validate_evidence_for_publish(after)
     _audit(
         connection,
         "evidence_item",
@@ -108,7 +118,7 @@ def create_legal_signal(
     data["country_id"] = _country_id_required(connection, data.pop("country_slug"))
     _validate_source_exists(connection, data.get("source_id"))
     if data.get("status") == PublicationStatus.published.value:
-        _validate_legal_signal_for_publish(data)
+        raise_if_critical_issues(validate_legal_signal_for_publish(data))
     row = repository.create_legal_signal(connection, data)
     _audit(connection, "legal_signal", row, "created", changed_by, {"after": row})
     return row
@@ -126,12 +136,13 @@ def patch_legal_signal(
     )
     data = _model_data(payload, exclude_unset=True)
     _validate_source_exists(connection, data.get("source_id"))
+    candidate = {**before, **data}
+    if candidate.get("status") == PublicationStatus.published.value:
+        raise_if_critical_issues(validate_legal_signal_for_publish(candidate))
     after = _require(
         repository.patch_legal_signal(connection, signal_id, data),
         "Legal signal",
     )
-    if after.get("status") == PublicationStatus.published.value:
-        _validate_legal_signal_for_publish(after)
     _audit(
         connection,
         "legal_signal",
@@ -150,12 +161,19 @@ def patch_country_profile(
     changed_by: str,
 ) -> dict[str, Any]:
     data = _model_data(payload, exclude_unset=True)
+    before = _require(
+        repository.patch_country_profile(
+            connection, country_slug, {"locale": data.get("locale", "en")}
+        ),
+        "Country profile",
+    )
+    candidate = {**before, **data}
+    if candidate.get("status") == PublicationStatus.published.value:
+        raise_if_critical_issues(validate_country_card_for_publish(candidate))
     after = _require(
         repository.patch_country_profile(connection, country_slug, data),
         "Country profile",
     )
-    if after.get("status") == PublicationStatus.published.value:
-        _validate_country_profile_for_publish(after)
     _audit(
         connection, "country_profile", after, "updated", changed_by, {"after": after}
     )
@@ -175,7 +193,7 @@ def create_user_story(
         connection, data.pop("destination_country_slug")
     )
     if data.get("status") == PublicationStatus.published.value:
-        _validate_user_story_for_publish(data)
+        raise_if_critical_issues(validate_user_story_for_publish(data))
     row = repository.create_user_story_for_admin(connection, data)
     _audit(connection, "user_story", row, "created", changed_by, {"after": row})
     return row
@@ -199,12 +217,13 @@ def patch_user_story(
         data["destination_country_id"] = _country_id_required(
             connection, data.pop("destination_country_slug")
         )
+    candidate = {**before, **data}
+    if candidate.get("status") == PublicationStatus.published.value:
+        raise_if_critical_issues(validate_user_story_for_publish(candidate))
     after = _require(
         repository.patch_user_story_for_admin(connection, story_id, data),
         "User story",
     )
-    if after.get("status") == PublicationStatus.published.value:
-        _validate_user_story_for_publish(after)
     _audit(
         connection,
         "user_story",
@@ -265,93 +284,6 @@ def _validate_legal_signal_exists(
             "Legal signal not found.",
             {"legal_signal_id": str(legal_signal_id)},
         )
-
-
-def _validate_source_for_publish(data: dict[str, Any]) -> None:
-    _require_fields(
-        data,
-        ["title", "url", "publisher", "source_type", "confidence"],
-        "Source cannot be published because required fields are missing.",
-    )
-
-
-def _validate_legal_signal_for_publish(data: dict[str, Any]) -> None:
-    _require_fields(
-        data,
-        [
-            "country_id",
-            "source_id",
-            "signal_type",
-            "impact_direction",
-            "impact_level",
-            "confidence",
-        ],
-        "Legal signal cannot be published because required fields are missing.",
-    )
-    if not (data.get("title_en") or data.get("title")):
-        _content_validation_error(
-            "Legal signal cannot be published because required fields are missing.",
-            ["title_en"],
-        )
-    if not (data.get("summary_en") or data.get("summary")):
-        _content_validation_error(
-            "Legal signal cannot be published because required fields are missing.",
-            ["summary_en"],
-        )
-
-
-def _validate_evidence_for_publish(data: dict[str, Any]) -> None:
-    _require_fields(
-        data,
-        ["source_id", "country_id", "claim", "confidence"],
-        "Evidence item cannot be published because required fields are missing.",
-    )
-
-
-def _validate_country_profile_for_publish(data: dict[str, Any]) -> None:
-    fields = [
-        "executive_summary",
-        "migration_overview",
-        "tax_overview",
-        "cost_of_living_overview",
-        "business_overview",
-        "safety_overview",
-        "legal_signals_summary",
-        "risk_summary",
-        "source_summary",
-    ]
-    if not any(data.get(field) for field in fields):
-        _content_validation_error(
-            "Country profile cannot be published because public text is empty.",
-            fields,
-        )
-
-
-def _validate_user_story_for_publish(data: dict[str, Any]) -> None:
-    if data.get("is_synthetic"):
-        notes = str(data.get("notes") or "").lower()
-        if data.get("verification_status") != "synthetic" or not (
-            "synthetic" in notes or "demo" in notes
-        ):
-            _content_validation_error(
-                "Synthetic user story cannot be published without explicit marking.",
-                ["verification_status", "notes"],
-            )
-
-
-def _require_fields(data: dict[str, Any], fields: list[str], message: str) -> None:
-    missing = [field for field in fields if data.get(field) in (None, "")]
-    if missing:
-        _content_validation_error(message, missing)
-
-
-def _content_validation_error(message: str, missing_fields: list[str]) -> None:
-    raise api_error(
-        422,
-        "content_validation_failed",
-        message,
-        {"missing_fields": missing_fields},
-    )
 
 
 def _require(row: dict[str, Any] | None, entity_name: str) -> dict[str, Any]:

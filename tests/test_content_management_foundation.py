@@ -40,6 +40,7 @@ def test_openapi_has_admin_security_and_content_schemas() -> None:
         "/api/v1/admin/countries/{country_slug}/profile",
         "/api/v1/admin/user-stories",
         "/api/v1/admin/user-stories/{story_id}",
+        "/api/v1/admin/data-quality/report",
     ]:
         assert path in paths
 
@@ -60,6 +61,8 @@ def test_openapi_has_admin_security_and_content_schemas() -> None:
         "CountryProfilePatch",
         "UserStoryAdminCreate",
         "UserStoryPatch",
+        "DataQualityIssue",
+        "DataQualityReport",
         "ErrorResponse",
     ]:
         assert schema in schemas
@@ -156,8 +159,11 @@ def test_publish_source_validation_blocks_missing_required_fields() -> None:
 
     assert error.value.status_code == 422
     detail = cast(dict[str, Any], error.value.detail)
-    assert detail["error"]["code"] == "content_validation_failed"
-    assert "url" in detail["error"]["details"]["missing_fields"]
+    assert detail["error"]["code"] == "data_quality_validation_failed"
+    fields = {
+        issue["details"]["field"] for issue in detail["error"]["details"]["issues"]
+    }
+    assert "url" in fields
 
 
 def test_publish_evidence_validation_blocks_missing_required_fields() -> None:
@@ -168,8 +174,10 @@ def test_publish_evidence_validation_blocks_missing_required_fields() -> None:
 
     assert error.value.status_code == 422
     detail = cast(dict[str, Any], error.value.detail)
-    missing = detail["error"]["details"]["missing_fields"]
-    assert {"source_id", "country_id", "claim"}.issubset(set(missing))
+    fields = {
+        issue["details"]["field"] for issue in detail["error"]["details"]["issues"]
+    }
+    assert {"source_id", "country_id", "claim"}.issubset(fields)
 
 
 def test_source_sorting_uses_whitelist(monkeypatch: pytest.MonkeyPatch) -> None:

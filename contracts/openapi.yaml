@@ -1484,6 +1484,27 @@ paths:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
       - AdminTokenAuth: []
+  /api/v1/admin/data-quality/report:
+    get:
+      tags:
+      - admin
+      summary: Admin Read Data Quality Report
+      operationId: admin_read_data_quality_report_api_v1_admin_data_quality_report_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataQualityReport'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - AdminTokenAuth: []
   /api/v1/user-stories:
     get:
       tags:
@@ -2554,6 +2575,50 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    DataQualityIssue:
+      properties:
+        code:
+          type: string
+          title: Code
+        severity:
+          type: string
+          title: Severity
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Id
+        message:
+          type: string
+          title: Message
+        details:
+          additionalProperties: true
+          type: object
+          title: Details
+      type: object
+      required:
+      - code
+      - severity
+      - entity_type
+      - message
+      title: DataQualityIssue
+    DataQualityReport:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        issues:
+          items:
+            $ref: '#/components/schemas/DataQualityIssue'
+          type: array
+          title: Issues
+      type: object
+      required:
+      - valid
+      title: DataQualityReport
     DecisionBreakdownItem:
       properties:
         criterion:

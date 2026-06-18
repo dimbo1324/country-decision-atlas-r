@@ -18,8 +18,10 @@ from app.schemas.admin_content import (
     UserStoryPatch,
 )
 from app.schemas.common import ContentValidationError, ErrorResponse
+from app.schemas.data_quality import DataQualityReport
 from app.schemas.translations import TranslationJobCreate, TranslationJobResponse
 from app.services import admin_content
+from app.services.data_quality import build_data_quality_report
 from fastapi import APIRouter, Depends
 from psycopg import Connection
 from typing import Annotated, Any
@@ -196,3 +198,15 @@ async def admin_create_translation_job(
     row = create_translation_job(connection, payload)
     connection.commit()
     return TranslationJobResponse(item=row)
+
+
+@router.get(
+    "/data-quality/report",
+    response_model=DataQualityReport,
+    responses={401: {"model": ErrorResponse}},
+)
+async def admin_read_data_quality_report(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> DataQualityReport:
+    return build_data_quality_report(connection)
