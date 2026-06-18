@@ -225,7 +225,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CountryCardResponse'
+                $ref: '#/components/schemas/CountryReadModelResponse'
         '422':
           description: Validation Error
           content:
@@ -1062,86 +1062,6 @@ components:
       - created_at
       - updated_at
       title: Country
-    CountryCard:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        country_id:
-          type: string
-          format: uuid
-          title: Country Id
-        locale:
-          type: string
-          title: Locale
-        executive_summary:
-          type: string
-          title: Executive Summary
-        migration_overview:
-          type: string
-          title: Migration Overview
-        tax_overview:
-          type: string
-          title: Tax Overview
-        cost_of_living_overview:
-          type: string
-          title: Cost Of Living Overview
-        business_overview:
-          type: string
-          title: Business Overview
-        safety_overview:
-          type: string
-          title: Safety Overview
-        legal_signals_summary:
-          type: string
-          title: Legal Signals Summary
-        risk_summary:
-          type: string
-          title: Risk Summary
-        source_summary:
-          type: string
-          title: Source Summary
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - id
-      - country_id
-      - locale
-      - executive_summary
-      - migration_overview
-      - tax_overview
-      - cost_of_living_overview
-      - business_overview
-      - safety_overview
-      - legal_signals_summary
-      - risk_summary
-      - source_summary
-      - status
-      - created_at
-      - updated_at
-      title: CountryCard
-    CountryCardResponse:
-      properties:
-        item:
-          $ref: '#/components/schemas/CountryCard'
-        locale:
-          $ref: '#/components/schemas/LocaleResolution'
-      type: object
-      required:
-      - item
-      - locale
-      title: CountryCardResponse
     CountryListResponse:
       properties:
         items:
@@ -1229,6 +1149,324 @@ components:
       - item
       - locale
       title: CountryProfileResponse
+    CountryReadModelCountry:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        iso_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso Code
+        name:
+          type: string
+          title: Name
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - slug
+      - name
+      - status
+      title: CountryReadModelCountry
+    CountryReadModelLegalSignal:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        signal_type:
+          type: string
+          title: Signal Type
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        affected_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Affected Groups
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        effective_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Effective Date
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+      type: object
+      required:
+      - id
+      - title
+      - signal_type
+      title: CountryReadModelLegalSignal
+    CountryReadModelMeta:
+      properties:
+        scores_count:
+          type: integer
+          title: Scores Count
+        legal_signals_count:
+          type: integer
+          title: Legal Signals Count
+        sources_count:
+          type: integer
+          title: Sources Count
+        last_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated At
+      type: object
+      required:
+      - scores_count
+      - legal_signals_count
+      - sources_count
+      title: CountryReadModelMeta
+    CountryReadModelProfile:
+      properties:
+        executive_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Executive Summary
+        migration_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Migration Overview
+        tax_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tax Overview
+        cost_of_living_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cost Of Living Overview
+        business_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Overview
+        safety_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Safety Overview
+        legal_signals_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Signals Summary
+        risk_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk Summary
+        source_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Summary
+      type: object
+      title: CountryReadModelProfile
+    CountryReadModelResponse:
+      properties:
+        country:
+          $ref: '#/components/schemas/CountryReadModelCountry'
+        profile:
+          anyOf:
+          - $ref: '#/components/schemas/CountryReadModelProfile'
+          - type: 'null'
+        scores:
+          items:
+            $ref: '#/components/schemas/CountryReadModelScore'
+          type: array
+          title: Scores
+        legal_signals:
+          items:
+            $ref: '#/components/schemas/CountryReadModelLegalSignal'
+          type: array
+          title: Legal Signals
+        sources:
+          items:
+            $ref: '#/components/schemas/CountryReadModelSource'
+          type: array
+          title: Sources
+        meta:
+          $ref: '#/components/schemas/CountryReadModelMeta'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - country
+      - profile
+      - scores
+      - legal_signals
+      - sources
+      - meta
+      - locale
+      title: CountryReadModelResponse
+    CountryReadModelScore:
+      properties:
+        id:
+          type: string
+          title: Id
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        scenario_title:
+          type: string
+          title: Scenario Title
+        score:
+          type: number
+          title: Score
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        explanation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Explanation
+        calculated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Calculated At
+        breakdowns:
+          items:
+            $ref: '#/components/schemas/CountryReadModelScoreBreakdown'
+          type: array
+          title: Breakdowns
+      type: object
+      required:
+      - id
+      - scenario_slug
+      - scenario_title
+      - score
+      title: CountryReadModelScore
+    CountryReadModelScoreBreakdown:
+      properties:
+        criterion:
+          type: string
+          title: Criterion
+        score:
+          type: number
+          title: Score
+        weight:
+          type: number
+          title: Weight
+        weighted_score:
+          type: number
+          title: Weighted Score
+        explanation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Explanation
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+      type: object
+      required:
+      - criterion
+      - score
+      - weight
+      - weighted_score
+      title: CountryReadModelScoreBreakdown
+    CountryReadModelSource:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        published_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: CountryReadModelSource
     CountryResponse:
       properties:
         item:

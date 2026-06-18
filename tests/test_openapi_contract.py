@@ -61,7 +61,9 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     schemas = contract["components"]["schemas"]
 
     for schema_name in [
-        "CountryCard",
+        "CountryReadModelResponse",
+        "CountryReadModelScore",
+        "CountryReadModelScoreBreakdown",
         "CountryScoreBreakdown",
         "DecisionCompareInput",
         "DecisionCompareResult",

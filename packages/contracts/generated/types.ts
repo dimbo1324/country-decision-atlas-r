@@ -489,56 +489,6 @@ export interface components {
              */
             updated_at: string;
         };
-        /** CountryCard */
-        CountryCard: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Country Id
-             * Format: uuid
-             */
-            country_id: string;
-            /** Locale */
-            locale: string;
-            /** Executive Summary */
-            executive_summary: string;
-            /** Migration Overview */
-            migration_overview: string;
-            /** Tax Overview */
-            tax_overview: string;
-            /** Cost Of Living Overview */
-            cost_of_living_overview: string;
-            /** Business Overview */
-            business_overview: string;
-            /** Safety Overview */
-            safety_overview: string;
-            /** Legal Signals Summary */
-            legal_signals_summary: string;
-            /** Risk Summary */
-            risk_summary: string;
-            /** Source Summary */
-            source_summary: string;
-            /** Status */
-            status: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-        };
-        /** CountryCardResponse */
-        CountryCardResponse: {
-            item: components["schemas"]["CountryCard"];
-            locale: components["schemas"]["LocaleResolution"];
-        };
         /** CountryListResponse */
         CountryListResponse: {
             /** Items */
@@ -587,6 +537,144 @@ export interface components {
         CountryProfileResponse: {
             item: components["schemas"]["CountryProfile"];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryReadModelCountry */
+        CountryReadModelCountry: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Iso Code */
+            iso_code?: string | null;
+            /** Name */
+            name: string;
+            /** Region */
+            region?: string | null;
+            /** Status */
+            status: string;
+        };
+        /** CountryReadModelLegalSignal */
+        CountryReadModelLegalSignal: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary?: string | null;
+            /** Signal Type */
+            signal_type: string;
+            /** Impact Direction */
+            impact_direction?: string | null;
+            /** Impact Level */
+            impact_level?: string | null;
+            /** Affected Groups */
+            affected_groups?: string[] | null;
+            /** Published Date */
+            published_date?: string | null;
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+        };
+        /** CountryReadModelMeta */
+        CountryReadModelMeta: {
+            /** Scores Count */
+            scores_count: number;
+            /** Legal Signals Count */
+            legal_signals_count: number;
+            /** Sources Count */
+            sources_count: number;
+            /** Last Updated At */
+            last_updated_at?: string | null;
+        };
+        /** CountryReadModelProfile */
+        CountryReadModelProfile: {
+            /** Executive Summary */
+            executive_summary?: string | null;
+            /** Migration Overview */
+            migration_overview?: string | null;
+            /** Tax Overview */
+            tax_overview?: string | null;
+            /** Cost Of Living Overview */
+            cost_of_living_overview?: string | null;
+            /** Business Overview */
+            business_overview?: string | null;
+            /** Safety Overview */
+            safety_overview?: string | null;
+            /** Legal Signals Summary */
+            legal_signals_summary?: string | null;
+            /** Risk Summary */
+            risk_summary?: string | null;
+            /** Source Summary */
+            source_summary?: string | null;
+        };
+        /** CountryReadModelResponse */
+        CountryReadModelResponse: {
+            country: components["schemas"]["CountryReadModelCountry"];
+            profile: components["schemas"]["CountryReadModelProfile"] | null;
+            /** Scores */
+            scores: components["schemas"]["CountryReadModelScore"][];
+            /** Legal Signals */
+            legal_signals: components["schemas"]["CountryReadModelLegalSignal"][];
+            /** Sources */
+            sources: components["schemas"]["CountryReadModelSource"][];
+            meta: components["schemas"]["CountryReadModelMeta"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryReadModelScore */
+        CountryReadModelScore: {
+            /** Id */
+            id: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Scenario Title */
+            scenario_title: string;
+            /** Score */
+            score: number;
+            /** Confidence */
+            confidence?: string | null;
+            /** Explanation */
+            explanation?: string | null;
+            /** Calculated At */
+            calculated_at?: string | null;
+            /** Breakdowns */
+            breakdowns?: components["schemas"]["CountryReadModelScoreBreakdown"][];
+        };
+        /** CountryReadModelScoreBreakdown */
+        CountryReadModelScoreBreakdown: {
+            /** Criterion */
+            criterion: string;
+            /** Score */
+            score: number;
+            /** Weight */
+            weight: number;
+            /** Weighted Score */
+            weighted_score: number;
+            /** Explanation */
+            explanation?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Source Ids */
+            source_ids?: string[];
+        };
+        /** CountryReadModelSource */
+        CountryReadModelSource: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
         };
         /** CountryResponse */
         CountryResponse: {
@@ -1662,7 +1750,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CountryCardResponse"];
+                    "application/json": components["schemas"]["CountryReadModelResponse"];
                 };
             };
             /** @description Validation Error */

@@ -14,12 +14,11 @@ from app.schemas.countries import (
     CountryProfileResponse,
     CountryResponse,
 )
-from app.schemas.decision_engine import (
-    CountryCardResponse,
-    SourceListWithLocaleResponse,
-)
+from app.schemas.country_read_model import CountryReadModelResponse
+from app.schemas.decision_engine import SourceListWithLocaleResponse
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
+from app.services.country_read_model import get_country_read_model
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -85,13 +84,25 @@ async def read_country_scores(
     )
 
 
-@router.get("/{country_slug}/card", response_model=CountryCardResponse)
+@router.get("/{country_slug}/card", response_model=CountryReadModelResponse)
 async def read_country_card(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
-) -> CountryCardResponse:
-    return decision_engine.get_country_card(connection, country_slug, locale)
+) -> CountryReadModelResponse:
+    result = get_country_read_model(connection, country_slug, locale)
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": {
+                    "code": "country_not_found",
+                    "message": "Country not found.",
+                    "details": {"country_slug": country_slug},
+                }
+            },
+        )
+    return result
 
 
 @router.get("/{country_slug}/sources", response_model=SourceListWithLocaleResponse)
