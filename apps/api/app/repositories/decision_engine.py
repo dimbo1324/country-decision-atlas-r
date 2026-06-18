@@ -6,6 +6,27 @@ from psycopg import Connection
 from typing import Any
 
 
+LEGAL_SIGNAL_SORT_COLUMNS = {
+    "published_date": "ls.published_date",
+    "effective_date": "ls.effective_date",
+    "impact_level": "ls.impact_level",
+    "created_at": "ls.created_at",
+    "updated_at": "ls.updated_at",
+}
+COUNTRY_SOURCE_SORT_COLUMNS = {
+    "title": "s.title",
+    "created_at": "s.created_at",
+    "published_at": "s.published_at",
+    "last_checked_at": "s.last_checked_at",
+    "confidence": "s.confidence",
+}
+USER_STORY_SORT_COLUMNS = {
+    "created_at": "us.created_at",
+    "year": "us.year",
+    "satisfaction_score": "us.satisfaction_score",
+}
+
+
 def get_country_card(
     connection: Connection[Any], country_slug: str, locale: str
 ) -> dict[str, Any] | None:
@@ -34,7 +55,7 @@ def get_country_card(
             CASE WHEN cc.locale = 'en' THEN 'source' ELSE 'translated' END AS translation_status
         FROM country_cards cc
         JOIN countries c ON c.id = cc.country_id
-        WHERE c.slug = %s AND cc.locale = %s
+        WHERE c.slug = %s AND cc.locale = %s AND cc.status = 'published'
         """,
         (requested_locale, country_slug, requested_locale),
     )
@@ -66,7 +87,7 @@ def get_country_card(
             'fallback' AS translation_status
         FROM country_cards cc
         JOIN countries c ON c.id = cc.country_id
-        WHERE c.slug = %s AND cc.locale = 'en'
+        WHERE c.slug = %s AND cc.locale = 'en' AND cc.status = 'published'
         """,
         (country_slug,),
     )
@@ -234,7 +255,7 @@ def list_score_sources(
             s.updated_at
         FROM sources s
         JOIN countries c ON c.id = s.country_id
-        WHERE c.slug = ANY(%s)
+        WHERE c.slug = ANY(%s) AND s.status = 'published'
         ORDER BY c.slug, s.title
         """,
         (country_slugs,),
@@ -246,10 +267,23 @@ def list_country_sources(
     country_slug: str,
     limit: int,
     offset: int,
+    source_type: str | None = None,
+    language: str | None = None,
+    confidence: str | None = None,
+    status: str = "published",
+    sort: str = "title",
+    order: str = "asc",
 ) -> list[dict[str, Any]]:
+    filter_sql, params = _country_source_filters(
+        country_slug, source_type, language, confidence, status
+    )
+    sort_column = COUNTRY_SOURCE_SORT_COLUMNS.get(
+        sort, COUNTRY_SOURCE_SORT_COLUMNS["title"]
+    )
+    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             s.id,
             s.title,
@@ -259,30 +293,45 @@ def list_country_sources(
             s.country_id,
             s.locale_id,
             s.reliability_level,
+            s.language,
+            s.confidence,
+            s.status,
             s.published_at,
             s.accessed_at,
+            s.last_checked_at,
+            s.notes,
             s.created_at,
             s.updated_at
         FROM sources s
         JOIN countries c ON c.id = s.country_id
-        WHERE c.slug = %s
-        ORDER BY s.title
+        WHERE {filter_sql}
+        ORDER BY {sort_column} {order_sql} NULLS LAST, s.title
         LIMIT %s OFFSET %s
         """,
-        (country_slug, limit, offset),
+        (*params, limit, offset),
     )
 
 
-def count_country_sources(connection: Connection[Any], country_slug: str) -> int:
+def count_country_sources(
+    connection: Connection[Any],
+    country_slug: str,
+    source_type: str | None = None,
+    language: str | None = None,
+    confidence: str | None = None,
+    status: str = "published",
+) -> int:
+    filter_sql, params = _country_source_filters(
+        country_slug, source_type, language, confidence, status
+    )
     row = fetch_one(
         connection,
-        """
+        f"""
         SELECT COUNT(*) AS total
         FROM sources s
         JOIN countries c ON c.id = s.country_id
-        WHERE c.slug = %s
+        WHERE {filter_sql}
         """,
-        (country_slug,),
+        params,
     )
     return int(row["total"]) if row else 0
 
@@ -291,18 +340,27 @@ def list_legal_signals(
     connection: Connection[Any],
     locale: str,
     country_slug: str | None,
-    limit: int,
-    offset: int,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: str = "published",
+    limit: int = 20,
+    offset: int = 0,
+    sort: str = "published_date",
+    order: str = "desc",
 ) -> list[dict[str, Any]]:
     requested_locale = validate_locale(locale)
     title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
     summary_column = localized_column(
         requested_locale, "ls.summary_en", "ls.summary_ru"
     )
-    country_filter = "AND c.slug = %s" if country_slug else ""
-    params: tuple[Any, ...] = (
-        (country_slug, limit, offset) if country_slug else (limit, offset)
+    filter_sql, filter_params = _legal_signal_filters(
+        country_slug, signal_type, impact_direction, impact_level, status
     )
+    sort_column = LEGAL_SIGNAL_SORT_COLUMNS.get(
+        sort, LEGAL_SIGNAL_SORT_COLUMNS["published_date"]
+    )
+    order_sql = "ASC" if order == "asc" else "DESC"
     if requested_locale == SOURCE_LOCALE:
         resolved_locale_sql = "'en'"
         status_sql = """
@@ -349,30 +407,35 @@ def list_legal_signals(
             {status_sql} AS translation_status
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
-        WHERE 1 = 1 {country_filter}
-        ORDER BY ls.published_date DESC NULLS LAST, ls.title
+        WHERE {filter_sql}
+        ORDER BY {sort_column} {order_sql} NULLS LAST, ls.title
         LIMIT %s OFFSET %s
         """,
-        params,
+        (*filter_params, limit, offset),
     )
 
 
 def count_legal_signals(
-    connection: Connection[Any], country_slug: str | None = None
+    connection: Connection[Any],
+    country_slug: str | None = None,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: str = "published",
 ) -> int:
-    if country_slug:
-        row = fetch_one(
-            connection,
-            """
-            SELECT COUNT(*) AS total
-            FROM legal_signals ls
-            JOIN countries c ON c.id = ls.country_id
-            WHERE c.slug = %s
-            """,
-            (country_slug,),
-        )
-    else:
-        row = fetch_one(connection, "SELECT COUNT(*) AS total FROM legal_signals")
+    filter_sql, params = _legal_signal_filters(
+        country_slug, signal_type, impact_direction, impact_level, status
+    )
+    row = fetch_one(
+        connection,
+        f"""
+        SELECT COUNT(*) AS total
+        FROM legal_signals ls
+        JOIN countries c ON c.id = ls.country_id
+        WHERE {filter_sql}
+        """,
+        params,
+    )
     return int(row["total"]) if row else 0
 
 
@@ -427,7 +490,7 @@ def get_legal_signal(
             {resolved_locale_sql} AS resolved_locale,
             {status_sql} AS translation_status
         FROM legal_signals
-        WHERE id::text = %s
+        WHERE id::text = %s AND status = 'published'
         """,
         (signal_id,),
     )
@@ -453,7 +516,7 @@ def list_evidence_for_legal_signal(
             created_at,
             updated_at
         FROM evidence_items
-        WHERE legal_signal_id::text = %s
+        WHERE legal_signal_id::text = %s AND status = 'published'
         ORDER BY retrieved_at DESC NULLS LAST, title
         """,
         (signal_id,),
@@ -473,12 +536,17 @@ def get_source(connection: Connection[Any], source_id: str) -> dict[str, Any] | 
             country_id,
             locale_id,
             reliability_level,
+            language,
+            confidence,
+            status,
             published_at,
             accessed_at,
+            last_checked_at,
+            notes,
             created_at,
             updated_at
         FROM sources
-        WHERE id::text = %s
+        WHERE id::text = %s AND status = 'published'
         """,
         (source_id,),
     )
@@ -504,7 +572,7 @@ def list_evidence_for_source(
             created_at,
             updated_at
         FROM evidence_items
-        WHERE source_id::text = %s
+        WHERE source_id::text = %s AND status = 'published'
         ORDER BY retrieved_at DESC NULLS LAST, title
         LIMIT %s OFFSET %s
         """,
@@ -515,51 +583,179 @@ def list_evidence_for_source(
 def count_evidence_for_source(connection: Connection[Any], source_id: str) -> int:
     row = fetch_one(
         connection,
-        "SELECT COUNT(*) AS total FROM evidence_items WHERE source_id::text = %s",
+        """
+        SELECT COUNT(*) AS total
+        FROM evidence_items
+        WHERE source_id::text = %s AND status = 'published'
+        """,
         (source_id,),
     )
     return int(row["total"]) if row else 0
 
 
 def list_user_stories(
-    connection: Connection[Any], limit: int, offset: int
+    connection: Connection[Any],
+    limit: int,
+    offset: int,
+    origin_country_slug: str | None = None,
+    destination_country_slug: str | None = None,
+    scenario: str | None = None,
+    verification_status: str | None = None,
+    is_synthetic: bool | None = None,
+    status: str = "published",
+    sort: str = "created_at",
+    order: str = "desc",
 ) -> list[dict[str, Any]]:
+    filter_sql, params = _user_story_filters(
+        origin_country_slug,
+        destination_country_slug,
+        scenario,
+        verification_status,
+        is_synthetic,
+        status,
+    )
+    sort_column = USER_STORY_SORT_COLUMNS.get(
+        sort, USER_STORY_SORT_COLUMNS["created_at"]
+    )
+    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
-            id,
-            origin_country_id,
-            destination_country_id,
-            city,
-            year,
-            scenario,
-            budget_initial_usd,
-            budget_monthly_usd,
-            legal_path,
-            documents_used,
-            problems,
-            positive_outcome,
-            negative_outcome,
-            advice,
-            satisfaction_score,
-            verification_status,
-            status,
-            is_synthetic,
-            notes,
-            created_at,
-            updated_at
-        FROM user_stories
-        ORDER BY created_at DESC
+            us.id,
+            us.origin_country_id,
+            us.destination_country_id,
+            us.city,
+            us.year,
+            us.scenario,
+            us.budget_initial_usd,
+            us.budget_monthly_usd,
+            us.legal_path,
+            us.documents_used,
+            us.problems,
+            us.positive_outcome,
+            us.negative_outcome,
+            us.advice,
+            us.satisfaction_score,
+            us.verification_status,
+            us.status,
+            us.is_synthetic,
+            us.notes,
+            us.created_at,
+            us.updated_at
+        FROM user_stories us
+        LEFT JOIN countries origin ON origin.id = us.origin_country_id
+        JOIN countries destination ON destination.id = us.destination_country_id
+        WHERE {filter_sql}
+        ORDER BY {sort_column} {order_sql} NULLS LAST, us.id
         LIMIT %s OFFSET %s
         """,
-        (limit, offset),
+        (*params, limit, offset),
     )
 
 
-def count_user_stories(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM user_stories")
+def count_user_stories(
+    connection: Connection[Any],
+    origin_country_slug: str | None = None,
+    destination_country_slug: str | None = None,
+    scenario: str | None = None,
+    verification_status: str | None = None,
+    is_synthetic: bool | None = None,
+    status: str = "published",
+) -> int:
+    filter_sql, params = _user_story_filters(
+        origin_country_slug,
+        destination_country_slug,
+        scenario,
+        verification_status,
+        is_synthetic,
+        status,
+    )
+    row = fetch_one(
+        connection,
+        f"""
+        SELECT COUNT(*) AS total
+        FROM user_stories us
+        LEFT JOIN countries origin ON origin.id = us.origin_country_id
+        JOIN countries destination ON destination.id = us.destination_country_id
+        WHERE {filter_sql}
+        """,
+        params,
+    )
     return int(row["total"]) if row else 0
+
+
+def _country_source_filters(
+    country_slug: str,
+    source_type: str | None,
+    language: str | None,
+    confidence: str | None,
+    status: str,
+) -> tuple[str, tuple[Any, ...]]:
+    filters = ["c.slug = %s", "s.status = %s"]
+    params: list[Any] = [country_slug, status]
+    if source_type:
+        filters.append("s.source_type = %s")
+        params.append(source_type)
+    if language:
+        filters.append("s.language = %s")
+        params.append(language)
+    if confidence:
+        filters.append("s.confidence = %s")
+        params.append(confidence)
+    return " AND ".join(filters), tuple(params)
+
+
+def _legal_signal_filters(
+    country_slug: str | None,
+    signal_type: str | None,
+    impact_direction: str | None,
+    impact_level: str | None,
+    status: str,
+) -> tuple[str, tuple[Any, ...]]:
+    filters = ["ls.status = %s"]
+    params: list[Any] = [status]
+    if country_slug:
+        filters.append("c.slug = %s")
+        params.append(country_slug)
+    if signal_type:
+        filters.append("ls.signal_type = %s")
+        params.append(signal_type)
+    if impact_direction:
+        filters.append("ls.impact_direction = %s")
+        params.append(impact_direction)
+    if impact_level:
+        filters.append("ls.impact_level = %s")
+        params.append(impact_level)
+    return " AND ".join(filters), tuple(params)
+
+
+def _user_story_filters(
+    origin_country_slug: str | None,
+    destination_country_slug: str | None,
+    scenario: str | None,
+    verification_status: str | None,
+    is_synthetic: bool | None,
+    status: str,
+) -> tuple[str, tuple[Any, ...]]:
+    filters = ["us.status = %s"]
+    params: list[Any] = [status]
+    if origin_country_slug:
+        filters.append("origin.slug = %s")
+        params.append(origin_country_slug)
+    if destination_country_slug:
+        filters.append("destination.slug = %s")
+        params.append(destination_country_slug)
+    if scenario:
+        filters.append("us.scenario = %s")
+        params.append(scenario)
+    if verification_status:
+        filters.append("us.verification_status = %s")
+        params.append(verification_status)
+    if is_synthetic is not None:
+        filters.append("us.is_synthetic = %s")
+        params.append(is_synthetic)
+    return " AND ".join(filters), tuple(params)
 
 
 def get_user_story(connection: Connection[Any], story_id: str) -> dict[str, Any] | None:
@@ -589,7 +785,7 @@ def get_user_story(connection: Connection[Any], story_id: str) -> dict[str, Any]
             created_at,
             updated_at
         FROM user_stories
-        WHERE id::text = %s
+        WHERE id::text = %s AND status = 'published'
         """,
         (story_id,),
     )

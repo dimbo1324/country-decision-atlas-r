@@ -5,6 +5,7 @@ from app.schemas.common import (
     LocaleCode,
     LocaleResolution,
     Pagination,
+    SortMeta,
     source_locale_resolution,
 )
 from app.schemas.decision_engine import (
@@ -67,13 +68,37 @@ def list_scenario_countries(
 
 
 def get_country_sources(
-    connection: Connection[Any], country_slug: str, locale: str, limit: int, offset: int
+    connection: Connection[Any],
+    country_slug: str,
+    locale: str,
+    limit: int,
+    offset: int,
+    source_type: str | None = None,
+    language: str | None = None,
+    confidence: str | None = None,
+    status: str = "published",
+    sort: str = "title",
+    order: str = "asc",
 ) -> SourceListWithLocaleResponse:
-    rows = repository.list_country_sources(connection, country_slug, limit, offset)
-    total = repository.count_country_sources(connection, country_slug)
+    rows = repository.list_country_sources(
+        connection,
+        country_slug,
+        limit,
+        offset,
+        source_type,
+        language,
+        confidence,
+        status,
+        sort,
+        order,
+    )
+    total = repository.count_country_sources(
+        connection, country_slug, source_type, language, confidence, status
+    )
     return SourceListWithLocaleResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
+        sort=SortMeta(sort=sort, order=order),
         locale=source_locale_resolution(locale),
     )
 
@@ -84,15 +109,39 @@ def list_legal_signals(
     country_slug: str | None,
     limit: int,
     offset: int,
-) -> tuple[list[dict[str, Any]], Pagination, LocaleResolution]:
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: str = "published",
+    sort: str = "published_date",
+    order: str = "desc",
+) -> tuple[list[dict[str, Any]], Pagination, LocaleResolution, SortMeta]:
     rows = repository.list_legal_signals(
-        connection, locale, country_slug, limit, offset
+        connection=connection,
+        locale=locale,
+        country_slug=country_slug,
+        signal_type=signal_type,
+        impact_direction=impact_direction,
+        impact_level=impact_level,
+        status=status,
+        limit=limit,
+        offset=offset,
+        sort=sort,
+        order=order,
     )
-    total = repository.count_legal_signals(connection, country_slug)
+    total = repository.count_legal_signals(
+        connection,
+        country_slug,
+        signal_type,
+        impact_direction,
+        impact_level,
+        status,
+    )
     return (
         rows,
         Pagination(limit=limit, offset=offset, total=total),
         _locale(rows, locale),
+        SortMeta(sort=sort, order=order),
     )
 
 
@@ -134,13 +183,44 @@ def get_source_evidence(
 
 
 def list_user_stories(
-    connection: Connection[Any], limit: int, offset: int
+    connection: Connection[Any],
+    limit: int,
+    offset: int,
+    origin_country_slug: str | None = None,
+    destination_country_slug: str | None = None,
+    scenario: str | None = None,
+    verification_status: str | None = None,
+    is_synthetic: bool | None = None,
+    status: str = "published",
+    sort: str = "created_at",
+    order: str = "desc",
 ) -> UserStoryListResponse:
-    rows = repository.list_user_stories(connection, limit, offset)
-    total = repository.count_user_stories(connection)
+    rows = repository.list_user_stories(
+        connection,
+        limit,
+        offset,
+        origin_country_slug,
+        destination_country_slug,
+        scenario,
+        verification_status,
+        is_synthetic,
+        status,
+        sort,
+        order,
+    )
+    total = repository.count_user_stories(
+        connection,
+        origin_country_slug,
+        destination_country_slug,
+        scenario,
+        verification_status,
+        is_synthetic,
+        status,
+    )
     return UserStoryListResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
+        sort=SortMeta(sort=sort, order=order),
     )
 
 
@@ -205,7 +285,15 @@ def run_decision(
             rank=index + 1,
             risks=_risks_for_country(country),
             key_legal_signals=repository.list_legal_signals(
-                connection, locale, country.country_slug, 3, 0
+                connection,
+                locale,
+                country.country_slug,
+                None,
+                None,
+                None,
+                "published",
+                3,
+                0,
             ),
             source_references=country.source_references,
         )

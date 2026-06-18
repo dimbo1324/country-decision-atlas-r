@@ -1,4 +1,4 @@
-from app.schemas.common import LocaleResolution, Pagination
+from app.schemas.common import LocaleResolution, Pagination, PublicationStatus, SortMeta
 from datetime import date, datetime
 from pydantic import BaseModel
 from typing import Literal
@@ -16,9 +16,7 @@ SignalType = Literal[
 ]
 Sentiment = Literal["positive", "neutral", "negative", "mixed", "unknown"]
 Severity = Literal["low", "medium", "high", "critical"]
-SignalStatus = Literal[
-    "draft", "proposed", "adopted", "rejected", "active", "expired", "unknown"
-]
+SignalStatus = PublicationStatus
 ConfidenceLevel = Literal["low", "medium", "high"]
 
 
@@ -41,6 +39,7 @@ class LegalSignal(BaseModel):
 class LegalSignalListResponse(BaseModel):
     items: list[LegalSignal]
     pagination: Pagination
+    sort: SortMeta | None = None
     locale: LocaleResolution
 
 
@@ -51,7 +50,7 @@ class LegalSignalCreate(BaseModel):
     signal_type: SignalType
     sentiment: Sentiment = "unknown"
     severity: Severity = "low"
-    status: SignalStatus = "draft"
+    status: SignalStatus = PublicationStatus.draft
     confidence_level: ConfidenceLevel = "low"
     effective_date: date | None = None
     published_at: date | None = None

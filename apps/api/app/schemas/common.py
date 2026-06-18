@@ -16,6 +16,14 @@ class TranslationStatus(StrEnum):
     missing = "missing"
 
 
+class PublicationStatus(StrEnum):
+    draft = "draft"
+    review = "review"
+    published = "published"
+    archived = "archived"
+    rejected = "rejected"
+
+
 class LocaleResolution(BaseModel):
     requested_locale: LocaleCode
     resolved_locale: LocaleCode
@@ -28,6 +36,16 @@ class Pagination(BaseModel):
     total: int = Field(ge=0)
 
 
+class SortMeta(BaseModel):
+    sort: str | None = None
+    order: str = "asc"
+
+
+class PaginatedMeta(BaseModel):
+    pagination: Pagination
+    sort: SortMeta | None = None
+
+
 class ApiError(BaseModel):
     code: str
     message: str
@@ -36,6 +54,10 @@ class ApiError(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: ApiError
+
+
+class ContentValidationError(ErrorResponse):
+    pass
 
 
 def locale_resolution(

@@ -2,6 +2,8 @@ from app.core.locales import DEFAULT_LOCALE, SUPPORTED_LOCALES
 from app.schemas.common import (
     LocaleResolution,
     Pagination,
+    PublicationStatus,
+    SortMeta,
     TranslationStatus,
 )
 from app.schemas.sources import EvidenceItem, Source
@@ -169,7 +171,7 @@ class UserStoryCreate(BaseModel):
     budget_initial_usd: Decimal | None = Field(default=None, ge=0)
     budget_monthly_usd: Decimal | None = Field(default=None, ge=0)
     legal_path: str | None = None
-    documents_used: list[str] = []
+    documents_used: list[str] = Field(default_factory=list)
     problems: str | None = None
     positive_outcome: str | None = None
     negative_outcome: str | None = None
@@ -182,6 +184,7 @@ class UserStoryCreate(BaseModel):
 class UserStoryListResponse(BaseModel):
     items: list[UserStory]
     pagination: Pagination
+    sort: SortMeta | None = None
 
 
 class UserStoryResponse(BaseModel):
@@ -191,11 +194,13 @@ class UserStoryResponse(BaseModel):
 class EvidenceListResponse(BaseModel):
     items: list[EvidenceItem]
     pagination: Pagination
+    sort: SortMeta | None = None
 
 
 class SourceListWithLocaleResponse(BaseModel):
     items: list[Source]
     pagination: Pagination
+    sort: SortMeta | None = None
     locale: LocaleResolution
 
 
@@ -212,7 +217,7 @@ class LegalSignalDetail(BaseModel):
     effective_date: date | None = None
     source_id: UUID | None = None
     confidence: str
-    status: str
+    status: PublicationStatus
     created_at: datetime
     updated_at: datetime
 
@@ -225,4 +230,5 @@ class LegalSignalDetailResponse(BaseModel):
 class LegalSignalDetailListResponse(BaseModel):
     items: list[LegalSignalDetail]
     pagination: Pagination
+    sort: SortMeta | None = None
     locale: LocaleResolution

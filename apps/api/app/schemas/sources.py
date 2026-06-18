@@ -1,4 +1,4 @@
-from app.schemas.common import LocaleResolution, Pagination
+from app.schemas.common import LocaleResolution, Pagination, SortMeta
 from datetime import date, datetime
 from pydantic import BaseModel
 from uuid import UUID
@@ -13,8 +13,13 @@ class Source(BaseModel):
     country_id: UUID | None = None
     locale_id: UUID | None = None
     reliability_level: str
+    language: str | None = None
+    confidence: str | None = None
+    status: str | None = None
     published_at: date | None = None
     accessed_at: date | None = None
+    last_checked_at: date | None = None
+    notes: str | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -22,6 +27,7 @@ class Source(BaseModel):
 class SourceListResponse(BaseModel):
     items: list[Source]
     pagination: Pagination
+    sort: SortMeta | None = None
     locale: LocaleResolution
 
 
@@ -40,6 +46,12 @@ class EvidenceItem(BaseModel):
     quote: str | None = None
     evidence_type: str
     confidence_level: str
+    legal_signal_id: UUID | None = None
+    claim: str | None = None
+    excerpt: str | None = None
+    retrieved_at: date | None = None
+    confidence: str | None = None
+    status: str | None = None
     published_at: date | None = None
     created_at: datetime
     updated_at: datetime
@@ -48,3 +60,4 @@ class EvidenceItem(BaseModel):
 class EvidenceItemListResponse(BaseModel):
     items: list[EvidenceItem]
     pagination: Pagination
+    sort: SortMeta | None = None

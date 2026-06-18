@@ -344,6 +344,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Create Source */
+        post: operations["admin_create_source_api_v1_admin_sources_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/sources/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Admin Patch Source */
+        patch: operations["admin_patch_source_api_v1_admin_sources__source_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/evidence-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Create Evidence Item */
+        post: operations["admin_create_evidence_item_api_v1_admin_evidence_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/evidence-items/{evidence_item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Admin Patch Evidence Item */
+        patch: operations["admin_patch_evidence_item_api_v1_admin_evidence_items__evidence_item_id__patch"];
+        trace?: never;
+    };
     "/api/v1/admin/legal-signals": {
         parameters: {
             query?: never;
@@ -359,6 +427,74 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/legal-signals/{signal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Admin Patch Legal Signal */
+        patch: operations["admin_patch_legal_signal_api_v1_admin_legal_signals__signal_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/countries/{country_slug}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Admin Patch Country Profile */
+        patch: operations["admin_patch_country_profile_api_v1_admin_countries__country_slug__profile_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/user-stories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Create User Story */
+        post: operations["admin_create_user_story_api_v1_admin_user_stories_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/user-stories/{story_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Admin Patch User Story */
+        patch: operations["admin_patch_user_story_api_v1_admin_user_stories__story_id__patch"];
         trace?: never;
     };
     "/api/v1/admin/translations/jobs": {
@@ -451,6 +587,89 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdminCountryProfileResponse */
+        AdminCountryProfileResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+            audit?: components["schemas"]["AuditEvent"] | null;
+        };
+        /** AdminEvidenceItemResponse */
+        AdminEvidenceItemResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+            audit?: components["schemas"]["AuditEvent"] | null;
+        };
+        /** AdminLegalSignalResponse */
+        AdminLegalSignalResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+            audit?: components["schemas"]["AuditEvent"] | null;
+        };
+        /** AdminSourceResponse */
+        AdminSourceResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+            audit?: components["schemas"]["AuditEvent"] | null;
+        };
+        /** AdminUserStoryResponse */
+        AdminUserStoryResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+            audit?: components["schemas"]["AuditEvent"] | null;
+        };
+        /** ApiError */
+        ApiError: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+            /** Details */
+            details?: {
+                [key: string]: unknown;
+            } | unknown[] | null;
+        };
+        /** AuditEvent */
+        AuditEvent: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Entity Type */
+            entity_type: string;
+            /**
+             * Entity Id
+             * Format: uuid
+             */
+            entity_id: string;
+            /** Action */
+            action: string;
+            /** Changed By */
+            changed_by: string;
+            /**
+             * Changed At
+             * Format: date-time
+             */
+            changed_at: string;
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            };
+        };
+        /** ContentValidationError */
+        ContentValidationError: {
+            error: components["schemas"]["ApiError"];
+        };
         /** Country */
         Country: {
             /**
@@ -532,6 +751,33 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** CountryProfilePatch */
+        CountryProfilePatch: {
+            /**
+             * Locale
+             * @default en
+             */
+            locale: string;
+            /** Executive Summary */
+            executive_summary?: string | null;
+            /** Migration Overview */
+            migration_overview?: string | null;
+            /** Tax Overview */
+            tax_overview?: string | null;
+            /** Cost Of Living Overview */
+            cost_of_living_overview?: string | null;
+            /** Business Overview */
+            business_overview?: string | null;
+            /** Safety Overview */
+            safety_overview?: string | null;
+            /** Legal Signals Summary */
+            legal_signals_summary?: string | null;
+            /** Risk Summary */
+            risk_summary?: string | null;
+            /** Source Summary */
+            source_summary?: string | null;
+            status?: components["schemas"]["PublicationStatus"] | null;
         };
         /** CountryProfileResponse */
         CountryProfileResponse: {
@@ -957,6 +1203,10 @@ export interface components {
             item: components["schemas"]["DecisionScenario"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** ErrorResponse */
+        ErrorResponse: {
+            error: components["schemas"]["ApiError"];
+        };
         /** EvidenceItem */
         EvidenceItem: {
             /**
@@ -983,6 +1233,18 @@ export interface components {
             evidence_type: string;
             /** Confidence Level */
             confidence_level: string;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Retrieved At */
+            retrieved_at?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Status */
+            status?: string | null;
             /** Published At */
             published_at?: string | null;
             /**
@@ -996,17 +1258,57 @@ export interface components {
              */
             updated_at: string;
         };
+        /** EvidenceItemCreate */
+        EvidenceItemCreate: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Url */
+            url?: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+            /** @default draft */
+            status: components["schemas"]["PublicationStatus"];
+        };
         /** EvidenceItemListResponse */
         EvidenceItemListResponse: {
             /** Items */
             items: components["schemas"]["EvidenceItem"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
+        };
+        /** EvidenceItemPatch */
+        EvidenceItemPatch: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Url */
+            url?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            status?: components["schemas"]["PublicationStatus"] | null;
         };
         /** EvidenceListResponse */
         EvidenceListResponse: {
             /** Items */
             items: components["schemas"]["EvidenceItem"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1044,11 +1346,7 @@ export interface components {
              * @enum {string}
              */
             severity: "low" | "medium" | "high" | "critical";
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "draft" | "proposed" | "adopted" | "rejected" | "active" | "expired" | "unknown";
+            status: components["schemas"]["PublicationStatus"];
             /**
              * Confidence Level
              * @enum {string}
@@ -1071,48 +1369,37 @@ export interface components {
         };
         /** LegalSignalCreate */
         LegalSignalCreate: {
-            /**
-             * Country Id
-             * Format: uuid
-             */
-            country_id: string;
-            /** Title */
-            title: string;
-            /** Summary */
-            summary: string;
-            /**
-             * Signal Type
-             * @enum {string}
-             */
-            signal_type: "law" | "bill" | "policy" | "court_decision" | "administrative_change" | "political_signal" | "other";
-            /**
-             * Sentiment
-             * @default unknown
-             * @enum {string}
-             */
-            sentiment: "positive" | "neutral" | "negative" | "mixed" | "unknown";
-            /**
-             * Severity
-             * @default low
-             * @enum {string}
-             */
-            severity: "low" | "medium" | "high" | "critical";
-            /**
-             * Status
-             * @default draft
-             * @enum {string}
-             */
-            status: "draft" | "proposed" | "adopted" | "rejected" | "active" | "expired" | "unknown";
-            /**
-             * Confidence Level
-             * @default low
-             * @enum {string}
-             */
-            confidence_level: "low" | "medium" | "high";
+            /** Country Slug */
+            country_slug: string;
+            /** Source Id */
+            source_id?: string | null;
+            /** Title En */
+            title_en?: string | null;
+            /** Title Ru */
+            title_ru?: string | null;
+            /** Summary En */
+            summary_en?: string | null;
+            /** Summary Ru */
+            summary_ru?: string | null;
+            /** Signal Type */
+            signal_type?: string | null;
+            /** Impact Direction */
+            impact_direction?: string | null;
+            /** Impact Level */
+            impact_level?: string | null;
+            /** Affected Groups */
+            affected_groups?: string[];
+            /** Published Date */
+            published_date?: string | null;
             /** Effective Date */
             effective_date?: string | null;
-            /** Published At */
-            published_at?: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+            /** @default draft */
+            status: components["schemas"]["PublicationStatus"];
         };
         /** LegalSignalDetail */
         LegalSignalDetail: {
@@ -1146,8 +1433,7 @@ export interface components {
             source_id?: string | null;
             /** Confidence */
             confidence: string;
-            /** Status */
-            status: string;
+            status: components["schemas"]["PublicationStatus"];
             /**
              * Created At
              * Format: date-time
@@ -1164,6 +1450,7 @@ export interface components {
             /** Items */
             items: components["schemas"]["LegalSignalDetail"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
             locale: components["schemas"]["LocaleResolution"];
         };
         /** LegalSignalDetailResponse */
@@ -1176,11 +1463,36 @@ export interface components {
             /** Items */
             items: components["schemas"]["LegalSignal"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
             locale: components["schemas"]["LocaleResolution"];
         };
-        /** LegalSignalResponse */
-        LegalSignalResponse: {
-            item: components["schemas"]["LegalSignal"];
+        /** LegalSignalPatch */
+        LegalSignalPatch: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Title En */
+            title_en?: string | null;
+            /** Title Ru */
+            title_ru?: string | null;
+            /** Summary En */
+            summary_en?: string | null;
+            /** Summary Ru */
+            summary_ru?: string | null;
+            /** Signal Type */
+            signal_type?: string | null;
+            /** Impact Direction */
+            impact_direction?: string | null;
+            /** Impact Level */
+            impact_level?: string | null;
+            /** Affected Groups */
+            affected_groups?: string[] | null;
+            /** Published Date */
+            published_date?: string | null;
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            status?: components["schemas"]["PublicationStatus"] | null;
         };
         /**
          * LocaleCode
@@ -1202,6 +1514,11 @@ export interface components {
             /** Total */
             total: number;
         };
+        /**
+         * PublicationStatus
+         * @enum {string}
+         */
+        PublicationStatus: "draft" | "review" | "published" | "archived" | "rejected";
         /** Scenario */
         Scenario: {
             /**
@@ -1301,6 +1618,16 @@ export interface components {
             /** Results */
             results: components["schemas"]["ScenarioRunCountryResult"][];
         };
+        /** SortMeta */
+        SortMeta: {
+            /** Sort */
+            sort?: string | null;
+            /**
+             * Order
+             * @default asc
+             */
+            order: string;
+        };
         /** Source */
         Source: {
             /**
@@ -1322,10 +1649,20 @@ export interface components {
             locale_id?: string | null;
             /** Reliability Level */
             reliability_level: string;
+            /** Language */
+            language?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Status */
+            status?: string | null;
             /** Published At */
             published_at?: string | null;
             /** Accessed At */
             accessed_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Notes */
+            notes?: string | null;
             /**
              * Created At
              * Format: date-time
@@ -1337,11 +1674,43 @@ export interface components {
              */
             updated_at: string;
         };
+        /** SourceCreate */
+        SourceCreate: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /**
+             * Language
+             * @default en
+             */
+            language: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /** @default draft */
+            status: components["schemas"]["PublicationStatus"];
+        };
         /** SourceListResponse */
         SourceListResponse: {
             /** Items */
             items: components["schemas"]["Source"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
             locale: components["schemas"]["LocaleResolution"];
         };
         /** SourceListWithLocaleResponse */
@@ -1349,7 +1718,30 @@ export interface components {
             /** Items */
             items: components["schemas"]["Source"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** SourcePatch */
+        SourcePatch: {
+            /** Title */
+            title?: string | null;
+            /** Url */
+            url?: string | null;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /** Language */
+            language?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Notes */
+            notes?: string | null;
+            status?: components["schemas"]["PublicationStatus"] | null;
         };
         /** SourceResponse */
         SourceResponse: {
@@ -1521,6 +1913,54 @@ export interface components {
              */
             updated_at: string;
         };
+        /** UserStoryAdminCreate */
+        UserStoryAdminCreate: {
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Destination Country Slug */
+            destination_country_slug: string;
+            /** City */
+            city?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Scenario */
+            scenario: string;
+            /** Budget Initial Usd */
+            budget_initial_usd?: number | string | null;
+            /** Budget Monthly Usd */
+            budget_monthly_usd?: number | string | null;
+            /** Legal Path */
+            legal_path?: string | null;
+            /** Documents Used */
+            documents_used?: string[];
+            /** Problems */
+            problems?: string | null;
+            /** Positive Outcome */
+            positive_outcome?: string | null;
+            /** Negative Outcome */
+            negative_outcome?: string | null;
+            /** Advice */
+            advice?: string | null;
+            /** Satisfaction Score */
+            satisfaction_score?: number | string | null;
+            /**
+             * Verification Status
+             * @default synthetic
+             */
+            verification_status: string;
+            /** @default draft */
+            status: components["schemas"]["PublicationStatus"];
+            /**
+             * Is Synthetic
+             * @default true
+             */
+            is_synthetic: boolean;
+            /**
+             * Notes
+             * @default Synthetic example for MVP demonstration only.
+             */
+            notes: string;
+        };
         /** UserStoryCreate */
         UserStoryCreate: {
             /** Origin Country Slug */
@@ -1539,11 +1979,8 @@ export interface components {
             budget_monthly_usd?: number | string | null;
             /** Legal Path */
             legal_path?: string | null;
-            /**
-             * Documents Used
-             * @default []
-             */
-            documents_used: string[];
+            /** Documents Used */
+            documents_used?: string[];
             /** Problems */
             problems?: string | null;
             /** Positive Outcome */
@@ -1570,6 +2007,45 @@ export interface components {
             /** Items */
             items: components["schemas"]["UserStory"][];
             pagination: components["schemas"]["Pagination"];
+            sort?: components["schemas"]["SortMeta"] | null;
+        };
+        /** UserStoryPatch */
+        UserStoryPatch: {
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Destination Country Slug */
+            destination_country_slug?: string | null;
+            /** City */
+            city?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Scenario */
+            scenario?: string | null;
+            /** Budget Initial Usd */
+            budget_initial_usd?: number | string | null;
+            /** Budget Monthly Usd */
+            budget_monthly_usd?: number | string | null;
+            /** Legal Path */
+            legal_path?: string | null;
+            /** Documents Used */
+            documents_used?: string[] | null;
+            /** Problems */
+            problems?: string | null;
+            /** Positive Outcome */
+            positive_outcome?: string | null;
+            /** Negative Outcome */
+            negative_outcome?: string | null;
+            /** Advice */
+            advice?: string | null;
+            /** Satisfaction Score */
+            satisfaction_score?: number | string | null;
+            /** Verification Status */
+            verification_status?: string | null;
+            status?: components["schemas"]["PublicationStatus"] | null;
+            /** Is Synthetic */
+            is_synthetic?: boolean | null;
+            /** Notes */
+            notes?: string | null;
         };
         /** UserStoryResponse */
         UserStoryResponse: {
@@ -1789,6 +2265,12 @@ export interface operations {
     read_country_sources_api_v1_countries__country_slug__sources_get: {
         parameters: {
             query?: {
+                source_type?: string | null;
+                language?: string | null;
+                confidence?: ("low" | "medium" | "high") | null;
+                status?: "published" | "archived";
+                sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
                 locale?: "en" | "ru";
@@ -1824,6 +2306,12 @@ export interface operations {
     read_country_legal_signals_api_v1_countries__country_id__legal_signals_get: {
         parameters: {
             query?: {
+                signal_type?: string | null;
+                impact_direction?: string | null;
+                impact_level?: string | null;
+                status?: "published" | "archived";
+                sort?: "published_date" | "effective_date" | "impact_level" | "created_at" | "updated_at";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
                 locale?: "en" | "ru";
@@ -1860,6 +2348,12 @@ export interface operations {
         parameters: {
             query?: {
                 country_slug?: string | null;
+                signal_type?: string | null;
+                impact_direction?: string | null;
+                impact_level?: string | null;
+                status?: "published" | "archived";
+                sort?: "published_date" | "effective_date" | "impact_level" | "created_at" | "updated_at";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
                 locale?: "en" | "ru";
@@ -2089,6 +2583,13 @@ export interface operations {
     read_sources_api_v1_sources_get: {
         parameters: {
             query?: {
+                country_slug?: string | null;
+                source_type?: string | null;
+                language?: string | null;
+                confidence?: ("low" | "medium" | "high") | null;
+                status?: "published" | "archived";
+                sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
                 locale?: "en" | "ru";
@@ -2122,6 +2623,13 @@ export interface operations {
     read_evidence_items_api_v1_evidence_items_get: {
         parameters: {
             query?: {
+                country_slug?: string | null;
+                source_id?: string | null;
+                legal_signal_id?: string | null;
+                confidence?: ("low" | "medium" | "high") | null;
+                status?: "published" | "archived";
+                sort?: "retrieved_at" | "created_at" | "confidence";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
             };
@@ -2250,6 +2758,178 @@ export interface operations {
             };
         };
     };
+    admin_create_source_api_v1_admin_sources_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SourceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSourceResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_patch_source_api_v1_admin_sources__source_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SourcePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSourceResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_create_evidence_item_api_v1_admin_evidence_items_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EvidenceItemCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEvidenceItemResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_patch_evidence_item_api_v1_admin_evidence_items__evidence_item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                evidence_item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EvidenceItemPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEvidenceItemResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
     admin_create_legal_signal_api_v1_admin_legal_signals_post: {
         parameters: {
             query?: never;
@@ -2269,16 +2949,199 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LegalSignalResponse"];
+                    "application/json": components["schemas"]["AdminLegalSignalResponse"];
                 };
             };
-            /** @description Validation Error */
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_patch_legal_signal_api_v1_admin_legal_signals__signal_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                signal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LegalSignalPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminLegalSignalResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_patch_country_profile_api_v1_admin_countries__country_slug__profile_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryProfilePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCountryProfileResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_create_user_story_api_v1_admin_user_stories_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStoryAdminCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserStoryResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
+                };
+            };
+        };
+    };
+    admin_patch_user_story_api_v1_admin_user_stories__story_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                story_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStoryPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserStoryResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentValidationError"];
                 };
             };
         };
@@ -2305,13 +3168,22 @@ export interface operations {
                     "application/json": components["schemas"]["TranslationJobResponse"];
                 };
             };
-            /** @description Validation Error */
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
+                    "application/json": components["schemas"]["ContentValidationError"];
                 };
             };
         };
@@ -2319,6 +3191,14 @@ export interface operations {
     read_user_stories_api_v1_user_stories_get: {
         parameters: {
             query?: {
+                origin_country_slug?: string | null;
+                destination_country_slug?: string | null;
+                scenario?: string | null;
+                verification_status?: string | null;
+                is_synthetic?: boolean | null;
+                status?: "published" | "archived";
+                sort?: "created_at" | "year" | "satisfaction_score";
+                order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
             };

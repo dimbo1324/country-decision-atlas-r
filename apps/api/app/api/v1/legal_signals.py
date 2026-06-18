@@ -2,7 +2,7 @@ from app.core.database import get_connection
 from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
 from app.repositories.legal_signals import count_legal_signals, list_legal_signals
-from app.schemas.common import Pagination
+from app.schemas.common import Pagination, SortMeta
 from app.schemas.decision_engine import (
     EvidenceListResponse,
     LegalSignalDetailListResponse,
@@ -12,7 +12,7 @@ from app.schemas.legal_signals import LegalSignalListResponse
 from app.services import decision_engine
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 
 router = APIRouter(
@@ -25,14 +25,37 @@ async def read_country_legal_signals(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
-    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: Literal["published", "archived"] = "published",
+    sort: Literal[
+        "published_date", "effective_date", "impact_level", "created_at", "updated_at"
+    ] = "published_date",
+    order: Literal["asc", "desc"] = "desc",
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalListResponse:
-    rows = list_legal_signals(connection, country_id, locale, limit, offset)
-    total = count_legal_signals(connection, country_id)
+    rows = list_legal_signals(
+        connection,
+        country_id,
+        locale,
+        limit,
+        offset,
+        signal_type,
+        impact_direction,
+        impact_level,
+        status,
+        sort,
+        order,
+    )
+    total = count_legal_signals(
+        connection, country_id, signal_type, impact_direction, impact_level, status
+    )
     return LegalSignalListResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
+        sort=SortMeta(sort=sort, order=order),
         locale=build_locale(rows, locale),
     )
 
@@ -45,14 +68,32 @@ async def read_legal_signals(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     country_slug: str | None = None,
-    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: Literal["published", "archived"] = "published",
+    sort: Literal[
+        "published_date", "effective_date", "impact_level", "created_at", "updated_at"
+    ] = "published_date",
+    order: Literal["asc", "desc"] = "desc",
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalDetailListResponse:
-    rows, pagination, locale_meta = decision_engine.list_legal_signals(
-        connection, locale, country_slug, limit, offset
+    rows, pagination, locale_meta, sort_meta = decision_engine.list_legal_signals(
+        connection,
+        locale,
+        country_slug,
+        limit,
+        offset,
+        signal_type,
+        impact_direction,
+        impact_level,
+        status,
+        sort,
+        order,
     )
     return LegalSignalDetailListResponse(
-        items=rows, pagination=pagination, locale=locale_meta
+        items=rows, pagination=pagination, sort=sort_meta, locale=locale_meta
     )
 
 

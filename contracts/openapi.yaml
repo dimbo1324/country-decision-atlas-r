@@ -245,6 +245,67 @@ paths:
         schema:
           type: string
           title: Country Slug
+      - name: source_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+      - name: language
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+      - name: confidence
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - low
+            - medium
+            - high
+            type: string
+          - type: 'null'
+          title: Confidence
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - title
+          - created_at
+          - published_at
+          - last_checked_at
+          - confidence
+          type: string
+          default: title
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: asc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -252,7 +313,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -299,6 +360,63 @@ paths:
         schema:
           type: string
           title: Country Id
+      - name: signal_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+      - name: impact_direction
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+      - name: impact_level
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - published_date
+          - effective_date
+          - impact_level
+          - created_at
+          - updated_at
+          type: string
+          default: published_date
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: desc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -306,7 +424,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -355,6 +473,63 @@ paths:
           - type: string
           - type: 'null'
           title: Country Slug
+      - name: signal_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+      - name: impact_direction
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+      - name: impact_level
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - published_date
+          - effective_date
+          - impact_level
+          - created_at
+          - updated_at
+          type: string
+          default: published_date
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: desc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -362,7 +537,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -613,6 +788,75 @@ paths:
       summary: Read Sources
       operationId: read_sources_api_v1_sources_get
       parameters:
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: source_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+      - name: language
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+      - name: confidence
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - low
+            - medium
+            - high
+            type: string
+          - type: 'null'
+          title: Confidence
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - title
+          - created_at
+          - published_at
+          - last_checked_at
+          - confidence
+          type: string
+          default: last_checked_at
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: desc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -620,7 +864,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -661,6 +905,73 @@ paths:
       summary: Read Evidence Items
       operationId: read_evidence_items_api_v1_evidence_items_get
       parameters:
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: source_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Id
+      - name: legal_signal_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Signal Id
+      - name: confidence
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - low
+            - medium
+            - high
+            type: string
+          - type: 'null'
+          title: Confidence
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - retrieved_at
+          - created_at
+          - confidence
+          type: string
+          default: retrieved_at
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: desc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -668,7 +979,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -808,6 +1119,152 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/sources:
+    post:
+      tags:
+      - admin
+      summary: Admin Create Source
+      operationId: admin_create_source_api_v1_admin_sources_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminSourceResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/sources/{source_id}:
+    patch:
+      tags:
+      - admin
+      summary: Admin Patch Source
+      operationId: admin_patch_source_api_v1_admin_sources__source_id__patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourcePatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminSourceResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+          description: Unprocessable Content
+  /api/v1/admin/evidence-items:
+    post:
+      tags:
+      - admin
+      summary: Admin Create Evidence Item
+      operationId: admin_create_evidence_item_api_v1_admin_evidence_items_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvidenceItemCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminEvidenceItemResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/evidence-items/{evidence_item_id}:
+    patch:
+      tags:
+      - admin
+      summary: Admin Patch Evidence Item
+      operationId: admin_patch_evidence_item_api_v1_admin_evidence_items__evidence_item_id__patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: evidence_item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Evidence Item Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvidenceItemPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminEvidenceItemResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+          description: Unprocessable Content
   /api/v1/admin/legal-signals:
     post:
       tags:
@@ -826,13 +1283,174 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LegalSignalResponse'
-        '422':
-          description: Validation Error
+                $ref: '#/components/schemas/AdminLegalSignalResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/legal-signals/{signal_id}:
+    patch:
+      tags:
+      - admin
+      summary: Admin Patch Legal Signal
+      operationId: admin_patch_legal_signal_api_v1_admin_legal_signals__signal_id__patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Signal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LegalSignalPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminLegalSignalResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+          description: Unprocessable Content
+  /api/v1/admin/countries/{country_slug}/profile:
+    patch:
+      tags:
+      - admin
+      summary: Admin Patch Country Profile
+      operationId: admin_patch_country_profile_api_v1_admin_countries__country_slug__profile_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryProfilePatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminCountryProfileResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+          description: Unprocessable Content
+  /api/v1/admin/user-stories:
+    post:
+      tags:
+      - admin
+      summary: Admin Create User Story
+      operationId: admin_create_user_story_api_v1_admin_user_stories_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStoryAdminCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserStoryResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/user-stories/{story_id}:
+    patch:
+      tags:
+      - admin
+      summary: Admin Patch User Story
+      operationId: admin_patch_user_story_api_v1_admin_user_stories__story_id__patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Story Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStoryPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserStoryResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+          description: Unprocessable Content
   /api/v1/admin/translations/jobs:
     post:
       tags:
@@ -852,12 +1470,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TranslationJobResponse'
-        '422':
-          description: Validation Error
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentValidationError'
+      security:
+      - AdminTokenAuth: []
   /api/v1/user-stories:
     get:
       tags:
@@ -865,6 +1491,77 @@ paths:
       summary: Read User Stories
       operationId: read_user_stories_api_v1_user_stories_get
       parameters:
+      - name: origin_country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+      - name: destination_country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Country Slug
+      - name: scenario
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
+      - name: verification_status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verification Status
+      - name: is_synthetic
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Synthetic
+      - name: status
+        in: query
+        required: false
+        schema:
+          enum:
+          - published
+          - archived
+          type: string
+          default: published
+          title: Status
+      - name: sort
+        in: query
+        required: false
+        schema:
+          enum:
+          - created_at
+          - year
+          - satisfaction_score
+          type: string
+          default: created_at
+          title: Sort
+      - name: order
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          default: desc
+          title: Order
       - name: limit
         in: query
         required: false
@@ -872,7 +1569,7 @@ paths:
           type: integer
           maximum: 100
           minimum: 1
-          default: 50
+          default: 20
           title: Limit
       - name: offset
         in: query
@@ -997,6 +1694,142 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    AdminCountryProfileResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+        audit:
+          anyOf:
+          - $ref: '#/components/schemas/AuditEvent'
+          - type: 'null'
+      type: object
+      required:
+      - item
+      title: AdminCountryProfileResponse
+    AdminEvidenceItemResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+        audit:
+          anyOf:
+          - $ref: '#/components/schemas/AuditEvent'
+          - type: 'null'
+      type: object
+      required:
+      - item
+      title: AdminEvidenceItemResponse
+    AdminLegalSignalResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+        audit:
+          anyOf:
+          - $ref: '#/components/schemas/AuditEvent'
+          - type: 'null'
+      type: object
+      required:
+      - item
+      title: AdminLegalSignalResponse
+    AdminSourceResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+        audit:
+          anyOf:
+          - $ref: '#/components/schemas/AuditEvent'
+          - type: 'null'
+      type: object
+      required:
+      - item
+      title: AdminSourceResponse
+    AdminUserStoryResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+        audit:
+          anyOf:
+          - $ref: '#/components/schemas/AuditEvent'
+          - type: 'null'
+      type: object
+      required:
+      - item
+      title: AdminUserStoryResponse
+    ApiError:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+        details:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Details
+      type: object
+      required:
+      - code
+      - message
+      title: ApiError
+    AuditEvent:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          type: string
+          format: uuid
+          title: Entity Id
+        action:
+          type: string
+          title: Action
+        changed_by:
+          type: string
+          title: Changed By
+        changed_at:
+          type: string
+          format: date-time
+          title: Changed At
+        changes:
+          additionalProperties: true
+          type: object
+          title: Changes
+      type: object
+      required:
+      - id
+      - entity_type
+      - entity_id
+      - action
+      - changed_by
+      - changed_at
+      - changes
+      title: AuditEvent
+    ContentValidationError:
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+      type: object
+      required:
+      - error
+      title: ContentValidationError
     Country:
       properties:
         id:
@@ -1138,6 +1971,63 @@ components:
       - created_at
       - updated_at
       title: CountryProfile
+    CountryProfilePatch:
+      properties:
+        locale:
+          type: string
+          title: Locale
+          default: en
+        executive_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Executive Summary
+        migration_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Migration Overview
+        tax_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tax Overview
+        cost_of_living_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cost Of Living Overview
+        business_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Overview
+        safety_overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Safety Overview
+        legal_signals_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Signals Summary
+        risk_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk Summary
+        source_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Summary
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicationStatus'
+          - type: 'null'
+      type: object
+      title: CountryProfilePatch
     CountryProfileResponse:
       properties:
         item:
@@ -1963,6 +2853,14 @@ components:
       - item
       - locale
       title: DecisionScenarioResponse
+    ErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+      type: object
+      required:
+      - error
+      title: ErrorResponse
     EvidenceItem:
       properties:
         id:
@@ -2001,6 +2899,38 @@ components:
         confidence_level:
           type: string
           title: Confidence Level
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        retrieved_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Retrieved At
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
         published_at:
           anyOf:
           - type: string
@@ -2026,6 +2956,51 @@ components:
       - created_at
       - updated_at
       title: EvidenceItem
+    EvidenceItemCreate:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          default: medium
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+          default: draft
+      type: object
+      title: EvidenceItemCreate
     EvidenceItemListResponse:
       properties:
         items:
@@ -2035,11 +3010,55 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
       type: object
       required:
       - items
       - pagination
       title: EvidenceItemListResponse
+    EvidenceItemPatch:
+      properties:
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicationStatus'
+          - type: 'null'
+      type: object
+      title: EvidenceItemPatch
     EvidenceListResponse:
       properties:
         items:
@@ -2049,6 +3068,10 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
       type: object
       required:
       - items
@@ -2108,16 +3131,7 @@ components:
           - critical
           title: Severity
         status:
-          type: string
-          enum:
-          - draft
-          - proposed
-          - adopted
-          - rejected
-          - active
-          - expired
-          - unknown
-          title: Status
+          $ref: '#/components/schemas/PublicationStatus'
         confidence_level:
           type: string
           enum:
@@ -2161,84 +3175,79 @@ components:
       title: LegalSignal
     LegalSignalCreate:
       properties:
-        country_id:
+        country_slug:
           type: string
-          format: uuid
-          title: Country Id
-        title:
-          type: string
-          title: Title
-        summary:
-          type: string
-          title: Summary
+          title: Country Slug
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        title_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title En
+        title_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Ru
+        summary_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary En
+        summary_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Ru
         signal_type:
-          type: string
-          enum:
-          - law
-          - bill
-          - policy
-          - court_decision
-          - administrative_change
-          - political_signal
-          - other
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Signal Type
-        sentiment:
-          type: string
-          enum:
-          - positive
-          - neutral
-          - negative
-          - mixed
-          - unknown
-          title: Sentiment
-          default: unknown
-        severity:
-          type: string
-          enum:
-          - low
-          - medium
-          - high
-          - critical
-          title: Severity
-          default: low
-        status:
-          type: string
-          enum:
-          - draft
-          - proposed
-          - adopted
-          - rejected
-          - active
-          - expired
-          - unknown
-          title: Status
-          default: draft
-        confidence_level:
-          type: string
-          enum:
-          - low
-          - medium
-          - high
-          title: Confidence Level
-          default: low
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        affected_groups:
+          items:
+            type: string
+          type: array
+          title: Affected Groups
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
         effective_date:
           anyOf:
           - type: string
             format: date
           - type: 'null'
           title: Effective Date
-        published_at:
+        confidence:
           anyOf:
           - type: string
-            format: date
           - type: 'null'
-          title: Published At
+          title: Confidence
+          default: medium
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+          default: draft
       type: object
       required:
-      - country_id
-      - title
-      - summary
-      - signal_type
+      - country_slug
       title: LegalSignalCreate
     LegalSignalDetail:
       properties:
@@ -2292,8 +3301,7 @@ components:
           type: string
           title: Confidence
         status:
-          type: string
-          title: Status
+          $ref: '#/components/schemas/PublicationStatus'
         created_at:
           type: string
           format: date-time
@@ -2326,6 +3334,10 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
@@ -2354,6 +3366,10 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
@@ -2362,14 +3378,79 @@ components:
       - pagination
       - locale
       title: LegalSignalListResponse
-    LegalSignalResponse:
+    LegalSignalPatch:
       properties:
-        item:
-          $ref: '#/components/schemas/LegalSignal'
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        title_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title En
+        title_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Ru
+        summary_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary En
+        summary_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Ru
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        affected_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Affected Groups
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        effective_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Effective Date
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicationStatus'
+          - type: 'null'
       type: object
-      required:
-      - item
-      title: LegalSignalResponse
+      title: LegalSignalPatch
     LocaleCode:
       type: string
       enum:
@@ -2411,6 +3492,15 @@ components:
       - offset
       - total
       title: Pagination
+    PublicationStatus:
+      type: string
+      enum:
+      - draft
+      - review
+      - published
+      - archived
+      - rejected
+      title: PublicationStatus
     Scenario:
       properties:
         id:
@@ -2571,6 +3661,19 @@ components:
       - scenario_slug
       - results
       title: ScenarioRunResult
+    SortMeta:
+      properties:
+        sort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sort
+        order:
+          type: string
+          title: Order
+          default: asc
+      type: object
+      title: SortMeta
     Source:
       properties:
         id:
@@ -2606,6 +3709,21 @@ components:
         reliability_level:
           type: string
           title: Reliability Level
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
         published_at:
           anyOf:
           - type: string
@@ -2618,6 +3736,17 @@ components:
             format: date
           - type: 'null'
           title: Accessed At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
         created_at:
           type: string
           format: date-time
@@ -2636,6 +3765,67 @@ components:
       - created_at
       - updated_at
       title: Source
+    SourceCreate:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        title:
+          type: string
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+          default: en
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          default: medium
+        published_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+          default: draft
+      type: object
+      required:
+      - title
+      title: SourceCreate
     SourceListResponse:
       properties:
         items:
@@ -2645,6 +3835,10 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
@@ -2662,6 +3856,10 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
@@ -2670,6 +3868,61 @@ components:
       - pagination
       - locale
       title: SourceListWithLocaleResponse
+    SourcePatch:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        published_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicationStatus'
+          - type: 'null'
+      type: object
+      title: SourcePatch
     SourceResponse:
       properties:
         item:
@@ -2948,6 +4201,106 @@ components:
       - created_at
       - updated_at
       title: UserStory
+    UserStoryAdminCreate:
+      properties:
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        destination_country_slug:
+          type: string
+          title: Destination Country Slug
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        year:
+          anyOf:
+          - type: integer
+            maximum: 2100.0
+            minimum: 1990.0
+          - type: 'null'
+          title: Year
+        scenario:
+          type: string
+          title: Scenario
+        budget_initial_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Budget Initial Usd
+        budget_monthly_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Budget Monthly Usd
+        legal_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Path
+        documents_used:
+          items:
+            type: string
+          type: array
+          title: Documents Used
+        problems:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problems
+        positive_outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Positive Outcome
+        negative_outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Negative Outcome
+        advice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advice
+        satisfaction_score:
+          anyOf:
+          - type: number
+            maximum: 10.0
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Satisfaction Score
+        verification_status:
+          type: string
+          title: Verification Status
+          default: synthetic
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+          default: draft
+        is_synthetic:
+          type: boolean
+          title: Is Synthetic
+          default: true
+        notes:
+          type: string
+          title: Notes
+          default: Synthetic example for MVP demonstration only.
+      type: object
+      required:
+      - destination_country_slug
+      - scenario
+      title: UserStoryAdminCreate
     UserStoryCreate:
       properties:
         origin_country_slug:
@@ -2999,7 +4352,6 @@ components:
             type: string
           type: array
           title: Documents Used
-          default: []
         problems:
           anyOf:
           - type: string
@@ -3051,11 +4403,122 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        sort:
+          anyOf:
+          - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
       type: object
       required:
       - items
       - pagination
       title: UserStoryListResponse
+    UserStoryPatch:
+      properties:
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        destination_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Country Slug
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        year:
+          anyOf:
+          - type: integer
+            maximum: 2100.0
+            minimum: 1990.0
+          - type: 'null'
+          title: Year
+        scenario:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
+        budget_initial_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Budget Initial Usd
+        budget_monthly_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Budget Monthly Usd
+        legal_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Path
+        documents_used:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Documents Used
+        problems:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problems
+        positive_outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Positive Outcome
+        negative_outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Negative Outcome
+        advice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advice
+        satisfaction_score:
+          anyOf:
+          - type: number
+            maximum: 10.0
+            minimum: 0.0
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Satisfaction Score
+        verification_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verification Status
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicationStatus'
+          - type: 'null'
+        is_synthetic:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Synthetic
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      title: UserStoryPatch
     UserStoryResponse:
       properties:
         item:
@@ -3090,3 +4553,8 @@ components:
       - msg
       - type
       title: ValidationError
+  securitySchemes:
+    AdminTokenAuth:
+      type: apiKey
+      in: header
+      name: X-Admin-Token

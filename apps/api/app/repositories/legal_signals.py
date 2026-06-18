@@ -5,12 +5,27 @@ from psycopg import Connection
 from typing import Any
 
 
+LEGAL_SIGNAL_SORT_COLUMNS = {
+    "published_date": "ls.published_date",
+    "effective_date": "ls.effective_date",
+    "impact_level": "ls.impact_level",
+    "created_at": "ls.created_at",
+    "updated_at": "ls.updated_at",
+}
+
+
 def list_legal_signals(
     connection: Connection[Any],
     country_id: str,
     locale: str,
     limit: int,
     offset: int,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: str = "published",
+    sort: str = "published_date",
+    order: str = "desc",
 ) -> list[dict[str, Any]]:
     requested_locale = validate_locale(locale)
     title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
@@ -39,6 +54,13 @@ def list_legal_signals(
                 ELSE 'missing'
             END
         """
+    filter_sql, params = _filters(
+        country_id, signal_type, impact_direction, impact_level, status
+    )
+    sort_column = LEGAL_SIGNAL_SORT_COLUMNS.get(
+        sort, LEGAL_SIGNAL_SORT_COLUMNS["published_date"]
+    )
+    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
         f"""
@@ -61,26 +83,57 @@ def list_legal_signals(
             {status_sql} AS translation_status
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
-        WHERE c.id::text = %s OR c.slug = %s
-        ORDER BY ls.created_at DESC, ls.title
+        WHERE {filter_sql}
+        ORDER BY {sort_column} {order_sql} NULLS LAST, ls.title
         LIMIT %s OFFSET %s
         """,
-        (country_id, country_id, limit, offset),
+        (*params, limit, offset),
     )
 
 
-def count_legal_signals(connection: Connection[Any], country_id: str) -> int:
+def count_legal_signals(
+    connection: Connection[Any],
+    country_id: str,
+    signal_type: str | None = None,
+    impact_direction: str | None = None,
+    impact_level: str | None = None,
+    status: str = "published",
+) -> int:
+    filter_sql, params = _filters(
+        country_id, signal_type, impact_direction, impact_level, status
+    )
     row = fetch_one(
         connection,
-        """
+        f"""
         SELECT COUNT(*) AS total
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
-        WHERE c.id::text = %s OR c.slug = %s
+        WHERE {filter_sql}
         """,
-        (country_id, country_id),
+        params,
     )
     return int(row["total"]) if row else 0
+
+
+def _filters(
+    country_id: str,
+    signal_type: str | None,
+    impact_direction: str | None,
+    impact_level: str | None,
+    status: str,
+) -> tuple[str, tuple[Any, ...]]:
+    filters = ["(c.id::text = %s OR c.slug = %s)", "ls.status = %s"]
+    params: list[Any] = [country_id, country_id, status]
+    if signal_type:
+        filters.append("ls.signal_type = %s")
+        params.append(signal_type)
+    if impact_direction:
+        filters.append("ls.impact_direction = %s")
+        params.append(impact_direction)
+    if impact_level:
+        filters.append("ls.impact_level = %s")
+        params.append(impact_level)
+    return " AND ".join(filters), tuple(params)
 
 
 def create_legal_signal(

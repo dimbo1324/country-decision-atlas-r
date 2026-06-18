@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     default_locale: str = "en"
     supported_locales: str = "en,ru"
+    admin_token: str | None = None
 
     @property
     def cors_origins(self) -> list[str]:

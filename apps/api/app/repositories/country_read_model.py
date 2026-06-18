@@ -273,7 +273,7 @@ def list_country_read_model_legal_signals(
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.slug = %s
-          AND ls.status IN ('published', 'active')
+          AND ls.status = 'published'
         ORDER BY
             CASE ls.impact_level
                 WHEN 'critical' THEN 1
@@ -316,6 +316,7 @@ def list_country_read_model_sources(
         FROM sources s
         JOIN countries c ON c.id = s.country_id
         WHERE c.slug = %s
+          AND s.status = 'published'
         ORDER BY
             CASE s.source_type
                 WHEN 'official' THEN 1
@@ -353,6 +354,7 @@ def get_country_read_model_evidence_summary(
         FROM evidence_items ei
         JOIN countries c ON c.id = ei.country_id
         WHERE c.slug = %s
+          AND ei.status = 'published'
         """,
         (country_slug,),
     )
@@ -378,7 +380,8 @@ def get_country_read_model_user_stories_summary(
         FROM user_stories us
         LEFT JOIN countries origin ON origin.id = us.origin_country_id
         JOIN countries destination ON destination.id = us.destination_country_id
-        WHERE origin.slug = %s OR destination.slug = %s
+        WHERE (origin.slug = %s OR destination.slug = %s)
+          AND us.status = 'published'
         """,
         (country_slug, country_slug),
     )

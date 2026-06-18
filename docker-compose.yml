@@ -40,6 +40,7 @@ services:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-true}
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-change-me-local-admin-token}
       DATABASE_URL: postgresql://country_atlas:change-me@postgres:5432/country_atlas
       REDIS_URL: redis://redis:6379/0
     ports:

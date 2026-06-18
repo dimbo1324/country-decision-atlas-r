@@ -21,7 +21,7 @@ from app.services import decision_engine
 from app.services.country_read_model import get_country_read_model
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 
 router = APIRouter(prefix="/countries", tags=["countries"])
@@ -110,9 +110,27 @@ async def read_country_sources(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
-    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    source_type: str | None = None,
+    language: str | None = None,
+    confidence: Literal["low", "medium", "high"] | None = None,
+    status: Literal["published", "archived"] = "published",
+    sort: Literal[
+        "title", "created_at", "published_at", "last_checked_at", "confidence"
+    ] = "title",
+    order: Literal["asc", "desc"] = "asc",
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> SourceListWithLocaleResponse:
     return decision_engine.get_country_sources(
-        connection, country_slug, locale, limit, offset
+        connection,
+        country_slug,
+        locale,
+        limit,
+        offset,
+        source_type,
+        language,
+        confidence,
+        status,
+        sort,
+        order,
     )
