@@ -1,0 +1,42 @@
+import type { components } from "@country-decision-atlas/contracts/generated/types";
+
+import { apiGet, queryString } from "./http";
+import type { LocaleCode } from "./countries";
+
+export type SourceListResponse = components["schemas"]["SourceListResponse"];
+
+type ListSourcesParams = {
+  locale?: LocaleCode;
+  countrySlug?: string;
+  sourceType?: string;
+  language?: string;
+  confidence?: "low" | "medium" | "high";
+  status?: "published" | "archived";
+  sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
+  order?: "asc" | "desc";
+  limit?: number;
+  offset?: number;
+};
+
+export function listSources(
+  params: ListSourcesParams = {},
+): Promise<SourceListResponse> {
+  return apiGet<SourceListResponse>(
+    `/api/v1/sources${queryString({
+      locale: params.locale ?? "en",
+      country_slug: params.countrySlug,
+      source_type: params.sourceType,
+      language: params.language,
+      confidence: params.confidence,
+      status: params.status,
+      sort: params.sort,
+      order: params.order,
+      limit: params.limit,
+      offset: params.offset,
+    })}`,
+  );
+}
+
+export const sourcesApi = {
+  listSources,
+};

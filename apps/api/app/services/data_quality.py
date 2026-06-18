@@ -1,6 +1,10 @@
 from app.core.errors import api_error
 from app.repositories import data_quality as repository
-from app.schemas.data_quality import DataQualityIssue, DataQualityReport
+from app.schemas.data_quality import (
+    DataQualityCheck,
+    DataQualityIssue,
+    DataQualityReport,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -20,6 +24,7 @@ COUNTRY_CARD_FIELDS = [
 
 def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     issues: list[DataQualityIssue] = []
+    checks: list[DataQualityCheck] = []
     for row in repository.list_missing_mvp_countries(connection):
         issues.append(
             _issue(
@@ -31,6 +36,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(_check("mvp_countries_exist", issues, ["mvp_country_missing"]))
     for row in repository.list_published_countries_without_cards(connection):
         issues.append(
             _issue(
@@ -42,6 +48,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(_check("mvp_countries_have_cards", issues, ["country_card_missing"]))
     for row in repository.list_published_countries_without_sources(connection):
         issues.append(
             _issue(
@@ -53,6 +60,9 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check("mvp_countries_have_sources", issues, ["country_sources_missing"])
+    )
     for row in repository.list_missing_country_scores_for_required_scenarios(
         connection
     ):
@@ -66,6 +76,9 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check("mvp_country_scores_complete", issues, ["country_score_missing"])
+    )
     for row in repository.list_scores_without_breakdowns(connection):
         issues.append(
             _issue(
@@ -99,6 +112,17 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "mvp_score_breakdowns_complete",
+            issues,
+            [
+                "score_breakdown_missing",
+                "score_breakdown_count_invalid",
+                "score_breakdown_weight_sum_invalid",
+            ],
+        )
+    )
     for row in repository.list_published_legal_signals_without_source(connection):
         issues.append(
             _issue(
@@ -110,6 +134,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "published_legal_signals_have_sources",
+            issues,
+            ["published_legal_signal_source_missing"],
+        )
+    )
     for row in repository.list_published_legal_signals_without_evidence(connection):
         issues.append(
             _issue(
@@ -121,6 +152,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "published_legal_signals_have_evidence",
+            issues,
+            ["published_legal_signal_evidence_missing"],
+        )
+    )
     for row in repository.list_evidence_without_source(connection):
         issues.append(
             _issue(
@@ -143,6 +181,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "evidence_is_traceable",
+            issues,
+            ["evidence_source_missing", "evidence_country_missing"],
+        )
+    )
     for row in repository.list_published_sources_with_missing_required_fields(
         connection
     ):
@@ -156,6 +201,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "published_sources_have_required_fields",
+            issues,
+            ["published_source_required_field_missing"],
+        )
+    )
     for row in repository.list_invalid_synthetic_user_stories(connection):
         issues.append(
             _issue(
@@ -167,6 +219,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "synthetic_user_stories_are_marked",
+            issues,
+            ["synthetic_user_story_invalid"],
+        )
+    )
     for row in repository.list_country_cards_with_empty_major_sections(connection):
         issues.append(
             _issue(
@@ -178,8 +237,21 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    checks.append(
+        _check(
+            "country_cards_have_public_sections",
+            issues,
+            ["country_card_section_missing"],
+        )
+    )
+    critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
+    warnings_count = sum(1 for issue in issues if issue.severity == "warning")
     return DataQualityReport(
-        valid=not any(issue.severity == "critical" for issue in issues),
+        overall_status="valid" if critical_issues_count == 0 else "invalid",
+        valid=critical_issues_count == 0,
+        critical_issues_count=critical_issues_count,
+        warnings_count=warnings_count,
+        checks=checks,
         issues=issues,
     )
 
@@ -386,3 +458,10 @@ def _issue(
 
 def _missing(value: Any) -> bool:
     return value is None or value == ""
+
+
+def _check(
+    code: str, issues: list[DataQualityIssue], issue_codes: list[str]
+) -> DataQualityCheck:
+    failed = any(issue.code in issue_codes for issue in issues)
+    return DataQualityCheck(code=code, status="failed" if failed else "passed")

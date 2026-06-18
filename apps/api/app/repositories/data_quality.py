@@ -304,8 +304,8 @@ def list_invalid_synthetic_user_stories(
               OR notes IS NULL
               OR notes = ''
               OR (
-                  LOWER(notes) NOT LIKE '%synthetic%'
-                  AND LOWER(notes) NOT LIKE '%demo%'
+                  POSITION('synthetic' IN LOWER(notes)) = 0
+                  AND POSITION('demo' IN LOWER(notes)) = 0
               )
           )
         ORDER BY created_at DESC

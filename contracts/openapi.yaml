@@ -67,19 +67,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /api/v1/countries/{country_id}:
+  /api/v1/countries/{country_slug}:
     get:
       tags:
       - countries
       summary: Read Country
-      operationId: read_country_api_v1_countries__country_id__get
+      operationId: read_country_api_v1_countries__country_slug__get
       parameters:
-      - name: country_id
+      - name: country_slug
         in: path
         required: true
         schema:
           type: string
-          title: Country Id
+          title: Country Slug
       - name: locale
         in: query
         required: false
@@ -2575,6 +2575,19 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    DataQualityCheck:
+      properties:
+        code:
+          type: string
+          title: Code
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - code
+      - status
+      title: DataQualityCheck
     DataQualityIssue:
       properties:
         code:
@@ -2607,14 +2620,35 @@ components:
       title: DataQualityIssue
     DataQualityReport:
       properties:
+        overall_status:
+          type: string
+          title: Overall Status
+          default: valid
         valid:
           type: boolean
           title: Valid
+        critical_issues_count:
+          type: integer
+          title: Critical Issues Count
+          default: 0
+        warnings_count:
+          type: integer
+          title: Warnings Count
+          default: 0
+        checks:
+          items:
+            $ref: '#/components/schemas/DataQualityCheck'
+          type: array
+          title: Checks
         issues:
           items:
             $ref: '#/components/schemas/DataQualityIssue'
           type: array
           title: Issues
+        checked_at:
+          type: string
+          format: date-time
+          title: Checked At
       type: object
       required:
       - valid

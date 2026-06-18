@@ -1,0 +1,12 @@
+{
+  "name": "@country-decision-atlas/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./generated/types": {
+      "types": "./generated/types.ts",
+      "default": "./generated/types.ts"
+    }
+  }
+}

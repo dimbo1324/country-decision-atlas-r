@@ -1,4 +1,4 @@
-.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test typecheck quality
+.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test smoke-api typecheck quality
 
 help:
 	@echo "Country Decision Atlas"
@@ -15,6 +15,7 @@ help:
 	@echo "  make lint        Run Python and frontend linters"
 	@echo "  make format      Format Python and frontend files"
 	@echo "  make test        Run Python tests"
+	@echo "  make smoke-api   Run opt-in runtime API smoke tests"
 	@echo "  make quality     Run full local quality checks"
 	@echo "  make install-hooks Install pre-commit hooks"
 
@@ -59,6 +60,9 @@ format:
 
 test:
 	python -m pytest
+
+smoke-api:
+	RUN_RUNTIME_SMOKE_TESTS=1 python -m pytest tests/smoke
 
 typecheck:
 	python -m mypy apps packages scripts tests

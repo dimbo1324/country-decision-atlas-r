@@ -38,7 +38,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/countries/{country_id}": {
+    "/api/v1/countries/{country_slug}": {
         parameters: {
             query?: never;
             header?: never;
@@ -46,7 +46,7 @@ export interface paths {
             cookie?: never;
         };
         /** Read Country */
-        get: operations["read_country_api_v1_countries__country_id__get"];
+        get: operations["read_country_api_v1_countries__country_slug__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1058,6 +1058,13 @@ export interface components {
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** DataQualityCheck */
+        DataQualityCheck: {
+            /** Code */
+            code: string;
+            /** Status */
+            status: string;
+        };
         /** DataQualityIssue */
         DataQualityIssue: {
             /** Code */
@@ -1077,10 +1084,32 @@ export interface components {
         };
         /** DataQualityReport */
         DataQualityReport: {
+            /**
+             * Overall Status
+             * @default valid
+             */
+            overall_status: string;
             /** Valid */
             valid: boolean;
+            /**
+             * Critical Issues Count
+             * @default 0
+             */
+            critical_issues_count: number;
+            /**
+             * Warnings Count
+             * @default 0
+             */
+            warnings_count: number;
+            /** Checks */
+            checks?: components["schemas"]["DataQualityCheck"][];
             /** Issues */
             issues?: components["schemas"]["DataQualityIssue"][];
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at?: string;
         };
         /** DecisionBreakdownItem */
         DecisionBreakdownItem: {
@@ -2265,14 +2294,14 @@ export interface operations {
             };
         };
     };
-    read_country_api_v1_countries__country_id__get: {
+    read_country_api_v1_countries__country_slug__get: {
         parameters: {
             query?: {
                 locale?: "en" | "ru";
             };
             header?: never;
             path: {
-                country_id: string;
+                country_slug: string;
             };
             cookie?: never;
         };

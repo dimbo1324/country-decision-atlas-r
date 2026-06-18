@@ -43,13 +43,13 @@ async def read_countries(
     )
 
 
-@router.get("/{country_id}", response_model=CountryResponse)
+@router.get("/{country_slug}", response_model=CountryResponse)
 async def read_country(
-    country_id: str,
+    country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> CountryResponse:
-    row = get_country(connection, country_id, locale)
+    row = get_country(connection, country_slug, locale)
     if row is None:
         raise HTTPException(status_code=404, detail="Country not found.")
     return CountryResponse(item=row, locale=build_locale([row], locale))

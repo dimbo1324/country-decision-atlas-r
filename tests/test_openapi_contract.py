@@ -15,7 +15,7 @@ def test_openapi_contract_has_required_paths() -> None:
     expected_paths = {
         "/health",
         "/api/v1/countries",
-        "/api/v1/countries/{country_id}",
+        "/api/v1/countries/{country_slug}",
         "/api/v1/countries/{country_slug}/card",
         "/api/v1/countries/{country_slug}/sources",
         "/api/v1/countries/{country_id}/profile",
