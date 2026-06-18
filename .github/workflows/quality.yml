@@ -57,6 +57,12 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate contracts
+        run: pnpm contracts:generate
+
+      - name: Check generated contracts are committed
+        run: git diff --exit-code packages/contracts/generated/types.ts
+
       - name: Prettier check
         run: pnpm format:check
 

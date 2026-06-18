@@ -1,4 +1,5 @@
 from app.core.database import get_connection
+from app.core.errors import api_error
 from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
 from app.repositories.countries import (
@@ -51,7 +52,12 @@ async def read_country(
 ) -> CountryResponse:
     row = get_country(connection, country_slug, locale)
     if row is None:
-        raise HTTPException(status_code=404, detail="Country not found.")
+        raise api_error(
+            404,
+            "country_not_found",
+            "Country not found.",
+            {"country_slug": country_slug},
+        )
     return CountryResponse(item=row, locale=build_locale([row], locale))
 
 

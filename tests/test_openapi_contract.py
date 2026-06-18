@@ -38,6 +38,7 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/decision/compare",
         "/api/v1/decision/run",
         "/api/v1/admin/legal-signals",
+        "/api/v1/admin/data-quality/report",
         "/api/v1/admin/translations/jobs",
     }
     assert expected_paths.issubset(set(contract["paths"]))
@@ -72,6 +73,16 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "DecisionCountryResult",
         "DecisionRiskWarning",
         "DecisionBreakdownItem",
+        "LegalSignalDetailListResponse",
+        "SourceListResponse",
+        "EvidenceItemListResponse",
+        "ScenarioListResponse",
+        "UserStoryListResponse",
+        "DataQualityReport",
+        "DataQualityIssue",
+        "ErrorResponse",
+        "Pagination",
+        "SortMeta",
         "UserStory",
         "UserStoryCreate",
     ]:
@@ -84,3 +95,16 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     assert run_path["responses"]["200"]["content"]["application/json"]["schema"] == {
         "$ref": "#/components/schemas/DecisionRunResponse"
     }
+
+
+def test_openapi_contract_has_admin_token_security() -> None:
+    contract = load_contract()
+    security_schemes = contract["components"]["securitySchemes"]
+    report_path = contract["paths"]["/api/v1/admin/data-quality/report"]["get"]
+
+    assert security_schemes["AdminTokenAuth"] == {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Admin-Token",
+    }
+    assert report_path["security"] == [{"AdminTokenAuth": []}]

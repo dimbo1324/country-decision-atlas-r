@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "date": "2026-06-18",
+      "type": "chore",
+      "scope": "frontend-readiness",
+      "branch": "chore/frontend-readiness-hardening",
+      "title": "Harden frontend readiness contract and diagnostics",
+      "summary": [
+        "Finalizes frontend-facing API contract readiness before minimal frontend work.",
+        "Adds or hardens runtime smoke tests, typed frontend API boundary checks, diagnostics, and generated contract verification.",
+        "Starts the machine-readable project changelog."
+      ]
+    }
+  ]
+}
