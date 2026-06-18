@@ -1,8 +1,7 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
+import { API_BASE_URL } from "../config/env";
 
 export type ApiErrorResponse = components["schemas"]["ErrorResponse"];
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 type RequestOptions = {
   headers?: HeadersInit;

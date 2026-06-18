@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { AppShell } from "../shared/ui/AppShell";
 import "./styles.css";
+
 export const metadata: Metadata = {
   title: "Country Decision Atlas",
   description: "A relocation and country decision workspace.",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -11,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
