@@ -142,6 +142,14 @@ def test_admin_token_dependency(monkeypatch: pytest.MonkeyPatch) -> None:
         require_admin_token("wrong-token")
     assert wrong.value.status_code == 401
 
+    with pytest.raises(HTTPException) as prefix:
+        require_admin_token("valid")
+    assert prefix.value.status_code == 401
+
+    with pytest.raises(HTTPException) as longer:
+        require_admin_token("valid-token-extra")
+    assert longer.value.status_code == 401
+
     get_settings.cache_clear()
 
 

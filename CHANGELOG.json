@@ -12,6 +12,47 @@
         "Adds or hardens runtime smoke tests, typed frontend API boundary checks, diagnostics, and generated contract verification.",
         "Starts the machine-readable project changelog."
       ]
+    },
+    {
+      "date": "2026-06-18",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "codebase-quality-security-hardening",
+      "task": "chore/codebase-quality-security-hardening",
+      "branch": "chore/codebase-quality-security-hardening",
+      "title": "Start codebase quality and security hardening pass",
+      "summary": [
+        "Started codebase quality, security, duplication, decomposition, and maintainability hardening pass."
+      ],
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-18",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "codebase-quality-security-hardening",
+      "task": "chore/codebase-quality-security-hardening",
+      "branch": "chore/codebase-quality-security-hardening",
+      "title": "Complete codebase quality and security hardening pass",
+      "summary": [
+        "Reviewed backend routes, services, repositories, schemas, frontend typed API boundary, OpenAPI contract, tests, and tooling.",
+        "Hardened admin token verification to use constant-time comparison (secrets.compare_digest) to remove a timing side-channel.",
+        "Extended the admin token regression test to cover prefix and longer-token rejection.",
+        "Confirmed SQL access is parameterized with whitelisted sort columns and validated locales, public endpoints restrict status to published/archived, and no runtime/cache/build artifacts are tracked."
+      ],
+      "status": "completed",
+      "checks": [
+        "python -m ruff check . --fix",
+        "python -m ruff format .",
+        "python -m mypy apps packages scripts tests",
+        "python -m pytest",
+        "pnpm contracts:generate",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm build",
+        "python -m sqlfluff lint database --dialect postgres",
+        "python -m pre_commit validate-config"
+      ]
     }
   ]
 }
