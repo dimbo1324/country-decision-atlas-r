@@ -553,6 +553,17 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** CountryReadModelEvidenceSummary */
+        CountryReadModelEvidenceSummary: {
+            /** Total */
+            total: number;
+            /** High Confidence */
+            high_confidence: number;
+            /** Medium Confidence */
+            medium_confidence: number;
+            /** Low Confidence */
+            low_confidence: number;
+        };
         /** CountryReadModelLegalSignal */
         CountryReadModelLegalSignal: {
             /** Id */
@@ -618,6 +629,8 @@ export interface components {
             legal_signals: components["schemas"]["CountryReadModelLegalSignal"][];
             /** Sources */
             sources: components["schemas"]["CountryReadModelSource"][];
+            evidence_summary: components["schemas"]["CountryReadModelEvidenceSummary"];
+            user_stories_summary: components["schemas"]["CountryReadModelUserStoriesSummary"];
             meta: components["schemas"]["CountryReadModelMeta"];
             locale: components["schemas"]["LocaleResolution"];
         };
@@ -675,6 +688,15 @@ export interface components {
             published_at?: string | null;
             /** Last Checked At */
             last_checked_at?: string | null;
+        };
+        /** CountryReadModelUserStoriesSummary */
+        CountryReadModelUserStoriesSummary: {
+            /** Total */
+            total: number;
+            /** Synthetic */
+            synthetic: number;
+            /** Average Satisfaction Score */
+            average_satisfaction_score?: number | null;
         };
         /** CountryResponse */
         CountryResponse: {

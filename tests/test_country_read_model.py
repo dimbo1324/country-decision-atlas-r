@@ -89,6 +89,17 @@ def sample_response(slug: str, locale: str) -> CountryReadModelResponse:
                 "last_checked_at": NOW.date(),
             }
         ],
+        evidence_summary={
+            "total": 2,
+            "high_confidence": 1,
+            "medium_confidence": 1,
+            "low_confidence": 0,
+        },
+        user_stories_summary={
+            "total": 1,
+            "synthetic": 1,
+            "average_satisfaction_score": 7.5,
+        },
         meta=CountryReadModelMeta(
             scores_count=5,
             legal_signals_count=1,
@@ -121,6 +132,8 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
         "scores",
         "legal_signals",
         "sources",
+        "evidence_summary",
+        "user_stories_summary",
         "meta",
         "locale",
     }
@@ -136,6 +149,8 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
     assert body["meta"]["scores_count"] == len(body["scores"])
     assert body["meta"]["legal_signals_count"] == len(body["legal_signals"])
     assert body["meta"]["sources_count"] == len(body["sources"])
+    assert body["evidence_summary"]["total"] == 2
+    assert body["user_stories_summary"]["synthetic"] == 1
 
 
 def test_country_read_model_route_supported_slugs_and_locales(
@@ -275,6 +290,17 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
             "updated_at": NOW,
         }
     ]
+    evidence_summary = {
+        "total": 2,
+        "high_confidence": 1,
+        "medium_confidence": 1,
+        "low_confidence": 0,
+    }
+    user_stories_summary = {
+        "total": 1,
+        "synthetic": 1,
+        "average_satisfaction_score": 7.5,
+    }
 
     monkeypatch.setattr(
         country_read_model, "get_country_read_model_country", lambda *_: country
@@ -298,6 +324,16 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         country_read_model, "list_country_read_model_sources", lambda *_: sources
     )
+    monkeypatch.setattr(
+        country_read_model,
+        "get_country_read_model_evidence_summary",
+        lambda *_: evidence_summary,
+    )
+    monkeypatch.setattr(
+        country_read_model,
+        "get_country_read_model_user_stories_summary",
+        lambda *_: user_stories_summary,
+    )
 
     result = country_read_model.get_country_read_model(CONNECTION, "uruguay", "ru")
 
@@ -307,6 +343,8 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
     assert result.meta.scores_count == 1
     assert result.meta.legal_signals_count == 1
     assert result.meta.sources_count == 1
+    assert result.evidence_summary.total == 2
+    assert result.user_stories_summary.synthetic == 1
     assert result.locale.translation_status == "fallback"
     assert result.locale.resolved_locale == "en"
 
@@ -327,6 +365,8 @@ def test_country_read_model_openapi_contract() -> None:
         "CountryReadModelScoreBreakdown",
         "CountryReadModelLegalSignal",
         "CountryReadModelSource",
+        "CountryReadModelEvidenceSummary",
+        "CountryReadModelUserStoriesSummary",
         "CountryReadModelMeta",
         "LocaleResolution",
     ):

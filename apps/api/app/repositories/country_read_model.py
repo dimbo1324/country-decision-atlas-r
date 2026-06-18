@@ -273,7 +273,7 @@ def list_country_read_model_legal_signals(
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.slug = %s
-          AND ls.status = 'published'
+          AND ls.status IN ('published', 'active')
         ORDER BY
             CASE ls.impact_level
                 WHEN 'critical' THEN 1
@@ -333,3 +333,57 @@ def list_country_read_model_sources(
             limit,
         ),
     )
+
+
+def get_country_read_model_evidence_summary(
+    connection: Connection[Any],
+    country_slug: str,
+) -> dict[str, Any]:
+    row = fetch_one(
+        connection,
+        """
+        SELECT
+            COUNT(*)::int AS total,
+            COUNT(*) FILTER (WHERE COALESCE(ei.confidence, ei.confidence_level) = 'high')::int
+                AS high_confidence,
+            COUNT(*) FILTER (WHERE COALESCE(ei.confidence, ei.confidence_level) = 'medium')::int
+                AS medium_confidence,
+            COUNT(*) FILTER (WHERE COALESCE(ei.confidence, ei.confidence_level) = 'low')::int
+                AS low_confidence
+        FROM evidence_items ei
+        JOIN countries c ON c.id = ei.country_id
+        WHERE c.slug = %s
+        """,
+        (country_slug,),
+    )
+    return row or {
+        "total": 0,
+        "high_confidence": 0,
+        "medium_confidence": 0,
+        "low_confidence": 0,
+    }
+
+
+def get_country_read_model_user_stories_summary(
+    connection: Connection[Any],
+    country_slug: str,
+) -> dict[str, Any]:
+    row = fetch_one(
+        connection,
+        """
+        SELECT
+            COUNT(*)::int AS total,
+            COUNT(*) FILTER (WHERE us.is_synthetic)::int AS synthetic,
+            AVG(us.satisfaction_score)::float AS average_satisfaction_score
+        FROM user_stories us
+        LEFT JOIN countries origin ON origin.id = us.origin_country_id
+        JOIN countries destination ON destination.id = us.destination_country_id
+        WHERE origin.slug = %s OR destination.slug = %s
+        """,
+        (country_slug, country_slug),
+    )
+    return row or {
+        "total": 0,
+        "synthetic": 0,
+        "average_satisfaction_score": None,
+    }

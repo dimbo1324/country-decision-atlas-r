@@ -1180,6 +1180,27 @@ components:
       - name
       - status
       title: CountryReadModelCountry
+    CountryReadModelEvidenceSummary:
+      properties:
+        total:
+          type: integer
+          title: Total
+        high_confidence:
+          type: integer
+          title: High Confidence
+        medium_confidence:
+          type: integer
+          title: Medium Confidence
+        low_confidence:
+          type: integer
+          title: Low Confidence
+      type: object
+      required:
+      - total
+      - high_confidence
+      - medium_confidence
+      - low_confidence
+      title: CountryReadModelEvidenceSummary
     CountryReadModelLegalSignal:
       properties:
         id:
@@ -1331,6 +1352,10 @@ components:
             $ref: '#/components/schemas/CountryReadModelSource'
           type: array
           title: Sources
+        evidence_summary:
+          $ref: '#/components/schemas/CountryReadModelEvidenceSummary'
+        user_stories_summary:
+          $ref: '#/components/schemas/CountryReadModelUserStoriesSummary'
         meta:
           $ref: '#/components/schemas/CountryReadModelMeta'
         locale:
@@ -1342,6 +1367,8 @@ components:
       - scores
       - legal_signals
       - sources
+      - evidence_summary
+      - user_stories_summary
       - meta
       - locale
       title: CountryReadModelResponse
@@ -1467,6 +1494,24 @@ components:
       - title
       - url
       title: CountryReadModelSource
+    CountryReadModelUserStoriesSummary:
+      properties:
+        total:
+          type: integer
+          title: Total
+        synthetic:
+          type: integer
+          title: Synthetic
+        average_satisfaction_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Satisfaction Score
+      type: object
+      required:
+      - total
+      - synthetic
+      title: CountryReadModelUserStoriesSummary
     CountryResponse:
       properties:
         item:

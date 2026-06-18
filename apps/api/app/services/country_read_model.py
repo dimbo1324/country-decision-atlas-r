@@ -1,7 +1,9 @@
 from app.core.locales import SOURCE_LOCALE, SupportedLocale
 from app.repositories.country_read_model import (
     get_country_read_model_country,
+    get_country_read_model_evidence_summary,
     get_country_read_model_profile,
+    get_country_read_model_user_stories_summary,
     list_country_read_model_legal_signals,
     list_country_read_model_score_breakdowns,
     list_country_read_model_scores,
@@ -40,6 +42,10 @@ def get_country_read_model(
         connection, country_slug, locale, LEGAL_SIGNAL_LIMIT
     )
     sources = list_country_read_model_sources(connection, country_slug, SOURCE_LIMIT)
+    evidence_summary = get_country_read_model_evidence_summary(connection, country_slug)
+    user_stories_summary = get_country_read_model_user_stories_summary(
+        connection, country_slug
+    )
     localized_blocks = [
         country,
         profile,
@@ -53,6 +59,8 @@ def get_country_read_model(
         scores=scores,
         legal_signals=legal_signals,
         sources=sources,
+        evidence_summary=evidence_summary,
+        user_stories_summary=user_stories_summary,
         meta=CountryReadModelMeta(
             scores_count=len(scores),
             legal_signals_count=len(legal_signals),

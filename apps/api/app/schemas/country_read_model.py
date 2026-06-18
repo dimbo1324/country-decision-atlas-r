@@ -76,11 +76,26 @@ class CountryReadModelMeta(BaseModel):
     last_updated_at: datetime | None = None
 
 
+class CountryReadModelEvidenceSummary(BaseModel):
+    total: int
+    high_confidence: int
+    medium_confidence: int
+    low_confidence: int
+
+
+class CountryReadModelUserStoriesSummary(BaseModel):
+    total: int
+    synthetic: int
+    average_satisfaction_score: float | None = None
+
+
 class CountryReadModelResponse(BaseModel):
     country: CountryReadModelCountry
     profile: CountryReadModelProfile | None
     scores: list[CountryReadModelScore]
     legal_signals: list[CountryReadModelLegalSignal]
     sources: list[CountryReadModelSource]
+    evidence_summary: CountryReadModelEvidenceSummary
+    user_stories_summary: CountryReadModelUserStoriesSummary
     meta: CountryReadModelMeta
     locale: LocaleResolution
