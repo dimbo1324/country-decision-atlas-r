@@ -143,6 +143,50 @@
         "python -m ruff format apps packages scripts tests",
         "python -m mypy apps packages scripts tests"
       ]
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-legal-signals-sources-quality-pages",
+      "task": "feat/web-legal-signals-sources-quality-pages",
+      "branch": "feat/web-legal-signals-sources-quality-pages",
+      "title": "Start legal signals, sources, and data quality pages",
+      "summary": [
+        "Implements /legal-signals with country/type/direction/level filters and locale support.",
+        "Implements /sources with country/source_type/confidence filters and locale support.",
+        "Implements /internal/data-quality as server-rendered admin report page."
+      ],
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "web-legal-signals-sources-quality-pages",
+      "task": "feat/web-legal-signals-sources-quality-pages",
+      "branch": "feat/web-legal-signals-sources-quality-pages",
+      "title": "Complete legal signals, sources, and data quality pages",
+      "summary": [
+        "Created features/legal-signals/LegalSignalsView.tsx: client component with Suspense boundary, filter state (country/signal_type/impact_direction/impact_level), locale-aware API calls via legalSignalsApi, loading/error/empty states, signal cards with all fields.",
+        "Created features/sources/SourcesView.tsx: client component with Suspense boundary, filter state (country/source_type/confidence), sourcesApi calls, loading/error/empty states, source cards with external link, publisher, dates.",
+        "Created features/data-quality/DataQualityReportView.tsx: pure presentational server component rendering DataQualityReport summary (overall_status, critical_issues_count, warnings_count, checked_at) and issues list with per-severity left-border styling.",
+        "Rewrote app/legal-signals/page.tsx: server shell rendering LegalSignalsView; removed stale apiGet usage and local type definition.",
+        "Rewrote app/sources/page.tsx: server shell rendering SourcesView; replaced placeholder.",
+        "Rewrote app/internal/data-quality/page.tsx: async server component reading process.env.ADMIN_TOKEN (never NEXT_PUBLIC_), calling dataQualityApi.getDataQualityReport, rendering DataQualityReportView or ErrorState.",
+        "Extended styles.css with filterPageWrap, filterBar, filterGroup, filterLabel, filterSelect, clearButton, signalCard, sourceCard, sourceLink, dqWrap, dqSummaryCard, dqIssueCard, dqSeverity-* classes.",
+        "Admin token read server-side only via process.env.ADMIN_TOKEN; no secrets exposed to client."
+      ],
+      "status": "completed",
+      "checks": [
+        "pnpm typecheck",
+        "pnpm lint",
+        "pnpm build",
+        "python -m pytest",
+        "python -m ruff check . --fix",
+        "python -m ruff format .",
+        "python -m mypy apps packages scripts tests"
+      ]
     }
   ]
 }

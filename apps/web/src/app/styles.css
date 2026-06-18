@@ -637,6 +637,200 @@ h1 {
   font-size: 14px;
   color: #374151;
 }
+/* ───────────────────────── filter pages ───────────────────────── */
+.filterPageWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.filterLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.filterSelect {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  color: #1f2937;
+  min-width: 140px;
+}
+.clearButton {
+  padding: 6px 14px;
+  font-size: 13px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #374151;
+}
+.clearButton:hover {
+  background: #e5e7eb;
+}
+.resultCount {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ───────────────────────── signal cards ───────────────────────── */
+.signalList,
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.signalCard,
+.sourceCard {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.signalCardHeader,
+.sourceCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.signalTitle,
+.sourceTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+}
+.sourcePublisher {
+  font-size: 13px;
+  color: #6b7280;
+}
+.sourceLink {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+  width: fit-content;
+}
+.sourceLink:hover {
+  text-decoration: underline;
+}
+
+/* ───────────────────────── data quality ───────────────────────── */
+.dqWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.dqSummaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.dqSummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-width: 140px;
+}
+.dqLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.dqValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+.dqCritical {
+  color: #dc2626;
+}
+.dqWarning {
+  color: #d97706;
+}
+.dqSectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #111827;
+}
+.dqIssueList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dqIssueCard {
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-left-width: 4px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dqSeverity-critical {
+  border-left-color: #dc2626;
+}
+.dqSeverity-error {
+  border-left-color: #f97316;
+}
+.dqSeverity-warning {
+  border-left-color: #d97706;
+}
+.dqSeverity-info {
+  border-left-color: #3b82f6;
+}
+.dqIssueHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.dqIssueCode {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: ui-monospace, monospace;
+  color: #374151;
+}
+.dqEntityId {
+  font-size: 12px;
+  font-family: ui-monospace, monospace;
+  color: #6b7280;
+}
+.dqIssueMessage {
+  font-size: 14px;
+  color: #374151;
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .appHeaderInner {
     padding: 0 16px;
@@ -653,5 +847,13 @@ h1 {
   .pageShell,
   .homePage {
     padding: 24px 16px;
+  }
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filterSelect {
+    min-width: unset;
+    width: 100%;
   }
 }

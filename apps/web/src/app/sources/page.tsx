@@ -1,3 +1,7 @@
+import { SourcesView } from "../../features/sources";
+
+export const dynamic = "force-dynamic";
+
 export default function SourcesPage() {
   return (
     <div className="pageShell">
@@ -5,9 +9,7 @@ export default function SourcesPage() {
         <p className="eyebrow">Sources</p>
         <h1>Evidence sources</h1>
       </header>
-      <p className="notice">
-        Full sources page coming in feat/web-reference-pages.
-      </p>
+      <SourcesView />
     </div>
   );
 }
