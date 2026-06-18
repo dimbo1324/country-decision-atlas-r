@@ -49,10 +49,10 @@ def test_openapi_contract_uses_locale_resolution_schema() -> None:
     assert "LocaleResolution" in schemas
     assert schemas["LocaleCode"]["enum"] == ["en", "ru"]
     assert schemas["TranslationStatus"]["enum"] == [
-        "exact",
+        "source",
+        "translated",
         "fallback",
         "missing",
-        "not_applicable",
     ]
 
 

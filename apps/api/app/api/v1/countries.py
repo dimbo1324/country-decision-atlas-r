@@ -1,4 +1,5 @@
 from app.core.database import get_connection
+from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
 from app.repositories.countries import (
     count_countries,
@@ -7,7 +8,7 @@ from app.repositories.countries import (
     list_countries,
 )
 from app.repositories.scores import count_country_scores, list_country_scores
-from app.schemas.common import LocaleCode, Pagination
+from app.schemas.common import Pagination
 from app.schemas.countries import (
     CountryListResponse,
     CountryProfileResponse,
@@ -30,7 +31,7 @@ router = APIRouter(prefix="/countries", tags=["countries"])
 @router.get("", response_model=CountryListResponse)
 async def read_countries(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CountryListResponse:
@@ -47,7 +48,7 @@ async def read_countries(
 async def read_country(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> CountryResponse:
     row = get_country(connection, country_id, locale)
     if row is None:
@@ -59,21 +60,19 @@ async def read_country(
 async def read_country_profile(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> CountryProfileResponse:
-    row = get_profile(connection, country_id)
+    row = get_profile(connection, country_id, locale)
     if row is None:
         raise HTTPException(status_code=404, detail="Country profile not found.")
-    return CountryProfileResponse(
-        item=row, locale=build_locale([], locale, translatable=False)
-    )
+    return CountryProfileResponse(item=row, locale=build_locale([row], locale))
 
 
 @router.get("/{country_id}/scores", response_model=CountryScoreListResponse)
 async def read_country_scores(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CountryScoreListResponse:
@@ -90,7 +89,7 @@ async def read_country_scores(
 async def read_country_card(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> CountryCardResponse:
     return decision_engine.get_country_card(connection, country_slug, locale)
 
@@ -99,7 +98,7 @@ async def read_country_card(
 async def read_country_sources(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> SourceListWithLocaleResponse:

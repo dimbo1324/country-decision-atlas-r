@@ -1,4 +1,4 @@
-from app.schemas.common import Pagination
+from app.schemas.common import LocaleResolution, Pagination
 from datetime import date, datetime
 from pydantic import BaseModel
 from uuid import UUID
@@ -22,6 +22,12 @@ class Source(BaseModel):
 class SourceListResponse(BaseModel):
     items: list[Source]
     pagination: Pagination
+    locale: LocaleResolution
+
+
+class SourceResponse(BaseModel):
+    item: Source
+    locale: LocaleResolution
 
 
 class EvidenceItem(BaseModel):

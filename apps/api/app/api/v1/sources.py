@@ -1,12 +1,17 @@
 from app.core.database import get_connection
+from app.core.locales import LocaleQuery
 from app.repositories.sources import (
     count_evidence_items,
     count_sources,
     list_evidence_items,
     list_sources,
 )
-from app.schemas.common import Pagination
-from app.schemas.sources import EvidenceItemListResponse, SourceListResponse
+from app.schemas.common import Pagination, source_locale_resolution
+from app.schemas.sources import (
+    EvidenceItemListResponse,
+    SourceListResponse,
+    SourceResponse,
+)
 from app.services import decision_engine
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
@@ -19,6 +24,7 @@ router = APIRouter(tags=["sources"])
 @router.get("/sources", response_model=SourceListResponse)
 async def read_sources(
     connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> SourceListResponse:
@@ -27,6 +33,7 @@ async def read_sources(
     return SourceListResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
+        locale=source_locale_resolution(locale),
     )
 
 
@@ -44,12 +51,16 @@ async def read_evidence_items(
     )
 
 
-@router.get("/sources/{source_id}")
+@router.get("/sources/{source_id}", response_model=SourceResponse)
 async def read_source(
     source_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-) -> dict[str, Any]:
-    return decision_engine.get_source(connection, source_id)
+    locale: LocaleQuery,
+) -> SourceResponse:
+    return SourceResponse(
+        item=decision_engine.get_source(connection, source_id),
+        locale=source_locale_resolution(locale),
+    )
 
 
 @router.get("/sources/{source_id}/evidence", response_model=EvidenceItemListResponse)

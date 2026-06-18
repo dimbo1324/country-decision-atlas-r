@@ -1,5 +1,5 @@
 from app.core.database import fetch_all, fetch_one
-from app.schemas.common import localized_column, validate_locale
+from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -18,6 +18,28 @@ def list_country_scores(
     summary_column = localized_column(
         requested_locale, "cs.explanation_en", "cs.explanation_ru"
     )
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'translated'
+                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_all(
         connection,
         f"""
@@ -33,11 +55,8 @@ def list_country_scores(
             cs.created_at,
             cs.updated_at,
             {scenario_name_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {scenario_name_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
-                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -52,7 +71,7 @@ def list_country_scores(
         ORDER BY s.slug
         LIMIT %s OFFSET %s
         """,
-        (requested_locale.value, country_id, country_id, limit, offset),
+        (requested_locale, country_id, country_id, limit, offset),
     )
 
 

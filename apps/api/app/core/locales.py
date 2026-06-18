@@ -1,0 +1,49 @@
+from fastapi import Depends, HTTPException, Query
+from typing import Annotated, Literal
+
+
+SupportedLocale = Literal["en", "ru"]
+
+SUPPORTED_LOCALES: tuple[SupportedLocale, ...] = ("en", "ru")
+DEFAULT_LOCALE: SupportedLocale = "en"
+SOURCE_LOCALE: SupportedLocale = "en"
+
+
+def validate_locale(locale: str | None = None) -> SupportedLocale:
+    candidate = locale or DEFAULT_LOCALE
+    if candidate in SUPPORTED_LOCALES:
+        return candidate
+    raise HTTPException(
+        status_code=422,
+        detail={
+            "error": {
+                "code": "unsupported_locale",
+                "message": "Unsupported locale.",
+                "details": {
+                    "requested_locale": candidate,
+                    "supported_locales": list(SUPPORTED_LOCALES),
+                },
+            }
+        },
+    )
+
+
+def get_locale(
+    locale: Annotated[
+        str,
+        Query(
+            pattern="^[a-z]{2}$",
+            json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
+        ),
+    ] = DEFAULT_LOCALE,
+) -> SupportedLocale:
+    return validate_locale(locale)
+
+
+LocaleQuery = Annotated[SupportedLocale, Depends(get_locale)]
+
+
+def localized_column(locale: str, en_column: str, ru_column: str) -> str:
+    if validate_locale(locale) == "ru":
+        return ru_column
+    return en_column

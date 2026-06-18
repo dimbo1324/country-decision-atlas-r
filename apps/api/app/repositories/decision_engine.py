@@ -1,5 +1,5 @@
 from app.core.database import execute_one, fetch_all, fetch_one
-from app.schemas.common import LocaleCode, localized_column, validate_locale
+from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
 from app.schemas.decision_engine import UserStoryCreate
 import json
 from psycopg import Connection
@@ -30,16 +30,17 @@ def get_country_card(
             cc.created_at,
             cc.updated_at,
             cc.locale = %s AS is_translated,
-            'exact' AS translation_status
+            cc.locale AS resolved_locale,
+            CASE WHEN cc.locale = 'en' THEN 'source' ELSE 'translated' END AS translation_status
         FROM country_cards cc
         JOIN countries c ON c.id = cc.country_id
         WHERE c.slug = %s AND cc.locale = %s
         """,
-        (requested_locale.value, country_slug, requested_locale.value),
+        (requested_locale, country_slug, requested_locale),
     )
     if row is not None:
         return row
-    if requested_locale == LocaleCode.en:
+    if requested_locale == SOURCE_LOCALE:
         return None
     return fetch_one(
         connection,
@@ -61,6 +62,7 @@ def get_country_card(
             cc.created_at,
             cc.updated_at,
             FALSE AS is_translated,
+            'en' AS resolved_locale,
             'fallback' AS translation_status
         FROM country_cards cc
         JOIN countries c ON c.id = cc.country_id
@@ -78,6 +80,28 @@ def get_scenario(
     description_column = localized_column(
         requested_locale, "description_en", "description_ru"
     )
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN title_en IS NOT NULL OR description_en IS NOT NULL OR name IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN title_ru IS NOT NULL AND description_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN title_ru IS NOT NULL AND description_ru IS NOT NULL THEN 'translated'
+                WHEN title_en IS NOT NULL OR description_en IS NOT NULL OR name IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_one(
         connection,
         f"""
@@ -91,11 +115,8 @@ def get_scenario(
             created_at,
             updated_at,
             {title_column} IS NOT NULL AND {description_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {title_column} IS NOT NULL AND {description_column} IS NOT NULL THEN 'exact'
-                WHEN title_en IS NOT NULL OR description_en IS NOT NULL OR name IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM scenarios
         WHERE slug = %s AND is_active = TRUE
         """,
@@ -111,6 +132,28 @@ def list_scenario_countries(
     explanation_column = localized_column(
         requested_locale, "cs.explanation_en", "cs.explanation_ru"
     )
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'translated'
+                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_all(
         connection,
         f"""
@@ -127,11 +170,8 @@ def list_scenario_countries(
             cs.confidence,
             cs.calculated_at,
             {title_column} IS NOT NULL AND {explanation_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {title_column} IS NOT NULL AND {explanation_column} IS NOT NULL THEN 'exact'
-                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -263,6 +303,28 @@ def list_legal_signals(
     params: tuple[Any, ...] = (
         (country_slug, limit, offset) if country_slug else (limit, offset)
     )
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'translated'
+                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_all(
         connection,
         f"""
@@ -283,11 +345,8 @@ def list_legal_signals(
             ls.created_at,
             ls.updated_at,
             {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {title_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE 1 = 1 {country_filter}
@@ -323,6 +382,28 @@ def get_legal_signal(
     requested_locale = validate_locale(locale)
     title_column = localized_column(requested_locale, "title_en", "title_ru")
     summary_column = localized_column(requested_locale, "summary_en", "summary_ru")
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN title_en IS NOT NULL OR summary_en IS NOT NULL OR title IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN title_ru IS NOT NULL AND summary_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN title_ru IS NOT NULL AND summary_ru IS NOT NULL THEN 'translated'
+                WHEN title_en IS NOT NULL OR summary_en IS NOT NULL OR title IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_one(
         connection,
         f"""
@@ -343,11 +424,8 @@ def get_legal_signal(
             created_at,
             updated_at,
             {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {title_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
-                WHEN title_en IS NOT NULL OR summary_en IS NOT NULL OR title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM legal_signals
         WHERE id::text = %s
         """,

@@ -1,5 +1,5 @@
 from app.core.database import fetch_all, fetch_one
-from app.schemas.common import validate_locale
+from app.core.locales import SOURCE_LOCALE, validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -19,7 +19,18 @@ SELECT
     c.is_active,
     c.created_at,
     c.updated_at,
-    t_name.translated_value IS NOT NULL AS is_translated
+    t_name.translated_value IS NOT NULL AS is_translated,
+    CASE
+        WHEN %s = 'en' AND c.name IS NOT NULL THEN 'en'
+        WHEN t_name.translated_value IS NOT NULL THEN %s
+        ELSE 'en'
+    END AS resolved_locale,
+    CASE
+        WHEN %s = 'en' AND c.name IS NOT NULL THEN 'source'
+        WHEN t_name.translated_value IS NOT NULL THEN 'translated'
+        WHEN c.name IS NOT NULL THEN 'fallback'
+        ELSE 'missing'
+    END AS translation_status
 FROM countries c
 LEFT JOIN locales l ON l.code = %s
 LEFT JOIN translations t_name
@@ -46,7 +57,14 @@ def list_countries(
         ORDER BY c.name
         LIMIT %s OFFSET %s
         """,
-        (requested_locale.value, limit, offset),
+        (
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            limit,
+            offset,
+        ),
     )
 
 
@@ -69,14 +87,24 @@ def get_country(
         + """
         WHERE c.id::text = %s OR c.slug = %s
         """,
-        (requested_locale.value, country_id, country_id),
+        (
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            country_id,
+            country_id,
+        ),
     )
 
 
 def get_profile(
     connection: Connection[Any],
     country_id: str,
+    locale: str,
 ) -> dict[str, Any] | None:
+    requested_locale = validate_locale(locale)
+    status = "source" if requested_locale == SOURCE_LOCALE else "fallback"
     return fetch_one(
         connection,
         """
@@ -91,10 +119,12 @@ def get_profile(
             cp.quality_of_life_overview,
             cp.risk_overview,
             cp.created_at,
-            cp.updated_at
+            cp.updated_at,
+            'en' AS resolved_locale,
+            %s AS translation_status
         FROM country_profiles cp
         JOIN countries c ON c.id = cp.country_id
         WHERE c.id::text = %s OR c.slug = %s
         """,
-        (country_id, country_id),
+        (status, country_id, country_id),
     )

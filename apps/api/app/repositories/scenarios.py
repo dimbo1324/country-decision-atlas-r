@@ -1,5 +1,5 @@
 from app.core.database import fetch_all, fetch_one
-from app.schemas.common import validate_locale
+from app.core.locales import SOURCE_LOCALE, validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -11,18 +11,36 @@ def list_scenarios(
     offset: int,
 ) -> list[dict[str, Any]]:
     requested_locale = validate_locale(locale)
+    if requested_locale == SOURCE_LOCALE:
+        name_column = "s.name"
+        resolved_locale_sql = "'en'"
+        status_sql = "CASE WHEN s.name IS NOT NULL THEN 'source' ELSE 'missing' END"
+    else:
+        name_column = "COALESCE(t_name.translated_value, s.name)"
+        resolved_locale_sql = (
+            "CASE WHEN t_name.translated_value IS NOT NULL THEN 'ru' ELSE 'en' END"
+        )
+        status_sql = """
+            CASE
+                WHEN t_name.translated_value IS NOT NULL THEN 'translated'
+                WHEN s.name IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     rows = fetch_all(
         connection,
-        """
+        f"""
         SELECT
             s.id,
             s.slug,
-            COALESCE(t_name.translated_value, s.name) AS name,
+            {name_column} AS name,
             s.description,
             s.is_active,
             s.created_at,
             s.updated_at,
-            t_name.translated_value IS NOT NULL AS is_translated
+            t_name.translated_value IS NOT NULL AS is_translated,
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM scenarios s
         LEFT JOIN locales l ON l.code = %s
         LEFT JOIN translations t_name
@@ -35,7 +53,7 @@ def list_scenarios(
         ORDER BY s.slug
         LIMIT %s OFFSET %s
         """,
-        (requested_locale.value, limit, offset),
+        (requested_locale, limit, offset),
     )
     criteria = fetch_all(
         connection,

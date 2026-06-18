@@ -665,7 +665,7 @@ export interface components {
              * @enum {string}
              */
             confidence: "high" | "medium" | "low";
-            /** @default not_applicable */
+            /** @default source */
             translation_status: components["schemas"]["TranslationStatus"];
             /**
              * Created At
@@ -691,8 +691,12 @@ export interface components {
             scenario_slug: string;
             /** Country Slugs */
             country_slugs: string[];
-            /** @default en */
-            locale: components["schemas"]["LocaleCode"];
+            /**
+             * Locale
+             * @default en
+             * @enum {string}
+             */
+            locale: "en" | "ru";
         };
         /** DecisionCompareResult */
         DecisionCompareResult: {
@@ -793,8 +797,12 @@ export interface components {
             origin_country_slug?: string | null;
             /** Candidate Country Slugs */
             candidate_country_slugs: string[];
-            /** @default en */
-            locale: components["schemas"]["LocaleCode"];
+            /**
+             * Locale
+             * @default en
+             * @enum {string}
+             */
+            locale: "en" | "ru";
         };
         /** DecisionRunResult */
         DecisionRunResult: {
@@ -1224,12 +1232,18 @@ export interface components {
             /** Items */
             items: components["schemas"]["Source"][];
             pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
         };
         /** SourceListWithLocaleResponse */
         SourceListWithLocaleResponse: {
             /** Items */
             items: components["schemas"]["Source"][];
             pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** SourceResponse */
+        SourceResponse: {
+            item: components["schemas"]["Source"];
             locale: components["schemas"]["LocaleResolution"];
         };
         /** Translation */
@@ -1339,7 +1353,7 @@ export interface components {
          * TranslationStatus
          * @enum {string}
          */
-        TranslationStatus: "exact" | "fallback" | "missing" | "not_applicable";
+        TranslationStatus: "source" | "translated" | "fallback" | "missing";
         /** UserStory */
         UserStory: {
             /**
@@ -1498,9 +1512,9 @@ export interface operations {
     read_countries_api_v1_countries_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path?: never;
@@ -1531,7 +1545,7 @@ export interface operations {
     read_country_api_v1_countries__country_id__get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1564,7 +1578,7 @@ export interface operations {
     read_country_profile_api_v1_countries__country_id__profile_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1597,9 +1611,9 @@ export interface operations {
     read_country_scores_api_v1_countries__country_id__scores_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1632,7 +1646,7 @@ export interface operations {
     read_country_card_api_v1_countries__country_slug__card_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1665,9 +1679,9 @@ export interface operations {
     read_country_sources_api_v1_countries__country_slug__sources_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1700,9 +1714,9 @@ export interface operations {
     read_country_legal_signals_api_v1_countries__country_id__legal_signals_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1736,9 +1750,9 @@ export interface operations {
         parameters: {
             query?: {
                 country_slug?: string | null;
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path?: never;
@@ -1769,7 +1783,7 @@ export interface operations {
     read_legal_signal_api_v1_legal_signals__signal_id__get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1833,9 +1847,9 @@ export interface operations {
     read_scenarios_api_v1_scenarios_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path?: never;
@@ -1899,7 +1913,7 @@ export interface operations {
     read_scenario_detail_api_v1_scenarios__slug__get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1932,7 +1946,7 @@ export interface operations {
     read_scenario_countries_api_v1_scenarios__slug__countries_get: {
         parameters: {
             query?: {
-                locale?: components["schemas"]["LocaleCode"];
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -1967,6 +1981,7 @@ export interface operations {
             query?: {
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path?: never;
@@ -2028,7 +2043,9 @@ export interface operations {
     };
     read_source_api_v1_sources__source_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                locale?: "en" | "ru";
+            };
             header?: never;
             path: {
                 source_id: string;
@@ -2043,9 +2060,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
+                    "application/json": components["schemas"]["SourceResponse"];
                 };
             };
             /** @description Validation Error */

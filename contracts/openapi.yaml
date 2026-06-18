@@ -26,12 +26,6 @@ paths:
       summary: Read Countries
       operationId: read_countries_api_v1_countries_get
       parameters:
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -49,6 +43,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -79,8 +84,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -111,8 +121,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -139,12 +154,6 @@ paths:
         schema:
           type: string
           title: Country Id
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -162,6 +171,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -192,8 +212,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -220,12 +245,6 @@ paths:
         schema:
           type: string
           title: Country Slug
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -243,6 +262,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -269,12 +299,6 @@ paths:
         schema:
           type: string
           title: Country Id
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -292,6 +316,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -320,12 +355,6 @@ paths:
           - type: string
           - type: 'null'
           title: Country Slug
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -343,6 +372,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -373,8 +413,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -421,12 +466,6 @@ paths:
       summary: Read Scenarios
       operationId: read_scenarios_api_v1_scenarios_get
       parameters:
-      - name: locale
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/LocaleCode'
-          default: en
       - name: limit
         in: query
         required: false
@@ -444,6 +483,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -499,8 +549,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -531,8 +586,13 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
           default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -570,6 +630,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -633,15 +704,24 @@ paths:
         schema:
           type: string
           title: Source Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Read Source Api V1 Sources  Source Id  Get
+                $ref: '#/components/schemas/SourceResponse'
         '422':
           description: Validation Error
           content:
@@ -1259,7 +1339,7 @@ components:
           title: Confidence
         translation_status:
           $ref: '#/components/schemas/TranslationStatus'
-          default: not_applicable
+          default: source
         created_at:
           type: string
           format: date-time
@@ -1313,7 +1393,11 @@ components:
           minItems: 2
           title: Country Slugs
         locale:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
           default: en
       type: object
       required:
@@ -1501,7 +1585,11 @@ components:
           minItems: 1
           title: Candidate Country Slugs
         locale:
-          $ref: '#/components/schemas/LocaleCode'
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
           default: en
       type: object
       required:
@@ -2274,10 +2362,13 @@ components:
           title: Items
         pagination:
           $ref: '#/components/schemas/Pagination'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
       - items
       - pagination
+      - locale
       title: SourceListResponse
     SourceListWithLocaleResponse:
       properties:
@@ -2296,6 +2387,17 @@ components:
       - pagination
       - locale
       title: SourceListWithLocaleResponse
+    SourceResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/Source'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - item
+      - locale
+      title: SourceResponse
     Translation:
       properties:
         id:
@@ -2448,10 +2550,10 @@ components:
     TranslationStatus:
       type: string
       enum:
-      - exact
+      - source
+      - translated
       - fallback
       - missing
-      - not_applicable
       title: TranslationStatus
     UserStory:
       properties:

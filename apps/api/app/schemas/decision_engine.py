@@ -1,5 +1,5 @@
+from app.core.locales import DEFAULT_LOCALE, SUPPORTED_LOCALES
 from app.schemas.common import (
-    LocaleCode,
     LocaleResolution,
     Pagination,
     TranslationStatus,
@@ -47,7 +47,7 @@ class CountryScoreBreakdown(BaseModel):
     explanation_ru: str
     source_ids: list[str]
     confidence: Literal["high", "medium", "low"]
-    translation_status: TranslationStatus = TranslationStatus.not_applicable
+    translation_status: TranslationStatus = TranslationStatus.source
     created_at: datetime
     updated_at: datetime
 
@@ -90,7 +90,10 @@ class DecisionCountryScoreListResponse(BaseModel):
 class DecisionCompareInput(BaseModel):
     scenario_slug: str
     country_slugs: list[str] = Field(min_length=2)
-    locale: LocaleCode = LocaleCode.en
+    locale: str = Field(
+        default=DEFAULT_LOCALE,
+        json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
+    )
 
 
 class DecisionCompareResult(BaseModel):
@@ -108,7 +111,10 @@ class DecisionRunInput(BaseModel):
     scenario_slug: str
     origin_country_slug: str | None = None
     candidate_country_slugs: list[str] = Field(min_length=1)
-    locale: LocaleCode = LocaleCode.en
+    locale: str = Field(
+        default=DEFAULT_LOCALE,
+        json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
+    )
 
 
 class DecisionRunCountry(BaseModel):

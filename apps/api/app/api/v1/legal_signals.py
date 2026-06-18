@@ -1,7 +1,8 @@
 from app.core.database import get_connection
+from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
 from app.repositories.legal_signals import count_legal_signals, list_legal_signals
-from app.schemas.common import LocaleCode, Pagination
+from app.schemas.common import Pagination
 from app.schemas.decision_engine import (
     EvidenceListResponse,
     LegalSignalDetailListResponse,
@@ -23,7 +24,7 @@ router = APIRouter(
 async def read_country_legal_signals(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalListResponse:
@@ -32,7 +33,7 @@ async def read_country_legal_signals(
     return LegalSignalListResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
-        locale=build_locale([], locale),
+        locale=build_locale(rows, locale),
     )
 
 
@@ -42,8 +43,8 @@ top_level_router = APIRouter(prefix="/legal-signals", tags=["legal_signals"])
 @top_level_router.get("", response_model=LegalSignalDetailListResponse)
 async def read_legal_signals(
     connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
     country_slug: str | None = None,
-    locale: LocaleCode = LocaleCode.en,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalDetailListResponse:
@@ -59,7 +60,7 @@ async def read_legal_signals(
 async def read_legal_signal(
     signal_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> LegalSignalDetailResponse:
     return decision_engine.get_legal_signal(connection, signal_id, locale)
 

@@ -1,8 +1,9 @@
 from app.core.database import get_connection
+from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
 from app.repositories.scenarios import count_scenarios, list_scenarios
 from app.repositories.scores import run_scenario
-from app.schemas.common import LocaleCode, Pagination
+from app.schemas.common import Pagination
 from app.schemas.countries import ScenarioRunInput, ScenarioRunResult
 from app.schemas.decision_engine import (
     DecisionCountryScoreListResponse,
@@ -22,7 +23,7 @@ router = APIRouter(tags=["scenarios"])
 @router.get("/scenarios", response_model=ScenarioListResponse)
 async def read_scenarios(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> ScenarioListResponse:
@@ -52,7 +53,7 @@ async def create_scenario_run(
 async def read_scenario_detail(
     slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> DecisionScenarioResponse:
     row = decision_engine.get_scenario(connection, slug, locale)
     return DecisionScenarioResponse(
@@ -73,7 +74,7 @@ async def read_scenario_detail(
 async def read_scenario_countries(
     slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    locale: LocaleCode = LocaleCode.en,
+    locale: LocaleQuery,
 ) -> DecisionCountryScoreListResponse:
     items = decision_engine.list_scenario_countries(connection, slug, locale)
     return DecisionCountryScoreListResponse(

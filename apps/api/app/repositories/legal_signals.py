@@ -1,5 +1,5 @@
 from app.core.database import execute_one, fetch_all, fetch_one
-from app.schemas.common import localized_column, validate_locale
+from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
 from typing import Any
@@ -17,6 +17,28 @@ def list_legal_signals(
     summary_column = localized_column(
         requested_locale, "ls.summary_en", "ls.summary_ru"
     )
+    if requested_locale == SOURCE_LOCALE:
+        resolved_locale_sql = "'en'"
+        status_sql = """
+            CASE
+                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'source'
+                ELSE 'missing'
+            END
+        """
+    else:
+        resolved_locale_sql = """
+            CASE
+                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'ru'
+                ELSE 'en'
+            END
+        """
+        status_sql = """
+            CASE
+                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'translated'
+                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
+                ELSE 'missing'
+            END
+        """
     return fetch_all(
         connection,
         f"""
@@ -35,11 +57,8 @@ def list_legal_signals(
             ls.created_at,
             ls.updated_at,
             {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            CASE
-                WHEN {title_column} IS NOT NULL AND {summary_column} IS NOT NULL THEN 'exact'
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            {resolved_locale_sql} AS resolved_locale,
+            {status_sql} AS translation_status
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.id::text = %s OR c.slug = %s

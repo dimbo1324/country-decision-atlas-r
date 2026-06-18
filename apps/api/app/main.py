@@ -57,6 +57,8 @@ app.add_middleware(
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
+    if isinstance(exc.detail, dict) and "error" in exc.detail:
+        return JSONResponse(status_code=exc.status_code, content=exc.detail)
     message = exc.detail if isinstance(exc.detail, str) else "HTTP error."
     return error_response(exc.status_code, "http_error", message, exc.detail)
 

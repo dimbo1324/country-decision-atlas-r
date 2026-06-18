@@ -1,10 +1,11 @@
+from app.core.locales import SOURCE_LOCALE, validate_locale
 from app.repositories import decision_engine as repository
 from app.repositories.common import build_locale
 from app.schemas.common import (
     LocaleCode,
     LocaleResolution,
     Pagination,
-    locale_resolution,
+    source_locale_resolution,
 )
 from app.schemas.decision_engine import (
     CountryCardResponse,
@@ -73,7 +74,7 @@ def get_country_sources(
     return SourceListWithLocaleResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
-        locale=locale_resolution(locale, False, translatable=False),
+        locale=source_locale_resolution(locale),
     )
 
 
@@ -161,17 +162,16 @@ def create_user_story(
 def compare_countries(
     connection: Connection[Any], payload: DecisionCompareInput
 ) -> DecisionCompareResult:
-    scenario_row = get_scenario(connection, payload.scenario_slug, payload.locale)
-    rows = repository.list_scenario_countries(
-        connection, payload.scenario_slug, payload.locale
-    )
+    locale = validate_locale(str(payload.locale))
+    scenario_row = get_scenario(connection, payload.scenario_slug, locale)
+    rows = repository.list_scenario_countries(connection, payload.scenario_slug, locale)
     rows = [row for row in rows if row["country_slug"] in payload.country_slugs]
-    countries = _attach_breakdowns_and_sources(connection, rows, payload.locale)
+    countries = _attach_breakdowns_and_sources(connection, rows, locale)
     if len(countries) != len(set(payload.country_slugs)):
         raise LookupError("One or more country scores were not found")
     recommendation_type, recommended_country, confidence = _recommend(countries)
     explanation = _compare_explanation(
-        countries, recommended_country, recommendation_type, payload.locale
+        countries, recommended_country, recommendation_type, locale
     )
     return DecisionCompareResult(
         scenario=_scenario_model(scenario_row),
@@ -180,22 +180,21 @@ def compare_countries(
         recommendation_type=recommendation_type,
         confidence=confidence,
         explanation=explanation,
-        caveat=_caveat(payload.locale),
-        locale=_locale([scenario_row], payload.locale),
+        caveat=_caveat(locale),
+        locale=_locale([scenario_row], locale),
     )
 
 
 def run_decision(
     connection: Connection[Any], payload: DecisionRunInput
 ) -> DecisionRunResult:
-    scenario_row = get_scenario(connection, payload.scenario_slug, payload.locale)
-    rows = repository.list_scenario_countries(
-        connection, payload.scenario_slug, payload.locale
-    )
+    locale = validate_locale(str(payload.locale))
+    scenario_row = get_scenario(connection, payload.scenario_slug, locale)
+    rows = repository.list_scenario_countries(connection, payload.scenario_slug, locale)
     rows = [
         row for row in rows if row["country_slug"] in payload.candidate_country_slugs
     ]
-    countries = _attach_breakdowns_and_sources(connection, rows, payload.locale)
+    countries = _attach_breakdowns_and_sources(connection, rows, locale)
     if not countries:
         raise LookupError("Candidate country scores were not found")
     countries = sorted(countries, key=lambda item: item.score, reverse=True)
@@ -206,7 +205,7 @@ def run_decision(
             rank=index + 1,
             risks=_risks_for_country(country),
             key_legal_signals=repository.list_legal_signals(
-                connection, payload.locale, country.country_slug, 3, 0
+                connection, locale, country.country_slug, 3, 0
             ),
             source_references=country.source_references,
         )
@@ -219,10 +218,10 @@ def run_decision(
         recommended_country=recommended_country,
         confidence=confidence,
         explanation=_compare_explanation(
-            countries, recommended_country, recommendation_type, payload.locale
+            countries, recommended_country, recommendation_type, locale
         ),
-        caveat=_caveat(payload.locale),
-        locale=_locale([scenario_row], payload.locale),
+        caveat=_caveat(locale),
+        locale=_locale([scenario_row], locale),
     )
 
 
@@ -319,10 +318,10 @@ def _localized_explanation(
 def _field_translation_status(
     value_en: str | None, value_ru: str | None, locale: str
 ) -> str:
-    if locale == LocaleCode.en and value_en:
-        return "exact"
+    if locale == SOURCE_LOCALE and value_en:
+        return "source"
     if locale == LocaleCode.ru and value_ru:
-        return "exact"
+        return "translated"
     if value_en:
         return "fallback"
     return "missing"

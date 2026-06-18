@@ -1,10 +1,11 @@
+from app.core.locales import validate_locale
 from app.repositories import decision_engine as decision_repository
-from app.schemas.common import LocaleCode, locale_resolution
+from app.schemas.common import locale_resolution, source_locale_resolution
 from app.schemas.decision_engine import DecisionRunInput
 from app.services import decision_engine
 from datetime import UTC, date, datetime
+from fastapi import HTTPException
 from psycopg import Connection
-from pydantic import TypeAdapter, ValidationError
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
 from uuid import uuid4
@@ -49,7 +50,8 @@ def card_row(status: str) -> dict[str, Any]:
         "created_at": NOW,
         "updated_at": NOW,
         "translation_status": status,
-        "is_translated": status == "exact",
+        "resolved_locale": "ru" if status == "translated" else "en",
+        "is_translated": status == "translated",
     }
 
 
@@ -57,11 +59,12 @@ def scenario_row(status: str) -> dict[str, Any]:
     return {
         "id": uuid4(),
         "slug": "relocation_residence",
-        "title": RU_RELOCATION if status == "exact" else "Relocation",
-        "description": RU_DESCRIPTION if status == "exact" else "Description",
+        "title": RU_RELOCATION if status == "translated" else "Relocation",
+        "description": RU_DESCRIPTION if status == "translated" else "Description",
         "weights": {"legalization_score": 1.0},
         "translation_status": status,
-        "is_translated": status == "exact",
+        "resolved_locale": "ru" if status == "translated" else "en",
+        "is_translated": status == "translated",
     }
 
 
@@ -73,13 +76,16 @@ def score_row(status: str) -> dict[str, Any]:
         "country_name": "Uruguay",
         "scenario_id": uuid4(),
         "scenario_slug": "relocation_residence",
-        "scenario_name": RU_RELOCATION if status == "exact" else "Relocation",
+        "scenario_name": RU_RELOCATION if status == "translated" else "Relocation",
         "score": 72.0,
-        "explanation": RU_EXPLANATION if status == "exact" else "English explanation",
+        "explanation": RU_EXPLANATION
+        if status == "translated"
+        else "English explanation",
         "confidence": "medium",
         "calculated_at": NOW,
         "translation_status": status,
-        "is_translated": status == "exact",
+        "resolved_locale": "ru" if status == "translated" else "en",
+        "is_translated": status == "translated",
     }
 
 
@@ -104,8 +110,8 @@ def legal_signal_row(status: str) -> dict[str, Any]:
     return {
         "id": uuid4(),
         "country_id": uuid4(),
-        "title": RU_SIGNAL if status == "exact" else "English signal",
-        "summary": RU_SUMMARY if status == "exact" else "English summary",
+        "title": RU_SIGNAL if status == "translated" else "English signal",
+        "summary": RU_SUMMARY if status == "translated" else "English summary",
         "signal_type": "policy",
         "impact_direction": "neutral",
         "impact_level": "low",
@@ -118,27 +124,24 @@ def legal_signal_row(status: str) -> dict[str, Any]:
         "created_at": NOW,
         "updated_at": NOW,
         "translation_status": status,
-        "is_translated": status == "exact",
+        "resolved_locale": "ru" if status == "translated" else "en",
+        "is_translated": status == "translated",
     }
 
 
 def test_locale_resolution_status_values() -> None:
-    assert locale_resolution("en", False).translation_status == "exact"
-    assert locale_resolution("ru", True).translation_status == "exact"
-    assert locale_resolution("ru", False).translation_status == "fallback"
+    assert locale_resolution("en", "en", "source").translation_status == "source"
     assert (
-        locale_resolution("ru", False, has_fallback=False).translation_status
-        == "missing"
+        locale_resolution("ru", "ru", "translated").translation_status == "translated"
     )
-    assert (
-        locale_resolution("ru", False, translatable=False).translation_status
-        == "not_applicable"
-    )
+    assert locale_resolution("ru", "en", "fallback").translation_status == "fallback"
+    assert locale_resolution("ru", "en", "missing").translation_status == "missing"
+    assert source_locale_resolution("ru").translation_status == "fallback"
 
 
 def test_country_card_locale_fallback(monkeypatch: Any) -> None:
     def fake_get_country_card(_: Any, __: str, locale: str) -> dict[str, Any]:
-        return card_row("exact" if locale == "en" else "fallback")
+        return card_row("source" if locale == "en" else "fallback")
 
     monkeypatch.setattr(decision_repository, "get_country_card", fake_get_country_card)
 
@@ -146,7 +149,7 @@ def test_country_card_locale_fallback(monkeypatch: Any) -> None:
     russian = decision_engine.get_country_card(CONNECTION, "russia", "ru")
 
     assert english.locale.requested_locale == "en"
-    assert english.locale.translation_status == "exact"
+    assert english.locale.translation_status == "source"
     assert russian.locale.requested_locale == "ru"
     assert russian.locale.resolved_locale == "en"
     assert russian.locale.translation_status == "fallback"
@@ -156,14 +159,14 @@ def test_scenario_locale_metadata(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         decision_repository,
         "get_scenario",
-        lambda *_: scenario_row("exact"),
+        lambda *_: scenario_row("translated"),
     )
 
     row = decision_engine.get_scenario(CONNECTION, "relocation_residence", "ru")
     response_locale = decision_engine._locale([row], "ru")
 
     assert row["title"] == RU_RELOCATION
-    assert response_locale.translation_status == "exact"
+    assert response_locale.translation_status == "translated"
 
 
 def test_legal_signal_locale_fallback(monkeypatch: Any) -> None:
@@ -182,7 +185,7 @@ def test_legal_signal_locale_fallback(monkeypatch: Any) -> None:
 
 
 def test_score_and_breakdown_locale(monkeypatch: Any) -> None:
-    row = score_row("exact")
+    row = score_row("translated")
     row_id = str(row["id"])
     breakdown = breakdown_row(RU_BREAKDOWN)
     breakdown["country_score_id"] = row["id"]
@@ -205,9 +208,9 @@ def test_score_and_breakdown_locale(monkeypatch: Any) -> None:
 
     assert str(scores[0].id) == row_id
     assert scores[0].explanation == RU_EXPLANATION
-    assert scores[0].translation_status == "exact"
+    assert scores[0].translation_status == "translated"
     assert scores[0].breakdowns[0].explanation == RU_BREAKDOWN
-    assert scores[0].breakdowns[0].translation_status == "exact"
+    assert scores[0].breakdowns[0].translation_status == "translated"
 
 
 def test_score_breakdown_fallback(monkeypatch: Any) -> None:
@@ -236,14 +239,14 @@ def test_score_breakdown_fallback(monkeypatch: Any) -> None:
 
 
 def test_decision_output_respects_locale(monkeypatch: Any) -> None:
-    row = score_row("exact")
+    row = score_row("translated")
     breakdown = breakdown_row(RU_BREAKDOWN)
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
         decision_repository,
         "get_scenario",
-        lambda *_: scenario_row("exact"),
+        lambda *_: scenario_row("translated"),
     )
     monkeypatch.setattr(
         decision_repository,
@@ -259,7 +262,7 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         decision_repository,
         "list_legal_signals",
-        lambda *_: [legal_signal_row("exact")],
+        lambda *_: [legal_signal_row("translated")],
     )
 
     result = decision_engine.run_decision(
@@ -271,33 +274,34 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
         ),
     )
 
-    assert result.locale.translation_status == "exact"
+    assert result.locale.translation_status == "translated"
     assert RU_MVP_SCORE in result.explanation
     assert result.ranked_candidates[0].country.explanation == RU_EXPLANATION
 
 
 def test_unknown_query_locale_returns_validation_error() -> None:
-    adapter = TypeAdapter(LocaleCode)
-
     try:
-        adapter.validate_python("de")
-    except ValidationError as error:
-        assert "de" in str(error)
+        validate_locale("de")
+    except HTTPException as error:
+        details = cast(dict[str, Any], error.detail)
+        assert details["error"]["code"] == "unsupported_locale"
     else:
         raise AssertionError("Unsupported locale was accepted")
 
 
 def test_unknown_decision_locale_returns_validation_error() -> None:
     try:
-        DecisionRunInput.model_validate(
-            {
-                "scenario_slug": "relocation_residence",
-                "candidate_country_slugs": ["uruguay"],
-                "locale": "de",
-            }
+        decision_engine.run_decision(
+            CONNECTION,
+            DecisionRunInput(
+                scenario_slug="relocation_residence",
+                candidate_country_slugs=["uruguay"],
+                locale="de",
+            ),
         )
-    except ValidationError as error:
-        assert "de" in str(error)
+    except HTTPException as error:
+        details = cast(dict[str, Any], error.detail)
+        assert details["error"]["code"] == "unsupported_locale"
     else:
         raise AssertionError("Unsupported locale was accepted")
 
@@ -307,9 +311,9 @@ def test_openapi_locale_contract() -> None:
 
     assert schemas["LocaleCode"]["enum"] == ["en", "ru"]
     assert schemas["TranslationStatus"]["enum"] == [
-        "exact",
+        "source",
+        "translated",
         "fallback",
         "missing",
-        "not_applicable",
     ]
     assert "LocaleResolution" in schemas
