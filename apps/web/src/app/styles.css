@@ -17,12 +17,138 @@
 body {
   margin: 0;
 }
-.shell {
+.appShell {
+  display: grid;
+  grid-template-rows: auto 1fr;
   min-height: 100vh;
+}
+.appHeader {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.appHeaderInner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 56px;
+}
+.appTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.appTitle:hover {
+  color: #2563eb;
+}
+.appNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.navLink {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.navLink:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.navLink[data-active="true"] {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.localeSwitcher {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.localeButton {
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+.localeButton:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.localeButton[data-active="true"] {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+.appMain {
+  background: #f7f8fa;
+}
+.homePage {
+  min-height: 80vh;
   display: grid;
   gap: 32px;
   align-content: center;
-  padding: 48px;
+  padding: 48px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.homeLinks {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.homeLink:hover {
+  background: #1d4ed8;
+}
+.errorState {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+}
+.errorCode {
+  font-size: 13px;
+  font-family: monospace;
+  color: #7f1d1d;
+}
+.shell {
+  min-height: 80vh;
+  display: grid;
+  gap: 32px;
+  align-content: center;
+  padding: 48px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 .intro {
   max-width: 760px;
@@ -67,8 +193,9 @@ h1 {
   font-weight: 700;
 }
 .pageShell {
-  min-height: 100vh;
-  padding: 48px;
+  padding: 40px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 .pageHeader {
   max-width: 760px;
@@ -122,11 +249,21 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
 }
-@media (max-width: 640px) {
-  .shell {
-    padding: 28px;
+@media (max-width: 768px) {
+  .appHeaderInner {
+    padding: 0 16px;
+    gap: 12px;
   }
-  .pageShell {
-    padding: 28px;
+  .appNav {
+    gap: 2px;
+  }
+  .navLink {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+  .shell,
+  .pageShell,
+  .homePage {
+    padding: 24px 16px;
   }
 }

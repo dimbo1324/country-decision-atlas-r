@@ -53,6 +53,51 @@
         "python -m sqlfluff lint database --dialect postgres",
         "python -m pre_commit validate-config"
       ]
+    },
+    {
+      "date": "2026-06-18",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-foundation-shell",
+      "task": "feat/web-foundation-shell",
+      "branch": "feat/web-foundation-shell",
+      "title": "Start frontend web foundation shell",
+      "summary": [
+        "Started frontend web foundation shell implementation.",
+        "Adds app shell, navigation, locale switcher, shared UI states, route placeholders, and shared config."
+      ],
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-18",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "web-foundation-shell",
+      "task": "feat/web-foundation-shell",
+      "branch": "feat/web-foundation-shell",
+      "title": "Complete frontend web foundation shell",
+      "summary": [
+        "Added app shell (AppShell, AppHeader, AppNavigation, LocaleSwitcher) as server and client components.",
+        "Wrapped LocaleSwitcher in Suspense in AppHeader to satisfy Next.js 15 useSearchParams boundary requirement.",
+        "Added shared config (env.ts), locale helpers (locale.ts), route constants (routes.ts).",
+        "Added shared UI states: LoadingState, EmptyState, ErrorState.",
+        "Created route placeholder pages for /decision, /sources, /internal/data-quality.",
+        "Centralized API_BASE_URL in shared/config/env.ts; removed duplicate hardcoded constants from http.ts and lib/api.ts.",
+        "Upgraded /countries page to use shared typed API client and locale from searchParams.",
+        "Rewrote layout.tsx to use AppShell and page.tsx as clean home page.",
+        "Extended styles.css with full shell, nav, locale switcher, home page, and error state styles.",
+        "Added NEXT_PUBLIC_API_BASE_URL to .env.example."
+      ],
+      "status": "completed",
+      "checks": [
+        "pnpm typecheck",
+        "pnpm lint",
+        "pnpm build",
+        "python -m pytest",
+        "python -m ruff check apps packages scripts tests --fix",
+        "python -m ruff format apps packages scripts tests",
+        "python -m mypy apps packages scripts tests"
+      ]
     }
   ]
 }
