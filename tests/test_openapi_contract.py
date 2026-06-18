@@ -67,9 +67,20 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "CountryScoreBreakdown",
         "DecisionCompareInput",
         "DecisionCompareResult",
-        "DecisionRunInput",
-        "DecisionRunResult",
+        "DecisionRunRequest",
+        "DecisionRunResponse",
+        "DecisionCountryResult",
+        "DecisionRiskWarning",
+        "DecisionBreakdownItem",
         "UserStory",
         "UserStoryCreate",
     ]:
         assert schema_name in schemas
+
+    run_path = contract["paths"]["/api/v1/decision/run"]["post"]
+    assert run_path["requestBody"]["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/DecisionRunRequest"
+    }
+    assert run_path["responses"]["200"]["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/DecisionRunResponse"
+    }

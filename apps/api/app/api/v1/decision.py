@@ -2,8 +2,8 @@ from app.core.database import get_connection
 from app.schemas.decision_engine import (
     DecisionCompareInput,
     DecisionCompareResult,
-    DecisionRunInput,
-    DecisionRunResult,
+    DecisionRunRequest,
+    DecisionRunResponse,
 )
 from app.services import decision_engine
 from fastapi import APIRouter, Depends
@@ -22,9 +22,9 @@ async def compare_countries(
     return decision_engine.compare_countries(connection, payload)
 
 
-@router.post("/run", response_model=DecisionRunResult)
+@router.post("/run", response_model=DecisionRunResponse)
 async def run_decision(
-    payload: DecisionRunInput,
+    payload: DecisionRunRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-) -> DecisionRunResult:
+) -> DecisionRunResponse:
     return decision_engine.run_decision(connection, payload)

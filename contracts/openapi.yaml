@@ -267,9 +267,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -818,9 +818,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -935,9 +935,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -1145,7 +1145,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1191,7 +1191,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/evidence-items:
     post:
       tags:
@@ -1218,7 +1218,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1264,7 +1264,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/legal-signals:
     post:
       tags:
@@ -1291,7 +1291,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1337,7 +1337,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/countries/{country_slug}/profile:
     patch:
       tags:
@@ -1377,7 +1377,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/user-stories:
     post:
       tags:
@@ -1404,7 +1404,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1450,7 +1450,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/translations/jobs:
     post:
       tags:
@@ -1477,7 +1477,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1677,7 +1677,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DecisionRunInput'
+              $ref: '#/components/schemas/DecisionRunRequest'
         required: true
       responses:
         '200':
@@ -1685,7 +1685,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DecisionRunResult'
+                $ref: '#/components/schemas/DecisionRunResponse'
         '422':
           description: Validation Error
           content:
@@ -2554,6 +2554,50 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    DecisionBreakdownItem:
+      properties:
+        criterion:
+          type: string
+          title: Criterion
+        title:
+          type: string
+          title: Title
+        score:
+          type: number
+          title: Score
+        weight:
+          type: number
+          title: Weight
+        weighted_score:
+          type: number
+          title: Weighted Score
+        explanation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Explanation
+        confidence:
+          anyOf:
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+      type: object
+      required:
+      - criterion
+      - title
+      - score
+      - weight
+      - weighted_score
+      title: DecisionBreakdownItem
     DecisionCompareInput:
       properties:
         scenario_slug:
@@ -2624,6 +2668,96 @@ components:
       - caveat
       - locale
       title: DecisionCompareResult
+    DecisionCountryRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso Code
+      type: object
+      required:
+      - id
+      - slug
+      - name
+      title: DecisionCountryRef
+    DecisionCountryResult:
+      properties:
+        rank:
+          type: integer
+          title: Rank
+        country:
+          $ref: '#/components/schemas/DecisionCountryRef'
+        score:
+          type: number
+          title: Score
+        score_label:
+          type: string
+          enum:
+          - weak
+          - limited
+          - moderate
+          - strong
+          - excellent
+          title: Score Label
+        summary:
+          type: string
+          title: Summary
+        strengths:
+          items:
+            $ref: '#/components/schemas/DecisionPoint'
+          type: array
+          title: Strengths
+        weaknesses:
+          items:
+            $ref: '#/components/schemas/DecisionPoint'
+          type: array
+          title: Weaknesses
+        risk_warnings:
+          items:
+            $ref: '#/components/schemas/DecisionRiskWarning'
+          type: array
+          title: Risk Warnings
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+        breakdown:
+          items:
+            $ref: '#/components/schemas/DecisionBreakdownItem'
+          type: array
+          title: Breakdown
+        sources:
+          items:
+            $ref: '#/components/schemas/DecisionSourceRef'
+          type: array
+          title: Sources
+      type: object
+      required:
+      - rank
+      - country
+      - score
+      - score_label
+      - summary
+      - strengths
+      - weaknesses
+      - risk_warnings
+      - confidence
+      - breakdown
+      - sources
+      title: DecisionCountryResult
     DecisionCountryScore:
       properties:
         id:
@@ -2710,53 +2844,89 @@ components:
       - items
       - locale
       title: DecisionCountryScoreListResponse
-    DecisionRunCountry:
+    DecisionPoint:
       properties:
-        country:
-          $ref: '#/components/schemas/DecisionCountryScore'
-        rank:
-          type: integer
-          title: Rank
-        risks:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        message:
+          type: string
+          title: Message
+        source_ids:
           items:
             type: string
           type: array
-          title: Risks
-        key_legal_signals:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Key Legal Signals
-        source_references:
-          items:
-            $ref: '#/components/schemas/Source'
-          type: array
-          title: Source References
+          title: Source Ids
       type: object
       required:
-      - country
-      - rank
-      - risks
-      - key_legal_signals
-      - source_references
-      title: DecisionRunCountry
-    DecisionRunInput:
+      - code
+      - title
+      - message
+      title: DecisionPoint
+    DecisionRiskWarning:
       properties:
-        scenario_slug:
+        code:
           type: string
-          title: Scenario Slug
+          title: Code
+        level:
+          type: string
+          title: Level
+        message:
+          type: string
+          title: Message
+        legal_signal_ids:
+          items:
+            type: string
+          type: array
+          title: Legal Signal Ids
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+      type: object
+      required:
+      - code
+      - level
+      - message
+      title: DecisionRiskWarning
+    DecisionRunMeta:
+      properties:
+        candidate_count:
+          type: integer
+          title: Candidate Count
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        model_version:
+          type: string
+          title: Model Version
+          default: scenario-decision-engine-v1
+      type: object
+      required:
+      - candidate_count
+      - generated_at
+      title: DecisionRunMeta
+    DecisionRunRequest:
+      properties:
         origin_country_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Origin Country Slug
         candidate_country_slugs:
           items:
             type: string
           type: array
+          maxItems: 10
           minItems: 1
+          uniqueItems: true
           title: Candidate Country Slugs
+        scenario_slug:
+          type: string
+          title: Scenario Slug
         locale:
           type: string
           enum:
@@ -2766,54 +2936,33 @@ components:
           default: en
       type: object
       required:
-      - scenario_slug
+      - origin_country_slug
       - candidate_country_slugs
-      title: DecisionRunInput
-    DecisionRunResult:
+      - scenario_slug
+      title: DecisionRunRequest
+    DecisionRunResponse:
       properties:
         scenario:
-          $ref: '#/components/schemas/DecisionScenario'
-        origin_country_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Origin Country Slug
-        ranked_candidates:
+          $ref: '#/components/schemas/DecisionScenarioRef'
+        origin_country:
+          $ref: '#/components/schemas/DecisionCountryRef'
+        results:
           items:
-            $ref: '#/components/schemas/DecisionRunCountry'
+            $ref: '#/components/schemas/DecisionCountryResult'
           type: array
-          title: Ranked Candidates
-        recommended_country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recommended Country
-        confidence:
-          type: string
-          enum:
-          - high
-          - medium
-          - low
-          title: Confidence
-        explanation:
-          type: string
-          title: Explanation
-        caveat:
-          type: string
-          title: Caveat
+          title: Results
+        meta:
+          $ref: '#/components/schemas/DecisionRunMeta'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
       required:
       - scenario
-      - origin_country_slug
-      - ranked_candidates
-      - recommended_country
-      - confidence
-      - explanation
-      - caveat
+      - origin_country
+      - results
+      - meta
       - locale
-      title: DecisionRunResult
+      title: DecisionRunResponse
     DecisionScenario:
       properties:
         id:
@@ -2842,6 +2991,24 @@ components:
       - description
       - weights
       title: DecisionScenario
+    DecisionScenarioRef:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - slug
+      - title
+      title: DecisionScenarioRef
     DecisionScenarioResponse:
       properties:
         item:
@@ -2853,6 +3020,37 @@ components:
       - item
       - locale
       title: DecisionScenarioResponse
+    DecisionSourceRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        confidence:
+          anyOf:
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: DecisionSourceRef
     ErrorResponse:
       properties:
         error:

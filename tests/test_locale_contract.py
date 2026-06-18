@@ -1,7 +1,7 @@
 from app.core.locales import validate_locale
 from app.repositories import decision_engine as decision_repository
 from app.schemas.common import locale_resolution, source_locale_resolution
-from app.schemas.decision_engine import DecisionRunInput
+from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
 from datetime import UTC, date, datetime
 from fastapi import HTTPException
@@ -245,29 +245,75 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
 
     monkeypatch.setattr(
         decision_repository,
-        "get_scenario",
+        "get_decision_scenario",
         lambda *_: scenario_row("translated"),
     )
     monkeypatch.setattr(
         decision_repository,
-        "list_scenario_countries",
-        lambda *_: [row],
+        "list_decision_countries",
+        lambda *_: [
+            {
+                "id": str(row["country_id"]),
+                "slug": "russia",
+                "name": "Russia",
+                "iso_code": "RU",
+                "translation_status": "translated",
+                "resolved_locale": "ru",
+            },
+            {
+                "id": str(row["country_id"]),
+                "slug": "uruguay",
+                "name": "Uruguay",
+                "iso_code": "UY",
+                "translation_status": "translated",
+                "resolved_locale": "ru",
+            },
+        ],
     )
     monkeypatch.setattr(
         decision_repository,
-        "list_score_breakdowns",
-        lambda *_: [breakdown],
+        "list_decision_scores",
+        lambda *_: [
+            {**row, "id": str(row["id"]), "country_id": str(row["country_id"])}
+        ],
     )
-    monkeypatch.setattr(decision_repository, "list_score_sources", lambda *_: [])
     monkeypatch.setattr(
         decision_repository,
-        "list_legal_signals",
-        lambda *_: [legal_signal_row("translated")],
+        "list_decision_score_breakdowns",
+        lambda *_: [
+            {
+                "country_score_id": str(breakdown["country_score_id"]),
+                "criterion": breakdown["criterion"],
+                "score": breakdown["score"],
+                "weight": breakdown["weight"],
+                "weighted_score": breakdown["weighted_score"],
+                "explanation": RU_BREAKDOWN,
+                "source_ids": [],
+                "confidence": breakdown["confidence"],
+                "translation_status": "translated",
+                "resolved_locale": "ru",
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        decision_repository, "list_decision_sources_by_ids", lambda *_: []
+    )
+    monkeypatch.setattr(
+        decision_repository,
+        "list_decision_legal_signals",
+        lambda *_: [
+            {
+                **legal_signal_row("translated"),
+                "id": str(uuid4()),
+                "country_slug": "uruguay",
+            }
+        ],
     )
 
     result = decision_engine.run_decision(
         CONNECTION,
-        DecisionRunInput(
+        DecisionRunRequest(
+            origin_country_slug="russia",
             scenario_slug="relocation_residence",
             candidate_country_slugs=["uruguay"],
             locale="ru",
@@ -275,8 +321,8 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
     )
 
     assert result.locale.translation_status == "translated"
-    assert RU_MVP_SCORE in result.explanation
-    assert result.ranked_candidates[0].country.explanation == RU_EXPLANATION
+    assert RU_RELOCATION in result.results[0].summary
+    assert result.results[0].breakdown[0].explanation == RU_BREAKDOWN
 
 
 def test_unknown_query_locale_returns_validation_error() -> None:
@@ -293,7 +339,8 @@ def test_unknown_decision_locale_returns_validation_error() -> None:
     try:
         decision_engine.run_decision(
             CONNECTION,
-            DecisionRunInput(
+            DecisionRunRequest(
+                origin_country_slug="russia",
                 scenario_slug="relocation_residence",
                 candidate_country_slugs=["uruguay"],
                 locale="de",

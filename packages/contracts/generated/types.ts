@@ -1041,6 +1041,25 @@ export interface components {
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** DecisionBreakdownItem */
+        DecisionBreakdownItem: {
+            /** Criterion */
+            criterion: string;
+            /** Title */
+            title: string;
+            /** Score */
+            score: number;
+            /** Weight */
+            weight: number;
+            /** Weighted Score */
+            weighted_score: number;
+            /** Explanation */
+            explanation?: string | null;
+            /** Confidence */
+            confidence?: ("high" | "medium" | "low") | null;
+            /** Source Ids */
+            source_ids?: string[];
+        };
         /** DecisionCompareInput */
         DecisionCompareInput: {
             /** Scenario Slug */
@@ -1076,6 +1095,47 @@ export interface components {
             /** Caveat */
             caveat: string;
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionCountryRef */
+        DecisionCountryRef: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso Code */
+            iso_code?: string | null;
+        };
+        /** DecisionCountryResult */
+        DecisionCountryResult: {
+            /** Rank */
+            rank: number;
+            country: components["schemas"]["DecisionCountryRef"];
+            /** Score */
+            score: number;
+            /**
+             * Score Label
+             * @enum {string}
+             */
+            score_label: "weak" | "limited" | "moderate" | "strong" | "excellent";
+            /** Summary */
+            summary: string;
+            /** Strengths */
+            strengths: components["schemas"]["DecisionPoint"][];
+            /** Weaknesses */
+            weaknesses: components["schemas"]["DecisionPoint"][];
+            /** Risk Warnings */
+            risk_warnings: components["schemas"]["DecisionRiskWarning"][];
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** Breakdown */
+            breakdown: components["schemas"]["DecisionBreakdownItem"][];
+            /** Sources */
+            sources: components["schemas"]["DecisionSourceRef"][];
         };
         /** DecisionCountryScore */
         DecisionCountryScore: {
@@ -1131,28 +1191,53 @@ export interface components {
             items: components["schemas"]["DecisionCountryScore"][];
             locale: components["schemas"]["LocaleResolution"];
         };
-        /** DecisionRunCountry */
-        DecisionRunCountry: {
-            country: components["schemas"]["DecisionCountryScore"];
-            /** Rank */
-            rank: number;
-            /** Risks */
-            risks: string[];
-            /** Key Legal Signals */
-            key_legal_signals: {
-                [key: string]: unknown;
-            }[];
-            /** Source References */
-            source_references: components["schemas"]["Source"][];
+        /** DecisionPoint */
+        DecisionPoint: {
+            /** Code */
+            code: string;
+            /** Title */
+            title: string;
+            /** Message */
+            message: string;
+            /** Source Ids */
+            source_ids?: string[];
         };
-        /** DecisionRunInput */
-        DecisionRunInput: {
-            /** Scenario Slug */
-            scenario_slug: string;
+        /** DecisionRiskWarning */
+        DecisionRiskWarning: {
+            /** Code */
+            code: string;
+            /** Level */
+            level: string;
+            /** Message */
+            message: string;
+            /** Legal Signal Ids */
+            legal_signal_ids?: string[];
+            /** Source Ids */
+            source_ids?: string[];
+        };
+        /** DecisionRunMeta */
+        DecisionRunMeta: {
+            /** Candidate Count */
+            candidate_count: number;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Model Version
+             * @default scenario-decision-engine-v1
+             */
+            model_version: string;
+        };
+        /** DecisionRunRequest */
+        DecisionRunRequest: {
             /** Origin Country Slug */
-            origin_country_slug?: string | null;
+            origin_country_slug: string;
             /** Candidate Country Slugs */
             candidate_country_slugs: string[];
+            /** Scenario Slug */
+            scenario_slug: string;
             /**
              * Locale
              * @default en
@@ -1160,24 +1245,13 @@ export interface components {
              */
             locale: "en" | "ru";
         };
-        /** DecisionRunResult */
-        DecisionRunResult: {
-            scenario: components["schemas"]["DecisionScenario"];
-            /** Origin Country Slug */
-            origin_country_slug: string | null;
-            /** Ranked Candidates */
-            ranked_candidates: components["schemas"]["DecisionRunCountry"][];
-            /** Recommended Country */
-            recommended_country: string | null;
-            /**
-             * Confidence
-             * @enum {string}
-             */
-            confidence: "high" | "medium" | "low";
-            /** Explanation */
-            explanation: string;
-            /** Caveat */
-            caveat: string;
+        /** DecisionRunResponse */
+        DecisionRunResponse: {
+            scenario: components["schemas"]["DecisionScenarioRef"];
+            origin_country: components["schemas"]["DecisionCountryRef"];
+            /** Results */
+            results: components["schemas"]["DecisionCountryResult"][];
+            meta: components["schemas"]["DecisionRunMeta"];
             locale: components["schemas"]["LocaleResolution"];
         };
         /** DecisionScenario */
@@ -1198,10 +1272,32 @@ export interface components {
                 [key: string]: number;
             };
         };
+        /** DecisionScenarioRef */
+        DecisionScenarioRef: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Description */
+            description?: string | null;
+        };
         /** DecisionScenarioResponse */
         DecisionScenarioResponse: {
             item: components["schemas"]["DecisionScenario"];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionSourceRef */
+        DecisionSourceRef: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Source Type */
+            source_type?: string | null;
+            /** Confidence */
+            confidence?: ("high" | "medium" | "low") | null;
         };
         /** ErrorResponse */
         ErrorResponse: {
@@ -2267,7 +2363,7 @@ export interface operations {
             query?: {
                 source_type?: string | null;
                 language?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
                 order?: "asc" | "desc";
@@ -2586,7 +2682,7 @@ export interface operations {
                 country_slug?: string | null;
                 source_type?: string | null;
                 language?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
                 order?: "asc" | "desc";
@@ -2626,7 +2722,7 @@ export interface operations {
                 country_slug?: string | null;
                 source_id?: string | null;
                 legal_signal_id?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "retrieved_at" | "created_at" | "confidence";
                 order?: "asc" | "desc";
@@ -2789,7 +2885,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2833,7 +2929,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2875,7 +2971,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2919,7 +3015,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2961,7 +3057,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3005,7 +3101,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3049,7 +3145,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3091,7 +3187,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3135,7 +3231,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3177,7 +3273,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3334,7 +3430,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["DecisionRunInput"];
+                "application/json": components["schemas"]["DecisionRunRequest"];
             };
         };
         responses: {
@@ -3344,7 +3440,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DecisionRunResult"];
+                    "application/json": components["schemas"]["DecisionRunResponse"];
                 };
             };
             /** @description Validation Error */

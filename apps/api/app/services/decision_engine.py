@@ -1,3 +1,4 @@
+from app.core.errors import api_error
 from app.core.locales import SOURCE_LOCALE, validate_locale
 from app.repositories import decision_engine as repository
 from app.repositories.common import build_locale
@@ -10,13 +11,20 @@ from app.schemas.common import (
 )
 from app.schemas.decision_engine import (
     CountryCardResponse,
+    DecisionBreakdownItem,
     DecisionCompareInput,
     DecisionCompareResult,
+    DecisionCountryRef,
+    DecisionCountryResult,
     DecisionCountryScore,
-    DecisionRunCountry,
+    DecisionPoint,
     DecisionRunInput,
-    DecisionRunResult,
+    DecisionRunMeta,
+    DecisionRunRequest,
+    DecisionRunResponse,
     DecisionScenario,
+    DecisionScenarioRef,
+    DecisionSourceRef,
     EvidenceListResponse,
     LegalSignalDetailResponse,
     SourceListWithLocaleResponse,
@@ -25,6 +33,15 @@ from app.schemas.decision_engine import (
     UserStoryResponse,
 )
 from app.schemas.sources import EvidenceItemListResponse
+from app.services.decision_labels import (
+    criterion_label,
+    score_label_text,
+    strength_message,
+    weakness_message,
+)
+from app.services.decision_warnings import build_risk_warnings
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from psycopg import Connection
 from typing import Any
 
@@ -266,51 +283,298 @@ def compare_countries(
 
 
 def run_decision(
-    connection: Connection[Any], payload: DecisionRunInput
-) -> DecisionRunResult:
+    connection: Connection[Any], payload: DecisionRunRequest | DecisionRunInput
+) -> DecisionRunResponse:
     locale = validate_locale(str(payload.locale))
-    scenario_row = get_scenario(connection, payload.scenario_slug, locale)
-    rows = repository.list_scenario_countries(connection, payload.scenario_slug, locale)
-    rows = [
-        row for row in rows if row["country_slug"] in payload.candidate_country_slugs
-    ]
-    countries = _attach_breakdowns_and_sources(connection, rows, locale)
-    if not countries:
-        raise LookupError("Candidate country scores were not found")
-    countries = sorted(countries, key=lambda item: item.score, reverse=True)
-    recommendation_type, recommended_country, confidence = _recommend(countries)
-    ranked = [
-        DecisionRunCountry(
-            country=country,
-            rank=index + 1,
-            risks=_risks_for_country(country),
-            key_legal_signals=repository.list_legal_signals(
-                connection,
-                locale,
-                country.country_slug,
-                None,
-                None,
-                None,
-                "published",
-                3,
-                0,
-            ),
-            source_references=country.source_references,
-        )
-        for index, country in enumerate(countries)
-    ]
-    return DecisionRunResult(
-        scenario=_scenario_model(scenario_row),
-        origin_country_slug=payload.origin_country_slug,
-        ranked_candidates=ranked,
-        recommended_country=recommended_country,
-        confidence=confidence,
-        explanation=_compare_explanation(
-            countries, recommended_country, recommendation_type, locale
-        ),
-        caveat=_caveat(locale),
-        locale=_locale([scenario_row], locale),
+    scenario_row = repository.get_decision_scenario(
+        connection, payload.scenario_slug, locale
     )
+    if scenario_row is None:
+        raise api_error(
+            404,
+            "scenario_not_found",
+            "Scenario was not found.",
+            {"scenario_slug": payload.scenario_slug},
+        )
+    candidate_slugs = list(payload.candidate_country_slugs)
+    if len(candidate_slugs) != len(set(candidate_slugs)):
+        raise api_error(
+            422,
+            "invalid_candidate_countries",
+            "Candidate countries must be unique.",
+            {"candidate_country_slugs": candidate_slugs},
+        )
+    country_slugs = sorted({payload.origin_country_slug, *candidate_slugs})
+    country_rows = repository.list_decision_countries(connection, country_slugs, locale)
+    countries_by_slug = {row["slug"]: row for row in country_rows}
+    missing_slugs = [slug for slug in country_slugs if slug not in countries_by_slug]
+    if missing_slugs:
+        details_key = (
+            "country_slug"
+            if missing_slugs == [payload.origin_country_slug]
+            else "missing_country_slugs"
+        )
+        raise api_error(
+            404,
+            "country_not_found",
+            "Country was not found.",
+            {
+                details_key: missing_slugs[0]
+                if len(missing_slugs) == 1
+                else missing_slugs
+            },
+        )
+    score_rows = repository.list_decision_scores(
+        connection, payload.scenario_slug, candidate_slugs, locale
+    )
+    scores_by_country = {row["country_slug"]: row for row in score_rows}
+    missing_score_slugs = [
+        slug for slug in candidate_slugs if slug not in scores_by_country
+    ]
+    if missing_score_slugs:
+        raise api_error(
+            422,
+            "decision_score_not_found",
+            "Decision score was not found for one or more candidate countries.",
+            {
+                "scenario_slug": payload.scenario_slug,
+                "missing_country_slugs": missing_score_slugs,
+            },
+        )
+    score_ids = [row["id"] for row in score_rows]
+    breakdown_rows = repository.list_decision_score_breakdowns(
+        connection, score_ids, locale
+    )
+    legal_signal_rows = repository.list_decision_legal_signals(
+        connection, candidate_slugs, locale
+    )
+    source_ids = _collect_source_ids(breakdown_rows, legal_signal_rows)
+    source_rows = repository.list_decision_sources_by_ids(connection, source_ids)
+    breakdowns_by_score = _group_by(breakdown_rows, "country_score_id")
+    signals_by_country = _group_by(legal_signal_rows, "country_slug")
+    sources_by_id = {row["id"]: row for row in source_rows}
+    results = [
+        _build_country_result(
+            country=countries_by_slug[slug],
+            score=scores_by_country[slug],
+            breakdowns=breakdowns_by_score.get(scores_by_country[slug]["id"], []),
+            legal_signals=signals_by_country.get(slug, []),
+            sources_by_id=sources_by_id,
+            scenario_slug=payload.scenario_slug,
+            scenario_title=scenario_row["title"],
+            locale=locale,
+        )
+        for slug in candidate_slugs
+    ]
+    ranked_results = _rank_results(results)
+    locale_rows = [
+        scenario_row,
+        countries_by_slug[payload.origin_country_slug],
+        *[countries_by_slug[slug] for slug in candidate_slugs],
+        *score_rows,
+        *breakdown_rows,
+        *legal_signal_rows,
+    ]
+    return DecisionRunResponse(
+        scenario=DecisionScenarioRef(
+            slug=scenario_row["slug"],
+            title=scenario_row["title"],
+            description=scenario_row["description"],
+        ),
+        origin_country=_country_ref(countries_by_slug[payload.origin_country_slug]),
+        results=ranked_results,
+        meta=DecisionRunMeta(
+            candidate_count=len(candidate_slugs),
+            generated_at=datetime.now(UTC),
+        ),
+        locale=_locale(locale_rows, locale),
+    )
+
+
+def get_score_label(score: float) -> str:
+    if score >= 85:
+        return "excellent"
+    if score >= 75:
+        return "strong"
+    if score >= 60:
+        return "moderate"
+    if score >= 40:
+        return "limited"
+    return "weak"
+
+
+def aggregate_confidence(values: Iterable[str | None]) -> str:
+    confidence_value = {"low": 1, "medium": 2, "high": 3}
+    clean_values = [
+        confidence_value[value] for value in values if value in confidence_value
+    ]
+    if not clean_values:
+        return "low"
+    average = sum(clean_values) / len(clean_values)
+    if average >= 2.5:
+        return "high"
+    if average >= 1.7:
+        return "medium"
+    return "low"
+
+
+def _build_country_result(
+    country: dict[str, Any],
+    score: dict[str, Any],
+    breakdowns: list[dict[str, Any]],
+    legal_signals: list[dict[str, Any]],
+    sources_by_id: dict[str, dict[str, Any]],
+    scenario_slug: str,
+    scenario_title: str,
+    locale: str,
+) -> DecisionCountryResult:
+    used_source_ids = _collect_source_ids(breakdowns, legal_signals)
+    result_sources = [
+        DecisionSourceRef(**sources_by_id[source_id])
+        for source_id in used_source_ids
+        if source_id in sources_by_id
+    ]
+    score_label = get_score_label(float(score["score"]))
+    return DecisionCountryResult(
+        rank=0,
+        country=_country_ref(country),
+        score=score["score"],
+        score_label=score_label,
+        summary=_build_summary(
+            country["name"], score["score"], score_label, scenario_title, locale
+        ),
+        strengths=_build_strengths(breakdowns, locale),
+        weaknesses=_build_weaknesses(breakdowns, locale),
+        risk_warnings=build_risk_warnings(scenario_slug, legal_signals, locale),
+        confidence=aggregate_confidence(
+            [
+                score.get("confidence"),
+                *[item.get("confidence") for item in breakdowns],
+                *[item.get("confidence") for item in legal_signals],
+                *[item.confidence for item in result_sources],
+            ]
+        ),
+        breakdown=[
+            DecisionBreakdownItem(
+                criterion=item["criterion"],
+                title=criterion_label(item["criterion"], locale),
+                score=item["score"],
+                weight=item["weight"],
+                weighted_score=item["weighted_score"],
+                explanation=item.get("explanation"),
+                confidence=item.get("confidence"),
+                source_ids=_source_ids(item.get("source_ids")),
+            )
+            for item in breakdowns
+        ],
+        sources=result_sources,
+    )
+
+
+def _country_ref(country: dict[str, Any]) -> DecisionCountryRef:
+    return DecisionCountryRef(
+        id=str(country["id"]),
+        slug=country["slug"],
+        name=country["name"],
+        iso_code=country.get("iso_code"),
+    )
+
+
+def _build_strengths(
+    breakdowns: list[dict[str, Any]], locale: str
+) -> list[DecisionPoint]:
+    return [
+        DecisionPoint(
+            code=item["criterion"],
+            title=criterion_label(item["criterion"], locale),
+            message=strength_message(item["criterion"], locale),
+            source_ids=_source_ids(item.get("source_ids")),
+        )
+        for item in breakdowns
+        if float(item["score"]) >= 70
+    ]
+
+
+def _build_weaknesses(
+    breakdowns: list[dict[str, Any]], locale: str
+) -> list[DecisionPoint]:
+    return [
+        DecisionPoint(
+            code=item["criterion"],
+            title=criterion_label(item["criterion"], locale),
+            message=weakness_message(item["criterion"], locale),
+            source_ids=_source_ids(item.get("source_ids")),
+        )
+        for item in breakdowns
+        if float(item["score"]) <= 50
+    ]
+
+
+def _build_summary(
+    country_name: str,
+    score: float,
+    label: str,
+    scenario_title: str,
+    locale: str,
+) -> str:
+    display_label = score_label_text(label, locale)
+    if locale == LocaleCode.ru:
+        return (
+            f"{country_name} \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u043e\u0446\u0435\u043d\u043a\u0443 {score:.0f}/100 \u043f\u043e \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u044e "
+            f"\u00ab{scenario_title}\u00bb. \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043e\u0446\u0435\u043d\u0438\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a {display_label}. "
+            "\u0412\u044b\u0432\u043e\u0434 \u043e\u0441\u043d\u043e\u0432\u0430\u043d \u043d\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0445 score breakdowns, legal signals \u0438 \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430\u0445."
+        )
+    return (
+        f"{country_name} receives a {score:.0f}/100 score for the "
+        f'"{scenario_title}" scenario. The result is assessed as {display_label}. '
+        "The conclusion is based on stored score breakdowns, legal signals, and sources."
+    )
+
+
+def _rank_results(
+    results: list[DecisionCountryResult],
+) -> list[DecisionCountryResult]:
+    confidence_rank = {"high": 3, "medium": 2, "low": 1}
+    ranked = sorted(
+        results,
+        key=lambda item: (
+            -item.score,
+            -confidence_rank.get(item.confidence, 0),
+            item.country.slug,
+        ),
+    )
+    for index, result in enumerate(ranked, start=1):
+        result.rank = index
+    return ranked
+
+
+def _collect_source_ids(
+    breakdowns: list[dict[str, Any]], legal_signals: list[dict[str, Any]]
+) -> list[str]:
+    source_ids = [
+        source_id
+        for breakdown in breakdowns
+        for source_id in _source_ids(breakdown.get("source_ids"))
+    ]
+    source_ids.extend(
+        str(signal["source_id"]) for signal in legal_signals if signal.get("source_id")
+    )
+    return sorted(set(source_ids))
+
+
+def _source_ids(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item) for item in value]
+    if isinstance(value, tuple):
+        return [str(item) for item in value]
+    return []
+
+
+def _group_by(rows: list[dict[str, Any]], key: str) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(str(row[key]), []).append(row)
+    return grouped
 
 
 def _attach_breakdowns_and_sources(

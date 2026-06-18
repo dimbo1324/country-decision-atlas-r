@@ -8,4 +8,4 @@ def test_decision_contract_paths_exist() -> None:
     assert "/api/v1/decision/compare" in paths
     assert "/api/v1/decision/run" in paths
     assert "DecisionCompareInput" in schemas
-    assert "DecisionRunResult" in schemas
+    assert "DecisionRunResponse" in schemas

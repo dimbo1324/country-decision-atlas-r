@@ -109,14 +109,96 @@ class DecisionCompareResult(BaseModel):
     locale: LocaleResolution
 
 
-class DecisionRunInput(BaseModel):
+class DecisionRunRequest(BaseModel):
+    origin_country_slug: str
+    candidate_country_slugs: list[str] = Field(
+        min_length=1,
+        max_length=10,
+        json_schema_extra={"uniqueItems": True},
+    )
     scenario_slug: str
-    origin_country_slug: str | None = None
-    candidate_country_slugs: list[str] = Field(min_length=1)
     locale: str = Field(
         default=DEFAULT_LOCALE,
         json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
     )
+
+
+DecisionRunInput = DecisionRunRequest
+
+
+class DecisionCountryRef(BaseModel):
+    id: str
+    slug: str
+    name: str
+    iso_code: str | None = None
+
+
+class DecisionScenarioRef(BaseModel):
+    slug: str
+    title: str
+    description: str | None = None
+
+
+class DecisionPoint(BaseModel):
+    code: str
+    title: str
+    message: str
+    source_ids: list[str] = Field(default_factory=list)
+
+
+class DecisionRiskWarning(BaseModel):
+    code: str
+    level: str
+    message: str
+    legal_signal_ids: list[str] = Field(default_factory=list)
+    source_ids: list[str] = Field(default_factory=list)
+
+
+class DecisionBreakdownItem(BaseModel):
+    criterion: str
+    title: str
+    score: float
+    weight: float
+    weighted_score: float
+    explanation: str | None = None
+    confidence: Literal["high", "medium", "low"] | None = None
+    source_ids: list[str] = Field(default_factory=list)
+
+
+class DecisionSourceRef(BaseModel):
+    id: str
+    title: str
+    url: str
+    source_type: str | None = None
+    confidence: Literal["high", "medium", "low"] | None = None
+
+
+class DecisionCountryResult(BaseModel):
+    rank: int
+    country: DecisionCountryRef
+    score: float
+    score_label: Literal["weak", "limited", "moderate", "strong", "excellent"]
+    summary: str
+    strengths: list[DecisionPoint]
+    weaknesses: list[DecisionPoint]
+    risk_warnings: list[DecisionRiskWarning]
+    confidence: Literal["high", "medium", "low"]
+    breakdown: list[DecisionBreakdownItem]
+    sources: list[DecisionSourceRef]
+
+
+class DecisionRunMeta(BaseModel):
+    candidate_count: int
+    generated_at: datetime
+    model_version: str = "scenario-decision-engine-v1"
+
+
+class DecisionRunResponse(BaseModel):
+    scenario: DecisionScenarioRef
+    origin_country: DecisionCountryRef
+    results: list[DecisionCountryResult]
+    meta: DecisionRunMeta
+    locale: LocaleResolution
 
 
 class DecisionRunCountry(BaseModel):
