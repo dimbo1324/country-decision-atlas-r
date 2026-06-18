@@ -1,0 +1,70 @@
+import type { DecisionRunResponse } from "../../shared/api/decision";
+import { formatScore } from "../../shared/lib/format";
+import { DecisionBreakdown } from "./DecisionBreakdown";
+import { DecisionSources } from "./DecisionSources";
+import { DecisionWarnings } from "./DecisionWarnings";
+
+type DecisionCountryResult = DecisionRunResponse["results"][number];
+
+type DecisionResultCardProps = {
+  result: DecisionCountryResult;
+};
+
+export function DecisionResultCard({ result }: DecisionResultCardProps) {
+  return (
+    <div className="resultCard">
+      <div className="resultCardHeader">
+        <span className="resultRank">#{result.rank}</span>
+        <span className="resultCountryName">{result.country.name}</span>
+        <span className="resultScore">{formatScore(result.score)}</span>
+        <span className="metaChip">{result.score_label}</span>
+        <span className="metaChip">{result.confidence}</span>
+      </div>
+
+      {result.summary && (
+        <p className="resultSummary">{result.summary}</p>
+      )}
+
+      {result.strengths.length > 0 && (
+        <div className="resultSection">
+          <h4 className="resultSectionTitle">Strengths</h4>
+          <ul className="pointsList">
+            {result.strengths.map((s, i) => (
+              <li key={i}>{s.message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {result.weaknesses.length > 0 && (
+        <div className="resultSection">
+          <h4 className="resultSectionTitle">Weaknesses</h4>
+          <ul className="pointsList">
+            {result.weaknesses.map((w, i) => (
+              <li key={i}>{w.message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {result.risk_warnings.length > 0 && (
+        <div className="resultSection">
+          <h4 className="resultSectionTitle">Risk warnings</h4>
+          <DecisionWarnings warnings={result.risk_warnings} />
+        </div>
+      )}
+
+      {result.breakdown.length > 0 && (
+        <div className="resultSection">
+          <h4 className="resultSectionTitle">Breakdown</h4>
+          <DecisionBreakdown breakdown={result.breakdown} />
+        </div>
+      )}
+
+      <div className="resultSection">
+        <h4 className="resultSectionTitle">Sources</h4>
+        <DecisionSources sources={result.sources} />
+      </div>
+    </div>
+  );
+}

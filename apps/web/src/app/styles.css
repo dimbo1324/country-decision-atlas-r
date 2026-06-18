@@ -249,6 +249,394 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
 }
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.metaChip {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  color: #374151;
+  white-space: nowrap;
+}
+.metaChipWarn {
+  background: #fef3c7;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+.cardSections {
+  display: grid;
+  gap: 24px;
+  max-width: 1120px;
+}
+.cardSection {
+  display: grid;
+  gap: 12px;
+}
+.cardSectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+.sectionStack {
+  display: grid;
+  gap: 16px;
+}
+.profileSection {
+  border-left: 3px solid #e5e7eb;
+  padding-left: 16px;
+}
+.profileSection h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #374151;
+}
+.profileSection p {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.scoreList {
+  display: grid;
+  gap: 16px;
+}
+.scoreCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.scoreCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.scoreScenario {
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1;
+}
+.scoreBadge {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2563eb;
+}
+.scoreExplanation {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.55;
+}
+.breakdownWrap {
+  overflow-x: auto;
+}
+.breakdownTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.breakdownTable th {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 2px solid #e5e7eb;
+  color: #6b7280;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.breakdownTable td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+.breakdownTable tr:last-child td {
+  border-bottom: none;
+}
+.signalList {
+  display: grid;
+  gap: 12px;
+}
+.signalCard {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.signalCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.signalTitle {
+  font-size: 14px;
+  font-weight: 600;
+  flex: 1;
+}
+.sourceList {
+  display: grid;
+  gap: 12px;
+}
+.sourceCard {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.sourceCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sourceTitle {
+  font-size: 14px;
+  font-weight: 600;
+  flex: 1;
+}
+.sourcePublisher {
+  font-size: 13px;
+  color: #6b7280;
+}
+.sourceLink {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+}
+.sourceLink:hover {
+  text-decoration: underline;
+}
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  max-width: 560px;
+}
+.summaryItem {
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.summaryValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+.summaryLabel {
+  font-size: 12px;
+  color: #6b7280;
+}
+.localeStatusBlock {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  max-width: 400px;
+}
+.localeStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.localeNotice {
+  margin: 0;
+  font-size: 13px;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.decisionFormWrap {
+  display: grid;
+  gap: 32px;
+  max-width: 760px;
+}
+.decisionForm {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+.formGroup {
+  display: grid;
+  gap: 6px;
+}
+.formLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+.formSelect {
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  max-width: 360px;
+}
+.checkboxList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.formError {
+  font-size: 13px;
+  color: #dc2626;
+  margin: 0;
+}
+.runButton {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: fit-content;
+}
+.runButton:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+.runButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.decisionResults {
+  display: grid;
+  gap: 24px;
+}
+.decisionResultsMeta {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  max-width: 480px;
+}
+.resultMetaRow {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 14px;
+  color: #374151;
+}
+.resultList {
+  display: grid;
+  gap: 20px;
+}
+.resultCard {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid #d8dee8;
+  border-radius: 10px;
+  background: #ffffff;
+}
+.resultCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.resultRank {
+  font-size: 20px;
+  font-weight: 800;
+  color: #6b7280;
+  min-width: 32px;
+}
+.resultCountryName {
+  font-size: 18px;
+  font-weight: 700;
+  flex: 1;
+}
+.resultScore {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+}
+.resultSummary {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+.resultSection {
+  display: grid;
+  gap: 8px;
+}
+.resultSectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+.pointsList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+.pointsList li {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+.warningsList {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.warningItem {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
 @media (max-width: 768px) {
   .appHeaderInner {
     padding: 0 16px;
