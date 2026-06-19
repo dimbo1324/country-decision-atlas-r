@@ -1,4 +1,5 @@
 from app.core.database import fetch_all, fetch_one
+from app.repositories.sorting import resolve_sort_clause
 from psycopg import Connection
 from typing import Any
 
@@ -32,8 +33,9 @@ def list_sources(
     where_sql, params = _source_filters(
         country_slug, source_type, language, confidence, status
     )
-    sort_column = SOURCE_SORT_COLUMNS.get(sort, SOURCE_SORT_COLUMNS["last_checked_at"])
-    order_sql = "ASC" if order == "asc" else "DESC"
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, SOURCE_SORT_COLUMNS, "last_checked_at"
+    )
     return fetch_all(
         connection,
         f"""
@@ -104,8 +106,9 @@ def list_evidence_items(
     where_sql, params = _evidence_filters(
         country_slug, source_id, legal_signal_id, confidence, status
     )
-    sort_column = EVIDENCE_SORT_COLUMNS.get(sort, EVIDENCE_SORT_COLUMNS["retrieved_at"])
-    order_sql = "ASC" if order == "asc" else "DESC"
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, EVIDENCE_SORT_COLUMNS, "retrieved_at"
+    )
     return fetch_all(
         connection,
         f"""

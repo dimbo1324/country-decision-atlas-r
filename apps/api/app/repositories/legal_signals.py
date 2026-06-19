@@ -1,5 +1,6 @@
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
+from app.repositories.sorting import resolve_sort_clause
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
 from typing import Any
@@ -57,10 +58,9 @@ def list_legal_signals(
     filter_sql, params = _filters(
         country_id, signal_type, impact_direction, impact_level, status
     )
-    sort_column = LEGAL_SIGNAL_SORT_COLUMNS.get(
-        sort, LEGAL_SIGNAL_SORT_COLUMNS["published_date"]
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, LEGAL_SIGNAL_SORT_COLUMNS, "published_date"
     )
-    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
         f"""

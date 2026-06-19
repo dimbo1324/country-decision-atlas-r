@@ -7,9 +7,15 @@ htmlcov/
 .venv/
 venv/
 __pycache__/
+.ruff_cache
 .ruff_cache/
+**/.ruff_cache/**
+.mypy_cache
 .mypy_cache/
+**/.mypy_cache/**
+.pytest_cache
 .pytest_cache/
+**/.pytest_cache/**
 docs/
 README*
 *.md

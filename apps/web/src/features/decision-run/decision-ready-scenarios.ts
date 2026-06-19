@@ -6,6 +6,8 @@ export const DECISION_READY_SCENARIO_SLUGS = [
   "safety_political_risk",
 ] as const;
 
+export const DEFAULT_DECISION_READY_SCENARIO_SLUG = DECISION_READY_SCENARIO_SLUGS[0];
+
 export function isDecisionReadyScenario(slug: string): boolean {
   return DECISION_READY_SCENARIO_SLUGS.includes(
     slug as (typeof DECISION_READY_SCENARIO_SLUGS)[number],

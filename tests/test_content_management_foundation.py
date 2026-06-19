@@ -1,6 +1,7 @@
 from app.core.admin_auth import require_admin_token
 from app.core.config import get_settings
 from app.repositories import sources as source_repository
+from app.repositories.sorting import resolve_sort_clause
 from app.schemas.admin_content import EvidenceItemCreate, SourceCreate
 from app.schemas.common import PublicationStatus
 from app.services import admin_content
@@ -213,3 +214,16 @@ def test_source_sorting_uses_whitelist(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert "ORDER BY s.last_checked_at DESC" in captured["query"]
     assert "unsafe_column" not in captured["query"]
+
+
+def test_sort_clause_resolver_uses_whitelisted_columns() -> None:
+    columns = {"created_at": "items.created_at", "title": "items.title"}
+
+    assert resolve_sort_clause("title", "asc", columns, "created_at") == (
+        "items.title",
+        "ASC",
+    )
+    assert resolve_sort_clause("unsafe", "drop table", columns, "created_at") == (
+        "items.created_at",
+        "DESC",
+    )

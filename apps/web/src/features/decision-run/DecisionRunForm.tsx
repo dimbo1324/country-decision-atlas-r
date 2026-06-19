@@ -12,7 +12,10 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { DecisionResults } from "./DecisionResults";
-import { isDecisionReadyScenario } from "./decision-ready-scenarios";
+import {
+  DEFAULT_DECISION_READY_SCENARIO_SLUG,
+  isDecisionReadyScenario,
+} from "./decision-ready-scenarios";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -29,7 +32,9 @@ function DecisionFormInner() {
     "russia",
     "uruguay",
   ]);
-  const [scenarioSlug, setScenarioSlug] = useState("relocation_residence");
+  const [scenarioSlug, setScenarioSlug] = useState<string>(
+    DEFAULT_DECISION_READY_SCENARIO_SLUG,
+  );
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);

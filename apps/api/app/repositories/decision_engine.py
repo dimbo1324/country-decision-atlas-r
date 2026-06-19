@@ -1,5 +1,6 @@
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
+from app.repositories.sorting import resolve_sort_clause
 from app.schemas.decision_engine import UserStoryCreate
 import json
 from psycopg import Connection
@@ -512,10 +513,9 @@ def list_country_sources(
     filter_sql, params = _country_source_filters(
         country_slug, source_type, language, confidence, status
     )
-    sort_column = COUNTRY_SOURCE_SORT_COLUMNS.get(
-        sort, COUNTRY_SOURCE_SORT_COLUMNS["title"]
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, COUNTRY_SOURCE_SORT_COLUMNS, "title"
     )
-    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
         f"""
@@ -592,10 +592,9 @@ def list_legal_signals(
     filter_sql, filter_params = _legal_signal_filters(
         country_slug, signal_type, impact_direction, impact_level, status
     )
-    sort_column = LEGAL_SIGNAL_SORT_COLUMNS.get(
-        sort, LEGAL_SIGNAL_SORT_COLUMNS["published_date"]
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, LEGAL_SIGNAL_SORT_COLUMNS, "published_date"
     )
-    order_sql = "ASC" if order == "asc" else "DESC"
     if requested_locale == SOURCE_LOCALE:
         resolved_locale_sql = "'en'"
         status_sql = """
@@ -849,10 +848,9 @@ def list_user_stories(
         is_synthetic,
         status,
     )
-    sort_column = USER_STORY_SORT_COLUMNS.get(
-        sort, USER_STORY_SORT_COLUMNS["created_at"]
+    sort_column, order_sql = resolve_sort_clause(
+        sort, order, USER_STORY_SORT_COLUMNS, "created_at"
     )
-    order_sql = "ASC" if order == "asc" else "DESC"
     return fetch_all(
         connection,
         f"""

@@ -446,6 +446,48 @@
         "python -m ruff format .",
         "python -m mypy apps packages scripts tests"
       ]
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "refactor",
+      "scope": "codebase-maintainability-hardening",
+      "task": "refactor/codebase-maintainability-hardening",
+      "branch": "refactor/codebase-maintainability-hardening",
+      "summary": "Started maintainability, safety, decomposition, and deduplication hardening without changing business logic.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "refactor",
+      "scope": "codebase-maintainability-hardening",
+      "task": "refactor/codebase-maintainability-hardening",
+      "branch": "refactor/codebase-maintainability-hardening",
+      "summary": [
+        "Centralized repository sort/order clause resolution behind a whitelist-preserving helper.",
+        "Centralized the frontend app route API request wrapper while preserving ApiResult behavior.",
+        "Centralized the default decision-ready scenario slug in the existing decision-ready scenario module.",
+        "Made pnpm build-script approval explicit for ignored optional native dependencies and hardened Prettier cache ignores."
+      ],
+      "status": "completed",
+      "checks": [
+        "python -m ruff check . --fix",
+        "python -m ruff format .",
+        "python -m ruff check apps packages scripts tests",
+        "python -m ruff format --check apps packages scripts tests",
+        "python -m mypy apps packages scripts tests",
+        "python -m pytest",
+        "python -m sqlfluff lint database --dialect postgres",
+        "python -m pre_commit run --all-files",
+        "pnpm format",
+        "pnpm format:check",
+        "pnpm typecheck",
+        "pnpm lint",
+        "pnpm build",
+        "pnpm web:mvp:check",
+        "make quality unavailable: make command is not installed in this Windows environment"
+      ]
     }
   ]
 }
