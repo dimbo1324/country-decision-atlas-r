@@ -1,0 +1,25 @@
+{
+  "project": "Country Decision Atlas",
+  "package_version": "v0.4",
+  "created_at": "2026-06-19",
+  "language": "ru",
+  "purpose": "Full external product and architecture description archive",
+  "files": [
+    "00_NAVIGATION.md",
+    "01_PRODUCT_VISION.md",
+    "02_TARGET_AUDIENCE_AND_JOBS.md",
+    "03_CORE_USER_FLOWS.md",
+    "04_MVP_SCOPE_AND_CURRENT_STATE.md",
+    "05_FUNCTIONAL_MODULES.md",
+    "06_BACKEND_ARCHITECTURE.md",
+    "07_DATA_MODEL_AND_CONTENT_GOVERNANCE.md",
+    "08_FRONTEND_PRODUCT_AND_UX.md",
+    "09_MULTILINGUAL_AND_TRANSLATION_STRATEGY.md",
+    "10_UNIQUE_FEATURES_AND_DIFFERENTIATION.md",
+    "11_ROADMAP_BY_PHASES.md",
+    "12_DO_NOT_DO_YET.md",
+    "13_TECHNICAL_STATE_SNAPSHOT.md",
+    "14_ACCEPTANCE_CRITERIA_FOR_FIRST_MVP.md",
+    "CHANGELOG.md"
+  ]
+}
