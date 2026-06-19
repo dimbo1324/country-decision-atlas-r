@@ -13,7 +13,7 @@ interface Props {
 
 export function DataQualityReportView({ report }: Props) {
   return (
-    <div className="dqWrap">
+    <div className="dqWrap" data-testid="data-quality-report">
       <div className="analyticalSummaryRow">
         <SummaryCard
           label="Status"

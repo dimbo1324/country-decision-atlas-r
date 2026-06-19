@@ -15,7 +15,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
   const isFallback = locale.translation_status === "fallback";
 
   return (
-    <div className="decisionResults">
+    <div className="decisionResults" data-testid="decision-results">
       {isFallback && (
         <div className="fallbackBanner">
           {locale.requested_locale === "ru"

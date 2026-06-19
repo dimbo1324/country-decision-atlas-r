@@ -1,4 +1,4 @@
-.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test smoke-api diagnostics diagnostics-smoke frontend-handoff-check clean-runtime typecheck quality
+.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test smoke-api diagnostics diagnostics-smoke frontend-handoff-check clean-runtime typecheck quality web-mvp-e2e web-mvp-check
 
 help:
 	@echo "Country Decision Atlas"
@@ -22,6 +22,8 @@ help:
 	@echo "  make clean-runtime Remove ignored runtime diagnostics"
 	@echo "  make quality     Run full local quality checks"
 	@echo "  make install-hooks Install pre-commit hooks"
+	@echo "  make web-mvp-e2e Run Playwright MVP E2E acceptance tests"
+	@echo "  make web-mvp-check Run frontend checks + Playwright + backend pytest"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -99,3 +101,13 @@ quality:
 	pnpm typecheck
 	pnpm build
 	python -m sqlfluff lint database --dialect postgres
+
+web-mvp-e2e:
+	pnpm web:mvp:e2e
+
+web-mvp-check:
+	pnpm typecheck
+	pnpm lint
+	pnpm build
+	python -m pytest
+	pnpm web:mvp:e2e

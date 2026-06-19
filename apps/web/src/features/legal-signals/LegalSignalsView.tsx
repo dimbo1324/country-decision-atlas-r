@@ -248,7 +248,7 @@ function LegalSignalsViewInner() {
           {signals.items.length === 0 ? (
             <EmptyState message="No legal signals match the selected filters." />
           ) : (
-            <div className="signalList">
+            <div className="signalList" data-testid="legal-signals-list">
               {signals.items.map((signal) => {
                 const country = countriesById.get(signal.country_id);
                 return (

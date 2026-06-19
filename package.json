@@ -11,9 +11,14 @@
     "contracts:generate": "openapi-typescript contracts/openapi.yaml -o packages/contracts/generated/types.ts && prettier --write packages/contracts/generated/types.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build"
+    "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build",
+    "web:mvp:e2e": "playwright test",
+    "web:mvp:e2e:headed": "playwright test --headed",
+    "web:mvp:e2e:report": "playwright show-report local-artifacts/playwright-report",
+    "web:mvp:check": "pnpm typecheck && pnpm lint && pnpm build && playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "openapi-typescript": "^7.4.2",
     "prettier": "^3.3.3"
   }

@@ -204,7 +204,7 @@ function SourcesViewInner() {
           {sources.items.length === 0 ? (
             <EmptyState message="No sources match the selected filters." />
           ) : (
-            <div className="sourceList">
+            <div className="sourceList" data-testid="sources-list">
               {sources.items.map((source) => {
                 const country = source.country_id
                   ? countriesById.get(source.country_id)

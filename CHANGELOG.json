@@ -4,6 +4,52 @@
     {
       "date": "2026-06-19",
       "event": "task_started",
+      "type": "test",
+      "scope": "web-mvp-automated-runtime-acceptance",
+      "task": "test/web-mvp-automated-runtime-acceptance",
+      "branch": "test/web-mvp-automated-runtime-acceptance",
+      "title": "Start automated runtime acceptance layer for MVP",
+      "summary": [
+        "Started automated runtime acceptance layer for frontend and backend MVP verification.",
+        "Adds Playwright E2E smoke tests covering all MVP pages, main user flow, locale, analytical pages, and data-quality.",
+        "Adds helper utilities, artifact config, package scripts, and Makefile targets."
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "test",
+      "scope": "web-mvp-automated-runtime-acceptance",
+      "task": "test/web-mvp-automated-runtime-acceptance",
+      "branch": "test/web-mvp-automated-runtime-acceptance",
+      "title": "Add Playwright MVP runtime acceptance tests",
+      "summary": [
+        "Added playwright.config.ts with Chromium, webServer (next dev), retain-on-failure artifacts to local-artifacts/.",
+        "Added tests/e2e/helpers/env.ts, assertions.ts, routes.ts helper utilities.",
+        "Added web-mvp-pages.spec.ts: 12 tests covering all 11 MVP pages + responsive smoke.",
+        "Added web-mvp-main-flow.spec.ts: full user flow home→countries→Russia→Uruguay→decision→result→country card.",
+        "Added web-mvp-locale.spec.ts: locale preservation, ru country card, ru decision, fallback banner.",
+        "Added web-mvp-analytical-pages.spec.ts: legal signals filters, sources filters, external link safety, data quality, accessibility semantics, API health.",
+        "Added data-testid attributes: decision-results, decision-run-button, country-card, legal-signals-list, sources-list, data-quality-report.",
+        "Added pnpm scripts: web:mvp:e2e, web:mvp:e2e:headed, web:mvp:e2e:report, web:mvp:check.",
+        "Added Makefile targets: web-mvp-e2e, web-mvp-check.",
+        "Added local-artifacts/ to .gitignore.",
+        "All checks pass: tsc, eslint, next build, pytest (74 passed), ruff."
+      ],
+      "checks_run": [
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "python -m pytest: 74 passed",
+        "ruff check . --fix: passed",
+        "ruff format .: 77 files unchanged"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
       "type": "feat",
       "scope": "web-analytical-pages-and-mvp-regression",
       "task": "feat/web-analytical-pages-and-mvp-regression",

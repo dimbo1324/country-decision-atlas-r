@@ -160,6 +160,7 @@ function DecisionFormInner() {
           onClick={handleRun}
           disabled={isRunning || candidateCountrySlugs.length === 0}
           aria-busy={isRunning}
+          data-testid="decision-run-button"
         >
           {isRunning ? "Running decision…" : "Run decision"}
         </button>

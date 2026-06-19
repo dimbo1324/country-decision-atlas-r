@@ -182,6 +182,7 @@ extractions/generated/
 playwright-report/
 playwright/.cache/
 test-results/
+local-artifacts/
 screenshots/
 html_snapshots/
 raw_pages/

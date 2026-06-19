@@ -78,7 +78,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
       <CountryHeader country={card.country} locale={locale} />
 
-      <div className="cardSections">
+      <div className="cardSections" data-testid="country-card">
         {card.profile?.executive_summary && (
           <section className="cardSection cardSectionHighlight">
             <h2 className="cardSectionTitle">Overview</h2>
