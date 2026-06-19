@@ -138,7 +138,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           />
         </section>
 
-        <section className="cardSection">
+        <section className="cardSection" data-testid="locale-status">
           <h2 className="cardSectionTitle">Translation status</h2>
           <LocaleStatusBadge locale={card.locale} />
         </section>

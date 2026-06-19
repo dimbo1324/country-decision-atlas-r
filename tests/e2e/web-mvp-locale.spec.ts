@@ -36,7 +36,7 @@ test.describe("locale preservation", () => {
   }) => {
     await page.goto(e2eRoutes.country("uruguay", "ru"));
     await expectPageReady(page);
-    await expect(page.getByText(/translation status/i)).toBeVisible();
+    await expect(page.getByTestId("locale-status")).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -66,11 +66,6 @@ test.describe("locale preservation", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
 
-    const hasFallbackBanner =
-      await page.getByText(/fallback/i).isVisible().catch(() => false);
-    const hasLocaleStatus =
-      await page.getByText(/translation status/i).isVisible().catch(() => false);
-
-    expect(hasFallbackBanner || hasLocaleStatus).toBe(true);
+    await expect(page.getByTestId("locale-status")).toBeVisible();
   });
 });

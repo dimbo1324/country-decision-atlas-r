@@ -18,7 +18,10 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   ).toBeVisible();
   await expectNoAppCrash(page);
 
-  await page.getByRole("link", { name: "Countries" }).click();
+  await page
+    .getByRole("navigation")
+    .getByRole("link", { name: "Countries", exact: true })
+    .click();
   await expectHasMainHeading(page, /decision-ready country cards/i);
   await expect(page.getByText("Russia").first()).toBeVisible();
   await expect(page.getByText("Uruguay").first()).toBeVisible();

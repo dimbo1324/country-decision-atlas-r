@@ -5,6 +5,43 @@
       "date": "2026-06-19",
       "event": "task_started",
       "type": "test",
+      "scope": "e2e-selector-hardening",
+      "task": "test/e2e-selector-hardening",
+      "branch": "test/e2e-selector-hardening",
+      "title": "Start E2E selector hardening for 3 failing Playwright tests",
+      "summary": [
+        "Started selector hardening for remaining failing Playwright MVP acceptance tests.",
+        "Fixes strict-mode violation on locale status locator and ambiguous Countries navigation link."
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "test",
+      "scope": "e2e-selector-hardening",
+      "task": "test/e2e-selector-hardening",
+      "branch": "test/e2e-selector-hardening",
+      "title": "Harden MVP E2E selectors for 3 failing tests",
+      "summary": [
+        "Added data-testid='locale-status' to the Translation status section in /countries/[slug]/page.tsx.",
+        "Updated web-mvp-locale.spec.ts to use getByTestId('locale-status') instead of brittle getByText(/translation status/i).",
+        "Updated web-mvp-main-flow.spec.ts to scope Countries nav click to getByRole('navigation') with exact:true.",
+        "All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass."
+      ],
+      "checks_run": [
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "ruff check . --fix: passed",
+        "ruff format .: 77 files unchanged"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "test",
       "scope": "web-mvp-automated-runtime-acceptance",
       "task": "test/web-mvp-automated-runtime-acceptance",
       "branch": "test/web-mvp-automated-runtime-acceptance",
