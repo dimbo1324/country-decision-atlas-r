@@ -40,8 +40,8 @@ export function ScoreBreakdown({ breakdowns, sourcesById }: ScoreBreakdownProps)
             </tr>
           </thead>
           <tbody>
-            {breakdowns.map((b, i) => (
-              <tr key={i}>
+            {breakdowns.map((b) => (
+              <tr key={b.criterion}>
                 <td>{b.criterion}</td>
                 <td>{b.score}</td>
                 <td>{b.weight}</td>

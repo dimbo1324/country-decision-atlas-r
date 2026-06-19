@@ -34,8 +34,8 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
         <div className="resultSection resultSectionPositive">
           <h4 className="resultSectionTitle">Strengths</h4>
           <ul className="pointsList pointsListPositive">
-            {result.strengths.map((s, i) => (
-              <li key={i}>{s.message}</li>
+            {result.strengths.map((s) => (
+              <li key={s.message}>{s.message}</li>
             ))}
           </ul>
         </div>
@@ -45,8 +45,8 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
         <div className="resultSection resultSectionNegative">
           <h4 className="resultSectionTitle">Weaknesses</h4>
           <ul className="pointsList pointsListNegative">
-            {result.weaknesses.map((w, i) => (
-              <li key={i}>{w.message}</li>
+            {result.weaknesses.map((w) => (
+              <li key={w.message}>{w.message}</li>
             ))}
           </ul>
         </div>

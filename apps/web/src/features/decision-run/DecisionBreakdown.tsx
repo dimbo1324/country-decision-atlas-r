@@ -23,8 +23,8 @@ export function DecisionBreakdown({ breakdown }: DecisionBreakdownProps) {
           </tr>
         </thead>
         <tbody>
-          {breakdown.map((b, i) => (
-            <tr key={i}>
+          {breakdown.map((b) => (
+            <tr key={b.criterion}>
               <td>{b.title || b.criterion}</td>
               <td>{b.score}</td>
               <td>{b.weight}</td>

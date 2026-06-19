@@ -4,7 +4,6 @@ import { apiGet, queryString } from "./http";
 
 export type LocaleCode = components["schemas"]["LocaleCode"];
 export type CountryListResponse = components["schemas"]["CountryListResponse"];
-export type CountryResponse = components["schemas"]["CountryResponse"];
 export type CountryReadModelResponse =
   components["schemas"]["CountryReadModelResponse"];
 
@@ -26,15 +25,6 @@ export function listCountries(
   );
 }
 
-export function getCountry(
-  countrySlug: string,
-  locale: LocaleCode = "en",
-): Promise<CountryResponse> {
-  return apiGet<CountryResponse>(
-    `/api/v1/countries/${countrySlug}${queryString({ locale })}`,
-  );
-}
-
 export function getCountryCard(
   countrySlug: string,
   locale: LocaleCode = "en",
@@ -46,6 +36,5 @@ export function getCountryCard(
 
 export const countriesApi = {
   listCountries,
-  getCountry,
   getCountryCard,
 };
