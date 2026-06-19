@@ -94,7 +94,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Scenario scores</h2>
-          <CountryScores scores={card.scores} />
+          <CountryScores scores={card.scores} sources={card.sources} />
         </section>
 
         <section className="cardSection">
@@ -133,8 +133,13 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Evidence summary</h2>
-          <CountryEvidenceSummary evidenceSummary={card.evidence_summary} />
+          <h2 className="cardSectionTitle">Evidence &amp; Sources</h2>
+          <CountryEvidenceSummary
+            evidenceSummary={card.evidence_summary}
+            countrySlug={card.country.slug}
+            locale={locale}
+            sourceSummary={card.profile?.source_summary}
+          />
         </section>
 
         <section className="cardSection">

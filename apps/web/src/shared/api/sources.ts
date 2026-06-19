@@ -2,6 +2,7 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
+import type { EvidenceItemListResponse } from "./evidence";
 
 export type SourceListResponse = components["schemas"]["SourceListResponse"];
 
@@ -37,6 +38,16 @@ export function listSources(
   );
 }
 
+export function getSourceEvidence(
+  sourceId: string,
+  limit = 50,
+): Promise<EvidenceItemListResponse> {
+  return apiGet<EvidenceItemListResponse>(
+    `/api/v1/sources/${sourceId}/evidence${queryString({ limit })}`,
+  );
+}
+
 export const sourcesApi = {
   listSources,
+  getSourceEvidence,
 };

@@ -2,8 +2,10 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 
 import { apiGet, queryString } from "./http";
 
+export type EvidenceItem = components["schemas"]["EvidenceItem"];
 export type EvidenceItemListResponse =
   components["schemas"]["EvidenceItemListResponse"];
+export type EvidenceListResponse = components["schemas"]["EvidenceListResponse"];
 
 type ListEvidenceItemsParams = {
   countrySlug?: string;
@@ -35,6 +37,26 @@ export function listEvidenceItems(
   );
 }
 
+export function listEvidenceForLegalSignal(
+  signalId: string,
+  limit = 20,
+): Promise<EvidenceListResponse> {
+  return apiGet<EvidenceListResponse>(
+    `/api/v1/legal-signals/${signalId}/evidence${queryString({ limit })}`,
+  );
+}
+
+export function listEvidenceForSource(
+  sourceId: string,
+  limit = 50,
+): Promise<EvidenceItemListResponse> {
+  return apiGet<EvidenceItemListResponse>(
+    `/api/v1/sources/${sourceId}/evidence${queryString({ limit })}`,
+  );
+}
+
 export const evidenceApi = {
   listEvidenceItems,
+  listEvidenceForLegalSignal,
+  listEvidenceForSource,
 };

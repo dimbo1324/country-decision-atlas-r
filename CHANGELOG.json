@@ -5,6 +5,34 @@
       "date": "2026-06-19",
       "event": "task_completed",
       "type": "feat",
+      "scope": "evidence-traceability-ui-v1",
+      "task": "feat/evidence-traceability-ui-v1",
+      "branch": "feat/evidence-traceability-ui-v1",
+      "summary": "Implemented evidence traceability UI: EvidenceCard component, expandable evidence panels on legal-signals and sources pages (lazy load), score breakdown with supporting sources, CountryEvidenceSummary cross-links, API client extensions for evidence endpoints.",
+      "status": "completed",
+      "checks": {
+        "typecheck": "pass",
+        "lint": "pass",
+        "build": "pass",
+        "e2e": "38/38",
+        "pytest": "79 passed",
+        "ruff": "pass"
+      }
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "evidence-traceability-ui-v1",
+      "task": "feat/evidence-traceability-ui-v1",
+      "branch": "feat/evidence-traceability-ui-v1",
+      "summary": "Started evidence traceability UI work to make score, legal signal, evidence, and source relationships visible in the frontend.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
       "scope": "web-compact-dark-archive-ui-v1",
       "task": "feat/web-compact-dark-archive-ui-v1",
       "branch": "feat/web-compact-dark-archive-ui-v1",
