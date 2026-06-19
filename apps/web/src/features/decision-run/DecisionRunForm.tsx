@@ -12,6 +12,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { DecisionResults } from "./DecisionResults";
+import { isDecisionReadyScenario } from "./decision-ready-scenarios";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -95,6 +96,20 @@ function DecisionFormInner() {
     return <LoadingState message="Loading countries and scenarios…" />;
   }
 
+  const decisionReadyScenarios = scenarios.items.filter((s) =>
+    isDecisionReadyScenario(s.slug),
+  );
+
+  const noScenariosAvailable = decisionReadyScenarios.length === 0;
+
+  const resolvedRunError =
+    runError !== null &&
+    typeof runError === "object" &&
+    (runError as { error?: { code?: string } }).error?.code ===
+      "decision_score_not_found"
+      ? "This scenario is not available for the selected countries yet. Please choose one of the MVP decision scenarios."
+      : runError;
+
   return (
     <div className="decisionFormWrap">
       <div className="decisionForm">
@@ -141,24 +156,35 @@ function DecisionFormInner() {
           <label className="formLabel" htmlFor="scenario-select">
             Scenario
           </label>
-          <select
-            id="scenario-select"
-            className="formSelect"
-            value={scenarioSlug}
-            onChange={(e) => setScenarioSlug(e.target.value)}
-          >
-            {scenarios.items.map((s) => (
-              <option key={s.slug} value={s.slug}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          {noScenariosAvailable ? (
+            <p className="formError" role="alert">
+              No decision-ready scenarios are available yet.
+            </p>
+          ) : (
+            <select
+              id="scenario-select"
+              className="formSelect"
+              value={scenarioSlug}
+              onChange={(e) => setScenarioSlug(e.target.value)}
+              data-testid="decision-scenario-select"
+            >
+              {decisionReadyScenarios.map((s) => (
+                <option key={s.slug} value={s.slug}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <button
           className="runButton"
           onClick={handleRun}
-          disabled={isRunning || candidateCountrySlugs.length === 0}
+          disabled={
+            isRunning ||
+            candidateCountrySlugs.length === 0 ||
+            noScenariosAvailable
+          }
           aria-busy={isRunning}
           data-testid="decision-run-button"
         >
@@ -167,8 +193,10 @@ function DecisionFormInner() {
       </div>
 
       {isRunning && <LoadingState message="Running decision engine…" />}
-      {!isRunning && runError !== null && <ErrorState error={runError} />}
-      {!isRunning && runError === null && result === null && (
+      {!isRunning && resolvedRunError !== null && (
+        <ErrorState error={resolvedRunError} />
+      )}
+      {!isRunning && resolvedRunError === null && result === null && (
         <EmptyState message="Choose a scenario and run a decision to see the ranking." />
       )}
       {result !== null && <DecisionResults response={result} />}

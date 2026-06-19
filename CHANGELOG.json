@@ -4,6 +4,45 @@
     {
       "date": "2026-06-19",
       "event": "task_started",
+      "type": "fix",
+      "scope": "decision-ready-scenario-filter",
+      "task": "fix/decision-ready-scenario-filter",
+      "branch": "fix/decision-ready-scenario-filter",
+      "summary": "Started frontend fix to prevent unsupported scenarios from being run through the MVP decision engine.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "fix",
+      "scope": "decision-ready-scenario-filter",
+      "task": "fix/decision-ready-scenario-filter",
+      "branch": "fix/decision-ready-scenario-filter",
+      "title": "Filter /decision to only show MVP decision-ready scenarios",
+      "summary": [
+        "Created decision-ready-scenarios.ts with DECISION_READY_SCENARIO_SLUGS constant and isDecisionReadyScenario() helper.",
+        "Updated DecisionRunForm.tsx to filter scenario list to only the 5 MVP-ready slugs: relocation_residence, permanent_residence_citizenship, low_budget_living, business_self_employment, safety_political_risk.",
+        "Added empty state when no decision-ready scenarios are available.",
+        "Added data-testid='decision-scenario-select' to the scenario select element.",
+        "Improved decision_score_not_found error message to guide the user to MVP scenarios.",
+        "Added tests/e2e/web-mvp-decision-ready-scenarios.spec.ts with 4 tests covering filtering, locale=ru, default run, and button state.",
+        "All 38 Playwright tests pass (34 original + 4 new). TypeScript, ESLint, Next.js build, ruff, pytest (74 passed), mypy all pass."
+      ],
+      "checks_run": [
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "ruff check . --fix: passed",
+        "ruff format .: 77 files unchanged",
+        "python -m pytest: 74 passed, 23 skipped",
+        "python -m mypy: no issues in 75 source files",
+        "pnpm web:mvp:check: 38 passed, 0 failed"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
       "type": "test",
       "scope": "e2e-selector-hardening",
       "task": "test/e2e-selector-hardening",
