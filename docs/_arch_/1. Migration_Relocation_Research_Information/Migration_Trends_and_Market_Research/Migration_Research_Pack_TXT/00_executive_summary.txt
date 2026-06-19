@@ -1,0 +1,63 @@
+Migration Research Pack — Executive Summary
+Language: English
+Research date: June 2026
+Scope: global migration dynamics, migration intentions, online interest, social/community behaviour, monetisation, policy trends, country competition, and product opportunities for a migration decision platform.
+
+1. Top-level conclusion
+International migration is structurally rising in stock terms, but 2024-2026 shows a more fragmented market: total migrant stock is at a record high, forced displacement is near record levels, labour migration has cooled in several OECD countries after the post-COVID surge, student migration is being restricted in traditional destination countries, and digital-nomad / remote-work migration has moved from niche to mainstream but is becoming more compliance-heavy.
+
+2. Hard numbers
+- International migrants worldwide: about 154 million in 1990, 173 million in 2000, 221 million in 2010, 281 million in 2020 and 304 million in 2024. The share of world population rose only modestly, from 2.9% in 1990 to 3.7% in 2024.
+- Largest destination region in 2024: Europe, with about 94 million international migrants. Northern America hosted about 61 million, and Northern Africa/Western Asia about 54 million.
+- Top destination countries in 2024: United States, Germany, Saudi Arabia, United Kingdom, France, Spain, Canada, UAE, Australia, Russian Federation, Turkey and Italy.
+- Top origin countries in 2024: India, China, Mexico, Ukraine and Russian Federation, with India alone at roughly 18.5 million emigrants.
+- Forced displacement: UNHCR reported 123.2 million forcibly displaced people at end-2024. Newer reporting for end-2025 indicates a slight fall to around 117.8 million, still an extremely high level.
+- Labour migration: ILO estimated 167.7 million international migrants in the global labour force in 2022.
+- Student migration: UNESCO reports nearly 7.3 million students abroad for higher education in 2023, more than triple the 2000 level.
+- U.S. digital nomads: MBO Partners reports 18.5 million American digital nomads in 2025, up 153% since 2019.
+
+3. Demand and intention
+Gallup shows that migration desire was at record-high levels around 2021-2024, when 16% of adults worldwide said they would like to move permanently if they could. In 2025, the figure fell to 15%, still implying around 900 million adults. The U.S. remains the top desired destination but its relative attractiveness fell to a 20-year low: 15% of potential migrants named the U.S. in 2025, down from 24% in 2007-2009. Canada remained second at 9%.
+
+4. Where growth is shifting
+The strongest growth themes are:
+- forced/humanitarian migration caused by conflict, persecution and instability;
+- skilled migration and talent attraction in countries facing ageing populations;
+- remote-work and digital-nomad pathways, especially where tourism, tech and lifestyle strategies overlap;
+- student mobility outside the Big Four destinations as Canada, Australia, the UK and the Netherlands stabilise or restrict student numbers;
+- second-residence / risk-hedging migration among wealthy individuals, although EU golden visa and golden passport routes are tightening.
+
+5. What is cooling
+- OECD labour migration fell by 21% in 2024 after the post-pandemic surge, although it remained above 2019 levels.
+- UK and New Zealand permanent migration flows dropped sharply in 2024 from exceptional 2022-2023 levels.
+- International student routes are tightening in Canada, Australia and the UK.
+- Passive investment migration, especially real-estate golden visas and citizenship-by-investment in the EU, is under sustained political/legal pressure.
+
+6. Main drivers of relocation interest
+The recurring drivers are: income and job access, safety, political stability, rights and freedoms, education, healthcare, quality of life, taxes, second passport/residency optionality, climate/lifestyle, and family future planning. People rarely move for one reason; most decisions are multi-factor and depend on personal constraints: passport, budget, profession, family, language, risk tolerance and timeline.
+
+7. Product opportunity
+The opportunity is not another country-ranking website. The gap is a decision engine that combines official law, cost, safety, tax, jobs, housing, schooling, healthcare, user cases, social trend signals and policy direction into personalised, evidence-backed recommendations. The strongest wedge is: “Which 3-5 countries fit my exact profile, what route is realistic, what will it cost, what can go wrong, and how are the laws changing?”
+
+8. Recommended platform outputs
+- country shortlist;
+- route recommendation by user profile;
+- expected cost and timeline;
+- visa/residence/legal requirements;
+- risk score and confidence score;
+- law-change history and direction indicator;
+- “why this country / why not” explanation;
+- document checklist;
+- comparable verified user cases;
+- ongoing alerts when rules, taxes, safety or housing conditions change.
+
+Core sources used:
+- UN_DESA_2024: United Nations DESA, International Migrant Stock 2024: Key facts and figures, https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf
+- OECD_Recent_Flows_2025: OECD, Recent developments in international migration movements, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-international-migration-movements-and-labour-market-inclusion-of-immigrants_203de29e.html
+- UNHCR_2024: UNHCR, Global Trends report 2024, https://www.unhcr.org/global-trends-report-2024
+- UNHCR_2025_AP: AP, Nearly 118 million people were displaced by conflict and persecution last year, UN says, https://apnews.com/article/4dbcddd571b1ad2de8fadff609fec393
+- Gallup_2026_US_Low: Gallup, Desire to Move Permanently to U.S. at New Low, https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+- Gallup_2026_PNMI: Gallup, How Migration Could Reshape Populations and Labor Forces, https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+- ILO_Migrant_Workers: ILO, Global estimates on international migrants in the labour force, https://www.ilo.org/publications/major-publications/ilo-global-estimates-international-migrants-labour-force
+- UNESCO_2026_Students: UNESCO, Number of students in higher education more than doubled in 20 years, https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- MBO_Digital_Nomads: MBO Partners, 2025 Digital Nomads Trends Report, https://www.mbopartners.com/state-of-independence/digital-nomads/

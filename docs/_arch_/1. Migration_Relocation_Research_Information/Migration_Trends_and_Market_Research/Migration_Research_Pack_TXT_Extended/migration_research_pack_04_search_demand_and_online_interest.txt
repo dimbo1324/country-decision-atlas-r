@@ -1,0 +1,185 @@
+4. SEARCH DEMAND AND ONLINE INTEREST
+
+4.1 Is the number of searches about moving abroad increasing?
+
+Public evidence suggests that online interest in specific relocation categories has grown strongly, especially digital nomad visas, remote work abroad, second passports, tax residency, and country-comparison queries. However, a precise global answer requires exporting Google Trends data for a fixed keyword set by country and language.
+
+Strong public proxy:
+A 2024 search-analysis article reported that global searches for "digital nomad visa" reached an all-time high and grew by more than 1,100% relative to earlier benchmark periods. Italy's new digital nomad visa launch reportedly produced a very large search spike. This is not an official Google report, but it is useful as market-proxy evidence.
+
+Recommended measurement:
+Create keyword clusters and track them monthly in Google Trends:
+- Generic move abroad: "move abroad", "move overseas", "immigrate to", "emigrate to", "best countries to live".
+- Visa/status: "residence permit", "permanent residence", "citizenship", "second passport", "citizenship by descent".
+- Remote work: "digital nomad visa", "remote work visa", "freelance visa".
+- Tax: "low tax countries", "tax residency", "non dom", "territorial tax".
+- Family: "best country for families", "schools in [country]", "healthcare in [country]".
+- Safety: "safest countries", "crime in [country]", "is [country] safe".
+- Cost: "cost of living in [country]", "rent in [city]".
+
+4.2 Which migration-related searches appear to be growing fastest?
+
+Fast-growing query clusters:
+1. Digital nomad visa / remote work visa.
+2. Residence permit.
+3. Fast residency.
+4. Easy citizenship.
+5. Citizenship by descent / ancestry citizenship.
+6. Second passport.
+7. Low-tax countries / tax residency.
+8. Golden visa, although some European programmes are closing or restricted.
+9. Startup visa / founder visa.
+10. Safe countries to move to.
+11. Best countries for families.
+12. Cheapest countries to live.
+13. Move abroad after election / political crisis queries.
+
+The fastest-growing search topics are not always the largest migration flows. Digital nomad searches may grow much faster than classic family migration, while actual family migration remains much larger.
+
+4.3 Which countries are most often searched with "move to"?
+
+Likely high-volume English-language examples:
+- Move to Canada.
+- Move to Australia.
+- Move to New Zealand.
+- Move to Portugal.
+- Move to Spain.
+- Move to Germany.
+- Move to the UK.
+- Move to the USA.
+- Move to Italy.
+- Move to Mexico.
+- Move to Costa Rica.
+- Move to Panama.
+- Move to Uruguay.
+- Move to Dubai / UAE.
+- Move to Thailand.
+- Move to Japan.
+- Move to South Korea.
+
+Language-specific variants matter:
+- Russian-language searches: relocation to Serbia, Armenia, Georgia, Montenegro, Turkey, Cyprus, Portugal, Spain, Germany, UAE.
+- Spanish-language searches: USA, Spain, Canada, Mexico, Argentina, Uruguay, Chile.
+- French-language searches: Canada/Quebec, Belgium, Switzerland, France, Luxembourg.
+- Arabic-language searches: Canada, Germany, Turkey, Gulf states, Europe.
+- South Asian English searches: Canada, Australia, UK, Germany, Gulf countries, USA.
+
+4.4 Which countries are most often compared?
+
+Common comparison patterns:
+- Portugal vs Spain.
+- Spain vs Italy.
+- Portugal vs Greece.
+- Canada vs Australia.
+- Australia vs New Zealand.
+- USA vs Canada.
+- Germany vs Netherlands.
+- Germany vs UK.
+- Ireland vs UK.
+- Dubai/UAE vs Singapore.
+- Mexico vs Costa Rica.
+- Panama vs Costa Rica.
+- Uruguay vs Argentina.
+- Thailand vs Vietnam.
+- Japan vs South Korea.
+- Estonia vs Portugal for digital nomads/founders.
+
+Why comparison queries are valuable:
+They show a user is moving from curiosity to decision mode. A comparison query often means the user has narrowed options and is ready to pay for clarity.
+
+4.5 What topics do people search before moving?
+
+Most common pre-move topics:
+1. Visa eligibility.
+2. Documents and apostilles.
+3. Work permits and employer sponsorship.
+4. Job market and salary.
+5. Rent and housing.
+6. Cost of living.
+7. Taxes and tax residency.
+8. Healthcare and insurance.
+9. Schools and childcare.
+10. Safety and crime.
+11. Banking and proof of funds.
+12. Driving licence and car import.
+13. Pets.
+14. Language requirements.
+15. Path to permanent residence and citizenship.
+16. Processing times.
+17. Visa rejection risk.
+18. Moving companies and shipping.
+19. City/neighbourhood choice.
+20. Community and adaptation.
+
+4.6 Which fears appear in search behaviour?
+
+Fear-based query themes:
+- Crime.
+- Corruption.
+- Racism and discrimination.
+- Bureaucracy.
+- Visa denial.
+- Deportation / overstay risk.
+- War risk / conscription / mobilisation.
+- Tax problems and double taxation.
+- Healthcare access.
+- School access for children.
+- Housing scams.
+- Job sponsorship failure.
+- Bank account refusal.
+- Language barrier.
+- Loneliness and social isolation.
+- Whether moving abroad is a mistake.
+
+Platform implication:
+Fear-based searches are excellent entry points for a risk report. Users often do not need inspiration at that stage; they need de-risking.
+
+4.7 Is interest in digital nomad visas growing?
+
+Answer: Yes, clearly in online visibility and policy supply.
+
+Evidence:
+- Public search-analysis sources report very large increases in "digital nomad visa" search interest.
+- Multiple 2025-2026 market guides report that more than 50 countries now offer digital nomad or remote-worker-style programmes; some lists count 60-70+ depending on definition.
+- Newer or more visible destinations include Italy, Japan, South Korea, New Zealand's remote-work visitor rule, Spain, Portugal, Greece, UAE, Costa Rica, Panama, Brazil, Ecuador, Thailand, and others.
+
+Important nuance:
+Digital nomad migration is highly visible online but not necessarily the largest by volume. It is a valuable platform segment because users are digital, search-heavy, comparison-driven, and often willing to pay for tax/visa clarity.
+
+4.8 Is interest rising in fast residence, permanent residence, and citizenship?
+
+Answer: Yes, especially among users from politically unstable countries, weak-passport countries, entrepreneurs, investors, remote workers, and families.
+
+High-interest search clusters:
+- Fast residency.
+- Easy residency.
+- Permanent residence in [country].
+- Citizenship by descent.
+- Second passport.
+- Dual citizenship.
+- Naturalisation timeline.
+- Golden visa.
+- Investment visa.
+- Startup visa.
+- Digital nomad visa to permanent residence.
+
+Market reality:
+Fast does not always mean stable. Some fast routes are politically fragile. A platform should score each route by:
+- Time to temporary residence.
+- Time to permanent residence.
+- Time to citizenship.
+- Legal stability.
+- Family inclusion.
+- Physical-stay requirement.
+- Tax implications.
+- Rejection risk.
+- Policy-change risk.
+
+SOURCES
+Google Trends: https://trends.google.com/trends/
+Expat Network digital nomad search analysis: https://expatnetwork.com/digital-nomad-visa-searches-skyrocket-1135-demand-hits-an-all-time-high-worldwide/
+IBA Digital Nomad Report 2026: https://www.ibanet.org/document?id=IBA-GEI-Digital-Nomad-Report-Mar-2026
+Immigrant Invest Digital Nomad Visa Index 2026: https://immigrantinvest.com/reports/digital-nomad-visa-index-2026/
+Taxes for Expats, Digital Nomad Visa Countries: https://www.taxesforexpats.com/articles/immigration/digital-nomad-visa-countries.html
+CN Traveler digital nomad visa country list: https://www.cntraveler.com/story/digital-nomad-visas
+Business Insider reporting on foreign-job interest: https://www.businessinsider.com/

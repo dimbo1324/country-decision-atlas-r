@@ -1,0 +1,70 @@
+# Source Index
+
+Prepared: 2026-06-17
+
+- **[S01] UN DESA — International Migrant Stock 2024: Key Facts and Figures.** Global migrant stock baseline. URL: https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf
+- **[S02] OECD — International Migration Outlook 2025.** Migration flows, OECD policy changes, labour-market inclusion. URL: https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd.html
+- **[S03] IOM — World Migration Report 2024.** Global migration context and thematic analysis. URL: https://publications.iom.int/books/world-migration-report-2024
+- **[S04] UNHCR — Global Trends Report 2024.** Forced displacement, refugees, asylum trends. URL: https://www.unhcr.org/global-trends-report-2024
+- **[S05] EU Immigration Portal — European Commission.** Official EU practical immigration information. URL: https://home-affairs.ec.europa.eu/policies/migration-and-asylum/eu-immigration-portal_en
+- **[S06] Migration Policy Institute — Official Government Websites of Major Destination Countries.** Directory of official immigration portals. URL: https://www.migrationpolicy.org/about/official-government-websites-major-destination-countries
+- **[S07] OECD Databases on Migration.** Migration flows, stocks, integration indicators. URL: https://www.oecd.org/en/data/datasets/oecd-databases-on-migration.html
+- **[S08] Migration Data Portal.** Single access point for migration statistics and metadata. URL: https://www.migrationdataportal.org/
+- **[S09] Numbeo — Methodology and Motivation.** Crowdsourced cost-of-living methodology. URL: https://www.numbeo.com/common/motivation_and_methodology.jsp
+- **[S10] Numbeo — Data API.** Machine-readable cost-of-living and quality-of-life data, including timestamped raw entries. URL: https://www.numbeo.com/common/api.jsp
+- **[S11] Expatistan — How does it work?.** Crowdsourced cost-of-living collection methodology. URL: https://www.expatistan.com/how-does-it-work
+- **[S12] Nomads.com FAQ — Source of Data.** Nomad List / Nomads.com data-origin explanation. URL: https://nomads.com/faq/what-is-the-source-of-your-data-9823519
+- **[S13] Nomads.com.** Digital nomad city filters, community, visa/residence calendar features. URL: https://nomads.com/
+- **[S14] InterNations — Expat Insider 2025.** Large expat survey: 10,000+ expats, 172 nationalities, 46 destinations. URL: https://www.internations.org/expat-insider
+- **[S15] InterNations — Personal Finance Index Methodology 2025.** Survey methodology for cost of living, disposable income, financial satisfaction. URL: https://www.internations.org/expat-insider/2025/personal-finance-2025
+- **[S16] EY — Remote Work and Digital Nomads, March 2026.** Digital nomad/remote-work visa landscape; 48+ jurisdictions as of Feb 2026. URL: https://www.ey.com/content/dam/ey-unified-site/ey-com/en-gl/insights/workforce/documents/ey-gl-global-immigration-index-remote-work-and-digital-nomads-03-2026.pdf
+- **[S17] KPMG — Digital Nomad and Remote Work Visa Options.** Country-by-country tracker for remote-work visa requirements. URL: https://assets.kpmg.com/content/dam/kpmgsites/xx/pdf/2022/09/GMS-DigitalNomad-RemoteWork-TrackerMap.pdf.coredownload.inline.pdf
+- **[S18] MBO Partners — 2025 Digital Nomads Trends Report.** US digital nomad trend data; 18.5m American workers in 2025. URL: https://www.mbopartners.com/state-of-independence/digital-nomads/
+- **[S19] Make it in Germany — New Skilled Immigration Act.** Official-quality Germany skilled-worker reform and Opportunity Card guidance. URL: https://www.make-it-in-germany.com/en/visa-residence/skilled-immigration-act
+- **[S20] German Federal Ministry of the Interior — Opportunity Card launch.** Official notice of Opportunity Card provisions from 1 June 2024. URL: https://www.bmi.bund.de/SharedDocs/kurzmeldungen/EN/2024/05/chancenkarte.html
+- **[S21] Canada — Immigration Levels Plan 2026–2028.** Official Canadian immigration levels and temporary-resident reduction policy. URL: https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/corporate-initiatives/levels.html
+- **[S22] Canada — Supplementary Information for 2025–2027 Levels Plan.** Permanent-resident target reductions: 395k, 380k, 365k. URL: https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/supplementary-immigration-levels-2025-2027.html
+- **[S23] GOV.UK — Skilled Worker Visa Salary Requirements.** Official UK salary threshold and going-rate requirements. URL: https://www.gov.uk/skilled-worker-visa/your-job
+- **[S24] UK Home Office — HC 997 Immigration Rules Changes.** 2025 UK immigration-rules changes including salary/skill reforms. URL: https://assets.publishing.service.gov.uk/media/6863a3ea08bf2f5376121a67/E03394848_-_HC_997_-_Immigration_Rules_Changes__Print_Ready_.pdf
+- **[S25] KPMG Spain — Elimination of the Golden Visa.** Spain golden visa ceased to be effective 3 April 2025 subject to transitional rules. URL: https://assets.kpmg.com/content/dam/kpmgsites/es/pdf/2025/01/legal-alert-ingles-eliminacion-golden-visa.pdf.coredownload.inline.pdf
+- **[S26] Greenberg Traurig — Portugal Ends Real Estate Investment Visa Program.** Portugal ended real-estate-based Golden Visa investment routes in 2023. URL: https://www.gtlaw-insidebusinessimmigration.com/featured/update-portugal-ends-real-estate-investment-visa-program/
+- **[S27] Reuters — Portugal tightens naturalisation rules.** Portugal proposal to double most citizenship residence requirement from 5 to 10 years. URL: https://www.reuters.com/world/americas/portugal-tightens-naturalisation-rules-doubles-residency-requirement-2025-06-23/
+- **[S28] Reuters — Portugal court blocks immigration bill.** Constitutional constraints on immigration-law tightening. URL: https://www.reuters.com/world/portugals-top-court-blocks-bill-restricting-immigration-2025-08-09/
+- **[S29] Reuters — Portugal parliament approves amended immigration law.** Revised family-reunification and immigration-control legislation. URL: https://www.reuters.com/world/portugals-parliament-approves-amended-immigration-law-after-veto-2025-09-30/
+- **[S30] Greece Ministry of Migration — Golden Visa.** Official Greek investor-residence/golden-visa portal. URL: https://migration.gov.gr/en/golden-visa/
+- **[S31] Italy Consulate — Digital Nomad / Remote Worker Visa.** Official Italian consular guidance for digital nomad/remote worker visa. URL: https://consnewyork.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/visas-to-enter-italy/digital-nomad-remote-worker-visa/
+- **[S32] Japan MOFA — Digital Nomad Specified Visa.** Official Japanese digital nomad visa: six months, no extension. URL: https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html
+- **[S33] Canada Finance — Foreign home-buyer ban extended to 2027.** Official extension of Canada foreign ownership ban to 1 Jan 2027. URL: https://www.canada.ca/en/department-finance/news/2024/02/government-announces-two-year-extension-to-ban-on-foreign-ownership-of-canadian-housing.html
+- **[S34] New Zealand LINZ — Buying residential property to live in.** Official NZ overseas-investment residential property rules. URL: https://www.linz.govt.nz/guidance/overseas-investment/buying-residential-property-live
+- **[S35] Australian Taxation Office — Residential fees for foreign persons.** Official Australian fees for foreign residential investors. URL: https://www.ato.gov.au/individuals-and-families/investments-and-assets/foreign-resident-investments/foreign-investment-in-australia/fees-for-foreign-residential-investors
+- **[S36] Singapore IRAS — Additional Buyer’s Stamp Duty.** Official ABSD rules and rates. URL: https://www.iras.gov.sg/taxes/stamp-duty/for-property/buying-or-acquiring-property/additional-buyer%27s-stamp-duty-%28absd%29
+- **[S37] GOV.UK — 4-year Foreign Income and Gains Regime.** Official replacement of remittance basis from 6 April 2025. URL: https://www.gov.uk/guidance/check-if-you-can-claim-the-4-year-foreign-income-and-gains-regime
+- **[S38] IBA — Portugal IFICI regime overview.** Portugal IFICI tax incentive after NHR changes. URL: https://www.ibanet.org/overview-Portugal-new-IFICI-regime
+- **[S39] Reuters — Italy doubles flat tax for wealthy new residents.** Italy increased flat tax for new resident HNWIs to EUR 200k. URL: https://www.reuters.com/world/europe/italy-doubles-flat-tax-rich-who-move-fiscal-residence-country-2024-08-07/
+- **[S40] PwC Worldwide Tax Summaries.** Regularly updated corporate and individual tax summaries for 148 territories. URL: https://taxsummaries.pwc.com/
+- **[S41] EUR-Lex — Official Journal and EU Law.** Official EU law, case-law, Official Journal and consolidated texts. URL: https://eur-lex.europa.eu/homepage.html
+- **[S42] N-Lex — National law of EU countries.** Single entry point to EU national law databases. URL: https://n-lex.europa.eu/n-lex/index
+- **[S43] ILO NATLEX.** National labour, social security and human-rights legislation database. URL: https://migrationnetwork.un.org/resources/natlex-database-national-labour-social-security-and-related-human-rights-legislation
+- **[S44] FAOLEX.** National laws on land, environment, agriculture, food and natural resources. URL: https://faolex.fao.org/faolex/waterlex.htm
+- **[S45] OECD Taxing Wages 2026.** Tax wedge and labour taxation in OECD countries. URL: https://www.oecd.org/content/dam/oecd/en/topics/policy-issues/tax-policy/taxing-wages-brochure.pdf
+- **[S46] World Justice Project — Rule of Law Index 2025.** Rule-of-law dimensions across 143 countries. URL: https://worldjusticeproject.org/rule-of-law-index/country/2025
+- **[S47] Freedom House — Freedom in the World 2026.** Global freedom declined for the 20th consecutive year in 2025. URL: https://freedomhouse.org/sites/default/files/2026-03/FIW2026_final_digital%20%281%29.pdf
+- **[S48] Freedom House — Freedom in the World 2025.** Global freedom declined for the 19th consecutive year in 2024. URL: https://freedomhouse.org/sites/default/files/2025-02/FITW_World_2025_Feb.2025.pdf
+- **[S49] V-Dem — Democracy Reports.** Democracy, autocratization and democratization trends. URL: https://www.v-dem.net/publications/democracy-reports/
+- **[S50] V-Dem — 2026 press release.** 2025-data democratizers including Brazil, Poland, Botswana, Guatemala, Mauritius. URL: https://www.v-dem.net/news/press-release-democratic-backsliding-reaches-western-democracies-with-us-decline-unprecedented/
+- **[S51] Transparency International — CPI 2025.** Perceived public-sector corruption ranking for 182 countries. URL: https://www.transparency.org/en/cpi/2025
+- **[S52] World Bank — Worldwide Governance Indicators 2025.** Governance dimensions including rule of law and control of corruption. URL: https://www.worldbank.org/en/publication/worldwide-governance-indicators
+- **[S53] World Bank — B-READY 2024.** Business environment benchmarking in 50 economies. URL: https://www.worldbank.org/en/businessready/publications-2024
+- **[S54] Fraser Institute — Economic Freedom of the World 2025.** Economic freedom in 165 jurisdictions. URL: https://www.fraserinstitute.org/studies/economic-freedom-world-2025-annual-report
+- **[S55] EIU — Democracy Index 2025.** Democracy Index for 167 countries and territories. URL: https://www.eiu.com/n/campaigns/democracy-index-2025/
+- **[S56] Institute for Economics & Peace — Global Peace Index 2025.** Peacefulness and conflict/safety/militarisation indicators. URL: https://www.visionofhumanity.org/wp-content/uploads/2025/06/Global-Peace-Index-2025-web.pdf
+- **[S57] UNODC Data Portal.** Crime and justice data, including intentional homicide. URL: https://data.unodc.org/
+- **[S58] OECD Better Life Index.** Well-being dimensions and user-weighted country comparisons. URL: https://www.oecd.org/en/data/tools/well-being-data-monitor/better-life-index.html
+- **[S59] World Bank — unemployment indicator.** Harmonised unemployment data. URL: https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS
+- **[S60] Eurostat — Housing in Europe 2025.** Official EU housing-cost and overburden indicators. URL: https://ec.europa.eu/eurostat/web/interactive-publications/housing-2025
+- **[S61] Reddit r/digitalnomad — Numbeo contradictions.** Community signal: crowd data often contradicts lived experience. URL: https://www.reddit.com/r/digitalnomad/comments/11eie8h/good_sites_for_actually_researching_cost_and/
+- **[S62] Reddit r/expats — what no one warned you about.** Community signal: hidden adaptation and identity costs. URL: https://www.reddit.com/r/expats/comments/1s29avt/whats_something_no_one_warned_you_about_before/
+- **[S63] Reddit r/expats — moving abroad after 30 disadvantages.** Community signal: bureaucracy, loneliness, language integration. URL: https://www.reddit.com/r/expats/comments/w25g4c/moving_abroad_after_30s_what_are_the_disadvantages/
+- **[S64] Reddit r/digitalnomad — cost-of-living crowdsourcing.** Community signal: granular budgets are useful but non-standardised. URL: https://www.reddit.com/r/digitalnomad/comments/14l6kgi/cost_of_living_in_your_current_place/
+- **[S65] Reddit r/expats — quality of life and regrets.** Community signal: miscalculation of quality-of-life drivers creates regret. URL: https://www.reddit.com/r/expats/comments/1qibrom/quality_of_life_and_regrets/
+- **[S66] Reddit r/digitalnomad — tool wish existed.** Community signal: outdated cost data, seasonality and transparency gaps. URL: https://www.reddit.com/r/digitalnomad/comments/1jixiwy/built_the_tool_i_wish_existed_when_i_started/

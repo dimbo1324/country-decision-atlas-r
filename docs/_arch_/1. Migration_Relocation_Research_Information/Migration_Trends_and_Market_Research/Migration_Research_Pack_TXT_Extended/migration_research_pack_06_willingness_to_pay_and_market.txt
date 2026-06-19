@@ -1,0 +1,212 @@
+6. WILLINGNESS TO PAY AND MARKET OPPORTUNITY
+
+6.1 What migration information are people already willing to pay for?
+
+People do not usually pay for generic information. They pay for risk reduction, personal interpretation, speed, confidence, paperwork, and accountability.
+
+Paid categories:
+1. Lawyer consultations.
+2. Visa eligibility assessment.
+3. Document checklists.
+4. Application preparation.
+5. Full visa packages.
+6. Tax-residency consultation.
+7. Business setup and company formation.
+8. School search and family relocation help.
+9. Housing search.
+10. Bank-account setup.
+11. Relocation concierge services.
+12. Premium country reports.
+13. Immigration compliance for employers.
+14. Global mobility dashboards for HR.
+15. Alerts about law changes.
+16. Personalised country shortlists.
+
+6.2 Current price signals
+
+Examples from public pricing pages:
+
+B2C / individual legal and visa pricing:
+- MigRun advertises EU residence-permit support from about EUR 530.
+- Dutch immigration-law examples: highly skilled migrant package around EUR 700, DAFT route around EUR 950, DAFT with family around EUR 1,250, excluding VAT.
+- German immigration-law consultation examples: around EUR 109 for a short consultation and around EUR 226 for a more complete first consultation, with further hourly rates.
+- UK immigration-law examples: several work and specialist visa services listed around GBP 2,500-5,000 depending on route.
+- Australian migration-law consultation examples: around AUD 330-440 for consultations.
+
+B2B / employer and relocation pricing:
+- RelokateHR lists immigration/relocation cases from around EUR 950.
+- Localyze lists specific UK-related employer services such as Certificate of Sponsorship issuing and priority support fees.
+- Global mobility providers such as Deel, Localyze, Jobbatical, Remote, and others sell immigration, payroll, compliance, and relocation workflows to companies.
+
+Interpretation:
+Users already pay meaningful amounts when the task is legal, personal, high-stakes, or document-heavy. There is room below lawyers for software-guided paid assessments and above generic content for expert-reviewed reports.
+
+6.3 Which paid services are growing fastest?
+
+Fast-growing or strategically important categories:
+1. Visa-tech platforms
+Digital products that automate eligibility, document collection, workflow, and case tracking.
+
+2. Employer global mobility SaaS
+Tools for HR teams hiring international talent, sponsoring visas, tracking compliance, and managing relocations.
+
+3. Immigration compliance
+Companies need to avoid fines, illegal work, and status problems.
+
+4. Remote-work compliance
+As remote work crosses borders, employers and workers need tax, social-security, permanent-establishment, and work-authorisation checks.
+
+5. Relocation concierge
+Housing, school, banking, pets, moving logistics, registration, and settling-in.
+
+6. Investment migration advisory
+High-ticket but politically sensitive. Demand exists, but EU pressure and programme closures increase regulatory risk.
+
+7. AI migration assistants
+Emerging category: personalised eligibility checks, route comparison, document checklists, law-change alerts, and country scoring. This category must handle legal-advice boundaries carefully.
+
+6.4 How much are people willing to pay to reduce the risk of choosing the wrong country?
+
+Likely willingness-to-pay by segment:
+
+Low-budget migrant / student:
+- Free to EUR 50 for guides, checklists, and community access.
+- EUR 50-200 for personalised assessments if trusted and source-cited.
+
+Remote worker / freelancer:
+- EUR 50-300 for visa/tax/country comparison.
+- EUR 300-1,000+ if tax residency, company setup, or family complexity is involved.
+
+High-skilled worker:
+- EUR 100-500 for pathway assessment, document roadmap, and country shortlist.
+- Higher if employer sponsorship and legal review are included.
+
+Family:
+- EUR 200-1,000 for school, healthcare, visa, tax, and housing-risk analysis.
+- Families have high willingness to pay because mistakes affect children and long-term stability.
+
+Entrepreneur:
+- EUR 500-3,000+ for business/tax/residence analysis.
+- Higher if company formation and banking are included.
+
+Investor/HNWI:
+- EUR 5,000-50,000+ for residence/citizenship, tax, inheritance, family office, and legal structuring.
+
+B2B employer:
+- Hundreds to thousands per case, plus platform subscriptions, depending on employee seniority and country complexity.
+
+6.5 Existing B2C products for migrants and relocants
+
+Product types:
+- Visa assistants and eligibility checkers.
+- Country reports.
+- Expat communities and forums.
+- Cost-of-living calculators.
+- Digital nomad platforms.
+- Relocation checklists.
+- Legal marketplaces.
+- Tax-residency advisors.
+- Housing and settling-in services.
+- Immigration lawyer packages.
+- YouTube courses and paid communities.
+- Telegram/Discord private groups.
+
+Examples/adjacent players:
+- Nomad List: digital-nomad city/country data and community.
+- Numbeo: cost of living, safety, quality-of-life data.
+- Expat.com and InterNations: expat community and country information.
+- MigRun: digital visa/residence-permit support.
+- Immigrant Invest / Henley / Get Golden Visa: investment migration and country route content.
+- Country-specific immigration law firms and visa agencies.
+
+6.6 Existing B2B products for companies, HR, and relocation departments
+
+Product types:
+- Global mobility platforms.
+- Immigration compliance dashboards.
+- Employee relocation case management.
+- Visa sponsorship management.
+- Document collection and status tracking.
+- Tax and payroll compliance.
+- Employer-of-record platforms.
+- Remote-work compliance systems.
+- Destination services.
+
+Examples/adjacent players:
+- Deel.
+- Localyze.
+- Jobbatical.
+- Remote.
+- RelokateHR.
+- Fragomen and large immigration-law firms.
+- Cartus, SIRVA, Graebel, and other relocation providers.
+
+6.7 Can a platform monetise personal analysis rather than information?
+
+Yes. This is the strongest opportunity.
+
+Why personal analysis is monetisable:
+- Generic information is abundant and often free.
+- Laws are fragmented and change often.
+- Users do not know which facts apply to them.
+- Mistakes are expensive: rejected visa, tax liability, wrong school choice, bad city, failed job move.
+- Users trust systems more when they can see dated sources and official references.
+
+Paid product examples:
+1. Personal country shortlist.
+2. Eligibility score by visa route.
+3. Risk report.
+4. Cost-of-move estimate.
+5. Tax-risk warning.
+6. Family-fit report.
+7. Document roadmap.
+8. Law-change alerts.
+9. Lawyer-reviewed premium report.
+10. Employer-ready relocation plan.
+
+Best monetisation model:
+- Free: country pages, basic comparison, public data.
+- Paid low tier: personalised quiz + shortlist + basic risk score.
+- Paid mid tier: detailed PDF/TXT report, route plan, cost model, document checklist.
+- Paid premium: expert/lawyer review, tax review, family plan, relocation concierge.
+- B2B: HR dashboard/API for candidate country fit, visa feasibility, compliance warnings.
+
+6.8 Pricing strategy for the platform
+
+Suggested B2C pricing:
+- Free country explorer.
+- EUR 19-49: basic personalised report.
+- EUR 99-199: detailed country shortlist with route and risk scoring.
+- EUR 299-799: family/entrepreneur/remote-worker deep report.
+- EUR 1,000+: expert-reviewed case with partner lawyer/tax advisor.
+
+Suggested B2B pricing:
+- Per employee: EUR 100-500 for initial mobility feasibility.
+- Per active case: EUR 500-2,000 depending on complexity.
+- Monthly SaaS: EUR 500-5,000+ depending on company size.
+- API/data product: priced by seat, country coverage, or query volume.
+
+6.9 What users are really buying
+
+They are buying:
+- Certainty.
+- Personal relevance.
+- Freshness.
+- Official-source verification.
+- Fewer mistakes.
+- Time saved.
+- A realistic path.
+- Confidence to act.
+
+This is more valuable than another generic "best countries to live" article.
+
+SOURCES
+MigRun pricing and product pages: https://migrun.tech/
+RelokateHR pricing: https://www.relokatehr.com/pricing
+Dutch immigration-law fee examples: https://www.immigrationlawyersnetherlands.com/fees
+German immigration-law consultation pricing: https://se-legal.de/services/immigration-lawyer-germany/usa-to-germany/?lang=en
+UK immigration-law fee examples: https://daniellecohenimmigration.com/our-costs/
+Australian migration-law consultation example: https://www.raccosta.com.au/
+Gartner, global mobility services definition: https://www.gartner.com/reviews/market/global-mobility-services
+Deel global relocation provider content: https://www.deel.com/
+Localyze employer mobility services: https://www.localyze.com/

@@ -1,0 +1,159 @@
+4. SEARCH DEMAND AND ONLINE INTEREST
+Research date: 16 June 2026
+
+4.1 Is search demand for moving abroad rising?
+
+Answer: There are strong public indicators of rising or spiking search demand, but a complete answer requires exported Google Trends / SEO-tool data for each query and country.
+
+Evidence found:
+- Google Trends is the correct primary tool for query-level search interest by time and geography.
+- Public reporting after the 2024 U.S. election showed large spikes in searches such as “move to Canada,” “emigrate to Australia,” and general moving-abroad queries.
+- Public reports also show large growth in “digital nomad visa” searches in 2024.
+
+Caution:
+Search spikes do not equal completed migration. Search interest is an early signal, not proof of actual relocation.
+
+Sources: Google Trends; Sky News; Expat Network. [S27][S28][S29]
+
+4.2 Which migration-related queries are growing fastest?
+
+Likely fast-growing query clusters:
+- “digital nomad visa”
+- “remote work visa”
+- “residence permit”
+- “fast residency”
+- “easy citizenship”
+- “citizenship by descent”
+- “second passport”
+- “low tax countries”
+- “tax residency”
+- “golden visa alternatives”
+- “move abroad after election”
+- “best countries to live”
+- “countries with good healthcare”
+- “safe countries to move to”
+
+Evidence:
+Digital-nomad visa search-demand reporting shows very large growth, and policy reality supports the trend: EY counted more than 48 jurisdictions with digital-nomad/remote-work visa schemes by early 2026.
+
+Sources: Google Trends; EY; Expat Network. [S27][S14][S29]
+
+4.3 Which countries are most often searched with moving abroad?
+
+Based on public search reports and broader migration demand, the main search destinations include:
+- Canada.
+- Australia.
+- New Zealand.
+- United Kingdom.
+- Spain.
+- Portugal.
+- Germany.
+- France.
+- Japan.
+- Italy.
+- Switzerland.
+- Mexico.
+- Thailand.
+- United Arab Emirates.
+- Uruguay, Argentina, and other Latin American destinations in some niche communities.
+
+Examples:
+- Post-U.S.-election search spikes focused strongly on Canada and Australia.
+- Digital-nomad searches rose around Italy after the launch of Italy's digital-nomad visa.
+- Portugal and Spain continue to be heavily searched lifestyle and remote-worker destinations, but face housing, tax, and policy concerns.
+
+Sources: Sky News; Expat Network; Google Trends should be used for confirmation by query/country. [S28][S29][S27]
+
+4.4 Which countries are often compared?
+
+Likely high-intent comparison pairs:
+- Portugal vs Spain.
+- Canada vs Australia.
+- Australia vs New Zealand.
+- Germany vs Netherlands.
+- Spain vs Italy.
+- Uruguay vs Argentina.
+- Mexico vs Costa Rica.
+- Dubai/UAE vs Singapore.
+- Portugal vs Greece.
+- Canada vs United States.
+
+Interpretation:
+Comparison searches are high-value because they indicate decision-stage users. A platform should prioritise “country A vs country B” pages with structured legal, tax, cost, safety, healthcare, school, and citizenship comparisons.
+
+Method note:
+These pairs should be validated with Google Trends, Google Search Console, Ahrefs, Semrush, Reddit search, YouTube search, and autocomplete data.
+
+4.5 Which topics do people search before moving?
+
+Most common topics:
+- Visa eligibility.
+- Work rights.
+- Job market.
+- Salaries.
+- Cost of living.
+- Rent and housing availability.
+- Taxes and tax residency.
+- Healthcare.
+- Schools and childcare.
+- Safety and crime.
+- Banking and money transfer.
+- Language barrier.
+- Permanent residence and citizenship timeline.
+- Spouse/dependant rights.
+- Pets.
+- Driving licence.
+- Documents and apostilles.
+- Moving companies and shipping.
+
+Product implication:
+These topics should become structured modules in a user decision report, not just articles.
+
+4.6 Which fears appear in search behavior?
+
+Common fear clusters:
+- Crime and personal safety.
+- Corruption and bureaucracy.
+- Racism/xenophobia.
+- Visa refusal.
+- War and political risk.
+- Losing tax residency control.
+- Double taxation.
+- Healthcare access failure.
+- School integration problems.
+- Housing scams.
+- Bank-account denial.
+- Loneliness and cultural adaptation.
+- Regret after moving.
+
+Platform implication:
+Fear-based searches are monetisable if the product gives a clear risk score and practical mitigation steps.
+
+4.7 Is interest in digital-nomad visas rising?
+
+Answer: Yes.
+
+Evidence:
+- EY counted more than 40 jurisdictions offering digital-nomad/remote-work visa schemes by mid-2024 and more than 48 by early 2026.
+- MBO Partners estimates U.S. digital nomads rose to 18.5 million in 2025, up 153% since 2019.
+- Japan introduced a six-month digital-nomad status in 2024.
+- Thailand expanded long-stay options including the Destination Thailand Visa, with 180-day stays and multi-year validity.
+
+Sources: EY; MBO Partners; Japan MOFA; Reuters. [S14][S13][S15][S16]
+
+4.8 Is interest rising in countries with fast residence, permanent residence, or citizenship?
+
+Answer: Yes, especially among remote workers, weak-passport holders, founders, investors, politically anxious users, and families.
+
+Search themes:
+- “fast residency”
+- “easy permanent residence”
+- “citizenship by descent”
+- “citizenship by investment”
+- “golden visa alternatives”
+- “naturalisation timeline by country”
+
+Reality check:
+The fastest routes are not always the safest or best. Some are legally fragile, expensive, or politically controversial. A platform should separate “fast” from “stable,” “cheap,” “family-friendly,” and “citizenship-realistic.”
+
+Sources: Henley & Partners; Spain/Malta reports; Google Trends framework. [S30][S22][S23][S27]

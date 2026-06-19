@@ -1,0 +1,160 @@
+5. SOCIAL MEDIA AND USER BEHAVIOUR
+Research date: 16 June 2026
+
+5.1 Is the number of migration channels, chats, and communities growing?
+
+Answer: Likely yes in activity and fragmentation, but reliable public counts are limited.
+
+Evidence and observations:
+- Large Reddit communities such as r/expats, r/IWantOut, and r/digitalnomad remain highly active sources of migration questions and lived experience.
+- Telegram, WhatsApp, Discord, Facebook Groups, and YouTube communities are widely used by expats, digital nomads, war-driven migrants, Russian-speaking relocants, Latin American migrants, students, and destination-specific communities.
+- Public Reddit posts show users building directories of hundreds of WhatsApp, Telegram, Discord, and Facebook groups for digital nomads and expats, indicating fragmentation and discovery problems.
+- Russian relocation after 2022 created a large ecosystem of Telegram channels and chats around Armenia, Georgia, Kazakhstan, Serbia, Montenegro, Turkey, Israel, Germany, Spain, Portugal, and other destinations.
+
+Limitations:
+- Telegram and WhatsApp groups are often private or invite-only.
+- Subscriber counts can be inflated or duplicated.
+- Communities are renamed or abandoned.
+- Many users join multiple groups.
+- Public search engines undercount closed communities.
+
+Conclusion:
+A platform should treat social media as a qualitative signal and early-warning system, not as a clean statistical source unless it has direct access to APIs, crawlers, partnerships, or user-submitted data.
+
+5.2 What topics are most discussed in migration communities?
+
+Recurring topics:
+- Visa documents.
+- Residence permit renewals.
+- Embassy appointments.
+- Waiting times.
+- Housing and rent.
+- Job search.
+- Local salaries.
+- Taxes and tax residency.
+- Banking and blocked accounts.
+- Health insurance.
+- Schools and kindergartens.
+- Language learning.
+- Driving licence exchange.
+- Mobile/internet providers.
+- Moving pets.
+- Customs and shipping.
+- Police registration / address registration.
+- Opening a company.
+- Freelancing legality.
+- Neighbourhood safety.
+- Integration and loneliness.
+- Racism, discrimination, and bureaucracy.
+- Returning home or moving onward.
+
+5.3 What questions do people ask most often before moving?
+
+Common pre-move questions:
+- Can I legally move with my passport, job, income, age, family status, and education?
+- Which visa route fits me?
+- How much money do I need before moving?
+- Can I work remotely legally?
+- Can my spouse work?
+- How long until permanent residence or citizenship?
+- Is dual citizenship allowed?
+- How do taxes work if I keep foreign clients or foreign salary?
+- Which city is safer or cheaper?
+- How hard is it to rent without local income history?
+- Can I open a bank account?
+- Is healthcare public, private, or insurance-based?
+- Are schools free, international, or local-language only?
+- What documents need apostille/translation?
+- Is the country friendly to foreigners from my nationality?
+- What mistakes should I avoid?
+
+5.4 What problems do people face after moving?
+
+Common post-move problems:
+- Visa delays and unclear bureaucracy.
+- Housing scams, high deposits, and rental discrimination.
+- Underestimating cost of living.
+- Tax surprises and double-taxation issues.
+- Bank account rejections.
+- Healthcare registration delays.
+- Difficulty finding a job without local language.
+- Credential recognition problems.
+- Loneliness and lack of community.
+- Family stress and child adaptation issues.
+- School placement difficulties.
+- Cultural mismatch.
+- Legal uncertainty after rule changes.
+- Difficulty renewing residence permits.
+- Mistaking tourist stay for legal residence.
+- Inaccurate advice from blogs, influencers, or chats.
+
+5.5 Which sources do people trust when choosing a country?
+
+Trust hierarchy usually looks like this:
+
+Highest authority:
+- Official government immigration websites.
+- Embassy and consulate websites.
+- Tax authority websites.
+- Official legal texts.
+- Recognised immigration lawyers and licensed tax advisers.
+
+High practical usefulness:
+- People who recently completed the same route.
+- Destination-specific expat groups.
+- Employer/global mobility teams.
+- University international offices.
+- Relocation consultants.
+
+High reach but mixed reliability:
+- YouTube creators.
+- Telegram channels.
+- Reddit.
+- Facebook Groups.
+- TikTok/Instagram explainers.
+- Blogs and SEO articles.
+
+Best practice for a platform:
+Combine official authority with verified lived experience. Users want both: “What does the law say?” and “What actually happens?”
+
+5.6 Where do people get outdated or contradictory information?
+
+Weak information channels:
+- SEO blogs not updated after law changes.
+- Visa-agent marketing pages that oversimplify eligibility.
+- Influencer content based on one personal route.
+- Telegram/WhatsApp chats with anonymous advice.
+- Reddit comments from users who moved years ago.
+- Country rankings that ignore visa/tax/legal status.
+- Old YouTube videos after policy changes.
+- AI-generated content without source dates.
+- Forum answers that confuse tourist stay, residence, tax residency, and citizenship.
+
+Common contradictions:
+- “You can work remotely on a tourist visa” versus actual local law.
+- “Citizenship takes 5 years” versus residence quality, language, physical-presence, and application-backlog reality.
+- “Low-tax country” versus tax-residency, CFC, exit-tax, and source-income rules.
+- “Cheap country” versus current rents in safe neighbourhoods.
+- “Easy visa” versus embassy appointment scarcity and document burden.
+- “Safe country” versus city-level crime and neighbourhood differences.
+
+Platform opportunity from social media behaviour
+
+A good platform can productise what users currently try to assemble manually from chats:
+- Verified route-specific FAQs.
+- Country/city mistake database.
+- Freshness labels for every answer.
+- “Law changed” alerts.
+- Verified user cases by nationality, income, family status, and route.
+- Community-signal detection: what people are suddenly asking more often.
+- Contradiction resolver: official rule vs lawyer interpretation vs user experience.
+- Risk flags: housing scam, bank rejection, visa denial, tax exposure.
+
+Key sources and examples
+- Reddit r/expats: https://www.reddit.com/r/expats/
+- Reddit r/IWantOut: https://www.reddit.com/r/IWantOut/
+- Reddit r/digitalnomad: https://www.reddit.com/r/digitalnomad/
+- Digital nomad group directory example: https://www.reddit.com/r/digitalnomad/comments/1f9a323/digital_nomad_whatsapp_telegram_group_directory/
+- Open-source directory of 580+ digital nomad/expat groups example: https://www.reddit.com/r/digitalnomad/comments/1ruauso/i_built_an_opensource_directory_of_580_digital/
+- RECAS, Stories Emigrants Tell: https://recas.info/wp-content/uploads/2025/05/Stories-Emigrants-Tell.pdf
+- Reuters, Russian emigration after 2022 context: https://www.reuters.com/world/europe/thousands-russians-exiled-war-torn-between-their-roots-new-lives-abroad-2023-03-03/

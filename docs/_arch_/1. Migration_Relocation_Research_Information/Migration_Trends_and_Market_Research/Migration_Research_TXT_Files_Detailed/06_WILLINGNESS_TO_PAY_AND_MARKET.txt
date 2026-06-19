@@ -1,0 +1,217 @@
+06. WILLINGNESS TO PAY AND MARKET
+Research package date: 2026-06-16
+Language: English
+Scope: international migration, relocation demand, digital nomads, skilled migration, investment migration, policy trends, and product opportunity for a migration decision platform.
+
+Important interpretation rules:
+- "International migrant stock" is not the same thing as annual migration flow. Stock counts people residing outside their country of birth or citizenship at a point in time; flows measure entries/exits during a period.
+- Forced displacement counts and international migrant stock overlap only partly, because some displaced people remain internally displaced inside their own country.
+- Online search interest is often measured on relative scales. Exact Google Trends exports were not available in this environment, so this package uses published Google Trends analyses where available and recommends a measurement design for direct collection.
+- Social-media community counts are incomplete because Telegram, Facebook, WhatsApp, and Discord groups often hide membership/activity or are private.
+- Commercial market-size estimates are directional; exact market sizing for relocation, immigration law, and visa-tech varies by vendor definition.
+
+
+1. What migration information are people already willing to pay for?
+
+People already pay for:
+- Immigration lawyer consultations.
+- Visa eligibility assessments.
+- Document checklists.
+- Full visa application preparation.
+- Translation and apostille support.
+- Business incorporation.
+- Tax-residency advice.
+- International tax planning.
+- Citizenship-by-descent case review.
+- Residence-by-investment advice.
+- School search.
+- Housing search.
+- Relocation packages.
+- Bank account support.
+- Insurance recommendations.
+- Employer-sponsored relocation.
+- Global mobility compliance.
+- Premium country reports.
+- Private community memberships.
+- Coaching for interviews, immigration officers, or job applications.
+
+Why people pay:
+- To reduce risk of refusal.
+- To save time.
+- To avoid missing documents.
+- To understand taxes and long-term consequences.
+- To compare countries based on personal profile.
+- To avoid scams.
+- To access experts with current rules.
+- To get an executable plan instead of general information.
+
+2. Which paid services are growing fastest?
+
+Fast-growing categories:
+- Visa-tech and immigration workflow automation.
+- Employer global mobility platforms.
+- Remote-work compliance.
+- Business-travel compliance.
+- Relocation management SaaS.
+- AI-assisted immigration document preparation.
+- Tax-residency planning.
+- Contractor/remote-employee compliance.
+- Citizenship-by-descent assessment services.
+- Investment migration advisory.
+- Destination services for housing/schools/banking.
+- Corporate mobility dashboards.
+
+B2B market examples:
+- Localyze automates immigration and relocation processes for companies.
+- Remote Mobility combines visas, tax compliance, payroll, and relocation/remote-work compliance.
+- Topia offers enterprise global talent mobility, tax compliance, and distributed workforce tools.
+- Jobbatical supports employee relocation across many countries using technology plus immigration experts.
+- Gartner defines global mobility services as a combination of compliance, logistics, advisory, tracking, and reporting capabilities.
+- Newland Chase’s 2025 survey indicates that global mobility functions are becoming more strategic amid hybrid work, geopolitical volatility, and regulatory change.
+
+3. How much are people willing to pay to reduce relocation risk?
+
+Exact willingness-to-pay varies heavily by segment. A realistic pricing map:
+
+Low-budget migrants:
+- $0-$50 for checklists, templates, and community access.
+- $50-$200 for a paid guide or basic assessment.
+- $100-$500 for a limited consultation, depending on country and advisor.
+
+Skilled workers and remote workers:
+- $50-$200 for self-serve country reports and personalised comparisons.
+- $150-$500 for visa/tax path assessment.
+- $500-$2,000 for application support or bundled planning.
+- $2,000-$10,000+ for full relocation support if family, employer, or complex tax issues are involved.
+
+Families:
+- $200-$1,000 for country shortlist and family feasibility report.
+- $1,000-$5,000 for visa + school + housing + tax plan.
+- $5,000-$20,000+ for premium relocation support, depending on destination and services.
+
+Entrepreneurs and investors:
+- $500-$2,500 for initial tax/residence planning.
+- $2,000-$10,000 for company, visa, and tax structuring support.
+- $10,000-$100,000+ for investment migration, legal structuring, and family-office-level planning, excluding investment amounts and government fees.
+
+Employers:
+- Per-case pricing can range from several hundred to several thousand dollars for immigration case handling.
+- Enterprise SaaS and managed-service pricing depends on headcount, countries, compliance scope, and volume.
+- Companies pay because non-compliance can create visa refusals, tax exposure, employment-law risk, fines, and employee attrition.
+
+4. Which B2C products already exist?
+
+B2C categories:
+- Country databases: Nomads.com, Numbeo, Expat.com.
+- Cost-of-living calculators: Numbeo and similar tools.
+- Expat forums and communities: Expat.com, Reddit, Facebook groups.
+- Digital nomad community memberships.
+- Visa guides and paid checklists.
+- Immigration lawyer marketplaces.
+- Tax consultation marketplaces.
+- Citizenship-by-descent eligibility services.
+- Residence/citizenship-by-investment advisors.
+- Country reports and relocation guides.
+- Remote-work and nomad city rankings.
+- Job boards with visa sponsorship filters.
+- International health insurance brokers.
+- Housing and serviced-apartment platforms.
+
+Gaps in current B2C products:
+- Weak personalisation.
+- Weak law-change tracking.
+- Weak tax/legal risk warnings.
+- Limited verified user cases.
+- Poor handling of dependants, schools, pets, banking, and long-term citizenship.
+- Hype-heavy city rankings.
+- Sparse data for non-Western passports.
+- Poor transparency on data dates and source quality.
+
+5. Which B2B products already exist?
+
+B2B product categories:
+- Immigration case management.
+- Global mobility SaaS.
+- Relocation dashboards.
+- Business travel compliance.
+- Work-from-anywhere compliance.
+- Tax and permanent establishment risk.
+- Employee relocation packages.
+- Destination services.
+- Immigration law firm platforms.
+- HRIS/payroll integrations.
+- Visa-sponsorship workflows.
+- Policy and cost management.
+
+Examples:
+- Localyze.
+- Remote Mobility.
+- Topia.
+- Jobbatical.
+- Fragomen, BAL, Newland Chase, and other immigration-law/global-mobility providers.
+- Deel and other employer-of-record/payroll companies with mobility add-ons.
+
+6. Can the platform monetise personal analysis rather than raw information?
+
+Yes. This is the stronger opportunity.
+
+Raw information is commoditised:
+- Government pages are free.
+- Reddit and Telegram are free.
+- SEO blogs are free.
+- Nomad/cost-of-living lists are free.
+
+Valuable paid product:
+- Profile-specific country shortlist.
+- Visa eligibility and rejection risk.
+- Tax-residence warning.
+- Country law-change monitoring.
+- Cost and budget simulation.
+- Family feasibility model.
+- Citizenship timeline.
+- Document plan.
+- Step-by-step migration path.
+- Expert-reviewed action plan.
+- Alerts when a country becomes worse or better for the user’s profile.
+
+Possible B2C pricing:
+- Free: public country pages and basic calculators.
+- $19-$49/month: monitoring, saved profiles, checklists, community, alerts.
+- $49-$199 one-time: personalised country shortlist.
+- $199-$499: full relocation feasibility report.
+- $500-$2,000: expert-reviewed plan.
+- Referral/marketplace revenue from lawyers, accountants, insurance, relocation partners, schools, and housing providers.
+
+Possible B2B pricing:
+- SaaS subscription for HR/global mobility teams.
+- Per-employee mobility assessment.
+- Country risk dashboard.
+- Law-change alerts.
+- Immigration/tax compliance triage.
+- Employee self-service relocation portal.
+- API for visa/tax/country risk data.
+
+Product principle:
+Users do not pay for "Portugal is nice." They pay for:
+"With your passport, income, profession, family status, tax situation, and timeline, here are the three safest options, the expected costs, the legal pathway, the risks, and the next documents to prepare."
+
+Evidence strength:
+- Existing paid-service categories: A/C.
+- Market size estimates: C and should be treated directionally.
+- Willingness-to-pay ranges: market synthesis; validate with interviews, ads, and landing-page tests.
+
+SOURCES USED IN THIS FILE
+
+- Localyze: https://www.localyze.com/
+- Remote Mobility: https://remote.com/products/mobility
+- Topia: https://topia.com/
+- Gartner, Global Mobility Services: https://www.gartner.com/en/human-resources/glossary/global-mobility-services
+- Jobbatical: https://www.jobbatical.com/
+- Newland Chase 2025 Global Mobility Survey: https://newlandchase.com/report/2025-global-mobility-survey/
+- Nomads.com: https://nomads.com/
+- Numbeo Cost of Living: https://www.numbeo.com/cost-of-living/
+- Expat.com: https://www.expat.com/
+- Henley Global Residence Program Index 2025: https://www.henleyglobal.com/publications/global-residence-program-index/2025
+- Henley Private Wealth Migration Report 2025: https://www.henleyglobal.com/publications/private-wealth-migration-report-2025
+- IMF WP, Residence and Citizenship by Investment: https://www.imf.org/en/Publications/WP/Issues/2025/03/07/Drivers-and-Effects-of-Residence-and-Citizenship-by-Investment-566483
+- Harris Poll / American Expats Survey 2025: https://theharrispoll.com/briefs/american-expats-survey/

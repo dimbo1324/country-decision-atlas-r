@@ -1,0 +1,63 @@
+Prepared: 16 June 2026
+Language: English
+Scope: Research brief for a migration-country-selection / relocation-intelligence platform.
+Note: This is market and policy research, not legal, tax, or immigration advice. Always verify eligibility against the current official law and use licensed professionals where required.
+Source IDs such as [S1] refer to 08_source_map_and_research_notes.txt.
+
+00_EXECUTIVE_SUMMARY
+
+1. The global migration market is structurally growing, but some rich-country inflows are cooling.
+The number of international migrants worldwide continues to rise. UN DESA estimates 304.0 million international migrants in 2024, up from about 275 million in 2020, 221.0 million in 2010, and 153.9 million in 1990. The stock of migrants has almost doubled since 1990, while migrants remain a relatively small share of the world population: 3.7% in 2024. [S1][S3]
+
+At the same time, recent rich-country flows are no longer in the extreme post-pandemic rebound phase. OECD permanent migration fell by 4% in 2024 after three years of sharp increases, but still reached 6.2 million people and remained about 15% above 2019. The market is not “dead”; it is shifting from easy-growth to selective-growth. [S7]
+
+2. Growth is strongest where labour demand, conflict, demographics, and regional corridors overlap.
+The biggest absolute migrant-stock increases since 1990 are visible in Asia, Europe, Northern America, and Northern Africa/Western Asia. Europe’s increase since 2020 was strongly affected by Ukrainian refugees. Northern America remains a giant receiving region, but its pace of growth slowed after 2020. Gulf and Western Asian destinations remain structurally important for labour migration. [S1]
+
+3. Forced migration is now central, not peripheral.
+UN DESA estimated 51.7 million forcibly displaced people across borders in mid-2024, about one in six international migrants. UNHCR recorded 123.2 million forcibly displaced people at the end of 2024 and 117.8 million at the end of 2025. The 2025 decline is meaningful, but the level remains historically very high. [S1][S9][S10]
+
+4. Migration desire is high, but “desire” is not the same as “action”.
+Gallup found that 16% of adults worldwide, more than 900 million people, wanted to leave their country permanently if they could in 2023. Gallup’s 2026 update still estimated around 900 million potential movers, but the United States’ share as the desired destination dropped to 15%, the lowest level in nearly two decades. [S13][S14]
+
+5. The most attractive destination countries are not always the easiest countries.
+The United States, Canada, Germany, the United Kingdom, Australia, Spain, France, Italy, Japan, and Saudi Arabia appear repeatedly as desired destinations or major receiving countries. But several attractive destinations are tightening migration rules, raising salary thresholds, limiting students, closing investor routes, or making naturalisation harder. This creates a product opportunity: users need “desire vs feasibility vs risk” analysis, not just country rankings. [S7][S14][S36][S39][S46]
+
+6. Migration types are diverging.
+- Family migration remains the largest permanent migration reason in OECD countries.
+- Humanitarian migration and asylum remain elevated.
+- Temporary labour migration is still high, especially compared with 2015/2019.
+- Permanent labour migration fell in 2024 in OECD data.
+- International student migration cooled sharply in the United States, United Kingdom, Canada, and Australia in 2024.
+- Digital nomad migration is growing in policy supply and search interest, but actual demand is constrained by return-to-office policies, tax compliance, and visa complexity. [S7][S29][S31]
+
+7. Policy direction is mixed: countries want talent, but not unlimited inflows.
+Germany, Japan, South Korea, Spain, Italy, and other countries have introduced or expanded skilled-worker, opportunity-card, or remote-work pathways. Canada, the UK, Spain, Portugal, and others show tightening or rebalancing in students, family, low-wage labour, golden visas, or naturalisation. The strongest trend is selective openness: governments compete for high-skill workers, entrepreneurs, investors, and remote professionals while restricting politically sensitive categories. [S36][S39][S41][S42][S43][S44][S45][S46]
+
+8. The online information market is large but fragmented.
+People research visas, taxes, housing, jobs, schools, healthcare, safety, banking, cost of living, second passports, and bureaucracy across official sites, Reddit, Telegram, YouTube, law firms, relocation agencies, Numbeo, Nomad List, Expat.com, and private chats. The main problem is not a lack of information. The problem is verification, personal relevance, recency, and legal risk. [S32][S34][S35]
+
+9. Users already pay for risk reduction.
+B2C users pay for lawyer consultations, visa checks, document reviews, tax-residency planning, second-passport assessments, relocation packages, country reports, and premium communities. Example open pricing includes roughly EUR 109-226 for German immigration-law consultations and about GBP 330 for a UK immigration consultation. B2B employers pay for global mobility platforms, immigration compliance, relocation dashboards, visa workflows, and document tracking. [S54][S55][S56][S57][S58][S59]
+
+10. Best platform opportunity.
+The strongest opportunity is not to copy Nomad List, Numbeo, Expat.com, or a Telegram chat. The differentiated product should combine:
+- personalised country shortlist;
+- eligibility and route mapping;
+- cost and tax-risk estimate;
+- legal-change tracker;
+- country-direction index;
+- interest/sentiment index;
+- risk score;
+- official-source citations;
+- verified user cases;
+- alerts when rules change.
+
+The core positioning: “A decision engine for international relocation, not another travel/lifestyle ranking.”
+
+Recommended MVP data stack
+1. Immigration eligibility: visa/residence routes, income thresholds, work rights, family rights, processing time, path to PR/citizenship.
+2. Personal fit: budget, citizenship, age, family, profession, remote income, languages, risk tolerance, tax profile.
+3. Country conditions: cost of living, housing, safety, healthcare, schools, labour market, tax rules, banking access, climate, political stability.
+4. Trend signals: search demand, social discussion, official law changes, visa applications where public, migration flows, YouTube/Reddit/Telegram activity.
+5. Evidence layer: official source URL, publication date, confidence score, last checked date, human/lawyer review status.

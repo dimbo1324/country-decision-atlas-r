@@ -1,0 +1,131 @@
+6. WILLINGNESS TO PAY AND MONETISATION
+Research date: 16 June 2026
+
+6.1 What migration information are people already willing to pay for?
+
+People already pay for:
+- Immigration lawyer consultations.
+- Visa eligibility assessments.
+- Full visa application preparation.
+- Document review.
+- Translation and apostille support.
+- Tax-residency advice.
+- Company formation and freelancer registration.
+- Relocation packages.
+- Housing search.
+- School search.
+- Health-insurance setup.
+- Bank-account setup.
+- Country reports and relocation guides.
+- Checklists, templates, and paid communities.
+- Second-passport and investment-migration advice.
+
+Conclusion:
+Users do not pay for generic information. They pay to reduce uncertainty, avoid expensive mistakes, save time, and receive personalised answers.
+
+6.2 Which paid services are growing fastest?
+
+High-growth service categories:
+- Visa tech and immigration-law platforms.
+- Global mobility SaaS for HR teams.
+- Employer-of-record and remote hiring compliance.
+- Relocation management platforms.
+- Digital-nomad visa support.
+- Tax-residency and cross-border structuring advice.
+- Founder/startup visa support.
+- Investment migration and private-client residence planning.
+
+Commercial examples:
+- Localyze: immigration and relocation automation for companies.
+- Envoy Global: immigration services and technology.
+- Fragomen: global immigration law and corporate mobility.
+- Startup-visa and founder-relocation programs tracked by StartupBlink and similar sources.
+
+Sources: Localyze; Envoy; Fragomen; StartupBlink. [S35][S36][S37][S31]
+
+6.3 How much are people willing to pay to reduce risk?
+
+Market price examples:
+- Immigration consultation: often about USD 150-500 per hour, depending on country and adviser.
+- Germany relocation support: visa-only services can cost around EUR 1,500-3,000; full family packages can exceed EUR 5,000-10,000.
+- Dutch immigration legal packages: examples range from hundreds to more than EUR 1,000 excluding VAT for specific categories.
+- UK immigration lawyer fees: often thousands of pounds for family, work, student, or complex matters.
+- U.S. immigration lawyer fees: often thousands of dollars for employment, family, or fiancé pathways.
+- Australia visa legal support: temporary, skilled, and partner visas can range from several thousand to more than AUD 10,000 depending on complexity.
+
+Interpretation:
+A pre-lawyer “country/pathway risk report” priced from roughly USD/EUR 29-299 could be attractive if it helps users avoid spending thousands on the wrong country or wrong route. Premium expert-reviewed reports could justify higher pricing.
+
+Sources: public pricing pages of immigration lawyers and relocation agencies; commercial market reports. Treat as indicative, not universal.
+
+6.4 What B2C products already exist for migrants and relocators?
+
+Existing B2C product types:
+- Destination-ranking sites: Nomads.com / Nomad List.
+- Cost-of-living databases: Numbeo.
+- Expat communities and guides: Expat.com, InterNations, Reddit, Facebook groups.
+- Visa eligibility quizzes and agency funnels.
+- Relocation checklists.
+- Country reports.
+- Paid newsletters and communities.
+- Lawyer marketplaces.
+- Tax-residency consultations.
+- Digital-nomad guides.
+- AI migration assistants and country-comparison tools.
+
+Gaps:
+Most B2C products are either generic content, crowd-sourced lifestyle data, or lead-generation funnels. Few provide structured, personalised, evidence-backed pathway comparison.
+
+Sources: Nomads.com; Numbeo; Expat.com; observed AI relocation tools. [S32][S33][S34]
+
+6.5 What B2B products already exist for companies, HR, and relocation departments?
+
+Existing B2B products:
+- Global mobility dashboards.
+- Immigration compliance systems.
+- Visa case management.
+- Employee relocation management.
+- Employer-of-record platforms.
+- Remote-work compliance tools.
+- Tax and payroll mobility tools.
+- Assignment-cost estimators.
+- Law-firm case portals.
+
+Buyers:
+- HR departments.
+- Global mobility teams.
+- Startups hiring internationally.
+- Enterprises relocating staff.
+- Universities and research institutions.
+- Recruitment agencies.
+
+Examples:
+Localyze, Envoy Global, Fragomen, and other mobility providers show that B2B buyers pay for compliance, automation, tracking, and risk reduction. [S35][S36][S37]
+
+6.6 Can the platform monetise personalised analysis rather than information itself?
+
+Answer: Yes. This is the strongest monetisation strategy.
+
+Possible paid products:
+1. Personal country shortlist.
+2. Visa/pathway feasibility report.
+3. Rejection-risk and document-risk report.
+4. Family relocation feasibility report.
+5. Tax-residency risk snapshot.
+6. Digital-nomad legality checker.
+7. Startup/founder route comparison.
+8. Second-passport route analysis.
+9. Law-change alerts for selected countries.
+10. Expert-reviewed premium report.
+11. Lawyer/tax adviser referral marketplace.
+12. Company HR dashboard for employees considering relocation.
+
+Pricing logic:
+- Free: basic country discovery and public articles.
+- Low-ticket: USD/EUR 19-49 for checklists, country profiles, and comparison pages.
+- Mid-ticket: USD/EUR 79-299 for personalised AI reports.
+- Premium: USD/EUR 500-2,000+ for expert-reviewed packages.
+- B2B: subscription per company or per relocating employee.
+
+Key principle:
+The user is buying reduced uncertainty, not text.

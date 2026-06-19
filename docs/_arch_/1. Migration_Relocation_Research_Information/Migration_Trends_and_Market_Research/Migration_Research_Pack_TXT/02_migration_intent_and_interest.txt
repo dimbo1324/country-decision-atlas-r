@@ -1,0 +1,74 @@
+2. Interest in Moving Abroad
+
+Question: Is the number of people who want to move abroad growing?
+Answer: It grew to record levels from 2021 to 2024, then declined slightly in 2025 but remains historically high. Gallup reported that 16% of adults worldwide wanted to move permanently to another country during 2021-2024. In 2025 this fell to 15%, but still represents roughly 900 million adults.
+
+Important distinction
+Migration desire is not migration intent. Gallup repeatedly stresses that the percentage who want to move is much higher than the percentage who have concrete plans, documents, money, job offers or legal pathways.
+
+Countries/regions where people most want to emigrate
+- Sub-Saharan Africa: highest regional desire in Gallup 2025, around 33%, but down from 37% in 2023.
+- Latin America and the Caribbean: 25% in 2025, down from a 34% peak in 2021-2022.
+- United States and Canada: 20% desire to leave in 2025, near record highs for receiving countries.
+- European Union: 21% desire to leave in 2025, also near record highs.
+- Individual high-loss countries in Gallup's potential migration indexes include Honduras, Ghana, Togo, Liberia, Sierra Leone, Bolivia, Ecuador, Peru, Lebanon and Bangladesh, depending on whether the metric is total population, youth or brain gain/loss.
+
+Most desired destination countries
+- United States: still #1, but less dominant. In 2025, 15% of potential migrants named the U.S., down from 24% in 2007-2009.
+- Canada: #2, 9% of potential migrants in 2025.
+- Other stable desired destinations: United Kingdom, Germany, Australia, Spain, France, Japan, Italy and Saudi Arabia, generally around 3-5% each in Gallup's 2025 chart.
+- Regional variation matters:
+  - Southeast Asia: Japan leads over the U.S.
+  - Middle East and North Africa: Germany and Saudi Arabia are more attractive than the U.S.
+  - South Asia: Saudi Arabia and the U.S. are roughly tied.
+  - EU respondents: Spain and Switzerland rank ahead of the U.S.
+
+Age groups most interested in migration
+- Young adults are the most mobile and most interested group globally.
+- Gallup's Potential Net Youth Gain Index shows large potential youth gains for Canada, New Zealand, Switzerland, Iceland, Australia, Ireland, Norway, Portugal, Luxembourg, UAE, Singapore and Spain.
+- The biggest potential youth losses are concentrated in parts of Sub-Saharan Africa, North Africa and Latin America.
+- U.S. young women are a standout case: 40% of women aged 15-44 said in 2025 they would move abroad permanently if they could, up from 10% in 2014. This is more than twice the rate for young U.S. men.
+
+Professions and social groups most likely to consider moving
+The strongest groups by evidence and market signals are:
+1) Students: because international higher education is a legal migration channel and future work pathway.
+2) Highly skilled professionals: IT, engineering, healthcare, finance, research, academia and advanced manufacturing.
+3) Medical workers and care workers: demand is high in ageing societies, but some countries are restricting low-wage care routes.
+4) Entrepreneurs and startup founders: attracted by startup visas, low-tax regimes, access to markets, banking and talent.
+5) Remote workers/digital nomads: strong growth since 2019, but more legal/tax compliance friction.
+6) Families: motivated by education, healthcare, safety, passport options and long-term quality of life.
+7) Wealthy individuals/investors: motivated by second residence, optionality, tax planning, safety and family security.
+8) Forced migrants: not an “interest” segment in the consumer sense; they move because of persecution, war, violence, insecurity or disasters.
+
+Is interest among highly skilled specialists growing?
+Yes, especially in destination-country competition for talent. Gallup's Potential Net Brain Gain Index identifies Iceland, New Zealand, Denmark, Spain, Finland, Australia, Canada, Portugal and Norway as countries that would gain large shares of college-educated adults if aspirations became reality. OECD and Fragomen also show a policy trend toward selective attraction of highly skilled workers, even while low-wage and student routes are tightened.
+
+Is interest among entrepreneurs and investors growing?
+Yes, but the channel is changing. Wealthy individuals still seek second residence/citizenship as risk insurance. Henley reports continuing demand for investment migration, and U.S. citizens have become a major nationality in this market. However, EU golden passport/golden visa routes face stronger legal and political scrutiny. The market is shifting from “buy property, get residence” to more complex combinations: entrepreneur visas, startup visas, active investment, fund investment, tax residence planning and multi-jurisdiction “sovereign portfolio” strategies.
+
+Important interpretation
+The migration market is split into two different demand curves:
+- Mass-market aspiration: hundreds of millions want to move, but most cannot easily act.
+- High-conversion demand: skilled workers, students, remote workers, founders, investors and families with sufficient funds are more likely to pay for planning, legal help and decision tools.
+
+Platform implication
+A migration platform should not treat all users equally. It should segment by:
+- passport/citizenship;
+- budget;
+- age and family status;
+- education and profession;
+- remote income or local job need;
+- urgency;
+- risk tolerance;
+- long-term goal: temporary stay, residence, permanent residence, citizenship, tax residence, education, business, safety.
+
+Sources:
+- Gallup_2024_Record: Gallup, Desire to Migrate Remains at Record High, https://news.gallup.com/poll/652748/desire-migrate-remains-record-high.aspx
+- Gallup_2026_US_Low: Gallup, Desire to Move Permanently to U.S. at New Low, https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+- Gallup_2026_PNMI: Gallup, How Migration Could Reshape Populations and Labor Forces, https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+- Axios_Women_US: Axios, Record share of women say they want to leave U.S. for good, https://www.axios.com/2025/11/13/trump-abortion-dobbs-women-immigration
+- OECD_Recent_Flows_2025: OECD, Recent developments in international migration movements, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-international-migration-movements-and-labour-market-inclusion-of-immigrants_203de29e.html
+- UNESCO_2026_Students: UNESCO, Number of students in higher education more than doubled in 20 years, https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- OECD_EAG_Students: OECD, Education at a Glance 2025: international student mobility section, https://www.oecd.org/en/publications/education-at-a-glance-2025_1c0d9c79-en/full-report/how-do-student-profiles-study-choices-and-mobility-trends-shape-tertiary-education_97e1e2bd.html
+- Henley_2025: Henley & Partners, Investment Migration Programs Report 2025 press release, https://www.henleyglobal.com/newsroom/press-releases/investment-migration-programs-report-2025
+- Fragomen_APAC_2025: Fragomen, Rise of highly skilled visa and digital nomad visa options in APAC, https://www.fragomen.com/insights/a-new-beginning-the-rise-of-highly-skilled-visa-and-digital-nomad-visa-options-in-apac.html

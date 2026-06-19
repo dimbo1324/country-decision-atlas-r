@@ -1,0 +1,260 @@
+10. SOURCES AND BIBLIOGRAPHY
+Research date: 16 June 2026
+
+Core migration statistics
+
+UN DESA - International Migrant Stock
+https://www.un.org/development/desa/pd/content/international-migrant-stock
+
+UN DESA - International Migrant Stock 2024: Key Facts and Figures PDF
+https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf
+
+Migration Data Portal - International migrant stocks overview
+https://www.migrationdataportal.org/themes/international-migrant-stocks-overview
+
+Migration Policy Institute - Top Statistics on Global Migration and Migrants
+https://www.migrationpolicy.org/article/top-statistics-global-migration-migrants
+
+IOM World Migration Report 2024
+https://worldmigrationreport.iom.int/what-we-do/world-migration-report-2024/chapter-2/international-migrants-numbers-and-trends
+
+OECD - International Migration Outlook 2024
+https://www.oecd.org/en/publications/2024/11/international-migration-outlook-2024_c6f3e803.html
+
+OECD - International Migration Outlook 2025
+https://www.oecd.org/en/publications/international-migration-outlook-2025_ae26c893-en.html
+
+Labour migration
+
+ILO - Global Estimates on International Migrant Workers
+https://www.ilo.org/publications/major-publications/ilo-global-estimates-international-migrants-labour-force
+
+Migration Data Portal - Labour migration statistics
+https://www.migrationdataportal.org/themes/labour-migration-statistics
+
+International students
+
+Migration Data Portal - International students
+https://www.migrationdataportal.org/themes/international-students-trends
+
+UNESCO - Number of students in higher education more than doubled in 20 years
+https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+
+OECD - International Students in Higher Education
+https://www.oecd.org/en/publications/international-students-in-higher-education_9be049e8-en.html
+
+Forced displacement and climate migration
+
+UNHCR - Global Trends 2024
+https://www.unhcr.org/global-trends-report-2024
+
+UNHCR - Global Trends
+https://www.unhcr.org/global-trends
+
+World Bank - Groundswell climate migration press release
+https://www.worldbank.org/en/news/press-release/2021/09/13/climate-change-could-force-216-million-people-to-migrate-within-their-own-countries-by-2050
+
+IDMC - Global Report on Internal Displacement 2025
+https://www.internal-displacement.org/global-report/grid2025/
+
+Migration interest and public opinion
+
+Gallup - Desire to Migrate Remains at Record High
+https://news.gallup.com/poll/652748/desire-migrate-remains-record-high.aspx
+
+Gallup - Desire to Migrate Drops to New Low
+https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+
+Gallup - Migration Would Reshape Populations and Labor Forces
+https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+
+Pew Research Center - Global migration and demographic research
+https://www.pewresearch.org/topic/immigration-migration/global-migration-demography/
+
+Drivers of migration
+
+World Bank - World Development Report 2023: Migrants, Refugees, and Societies
+https://www.worldbank.org/en/publication/wdr2023
+
+Joint Research Centre - Drivers of Migration / Atlas of Migration
+https://publications.jrc.ec.europa.eu/repository/bitstream/JRC139459/JRC139459_01.pdf
+
+Migration Data Portal - Migration drivers
+https://www.migrationdataportal.org/themes/migration-drivers
+
+Mixed Migration Centre - Migration drivers and decision making
+https://mixedmigration.org/themes/migration-drivers-decision-making/
+
+European Parliament - Exploring migration causes
+https://www.europarl.europa.eu/topics/en/article/20200624STO81906/exploring-migration-causes-why-people-migrate
+
+Search demand and online interest
+
+Google Trends
+https://trends.google.com/trends/
+
+Reuters - Post-2024 US election move-abroad search spike
+https://www.reuters.com/world/us/after-trumps-win-many-despondent-americans-research-moving-abroad-2024-11-08/
+
+Sky News - Internet searches for moving abroad after US election
+https://news.sky.com/story/internet-searches-for-how-to-move-abroad-up-by-more-than-1-000-after-us-election-result-13251032
+
+Expat Network - Digital nomad visa searches
+https://expatnetwork.com/digital-nomad-visa-searches-skyrocket-1135-demand-hits-an-all-time-high-worldwide/
+
+Shipit / 1st Move International - Relocation Index
+https://www.shipit.co.uk/blog/the-relocation-index
+
+GoogleTrendArchive academic dataset
+https://arxiv.org/abs/2603.21871
+
+Digital nomads and remote work
+
+MBO Partners - Digital Nomads 2024
+https://www.mbopartners.com/state-of-independence/digital-nomads-2024/
+
+MBO Partners - Digital Nomads 2025
+https://www.mbopartners.com/state-of-independence/digital-nomads/
+
+OECD - Should OECD countries develop new Digital Nomad Visas?
+https://www.oecd.org/en/publications/should-oecd-countries-develop-new-digital-nomad-visas_4d425e15-en.html
+
+EY - Global Immigration Index for Digital Nomads and Remote Workers
+https://www.ey.com/en_nl/insights/workforce/a-global-immigration-index-for-digital-nomads-and-remote-workers
+
+Global Citizen Solutions - Global Digital Nomad Report 2025
+https://www.globalcitizensolutions.com/report/global-digital-nomad-report-2025/
+
+Social media and communities
+
+Reddit r/expats
+https://www.reddit.com/r/expats/
+
+Reddit r/IWantOut
+https://www.reddit.com/r/IWantOut/
+
+Reddit r/digitalnomad
+https://www.reddit.com/r/digitalnomad/
+
+Example: digital nomad WhatsApp/Telegram group directory
+https://www.reddit.com/r/digitalnomad/comments/1f9a323/digital_nomad_whatsapp_telegram_group_directory/
+
+Example: open-source directory of 580+ digital nomad/expat groups
+https://www.reddit.com/r/digitalnomad/comments/1ruauso/i_built_an_opensource_directory_of_580_digital/
+
+RECAS - Stories Emigrants Tell
+https://recas.info/wp-content/uploads/2025/05/Stories-Emigrants-Tell.pdf
+
+Willingness to pay and market
+
+Credence Research - Immigration Consulting Services Market
+https://www.credenceresearch.com/report/immigration-consulting-services-market
+
+Global Market Insights - Cross-border Workforce and Migration Solutions Market
+https://www.gminsights.com/industry-analysis/cross-border-workforce-and-migration-solutions-market
+
+Mordor Intelligence - Mobility and Relocation Management Software Market
+https://www.mordorintelligence.com/industry-reports/mobility-and-relocation-management-software-market
+
+InsightAce Analytic - Expat Relocation Service Market
+https://www.insightaceanalytic.com/report/expat-relocation-service-market/3048
+
+Coherent Market Insights - Corporate Relocation Service Market
+https://www.coherentmarketinsights.com/market-insight/corporate-relocation-service-market-6203
+
+Jobbatical - Global Mobility Platform
+https://www.jobbatical.com/solutions/mid-size-companies
+
+Gartner - Global Mobility Services
+https://www.gartner.com/reviews/market/global-mobility-services
+
+IAS US - Immigration lawyer costs
+https://us.iasservices.org.uk/immigration-lawyer-costs/
+
+AHC Lawyers - Australian immigration lawyer costs
+https://www.ahclawyers.com/news-articles/26/03/06/how-much-does-an-immigration-lawyer-cost
+
+Danielle Cohen Immigration - UK immigration legal costs
+https://daniellecohenimmigration.com/our-costs/
+
+Portugal Golden Visa Funds - Costs and legal fees
+https://goldenvisafundsportugal.com/blog/portugal-golden-visa-costs-legal-fees-2025
+
+Settly - Dutch Employee Relocation Benchmark
+https://www.getsettly.com/case-study/the-2024-dutch-employee-relocation-benchmark-report
+
+Legal and policy trends
+
+Germany Opportunity Card
+https://digital.diplo.de/chancenkarte
+
+Make it in Germany - Opportunity Card / Skilled Immigration Act
+https://www.make-it-in-germany.com/en/service/newsletter-juli-2025
+
+Canada Immigration Levels Plan 2025-2027
+https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/supplementary-immigration-levels-2025-2027.html
+
+Canada Immigration Levels Plan 2026-2028
+https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/corporate-initiatives/levels.html
+
+Australia StudyAustralia - Migration strategy changes
+https://www.studyaustralia.gov.au/en/tools-and-resources/news/australias-new-migration-strategy-what-it-means-for-you
+
+UK House of Commons Library - Immigration White Paper 2025
+https://commonslibrary.parliament.uk/research-briefings/cbp-10267/
+
+Netherlands IND - Foreign investor scheme abolished
+https://ind.nl/en/news/admission-scheme-for-foreign-investors-abolished
+
+KPMG - Spain golden visa elimination
+https://kpmg.com/xx/en/our-insights/gms-flash-alert/flash-alert-2025-054.html
+
+Reuters - Europe tightening asylum and migration rules
+https://www.reuters.com/world/europes-moves-tighten-asylum-migration-rules-2025-11-17/
+
+Reuters - UK migration tightening
+https://www.reuters.com/world/uk/uks-starmer-under-pressure-farage-tightens-migration-rules-2025-05-11/
+
+Reuters - EU revokes Vanuatu visa-free travel over golden passports
+https://www.reuters.com/world/eu-revokes-vanuatus-visa-free-travel-its-golden-passport-scheme-2024-12-12/
+
+Investment migration and wealth migration
+
+Henley Investment Migration Programmes Report 2025
+https://www.henleyglobal.com/newsroom/press-releases/investment-migration-programs-report-2025
+
+Henley Private Wealth Migration Report 2025
+https://www.henleyglobal.com/publications/henley-private-wealth-migration-report-2025
+
+Country rankings and competition
+
+InterNations Expat Insider 2025
+https://www.internations.org/expat-insider/2025/best-and-worst-countries-2025
+
+HSBC Expat Explorer / Lifestyle
+https://www.expat.hsbc.com/expat-explorer/expat-lifestyle/
+
+OECD Talent Attractiveness 2023
+https://www.oecd.org/en/data/tools/talent-attractiveness-2023.html
+
+OECD - What is the best country for global talents in the OECD?
+https://www.oecd.org/content/dam/oecd/en/publications/reports/2023/03/what-is-the-best-country-for-global-talents-in-the-oecd_3496c15f/5186ab2d-en.pdf
+
+OECD - Attractiveness of OECD countries for start-up talents
+https://www.oecd.org/en/publications/what-are-the-top-oecd-destinations-for-start-up-talents_6c6bc0be-en.html
+
+Bertelsmann Stiftung - Germany and competition for top talent
+https://www.bertelsmann-stiftung.de/en/topics/latest-news/2023/march/germany-falls-behind-in-international-competition-for-top-talent
+
+Global Talent Competitiveness Index
+https://www.globaltalentcompetitivenessindex.org/
+
+IMD World Talent Ranking
+https://www.imd.org/centers/wcc/world-competitiveness-center/rankings/world-talent-ranking/
+
+Notes on source reliability
+- Highest confidence: UN DESA, OECD, ILO, UNESCO, UNHCR, World Bank, national government portals, and official legal texts.
+- Medium confidence: Gallup, Pew, IOM/Migration Data Portal, InterNations, HSBC, academic papers, recognised media such as Reuters.
+- Directional only: market research firms, SEO articles, relocation-company indices, community posts, influencer content.
+- Use Google Trends as relative interest, not absolute demand.
+- Use Reddit/Telegram/Facebook/YouTube as qualitative behaviour signals, not precise population statistics unless platform analytics are available.

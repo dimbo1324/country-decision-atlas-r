@@ -1,0 +1,217 @@
+4. SEARCH DEMAND AND ONLINE INTEREST
+Research date: 16 June 2026
+
+4.1 Is the number of search queries about moving abroad growing?
+
+Answer: The long-term online interest is structurally high, but Google Trends data must be read carefully because it shows relative interest, not absolute query volume.
+
+Strong evidence exists for event-driven spikes:
+- After the 2024 US election, Google searches for “move to Canada”, “move to New Zealand”, and “move to Australia” rose dramatically according to Reuters and Sky News reporting based on Google Trends data.
+- Digital nomad visa searches rose strongly after 2020 as countries launched remote-worker visa programmes.
+- Search demand for second passports, citizenship by descent, low-tax countries, and residence permits tends to spike after political, tax, war, banking, or election shocks.
+
+Important caveat:
+Google Trends is excellent for relative momentum and early signals. It is not a direct count of people who will migrate.
+
+4.2 Which migration queries are growing fastest?
+
+High-growth query families:
+- “digital nomad visa”.
+- “remote worker visa”.
+- “residence permit [country]”.
+- “how to move to [country]”.
+- “move abroad”.
+- “immigrate to [country]”.
+- “best countries to live”.
+- “best countries for expats”.
+- “low tax countries”.
+- “tax residency [country]”.
+- “second passport”.
+- “citizenship by descent”.
+- “citizenship by investment”.
+- “golden visa”.
+- “startup visa”.
+- “talent visa”.
+- “fast residency”.
+- “easy citizenship”.
+
+Interpretation:
+Demand is moving from generic emigration dreams to practical legal pathway searches. Users want feasibility, not only inspiration.
+
+4.3 Which countries are most often searched in connection with moving?
+
+Common high-interest search pairings:
+- move to Canada.
+- move to Portugal.
+- move to Spain.
+- move to Australia.
+- move to New Zealand.
+- move to Germany.
+- move to United Kingdom.
+- move to United States.
+- move to Dubai / UAE.
+- move to Italy.
+- move to France.
+- move to Netherlands.
+- move to Mexico.
+- move to Costa Rica.
+- move to Panama.
+- move to Uruguay.
+- move to Argentina.
+- move to Colombia.
+- move to Thailand.
+- move to Bali / Indonesia.
+- move to Georgia.
+- move to Albania.
+- move to Greece.
+
+2024-2025 signals:
+- Canada, New Zealand, and Australia became prominent in US post-election search spikes.
+- Portugal and Spain remain strong lifestyle and EU-access searches, though rules have become more complex.
+- UAE/Dubai remains strong for tax, business, safety, and lifestyle.
+- Italy, Greece, and Spain gained interest from digital-nomad and investor-residence audiences.
+- Uruguay, Paraguay, Panama, Mexico, Costa Rica, Colombia, Argentina, and Chile appear often in affordability, safety, tax, and second-residence discussions, especially among Americas-focused users.
+
+4.4 Which countries are often compared?
+
+Common comparison patterns:
+- Portugal vs Spain.
+- Portugal vs Italy.
+- Spain vs Italy.
+- Spain vs France.
+- Germany vs Netherlands.
+- Germany vs Canada.
+- Canada vs Australia.
+- Canada vs New Zealand.
+- Canada vs United States.
+- UAE vs Singapore.
+- UAE vs Portugal.
+- Uruguay vs Argentina.
+- Uruguay vs Paraguay.
+- Mexico vs Costa Rica.
+- Panama vs Costa Rica.
+- Thailand vs Bali/Indonesia.
+- Georgia vs Armenia.
+- Estonia vs Portugal.
+- Netherlands vs Germany.
+
+Why people compare these countries:
+- Similar climate/lifestyle category.
+- Similar visa route.
+- Similar language or region.
+- Similar tax/residency pitch.
+- Similar perceived affordability.
+- Similar startup or digital-nomad positioning.
+
+4.5 What topics do people search before moving?
+
+Core topics:
+- Visa eligibility.
+- Residence permit documents.
+- Permanent residence timeline.
+- Citizenship timeline.
+- Work permit and sponsorship.
+- Job market and salary.
+- Rental market and deposits.
+- Cost of living.
+- Taxes and tax residency.
+- Banking and account opening.
+- Healthcare and insurance.
+- Schools and childcare.
+- Safety and crime.
+- Neighbourhoods.
+- Language requirements.
+- Driving licence exchange.
+- Pet relocation.
+- Shipping and customs.
+- Spouse work rights.
+- Recognition of diplomas.
+- Company formation.
+- Social security and pensions.
+- Military/conscription obligations.
+
+The highest-value topics are those that combine legal and practical risk: visas, taxes, healthcare, schools, housing, and employment rights.
+
+4.6 What fears appear in search queries?
+
+Common fear-based searches:
+- crime in [country/city].
+- corruption in [country].
+- racism in [country].
+- is [country] safe for women / families / foreigners.
+- visa denial reasons.
+- residence permit rejected.
+- tax problems after moving abroad.
+- double taxation.
+- war risk.
+- political instability.
+- bureaucracy.
+- scams renting apartment.
+- healthcare waiting times.
+- school bullying / school quality.
+- bank account denied.
+- deportation / overstay risk.
+- expat regrets.
+- why people leave [country].
+
+Platform implication:
+A risk engine should answer fear searches directly, using evidence and severity labels. This is more valuable than a generic “best countries” ranking.
+
+4.7 Is interest in digital nomad visas growing?
+
+Answer: Yes, strongly since 2020.
+
+Evidence:
+- OECD notes that special digital-nomad statuses began appearing in OECD countries around 2020 and continued spreading.
+- EY reported that more than 40 jurisdictions had digital nomad or remote-worker permit schemes by the end of July 2024.
+- Other public trackers and professional reports identify more than 60 digital-nomad schemes by 2025.
+- MBO Partners estimated 18.5 million US digital nomads in 2025, up about 153% since 2019.
+
+Popular digital-nomad destinations:
+- Portugal, Spain, Italy, Greece, Croatia, Estonia, Malta.
+- UAE/Dubai.
+- Mexico, Costa Rica, Panama, Colombia, Brazil, Argentina, Uruguay.
+- Thailand, Indonesia/Bali, Malaysia, Japan, South Korea, Taiwan.
+- Georgia, Albania, Montenegro.
+
+4.8 Is interest growing in fast residence, permanent residence, or citizenship?
+
+Answer: Yes, especially among users who want optionality, risk reduction, better passports, or long-term family planning.
+
+High-demand search themes:
+- fast residency.
+- easy residence permit.
+- permanent residence after 5 years.
+- citizenship after 3/5/7/10 years.
+- citizenship by descent.
+- citizenship by investment.
+- EU passport ancestry.
+- golden visa.
+- naturalisation requirements.
+- dual citizenship allowed.
+
+However, “fast” routes are becoming more regulated. A platform must distinguish between marketing claims and legal reality.
+
+Recommended search-data system for a platform
+
+Track weekly, by origin country and language:
+1. Generic intent: move abroad, immigrate, relocate, emigrate.
+2. Country-specific intent: move to Portugal, move to Canada, etc.
+3. Legal-pathway intent: visa, residence permit, permanent residence, citizenship.
+4. Segment intent: digital nomad, startup visa, skilled worker, student visa, retirement visa.
+5. Risk intent: crime, tax, visa rejection, bureaucracy, racism, healthcare.
+6. Comparison intent: Portugal vs Spain, Canada vs Australia, etc.
+7. Shock intent: after elections, wars, tax changes, mobilisation, banking restrictions.
+
+Use search demand as an early signal, not as proof of migration. Combine it with visa applications, law changes, migration statistics, job postings, social media activity, and community growth.
+
+Key sources
+- Google Trends: https://trends.google.com/trends/
+- Reuters, post-2024-election move-abroad searches: https://www.reuters.com/world/us/after-trumps-win-many-despondent-americans-research-moving-abroad-2024-11-08/
+- Sky News, move-abroad search spike: https://news.sky.com/story/internet-searches-for-how-to-move-abroad-up-by-more-than-1-000-after-us-election-result-13251032
+- Expat Network, digital nomad visa searches: https://expatnetwork.com/digital-nomad-visa-searches-skyrocket-1135-demand-hits-an-all-time-high-worldwide/
+- OECD, Digital Nomad Visas: https://www.oecd.org/en/publications/should-oecd-countries-develop-new-digital-nomad-visas_4d425e15-en.html
+- EY, Global Immigration Index for Digital Nomads and Remote Workers: https://www.ey.com/en_nl/insights/workforce/a-global-immigration-index-for-digital-nomads-and-remote-workers
+- MBO Partners, Digital Nomads 2025: https://www.mbopartners.com/state-of-independence/digital-nomads/
+- Shipit / 1st Move International Relocation Index: https://www.shipit.co.uk/blog/the-relocation-index
+- GoogleTrendArchive academic dataset: https://arxiv.org/abs/2603.21871

@@ -1,0 +1,260 @@
+03. DRIVERS OF MIGRATION INTEREST
+Research package date: 2026-06-16
+Language: English
+Scope: international migration, relocation demand, digital nomads, skilled migration, investment migration, policy trends, and product opportunity for a migration decision platform.
+
+Important interpretation rules:
+- "International migrant stock" is not the same thing as annual migration flow. Stock counts people residing outside their country of birth or citizenship at a point in time; flows measure entries/exits during a period.
+- Forced displacement counts and international migrant stock overlap only partly, because some displaced people remain internally displaced inside their own country.
+- Online search interest is often measured on relative scales. Exact Google Trends exports were not available in this environment, so this package uses published Google Trends analyses where available and recommends a measurement design for direct collection.
+- Social-media community counts are incomplete because Telegram, Facebook, WhatsApp, and Discord groups often hide membership/activity or are private.
+- Commercial market-size estimates are directional; exact market sizing for relocation, immigration law, and visa-tech varies by vendor definition.
+
+
+1. Why do people most often want to move abroad?
+
+The main drivers are:
+- Safety and security.
+- Higher income.
+- Better jobs.
+- Political stability.
+- Freedom and rule of law.
+- Better education.
+- Better healthcare.
+- Quality of life.
+- Family reunification.
+- Passport strength and citizenship strategy.
+- Tax efficiency and financial freedom.
+- Climate, environment, and lifestyle.
+- Escape from corruption, discrimination, or bureaucracy.
+- Professional growth and global mobility.
+
+The strongest migration driver is rarely one factor alone. Most real decisions combine:
+- Push factors: why the current country feels risky, limited, or undesirable.
+- Pull factors: why another country looks safer, richer, freer, or more predictable.
+- Pathway factors: whether the person can actually get a visa, job, residence permit, school place, or citizenship route.
+
+2. How strongly does political instability affect migration interest?
+
+Strongly, especially among educated urban professionals, minorities, activists, journalists, entrepreneurs, and families.
+
+Political triggers:
+- War or military mobilisation.
+- Democratic backsliding.
+- Authoritarian laws.
+- Fear after elections.
+- Restrictions on media, civil society, or courts.
+- Anti-minority laws.
+- Sanctions and banking isolation.
+- Loss of passport mobility.
+- Fear of future taxation or asset seizure.
+
+Examples and patterns:
+- Ukraine caused one of the largest recent forced-displacement movements in Europe.
+- Russia’s 2022 invasion of Ukraine and mobilisation produced increased outflows from both Ukraine and Russia, for very different reasons.
+- U.S. relocation-interest stories after elections show that political fear can move affluent people from passive interest to consultations, though this is more anecdotal than official flow data.
+- Latin American political/economic crises often drive regional relocation to the U.S., Spain, Portugal, Mexico, Chile, Argentina, Uruguay, and other destinations.
+- Authoritarian or unstable environments tend to create demand for second passports, residence backups, foreign bank accounts, and children’s education abroad.
+
+Product implication:
+- A platform should track political risk as an input to relocation interest. Early signals include election cycles, protest intensity, new security laws, exit restrictions, conscription rules, capital controls, sanctions, media restrictions, and sudden currency falls.
+
+3. How strongly do economic crises affect migration?
+
+Very strongly.
+
+Economic triggers:
+- Inflation.
+- Currency collapse.
+- Unemployment.
+- Salary stagnation.
+- Housing unaffordability.
+- Falling real income.
+- Banking restrictions.
+- Capital controls.
+- Loss of business confidence.
+- Low professional ceiling.
+
+Economic migration logic:
+- Low-skilled workers move for wage gaps.
+- Skilled workers move for career ceilings, professional recognition, and global salaries.
+- Entrepreneurs move for predictable regulation, tax, banking, investor access, and customer markets.
+- Families move when they conclude that staying means worse education, healthcare, or safety for children.
+
+Important nuance:
+- Extreme poverty can reduce actual migration because people cannot afford to move.
+- Middle-income households often have the strongest practical migration capability.
+- Wealthier households can buy optionality through residence permits, international schools, lawyers, and tax planning.
+
+4. How important are safety and crime levels?
+
+Very important for families, women, retirees, and high-net-worth migrants.
+
+Safety factors users compare:
+- Violent crime.
+- Property crime.
+- Personal safety at night.
+- Corruption and police reliability.
+- Domestic political violence.
+- Terrorism and war risk.
+- Hate crimes, racism, or discrimination.
+- Road safety.
+- Women’s safety.
+- Child safety.
+- Natural-disaster exposure.
+
+Practical product issue:
+Most websites show either user opinions or aggregate national rankings. A stronger platform should show safety by city/neighbourhood, not only by country, and separate:
+- subjective safety,
+- reported crime,
+- violent crime,
+- corruption,
+- police trust,
+- political violence,
+- disaster risk.
+
+5. How important are taxes and financial freedom?
+
+Increasingly important for:
+- Entrepreneurs.
+- High-income remote workers.
+- Investors.
+- Crypto/digital asset holders.
+- Consultants/freelancers.
+- High-net-worth families.
+- People with international income.
+
+Common tax questions:
+- Am I tax resident after 183 days?
+- Is worldwide income taxed?
+- Is foreign-source income exempt?
+- Are capital gains taxed?
+- Is crypto taxed?
+- Are dividends taxed?
+- Is there wealth tax, exit tax, inheritance tax, or gift tax?
+- Can I use a non-dom, special expat, digital nomad, or territorial tax regime?
+- Can I keep my company abroad?
+- Is a local company required?
+- Is banking easy?
+- Is the tax authority predictable?
+
+Important warning:
+Tax-driven migration is often misunderstood. Visa residence, physical presence, tax residence, domicile, company substance, social security, and banking compliance are separate issues. Many online communities oversimplify this.
+
+6. How important is a second passport or citizenship?
+
+Increasingly important, especially for people from countries with weak passports, unstable politics, war risk, sanctions exposure, or limited banking access.
+
+Main citizenship/residence motivations:
+- Visa-free travel.
+- Right to live and work in a safer region.
+- Children’s education.
+- Family security.
+- Asset protection.
+- Exit option in crisis.
+- Better banking access.
+- EU/Schengen or U.S./Canada/Australia/UK access.
+- Avoiding future political or military risk.
+
+Popular citizenship routes:
+- Naturalisation after residence.
+- Citizenship by descent/ancestry.
+- Marriage/family routes.
+- Investment-related routes, where still available.
+- Exceptional talent or contribution routes.
+- Refugee/statelessness-related routes in limited cases.
+
+Trend:
+- Direct citizenship-by-investment is under more scrutiny.
+- Residence-by-investment remains active but is becoming more regulated.
+- Descent citizenship is a major growth niche because it is often cheaper than investment migration and gives a strong passport if eligibility exists.
+
+7. How important are healthcare, education, and quality of life for family migration?
+
+Extremely important.
+
+Family relocation drivers:
+- Safe neighbourhoods.
+- School quality and language.
+- International schools.
+- University pathways.
+- Healthcare access.
+- Childcare cost.
+- Family reunification rights.
+- Spouse work rights.
+- Housing space.
+- Long-term residence and citizenship.
+- Social benefits and legal protection.
+- Low crime and political stability.
+
+Family migration is rarely about the easiest visa alone. Families need a stable life operating system:
+- visa path,
+- income model,
+- school plan,
+- housing plan,
+- healthcare plan,
+- tax plan,
+- language plan,
+- citizenship timeline.
+
+8. How do climate and ecology affect country choice?
+
+Climate affects migration in two different ways:
+
+A. Climate-displacement migration:
+- drought,
+- floods,
+- storms,
+- sea-level rise,
+- heat stress,
+- crop loss,
+- disaster displacement,
+- water scarcity.
+
+B. Lifestyle/climate preference migration:
+- choosing warmer weather,
+- avoiding extreme heat,
+- cleaner air,
+- better nature,
+- lower pollution,
+- walkability,
+- outdoor life.
+
+Evidence interpretation:
+- Climate is a real and growing driver of displacement and internal mobility.
+- Cross-border climate migration is harder to measure than conflict or labour migration because climate interacts with income, conflict, agriculture, housing, and governance.
+- Most people displaced by climate shocks first move internally or regionally, not immediately to wealthy countries.
+- For skilled and lifestyle migrants, climate and ecology are increasingly used as tie-breakers among otherwise viable destinations.
+
+Platform implication:
+A country-selection tool should not treat climate as only "weather." It should include:
+- heat risk,
+- flood risk,
+- wildfire risk,
+- air pollution,
+- water stress,
+- disaster insurance,
+- climate adaptation capacity,
+- seasonal comfort,
+- energy reliability.
+
+Evidence strength:
+- Structural migration drivers: A/B.
+- Political triggers: strong in case studies, harder to quantify globally.
+- Tax/citizenship motivation: C, but strongly visible in legal/market demand.
+- Climate migration: A/B, but country-level prediction remains uncertain.
+
+SOURCES USED IN THIS FILE
+
+- World Bank WDR 2023: Migrants, Refugees, and Societies: https://www.worldbank.org/en/publication/wdr2023
+- UNHCR Global Trends 2024: https://www.unhcr.org/global-trends-report-2024
+- UNHCR Global Trends 2025: https://www.unhcr.org/global-trends-report-2025
+- Migration Policy Institute climate migration opinion: https://www.migrationpolicy.org/research/public-opinion-climate-migrants
+- Migration Policy Institute, climate change and migration research: https://www.migrationpolicy.org/programs/migration-information-source/climate-change-migration
+- Gallup, 900 Million Wanted to Migrate in 2023: https://news.gallup.com/poll/468218/nearly-900-million-worldwide-wanted-migrate-2021.aspx
+- Harris Poll / American Expats Survey 2025: https://theharrispoll.com/briefs/american-expats-survey/
+- Ipsos Cost of Living Monitor 2025: https://www.ipsos.com/en/cost-living-monitor-2025
+- EU Youth Survey 2025: https://youth.europa.eu/news/eurobarometer-2025-young-people-and-democracy_en
+- IMF WP, Residence and Citizenship by Investment: https://www.imf.org/en/Publications/WP/Issues/2025/03/07/Drivers-and-Effects-of-Residence-and-Citizenship-by-Investment-566483
+- Henley Private Wealth Migration Report 2025: https://www.henleyglobal.com/publications/private-wealth-migration-report-2025
+- Numbeo Quality of Life: https://www.numbeo.com/quality-of-life/

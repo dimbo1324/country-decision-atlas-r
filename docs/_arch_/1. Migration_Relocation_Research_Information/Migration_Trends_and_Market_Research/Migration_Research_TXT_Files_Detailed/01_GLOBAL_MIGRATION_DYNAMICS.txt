@@ -1,0 +1,196 @@
+01. GLOBAL MIGRATION DYNAMICS
+Research package date: 2026-06-16
+Language: English
+Scope: international migration, relocation demand, digital nomads, skilled migration, investment migration, policy trends, and product opportunity for a migration decision platform.
+
+Important interpretation rules:
+- "International migrant stock" is not the same thing as annual migration flow. Stock counts people residing outside their country of birth or citizenship at a point in time; flows measure entries/exits during a period.
+- Forced displacement counts and international migrant stock overlap only partly, because some displaced people remain internally displaced inside their own country.
+- Online search interest is often measured on relative scales. Exact Google Trends exports were not available in this environment, so this package uses published Google Trends analyses where available and recommends a measurement design for direct collection.
+- Social-media community counts are incomplete because Telegram, Facebook, WhatsApp, and Discord groups often hide membership/activity or are private.
+- Commercial market-size estimates are directional; exact market sizing for relocation, immigration law, and visa-tech varies by vendor definition.
+
+
+1. Is the total number of international migrants increasing or decreasing?
+
+Answer: increasing over the long term.
+
+UN DESA estimates that the global stock of international migrants reached 304.0 million in 2024. This is nearly double the 154 million estimated in 1990. The migrant share of world population also increased, but more slowly: from about 2.9% in 1990 to 3.7% in 2024.
+
+Global migrant stock by selected years:
+- 1990: 153.9 million.
+- 2010: 221.0 million.
+- 2020: approximately 281 million.
+- 2024: 304.0 million.
+
+Interpretation:
+- Migration is structurally rising, but it is not exploding as a share of global population.
+- The absolute number rises because of population growth, labour-market demand, conflict, education mobility, family reunification, and long-term network effects.
+- Stock can keep rising even if annual inflows slow, because migrants already living abroad remain counted.
+
+2. Which world regions show the strongest growth?
+
+UN DESA regional stock estimates, selected regions:
+
+World:
+- 1990: 153.9 million.
+- 2010: 221.0 million.
+- 2024: 304.0 million.
+
+Sub-Saharan Africa:
+- 1990: 13.8 million.
+- 2010: 15.8 million.
+- 2024: 24.3 million.
+
+Northern Africa and Western Asia:
+- 1990: 16.9 million.
+- 2010: 32.0 million.
+- 2024: 54.1 million.
+
+Central and Southern Asia:
+- 1990: 25.5 million.
+- 2010: 18.2 million.
+- 2024: 20.4 million.
+
+Eastern and South-Eastern Asia:
+- 1990: 6.8 million.
+- 2010: 16.1 million.
+- 2024: 22.6 million.
+
+Latin America and the Caribbean:
+- 1990: 7.3 million.
+- 2010: 8.3 million.
+- 2024: 17.5 million.
+
+Australia and New Zealand:
+- 1990: 4.5 million.
+- 2010: 6.8 million.
+- 2024: 9.6 million.
+
+Europe plus Northern America:
+- 1990: 79.0 million.
+- 2010: 123.5 million.
+- 2024: 155.3 million.
+
+Regional interpretation:
+- Europe and Northern America remain the largest combined receiving region.
+- Europe hosted about 94 million migrants in 2024; Northern America hosted about 61 million.
+- Northern Africa and Western Asia show very strong growth because of Gulf labour migration, refugee movements, and regional conflict displacement.
+- Latin America and the Caribbean roughly doubled as a migrant-hosting region from 2010 to 2024, partly due to Venezuelan displacement and regional mobility.
+- Europe’s growth accelerated after 2020, partly because of refugees from Ukraine.
+- Northern America remains huge but UN DESA notes its growth rate slowed to under 1% per year in 2020-2024.
+
+3. From which countries do people most often emigrate?
+
+Top origin countries by international migrant stock, according to IOM/Migration Data Portal summaries:
+- India: about 18.5 million emigrants.
+- China: about 11.7 million.
+- Mexico: about 11.6 million.
+- Ukraine: about 9.8 million.
+- Russian Federation: about 9.1 million.
+
+Interpretation:
+- India, China, and Mexico are large origin countries because of population size, diaspora networks, labour-market corridors, student flows, and family reunification.
+- Ukraine rose sharply because of war-related displacement after 2022.
+- Russia remains a large origin country because of historic post-Soviet mobility and recent political/economic outflows.
+- Other important origin countries in many datasets include Syria, Bangladesh, Pakistan, the Philippines, Afghanistan, Venezuela, and several Central Asian countries, but exact rankings vary by data year and definition.
+
+4. Which countries receive the most migrants?
+
+UN DESA top destination countries by international migrant stock in 2024:
+- United States: 52.4 million.
+- Germany: 16.8 million.
+- Saudi Arabia: 13.7 million.
+- United Kingdom: 11.8 million.
+- France: 9.2 million.
+- Spain: 8.9 million.
+- Canada: 8.8 million.
+- United Arab Emirates: 8.2 million.
+- Australia: 8.1 million.
+- Russian Federation: 7.6 million.
+- Türkiye: 7.1 million.
+- Italy: 6.6 million.
+
+Interpretation:
+- The United States remains the clear number-one destination by stock.
+- Germany, the UK, France, Spain, Italy, Canada, and Australia combine labour, family, student, asylum, and long-standing immigrant networks.
+- Saudi Arabia and the UAE are unusually important because of temporary labour migration and high foreign-born population shares.
+- Türkiye’s stock is heavily affected by forced displacement, especially from Syria.
+
+5. Which migration corridors have become more important?
+
+Major interregional corridors identified by UN DESA:
+- Latin America and the Caribbean to Northern America: 27 million migrants.
+- Central and Southern Asia to Northern Africa and Western Asia: 20 million.
+- Northern Africa and Western Asia to Europe: 13 million.
+- Eastern and South-Eastern Asia to Northern America: 12 million.
+- Central and Southern Asia to Europe: 10 million.
+
+Routes and destinations becoming more visible in the last five years:
+- Ukraine to Europe: strong growth since 2022 because of war.
+- Latin America to North America: still the largest interregional corridor and politically central.
+- Central and Southern Asia to Gulf countries: labour demand in Saudi Arabia, UAE, Qatar, Kuwait, and related markets.
+- Venezuelan migration within Latin America and to North America/Europe: still a major driver of asylum and residence demand.
+- Digital-nomad routes to Southern Europe, Latin America, and selected Asian destinations: Portugal, Spain, Italy, Croatia, Greece, Mexico, Colombia, Brazil, Thailand, Malaysia, Indonesia, and the UAE appear frequently in visa and nomad discussions.
+- Wealth/investment relocation to Italy, Switzerland, Portugal, Greece, UAE, Singapore, and selected Caribbean jurisdictions.
+
+6. Which migration directions are losing popularity?
+
+Evidence-backed declines:
+- OECD permanent-type migration fell by about 4% in 2024 after three post-pandemic years of growth, though it remained above 2019 levels.
+- OECD permanent labour migration fell by about 21% in 2024 to about 934,000, after a strong 2023.
+- New international tertiary students in OECD countries fell by about 13% in 2024, with large declines in Canada, Australia, the United States, and the United Kingdom.
+- EU irregular border crossings fell sharply in 2024 and again in 2025, although some routes such as the Central Mediterranean, Western Mediterranean, and certain eastern routes can still rise while total crossings decline.
+- EU+ asylum applications fell in 2025 compared with 2024, with large declines for Syrian and Turkish applicants.
+- Canada, the UK, and Australia are deliberately cooling parts of student, temporary resident, and low-wage migration channels.
+- Spain ended its real-estate-oriented golden visa route in 2025, reducing that specific investment-migration pathway.
+
+Interpretation:
+- Declining flows do not always mean declining interest. They may reflect stricter rules, caps, processing bottlenecks, unaffordability, or saturated housing markets.
+- Student migration to Canada/UK/Australia became less attractive for some applicants because dependants, work rights, post-study rules, proof-of-funds, and institutional controls became stricter.
+- Some high-hype lifestyle destinations lose practical attractiveness because of rents, tax complexity, healthcare access, schooling, or slow bureaucracy.
+
+7. Which type of migration is growing fastest?
+
+The answer depends on timeframe:
+
+Long-term growth:
+- Student mobility is one of the strongest long-run growth categories. UNESCO reports that global international student mobility rose from about 2.5 million in 2002 to about 6.9 million in 2022 and around 7.3 million in 2024.
+- Digital nomadism is one of the fastest-growing lifestyle/remote-work niches. MBO Partners estimates 18.5 million American digital nomads in 2025, up 153% since 2019.
+- Forced displacement reached record levels by end-2024, with UNHCR reporting 123.2 million forcibly displaced people worldwide. However, UNHCR reported a decline to 117.8 million by end-2025.
+
+Short-term OECD 2024:
+- Permanent labour migration declined sharply.
+- International student inflows declined in major OECD destinations.
+- Humanitarian migration and asylum demand remained high, with asylum applications to OECD countries at or near record levels in 2024.
+- Family migration remained the leading permanent migration category in the OECD.
+- Temporary labour migration was still above pre-pandemic levels.
+
+Practical conclusion:
+- Fastest-growing user-interest niches for a platform: digital nomads, remote workers, second citizenship/residency planning, and high-skill talent routes.
+- Fastest-growing humanitarian/need-driven category: forced displacement, although it is not primarily a premium B2C market.
+- Most stable mass category: family migration.
+- Most policy-sensitive categories: students, low-wage labour, asylum, golden visas.
+
+Evidence strength:
+- Global stock/destination/origin data: A.
+- OECD migration by type: A.
+- Digital nomad numbers: C, but based on a repeated annual survey by a market specialist.
+- Search/interest in country routes: C/D unless backed by official visa-application numbers.
+
+SOURCES USED IN THIS FILE
+
+- UN DESA International Migrant Stock 2024 PDF: https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2024_international_migrant_stock_2024_advance_unedited_0.pdf
+- Migration Data Portal, International migrant stocks: https://www.migrationdataportal.org/themes/international-migrant-stocks
+- IOM World Migration Report 2024: https://worldmigrationreport.iom.int/what-we-do/world-migration-report-2024-chapter-2/international-migration
+- OECD International Migration Outlook 2024: https://www.oecd.org/en/publications/international-migration-outlook-2024_50b0353e-en.html
+- OECD International Migration Outlook 2025: https://www.oecd.org/en/publications/international-migration-outlook-2025_30b687d5-en.html
+- UNHCR Global Trends 2024: https://www.unhcr.org/global-trends-report-2024
+- UNHCR Global Trends 2025: https://www.unhcr.org/global-trends-report-2025
+- UNESCO Global Flow of Tertiary-Level Students: https://uis.unesco.org/en/uis-student-flow
+- UNESCO Global Education Monitoring report news 2026: https://www.unesco.org/gem-report/en/articles/international-student-mobility-has-tripled-20-years-and-now-73-million-students-study-abroad
+- MBO Partners State of Independence 2025: https://www.mbopartners.com/state-of-independence/digital-nomad-trends/
+- Frontex 2024 irregular border crossings: https://www.frontex.europa.eu/media-centre/news/news-release/irregular-border-crossings-into-eu-drop-sharply-in-2024-2rM3cz
+- Frontex 2025 irregular border crossings: https://www.frontex.europa.eu/media-centre/news/news-release/eu-external-border-crossings-drop-in-2025-L5i7Xj
+- EUAA Latest Asylum Trends: https://euaa.europa.eu/latest-asylum-trends-annual-overview-2025
+- Spain ends golden visa: https://www.mjusticia.gob.es/en/ciudadania/nacionalidad/otras-formas-adquisicion-nacionalidad/residencia-inversores

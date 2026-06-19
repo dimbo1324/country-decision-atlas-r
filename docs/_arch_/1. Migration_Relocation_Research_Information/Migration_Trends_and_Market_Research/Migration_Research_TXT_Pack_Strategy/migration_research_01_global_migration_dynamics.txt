@@ -1,0 +1,134 @@
+1. GENERAL MIGRATION DYNAMICS
+
+Research date: 16 June 2026
+
+1.1 Is the total number of international migrants rising or falling?
+
+The long-term trend is rising. International migrant stock has roughly doubled since 1990.
+
+Key data points:
+- 1990: about 153-154 million international migrants worldwide.
+- 2020: about 281 million international migrants worldwide.
+- 2023: about 302 million international migrants worldwide, according to World Bank estimates based on UN DESA data.
+- Mid-2024: about 304 million international migrants worldwide, about 3.7%-4% of world population.
+
+Interpretation:
+- The absolute number of migrants is clearly growing.
+- The share of the world population living outside their country of birth has grown more slowly, from roughly 3% in 1990 to around 4% in 2024.
+- Migration is not “mass movement by most people”; it remains a minority behaviour globally, but the absolute market is enormous.
+
+Main evidence: UN DESA International Migrant Stock 2024; IOM World Migration Report; World Bank Migration and Development Brief 40; Migration Policy Institute Data Hub.
+
+1.2 Regional distribution and strongest growth regions
+
+Approximate distribution of international migrants by major UN region in 2024:
+- Europe and Northern America: about 155.3 million, around 51% of the global migrant stock.
+- Northern Africa and Western Asia: about 54.1 million, around 18%.
+- Sub-Saharan Africa: about 24.3 million, around 8%.
+- Eastern and South-Eastern Asia: about 22.6 million, around 7%.
+- Central and Southern Asia: about 20.4 million, around 7%.
+- Latin America and the Caribbean: about 17.5 million, around 6%.
+- Australia and New Zealand: about 9.6 million, around 3%.
+- Oceania excluding Australia/New Zealand: very small in global terms.
+
+Regions showing strong growth or high migration pressure:
+- Europe: large inflows from Ukraine, the Middle East, Africa, South Asia and intra-European mobility.
+- Northern America: persistent attraction for workers, students, family migrants and asylum seekers.
+- Gulf / Western Asia: labour migration to Saudi Arabia, UAE, Qatar, Kuwait and neighbouring economies remains central.
+- Latin America: Venezuelan displacement and regional mobility changed migration patterns dramatically.
+- Sub-Saharan Africa: high migration aspiration and high forced/internal displacement, though limited by money and visas.
+- Asia: large origin region for workers and students; also destination region for Gulf, East Asian and regional labour markets.
+
+1.3 Top countries people leave from
+
+Top origin countries in recent UN DESA/MPI summaries include:
+1. India: about 18.5 million emigrants.
+2. China: about 11.7 million.
+3. Mexico: about 11.6 million.
+4. Ukraine: about 9.8 million.
+5. Russia: about 9.1 million.
+6. Syria: about 8.9 million.
+7. Bangladesh: about 8.7 million.
+8. Venezuela: about 8.3 million.
+
+Interpretation:
+- India, China, Mexico and Bangladesh are large population countries with long-standing labour, student and family migration systems.
+- Ukraine, Syria and Venezuela show the importance of war, political instability and forced displacement.
+- Russia appears both as origin and destination because of post-Soviet mobility, labour markets and recent geopolitical disruption.
+
+1.4 Top countries people move to
+
+Top destination countries in recent UN DESA/MPI summaries include:
+1. United States: about 52.4 million international migrants.
+2. Germany: about 16.8 million.
+3. Saudi Arabia: about 13.7 million.
+4. United Kingdom: about 11.8 million.
+5. France: about 9.2 million.
+6. Canada: about 8.8 million.
+7. United Arab Emirates: about 8.2 million.
+8. Australia: about 8.1 million.
+9. Russia: about 7.6 million.
+10. Türkiye: about 7.1 million.
+11. Spain: about 6.9 million.
+12. Italy: about 6.8 million.
+
+The largest single bilateral corridor remains Mexico to the United States, with roughly 11 million people. Other major corridors include Syria-Türkiye, Ukraine-Russia, and India-UAE.
+
+1.5 Directions that became more popular in the last five years
+
+The strongest “newer” or accelerated routes include:
+- Ukraine to EU countries, after Russia’s full-scale invasion in 2022.
+- Venezuela to Colombia, Peru, Chile, Ecuador, Spain and the United States, though some flows have slowed or changed.
+- India to Canada, the UK, Australia, Germany, the Gulf and the United States, especially through students, skilled work and family channels.
+- Remote workers to Spain, Portugal, Italy, Greece, Croatia, Mexico, Costa Rica, Panama, Dubai/UAE, Thailand, Indonesia/Bali, Japan and New Zealand, depending on visa availability and lifestyle positioning.
+- Skilled workers to Germany, Canada, Australia, the UK, the Netherlands, UAE and Singapore, though policy tightening now affects some routes.
+- Wealth migration to UAE, Singapore, Switzerland, Italy, Portugal, Greece, Malta, Caribbean CBI countries and selected Latin American countries.
+
+1.6 Directions losing popularity or facing reduced inflow
+
+Routes losing popularity or facing tightening:
+- Canada student and temporary-resident routes: major caps and reduced targets after housing and infrastructure pressure.
+- UK care-worker and lower-paid skilled-worker routes: new restrictions and higher settlement requirements.
+- Australia student routes: stricter English, finance and visa integrity requirements.
+- European property golden visas: Spain closed its golden visa; Portugal removed real-estate investment as a route; the Netherlands, UK and Ireland closed investor routes earlier; Malta’s CBI model was challenged by the EU court.
+- Some post-pandemic “nomad hotspots” face backlash due to housing inflation, over-tourism and local resentment.
+
+Important distinction:
+- A route can lose legal accessibility while the country remains attractive.
+- A country can remain popular online even as its real legal route becomes much harder.
+
+1.7 Which migration type is growing fastest?
+
+No single global category is perfectly comparable, but the strongest growth signals are:
+
+A. Forced / humanitarian migration
+- Very high and still historically elevated.
+- UNHCR reported 123.2 million forcibly displaced people at end-2024.
+- IDMC reported 83.4 million internally displaced people at end-2024.
+- Conflicts in Ukraine, Sudan, Syria, Afghanistan, Gaza and other regions keep forced displacement central.
+
+B. Temporary labour migration
+- OECD reported more than 2.4 million work permits in 2023, up 16%.
+- Health, care, construction, agriculture, logistics and hospitality are major demand sectors.
+
+C. International student migration
+- International tertiary students have tripled since 2000 to roughly 7 million-plus.
+- Growth is now being capped or rebalanced in Canada, Australia and the UK.
+
+D. Digital nomad / remote-work migration
+- Very fast from a low base after 2020.
+- The U.S. digital nomad population reached about 18.1 million in 2024 according to MBO Partners.
+- More than 40 jurisdictions had some form of digital nomad or remote-work visa by mid-2024; some indexes track 60+ countries depending on definition.
+
+E. Investment migration
+- Growing among high-net-worth people, especially Americans, Chinese, Indians, Russians and politically exposed wealthy groups.
+- But European golden visa / citizenship routes are being restricted, making this segment more complex.
+
+F. Family migration
+- Still the largest or one of the largest legal permanent categories in many OECD countries.
+- OECD 2023 permanent-type flows were strongly driven by family and humanitarian migration.
+
+Conclusion:
+- Fastest by percentage growth: digital nomad/remote-work migration and some investment/second-passport demand.
+- Fastest by humanitarian urgency: forced displacement and asylum.
+- Largest structural categories: family, labour, students and regional migration.

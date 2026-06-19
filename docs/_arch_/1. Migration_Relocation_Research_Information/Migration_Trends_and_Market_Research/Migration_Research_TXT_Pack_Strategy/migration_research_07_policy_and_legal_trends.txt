@@ -1,0 +1,157 @@
+7. LEGAL AND POLITICAL TRENDS
+
+Research date: 16 June 2026
+
+7.1 Countries simplifying or opening migration rules
+
+Many countries are simplifying selectively, not universally.
+
+Examples:
+- Germany: expanded skilled-worker law and Opportunity Card for qualified jobseekers.
+- New Zealand: from 27 January 2025, visitor visas allow remote work for foreign employers/clients, subject to conditions.
+- Japan: introduced a digital nomad visa with high income and insurance requirements.
+- Spain, Italy, Greece, Croatia, Portugal and others: use digital nomad/freelancer/residence routes to attract remote workers, though tax and housing politics differ.
+- UAE: continues to attract investors, founders, skilled workers and remote workers through residence products and low-tax positioning.
+- Saudi Arabia: competing for professionals and investors as part of economic diversification.
+- Canada, Australia and the UK: still have skilled-worker/talent routes, even while tightening student, family or lower-wage routes.
+
+7.2 Countries tightening migration rules
+
+Major tightening examples:
+
+Canada:
+- Permanent resident admissions targets reduced in the 2025-2027 plan: 395,000 in 2025; 380,000 in 2026; 365,000 in 2027.
+- Temporary resident targets introduced, with a goal to reduce temporary residents as a share of population.
+- Study permit caps reduced and extended.
+- 2024 saw a sharp fall in new study permits compared with 2023.
+
+United Kingdom:
+- 2025 White Paper proposed stricter settlement/citizenship path, including extending many settlement timelines from 5 to 10 years, with exceptions for high-skilled contributors.
+- Skilled Worker restrictions moved toward graduate-level roles.
+- Care-sector international recruitment was targeted for restriction.
+- Family/dependent rules and English requirements became tougher.
+
+Australia:
+- Stricter student-visa requirements, including English, financial capacity and visa integrity rules.
+- Higher fees and more scrutiny of low-quality education-to-work pathways.
+
+European Union / Schengen:
+- Increased scrutiny of golden visas, AML risk, citizenship-by-investment and security concerns.
+
+7.3 Golden visa and citizenship-by-investment restrictions
+
+Strong trend: Europe is closing or restricting passive investment routes.
+
+Examples:
+- Spain closed its golden visa in 2025.
+- Portugal removed real-estate investment as an eligible golden visa route; other non-property routes remained.
+- Netherlands ended its investor residence program.
+- UK and Ireland closed investor routes earlier.
+- Malta’s citizenship-by-investment model was ruled incompatible with EU law by the Court of Justice of the EU.
+
+Interpretation:
+- Passive real-estate golden visas are politically weak because they are linked to housing affordability, money laundering and inequality.
+- Future investor migration will likely require more substance: business creation, jobs, innovation, donations, funds or tax residence.
+
+7.4 Countries becoming more attractive to remote workers
+
+Attractive remote-worker destinations combine visa access, tax clarity, lifestyle and infrastructure.
+
+Examples:
+- Spain: digital nomad visa, strong lifestyle appeal, high quality-of-life reputation.
+- Portugal: still attractive, though housing and golden visa changes reduced some appeal.
+- Italy: digital nomad visa and favourable tax regimes for some categories.
+- Greece and Croatia: digital nomad/lifestyle positioning.
+- UAE/Dubai: remote-work and business-friendly environment, low personal tax appeal.
+- Mexico, Costa Rica, Panama, Colombia: affordability, climate, regional appeal.
+- Japan: high-income digital nomad visa; attractive but short and restrictive.
+- New Zealand: remote work allowed on visitor visas applied for after 27 January 2025, increasing flexibility.
+
+7.5 Countries becoming less migrant-friendly
+
+Signals of declining friendliness:
+- Higher salary thresholds.
+- Lower study permit caps.
+- Longer settlement timelines.
+- Restrictions on dependants.
+- Closure of investor routes.
+- Anti-immigration rhetoric.
+- Poor housing affordability.
+- Stricter asylum or irregular migration policies.
+- Lower public tolerance due to housing, healthcare or infrastructure strain.
+
+Countries with visible tightening or social pressure include Canada, the UK, Australia, parts of the EU, and some over-tourism/nomad hotspots.
+
+7.6 Legislative changes that most affect country choice
+
+Most important legal variables:
+- Visa eligibility and processing time.
+- Work rights.
+- Spouse/dependent rights.
+- Student-to-work transition.
+- Permanent residence timeline.
+- Citizenship timeline.
+- Language requirements.
+- Physical-presence requirements.
+- Tax residency rules.
+- Social-security contributions.
+- Banking/AML rules.
+- Housing/rent regulation.
+- Labour-market regulation.
+- Business formation rules.
+- Capital controls and sanctions.
+- Dual citizenship policy.
+
+For users, a country can become unattractive because of a small rule change if that rule blocks the exact pathway they need.
+
+7.7 Can we determine a country’s direction from laws?
+
+Yes, with a structured “country direction index”.
+
+Open/pro-migrant signals:
+- New skilled-worker/talent routes.
+- Lower administrative friction.
+- Faster processing.
+- Clear family reunification.
+- Work rights for spouses.
+- Transparent permanent residence rules.
+- Dual citizenship acceptance.
+- Tax clarity for newcomers.
+- Startup/founder incentives.
+- Remote-work visa or freelancer route.
+
+Closed/restrictive signals:
+- Caps and quotas.
+- Higher salary thresholds.
+- Longer settlement/citizenship timelines.
+- More language tests.
+- Reduced dependants.
+- Closure of student-to-work routes.
+- Restrictions on property/investor visas.
+- Anti-immigration legislation.
+- More deportation/overstay penalties.
+- Harder bank account opening.
+
+Authoritarian/liberal direction signals:
+- Judicial independence.
+- Media freedom.
+- NGO/civil-society restrictions.
+- Emergency powers.
+- Restrictions on protest.
+- Discrimination laws.
+- Internet censorship.
+- Exit controls or military mobilisation risk.
+
+Pro-business/anti-business signals:
+- Company formation time/cost.
+- Tax stability.
+- Labour-market flexibility.
+- Capital controls.
+- Banking openness.
+- Crypto/fintech policy.
+- Founder visa availability.
+- Investor protection.
+- Regulatory predictability.
+
+Platform implication:
+Law tracking should not only list rules. It should detect direction: opening, closing, stable, unstable, or contradictory.

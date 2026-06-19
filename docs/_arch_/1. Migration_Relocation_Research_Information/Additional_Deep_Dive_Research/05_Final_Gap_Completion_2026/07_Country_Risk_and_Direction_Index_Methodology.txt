@@ -1,0 +1,149 @@
+Country Risk and Direction Index Methodology
+
+Purpose
+
+This file defines how to convert scattered country information into a structured country-direction model.
+
+The goal is not to say whether a country is “good” or “bad”. The goal is to measure whether a country is becoming more or less suitable for a specific scenario.
+
+Core concept
+
+A country should be evaluated through two dimensions:
+
+1. Current state — how attractive or risky the country is today.
+2. Direction / drift — whether it is improving, worsening or becoming more uncertain.
+
+Recommended dimensions
+
+| Dimension | Description | Example sources |
+|---|---|---|
+| Migration openness | Ease of entering, staying, renewing, naturalising | Immigration authorities, visa portals, legal updates |
+| Citizenship pathway | Clarity and speed of citizenship route | Nationality law, official guidance, lawyer interpretation |
+| Legal stability | Predictability of rules and institutions | Rule of law indices, official legal changes, WJP |
+| Political direction | Liberalisation vs authoritarianisation, stability vs volatility | V-Dem, Freedom House, EIU, news/legal signals |
+| Business friendliness | Company formation, taxes, bureaucracy, property rights | Tax authorities, World Bank/OECD, Heritage/Fraser, local law |
+| Cost pressure | Inflation, rent pressure, living costs | Numbeo, official inflation data, housing portals |
+| Social acceptance | Attitudes toward migrants, discrimination, integration | Surveys, community reports, hate-crime data, forums |
+| Safety/security | Crime, conflict, unrest, travel risk | Travel advisories, crime stats, Crisis24/Riskline-style sources |
+| Human infrastructure | Healthcare, schools, banking, transport, digital services | Official data, user reports, OECD/UN indicators |
+| Data confidence | How fresh and verifiable the evidence is | Source metadata, last checked date, number of sources |
+
+Signal types
+
+Every update should become a signal:
+
+- Legal signal
+- Policy signal
+- Economic signal
+- Social signal
+- Safety signal
+- Community signal
+- Market signal
+- Search-demand signal
+
+Signal fields
+
+| Field | Description |
+|---|---|
+| signal_id | Unique identifier |
+| country | Country affected |
+| date_detected | Date signal was found |
+| effective_date | Date rule/change takes effect, if known |
+| source_url | Primary source |
+| source_type | Official / media / legal expert / community / data |
+| scenario_affected | Migration / business / investment / family / study / nomad / citizenship |
+| impact_direction | Positive / negative / mixed / uncertain |
+| impact_strength | Low / medium / high / critical |
+| confidence | Low / medium / high |
+| summary | Plain-language summary |
+| original_text_excerpt | Short excerpt, if legally allowed |
+| review_status | Unreviewed / editor-reviewed / expert-reviewed |
+
+Scoring logic
+
+Use two scores:
+
+1. Country Fit Score
+A scenario-specific score for the user.
+
+Example formula:
+
+`Country Fit Score = weighted sum of scenario indicators - weighted risk penalties`
+
+Weights differ by scenario.
+
+Example: fast citizenship user:
+
+- citizenship pathway: 35%
+- residence simplicity: 20%
+- legal stability: 15%
+- cost of living: 10%
+- tax/business environment: 10%
+- community evidence: 10%
+
+Example: entrepreneur:
+
+- business friendliness: 30%
+- tax predictability: 20%
+- banking/company formation: 15%
+- residence pathway: 15%
+- political/legal stability: 15%
+- cost of living: 5%
+
+2. Country Direction Score
+A trend score measuring whether conditions are improving or deteriorating.
+
+Possible output:
+
+- Strongly improving
+- Improving
+- Stable
+- Mixed/uncertain
+- Deteriorating
+- Strongly deteriorating
+
+Explainability rule
+
+Every score must answer:
+
+1. Why did the country receive this score?
+2. Which sources support it?
+3. Which recent changes affected it?
+4. How confident is the system?
+5. What would change the score in the future?
+
+Example direction interpretation
+
+Migration openness: deteriorating
+Evidence pattern:
+
+- higher income requirements;
+- longer processing times;
+- stricter renewal rules;
+- reduced pathways for low-income applicants;
+- anti-immigration political rhetoric;
+- negative recent user cases.
+
+Business friendliness: improving
+Evidence pattern:
+
+- simplified company formation;
+- lower or clearer tax rules;
+- digital government services;
+- startup/talent visa expansion;
+- stronger property-rights indicators;
+- positive founder reports.
+
+Confidence model
+
+| Confidence level | Conditions |
+|---|---|
+| High | Official source + recent date + expert/editor review + corroborating evidence |
+| Medium | Official source or strong secondary source but interpretation uncertain |
+| Low | Community reports only, old information, conflicting evidence |
+
+Product implication
+
+The unique product layer is not the raw data itself. The unique layer is:
+
+`raw source -> structured signal -> scenario impact -> country direction -> explainable user recommendation`

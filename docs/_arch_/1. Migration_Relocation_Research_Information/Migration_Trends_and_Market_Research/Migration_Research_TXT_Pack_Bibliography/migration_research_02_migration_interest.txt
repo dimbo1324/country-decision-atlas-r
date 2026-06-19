@@ -1,0 +1,125 @@
+2. PEOPLE'S INTEREST IN MOVING ABROAD
+Research date: 16 June 2026
+
+2.1 Is the number of people who want to move to another country growing?
+
+Answer: It grew over the 2010s and early 2020s, reached a record level in 2021-2024, then declined slightly in 2025.
+
+Gallup's global migration desire data shows:
+- 2011-2018: global desire to migrate generally ranged around 12-15% of adults.
+- 2021-2024: desire reached about 16%, a record high in Gallup's series.
+- 2025: desire declined to about 15%, the lowest in roughly a decade but still equivalent to about 900 million adults.
+
+Interpretation:
+Interest is structurally high. The 2025 decline should not be read as a collapse in migration interest. It means the global desire measure cooled from a record high while remaining very large.
+
+2.2 In which countries or regions do the most people want to emigrate?
+
+By region, Gallup consistently finds the strongest desire to migrate in:
+- Sub-Saharan Africa: highest regional desire, about 33% in 2025.
+- Latin America and the Caribbean: about 25% in 2025, down from a peak around 34% in 2021-2022.
+- Middle East and North Africa: variable by country, often affected by conflict, youth unemployment, governance, and economic stress.
+
+Country examples from Gallup reporting:
+- In 2023, Ecuador, Honduras, and the Dominican Republic were around or just under 50% of adults wanting to move permanently abroad.
+- In 2025, Latin American migration desire eased in several countries; for example, Gallup reported lower desire in Honduras and El Salvador than during earlier peaks.
+
+Interpretation:
+High desire does not automatically mean high actual migration. Conversion depends on money, documents, family networks, destination rules, risk tolerance, and available routes.
+
+2.3 Which countries are most often named as desired destinations?
+
+Gallup 2025 desired-destination pattern:
+- United States: still the most desired destination, but its share among would-be migrants fell to about 15%, the lowest in almost two decades.
+- Canada: about 9%, second place.
+- Other recurring desired destinations: United Kingdom, Germany, Australia, Spain, France, Japan, Italy, and Saudi Arabia, generally in low single digits globally.
+
+Gallup's Potential Net Migration Index also shows strong theoretical population gains for high-income destinations such as Canada, Australia/New Zealand, Europe, and parts of the Gulf if everyone who wanted to move could do so.
+
+Interpretation:
+The US remains the largest global magnet, but its advantage is weakening. Canada has a stronger relative appeal in Gallup's hypothetical migration measures, especially for educated and younger potential migrants.
+
+2.4 Which age groups are most interested in migration?
+
+Younger adults are consistently more interested in migration than older adults.
+
+Common pattern across Gallup and migration-intent research:
+- Youth and young adults: highest desire to migrate, especially where unemployment, political frustration, or limited career mobility are high.
+- Students and early-career professionals: high interest because study is a legal route into long-term work and residence.
+- Working-age skilled professionals: high interest when income gaps, political risk, career ceiling, or passport limitations are strong.
+- Families: migrate more selectively, with stronger emphasis on safety, healthcare, schools, housing, and long-term citizenship.
+- Retirees: smaller but commercially important segment, driven by cost of living, healthcare, climate, safety, and lifestyle.
+
+Important recent signal:
+Gallup reported that 40% of US women aged 15-44 said in 2025 that they would like to move permanently abroad if they could. This is a striking example of how politics, quality of life, and social concerns can affect migration desire in a wealthy country.
+
+2.5 Which professions and social groups most often consider relocation?
+
+High-interest groups:
+- IT and software professionals.
+- Engineers.
+- Healthcare workers, especially doctors and nurses.
+- Researchers, academics, and PhD candidates.
+- Students.
+- Startup founders and entrepreneurs.
+- Skilled trades workers in shortage occupations.
+- Finance, product, design, marketing, and remote-work professionals.
+- High-net-worth individuals seeking residence/citizenship diversification.
+- Families with children seeking safety, schools, healthcare, and passport options.
+- Politically exposed or politically dissatisfied individuals.
+
+Why these groups matter:
+They have either high mobility potential, high economic value for destination countries, or strong willingness to pay for risk reduction.
+
+2.6 Is interest growing among highly skilled specialists?
+
+Answer: Yes, structurally. Highly skilled migration is one of the main areas where destination countries actively compete.
+
+Evidence and signals:
+- OECD maintains a Talent Attractiveness framework for highly educated workers, entrepreneurs, university students, and startup founders.
+- Many countries have added or expanded skilled-worker routes, points-based systems, shortage occupation lists, tech/talent visas, and job-search permits.
+- Germany introduced the Opportunity Card in 2024 to attract skilled workers and jobseekers.
+- Canada, Australia, Germany, the UK, New Zealand, and several EU countries continue to prioritise skilled workers even while tightening other migration categories.
+
+Important distinction:
+Skilled migration interest is rising, but route availability differs sharply by profession, language, credential recognition, salary, age, and employer sponsorship.
+
+2.7 Is interest growing among entrepreneurs and investors?
+
+Answer: Yes, but the market is changing.
+
+Entrepreneur/startup migration:
+- Startup visas and founder routes are used by countries to attract innovation, company formation, and high-skilled employment.
+- OECD rankings show active competition for startup founders.
+- Countries with strong startup ecosystems and favourable founder routes include Canada, the United States, France, the United Kingdom, Ireland, Sweden, Switzerland, the Netherlands, Estonia, Portugal, Singapore, and others depending on the metric.
+
+Investor migration:
+- Demand for residence and citizenship diversification remains strong among wealthy and upper-middle-income users.
+- Henley & Partners reported strong growth in investment-migration enquiries/applications, especially from Americans and other politically or economically concerned clients.
+- However, golden visa and citizenship-by-investment programmes face more scrutiny because of housing pressure, sanctions, tax transparency, money laundering concerns, and EU security concerns.
+
+Trend:
+Investor migration is not disappearing; it is moving from simple real-estate residence products toward more regulated, fund-based, business, innovation, donation, and physical-presence-sensitive models.
+
+Implication for a platform
+Interest data should be segmented by:
+- Country of origin.
+- Age.
+- Profession.
+- Budget.
+- Family status.
+- Language.
+- Risk motive: money, safety, politics, passport, tax, education, healthcare, climate, business.
+- Timeline: urgent, 3 months, 12 months, 3 years.
+
+The same destination can be attractive for one segment and bad for another. Example: Portugal may be strong for lifestyle and EU residence, weaker for high local salaries; Germany may be strong for skilled employment, weaker for bureaucracy and language; UAE may be strong for tax and business, weaker for naturalisation path.
+
+Key sources
+- Gallup, Desire to Migrate Remains at Record High: https://news.gallup.com/poll/652748/desire-migrate-remains-record-high.aspx
+- Gallup, Desire to Migrate Drops to New Low: https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+- Gallup, Migration Would Reshape Populations and Labor Forces: https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+- OECD Talent Attractiveness 2023: https://www.oecd.org/en/data/tools/talent-attractiveness-2023.html
+- OECD, What is the best country for global talents in the OECD?: https://www.oecd.org/content/dam/oecd/en/publications/reports/2023/03/what-is-the-best-country-for-global-talents-in-the-oecd_3496c15f/5186ab2d-en.pdf
+- Germany Opportunity Card: https://digital.diplo.de/chancenkarte
+- Make it in Germany, Skilled Immigration Act / Opportunity Card: https://www.make-it-in-germany.com/en/service/newsletter-juli-2025
+- Henley Investment Migration Programmes Report 2025: https://www.henleyglobal.com/newsroom/press-releases/investment-migration-programs-report-2025

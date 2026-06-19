@@ -1,0 +1,123 @@
+1. GENERAL MIGRATION DYNAMICS
+Research date: 16 June 2026
+
+1.1 Is the total number of international migrants rising or falling?
+
+Answer: Rising in absolute terms.
+
+Key data:
+- 1990: approximately 154 million international migrants.
+- 2000: approximately 173 million.
+- 2010: approximately 220-221 million.
+- 2015: approximately 249 million.
+- 2020: approximately 281 million.
+- 2024: approximately 304 million.
+
+Interpretation:
+The global migrant stock has almost doubled since 1990. The increase over the last 10-20 years is substantial in absolute numbers, but the migrant share of the world population remains relatively small: around 3.7% in 2024. This means migration is a large market, but most people still live in their country of birth.
+
+Sources: UN DESA International Migrant Stock 2024; Migration Data Portal; IOM World Migration Report. [S1][S2][S4]
+
+1.2 Which world regions show the strongest migration growth?
+
+Answer: By migrant stock, Europe, Northern America, and Northern Africa/Western Asia dominate. By migrant share of population, Oceania, Northern America, and Europe stand out.
+
+2024 host-region stock:
+- Europe: about 94 million migrants.
+- Northern America: about 61 million.
+- Northern Africa and Western Asia: about 54 million.
+
+Growth since 1990:
+- Europe recorded the largest absolute increase, around +43 million migrants.
+- Northern America added around +34 million migrants since 1990, although its growth rate slowed after 2010 and especially after 2020.
+- Northern Africa and Western Asia grew strongly because of Gulf labour migration and displacement-related flows.
+
+Migrant share of population:
+- Oceania: around 21%.
+- Northern America: around 16%.
+- Europe: around 13%.
+- Central/Southern Asia and East/Southeast Asia: below 1%.
+
+Sources: UN DESA International Migrant Stock 2024. [S1]
+
+1.3 From which countries do people most often leave?
+
+Answer: India is the largest origin country by diaspora stock.
+
+Top origin countries by migrant stock include:
+1. India: about 18.5 million people living abroad.
+2. China: about 11.7 million.
+3. Mexico: about 11.6 million.
+4. Ukraine: about 9.8 million.
+5. Russian Federation: about 9.1 million.
+
+Other major origin countries often include Syria, Bangladesh, Pakistan, Afghanistan, and the Philippines, depending on exact year and definition.
+
+Interpretation:
+Large origin countries can be large because of population size, labour corridors, conflict, colonial/language ties, education pathways, and established diaspora networks. Ukraine's position rose sharply after the 2022 full-scale Russian invasion.
+
+Sources: Migration Policy Institute; UN DESA. [S3][S1]
+
+1.4 To which countries do people most often move?
+
+Answer: The United States is by far the largest destination country by migrant stock.
+
+Top destination countries in 2024:
+1. United States: 52.4 million.
+2. Germany: 16.8 million.
+3. Saudi Arabia: 13.7 million.
+4. United Kingdom: 11.8 million.
+5. France: 9.2 million.
+6. Spain: 8.9 million.
+7. Canada: 8.8 million.
+8. United Arab Emirates: 8.2 million.
+9. Australia: 8.1 million.
+10. Russian Federation: 7.6 million.
+11. Türkiye: 7.1 million.
+12. Italy: 6.6 million.
+
+Sources: UN DESA International Migrant Stock 2024. [S1]
+
+1.5 Which migration routes became more popular in the last five years?
+
+Answer: The most important newer or accelerating routes include conflict-driven, labour-driven, student-driven, and remote-work routes.
+
+Major examples:
+- Ukraine to Europe: especially Poland, Germany, Czechia, and other EU countries after 2022.
+- Venezuela and other Latin American origins to the United States, Spain, Colombia, Chile, and other destinations.
+- Central America and Caribbean origins to the United States and Mexico, including asylum-related flows.
+- Central/Southern Asia to the Gulf, Europe, Canada, the UK, and Australia through work and study channels.
+- Skilled workers to Germany and other EU countries through Blue Card-style and shortage-occupation routes.
+- Remote workers and digital nomads to Portugal, Spain, Italy, Croatia, Estonia, Greece, Thailand, Japan, the UAE, Colombia, Mexico, and similar destinations.
+- High-net-worth individuals to the UAE, the United States, Italy, Switzerland, Singapore, and selected tax/residence-friendly jurisdictions.
+
+Evidence:
+UN DESA identifies major interregional corridors such as Latin America/Caribbean to Northern America, Central/Southern Asia to Northern Africa/Western Asia, and Northern Africa/Western Asia to Europe. OECD data shows historically high permanent-type immigration in 2023 and still-high flows in 2024. Digital-nomad visa programs spread rapidly after 2020. [S1][S5][S14]
+
+1.6 Which directions are losing popularity?
+
+Answer: Some destinations remain large but are losing marginal attractiveness because of policy tightening, housing costs, backlogs, or reduced public perception.
+
+Examples:
+- United States: still the top desired destination, but Gallup reports its share among preferred destinations fell to a trend low of 15% in 2025.
+- Canada: still highly attractive, but student and temporary-resident caps, housing pressure, and reduced permanent-resident targets may reduce inflows or interest among some groups.
+- United Kingdom: tightening after the 2024-2025 rule changes affected students' dependants, salary thresholds, social-care recruitment, and settlement expectations.
+- Australia: tighter student-visa conditions and higher English/financial requirements reduce low-confidence student pathways.
+- EU golden-visa routes: Spain ended its real-estate golden visa; Malta's citizenship-by-investment scheme was ruled illegal by the EU Court of Justice; Portugal and Greece have also tightened or redirected investment routes.
+- Some classic “cheap nomad” destinations may lose appeal when rents, visa runs, or tax enforcement become stricter.
+
+Sources: Gallup; Government of Canada; UK Government; UK House of Commons Library; Australian policy updates; Spain/Malta reports. [S11][S17][S18][S19][S22][S23]
+
+1.7 Which type of migration is growing fastest: labour, study, family, investment, forced, or digital nomad?
+
+Answer: It depends on the measurement. Forced migration and digital-nomad migration are the fastest-growing in recent salience; labour migration remains the largest; family migration is the largest permanent-admission category in the OECD.
+
+By category:
+- Labour migration: ILO estimated 167.7 million international migrant workers in 2022. It is the largest functional category.
+- Family migration: OECD reports family migration as the leading permanent migration channel in the OECD, representing roughly 44% of permanent flows in 2024.
+- Humanitarian/forced migration: this category rose sharply because of Ukraine, Syria, Afghanistan, Sudan, Venezuela, and other crises. UN DESA estimates people in international protection categories reached around 51.7 million by mid-2024.
+- Student migration: long-term growth is strong; UNESCO says internationally mobile higher-education students tripled since 2000 to about 6.9 million. But OECD-area student inflows recently softened after policy tightening.
+- Investment migration: demand exists among high-net-worth individuals, but EU-style golden visas/passports are being restricted.
+- Digital nomad migration: fastest by percentage in lifestyle terms. MBO estimates U.S. digital nomads increased 153% since 2019, while EY counted more than 48 jurisdictions with remote-work visa schemes by early 2026. However, digital nomads are not always counted as migrants in official statistics.
+
+Sources: ILO; OECD; UN DESA; UNESCO; MBO Partners; EY. [S6][S5][S1][S7][S13][S14]

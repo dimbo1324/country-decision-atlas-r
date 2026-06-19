@@ -1,0 +1,132 @@
+Prepared: 16 June 2026
+Language: English
+Scope: Research brief for a migration-country-selection / relocation-intelligence platform.
+Note: This is market and policy research, not legal, tax, or immigration advice. Always verify eligibility against the current official law and use licensed professionals where required.
+Source IDs such as [S1] refer to 08_source_map_and_research_notes.txt.
+
+01_GLOBAL_MIGRATION_DYNAMICS
+
+1. Is the total number of international migrants in the world growing or declining?
+Answer: growing over the long term.
+
+UN DESA estimates:
+- 1990: 153.9 million international migrants.
+- 2010: 221.0 million.
+- 2020: about 275 million.
+- 2024: 304.0 million.
+
+This means:
+- 1990 to 2024: approximately +150.1 million, or +97.5%.
+- 2010 to 2024: approximately +83.0 million, or +37.6%.
+- 2020 to 2024: approximately +29 million, or about +10.5%.
+
+The share of migrants in the world population also increased, from 2.9% in 1990 to 3.7% in 2024. The important interpretation is that migration is growing, but the world is not becoming “mostly migrant”; international migrants are still under 4% of the global population. [S1][S3]
+
+2. Which regions show the strongest growth?
+
+Using UN DESA migrant stock data, the largest absolute growth since 1990 appears in the following broad destination regions:
+
+Broad region / group | 1990 | 2024 | Change | Interpretation
+World | 153.9m | 304.0m | +150.1m | Long-term structural growth
+Europe | 51.5m | 94.1m | +42.6m | Strong growth, with major impact from Ukraine after 2022
+Northern America | about 27.5m | 61.2m | +33.7m | Still a core receiving region, slower growth after 2020
+Asia | 46.7m | 92.2m | +45.5m | Includes Gulf/Western Asia labour corridors and Asian regional migration
+Latin America and Caribbean | 7.3m | 17.5m | +10.3m | Strong growth from Venezuelan and regional mobility
+Oceania | about 4.8m | 9.9m | +5.1m | High migrant share in Australia/New Zealand
+Sub-Saharan Africa | 13.8m | 24.3m | +10.5m | Regional mobility plus displacement
+Northern Africa and Western Asia | 16.9m | 54.1m | +37.2m | One of the strongest relative-growth zones; Gulf labour migration is central
+
+In absolute numbers, Asia, Europe, Northern Africa/Western Asia, and Northern America matter most. In relative terms, Western Asia/Gulf-linked migration and Eastern/Southeastern Asia grew very strongly from lower bases. [S1]
+
+3. From which countries do people most often leave?
+
+Top origin countries vary slightly depending on whether the source uses country of birth, citizenship, mid-year stock, and how it handles refugees. The most consistently visible top origin countries include:
+- India: about 18.5 million emigrants.
+- China: about 11.7 million.
+- Mexico: about 11.6 million.
+- Ukraine: roughly around 10 million in recent estimates, strongly affected by war displacement.
+- Russian Federation: around 9 million.
+
+Other major origin countries often include Syria, Bangladesh, Pakistan, Venezuela, the Philippines, Afghanistan, and other countries with large diasporas, labour migration, or displacement. [S1][S3][S4]
+
+4. Which countries receive the most migrants?
+
+UN DESA 2024 top destination countries by international migrant stock:
+1. United States: 52.4 million.
+2. Germany: 16.8 million.
+3. Saudi Arabia: 13.7 million.
+4. United Kingdom: 11.8 million.
+5. France: 9.2 million.
+6. Spain: 8.9 million.
+7. Canada: 8.8 million.
+8. United Arab Emirates: 8.2 million.
+9. Australia: 8.1 million.
+10. Russian Federation: 7.6 million.
+11. Türkiye: 7.1 million.
+12. Italy: 6.6 million.
+
+Interpretation: the receiving-country map combines several different models: classic settler countries, European labour/family/humanitarian destinations, Gulf labour-importing economies, and countries affected by regional displacement. [S1]
+
+5. Which migration directions became more popular in the last five years?
+
+The strongest recent-growth directions are:
+
+A. Ukraine to Europe
+Russia’s full-scale invasion of Ukraine transformed European migration and displacement figures. UN DESA notes Europe’s growth since 2020 is heavily affected by Ukrainian refugees. [S1]
+
+B. Venezuelan mobility in the Americas
+Latin America and the Caribbean experienced strong growth in migrant stock, with Colombia, Peru, Chile, Ecuador, and other countries playing major roles as host and transit countries. [S1][S9]
+
+C. Afghanistan, Syria, Sudan, and other forced-displacement routes
+Forced displacement remains a major migration driver. UN DESA counted 51.7 million forcibly displaced people across borders in mid-2024; UNHCR recorded 117.8 million forcibly displaced people overall at the end of 2025. [S1][S10]
+
+D. Central/Southern Asia to Northern Africa/Western Asia
+This includes labour migration into Gulf economies and nearby markets. The corridor remains one of the largest global interregional corridors. [S1]
+
+E. Latin America and Caribbean to Northern America
+This remains the largest interregional corridor in UN DESA’s 2024 summary: about 27 million migrants from Latin America and the Caribbean living in Northern America. [S1]
+
+F. Remote-worker and digital-nomad routes
+Search and policy signals show increased interest in Spain, Portugal, Italy, Japan, South Korea, Croatia, Greece, Brazil, Colombia, Malaysia, UAE, and other remote-work destinations. However, official migration-stock data does not yet isolate “digital nomads” well. [S28][S29][S43][S44][S45]
+
+6. Which destinations are losing popularity?
+
+The answer depends on whether “popularity” means search interest, actual inflow, visa approvals, or public sentiment.
+
+Clear cooling signals:
+- OECD permanent migration declined 4% in 2024, though it remained historically high. [S7]
+- Permanent labour migration to OECD countries fell 21% in 2024. [S7]
+- New international tertiary-student permits in top receiving OECD destinations fell sharply in 2024: United States -12%, United Kingdom -14%, Canada -39%, Australia -22%. [S7]
+- Canada is actively reducing temporary-resident arrivals and stabilising permanent admissions. [S36][S37]
+- The UK tightened skilled-worker, care-worker, and family migration rules. [S39]
+- Spain closed its Golden Visa programme in April 2025. [S46]
+- The United States remains the top desired destination in Gallup polling, but its share among would-be migrants fell to 15% in 2025, the lowest level in nearly two decades. [S14]
+
+Interpretation: Canada, the UK, Australia, New Zealand, Portugal, Spain, and the United States are not necessarily “unpopular.” Rather, they are becoming more constrained, expensive, politicised, or administratively difficult.
+
+7. Which type of migration is growing fastest?
+
+By official evidence:
+
+A. Forced and humanitarian migration
+This has been one of the fastest-growing migration categories over the last decade. UN DESA estimated that refugees, asylum seekers, and others needing international protection accounted for one fifth of the increase in international migrants from 2010 to 2024. OECD humanitarian permanent migration rose 23% in 2024. [S1][S7]
+
+B. Asylum applications
+OECD countries received about 3 million new asylum applications in 2024, up 13%. This is not a direct measure of accepted migration, but it is a strong demand signal. [S7]
+
+C. Temporary labour migration
+OECD temporary foreign-worker permits/work authorisations were about 2.3 million in 2024. They were roughly unchanged versus 2023, but 26% higher than 2019 and 51% higher than 2015. [S7]
+
+D. Family migration
+Family remains the largest component of permanent migration in OECD countries. It may not be the fastest-growing category in a single year, but it is structurally the biggest. [S7]
+
+E. Student migration
+Student migration grew strongly in the pre-2024 period, but 2024 data shows a sharp correction in major receiving countries. This category is policy-sensitive because governments are using student caps, stricter financial requirements, and dependent restrictions to manage migration totals. [S7]
+
+F. Investment migration
+Investment migration is small in people-count terms but high in willingness-to-pay. It is politically sensitive and volatile. Some routes are closing or narrowing, especially property-linked golden visas. [S46][S51]
+
+G. Digital-nomad migration
+Digital-nomad migration is growing in policy supply and online attention, but the actual population is harder to measure. It is better treated as an emerging premium segment, not a mass migration category. [S28][S29]
+
+Bottom line: the fastest measurable official growth is in forced/humanitarian and asylum-related categories; the largest permanent category is family; the most commercially interesting emerging category is remote-worker/digital-nomad/talent migration.

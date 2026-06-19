@@ -1,0 +1,138 @@
+3. REASONS BEHIND MIGRATION INTEREST
+Research date: 16 June 2026
+
+3.1 Why do people most often want to move abroad?
+
+Answer: The most common reasons are economic opportunity, safety, political stability, family, education, healthcare, quality of life, legal status/passport access, and climate/lifestyle.
+
+Core categories:
+1. Work and income: higher wages, better jobs, lower unemployment, career growth.
+2. Safety: war, crime, persecution, domestic violence, state repression.
+3. Political conditions: authoritarianism, instability, elections, rights restrictions.
+4. Education: university access, children's schooling, language and international credentials.
+5. Family: reunification, marriage, dependants, family support networks.
+6. Healthcare: better medical systems, insurance access, disability/eldercare support.
+7. Quality of life: infrastructure, clean environment, transport, housing, work-life balance.
+8. Passport/citizenship: mobility, legal security, second-passport optionality.
+9. Taxes/financial freedom: especially for founders, investors, and remote workers.
+10. Climate/lifestyle: weather, pollution, heat, disasters, or desire for a specific lifestyle.
+
+Sources: European Parliament; OECD; Gallup; World Bank; UNHCR; IDMC. [S26][S5][S9][S24][S8][S25]
+
+3.2 How strongly does political instability affect migration interest?
+
+Answer: Strongly, especially when instability threatens safety, rights, income, or future predictability.
+
+Evidence:
+- Ukraine, Syria, Afghanistan, Sudan, and Venezuela show that political conflict and state crisis can rapidly transform migration flows.
+- Gallup found that Lebanon's desire to emigrate rose from 26% in 2018 to 63% in 2021 during severe economic and political crisis.
+- After the 2024 U.S. election, public search data showed very large spikes in searches related to moving abroad, especially to Canada, Australia, and other English-speaking destinations.
+- Gallup reported a sharp rise in desire to leave among U.S. women aged 15-44, with political attitudes and leadership approval connected to this trend.
+
+Platform implication:
+A platform should track political events as early signals, but distinguish temporary panic-search spikes from actual visa-qualified relocation demand.
+
+Sources: UN DESA; Gallup; Sky News; UNHCR. [S1][S10][S11][S28][S8]
+
+3.3 How strongly do economic crises affect migration?
+
+Answer: Strongly, but with a delay and with unequal ability to move.
+
+Mechanism:
+- Inflation reduces real income.
+- Unemployment pushes job search abroad.
+- Currency collapse increases desire to earn in stronger currencies.
+- Public-service decline pushes families to consider better schools, healthcare, and safety.
+- But the poorest people may want to move while lacking the money or documents to do so.
+
+Examples:
+- Lebanon's migration desire rose dramatically during economic crisis.
+- Latin America/Caribbean has had high migration desire linked to economic insecurity, crime, and political instability.
+- Labour migration corridors from lower-wage to higher-wage regions remain structurally strong.
+
+Sources: Gallup; OECD; ILO; European Parliament. [S10][S9][S5][S6][S26]
+
+3.4 How important are safety and crime levels in choosing a country?
+
+Answer: Very important, especially for families, women, older migrants, high-net-worth individuals, and people leaving violence or repression.
+
+Decision factors:
+- Violent crime and personal safety.
+- War and terrorism risk.
+- Police reliability and corruption.
+- Gender safety and minority safety.
+- School safety and child protection.
+- Political rights and rule of law.
+
+Data challenge:
+Safety is hard to summarise with one number. Numbeo provides crowd-sourced safety/crime perceptions, but official crime statistics, homicide rates, terrorism risk, and qualitative minority-safety data should be combined for serious decisions.
+
+Sources: UNHCR; IDMC; Numbeo; European Parliament. [S8][S25][S33][S26]
+
+3.5 How important are taxes and financial freedom?
+
+Answer: Crucial for entrepreneurs, investors, remote workers, crypto/finance workers, and high-income professionals; secondary for refugees and many labour migrants.
+
+Common tax questions:
+- When do I become a tax resident?
+- Will I be taxed on worldwide income?
+- Is there a non-dom or special expat regime?
+- How are dividends, capital gains, crypto, foreign companies, and property taxed?
+- Does the country have double-taxation treaties?
+- Can I open bank accounts and receive international income?
+
+Platform implication:
+Tax is a major monetisable layer because generic migration sites usually handle it poorly. A country recommendation without tax-residency logic is incomplete for high-income users.
+
+Sources: Henley & Partners; Fragomen; government tax/immigration pages should be used per country. [S30][S37]
+
+3.6 How important is a second passport or citizenship?
+
+Answer: Important for high-net-worth individuals, entrepreneurs, people from weak-passport countries, politically exposed people, and families seeking long-term security.
+
+Main routes:
+- Naturalisation after residence.
+- Citizenship by descent/ancestry.
+- Citizenship by marriage.
+- Citizenship by investment, mostly outside the EU or under heavy scrutiny.
+- Special talent or contribution pathways.
+
+Trend:
+Interest in second passports remains high, but EU-style citizenship-by-investment and real-estate golden visas are under pressure. Spain ended its real-estate golden visa and Malta's golden-passport scheme was ruled illegal by the EU's top court.
+
+Sources: Henley & Partners; Spain/Malta reports. [S30][S22][S23]
+
+3.7 How important are healthcare, education, and quality of life for family migration?
+
+Answer: Very important and often decisive.
+
+Family decision factors:
+- School language and curriculum.
+- Public/private school cost and availability.
+- Childcare costs.
+- Healthcare access for dependants.
+- Maternity/paternity benefits.
+- Safety and bullying/discrimination risk.
+- Housing size and neighbourhood quality.
+- Work rights for spouses.
+- Path to permanent residence and citizenship for children.
+
+Evidence:
+Family migration is the largest permanent-migration category in OECD data. Education-driven migration is also large: UNESCO reports around 6.9 million internationally mobile higher-education students.
+
+Sources: OECD; UNESCO. [S5][S7]
+
+3.8 How much do climate and ecology influence country choice?
+
+Answer: Climate already drives displacement, mostly internally, and increasingly affects long-term relocation and lifestyle decisions.
+
+Evidence:
+- World Bank Groundswell estimates that up to 216 million people could become internal climate migrants by 2050 across six regions without strong action.
+- IDMC reports that disasters triggered tens of millions of internal displacements in 2024, overwhelmingly weather-related.
+- Climate interacts with conflict, food security, poverty, housing, and health; it rarely acts as a single isolated cause.
+- Among lifestyle migrants and digital nomads, climate/weather also affects destination choice: mild winters, clean air, coastal access, heat risk, and disaster exposure.
+
+Platform implication:
+Include a climate-risk layer, but separate “climate displacement risk” from “lifestyle climate preference.”
+
+Sources: World Bank; IDMC; UNHCR. [S24][S25][S8]

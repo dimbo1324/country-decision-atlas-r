@@ -1,0 +1,70 @@
+10. Sources and Methodology
+
+Methodology
+This research pack uses a mixed evidence approach:
+1. Official statistics: UN DESA, IOM, OECD, UNHCR, ILO, UNESCO, national governments.
+2. Survey data: Gallup World Poll and related Gallup migration indexes.
+3. Policy evidence: government and OECD immigration policy summaries, UK/Canada/Australia/NZ/EU sources.
+4. Market evidence: relocation services, global mobility software and immigration services market estimates.
+5. Platform/behavioural evidence: migration communities, expat platforms, digital nomad platforms and academic research on migrant information seeking.
+6. Search-interest evidence: public Google Trends references and Google Trends API announcement. Exact keyword time series should be collected separately using the API or SEO tools.
+
+Limitations
+- International migrant stock is not the same as annual migration flow.
+- Migration desire is not the same as concrete migration intent.
+- Forced displacement and voluntary migration must be interpreted separately.
+- Search trends are normalised, not absolute volume.
+- Telegram/Facebook/WhatsApp community counts are not consistently auditable without platform/API access.
+- Market-size reports use different definitions; treat them as directional evidence, not exact truth.
+- Migration law changes frequently; all legal facts need ongoing verification before user-facing recommendations.
+
+Full source list
+- UN_DESA_2024: United Nations DESA, International Migrant Stock 2024: Key facts and figures, https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf
+- UN_DESA_DATA: United Nations DESA, International Migrant Stock dataset page, https://www.un.org/development/desa/pd/content/international-migrant-stock
+- Migration_Data_Portal_Stocks: Migration Data Portal, International migrant stocks overview, https://www.migrationdataportal.org/themes/international-migrant-stocks-overview
+- IOM_WMR_2026: IOM, World Migration Report 2026, https://publications.iom.int/books/world-migration-report-2026
+- OECD_Migration_2025: OECD, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd.html
+- OECD_Recent_Flows_2025: OECD, Recent developments in international migration movements, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-international-migration-movements-and-labour-market-inclusion-of-immigrants_203de29e.html
+- OECD_Policy_2025: OECD, Recent developments in migration policy, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-migration-policy_e3826f20.html
+- UNHCR_2024: UNHCR, Global Trends report 2024, https://www.unhcr.org/global-trends-report-2024
+- UNHCR_2025_AP: AP, Nearly 118 million people were displaced by conflict and persecution last year, UN says, https://apnews.com/article/4dbcddd571b1ad2de8fadff609fec393
+- UNHCR_Climate_2025: UNHCR, Extreme weather driving repeated displacement, 2025, https://www.unhcr.org/news/press-releases/unhcr-report-reveals-extreme-weather-driving-repeated-displacement-among
+- IDMC_GRID_2025: IDMC, 2025 Global Report on Internal Displacement, https://www.internal-displacement.org/global-report/grid2025/
+- WorldBank_Groundswell: World Bank, Groundswell: Acting on Internal Climate Migration, https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change
+- Gallup_2024_Record: Gallup, Desire to Migrate Remains at Record High, https://news.gallup.com/poll/652748/desire-migrate-remains-record-high.aspx
+- Gallup_2026_US_Low: Gallup, Desire to Move Permanently to U.S. at New Low, https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+- Gallup_2026_PNMI: Gallup, How Migration Could Reshape Populations and Labor Forces, https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+- Axios_Women_US: Axios, Record share of women say they want to leave U.S. for good, https://www.axios.com/2025/11/13/trump-abortion-dobbs-women-immigration
+- UNESCO_2026_Students: UNESCO, Number of students in higher education more than doubled in 20 years, https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- OECD_Student_2025: OECD, What are the key trends in international student mobility?, https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/03/what-are-the-key-trends-in-international-student-mobility_495dcfac/2a423a76-en.pdf
+- OECD_EAG_Students: OECD, Education at a Glance 2025: international student mobility section, https://www.oecd.org/en/publications/education-at-a-glance-2025_1c0d9c79-en/full-report/how-do-student-profiles-study-choices-and-mobility-trends-shape-tertiary-education_97e1e2bd.html
+- ICEF_2025_Student_Shift: ICEF Monitor, Search and enrolment data foreshadows international enrolment trends for 2026, https://monitor.icef.com/2025/12/search-and-enrolment-data-foreshadows-international-enrolment-trends-for-2026/
+- ILO_Migrant_Workers: ILO, Global estimates on international migrants in the labour force, https://www.ilo.org/publications/major-publications/ilo-global-estimates-international-migrants-labour-force
+- OECD_DNV: OECD, Should OECD countries develop new Digital Nomad Visas?, https://www.oecd.org/en/publications/should-oecd-countries-develop-new-digital-nomad-visas_4d425e15-en.html
+- MBO_Digital_Nomads: MBO Partners, 2025 Digital Nomads Trends Report, https://www.mbopartners.com/state-of-independence/digital-nomads/
+- Henley_2025: Henley & Partners, Investment Migration Programs Report 2025 press release, https://www.henleyglobal.com/newsroom/press-releases/investment-migration-programs-report-2025
+- Guardian_Malta_Golden: The Guardian, Malta's golden passport scheme ruled illegal by EU top court, https://www.theguardian.com/world/2025/apr/29/malta-golden-passport-scheme-ruled-to-be-by-eu-top-court
+- Canada_2025_Levels: Government of Canada, 2025-2027 Immigration Levels Plan, https://www.canada.ca/en/immigration-refugees-citizenship/news/2024/10/20252027-immigration-levels-plan.html
+- Canada_2026_Levels: Government of Canada, Canada immigration levels, https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/corporate-initiatives/levels.html
+- UK_Parliament_2026: UK Parliament Commons Library, Changes to UK visa and settlement rules after the 2025 White Paper, https://commonslibrary.parliament.uk/research-briefings/cbp-10267/
+- UK_ONS_2025: UK ONS, Long-term international migration, provisional: year ending December 2025, https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/internationalmigration/bulletins/longterminternationalmigrationprovisional/yearendingdecember2025
+- Australia_Visa_Hopping: Australian Government, Ending visa hopping in the migration system, https://minister.homeaffairs.gov.au/ClareONeil/Pages/ending-visa-hopping-migration-system.aspx
+- NZ_Student_2025: Immigration New Zealand, Upcoming changes to student visa work rights, https://www.immigration.govt.nz/about-us/news-centre/upcoming-changes-to-student-visa-work-rights/
+- EU_Pact_Reuters: Reuters, EU overhaul to toughen migration rules takes effect, https://www.reuters.com/world/eu-overhaul-toughen-migration-rules-takes-effect-though-doubts-remain-about-2026-06-12/
+- Fragomen_APAC_2025: Fragomen, Rise of highly skilled visa and digital nomad visa options in APAC, https://www.fragomen.com/insights/a-new-beginning-the-rise-of-highly-skilled-visa-and-digital-nomad-visa-options-in-apac.html
+- ExpatNetwork_GTrends: Expat Network, Digital Nomad Visa searches skyrocket, https://expatnetwork.com/digital-nomad-visa-searches-skyrocket-1135-demand-hits-an-all-time-high-worldwide/
+- Google_Trends_API: Google Search Central, Introducing the Google Trends API alpha, https://developers.google.com/search/blog/2025/07/trends-api
+- OutRush_2025: OutRush / Stanford CDDRL, Mobility, Integration, and the Dynamics of Russian Emigration 2022-2024, https://cddrl.fsi.stanford.edu/publication/move-mobility-integration-and-dynamics-russian-emigration-2022-2024
+- EU_Disinformation_2025: European Commission/OpenEU, Mis- and disinformation on migration in Europe, https://op.europa.eu/en/publication-detail/-/publication/90d422c3-3133-11f0-8a44-01aa75ed71a1/language-en
+- Migration_Info_Seeking_2024: Zhang and Gao, Assisting International Migrants with Everyday Information Seeking, arXiv, https://arxiv.org/abs/2403.04096
+- InsightAce_Relocation: InsightAce Analytic, Expat Relocation Service Market, https://www.insightaceanalytic.com/report/expat-relocation-service-market/3048
+- GMI_Cross_Border: Global Market Insights, Cross-Border Workforce & Migration Solutions Market, https://www.gminsights.com/industry-analysis/cross-border-workforce-and-migration-solutions-market
+- Mordor_Global_Mobility: Mordor Intelligence, Mobility and Relocation Management Software Market, https://www.mordorintelligence.com/industry-reports/mobility-and-relocation-management-software-market
+- Netherlands_Lawyer_Fees: Adam & Wolf Immigration Lawyers, Fees, https://www.immigrationlawyersnetherlands.com/fees
+- UK_Lawyer_Fees: Danielle Cohen Immigration Law, Immigration lawyer fees UK, https://daniellecohenimmigration.com/our-costs/
+- US_Lawyer_Cost: Robichaud Law, How much does an immigration lawyer cost?, https://robichaudlaw.com/how-much-does-an-immigration-lawyer-cost/
+- Deel_Global_Mobility: Deel, Best Global Mobility Software, https://www.deel.com/blog/best-global-mobility-software/
+- Envoy_Global: Envoy Global, Home, https://www.envoyglobal.com/
+- Nomad_List: Nomads.com, https://nomads.com/
+- Expat_Com: Expat.com, https://www.expat.com/
+- InterNations_2025: InterNations, Expat Insider 2025, https://www.internations.org/expat-insider

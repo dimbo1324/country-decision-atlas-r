@@ -1,0 +1,213 @@
+3. DRIVERS OF MIGRATION INTEREST
+
+3.1 Why do people most often want to move to another country?
+
+The strongest reasons are usually a combination of push factors and pull factors.
+
+Push factors:
+- Low income or weak job market.
+- Political instability.
+- War, conflict, persecution, or conscription risk.
+- Crime and personal insecurity.
+- Corruption and weak rule of law.
+- Poor healthcare or education.
+- Currency instability, inflation, and declining purchasing power.
+- Discrimination or lack of personal freedoms.
+- Environmental stress: heat, drought, floods, air pollution, fires, water stress.
+
+Pull factors:
+- Higher wages and better work opportunities.
+- Safety.
+- Stable laws and institutions.
+- Better schools and universities.
+- Healthcare quality.
+- Better passport/citizenship prospects.
+- Family reunification.
+- Tax, banking, and business environment.
+- Lifestyle: climate, walkability, community, nature, culture.
+- Remote-work freedom.
+
+The typical migration decision is not one reason. It is a bundle: "I want safety, better income, legal certainty, education for children, and a path to permanent residence."
+
+3.2 How strongly does political instability affect migration interest?
+
+Very strongly, especially when instability affects personal safety, future rights, military risk, business property, banking, or freedom of speech.
+
+Examples:
+- Ukraine: Russia's full-scale invasion produced one of the largest displacement shocks in Europe since World War II.
+- Syria, Afghanistan, Sudan, Venezuela, and Myanmar: conflict, repression, or state breakdown reshaped regional and international migration.
+- Russia and Belarus: political repression, mobilisation/war risk, sanctions, and limited future prospects increased relocation interest among professionals, activists, entrepreneurs, and young people.
+- US/UK/EU election periods: search interest and relocation discussions often spike after polarising elections or policy shocks, even though only a small share of searchers actually move.
+
+Mechanism:
+Political instability increases migration interest when people lose confidence in the future direction of the country. The key psychological trigger is not only current danger; it is the fear that the country is moving in a worse direction.
+
+Platform implication:
+Track not only current conditions but direction of change: legal reforms, election risk, protests, media freedom, court independence, capital controls, military mobilisation, and treatment of minorities.
+
+3.3 How strongly do economic crises affect migration?
+
+Strongly, but not mechanically.
+
+Economic factors that increase migration interest:
+- High unemployment.
+- Falling real wages.
+- Inflation and currency devaluation.
+- Housing unaffordability.
+- Business uncertainty.
+- Lack of career growth.
+- Weak public services.
+- Debt pressure.
+
+Important nuance:
+The poorest people often cannot migrate internationally because migration requires money, information, documents, and networks. Migration is often highest among people with enough resources to move but not enough confidence in their country's future.
+
+Typical pattern:
+1. Economic crisis raises dissatisfaction.
+2. People search for countries with jobs, affordable living, or stronger currencies.
+3. Skilled workers and young people leave first.
+4. Diaspora networks reduce costs for later movers.
+5. Remittances become economically important for origin countries.
+
+3.4 How important are safety and crime levels when choosing a country?
+
+Very important, especially for families, women, LGBTQ+ people, politically vulnerable users, wealthy users, and migrants from high-crime environments.
+
+Safety includes:
+- Violent crime.
+- Political violence.
+- Terrorism and war risk.
+- Police corruption.
+- Hate crimes or discrimination.
+- Gender safety.
+- Road safety.
+- Disaster risk.
+- Healthcare emergency response.
+
+Why safety matters:
+Safety is a first-order filter. Many users will accept higher taxes, colder weather, or slower bureaucracy if they believe the country is safe and predictable.
+
+Platform opportunity:
+Do not reduce safety to one crime number. Build a safety profile by user type:
+- Single woman.
+- Family with children.
+- LGBTQ+ person.
+- Entrepreneur with capital.
+- Political activist.
+- Remote worker.
+- Retiree.
+
+3.5 How important are taxes and financial freedom?
+
+Taxes are highly important for entrepreneurs, investors, freelancers, remote workers, high earners, and people with cross-border assets. They are less decisive for students, refugees, or low-income labour migrants.
+
+Topics users search:
+- Low-tax countries.
+- Tax residency.
+- Non-dom regimes.
+- Territorial tax systems.
+- Double taxation treaties.
+- Exit tax.
+- Crypto taxation.
+- Offshore company + residence combinations.
+- Banking access.
+- Foreign-source income treatment.
+
+Important caution:
+Tax is frequently misunderstood online. A user can be legally resident in one country but still tax resident elsewhere, or trigger reporting obligations in multiple jurisdictions. A platform can add value by flagging tax risk, but it should not replace licensed tax advice.
+
+3.6 How important is a second passport or citizenship?
+
+Increasingly important for several segments:
+- Entrepreneurs and investors seeking optionality.
+- People from politically unstable countries.
+- Families planning children's future education and mobility.
+- People with weak passports seeking travel freedom.
+- People worried about war, sanctions, capital controls, or conscription.
+- Diaspora descendants eligible for ancestry citizenship.
+
+Main routes:
+1. Naturalisation after residence.
+2. Citizenship by descent or ancestry.
+3. Marriage/family routes.
+4. Citizenship by investment, where still legal.
+5. Exceptional talent or contribution routes in rare cases.
+
+Policy trend:
+Citizenship-by-investment is under pressure, especially where it touches EU citizenship. Residence-by-investment also faces housing and political criticism. Long-term residence-to-citizenship remains more legitimate but may take years and can change by law.
+
+3.7 How important are healthcare, education, and quality of life for family migration?
+
+Extremely important.
+
+For families, a country is not just a visa. It is a life system. The decision includes:
+- School quality and language.
+- International schools vs local schools.
+- University access and fees.
+- Healthcare system and insurance.
+- Child safety.
+- Parks, walkability, transport.
+- Parent employment rights.
+- Dependant visa rights.
+- Path to permanent residence and citizenship for children.
+- Housing size and affordability.
+
+Evidence from OECD migration categories:
+Family migration remains the largest permanent migration category in OECD countries. This shows that family considerations are not secondary; they are one of the central structures of migration.
+
+3.8 How do climate and ecology affect country choice?
+
+There are two different phenomena:
+
+1. Climate displacement
+This is often internal rather than international. The World Bank's Groundswell report estimated that up to 216 million people could move within their own countries by 2050 across six world regions if climate action and development are insufficient. UNHCR reported that weather-related disasters caused around 250 million internal displacements over the previous decade.
+
+2. Lifestyle and ecological selection
+Middle-class and remote-work migrants increasingly consider:
+- Heat waves.
+- Wildfires.
+- Flood risk.
+- Water stress.
+- Air pollution.
+- Access to nature.
+- Climate comfort.
+- Energy reliability.
+- Food and water security.
+
+Platform implication:
+Climate should be included twice: as an objective risk layer and as a subjective lifestyle preference. For example, a country may be attractive on taxes but weak on heat/water risk; another may be expensive but climate-resilient.
+
+3.9 Relative importance by user type
+
+Remote worker:
+Visa legality, tax residency, internet, cost of living, housing, safety, community, time zone.
+
+High-skilled employee:
+Job market, salary, employer sponsorship, PR route, recognition of qualifications, family rights.
+
+Student:
+Tuition, university ranking, post-study work, scholarship, language, route to employment.
+
+Family:
+Schools, healthcare, safety, housing, long-term status, spouse work rights.
+
+Entrepreneur:
+Company formation, tax, banking, capital access, hiring, legal stability, market size.
+
+Investor/HNWI:
+Tax, capital mobility, rule of law, residence/citizenship optionality, inheritance, family office ecosystem.
+
+Forced migrant:
+Safety, asylum/protection, documents, immediate housing, legal aid, family reunification, trauma support.
+
+Retiree:
+Healthcare, cost of living, safety, climate, residence requirements, pension taxation.
+
+SOURCES
+Migration Policy Institute, Top Statistics on Global Migration: https://www.migrationpolicy.org/article/top-statistics-global-migration-migrants
+UNHCR Global Trends: https://www.unhcr.org/global-trends
+World Bank Groundswell climate migration: https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change
+UNHCR climate displacement report: https://www.unhcr.org/news/press-releases/unhcr-report-reveals-extreme-weather-driving-repeated-displacement-among
+IDMC Global Report on Internal Displacement 2025: https://www.internal-displacement.org/global-report/grid2025/
+OECD International Migration Outlook 2025: https://www.oecd.org/en/publications/international-migration-outlook-2025_ae26c893-en.html
+Henley Private Wealth Migration Report 2026: https://www.henleyglobal.com/newsroom/press-releases/henley-private-wealth-migration-report-2026

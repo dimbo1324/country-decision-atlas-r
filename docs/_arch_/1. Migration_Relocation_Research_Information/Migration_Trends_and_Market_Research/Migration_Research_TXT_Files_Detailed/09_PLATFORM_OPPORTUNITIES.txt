@@ -1,0 +1,351 @@
+09. OPPORTUNITIES FOR A MIGRATION DECISION PLATFORM
+Research package date: 2026-06-16
+Language: English
+Scope: international migration, relocation demand, digital nomads, skilled migration, investment migration, policy trends, and product opportunity for a migration decision platform.
+
+Important interpretation rules:
+- "International migrant stock" is not the same thing as annual migration flow. Stock counts people residing outside their country of birth or citizenship at a point in time; flows measure entries/exits during a period.
+- Forced displacement counts and international migrant stock overlap only partly, because some displaced people remain internally displaced inside their own country.
+- Online search interest is often measured on relative scales. Exact Google Trends exports were not available in this environment, so this package uses published Google Trends analyses where available and recommends a measurement design for direct collection.
+- Social-media community counts are incomplete because Telegram, Facebook, WhatsApp, and Discord groups often hide membership/activity or are private.
+- Commercial market-size estimates are directional; exact market sizing for relocation, immigration law, and visa-tech varies by vendor definition.
+
+
+1. Which relocation questions are not solved quickly by existing platforms?
+
+Unsolved or poorly solved questions:
+- Which countries are realistic for my exact passport, income, job, family, age, and timeline?
+- Which route gives not just entry, but permanent residence and citizenship?
+- What is my rejection risk?
+- What documents will be hardest for me specifically?
+- Will I become tax resident?
+- Can I legally work remotely?
+- Can my spouse work?
+- Can my children access school?
+- What will the first 12 months actually cost?
+- What happens if the law changes after I apply?
+- Which country is becoming more open or more restrictive?
+- Is online hype supported by real conditions?
+- Which route is cheapest without becoming legally risky?
+- Which lawyers/agents are trustworthy?
+- What is the fastest safe path, not just the fastest advertised path?
+- How do different countries compare for the same user profile?
+- What should I prepare before leaving my current country?
+
+2. Which data are scattered across different websites and could be unified?
+
+Data to unify:
+- Visa types.
+- Eligibility criteria.
+- Required documents.
+- Government fees.
+- Processing times.
+- Rejection risks.
+- Renewal rules.
+- Permanent residence path.
+- Citizenship path.
+- Physical presence rules.
+- Remote work legality.
+- Work rights.
+- Spouse/dependant rights.
+- School access.
+- Healthcare access.
+- Health insurance requirements.
+- Tax residency.
+- Personal income tax.
+- Corporate tax.
+- Social security.
+- Capital gains and wealth/inheritance taxes.
+- Banking requirements.
+- Cost of living.
+- Rent by city/neighbourhood.
+- Safety and crime.
+- Corruption/rule of law.
+- Political risk.
+- Climate risk.
+- Job market and salaries.
+- Startup/business conditions.
+- Community size.
+- User reviews and verified cases.
+- Recent law changes.
+- Upcoming law changes.
+- Official source links.
+
+3. What functions are missing in existing platforms?
+
+Missing functions:
+- Personal country matching.
+- Passport-specific eligibility engine.
+- Law-change tracker with alerts.
+- Migration risk score.
+- Tax-residency warning engine.
+- Family feasibility score.
+- Cost-of-move calculator.
+- First-year budget model.
+- Document readiness checklist.
+- Route comparison by outcome, not just visa title.
+- "Temporary stay vs real immigration" distinction.
+- Verified user case database.
+- Lawyer/accountant verified notes.
+- Country direction dashboard.
+- Search/social early-signal tracker.
+- Rejection and delay tracker.
+- Step-by-step action plan.
+- Multilingual, multi-passport support.
+- AI assistant with citation discipline and source timestamps.
+- API for HR/global mobility teams.
+
+4. Can you create a Country Interest Index?
+
+Yes.
+
+Possible Country Interest Index formula:
+- Search trend acceleration: 25%.
+- Search volume proxy: 15%.
+- Official visa/residence applications: 20%.
+- Migrant inflow/stock growth: 15%.
+- Social/community growth: 10%.
+- YouTube/TikTok/Reddit/Telegram content velocity: 5%.
+- Media coverage volume: 5%.
+- Policy attractiveness change: 5%.
+
+Better version by segment:
+- Skilled Worker Interest Index.
+- Digital Nomad Interest Index.
+- Family Relocation Interest Index.
+- Student Interest Index.
+- Investor Interest Index.
+- Budget Migrant Interest Index.
+- Safety/Plan-B Interest Index.
+
+Why segment-specific is better:
+A country can be rising for digital nomads while becoming worse for students or asylum seekers. One universal score hides this.
+
+5. Can you create a Country Direction Index?
+
+Yes.
+
+Possible Country Direction Index dimensions:
+- Immigration openness.
+- Talent friendliness.
+- Student friendliness.
+- Family friendliness.
+- Digital nomad friendliness.
+- Investor friendliness.
+- Tax friendliness.
+- Business friendliness.
+- Housing pressure.
+- Banking accessibility.
+- Safety trend.
+- Rule-of-law trend.
+- Civil freedom trend.
+- Climate resilience.
+- Social acceptance of migrants.
+- Path to citizenship.
+- Administrative efficiency.
+
+Output:
+- Direction: opening, stable, tightening, mixed, deteriorating, improving.
+- Confidence: high/medium/low.
+- Time horizon: 6 months, 1 year, 3 years.
+- Evidence: law, bill, official announcement, statistics, survey, media signal, community signal.
+
+6. Can you predict rising country interest before it becomes obvious?
+
+Yes, probabilistically, not perfectly.
+
+Early signals:
+- New visa launched.
+- Visa application pages receive traffic/search spikes.
+- Influencers begin covering a country.
+- Reddit/Telegram questions increase.
+- Google Trends acceleration appears before mainstream media.
+- Currency devaluation makes a country cheaper.
+- Political crisis in an origin country triggers exit searches.
+- Tax law changes in destination/origin country.
+- Housing prices still low relative to lifestyle quality.
+- New airline routes.
+- Startup ecosystem receives major funding/news.
+- Country announces tax incentive or digital nomad program.
+- Lawyers begin advertising a route heavily.
+- Government processing times shorten.
+- Countries nearby tighten rules, pushing users to alternatives.
+
+Practical predictive model:
+- Track origin-country shocks and destination-country openings together.
+- Example logic: if Country A has election instability + currency fall + exit-search spike, and Country B launches easy residence + tax regime + influencer attention, interest in Country B may rise before official migration flows show it.
+
+7. What data help users decide faster and more confidently?
+
+Minimum viable decision dataset:
+- User passport(s).
+- Current residence.
+- Age.
+- Profession.
+- Income source.
+- Monthly income.
+- Savings.
+- Family status.
+- Children/school needs.
+- Remote work vs local job.
+- Company ownership.
+- Tax complexity.
+- Desired citizenship timeline.
+- Safety requirement.
+- Budget.
+- Languages.
+- Health needs.
+- Preferred climate.
+- Target move date.
+- Risk tolerance.
+
+Minimum country dataset:
+- Visa routes.
+- Eligibility.
+- Cost.
+- Processing time.
+- Renewal.
+- PR/citizenship path.
+- Tax-residence rules.
+- Work rights.
+- Family rights.
+- Healthcare.
+- Schools.
+- Cost of living.
+- Rent.
+- Safety.
+- Banking.
+- Legal trend.
+- Community evidence.
+- Official source links.
+
+8. What result should the user get after using the platform?
+
+Ideal output:
+- Top 3-7 country shortlist.
+- "Best fit" country for the user’s goal.
+- "Fastest legal route."
+- "Lowest-risk route."
+- "Cheapest viable route."
+- "Best family route."
+- "Best citizenship route."
+- Rejection-risk summary.
+- First-year cost estimate.
+- Tax-residence warning.
+- Document checklist.
+- Timeline.
+- Step-by-step action plan.
+- Official source pack.
+- Law-change alerts.
+- Expert upsell path if needed.
+- User cases similar to their profile.
+- Red-flag list: countries that look attractive but are bad for this user.
+
+9. What information must be evidence-based, not subjective?
+
+Must be evidence-based:
+- Visa eligibility.
+- Government fees.
+- Document requirements.
+- Processing times, if official data exist.
+- Rights to work.
+- Dependants/spouse rights.
+- Path to PR/citizenship.
+- Physical presence rules.
+- Tax-residence rules.
+- Healthcare eligibility.
+- School access.
+- Criminal record requirements.
+- Income/proof-of-funds requirements.
+- Official law changes.
+- Sanctions/nationality restrictions.
+- Travel bans.
+- Banking restrictions.
+- Rejection/approval statistics, where available.
+- Safety/crime statistics.
+- Cost of living, with source and date.
+
+Can be partly subjective:
+- Lifestyle fit.
+- Friendliness.
+- Food/culture.
+- Ease of making friends.
+- Bureaucracy frustration.
+- Neighbourhood vibe.
+- Expat community quality.
+- Weather comfort.
+
+But even subjective topics should be structured:
+- show number of reviews,
+- date,
+- user profile,
+- city/neighbourhood,
+- confidence,
+- contradictions.
+
+10. What functions would make the platform unique?
+
+Differentiators against Nomads.com, Numbeo, Expat.com, and Telegram chats:
+
+A. Profile-specific migration engine
+- Inputs: passport, income, profession, family, tax, savings, goals.
+- Output: realistic countries and routes.
+
+B. Legal freshness layer
+- Every rule has source, date, and change log.
+- Alerts when laws move.
+
+C. Risk scoring
+- Visa refusal risk.
+- Tax risk.
+- banking risk.
+- housing risk.
+- family risk.
+- long-term citizenship risk.
+
+D. Country Direction Index
+- Shows whether a country is becoming more open or closed.
+
+E. Country Interest Index
+- Measures demand acceleration before it becomes obvious.
+
+F. Route quality score
+- Scores not only "can enter," but whether route leads to residence, work, PR, citizenship, and family stability.
+
+G. Verified user cases
+- Real anonymised cases by nationality, income, family type, visa, city, timeline, cost, outcome.
+
+H. Hybrid AI + expert model
+- AI for triage, comparison, and document planning.
+- Experts for legal/tax review and paid escalations.
+
+I. Decision report
+- One downloadable report with shortlist, timeline, costs, risks, and next steps.
+
+J. B2B extension
+- HR dashboard for employee relocation feasibility, immigration/tax risk, and remote-work compliance.
+
+Strategic product thesis:
+The winning platform is not "Nomad List with more countries." It is a migration decision operating system: official data + legal tracking + personal scoring + verified lived experience + expert marketplace.
+
+Evidence strength:
+- Product opportunity: synthesis from official data gaps, existing platform features, user communities, and paid-service market.
+- Must be validated with user interviews, search ads, landing pages, pricing tests, and expert partnerships.
+
+SOURCES USED IN THIS FILE
+
+- Nomads.com: https://nomads.com/
+- Numbeo Cost of Living: https://www.numbeo.com/cost-of-living/
+- Numbeo Quality of Life: https://www.numbeo.com/quality-of-life/
+- Expat.com: https://www.expat.com/
+- Localyze: https://www.localyze.com/
+- Remote Mobility: https://remote.com/products/mobility
+- Topia: https://topia.com/
+- Gartner, Global Mobility Services: https://www.gartner.com/en/human-resources/glossary/global-mobility-services
+- Jobbatical: https://www.jobbatical.com/
+- Newland Chase 2025 Global Mobility Survey: https://newlandchase.com/report/2025-global-mobility-survey/
+- OECD International Migration Outlook 2025: https://www.oecd.org/en/publications/international-migration-outlook-2025_30b687d5-en.html
+- Gallup, U.S. losing appeal as dream destination: https://news.gallup.com/poll/658881/losing-appeal-dream-destination.aspx
+- International Bar Association, Digital Nomad Report 2026: https://www.ibanet.org/digital-nomad-report-2026
+- EU Migration and Asylum Pact: https://home-affairs.ec.europa.eu/policies/migration-and-asylum/pact-migration-and-asylum_en
+- Government of Canada, 2026-2028 Immigration Levels Plan: https://www.canada.ca/en/immigration-refugees-citizenship/news/2025/11/20262028-immigration-levels-plan-restoring-balance-and-strengthening-canadas-immigration-system.html

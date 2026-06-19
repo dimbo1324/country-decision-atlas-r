@@ -1,0 +1,127 @@
+MVP Readiness Decision Memo
+
+Decision
+
+The research archive is ready for MVP planning.
+
+Do not continue broad general research. The next step should be a focused product strategy and technical design phase.
+
+Recommended MVP positioning
+
+A country intelligence and decision-support platform for people choosing a country for relocation, residence, citizenship, remote work, business or investment.
+
+The MVP should not try to cover all countries and all user types. It should prove one workflow:
+
+`User goal -> shortlist countries -> compare objective data -> inspect legal signals -> read structured human experiences -> receive scenario-specific recommendation.`
+
+Recommended first countries
+
+Start with 12-15 countries where demand, migration interest, data availability and scenario variety are strong:
+
+1. Uruguay
+2. Argentina
+3. Paraguay
+4. Portugal
+5. Spain
+6. Serbia
+7. Georgia
+8. Armenia
+9. Turkey
+10. UAE
+11. Mexico
+12. Chile
+13. Canada
+14. Netherlands
+15. United Kingdom or United States as benchmark countries
+
+Recommended first scenarios
+
+1. Fast residence / citizenship pathway.
+2. Low-cost long-term life.
+3. Remote worker / digital nomad relocation.
+4. Business formation / entrepreneur relocation.
+5. Family relocation with safety, healthcare and education.
+
+MVP feature set
+
+Must-have
+
+- Country cards.
+- Country comparison table.
+- Scenario-based scoring.
+- Legal signal feed.
+- Source links and date stamps.
+- Basic cost-of-living and safety indicators.
+- Structured user experience form.
+- Admin/editor interface for country data and legal signals.
+- Saved country shortlist.
+
+Should-have
+
+- Radar charts / scorecards.
+- Timeline of legal and policy changes.
+- AI summary of country profile.
+- Confidence levels for data.
+- Exportable comparison report.
+- Watchlist for countries.
+
+Later
+
+- Browser extension.
+- Mobile app.
+- Expert marketplace.
+- Full community/forum.
+- API/data product.
+- Paid alerts.
+- Advanced AI chat assistant.
+- Automated government-source monitoring.
+
+MVP data entities
+
+Minimum entities:
+
+- Country
+- City
+- Scenario
+- Indicator
+- CountryIndicatorValue
+- LegalSignal
+- Source
+- EvidenceItem
+- UserExperience
+- UserProfile
+- CountryComparison
+- CountryFitScore
+- CountryDirectionScore
+- WatchlistItem
+
+MVP risks
+
+1. Legal data may become outdated quickly.
+2. Scores may be distrusted if methodology is hidden.
+3. User-generated content may become noisy if unstructured.
+4. Too many countries will dilute quality.
+5. Too many user scenarios will delay launch.
+6. Affiliate monetisation may create perceived bias.
+
+MVP success metrics
+
+- Users create country comparisons.
+- Users save country shortlists.
+- Users return to check legal signals.
+- Users submit structured experiences.
+- Users export/share reports.
+- Users sign up for alerts.
+- Users say the product reduced research time.
+- Users say the product revealed risks they had missed.
+
+Recommended next documents
+
+1. Product Strategy Document.
+2. MVP Functional Specification.
+3. Data Model Specification.
+4. Country Card Schema.
+5. Legal Signal Schema.
+6. Scoring Methodology v0.1.
+7. UX Sitemap.
+8. OpenAPI Contract Foundation.

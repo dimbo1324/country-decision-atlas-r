@@ -1,0 +1,16 @@
+Migration, Relocation and Country Choice — Short Index
+
+This ZIP archive contains Markdown research files answering 120 questions about:
+1. Global migration dynamics
+2. Interest in relocation
+3. Reasons for migration
+4. Search interest and online behaviour
+5. Social media and communities
+6. Country choice
+7. Laws, visas and government policy
+8. Existing services and platforms
+9. Monetization and willingness to pay
+10. Problems and unmet demand
+11. Future trends
+
+All detailed answers are in the .md files. See 00_README.md first.

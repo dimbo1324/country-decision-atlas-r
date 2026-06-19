@@ -1,0 +1,184 @@
+3. REASONS FOR MIGRATION INTEREST
+Research date: 16 June 2026
+
+3.1 Why do people most often want to move to another country?
+
+Main drivers:
+- Higher income and better jobs.
+- Safety and lower exposure to violence, war, crime, or repression.
+- Political stability and rule of law.
+- Better education and opportunities for children.
+- Better healthcare.
+- Higher quality of life.
+- Family reunification.
+- Better passport, citizenship, or global mobility.
+- Lower taxes or more favourable business conditions.
+- Climate, environment, and lifestyle.
+- Escape from discrimination or social restrictions.
+- Retirement affordability.
+
+The World Bank's 2023 World Development Report frames migration through “match” and “motive”: how well migrants' skills match destination needs, and whether the motive is opportunity, distress, or protection. This is useful for product design because the same migrant can have multiple motives.
+
+3.2 How strongly does political instability affect desire to move?
+
+Answer: Strongly, especially when instability is connected to safety, rights, economic uncertainty, military mobilisation, authoritarianism, or fear of future restrictions.
+
+Examples of strong political triggers:
+- War and invasion: Ukraine after 2022.
+- Authoritarian repression and political risk: Russia, Belarus, Venezuela, Nicaragua, Hong Kong, Myanmar, Iran, and others.
+- Election shocks: online searches for emigration rose sharply after the 2024 US election.
+- Policy uncertainty: people often search for second passports, tax residence, and alternative residence when they expect future instability.
+- Conscription or military mobilisation risk: a major trigger in some countries.
+
+Mechanism:
+Political instability increases both actual migration and “optionality demand”. People may not move immediately, but they start researching residence permits, passports, bank accounts, offshore structures, and safe destinations.
+
+3.3 How strongly do economic crises affect migration?
+
+Answer: Strongly, but with a delay and with unequal conversion.
+
+Economic drivers include:
+- Inflation.
+- Falling real income.
+- High unemployment.
+- Currency depreciation.
+- Business uncertainty.
+- Housing affordability problems.
+- Professional wage gaps between origin and destination.
+- Lack of career mobility.
+
+Important nuance:
+The poorest people often cannot migrate internationally because migration requires money, documents, information, and networks. Economic crisis can increase desire while reducing the ability to leave. Middle-income and skilled groups often convert interest into actual migration faster.
+
+3.4 How important are safety and crime levels?
+
+Answer: Very important, especially for families, women, retirees, and people leaving high-crime or conflict-affected environments.
+
+Safety-driven migration includes:
+- Moving away from war or political violence.
+- Moving away from organised crime or kidnapping risk.
+- Moving because of domestic insecurity, corruption, or weak police protection.
+- Moving toward countries perceived as safe for children, women, minorities, or business owners.
+
+Product implication:
+A country comparison should not use only national crime rates. It should separate:
+- Violent crime.
+- Property crime.
+- Political violence.
+- Terrorism/security risk.
+- Corruption and police reliability.
+- Safety by city/neighbourhood.
+- Safety perception from migrants.
+
+3.5 How important are taxes and financial freedom?
+
+Answer: Very important for entrepreneurs, investors, remote workers, crypto/finance workers, high earners, and retirees; less important for students and lower-income workers.
+
+Common tax-related migration motives:
+- Lower personal income tax.
+- Territorial taxation or non-dom regimes.
+- No capital gains tax or lower dividend tax.
+- Wealth tax avoidance.
+- Inheritance planning.
+- Tax residency diversification.
+- Corporate tax and company formation.
+- Avoiding exit tax or CFC problems.
+- Banking access and currency diversification.
+
+Popular tax-oriented destinations often discussed online:
+- UAE.
+- Singapore.
+- Switzerland.
+- Monaco.
+- Andorra.
+- Portugal, though benefits changed and NHR rules were reformed.
+- Italy, especially flat-tax regimes for wealthy residents.
+- Greece, Cyprus, Malta, Panama, Paraguay, Uruguay, Georgia, and others depending on profile.
+
+Risk:
+Tax advice is highly personal. A migration platform can flag risks and model scenarios, but final tax decisions usually require licensed tax counsel.
+
+3.6 How important is a second passport or citizenship?
+
+Answer: Increasingly important for people from countries with weak passports, political risk, sanctions risk, military risk, currency risk, or limited mobility.
+
+Main second-citizenship motives:
+- Visa-free travel.
+- Safety backup.
+- EU or Commonwealth access.
+- Right to live/work in a region.
+- Children's future education and mobility.
+- Asset protection and banking access.
+- Exit option during crisis.
+
+Main routes:
+- Citizenship by descent/ancestry.
+- Naturalisation after residence.
+- Marriage/family routes.
+- Citizenship by investment or contribution.
+- Exceptional talent or national-interest routes.
+- Birthright citizenship in limited jurisdictions.
+
+Trend:
+Interest is rising, but regulation is tightening. The EU and individual states are scrutinising citizenship-by-investment programmes, while ancestry and naturalisation routes remain highly attractive but document-heavy.
+
+3.7 How important are healthcare, education, and quality of life for family migration?
+
+Answer: Extremely important.
+
+Family relocation decisions usually prioritise:
+- Safety.
+- Schools and language of schooling.
+- Healthcare quality and access.
+- Housing cost and family-sized rentals.
+- Childcare.
+- Work rights for spouse/partner.
+- Long-term residence and citizenship path.
+- Integration and community.
+- Legal status stability.
+- Tax and social-security consequences.
+
+Typical family concerns:
+- “Will my child adapt?”
+- “Can my spouse work?”
+- “How expensive are schools?”
+- “Can we get healthcare immediately?”
+- “How long until permanent residence?”
+- “Will the country change the rules?”
+
+Product implication:
+A family migration score should be separate from a digital-nomad score. A country that is excellent for solo remote workers can be poor for families because of schools, rent, legal instability, or healthcare access.
+
+3.8 How do climate and ecology affect country choice?
+
+Answer: Climate affects both forced and voluntary migration, but in different ways.
+
+Climate migration types:
+- Forced internal displacement caused by disasters, droughts, floods, storms, sea-level rise, and livelihood loss.
+- Slow-onset internal migration from rural areas to cities because agriculture becomes less viable.
+- Lifestyle migration toward better weather, cleaner air, or lower climate risk.
+- Avoidance of heat, wildfire, water scarcity, pollution, or disaster-prone zones.
+
+World Bank Groundswell estimates that up to 216 million people could become internal climate migrants by 2050 across six regions if strong action is not taken. This is mostly internal migration, not necessarily cross-border migration.
+
+For international relocation users, climate matters through:
+- Heat risk.
+- Flood risk.
+- Wildfire risk.
+- Air quality.
+- Water stress.
+- Insurance cost.
+- Food and energy security.
+- Long-term liveability.
+
+Conclusion
+Migration interest is multi-causal. The most commercially important insight is that users do not just need “visa information”. They need a weighted decision model that reflects their motive hierarchy: money, safety, passport, family, tax, career, climate, and timeline.
+
+Key sources
+- World Bank, World Development Report 2023: Migrants, Refugees, and Societies: https://www.worldbank.org/en/publication/wdr2023
+- Joint Research Centre, Atlas of Migration / Drivers of Migration: https://publications.jrc.ec.europa.eu/repository/bitstream/JRC139459/JRC139459_01.pdf
+- Migration Data Portal, Migration drivers: https://www.migrationdataportal.org/themes/migration-drivers
+- Mixed Migration Centre, Migration drivers and decision making: https://mixedmigration.org/themes/migration-drivers-decision-making/
+- European Parliament, Exploring migration causes: https://www.europarl.europa.eu/topics/en/article/20200624STO81906/exploring-migration-causes-why-people-migrate
+- World Bank Groundswell climate migration release: https://www.worldbank.org/en/news/press-release/2021/09/13/climate-change-could-force-216-million-people-to-migrate-within-their-own-countries-by-2050
+- UNHCR Global Trends 2024: https://www.unhcr.org/global-trends-report-2024

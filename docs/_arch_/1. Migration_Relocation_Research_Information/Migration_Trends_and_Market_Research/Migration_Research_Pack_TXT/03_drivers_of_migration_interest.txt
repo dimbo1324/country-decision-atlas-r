@@ -1,0 +1,85 @@
+3. Drivers of Migration Interest
+
+Main answer
+People usually want to move because of a bundle of push and pull factors, not one single reason. The core drivers are: work/income, safety, political stability, personal rights, education, healthcare, family future, taxes, second passport/residence optionality, climate/lifestyle, and existing diaspora networks.
+
+1) Money, employment and economic opportunity
+This is the strongest general driver of voluntary migration. Labour markets, salary gaps, unemployment, inflation and currency weakness push people to consider moving. Destination countries with high wages, labour shortages and clear work pathways attract skilled and semi-skilled migrants. However, labour migration is cyclical: OECD permanent labour migration fell 21% in 2024 after the post-COVID surge, while still remaining above 2019 levels.
+
+2) Political instability and loss of rights
+Political instability can sharply raise relocation interest. Examples:
+- Russia after 2022: OutRush research finds a major post-2022 Russian emigration wave, heavily represented by highly skilled IT, culture and science workers.
+- United States: Gallup/Axios data show an unusual rise in young women wanting to leave, linked to institutional distrust, partisanship and post-Dobbs politics.
+- Conflict zones: Ukraine, Sudan, Syria, Afghanistan, Gaza, Venezuela and other crises drive large-scale displacement or emigration.
+
+3) War, persecution and safety
+Forced migration is one of the fastest-growing categories. UNHCR reported 123.2 million forcibly displaced people at end-2024. A newer 2026 UNHCR report reported 117.8 million at end-2025, the first decline in a decade, but still extremely high. Safety-driven migration includes war, state repression, violence, gender insecurity, gang violence, political persecution and ethnic/religious persecution.
+
+4) Crime and personal safety
+Safety is a central country-selection variable. Families, women, retirees and remote workers often compare crime, healthcare access, political stability and emergency services before moving. The data gap: most platforms use either official crime statistics, perception surveys or user reviews, but these are not equivalent. A serious platform should show official crime statistics, victimisation surveys, user-perceived safety and neighbourhood-level risk separately.
+
+5) Education
+Education is a major migration channel and long-term settlement strategy. UNESCO reports international higher-education mobility rose from 2.1 million in 2000 to nearly 7.3 million in 2023. Student migration is attractive because it can provide language acquisition, local credentials, work rights, post-study permits and a route to permanent residence. But Canada, Australia and the UK have tightened student and post-study routes, increasing demand for careful planning.
+
+6) Healthcare and family quality of life
+Families often prioritise healthcare, school quality, child safety, family reunification rules, parental residence rules, maternity care, disability support and childcare costs. Wealthy migrants increasingly consider healthcare resilience and private healthcare cost when choosing second residence, especially U.S. citizens and retirees.
+
+7) Taxes and financial freedom
+Tax-driven migration matters most for entrepreneurs, investors, remote workers, crypto/finance professionals and high earners. Common queries and decisions involve:
+- low-tax residence;
+- territorial tax systems;
+- non-dom regimes;
+- capital gains treatment;
+- CFC rules;
+- exit tax;
+- social security contributions;
+- banking access;
+- company formation.
+However, tax optimisation is complex: a low-tax country can be poor fit if banking, visa, family, healthcare or legal certainty is weak.
+
+8) Second passport / citizenship optionality
+Second passport demand is driven by risk hedging, travel freedom, banking access, political safety, children’s future, sanctions risk, military mobilisation risk, and unstable domestic politics. Routes include naturalisation, ancestry citizenship, marriage, investment, special talent, refugee/asylum, and long-term residence. EU citizenship-by-investment is tightening, while ancestry citizenship and naturalisation planning remain important.
+
+9) Climate and environment
+Climate is already a displacement driver, especially internally. UNHCR reported that weather-related disasters caused around 250 million internal displacements over the past decade. The World Bank projects up to 216 million internal climate migrants by 2050 across six regions under pessimistic scenarios. For middle-class voluntary movers, climate also appears as “lifestyle migration”: clean air, heat risk, water security, wildfire risk, flood risk, pollution and outdoor lifestyle.
+
+10) Diaspora and social network effects
+Migrants rarely choose only by abstract rankings. Existing communities reduce risk by providing information, housing tips, job leads, language support and emotional support. This explains why many routes remain stable over decades even when other destinations look better on paper.
+
+How strongly do crises affect migration?
+- Political crisis: high effect when personal safety, rights, mobilisation, sanctions, banking or business continuity are affected.
+- Economic crisis: high effect when unemployment, inflation and currency weakness reduce local opportunity.
+- Conflict: extreme effect; often converts voluntary migration into forced displacement.
+- Policy shock: high effect for students, care workers, entrepreneurs, nomads and investors because a single rule can close a route.
+- Housing crisis in destination country: increasingly important; it can reduce attractiveness even when salaries and visas are good.
+
+Platform implication
+The platform should ask “why are you moving?” but also infer hidden drivers. Example: a user may say “Portugal,” but the real goal may be EU access, safety, tax, warm climate, children’s education, cheaper healthcare or a path to citizenship. The recommendation engine should optimise for the goal, not the country name.
+
+Minimum driver data to collect:
+- income/employment goal;
+- safety concerns;
+- political risk sensitivity;
+- tax sensitivity;
+- family/children needs;
+- healthcare needs;
+- education needs;
+- passport/citizenship goal;
+- climate/lifestyle preferences;
+- language tolerance;
+- timeline;
+- budget;
+- willingness to learn language;
+- tolerance for bureaucracy.
+
+Sources:
+- OECD_Recent_Flows_2025: OECD, Recent developments in international migration movements, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-international-migration-movements-and-labour-market-inclusion-of-immigrants_203de29e.html
+- UNHCR_2024: UNHCR, Global Trends report 2024, https://www.unhcr.org/global-trends-report-2024
+- UNHCR_2025_AP: AP, Nearly 118 million people were displaced by conflict and persecution last year, UN says, https://apnews.com/article/4dbcddd571b1ad2de8fadff609fec393
+- OutRush_2025: OutRush / Stanford CDDRL, Mobility, Integration, and the Dynamics of Russian Emigration 2022-2024, https://cddrl.fsi.stanford.edu/publication/move-mobility-integration-and-dynamics-russian-emigration-2022-2024
+- Axios_Women_US: Axios, Record share of women say they want to leave U.S. for good, https://www.axios.com/2025/11/13/trump-abortion-dobbs-women-immigration
+- UNESCO_2026_Students: UNESCO, Number of students in higher education more than doubled in 20 years, https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- OECD_EAG_Students: OECD, Education at a Glance 2025: international student mobility section, https://www.oecd.org/en/publications/education-at-a-glance-2025_1c0d9c79-en/full-report/how-do-student-profiles-study-choices-and-mobility-trends-shape-tertiary-education_97e1e2bd.html
+- UNHCR_Climate_2025: UNHCR, Extreme weather driving repeated displacement, 2025, https://www.unhcr.org/news/press-releases/unhcr-report-reveals-extreme-weather-driving-repeated-displacement-among
+- WorldBank_Groundswell: World Bank, Groundswell: Acting on Internal Climate Migration, https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change
+- Migration_Info_Seeking_2024: Zhang and Gao, Assisting International Migrants with Everyday Information Seeking, arXiv, https://arxiv.org/abs/2403.04096

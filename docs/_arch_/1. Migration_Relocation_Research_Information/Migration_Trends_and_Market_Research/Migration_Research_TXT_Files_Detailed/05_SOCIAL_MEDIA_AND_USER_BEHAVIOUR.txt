@@ -1,0 +1,184 @@
+05. SOCIAL MEDIA AND USER BEHAVIOUR
+Research package date: 2026-06-16
+Language: English
+Scope: international migration, relocation demand, digital nomads, skilled migration, investment migration, policy trends, and product opportunity for a migration decision platform.
+
+Important interpretation rules:
+- "International migrant stock" is not the same thing as annual migration flow. Stock counts people residing outside their country of birth or citizenship at a point in time; flows measure entries/exits during a period.
+- Forced displacement counts and international migrant stock overlap only partly, because some displaced people remain internally displaced inside their own country.
+- Online search interest is often measured on relative scales. Exact Google Trends exports were not available in this environment, so this package uses published Google Trends analyses where available and recommends a measurement design for direct collection.
+- Social-media community counts are incomplete because Telegram, Facebook, WhatsApp, and Discord groups often hide membership/activity or are private.
+- Commercial market-size estimates are directional; exact market sizing for relocation, immigration law, and visa-tech varies by vendor definition.
+
+
+1. Are migration channels, chats, and communities growing?
+
+Answer: yes in visibility and fragmentation, but exact total growth is hard to measure because many communities are private, multi-platform, multilingual, and ephemeral.
+
+Evidence and visible signals:
+- Reddit has large active communities such as r/digitalnomad, r/expats, r/IWantOut, r/AmerExit, and country-specific subreddits.
+- Search-visible Reddit metrics for r/digitalnomad show hundreds of thousands of visitors and thousands of weekly contributions.
+- Community-maintained directories list hundreds of WhatsApp, Telegram, Discord, Facebook, and Slack groups for digital nomads and expats across dozens of countries.
+- A Reddit discussion in 2024 described a directory of digital nomad WhatsApp/Telegram/Facebook communities across more than 60 countries with hundreds of entries.
+- A 2026 open-source directory discussion referenced 580+ digital nomad/expat groups.
+- Wired reported that nomads use Facebook, WhatsApp, Slack, specialised forums, and platforms such as Nomads.com, Digital Nomad Girls, NomadBase, and city-specific groups to find community and practical help.
+
+Interpretation:
+- The information ecosystem is highly fragmented.
+- Users do not trust one source; they triangulate between official websites, lawyers, YouTube, Reddit, Telegram, friends, and paid consultants.
+- The growth of communities is a demand signal, but not a clean market-size metric.
+
+2. What topics are most often discussed in migration communities?
+
+Recurring topics:
+- Visa eligibility.
+- Document lists.
+- Proof of funds.
+- Embassy appointment availability.
+- Processing delays.
+- Lawyer/agent recommendations.
+- Scams and fake agents.
+- Housing search.
+- Rent prices and deposits.
+- Neighbourhood safety.
+- Bank accounts.
+- Tax residency.
+- Company setup.
+- Health insurance.
+- Schools and childcare.
+- Public healthcare access.
+- Work permits.
+- Remote-work legality.
+- Local job market.
+- Salary expectations.
+- Language learning.
+- Driving licences.
+- Pets.
+- Bringing family members.
+- Renewals and extensions.
+- Permanent residence and citizenship.
+- Police registration or address registration.
+- Adaptation, loneliness, and social life.
+- Returning home after a failed move.
+
+3. What questions do people ask most often before moving?
+
+High-frequency pre-move questions:
+- Which country is easiest for my passport/income/profession?
+- Can I work remotely there legally?
+- Do I need a local employer?
+- Can my spouse work?
+- Can I bring my children?
+- How much money do I need per month?
+- What proof of funds is accepted?
+- Can I open a bank account?
+- How long does the visa take?
+- Can I renew it?
+- Does it lead to permanent residence or citizenship?
+- How many days must I stay?
+- Will I become tax resident?
+- Is foreign income taxed?
+- What documents need apostille/translation?
+- Which city is safe and affordable?
+- Are schools good?
+- What is healthcare like?
+- Can I move with pets?
+- Which lawyers are reliable?
+- What are common mistakes?
+
+4. What problems do people most often face after moving?
+
+Post-move problems:
+- Underestimating rent and deposit costs.
+- Not understanding tax residency.
+- Banking problems and account refusals.
+- Visa renewal surprises.
+- Missing documents from home country.
+- Translation/apostille delays.
+- Dependants not allowed to work.
+- Children unable to enter desired schools.
+- Healthcare access more limited than expected.
+- Local salaries lower than expected.
+- Language barrier.
+- Social isolation and loneliness.
+- Bureaucratic appointments unavailable.
+- Poor internet or infrastructure in cheaper areas.
+- Insurance not covering real needs.
+- Scams in housing or visa assistance.
+- Community advice contradicting official rules.
+- Country changed rules after arrival.
+- Digital nomad lifestyle becoming exhausting.
+- No path from temporary visa to permanent residence.
+
+5. Which sources do people trust most?
+
+Trust hierarchy depends on user maturity.
+
+Beginners often trust:
+- YouTube creators.
+- TikTok/Instagram creators.
+- Telegram/WhatsApp groups.
+- Reddit posts.
+- Friends and acquaintances.
+- Influencer country lists.
+
+More advanced users trust:
+- Official government websites.
+- Embassy/consulate pages.
+- Immigration lawyers.
+- Accountants/tax advisors.
+- Verified expats with same passport/family profile.
+- Employer mobility teams.
+- Official legislation.
+- High-quality comparison tools.
+
+Best trust model for a platform:
+- Official law and government guidance for rules.
+- Lawyer/accountant review for interpretation.
+- Verified user cases for practical reality.
+- Community discussion for weak signals.
+- Transparent date stamps and change logs for all content.
+
+6. Where do people get outdated or contradictory information?
+
+Weak spots:
+- Telegram chats with no source links.
+- Reddit answers based on personal experience from previous years.
+- YouTube videos not updated after law changes.
+- SEO blogs written for affiliate leads.
+- Visa-agent pages that hide rejection risks.
+- Government pages that are accurate but hard to understand.
+- Facebook groups where rules differ by nationality but users generalise.
+- Nomad blogs that ignore tax or long-term residence issues.
+- Old cost-of-living posts from before inflation or currency changes.
+- AI-generated pages without citations or legal review.
+
+Most dangerous contradictions:
+- "You can work remotely on a tourist visa" vs actual work-authorisation rules.
+- "Stay 183 days" vs true tax-residence tests.
+- "This visa leads to citizenship" vs no clear permanent-residence path.
+- "This country is cheap" vs city-specific rent inflation.
+- "No tax" vs social security, local-source income, or company substance rules.
+- "Easy bank account" vs current AML/sanctions/passport restrictions.
+
+Product implication:
+A serious platform should compete on freshness, verification, profile-specific answers, and risk warnings. It should not simply aggregate community opinions.
+
+Evidence strength:
+- Community activity: C/D.
+- Common questions/problems: D synthesis from forums, service FAQs, relocation platforms, and repeated user patterns.
+- Trust-source hierarchy: synthesis; should be validated with user interviews.
+
+SOURCES USED IN THIS FILE
+
+- Reddit r/digitalnomad: https://www.reddit.com/r/digitalnomad/
+- Reddit r/IWantOut: https://www.reddit.com/r/IWantOut/
+- Reddit digital nomad community directory discussion: https://www.reddit.com/r/digitalnomad/comments/1jl8ahq/i_built_an_opensource_directory_of_digital_nomad/
+- Nomads.com: https://nomads.com/
+- Expat.com: https://www.expat.com/
+- Numbeo Cost of Living: https://www.numbeo.com/cost-of-living/
+- MBO Partners State of Independence 2025: https://www.mbopartners.com/state-of-independence/digital-nomad-trends/
+- International Bar Association, Digital Nomad Report 2026: https://www.ibanet.org/digital-nomad-report-2026
+- Localyze: https://www.localyze.com/
+- Remote Mobility: https://remote.com/products/mobility
+- Jobbatical: https://www.jobbatical.com/

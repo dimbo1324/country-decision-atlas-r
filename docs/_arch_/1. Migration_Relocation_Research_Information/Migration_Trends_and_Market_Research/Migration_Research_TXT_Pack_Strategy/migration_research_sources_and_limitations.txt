@@ -1,0 +1,53 @@
+SOURCE NOTES AND EVIDENCE BASE
+Research date: 16 June 2026
+
+Core official / institutional sources used across this pack:
+
+S1. UN DESA International Migrant Stock 2024, as summarised by Migration Policy Institute and UC Davis Rural Migration News.
+    Key figures used: 304 million international migrants in mid-2024; 154 million in 1990; 3.7%-4% of world population; top origin and destination countries.
+
+S2. International Organization for Migration, World Migration Report / UN DESA data.
+    Key figures used: long-run growth from 153 million in 1990 to 281 million in 2020 and roughly 304 million by 2024.
+
+S3. World Bank, Migration and Development Brief 40.
+    Key figures used: 302 million international migrants in 2023; top destinations and origins; remittance context.
+
+S4. OECD International Migration Outlook 2024 and 2025.
+    Key figures used: 6.5 million permanent-type migrants to OECD countries in 2023; more than 160 million foreign-born residents in OECD countries in 2024; foreign-born share rising from 9.1% in 2014 to 11.5%; 2024 declines in permanent migration in many OECD countries; family/labour/humanitarian/student/asylum patterns.
+
+S5. ILO Global Estimates on International Migrant Workers, 2022/2024 reporting.
+    Key figures used: 167.7 million migrant workers in the labour force in 2022; 4.7% of the global labour force; concentration in high-income countries and services.
+
+S6. UNESCO Global Education Monitoring / higher education mobility data.
+    Key figures used: roughly 6.9-7.3 million internationally mobile tertiary students, with numbers tripling since 2000.
+
+S7. UNHCR Global Trends and Mid-Year Trends; IDMC Global Report on Internal Displacement.
+    Key figures used: 123.2 million forcibly displaced persons at end-2024; 83.4 million internally displaced persons at end-2024; conflict/disaster breakdowns.
+
+S8. Gallup Potential Net Migration Index and Gallup global migration desire polling, including 2025/2026 release.
+    Key figures used: about 15% of adults worldwide wanting to move permanently to another country in 2025; about 900 million potential migrants; the U.S. still top desired destination but at its lowest preference share in nearly two decades.
+
+S9. Boston Consulting Group / The Stepstone Group global talent mobility research and BCG Top Talent Tracker.
+    Key figures used: global willingness to work abroad; preferred work destinations; 2025 high-skilled mobility slowdown based on professional profile data.
+
+S10. MBO Partners State of Independence / Digital Nomad reports.
+     Key figures used: 18.1 million American digital nomads in 2024; 147% growth since 2019; slower travel / longer stays in 2025.
+
+S11. EY and Global Citizen Solutions digital nomad visa analysis.
+     Key figures used: more than 40 jurisdictions with digital nomad / remote-work visas by mid-2024; 64 countries tracked in the Global Digital Nomad Report 2025; most programs launched after 2020.
+
+S12. Canada IRCC Immigration Levels Plans 2025-2027 and 2026-2028; UK Home Office / Reuters reporting on the 2025 immigration White Paper; Germany Opportunity Card official pages; New Zealand visitor-visa remote-work change; Japan digital nomad visa rules.
+     Key points used: major tightening in Canada and the UK; selective opening for skilled workers and remote workers in Germany, New Zealand, Japan and other countries.
+
+S13. European Commission / Court of Justice / Reuters / investment migration industry reporting on golden visas and citizenship by investment.
+     Key points used: Malta citizenship-by-investment ruling; Spain golden visa closure; Netherlands/UK/Ireland closures; Portugal real-estate route restrictions.
+
+S14. Public platform and competitor sources: Nomad List, Numbeo, Expat.com, InterNations Expat Insider, Reddit communities such as r/IWantOut, r/expats, r/AmerExit, and academic work on Telegram/WeChat/Facebook migrant communities.
+     Use: product gap analysis, social behaviour patterns, recurring questions, and evidence of where official data is weak.
+
+Important limitations:
+- International migration stocks are easier to measure than migration intentions, online searches, or Telegram/Facebook community growth.
+- Digital nomad visa counts differ by definition: some sources count only formal visas, others count remote-work permissions, freelancer visas, or temporary residence pathways.
+- Google Trends gives relative interest, not absolute search volumes. Exact export requires querying Google Trends directly for each term/country/time window.
+- Social media community counts are fragmented and often unavailable for Telegram/Facebook private groups.
+- Industry market-size estimates should be treated as directional rather than official statistics.

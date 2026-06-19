@@ -1,0 +1,1945 @@
+# Complete Migration, Relocation and Country-Choice Research Report
+
+
+
+---
+
+<!-- Included from README_Methodology.md -->
+
+# Migration, Relocation and Country-Choice Research Pack
+
+**Date prepared:** 16 June 2026  
+**Language of answers:** English  
+**Scope:** Global migration, relocation interest, country choice, online behaviour, community evidence, legal/policy changes, existing platforms, monetisation, unmet demand and future trends.
+
+## Methodology
+
+This pack answers the 120 questions supplied in the request. It combines:
+
+1. **Official and semi-official datasets** — UN DESA, IOM, OECD, Eurostat, UNHCR, IDMC, UNESCO, WHO and EU institutions.
+2. **Research and index sources** — Migration Policy Institute, OECD talent-attractiveness tools, InterNations, Numbeo, Nomads.com/Nomad List and comparable platforms.
+3. **Public community evidence** — Reddit communities such as r/IWantOut, r/expats and r/digitalnomad; public YouTube relocation/expat channels; public Telegram references where indexable.
+4. **Market and commercial evidence** — global mobility platforms, immigration advisory services, digital nomad visa guides, cost-of-living and relocation services.
+
+## Important limitations
+
+- Private Telegram groups, private Facebook groups, Discord servers and non-indexed YouTube comments cannot be audited reliably from here. Where community evidence is used, it is treated as **qualitative signal**, not statistically representative data.
+- Search-interest analysis is limited without exporting raw Google Trends data for every query and country pair. The pack therefore identifies patterns and query clusters rather than claiming precise global search volumes.
+- Immigration rules change frequently. For practical use, every country-specific visa, residence, tax or citizenship statement must be checked against the official government portal and, for complex cases, a licensed migration lawyer.
+- Cost-of-living and quality-of-life websites are useful for comparison, but crowdsourced data can be biased toward English-speaking, urban and expat users.
+
+## How to use this archive
+
+- Read `00_Executive_Synthesis.md` first.
+- Use files `01` to `11` for answers to the numbered questions.
+- Use `12_Source_Index.md` to trace the main sources.
+- For product or startup strategy, the most relevant sections are `04`, `05`, `08`, `09`, `10` and `11`.
+
+
+---
+
+<!-- Included from 00_Executive_Synthesis.md -->
+
+# 00 — Executive Synthesis
+
+## Core conclusion
+
+International migration is not a single trend. It is a bundle of several different movements:
+
+- **Long-term international migrant stock is rising**: the world had about **304 million international migrants in mid-2024**, almost double the 1990 level of 154 million and above 275 million in 2020. Migrants are still only about **3.7% of the world population**, so migration is globally significant but not the majority human condition. [S1] [S2] [S3]
+- **OECD migration reached a post-pandemic high in 2023 and remained historically high in 2024**, even after a partial decline. OECD recorded 6.5 million new permanent-type immigrants in 2023; in 2024, this fell by 4% to 6.2 million but remained 15% above 2019. [S4] [S5]
+- **Migration desire rose through the early 2020s but softened in 2025**. Gallup reports that global desire to migrate was at a record 16% from 2021 to 2024, then fell to 15% in 2025, the lowest level since 2018. The U.S. remains an important desired destination, but its attractiveness declined in several regions. [S6] [S7] [S8]
+- **Forced displacement remains historically high**. UNHCR reported 123.2 million forcibly displaced people at end-2024 and 117.8 million at end-2025 after a partial decline and increased returns. This is still a very high long-term level. [S9] [S10] [S47]
+- **Digital nomadism and remote-work relocation are no longer a niche**, but the market is becoming more regulated. U.S. digital nomads reached 18.5 million in 2025, up 153% since 2019, while governments increasingly formalise remote-work visas and employers impose compliance boundaries. [S16] [S18]
+
+## The strongest drivers of migration and relocation interest
+
+The recurring drivers across official data and community discussions are:
+
+1. **Income and work** — salary gap, job access, unemployment, career ceiling, business environment.
+2. **Safety and political stability** — war, repression, crime, institutional trust, social conflict.
+3. **Legal pathway feasibility** — whether a person can realistically obtain a visa, residence permit, permanent residence or citizenship.
+4. **Cost-of-living arbitrage** — especially for remote workers, retirees, freelancers and lower-budget migrants.
+5. **Family and children** — education, healthcare, safety, long-term stability.
+6. **Lifestyle and identity fit** — climate, culture, language, public services, social norms, ability to belong.
+7. **Plan B logic** — second passport, residence diversification, capital mobility, tax planning and geopolitical hedging.
+
+## Main destination patterns
+
+The largest absolute migrant-hosting countries are still the United States, Germany, Saudi Arabia, the United Kingdom, France, Spain, Canada, the UAE, Australia, Russia, Türkiye and Italy. Gulf states have extremely high migrant shares; North America, Western Europe and Oceania remain high-attraction regions; Southern Europe has become especially visible for remote workers, retirees and lifestyle migrants. [S1] [S3]
+
+## Main problem in the market
+
+People choosing a country face a severe information problem:
+
+- official information is fragmented by country and language;
+- legal rules change often;
+- communities contain valuable experience but also outdated, anecdotal or contradictory advice;
+- cost-of-living data is uneven;
+- visa/tax/healthcare/schooling/business data rarely appears in one decision-support system;
+- people compare countries emotionally rather than through structured scenarios.
+
+This creates demand for a platform that combines **objective country data, official legal tracking, human experience, scenario modelling, expert verification, and transparent freshness indicators**.
+
+## Product implications
+
+A valuable migration/country-choice product should not simply be “another expat forum” or “another visa blog”. The strongest opportunity is a **decision-support layer**:
+
+- country cards with objective indicators;
+- visa/residence/citizenship pathway maps;
+- freshness scoring for legal information;
+- cost-of-living + tax + income scenario calculators;
+- family/student/entrepreneur/digital-nomad personas;
+- community evidence with reliability labels;
+- law/policy direction tracking;
+- “country drift” indicators: becoming more open/closed, more liberal/authoritarian, more tax-friendly/tax-heavy, more business-friendly/bureaucratic;
+- expert-reviewed country playbooks.
+
+
+---
+
+<!-- Included from 01_Global_Migration_Dynamics_Q1_Q10.md -->
+
+# 01 — General Migration Dynamics
+
+## 1. Is the total number of international migrants increasing or decreasing?
+
+It is increasing in the long term. The latest UN DESA/IOM estimates place the global international migrant stock at around **304 million people in mid-2024**, up from **275 million in 2020** and **154 million in 1990**. As a share of world population, migrants rose from about 2.9% in 1990 to about 3.7% in 2024. [S1] [S2] [S3]
+
+Important nuance: “migrant stock” means people living outside their country of birth at a point in time. It does not measure every annual move. A country can have a rising migrant stock even if annual inflows slow temporarily.
+
+## 2. How has international migration changed over the last 10–20 years?
+
+Over 10–20 years, migration became larger, more diversified and more politically salient. Key changes:
+
+- more movement to OECD economies, especially after the pandemic rebound;
+- more labour-market migration into ageing economies;
+- more student mobility;
+- larger forced displacement due to Syria, Ukraine, Sudan, Afghanistan, Venezuela, Myanmar and other crises;
+- more remote-work relocation and “lifestyle migration”;
+- more digital bureaucracy and more restrictive screening in many destination countries.
+
+OECD permanent-type migration hit a record in 2023, then declined slightly in 2024 while remaining historically high. [S4] [S5]
+
+## 3. Which regions now receive the most migrants?
+
+The strongest receiving regions are:
+
+- **Europe** — both EU and non-EU Europe;
+- **Northern America** — especially the United States and Canada;
+- **Western Asia / Gulf states** — Saudi Arabia, UAE, Qatar, Kuwait and others;
+- **Oceania** — Australia and New Zealand by share and policy attractiveness;
+- selected **Latin American destinations** for regional movements, especially Venezuelan migration.
+
+By absolute country count, the United States remains the largest host; by migrant share, Gulf countries and small high-income states often rank highest. [S1] [S3]
+
+## 4. From which regions and countries do people most often leave?
+
+By stock of emigrants, the largest origin countries include **India, China, Mexico, Ukraine and Russia** in the UN DESA 2024 estimates. Other major origin contexts include Syria, Bangladesh, Pakistan, the Philippines and Afghanistan depending on the exact dataset and whether refugees are isolated from all migrants. [S1] [S3]
+
+By region, major origin areas include South Asia, Latin America, Eastern Europe/former Soviet space, parts of the Middle East, and sub-Saharan Africa.
+
+## 5. Which countries are the main migration destinations?
+
+The leading destination countries in 2024 included:
+
+1. United States — about 52.4 million international migrants  
+2. Germany — about 16.8 million  
+3. Saudi Arabia — about 13.7 million  
+4. United Kingdom — about 11.8 million  
+5. France — about 9.2 million  
+6. Spain — about 8.9 million  
+7. Canada — about 8.8 million  
+8. United Arab Emirates — about 8.2 million  
+9. Australia — about 8.1 million  
+10. Russian Federation — about 7.6 million  
+11. Türkiye — about 7.1 million  
+12. Italy — about 6.6 million  
+
+[S1] [S3]
+
+## 6. Which countries have become more popular for relocation over the last five years?
+
+The most visible growth categories:
+
+- **Canada** — high planned immigration targets in early 2020s, strong student/work pathways, though later tightening.
+- **Portugal and Spain** — lifestyle, remote work, retirement, tax regimes, digital nomad visas, EU access.
+- **Germany** — labour shortages and skilled-worker reforms.
+- **UAE** — business, tax, safety, international lifestyle, Golden Visa-style residence.
+- **Türkiye, Georgia, Armenia, Serbia, Kazakhstan** — practical relocation hubs for Russians, Ukrainians and regional movers after 2022.
+- **Mexico, Colombia, Costa Rica, Panama** — remote workers, retirees, U.S./Canadian outflow and cost arbitrage.
+- **Uruguay and Paraguay** — niche but growing interest among people seeking stability, residence options and lower geopolitical exposure.
+
+Popularity depends on user segment. Students, families, investors, digital nomads and refugees do not choose the same countries.
+
+## 7. Which countries are losing attractiveness for migrants?
+
+Countries can lose attractiveness for different reasons:
+
+- **High cost/housing pressure:** Canada, Australia, New Zealand, Netherlands, Ireland, Portugal’s Lisbon/Porto areas.
+- **Tighter student/work rules:** Canada, Australia, UK and some EU states since 2024.
+- **Political polarisation or safety concerns:** U.S. for some potential migrants, Russia for many outward movers, parts of the Middle East during conflict.
+- **Golden visa restrictions:** Spain ended its property golden visa route in 2025; Portugal removed real-estate routes earlier and has faced backlog issues. [S36] [S37]
+- **Integration/language difficulty:** Japan, South Korea, Gulf states and some European countries may be attractive economically but harder for long-term integration or citizenship.
+
+## 8. Which migration types are growing fastest?
+
+The fastest-growing or most dynamic categories are:
+
+- **Forced displacement** in the long run, despite the 2025 partial decline. [S9] [S10] [S11]
+- **Student migration** over the past two decades, although major Anglophone destinations tightened after 2024. [S14] [S15]
+- **Skilled migration** due to demographic ageing and labour shortages.
+- **Digital nomad / remote-work mobility**, from a low base but with strong post-2019 growth. [S16] [S18]
+- **Family migration** remains structurally large and drove much of the 2023 OECD increase. [S5]
+- **Investment migration** is polarised: demand among wealthy people is high, but many governments are tightening or redesigning programmes.
+
+## 9. How did migration flows change after COVID-19?
+
+COVID temporarily suppressed mobility through closed borders, visa delays and labour-market uncertainty. After reopening, many flows rebounded sharply:
+
+- OECD permanent-type migration reached record levels in 2023.
+- Student mobility recovered, then slowed in some destinations after policy tightening.
+- Remote work made temporary and semi-permanent relocation more realistic for knowledge workers.
+- Governments became more digital in visa processing, but also more cautious about fraud, housing pressure and labour-market abuse.
+
+## 10. Which world events most affected migration in recent years?
+
+The most influential events:
+
+- COVID-19 border closures and later reopening.
+- Russia’s full-scale invasion of Ukraine in 2022.
+- Conflicts in Syria, Sudan, Afghanistan, Myanmar, Gaza/Israel region and the Sahel.
+- Venezuela’s economic and political crisis.
+- Cost-of-living and housing crises in rich countries.
+- Climate-related disasters and food insecurity.
+- Post-2024 political shifts in the U.S. and Europe.
+- Demographic ageing in OECD and East Asian economies.
+- Return-to-office policies and compliance restrictions on remote work.
+
+
+---
+
+<!-- Included from 02_Interest_in_Moving_Abroad_Q11_Q20.md -->
+
+# 02 — People’s Interest in Moving Abroad
+
+## 11. Is the number of people who want to move to another country increasing?
+
+Long-term, yes, compared with the early 2010s; short-term, it softened in 2025. Gallup reported that desire to migrate reached a record **16% of adults worldwide from 2021 to 2024**, then declined to **15% in 2025**, the lowest level since 2018. [S6] [S8]
+
+So the correct answer is: **interest remains historically high, but it is not rising every year**.
+
+## 12. In which countries is the share of people wanting to emigrate highest?
+
+The highest emigration desire is usually found in countries with combinations of weak labour markets, insecurity, political instability, low trust in institutions and limited future prospects. Gallup historically shows high desire in parts of sub-Saharan Africa, Latin America and the Caribbean, and some conflict-affected or economically constrained countries. [S6] [S7] [S8]
+
+The exact top list changes year by year; for current product research, the better metric is not a single ranking but a dashboard combining: migration desire, actual outflow, youth outflow, skilled outflow, political risk and income gap.
+
+## 13. Which countries are most often named as desired places to live?
+
+The U.S. has long been the largest desired destination, but its advantage has weakened. Canada, Germany, the UK, Australia, France, Spain, Italy, Switzerland and some Nordic/Oceanian countries also rank highly in various surveys and indices. Canada showed very strong attractiveness in Gallup’s potential migration measures. [S6] [S7] [S8]
+
+## 14. Which age groups are most interested in relocation?
+
+Younger adults are usually the most migration-oriented group, especially ages 15–29 and 20–39. Reasons:
+
+- fewer family and property ties;
+- higher career/education flexibility;
+- more willingness to adapt linguistically and culturally;
+- stronger reaction to political and economic frustration;
+- greater use of online relocation communities.
+
+Families and older adults also migrate, but their decision cycles are slower and more constraint-heavy.
+
+## 15. Which professional groups most often consider migration?
+
+Frequently mobile groups include:
+
+- IT/software/data/AI professionals;
+- engineers, healthcare workers, technicians and skilled trades;
+- academics, researchers and students;
+- entrepreneurs and start-up founders;
+- finance/legal/tax professionals;
+- hospitality, construction, agriculture and care workers;
+- creative freelancers and digital nomads.
+
+In community discussions, IT and remote-work professionals are overrepresented because they have more searchable online footprints. [S21] [S22] [S23]
+
+## 16. Is interest in migration growing among qualified specialists?
+
+Yes, structurally. Ageing economies need skilled workers, and OECD countries increasingly benchmark talent attractiveness. The OECD’s talent-attractiveness work explicitly compares countries for highly educated workers, entrepreneurs, students and start-up founders. [S29] [S30]
+
+However, demand is selective. Countries want healthcare workers, engineers, trades, AI/data specialists and care workers, but often tighten lower-trust routes or student-to-work loopholes.
+
+## 17. Is interest growing among entrepreneurs, investors and business owners?
+
+Yes. Drivers include tax diversification, geopolitical hedging, capital protection, access to banking, business-friendly jurisdictions and “Plan B” residence/citizenship. Commercial investment-migration firms and sovereign-portfolio language are increasingly visible. [S45] [S46]
+
+But policy pressure is rising: property golden visas are under criticism because of housing affordability, money-laundering risks and unequal access.
+
+## 18. Is interest growing among students?
+
+Long-term, yes. International student mobility rose from around 2.5 million in 2002 to about 6.9 million in 2022, according to Migration Data Portal/UNESCO. UNESCO also reports that seven countries host roughly half of all international students. [S14] [S15]
+
+Short-term, some major destinations tightened rules. OECD reported that in 2024 OECD countries welcomed over 1.8 million international tertiary students, 13% fewer than in 2023, with sharp declines in Canada, Australia, the UK and the U.S. [S4]
+
+## 19. Is interest growing among families with children?
+
+Yes, but family migration is less visible online than digital nomad migration. Families mainly evaluate:
+
+- school quality;
+- healthcare;
+- safety;
+- residence stability;
+- housing;
+- language and integration for children;
+- spouse employment;
+- long-term citizenship prospects.
+
+Family migration is also reflected in residence permits: family reasons remain one of the largest legal migration categories in the EU and OECD. [S12] [S13]
+
+## 20. Which groups search most often for second citizenship, residence permits or permanent residence?
+
+Main groups:
+
+- wealthy investors and entrepreneurs;
+- politically anxious citizens of unstable or polarised countries;
+- remote workers seeking tax/residence optimisation;
+- parents seeking a safer future for children;
+- people from countries with weak passports;
+- diaspora descendants eligible for citizenship by ancestry;
+- people facing war, mobilisation, repression or sanctions;
+- global professionals planning long-term career mobility.
+
+The “second passport” audience is smaller than the general migration audience but has much higher willingness to pay.
+
+
+---
+
+<!-- Included from 03_Reasons_for_Migration_Q21_Q32.md -->
+
+# 03 — Reasons for Migration
+
+## 21. Why do people most often want to move abroad?
+
+The dominant reasons are:
+
+- better income and career prospects;
+- safety and political stability;
+- education;
+- family reunification;
+- healthcare;
+- lower cost of living;
+- personal freedom and rights;
+- business or investment opportunity;
+- climate and lifestyle;
+- long-term legal security.
+
+Most real decisions combine several reasons rather than one pure motive.
+
+## 22. How important are economic reasons: wages, jobs, taxes, cost of living?
+
+Very important. Economic reasons are central in labour migration and skilled migration. Even lifestyle migrants usually calculate income-to-cost ratio. Search and community behaviour shows repeated questions about salaries, rent, taxes, healthcare costs and whether a foreign income is enough for a specific city. [S21] [S22] [S23] [S26]
+
+For lower-income migrants, the wage gap is often decisive. For remote workers, cost arbitrage is decisive. For entrepreneurs, taxes and business rules become decisive.
+
+## 23. How important are political reasons: instability, restrictions, authoritarianism, wars?
+
+Very important when they exist. War, repression, mobilisation, sanctions, civil unrest, democratic backsliding and rights restrictions can turn migration from optional lifestyle planning into urgent exit planning. Ukraine, Russia, Belarus, Venezuela, Afghanistan, Myanmar, Syria and Sudan show how political shocks reshape flows and online communities. [S9] [S10] [S19] [S21]
+
+## 24. How important are safety and crime levels?
+
+Safety is one of the highest-priority criteria, especially for families, women, older adults and people moving from unstable contexts. It affects neighbourhood choice, school choice, nightlife, transport, insurance and long-term belonging. However, safety perceptions are often distorted by anecdotes; objective homicide/crime data should be combined with community reports.
+
+## 25. How important are healthcare systems?
+
+Healthcare is highly important for families, older migrants, people with chronic conditions and people comparing rich-country destinations. For young single remote workers, it may be secondary until they face real medical needs. WHO emphasises that migrant and refugee health access is a major policy issue, while communities often ask about insurance, waiting times, mental health and access to English-speaking doctors. [S48] [S22]
+
+## 26. How important are education and children’s opportunities?
+
+Very important for family migration. Parents compare school safety, language of instruction, international schools, university pathways, special-needs support, bullying, integration and future citizenship. For many families, a country with moderate salaries but strong schools can beat a richer country with expensive housing and difficult school access.
+
+## 27. How important are climate, ecology and urban environment?
+
+Increasingly important. Climate matters both as comfort and as risk: heat, fires, flooding, air pollution and water stress affect liveability. Urban environment matters because migrants experience the country through daily systems: transport, walkability, bureaucracy, parks, housing, pollution and commute time.
+
+## 28. How important is fast access to residence, permanent residence or citizenship?
+
+Extremely important. Many people do not choose the objectively “best” country; they choose the best country that gives them a realistic legal pathway. Fast residence/citizenship is especially important for weak-passport holders, politically exposed people, families, investors and people who cannot tolerate legal uncertainty.
+
+## 29. How important are taxes and financial freedom?
+
+Importance depends on income level:
+
+- low and middle-income migrants care first about net salary and living costs;
+- freelancers and remote workers care about double taxation, social contributions and tax residency;
+- entrepreneurs care about company tax, payroll tax, VAT, banking and capital controls;
+- wealthy people care about wealth tax, inheritance tax, exit tax, reporting and asset protection.
+
+For high-income users, tax can become a primary driver.
+
+## 30. How important is the ability to open a business or invest?
+
+Very important for entrepreneurs and investors, moderate for skilled workers and less important for students. Key factors are company formation, banking, tax, hiring rules, local market size, corruption, contract enforcement, investor residence routes and ability to bring family.
+
+## 31. How important are language, culture and ease of adaptation?
+
+Often underestimated. Language/culture may not block visa approval, but they determine long-term satisfaction. Communities repeatedly mention loneliness, bureaucracy, not belonging, dating/friendship difficulty, workplace culture and local language as post-move pain points. [S21] [S22] [S23]
+
+## 32. What reasons most often make people abandon relocation?
+
+Common blockers:
+
+- no realistic visa pathway;
+- insufficient savings;
+- housing cost shock;
+- fear of loneliness or integration failure;
+- family resistance;
+- partner/spouse career limits;
+- children’s schooling complexity;
+- inability to transfer qualifications;
+- healthcare uncertainty;
+- tax/legal uncertainty;
+- fear of losing status at home;
+- discovering that the “dream country” has low salaries or high bureaucracy.
+
+
+---
+
+<!-- Included from 04_Search_Interest_and_Online_Behaviour_Q33_Q44.md -->
+
+# 04 — Search Interest and Online Behaviour
+
+## 33. Is the number of search queries about moving abroad increasing?
+
+It appears event-driven rather than smoothly increasing. Google Trends can show spikes after elections, wars, policy changes and viral visa announcements. For example, after the 2024 U.S. election, Reuters reported very large spikes in U.S. searches for moving to Canada, New Zealand and Australia. [S19] [S20]
+
+A proper answer requires exporting Google Trends data for specific terms, languages and countries.
+
+## 34. Which migration search queries are growing fastest?
+
+Fast-growing clusters usually include:
+
+- “digital nomad visa [country]”;
+- “move to Canada/Portugal/Spain/Australia”;
+- “second passport”;
+- “citizenship by descent”;
+- “golden visa alternatives”;
+- “tax residency [country]”;
+- “best country to live in 2026”;
+- “cheap countries to live”;
+- “countries with low taxes”;
+- “how to leave [country]”.
+
+Growth is often triggered by policy changes, politics, influencer content and visa launches.
+
+## 35. Which countries are most often searched together with relocation?
+
+Common high-interest names: Canada, USA, Australia, New Zealand, UK, Germany, Portugal, Spain, Netherlands, UAE, Mexico, Thailand, Georgia, Türkiye, Italy and Greece. For Russian-speaking relocation, Serbia, Armenia, Georgia, Kazakhstan, Montenegro, Turkey, UAE, Argentina and Uruguay often appear in community discussions.
+
+## 36. Which countries are most often compared with each other?
+
+Frequent comparison pairs/clusters:
+
+- Canada vs Australia vs New Zealand;
+- Portugal vs Spain;
+- Germany vs Netherlands;
+- Spain vs Italy vs Portugal;
+- UAE vs Qatar vs Saudi Arabia;
+- Mexico vs Colombia vs Costa Rica;
+- Thailand vs Vietnam vs Malaysia vs Indonesia;
+- Georgia vs Armenia vs Serbia vs Turkey;
+- Uruguay vs Argentina vs Paraguay;
+- UK vs Ireland;
+- U.S. vs Canada.
+
+## 37. What topics do people most often search before moving?
+
+Typical topics:
+
+- visa requirements;
+- jobs and salaries;
+- cost of living and rent;
+- taxes and tax residency;
+- healthcare and insurance;
+- schools and childcare;
+- safety and neighbourhoods;
+- banking and documents;
+- language requirements;
+- permanent residence/citizenship timeline;
+- shipping belongings;
+- pets;
+- driving licence conversion;
+- mobile/internet;
+- community and dating/friendship.
+
+## 38. What questions are most often asked in Google about residence permits, permanent residence and citizenship?
+
+Common questions:
+
+- “How do I get a residence permit in [country]?”
+- “How long to get permanent residence in [country]?”
+- “Can I work on a student visa?”
+- “Can I bring my family?”
+- “Does [country] allow dual citizenship?”
+- “How many days do I need to stay to keep residence?”
+- “How much money do I need?”
+- “Can I get citizenship by descent?”
+- “What documents are required?”
+- “What happens if my visa is refused?”
+
+## 39. Is interest in digital nomad visas growing?
+
+Yes, compared with the pre-pandemic baseline. MBO Partners reported 18.5 million American digital nomads in 2025, up 153% since 2019. EY’s 2026 immigration index shows that many jurisdictions have launched or are preparing remote-work visa programmes. [S16] [S18]
+
+However, the market is maturing: employer compliance, tax rules, housing pressure and return-to-office policies limit the pure “work from anywhere” fantasy.
+
+## 40. Is interest in second passports and citizenship by investment growing?
+
+Yes among wealthy and politically anxious users, but the market is under more scrutiny. Golden visa/citizenship products remain commercially visible through firms such as Henley & Partners and Arton Capital, but the EU and individual states have tightened several routes. [S36] [S37] [S45] [S46]
+
+## 41. Is interest in low-tax countries growing?
+
+Yes among entrepreneurs, investors, crypto/tech workers and high-income freelancers. Common destinations in online content include UAE, Singapore, Switzerland, Monaco, Andorra, Cyprus, Malta, Panama, Paraguay and some territorial-tax jurisdictions. But “low tax” must be checked against residence rules, substance requirements, banking, controlled foreign company rules and exit taxes.
+
+## 42. Is interest in low-cost countries growing?
+
+Yes, driven by inflation, housing costs and remote work. Users compare rent, groceries, healthcare, transport and local purchasing power through tools such as Numbeo, Wise, Nomad List and community spreadsheets. [S24] [S26]
+
+Low cost alone is not enough: safety, visa stability, healthcare and internet quality often decide whether the country is viable.
+
+## 43. What fears appear most often in relocation searches?
+
+Recurring fears:
+
+- visa rejection;
+- not finding work;
+- running out of money;
+- being lonely;
+- language failure;
+- housing scams;
+- healthcare problems;
+- tax mistakes;
+- school problems for children;
+- crime;
+- discrimination;
+- losing documents;
+- not being able to return;
+- making the wrong country choice.
+
+## 44. Which YouTube relocation topics get the most views?
+
+High-performing topics usually include:
+
+- “best countries to live in” rankings;
+- cost-of-living breakdowns;
+- moving abroad after political events;
+- digital nomad visa explainers;
+- retire abroad under a budget;
+- countries Americans/Europeans regret moving to;
+- “why I left [country]”;
+- apartment tours and monthly budgets;
+- tax-friendly countries;
+- citizenship by descent or second passport;
+- country comparison videos.
+
+Representative channels include ExpatsEverywhere, Traveling with Kristin, Nomad Capitalist, Vagabond Awake and many country-specific creators. [S50]
+
+
+---
+
+<!-- Included from 05_Social_Networks_and_Communities_Q45_Q54.md -->
+
+# 05 — Social Networks and Communities
+
+## 45. Where do people most often discuss moving abroad?
+
+Public discussion is concentrated in:
+
+- Reddit: r/IWantOut, r/expats, r/digitalnomad, r/ExpatFIRE, country subreddits;
+- Facebook groups: “Expats in [city/country]”, “Foreigners in [country]”, school/parent groups;
+- Telegram: especially for Russian-speaking, Ukrainian, Belarusian and regional relocation communities;
+- YouTube comments under relocation videos;
+- Discord/Slack groups for digital nomads and remote workers;
+- old-style forums for expats, immigration and citizenship by descent;
+- Nomad List/Nomads.com and InterNations communities. [S21] [S22] [S23] [S24] [S25]
+
+## 46. What topics are most often discussed in migration communities?
+
+Common themes:
+
+- visa eligibility;
+- job search and sponsorship;
+- rent and neighbourhoods;
+- local salaries;
+- taxes;
+- documents;
+- schools;
+- healthcare;
+- language;
+- discrimination;
+- dating/friendship;
+- bureaucracy;
+- banking;
+- scams;
+- pets;
+- driving licence;
+- whether the move was “worth it”.
+
+## 47. What questions do people most often ask before moving?
+
+Typical pre-move questions:
+
+- “Can I realistically get a visa?”
+- “How much money do I need?”
+- “Can I get a job without local language?”
+- “Which city is better?”
+- “Is my profession in demand?”
+- “Can I bring my spouse/children/pets?”
+- “What is the real rent?”
+- “How hard is bureaucracy?”
+- “How safe is it?”
+- “How long until permanent residence/citizenship?”
+
+## 48. What problems do people most often describe after moving?
+
+Post-move complaints:
+
+- loneliness and weak social ties;
+- bureaucracy taking longer than expected;
+- housing shortage or bad landlords;
+- difficulty converting qualifications;
+- lower-than-expected salaries;
+- hidden tax/insurance costs;
+- healthcare waiting times;
+- language barrier;
+- children’s adaptation;
+- nostalgia and identity crisis;
+- visa renewal anxiety;
+- disappointment after the novelty fades.
+
+## 49. Which countries are most often discussed in migration communities?
+
+In English-language communities: U.S., Canada, UK, Australia, New Zealand, Germany, Netherlands, Spain, Portugal, Ireland, France, Italy, Mexico, Costa Rica, Thailand, Japan, Singapore and UAE.
+
+In Russian-speaking relocation communities: Georgia, Armenia, Serbia, Turkey, Kazakhstan, Montenegro, UAE, Argentina, Uruguay, Paraguay, Portugal, Spain, Germany and Cyprus.
+
+In digital nomad spaces: Portugal, Spain, Thailand, Indonesia/Bali, Vietnam/Da Nang, Mexico, Colombia/Medellín, Georgia/Tbilisi, Albania, Greece, Croatia, Malta, Uruguay and UAE.
+
+## 50. Which Telegram channels, YouTube channels, Reddit communities and Facebook groups are most active?
+
+Reliable activity changes constantly, but high-signal public examples include:
+
+- **Reddit:** r/IWantOut, r/expats, r/digitalnomad, r/ExpatFIRE, country/city subs. [S21] [S22] [S23]
+- **YouTube:** ExpatsEverywhere, Traveling with Kristin, Nomad Capitalist, Vagabond Awake, Offshore Citizen, country-specific expat creators. [S50]
+- **Telegram:** Russian-language relocation channels and chats such as Relocation.Guide became prominent after 2022; many are fragmented by country/city and should be verified manually for current activity.
+- **Facebook:** “Expats in Portugal”, “Expats in Spain”, “Americans in Portugal”, “Digital Nomads [city]”, “Expats in Uruguay”, “Foreigners in Georgia” style groups. Exact group quality varies strongly.
+
+## 51. How much do people trust social-media and chat information?
+
+They trust it for lived experience but not for law. Communities are useful for:
+
+- housing reality;
+- bureaucracy timelines;
+- neighbourhood safety;
+- school/doctor recommendations;
+- emotional support;
+- discovering hidden costs.
+
+But users frequently warn each other to verify visa/tax/legal advice with official sources or professionals. Trust is highest when several independent users report the same experience recently.
+
+## 52. Which community information is most often outdated or contradictory?
+
+High-risk categories:
+
+- visa documents and income thresholds;
+- tax residency and double taxation;
+- citizenship timelines;
+- healthcare registration;
+- school enrolment;
+- bank account opening;
+- rental prices;
+- border entry rules;
+- embassy appointment availability;
+- whether remote work is legal on a tourist stay;
+- recognition of diplomas.
+
+## 53. Which topics cause the most disputes among migrants and relocants?
+
+Dispute-heavy topics:
+
+- whether a country is “good” or “overrated”;
+- taxes vs public services;
+- local language obligation;
+- integration vs expat bubble;
+- crime and safety;
+- politics and social values;
+- whether digital nomads gentrify local cities;
+- salaries and job scarcity;
+- housing prices;
+- private vs public healthcare;
+- whether to use lawyers/agents;
+- moral debates around golden visas and passport buying.
+
+## 54. What recurring pains and complaints appear among people who already moved?
+
+The most repeated pains are:
+
+- “I underestimated bureaucracy.”
+- “I underestimated loneliness.”
+- “I underestimated rent.”
+- “The salary is not enough after taxes.”
+- “The country is beautiful but jobs are hard.”
+- “People are polite but hard to befriend.”
+- “I do not know if I belong here.”
+- “The information I used was outdated.”
+- “The visa renewal process creates constant stress.”
+- “My partner/children are not adapting as easily as I expected.”
+
+
+---
+
+<!-- Included from 06_Choosing_a_Country_Q55_Q66.md -->
+
+# 06 — Choosing a Country
+
+## 55. What criteria do people usually use to choose a relocation country?
+
+Core criteria:
+
+- visa feasibility;
+- work/income prospects;
+- cost of living;
+- safety;
+- healthcare;
+- education;
+- taxes;
+- citizenship/permanent residence timeline;
+- language/culture;
+- climate;
+- community/diaspora;
+- business environment;
+- property/rent market;
+- political stability;
+- passport strength;
+- distance from family;
+- personal identity fit.
+
+A good comparison system should weight these differently by persona.
+
+## 56. What criteria matter most for single people?
+
+Usually:
+
+- work and salary;
+- rent affordability;
+- social life and dating;
+- language and integration;
+- safety;
+- visa route;
+- city lifestyle;
+- career growth;
+- cost of travel home.
+
+Single people often tolerate smaller apartments and more uncertainty but care strongly about belonging and career momentum.
+
+## 57. What criteria matter most for families?
+
+Usually:
+
+- safety;
+- schools and childcare;
+- healthcare;
+- family visa rights;
+- stable residence status;
+- housing size and cost;
+- spouse employment;
+- child language adaptation;
+- long-term citizenship;
+- neighbourhood quality.
+
+Families need fewer surprises and more legal certainty.
+
+## 58. What criteria matter most for students?
+
+Usually:
+
+- university quality;
+- tuition and scholarships;
+- student visa rights;
+- post-study work route;
+- part-time work rights;
+- cost of living;
+- language of instruction;
+- degree recognition;
+- safety;
+- path from study to work/residence.
+
+Global student mobility is large, but some major destinations tightened student rules after 2024. [S4] [S14] [S15]
+
+## 59. What criteria matter most for entrepreneurs?
+
+Usually:
+
+- company formation;
+- taxes and social contributions;
+- banking access;
+- market access;
+- rule of law;
+- hiring rules;
+- start-up visas;
+- investor/start-up ecosystem;
+- IP protection;
+- ability to bring family;
+- personal residence pathway.
+
+## 60. What criteria matter most for investors?
+
+Usually:
+
+- political and legal stability;
+- property rights;
+- tax regime;
+- banking and capital controls;
+- residence/citizenship benefits;
+- exit options;
+- due diligence requirements;
+- inheritance/wealth taxes;
+- investment liquidity;
+- reputational risk of the programme.
+
+## 61. What criteria matter most for digital nomads?
+
+Usually:
+
+- legal remote-work route;
+- internet reliability;
+- rent and coworking;
+- time zone;
+- tax residency rules;
+- healthcare/insurance;
+- safety;
+- community;
+- climate;
+- banking/payment access;
+- visa length and renewal;
+- 183-day tax issues. [S16] [S18] [S24]
+
+## 62. Which countries are often chosen by people with limited budgets?
+
+Common budget-conscious choices include:
+
+- Mexico, Colombia, Ecuador, Peru;
+- Argentina and Paraguay in some scenarios;
+- Georgia, Armenia, Serbia, Albania, Bosnia;
+- Turkey;
+- Thailand, Vietnam, Indonesia, Malaysia, Philippines;
+- Portugal/Spain outside expensive cities for some Europeans;
+- Morocco and Tunisia for some retirees.
+
+Budget viability depends on visa, income source and healthcare needs.
+
+## 63. Which countries are often chosen by people who prioritise safety?
+
+Common safety-oriented choices:
+
+- Switzerland, Austria, Denmark, Finland, Norway, Iceland;
+- Netherlands, Germany, Luxembourg;
+- Japan, Singapore, South Korea;
+- Canada, New Zealand, Australia;
+- Uruguay in Latin America;
+- UAE for low street crime, though with different rights/legal trade-offs.
+
+Safety must include crime, political stability, women’s safety, healthcare access, traffic safety and legal predictability.
+
+## 64. Which countries are often chosen for a fast path to citizenship?
+
+Commonly discussed faster or more accessible routes include:
+
+- citizenship by descent: Italy, Ireland, Poland, Hungary, Spain/Portugal for specific ancestry categories;
+- Latin American naturalisation routes in some cases: Argentina, Uruguay, Paraguay, Brazil, Mexico depending on status and residence;
+- investment citizenship in some Caribbean states and a few small-state programmes;
+- Portugal historically popular for a five-year pathway, but timelines and legal changes must be verified.
+
+Fast does not mean easy. Residence days, language, clean record, income, documents and processing delays matter.
+
+## 65. Which countries are often chosen for taxes and business environment?
+
+Commonly discussed:
+
+- UAE;
+- Singapore;
+- Switzerland;
+- Estonia;
+- Cyprus;
+- Malta;
+- Ireland for corporate structures;
+- Netherlands for certain business structures, though not “low tax” for individuals;
+- Panama, Paraguay, Uruguay in Latin America;
+- Andorra and Monaco for high-net-worth individuals.
+
+The correct choice depends on personal tax residency, company substance, customers, controlled foreign company rules and banking.
+
+## 66. Which countries look attractive at first but create problems after relocation?
+
+Examples by pain pattern:
+
+- **Portugal/Spain:** lifestyle appeal but bureaucracy, housing pressure and tax-rule complexity.
+- **Canada/Australia/New Zealand:** high quality of life but housing costs, distance and stricter migration rules.
+- **UAE/Gulf:** safety and tax appeal but heat, cultural/legal constraints and limited citizenship path.
+- **Thailand/Bali/Mexico/Colombia:** lifestyle and cost appeal but visa runs, healthcare/insurance, safety pockets and gentrification.
+- **Germany/Netherlands:** strong economy but language, housing and bureaucracy.
+- **Georgia/Armenia/Serbia/Turkey:** accessible entry but limited high-paying jobs and changing rules.
+
+The problem is rarely that the country is “bad”; it is that expectations are incomplete.
+
+
+---
+
+<!-- Included from 07_Laws_Visas_and_Government_Policy_Q67_Q78.md -->
+
+# 07 — Laws, Visas and Government Policy
+
+## 67. Which countries recently simplified residence or permanent residence rules?
+
+Examples include:
+
+- Germany’s skilled-worker reforms and Western Balkans quota expansion;
+- several EU countries adjusting Blue Card/skilled routes;
+- Spain’s digital nomad/international teleworker route;
+- UAE long-term residence/golden visa-style pathways;
+- Japan, Korea and some Gulf states expanding selected skilled or talent routes;
+- countries launching digital nomad visas or remote-work residence permits.
+
+Always verify by official portals because “simplified” often means simplified for specific categories only. [S4] [S18] [S31] [S33]
+
+## 68. Which countries recently tightened migration rules?
+
+Recent tightening is visible in:
+
+- Canada: caps and reductions affecting international students/non-permanent residents;
+- Australia: stricter student and temporary migration controls;
+- UK: student dependants, salary thresholds and asylum/legal-route controls;
+- Netherlands: planned tightening of highly skilled migrant rules;
+- Sweden and other EU states: tougher asylum/residence enforcement;
+- EU-wide asylum/border pact implementation from June 2026. [S4] [S12] [S38] [S39]
+
+## 69. Which countries launched digital nomad visas or similar programmes?
+
+Many countries have remote-work/digital nomad routes, including Spain, Portugal, Croatia, Estonia, Greece, Malta, Hungary, Germany-style freelancer routes, UAE/Dubai, Barbados, Bahamas, Costa Rica, Panama, Colombia, Brazil, Argentina, Uruguay, Mauritius, Seychelles, Cape Verde and others. EY reported that more countries, including Bolivia, Georgia, the Philippines and Senegal, were preparing programmes for 2026. [S18]
+
+## 70. Which countries closed or restricted golden visa and investment programmes?
+
+Key examples:
+
+- Spain ended its real-estate golden visa route in April 2025. [S36]
+- Ireland ended its investor programme in 2023.
+- UK ended its Tier 1 investor route in 2022.
+- Netherlands ended its investor programme in 2024.
+- Portugal removed real-estate investment from eligible golden visa routes in 2023 while keeping other investment options. [S37]
+- Greece increased thresholds in key areas.
+
+## 71. Which countries simplified migration for qualified specialists?
+
+Common examples:
+
+- Germany;
+- Canada, though with more selective planning;
+- Australia;
+- New Zealand;
+- UK for selected skilled routes;
+- EU Blue Card countries;
+- Netherlands for recognised sponsors/highly skilled migrants;
+- Japan and South Korea for selected high-skilled categories;
+- Gulf states for specialised professionals.
+
+The trend is not open migration; it is targeted talent selection.
+
+## 72. Which countries actively compete for entrepreneurs and start-ups?
+
+Examples:
+
+- Canada Start-up Visa;
+- UK Innovator Founder route;
+- France Tech Visa;
+- Netherlands start-up residence;
+- Estonia start-up ecosystem/e-residency;
+- Portugal and Spain start-up/entrepreneur routes;
+- Singapore EntrePass;
+- UAE start-up/free-zone ecosystem;
+- Chile Start-Up Chile;
+- Ireland and Finland start-up permits;
+- New Zealand/Australia entrepreneur routes.
+
+OECD explicitly measures attractiveness for entrepreneurs and start-up founders. [S29] [S30]
+
+## 73. Which countries restrict foreign property purchases?
+
+Restrictions vary but are common in:
+
+- Canada: restrictions on foreign residential purchases;
+- New Zealand: foreign buyer restrictions;
+- Australia: foreign investment review and surcharges;
+- Singapore: heavy additional stamp duties;
+- Denmark/Switzerland: restrictions for non-residents;
+- Thailand: land ownership restrictions;
+- some EU cities/regions: local restrictions or tax pressure;
+- Spain/Portugal: not a full foreign-buying ban, but investment-residence via property was restricted/ended.
+
+## 74. Which countries are changing tax rules for new residents?
+
+Commonly discussed changes:
+
+- Portugal modified its non-habitual resident regime and related incentives;
+- Italy’s flat-tax regime remains high-profile but subject to political discussion;
+- Spain’s Beckham Law interacts with digital nomad visas;
+- UK changed non-dom rules;
+- UAE introduced corporate tax while remaining low/no personal income tax for many;
+- several Latin American and European countries are reviewing remote-worker and investment incentives.
+
+Tax rules change faster than lifestyle guides.
+
+## 75. Which legal changes most affect migrants?
+
+Most impactful:
+
+- visa eligibility and quotas;
+- income thresholds;
+- sponsor/employer rules;
+- family reunification limits;
+- student work/dependant rights;
+- asylum procedure changes;
+- path to permanent residence/citizenship;
+- dual citizenship rules;
+- tax residency/day-count rules;
+- healthcare access;
+- housing/registration requirements.
+
+## 76. Which legal changes most affect businesspeople and investors?
+
+Most impactful:
+
+- residence-by-investment thresholds;
+- eligible investment categories;
+- banking due diligence and source-of-funds checks;
+- tax residency and reporting;
+- company-substance rules;
+- CFC and anti-avoidance rules;
+- property purchase restrictions;
+- sanctions and nationality restrictions;
+- wealth/inheritance/exit taxes;
+- ability to employ foreign staff.
+
+## 77. Where can official visa/residence/citizenship information be found?
+
+Best sources:
+
+- official immigration ministry/home affairs websites;
+- embassy/consulate websites;
+- EU Immigration Portal for EU routes; [S31]
+- IATA Timatic/Travel Centre for travel document requirements; [S32]
+- Migration Policy Institute directory of official government immigration websites; [S33]
+- official gazettes and legislation portals;
+- licensed immigration lawyers for interpretation.
+
+## 78. How often do migration rules change in popular countries?
+
+Frequently. Popular countries may change rules several times per year through:
+
+- annual quotas;
+- budget laws;
+- ministerial decrees;
+- court decisions;
+- income threshold updates;
+- political reforms;
+- emergency security/asylum measures;
+- digital-system changes.
+
+For a serious platform, every legal item needs a **last verified date**, source URL, jurisdiction, affected user type and confidence/freshness score.
+
+
+---
+
+<!-- Included from 08_Existing_Services_and_Platforms_Q79_Q90.md -->
+
+# 08 — Existing Services and Platforms
+
+## 79. What websites and apps do people use to choose a country?
+
+Common tools:
+
+- Nomads.com/Nomad List;
+- Numbeo;
+- InterNations;
+- Expatistan;
+- Wise cost-of-living pages;
+- OECD Better Life Index;
+- World Bank/OECD/UN data portals;
+- Reddit/Facebook/Telegram communities;
+- YouTube relocation channels;
+- visa advisory websites;
+- official government portals.
+
+No single platform fully solves country choice.
+
+## 80. What sites compare cost of living?
+
+Common examples:
+
+- Numbeo; [S26]
+- Expatistan;
+- Wise Cost of Living;
+- Livingcost.org;
+- Mercer Cost of Living for corporate mobility;
+- Nomad List/Nomads.com for nomad-oriented cost estimates. [S24]
+
+## 81. What sites compare quality of life?
+
+Common examples:
+
+- OECD Better Life Index; [S28]
+- Numbeo Quality of Life; [S27]
+- InterNations Expat Insider; [S25]
+- World Happiness Report;
+- Social Progress Index;
+- Mercer Quality of Living;
+- EIU Global Liveability Index;
+- Global Peace Index.
+
+## 82. What sites help with visa and migration rules?
+
+Common examples:
+
+- official immigration portals;
+- EU Immigration Portal;
+- IATA Timatic / Travel Centre for entry rules;
+- embassy websites;
+- government gazettes;
+- Where Can I Live;
+- Nomad Gate;
+- MigRun;
+- relocation law-firm blogs;
+- investment migration firms for investor routes. [S31] [S32] [S33] [S44] [S45]
+
+## 83. What sites help with taxes and business abroad?
+
+Common examples:
+
+- Big Four tax guides: PwC, Deloitte, EY, KPMG;
+- government tax agencies;
+- Tax Foundation;
+- Nomad Capitalist;
+- Offshore Citizen;
+- local law/accounting firms;
+- OECD tax resources;
+- World Bank Doing Business archives and successor/related datasets;
+- Global Residence Index-style commercial guides.
+
+## 84. What sites help find migrant and expat reviews?
+
+Common examples:
+
+- Reddit;
+- InterNations;
+- Facebook expat groups;
+- YouTube channels and comments;
+- Trustpilot reviews of relocation services;
+- Expat.com;
+- Numbeo comments;
+- Nomad List/Nomads.com community;
+- local Telegram groups. [S21] [S22] [S23] [S24] [S25]
+
+## 85. What sites help digital nomads choose countries/cities?
+
+Common examples:
+
+- Nomads.com/Nomad List;
+- Digital Nomads World;
+- Remote Year and similar travel-work communities;
+- Coworker.com;
+- Workfrom;
+- SafetyWing content;
+- Remofirst/Deel/Remote work visa guides;
+- MBO Partners research for trend context. [S16] [S24]
+
+## 86. What sites help companies/HR relocate employees?
+
+Examples:
+
+- Deel Mobility;
+- Benivo;
+- Jobbatical;
+- Topia;
+- Localyze;
+- Aires;
+- Sirva/BGRS;
+- Crown World Mobility;
+- Graebel;
+- Plus Relocation;
+- Fragomen;
+- Envoy Global;
+- Remote/Boundless/EOR platforms. [S40] [S41] [S42]
+
+## 87. What sites help track laws and political changes?
+
+Examples:
+
+- official parliamentary/legal gazettes;
+- EU EUR-Lex and national gazettes;
+- FiscalNote/PolicyNote; [S34]
+- LegiScan for U.S.; [S35]
+- LexisNexis State Net;
+- OpenStates;
+- IAPP legal trackers for AI/privacy;
+- country risk platforms;
+- law-firm legal alerts.
+
+Migration-specific legal tracking is fragmented, which creates product opportunity.
+
+## 88. Which services are most popular in migration, relocation and country choice?
+
+By category:
+
+- **Cost/lifestyle:** Numbeo, InterNations, Nomad List.
+- **Community:** Reddit, Facebook, Telegram, YouTube.
+- **Official rules:** government portals, EU Immigration Portal, IATA Timatic.
+- **Legal services:** Fragomen, local immigration law firms, IAS-style firms.
+- **Investment migration:** Henley & Partners, Arton Capital, CS Global Partners, Astons and others.
+- **B2B mobility:** Deel, Benivo, Jobbatical, Topia, Localyze, Crown, Graebel.
+
+## 89. Which functions are most useful?
+
+Useful functions:
+
+- country/city comparison;
+- cost calculators;
+- visa requirement explainers;
+- community Q&A;
+- relocation checklists;
+- document lists;
+- salary/tax estimators;
+- neighbourhood reviews;
+- school/healthcare information;
+- immigration-law alerts;
+- B2B case tracking;
+- employee relocation dashboards.
+
+## 90. Which functions are weakest or inconvenient?
+
+Common weaknesses:
+
+- outdated visa pages;
+- weak source citations;
+- no freshness indicator;
+- poor separation of official law vs personal experience;
+- shallow country rankings;
+- weak family/student/business personas;
+- no scenario modelling;
+- hidden commercial bias;
+- poor local-language coverage;
+- unverified community advice;
+- no audit trail for legal changes.
+
+
+---
+
+<!-- Included from 09_Monetisation_and_Willingness_to_Pay_Q91_Q100.md -->
+
+# 09 — Monetisation and Willingness to Pay
+
+## 91. What relocation information are people willing to pay for?
+
+People pay for information that reduces legal, financial or emotional risk:
+
+- personalised visa eligibility;
+- document checklist for their case;
+- tax-residency analysis;
+- country comparison by personal scenario;
+- school/healthcare/housing guidance;
+- trusted lawyer/accountant introductions;
+- second citizenship/residence strategy;
+- business setup and banking;
+- “what can go wrong” risk assessment.
+
+Generic blog content has low willingness to pay; personalised risk reduction has high willingness.
+
+## 92. What migration services do people already pay for?
+
+Common paid services:
+
+- immigration lawyer consultation;
+- visa application preparation;
+- document translation/notarisation/apostille;
+- relocation consultant;
+- tax advisor;
+- international school consultant;
+- property search;
+- company formation;
+- bank account support;
+- health insurance;
+- shipment/moving services;
+- investment migration advisory;
+- employer relocation package.
+
+## 93. How much do consultations on migration, visas, residence, permanent residence and citizenship cost?
+
+Typical market ranges vary by country and case complexity:
+
+- simple initial consultation: free to roughly $100–$400 / €100–€300;
+- specialist lawyer hourly rates: often €150–€500+ or £225–£675 in some UK firms;
+- packaged document review/check-up: around €500+ in some online migration services;
+- full visa handling: hundreds to several thousand euros/dollars;
+- complex asylum, investor, business or litigation cases: several thousand to tens of thousands;
+- investment migration advisory: often quote-based and tied to programme fees. [S43] [S44] [S45] [S46]
+
+## 94. How much do paid reports, guides and checklists cost?
+
+Common ranges:
+
+- simple country checklist: $10–$50;
+- detailed relocation guide: $30–$200;
+- personalised country report: $100–$500+;
+- legal/tax memo: $300–$2,000+;
+- HNWI sovereign portfolio or investor report: often bundled into advisory services, quote-based.
+
+People pay more when the report is personalised, updated, jurisdiction-specific and lawyer-reviewed.
+
+## 95. Which services use subscription models?
+
+Subscription-style models appear in:
+
+- Nomads.com/Nomad List community/features;
+- InterNations premium membership;
+- legal/policy tracking tools like FiscalNote;
+- B2B global mobility platforms;
+- employer-of-record platforms;
+- relocation SaaS;
+- premium expat newsletters;
+- country intelligence/risk services.
+
+## 96. Which services monetise legal consultations?
+
+Examples:
+
+- immigration law firms;
+- visa agencies;
+- global mobility law providers such as Fragomen-style firms;
+- online migration platforms such as MigRun;
+- investment migration firms;
+- tax residency/offshore planning consultants;
+- country-specific relocation agencies. [S40] [S43] [S44] [S45]
+
+## 97. Which services monetise affiliate programmes?
+
+Common affiliate categories:
+
+- health/travel insurance;
+- international moving companies;
+- temporary housing;
+- banks/fintech accounts;
+- money transfers;
+- eSIMs/mobile plans;
+- coworking;
+- language schools;
+- document translation;
+- visa agencies;
+- tax consultations;
+- company formation;
+- property rentals.
+
+Affiliate monetisation works best when labelled transparently.
+
+## 98. What B2B services exist in global mobility and relocation?
+
+Main B2B categories:
+
+- immigration case management;
+- employee relocation logistics;
+- employer-of-record and payroll;
+- tax equalisation;
+- assignment compensation;
+- destination services;
+- corporate housing;
+- compliance dashboards;
+- vendor management;
+- policy automation;
+- employee experience portals.
+
+Examples include Deel, Benivo, Jobbatical, Topia, Localyze, Crown, Graebel, Aires, Sirva/BGRS, Fragomen and Envoy Global. [S40] [S41] [S42]
+
+## 99. What do companies pay for in employee relocation?
+
+Companies pay for:
+
+- visa/work permit compliance;
+- employee onboarding in destination country;
+- housing search;
+- shipment;
+- temporary accommodation;
+- tax compliance and equalisation;
+- family support;
+- school search;
+- language/cultural training;
+- payroll/EOR setup;
+- travel booking;
+- risk management;
+- dashboard/reporting.
+
+## 100. Which paid functions do users consider truly valuable?
+
+Valuable paid functions:
+
+- “Can I legally move?” eligibility engine;
+- official-law-backed document checklist;
+- deadline tracker;
+- tax risk calculator;
+- rent + salary + tax scenario simulator;
+- expert-reviewed country comparison;
+- lawyer/agent matching with transparent reviews;
+- verified community experience database;
+- alerts when laws change;
+- personalised relocation roadmap.
+
+The key value is confidence, not information volume.
+
+
+---
+
+<!-- Included from 10_Problems_and_Unmet_Demand_Q101_Q110.md -->
+
+# 10 — Problems and Unmet Demand
+
+## 101. What relocation information is most scattered across sources?
+
+The most scattered information:
+
+- visa law;
+- tax residency;
+- real cost of living;
+- salaries by profession;
+- school and healthcare access;
+- neighbourhood safety;
+- bureaucracy timelines;
+- banking;
+- document legalisation;
+- path to permanent residence/citizenship;
+- spouse employment;
+- pet relocation;
+- local-language requirements;
+- community reality after arrival.
+
+## 102. What data do people most often lack when choosing a country?
+
+Missing data:
+
+- realistic monthly budget by lifestyle/persona;
+- net salary after tax;
+- probability of visa approval by profile;
+- processing times;
+- real rental availability;
+- local job-market depth;
+- school availability;
+- healthcare waiting times;
+- newcomer bureaucracy timeline;
+- social integration difficulty;
+- legal-rule freshness;
+- risk of future policy tightening.
+
+## 103. Which relocation questions are hardest to solve alone?
+
+Hardest questions:
+
+- “Which visa route is actually best for my profile?”
+- “Will I become tax resident?”
+- “Can I legally work remotely from there?”
+- “Will my diploma/profession be recognised?”
+- “Can my spouse work?”
+- “Can my children enter local schools?”
+- “How much money do I really need for the first year?”
+- “How likely is the law to change?”
+- “What happens if I fail to renew?”
+- “Is the country moving politically in a direction I can accept?”
+
+## 104. Where do people most often face outdated information?
+
+Outdated information appears in:
+
+- old blog posts;
+- YouTube videos older than 6–12 months;
+- Telegram pinned messages;
+- Reddit answers from previous visa regimes;
+- agent landing pages not updated after reforms;
+- copied country guides;
+- AI-generated content without source dates;
+- embassy pages not synchronised with new laws.
+
+## 105. Where do people most often face contradictory advice?
+
+Contradictions appear in:
+
+- tax residency;
+- remote work on tourist visas;
+- required bank balance;
+- apostille/translation requirements;
+- border-entry experience;
+- school registration;
+- healthcare access;
+- whether a lawyer is necessary;
+- citizenship eligibility;
+- exact processing times.
+
+Contradictions often happen because people have different passports, income sources, family status and timing.
+
+## 106. What mistakes do people most often make when choosing a country?
+
+Common mistakes:
+
+- choosing by YouTube aesthetics;
+- ignoring visa feasibility;
+- underestimating rent;
+- comparing gross salaries instead of net income;
+- ignoring taxes;
+- assuming English is enough everywhere;
+- not checking healthcare;
+- not visiting before committing;
+- trusting one community opinion;
+- ignoring spouse/child adaptation;
+- confusing tourist experience with resident life.
+
+## 107. What mistakes do people often make after moving?
+
+Common mistakes:
+
+- missing registration deadlines;
+- not keeping proof of residence days;
+- working illegally or in a grey zone;
+- not saving for renewals;
+- choosing expensive temporary housing too long;
+- failing to learn the local language;
+- staying only in expat bubbles;
+- not understanding local contracts;
+- signing bad rental agreements;
+- delaying tax advice;
+- ignoring mental health.
+
+## 108. What decisions do people make based on unverified information?
+
+Examples:
+
+- buying property assuming it guarantees residence;
+- relocating on a tourist visa and working remotely;
+- assuming permanent residence after X years without checking physical presence;
+- choosing a city based on influencer budgets;
+- assuming healthcare is free immediately;
+- assuming children will enter school easily;
+- assuming tax-free income because “foreign income is not taxed”;
+- paying unlicensed agents;
+- believing “everyone gets approved”.
+
+## 109. What data would people like to see in one place?
+
+Ideal unified data:
+
+- visa pathways;
+- residence/citizenship timeline;
+- official sources and freshness;
+- cost-of-living budget;
+- rent availability;
+- salary ranges;
+- tax simulation;
+- safety indicators;
+- healthcare and school access;
+- community experience;
+- digital nomad legality;
+- business setup;
+- banking;
+- legal changes;
+- country direction/political drift;
+- personalised “fit score”.
+
+## 110. What tools could help people choose a country faster and more confidently?
+
+High-value tools:
+
+- country comparison matrix;
+- scenario simulator;
+- visa eligibility checker;
+- document checklist generator;
+- residence/citizenship timeline;
+- net income calculator;
+- family/student/entrepreneur/persona presets;
+- legal change tracker;
+- community evidence map;
+- risk alerts;
+- source freshness score;
+- relocation roadmap;
+- expert-review marketplace;
+- “what changed since last month?” tracker.
+
+
+---
+
+<!-- Included from 11_Future_Trends_Q111_Q120.md -->
+
+# 11 — Future Trends
+
+## 111. Which migration destinations may become more popular in the next 5–10 years?
+
+Likely growth areas:
+
+- countries with ageing populations and labour shortages: Germany, Canada, Australia, New Zealand, Japan, South Korea, parts of EU;
+- Southern Europe for lifestyle/remote work: Spain, Portugal, Greece, Italy, Malta;
+- safe and stable mid-size countries: Uruguay, Costa Rica, Slovenia, Czechia, Estonia;
+- Gulf hubs: UAE and Saudi Arabia for business and skilled work;
+- Southeast Asia: Thailand, Vietnam, Malaysia, Indonesia for nomads and regional talent;
+- Latin American residence options: Mexico, Colombia, Panama, Paraguay, Uruguay, Argentina;
+- Eastern/Central Europe if wages, infrastructure and safety continue improving.
+
+## 112. Which countries may lose attractiveness in the next 5–10 years?
+
+Countries may lose attractiveness if they combine:
+
+- housing crisis;
+- high taxes without perceived service quality;
+- political polarisation;
+- safety decline;
+- anti-immigration backlash;
+- restrictive visa policy;
+- climate stress;
+- weak salaries relative to costs.
+
+Potentially vulnerable high-demand destinations include Canada, Australia, New Zealand, Netherlands, Ireland, Portugal’s major cities, UK and parts of the U.S., though each will remain attractive for some groups.
+
+## 113. How does remote work affect migration?
+
+Remote work decouples income from location, enabling cost arbitrage and lifestyle migration. It supports digital nomad visas, secondary-city relocation and longer trial periods abroad. But the next phase is more regulated: employers worry about tax, labour law, permanent establishment, data security and time zones. [S16] [S18]
+
+## 114. How can AI and automation affect skilled migration?
+
+Possible effects:
+
+- more demand for AI/data/automation specialists;
+- less demand for some routine white-collar roles;
+- more global competition for remote jobs;
+- increased migration of engineers who can implement automation in ageing economies;
+- reskilling pressure on migrants in administrative, support and junior coding roles;
+- more algorithmic visa screening and document processing;
+- more country competition for AI talent.
+
+AI may reduce some migration need by enabling remote service delivery, but it can also increase global talent competition.
+
+## 115. How can climate change affect migration flows?
+
+Climate change will likely increase internal displacement first, then cross-border pressure where adaptation fails. Major drivers include heat, drought, water stress, storms, floods, crop failure and sea-level rise. IDMC already records large disaster-related internal displacement, while UNHCR and IOM treat climate/disaster mobility as a growing policy concern. [S9] [S11]
+
+## 116. How does rising cost of living affect country choice?
+
+Rising cost of living shifts people from “best country” to “best affordable country”. It pushes:
+
+- remote workers toward lower-cost cities;
+- families away from housing-crisis countries;
+- students toward cheaper education hubs;
+- retirees toward Latin America/Southern Europe/Southeast Asia;
+- skilled workers to calculate net salary, not prestige.
+
+It also creates backlash in destination cities when newcomers with foreign income raise rents.
+
+## 117. How does political polarisation affect desire to move?
+
+Political polarisation creates “exit interest” among people who feel their rights, identity, safety or institutions are under threat. U.S. search spikes after the 2024 election show how political shocks translate into migration research, even when actual migration remains difficult. [S19]
+
+Polarisation also affects host countries: anti-immigration politics can tighten rules and reduce perceived welcome.
+
+## 118. How does demographic crisis in developed countries affect migrant attraction?
+
+Ageing countries need workers in healthcare, care, construction, engineering, agriculture, logistics and technology. This creates structural demand for migrants. However, political systems often want labour without large visible migration, producing selective programmes, temporary worker routes and stricter integration requirements.
+
+## 119. Which countries will compete more actively for talent?
+
+Likely competitors:
+
+- Canada, Australia, New Zealand;
+- Germany and EU Blue Card countries;
+- Netherlands, Sweden, Finland, Denmark;
+- UK for high-value sectors;
+- Singapore;
+- UAE and Saudi Arabia;
+- Japan and South Korea;
+- Portugal, Spain and Estonia for remote/start-up talent;
+- Chile, Uruguay and other smaller countries seeking skilled niches.
+
+OECD talent-attractiveness work shows that countries increasingly treat skilled migration as a competitive policy domain. [S29] [S30]
+
+## 120. Which countries may become new centres for digital nomads, entrepreneurs and remote specialists?
+
+Potential centres:
+
+- Spain, Portugal, Greece, Malta, Croatia;
+- UAE, especially Dubai/Abu Dhabi;
+- Uruguay and Argentina for South America niches;
+- Mexico, Colombia, Costa Rica, Panama;
+- Thailand, Vietnam/Da Nang, Malaysia, Indonesia/Bali;
+- Georgia, Armenia, Albania, Serbia;
+- Estonia and other e-government-friendly countries;
+- Philippines and Senegal if planned visa programmes mature. [S18] [S24]
+
+The winners will combine legal stay, tax clarity, housing capacity, internet, safety, community and long-term integration options.
+
+
+---
+
+<!-- Included from 12_Source_Index.md -->
+
+# 12 — Source Index
+
+The source tags used across the research files:
+
+## [S1] UN DESA / IOM / Migration Data Portal — International Migrant Stock 2024
+
+- URL: https://www.migrationdataportal.org/themes/international-migrant-stocks-overview
+- Used for: Global migrant stock, destinations, origins.
+
+## [S2] IOM World Migration Report 2026 — International migrants: numbers and trends
+
+- URL: https://worldmigrationreport.iom.int/what-we-do/world-migration-report-2026/chapter-2/international-migrants-numbers-and-trends
+- Used for: Latest global migrant-stock framing and trends.
+
+## [S3] Migration Policy Institute — Top Statistics on Global Migration and Migrants
+
+- URL: https://www.migrationpolicy.org/article/top-statistics-global-migration-migrants
+- Used for: Readable synthesis of UN DESA 2024 top destinations/origins.
+
+## [S4] OECD International Migration Outlook 2025
+
+- URL: https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd.html
+- Used for: OECD flows, policy, labour, students.
+
+## [S5] OECD International Migration Outlook 2024
+
+- URL: https://www.oecd.org/en/publications/2024/11/international-migration-outlook-2024_c6f3e803.html
+- Used for: 2023 record permanent-type migration to OECD.
+
+## [S6] Gallup — Desire to Move Permanently to U.S. at New Low
+
+- URL: https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx
+- Used for: Global desire to migrate in 2025 and destination changes.
+
+## [S7] Gallup — How Migration Could Reshape Populations and Labor Forces
+
+- URL: https://news.gallup.com/poll/708680/migration-reshape-populations-labor-forces.aspx
+- Used for: Potential Net Migration Index 2023–2025.
+
+## [S8] Gallup — Desire to Migrate Remains at Record High
+
+- URL: https://news.gallup.com/poll/652748/desire-migrate-remains-record-high.aspx
+- Used for: 2021–2024 record-high migration desire and desired destinations.
+
+## [S9] UNHCR Global Trends 2025
+
+- URL: https://www.unhcr.org/global-trends
+- Used for: Forced displacement and returns in 2025.
+
+## [S10] UNHCR Global Trends Report 2024
+
+- URL: https://www.unhcr.org/global-trends-report-2024
+- Used for: Forced displacement at end-2024.
+
+## [S11] IDMC Global Report on Internal Displacement 2025
+
+- URL: https://www.internal-displacement.org/global-report/grid2025/
+- Used for: Internal displacement and conflict/disaster movements.
+
+## [S12] Eurostat — Migration and Asylum in Europe 2025
+
+- URL: https://ec.europa.eu/eurostat/web/interactive-publications/migration-2025
+- Used for: EU permits, asylum, returns.
+
+## [S13] Eurostat — First residence permits issued during the year
+
+- URL: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Residence_permits_-_statistics_on_first_permits_issued_during_the_year
+- Used for: EU first permits by reason in 2024.
+
+## [S14] Migration Data Portal — International Students
+
+- URL: https://www.migrationdataportal.org/themes/international-students-trends
+- Used for: Global student mobility, long-run growth.
+
+## [S15] UNESCO — Higher education and international student mobility
+
+- URL: https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- Used for: International student host countries and growth.
+
+## [S16] MBO Partners — 2025 Digital Nomads Trends Report
+
+- URL: https://www.mbopartners.com/state-of-independence/digital-nomads/
+- Used for: Digital nomad numbers in the U.S. and trend since 2019.
+
+## [S17] MBO Partners — 2024 State of Independence Report
+
+- URL: https://www.mbopartners.com/state-of-independence/2024-report/
+- Used for: Digital nomads and independent work.
+
+## [S18] EY — Remote Work and Digital Nomads, March 2026
+
+- URL: https://www.ey.com/content/dam/ey-unified-site/ey-com/en-gl/insights/workforce/documents/ey-gl-global-immigration-index-remote-work-and-digital-nomads-03-2026.pdf
+- Used for: Digital nomad visa programmes and upcoming launches.
+
+## [S19] Reuters — Post-2024 U.S. election move-abroad searches
+
+- URL: https://www.reuters.com/world/us/after-trumps-win-many-despondent-americans-research-moving-abroad-2024-11-08/
+- Used for: Political-event search spikes for moving abroad.
+
+## [S20] Google Trends
+
+- URL: https://trends.google.com/trends/
+- Used for: Search-interest tool; requires term-by-term manual analysis.
+
+## [S21] Reddit r/IWantOut
+
+- URL: https://www.reddit.com/r/IWantOut/
+- Used for: Public community evidence on migration questions and advice.
+
+## [S22] Reddit r/expats
+
+- URL: https://www.reddit.com/r/expats/
+- Used for: Public community evidence on expat problems.
+
+## [S23] Reddit r/digitalnomad
+
+- URL: https://www.reddit.com/r/digitalnomad/
+- Used for: Public community evidence on remote-work relocation.
+
+## [S24] Nomads.com / Nomad List
+
+- URL: https://nomads.com/
+- Used for: Digital nomad city/country comparison and community tooling.
+
+## [S25] InterNations Expat Insider 2025
+
+- URL: https://www.internations.org/expat-insider
+- Used for: Expat survey and rankings.
+
+## [S26] Numbeo Cost of Living Index 2026
+
+- URL: https://www.numbeo.com/cost-of-living/rankings_by_country.jsp
+- Used for: Crowdsourced cost-of-living comparison.
+
+## [S27] Numbeo Quality of Life Index 2026
+
+- URL: https://www.numbeo.com/quality-of-life/rankings_by_country.jsp
+- Used for: Crowdsourced quality-of-life comparison.
+
+## [S28] OECD Better Life Index
+
+- URL: https://www.oecd.org/en/data/tools/well-being-data-monitor/better-life-index.html
+- Used for: Well-being comparison framework.
+
+## [S29] OECD Indicators of Talent Attractiveness 2023
+
+- URL: https://www.oecd.org/en/data/tools/talent-attractiveness-2023.html
+- Used for: Attractiveness for skilled workers, entrepreneurs, students, start-up founders.
+
+## [S30] OECD — Measuring and assessing talent attractiveness, 2nd ed.
+
+- URL: https://www.oecd.org/en/publications/measuring-and-assessing-talent-attractiveness-in-oecd-countries-second-edition_133b6085-en.html
+- Used for: Updated talent attractiveness methodology.
+
+## [S31] EU Immigration Portal
+
+- URL: https://home-affairs.ec.europa.eu/policies/migration-and-asylum/eu-immigration-portal_en
+- Used for: Official EU migration routes for work/study/family.
+
+## [S32] IATA Timatic / Travel Centre
+
+- URL: https://www.iata.org/en/services/compliance/timatic/travel-documentation/
+- Used for: Passport, visa and health rules used by airlines.
+
+## [S33] Migration Policy Institute — Official Government Websites of Major Destination Countries
+
+- URL: https://www.migrationpolicy.org/about/official-government-websites-major-destination-countries
+- Used for: Directory of official immigration websites.
+
+## [S34] FiscalNote PolicyNote Global Policy Tracking
+
+- URL: https://fiscalnote.com/solutions/global-policy-tracking
+- Used for: Global legislative/regulatory tracking example.
+
+## [S35] LegiScan
+
+- URL: https://legiscan.com/
+- Used for: U.S. legislative tracking example.
+
+## [S36] Spain golden visa closure — public summaries / BOE-linked reporting
+
+- URL: https://guides.waypointsur.com/golden-visa-spain/
+- Used for: Spain property golden visa ended April 2025; verify with BOE/lawyer before use.
+
+## [S37] Portugal Golden Visa current guide
+
+- URL: https://immigrantinvest.com/blog/portugal-golden-visa/
+- Used for: Investor-residence programme changes; commercial but detailed.
+
+## [S38] EU migration and asylum policy — Consilium
+
+- URL: https://www.consilium.europa.eu/en/policies/eu-migration-policy/
+- Used for: EU asylum/migration pact context.
+
+## [S39] Reuters — EU migration and asylum pact takes effect, June 2026
+
+- URL: https://www.reuters.com/world/eu-overhaul-toughen-migration-rules-takes-effect-though-doubts-remain-about-2026-06-12/
+- Used for: Recent EU asylum and border reforms.
+
+## [S40] Deel — Global employee mobility services overview
+
+- URL: https://www.deel.com/blog/best-global-employee-mobility-services-and-platforms/
+- Used for: B2B global mobility and relocation services.
+
+## [S41] Benivo — Relocation services + mobility tech
+
+- URL: https://www.benivo.com/
+- Used for: B2B relocation platform example.
+
+## [S42] Jobbatical — multi-country EU relocation management
+
+- URL: https://www.jobbatical.com/blog/multi-country-relocation-management-jobbatical-platform
+- Used for: B2B mobility platform example.
+
+## [S43] Where Can I Live — Immigration attorney cost guide 2026
+
+- URL: https://wherecani.live/how-much-does-an-immigration-attorney-cost-a-2026-guide/
+- Used for: Price ranges for immigration legal support; commercial guide.
+
+## [S44] MigRun — EU residence permit assistance
+
+- URL: https://www.migrun.tech/
+- Used for: Example of packaged migration assistance pricing.
+
+## [S45] Henley & Partners
+
+- URL: https://www.henleyglobal.com/
+- Used for: Investment migration advisory and reports.
+
+## [S46] Arton Capital programme-cost tools
+
+- URL: https://www.artoncapital.com/tools/program-cost/
+- Used for: Investment migration programme cost estimates.
+
+## [S47] Reuters / AP / UNHCR current displacement reporting, June 2026
+
+- URL: https://www.reuters.com/world/unhcr-says-fewer-people-displaced-worldwide-2025-but-long-term-refugee-crisis-2026-06-11/
+- Used for: News-level summary of UNHCR 2025 report.
+
+## [S48] WHO Refugee and Migrant Health Fact Sheet
+
+- URL: https://www.who.int/news-room/fact-sheets/detail/refugee-and-migrant-health
+- Used for: Migrant/refugee health framing, global counts.
+
+## [S49] World Bank / KNOMAD Remittances overview
+
+- URL: https://www.migrationdataportal.org/themes/remittances-overview
+- Used for: Remittances and economic migration context.
+
+## [S50] ExpatsEverywhere YouTube channel
+
+- URL: https://www.youtube.com/c/expatseverywhere
+- Used for: Representative public YouTube expat channel.

@@ -1,0 +1,31 @@
+{
+  "prepared": "2026-06-17",
+  "language": "English",
+  "scope": [
+    "User pains",
+    "Competitor landscape",
+    "Deep platform analysis",
+    "Monetisation"
+  ],
+  "files": [
+    "00_Methodology_and_Limitations.md",
+    "00_Methodology_and_Limitations.txt",
+    "01_User_Pains_Q5.md",
+    "01_User_Pains_Q5.txt",
+    "02_Competitor_Landscape_Q6.md",
+    "02_Competitor_Landscape_Q6.txt",
+    "03_Platform_Deep_Dives_Q7.md",
+    "03_Platform_Deep_Dives_Q7.txt",
+    "04_Monetisation_Q8.md",
+    "04_Monetisation_Q8.txt",
+    "05_Product_Opportunity_Map.md",
+    "05_Product_Opportunity_Map.txt",
+    "ALL_ANSWERS_COMBINED.md",
+    "ALL_ANSWERS_COMBINED.txt",
+    "README.md",
+    "README.txt",
+    "Source_Index.md",
+    "Source_Index.txt"
+  ],
+  "source_count": 74
+}

@@ -1,0 +1,163 @@
+6. WILLINGNESS TO PAY AND MIGRATION MARKET
+
+Research date: 16 June 2026
+
+6.1 What migration information do people already pay for?
+
+Users already pay for:
+- Immigration lawyer consultations.
+- Licensed immigration consultant reviews.
+- Visa agency services.
+- Document checklists.
+- Document review before filing.
+- Application form preparation.
+- Translation and apostille support.
+- Country reports.
+- Tax residency consultations.
+- Relocation consultations.
+- School and neighbourhood selection.
+- Housing search support.
+- Business formation / founder relocation.
+- Investment migration advice.
+- Premium expat communities.
+- Employer-sponsored relocation packages.
+
+Why they pay:
+- To reduce visa refusal risk.
+- To avoid wrong-country decisions.
+- To save time.
+- To reduce anxiety.
+- To understand hidden costs.
+- To compare routes objectively.
+- To avoid legal mistakes with tax, work rights or overstays.
+
+6.2 Fast-growing paid service categories
+
+Fast-growing categories:
+- Visa-tech and immigration workflow platforms.
+- Relocation management software.
+- Global mobility SaaS.
+- Employer of Record / remote hiring platforms with immigration support.
+- Immigration compliance tools.
+- AI document review and eligibility screening.
+- Digital nomad visa services.
+- Tax residency / low-tax relocation advisory.
+- Investment migration advisory.
+- Founder/startup relocation services.
+- Premium country-selection reports.
+
+Market evidence:
+- Industry estimates place the expat relocation service market in the multi-billion-dollar range, with forecasts around 9%-12% CAGR depending on definition.
+- Relocation management software and immigration management software are also forecast as growing categories.
+- Global mobility leaders expect relocation volumes to rise or remain strategically important, even as some countries tighten rules.
+
+6.3 How much do people pay to reduce migration risk?
+
+Typical B2C price bands:
+- Simple paid guide/checklist: USD/EUR 10-100.
+- Premium country report: USD/EUR 50-300.
+- One-hour immigration consultation: often USD/EUR 100-500 depending on country and lawyer.
+- Tax residency consultation: often USD/EUR 200-1,000+.
+- Visa application support: hundreds to several thousand dollars/euros.
+- Relocation package: often USD/EUR 1,000-10,000+ depending on family size, housing, schools and destination.
+- Investment migration advisory: thousands to tens of thousands, excluding investment amount and government fees.
+
+Example observed pricing:
+- Germany relocation/visa consultation services can charge around EUR 250 for consultation and around EUR 990 for specific package support.
+- Government visa/residence fees may be much lower than service fees; users pay mainly for certainty and execution.
+
+6.4 Existing B2C products for migrants and relocants
+
+Existing product types:
+- Nomad List: city/country comparisons for digital nomads; cost, internet, weather, community.
+- Numbeo: user-contributed cost of living, rent, healthcare, traffic, crime and pollution.
+- Expat.com: country guides, forums, jobs, housing and services.
+- InterNations: expat community and Expat Insider survey.
+- Visa agency websites: route-specific application help.
+- Relocation boutiques: housing, documents, schools, registration.
+- Tax advisory firms: tax residency and cross-border planning.
+- Citizenship-by-investment firms: passport/residence programs.
+- Country-specific Telegram/Facebook/Reddit communities.
+
+Weakness:
+Most B2C products are either lifestyle-first, community-first, legal-service-first or data-first. Few combine personalised legal eligibility, country choice, risk scoring, tax, cost, policy direction and verified user experience.
+
+6.5 Existing B2B products
+
+B2B products include:
+- Global mobility platforms.
+- Immigration case-management software.
+- Relocation management dashboards.
+- HR assignment management tools.
+- Visa compliance tracking.
+- Payroll/EOR platforms.
+- Tax equalisation and assignment-cost tools.
+- Employee relocation vendors.
+- Corporate housing platforms.
+- Destination service providers.
+
+Buyers:
+- HR departments.
+- Global mobility teams.
+- Immigration legal teams.
+- Startups hiring internationally.
+- Enterprises moving employees.
+- Universities and research institutions.
+- Hospitals and care-sector recruiters.
+
+Pain points:
+- Compliance risk.
+- Visa delays.
+- Employee experience.
+- Cost forecasting.
+- Tax and payroll complexity.
+- Fragmented vendors.
+- Policy changes.
+- Housing and family integration.
+
+6.6 Can the platform monetise analysis rather than raw information?
+
+Yes. Raw information is abundant but low-trust and fragmented. Users pay for personalised interpretation.
+
+High-value paid outputs:
+- Personal country shortlist.
+- Eligibility score by route.
+- Visa refusal risk estimate.
+- Cost-of-move estimate.
+- First-year budget.
+- Tax-residency risk summary.
+- Citizenship timeline comparison.
+- Family relocation readiness check.
+- Document checklist by nationality and route.
+- Legal change alerts.
+- “What can go wrong” risk report.
+- Lawyer-ready case brief.
+- Employer sponsorship strategy.
+- Country direction index.
+
+Best monetisation model:
+- Free discovery and country browsing.
+- Paid personalised report.
+- Paid route comparison.
+- Paid document/risk checklist.
+- Subscription for law/tax/policy alerts.
+- Referral revenue from vetted lawyers/relocation/tax providers.
+- B2B dashboards for HR and global mobility.
+
+6.7 Strongest pricing hypothesis
+
+Possible B2C pricing:
+- Free: country database, basic comparisons, public articles.
+- USD/EUR 19-49: basic personalised eligibility screen.
+- USD/EUR 99-199: full country shortlist and risk report.
+- USD/EUR 199-499: family/entrepreneur/tax-sensitive deep report.
+- USD/EUR 20-50/month: legal-change alerts and country tracking.
+- Higher-ticket referral: lawyer, tax advisor, relocation provider.
+
+Users are most likely to pay when:
+- They are close to making a decision.
+- They face legal uncertainty.
+- The cost of mistake is high.
+- They have family or business complexity.
+- They are comparing several countries.
+- Rules recently changed.

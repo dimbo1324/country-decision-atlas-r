@@ -1,0 +1,93 @@
+1. Global Migration Dynamics
+
+Question: Is the total number of international migrants in the world growing or declining?
+Answer: Growing in stock terms. The global international migrant stock reached about 304 million in 2024, nearly double the 1990 level of 154 million. The share of the world population is still small but has risen from 2.9% in 1990 to 3.7% in 2024.
+
+Year-by-year / period dynamics:
+- 1990: about 154 million international migrants.
+- 2000: about 173 million.
+- 2010: about 221 million.
+- 2020: about 281 million.
+- 2024: about 304 million.
+Interpretation: the absolute count is growing faster than population in some periods, but global migration remains a minority phenomenon: around 1 in 27 people lived outside their country of birth/citizenship in 2024.
+
+Which regions show the strongest growth?
+1) Europe: largest absolute increase since 1990, adding about 43 million migrants between 1990 and 2024. Since 2020, growth accelerated largely because of Ukrainian displacement.
+2) Northern America: added about 34 million since 1990, but the growth rate slowed. Between 2020 and 2024, migrant stock rose by less than 1% per year on average.
+3) Northern Africa and Western Asia: large growth linked to Gulf labour markets, refugee movements, and regional instability.
+4) Asia: major origin region, and also an increasingly important destination region in East Asia, Southeast Asia and the Gulf.
+5) Latin America and the Caribbean: major source region to Northern America; also major intra-regional mobility around Venezuela, Colombia, Chile, Peru, Costa Rica, Mexico and the Caribbean.
+6) Sub-Saharan Africa: high migration aspirations and substantial intra-regional mobility, but much migration remains internal or regional rather than transcontinental.
+7) Oceania: small absolute stock but very high migrant share of population; international migrants represented about 21% of the population in 2024.
+
+Top destination countries in 2024
+1. United States: 52.4 million
+2. Germany: 16.8 million
+3. Saudi Arabia: 13.7 million
+4. United Kingdom: 11.8 million
+5. France: 9.2 million
+6. Spain: 8.9 million
+7. Canada: 8.8 million
+8. United Arab Emirates: 8.2 million
+9. Australia: 8.1 million
+10. Russian Federation: 7.6 million
+11. Turkey: 7.1 million
+12. Italy: 6.6 million
+
+Top origin countries in 2024
+Migration Data Portal reports the top origin countries as:
+1. India: about 18.5 million emigrants
+2. China: about 11.7 million
+3. Mexico: about 11.6 million
+4. Ukraine: about 9.8 million
+5. Russian Federation: around 9 million
+Likely next major origins include Syria, Bangladesh, Pakistan, Afghanistan, Philippines and Venezuela, depending on whether the measure is total migrant stock, refugees, or recent flows.
+
+Major corridors and directions
+- Latin America and Caribbean -> Northern America: about 27 million people in 2024.
+- Central/Southern Asia -> Northern Africa/Western Asia: about 20 million, strongly tied to Gulf labour migration.
+- Northern Africa/Western Asia -> Europe: about 13 million.
+- Eastern/South-Eastern Asia -> Northern America: about 12 million.
+- Central/Southern Asia -> Europe: about 10 million.
+Nearly half of international migrants live in their region of origin. Intra-European migration is especially high: 74% of European-born international migrants live in another European country.
+
+Which directions became more popular in the last 5 years?
+1) Ukraine -> Europe: the most visible sudden increase since 2022.
+2) Latin America -> United States/Canada/Spain and intra-Latin American routes: especially Venezuela-, Colombia-, Cuba-, Haiti- and Nicaragua-related movement, though U.S. interest from Latin America dropped in 2025.
+3) South Asia -> Gulf, Canada, Australia, UK, Europe: driven by labour, education and family routes, although policy tightening affects Canada/Australia/UK.
+4) Skilled migration to ageing OECD countries: Japan, Korea, Ireland, Denmark and Austria showed labour migration in 2024 well above 2019 levels.
+5) Remote-worker routes to Spain, Portugal, Mexico, Thailand, UAE, Croatia, Greece, Georgia, Estonia and similar destinations.
+6) Students shifting beyond the Big Four: stronger interest in Germany, France, Spain, Italy, Malaysia, Singapore, Thailand and South Korea.
+
+Which directions are losing popularity or slowing?
+1) United States as desired destination: still #1, but Gallup shows its share among potential migrants fell to 15% in 2025, the lowest in nearly two decades.
+2) UK labour and care-worker routes: accepted Health and Care Worker applications fell sharply after rule changes; UK net migration almost halved in year ending December 2025.
+3) Canada international student / temporary resident routes: caps and tighter PGWP rules are designed to reduce temporary resident growth.
+4) Australia student/graduate route: higher fees, shorter post-study rights, lower age limit and stricter English/genuine student requirements cool demand.
+5) EU golden passports/golden visas: passive investment routes are under legal and political pressure; Spain ended its golden visa in 2025, and the ECJ ruled Malta's golden passport scheme illegal.
+6) New Zealand permanent migration: 2024 dropped sharply after the exceptional 2021 Residence Visa wave expired.
+
+Which migration type is growing fastest?
+The answer depends on the time window:
+- Fastest structural growth since 2020: forced/humanitarian displacement and digital-nomad/remote-work migration.
+- Largest absolute category in OECD permanent migration: family migration, 2.4 million in 2024, 44% of permanent migration to OECD countries.
+- Labour migration: down 21% in OECD permanent flows in 2024, but still 32% above 2019 and 93% above 2015.
+- Humanitarian migration: up 23% in OECD countries in 2024, one of the highest annual totals on record.
+- Student migration: long-term growth is strong, but 2024-2026 policy tightening is changing destinations. UNESCO reports global outbound higher-education mobility rose from 2.1 million in 2000 to nearly 7.3 million in 2023.
+- Digital nomad migration: very fast from a low base; MBO reports U.S. digital nomads up 153% since 2019.
+- Investment migration: demand among wealthy individuals remains strong, but EU routes are narrowing and compliance scrutiny is increasing.
+
+Implication for a platform
+The platform should separate “stock”, “flows”, “interest” and “legal availability”. A country can be highly popular online but legally difficult; another can have rising legal openness but low awareness. The highest-value product is a combined migration-flow + policy + interest + personal-fit dashboard.
+
+Sources:
+- UN_DESA_2024: United Nations DESA, International Migrant Stock 2024: Key facts and figures, https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf
+- Migration_Data_Portal_Stocks: Migration Data Portal, International migrant stocks overview, https://www.migrationdataportal.org/themes/international-migrant-stocks-overview
+- IOM_WMR_2026: IOM, World Migration Report 2026, https://publications.iom.int/books/world-migration-report-2026
+- OECD_Recent_Flows_2025: OECD, Recent developments in international migration movements, International Migration Outlook 2025, https://www.oecd.org/en/publications/2025/11/international-migration-outlook-2025_355ae9fd/full-report/recent-developments-in-international-migration-movements-and-labour-market-inclusion-of-immigrants_203de29e.html
+- UNHCR_2024: UNHCR, Global Trends report 2024, https://www.unhcr.org/global-trends-report-2024
+- UNHCR_2025_AP: AP, Nearly 118 million people were displaced by conflict and persecution last year, UN says, https://apnews.com/article/4dbcddd571b1ad2de8fadff609fec393
+- ILO_Migrant_Workers: ILO, Global estimates on international migrants in the labour force, https://www.ilo.org/publications/major-publications/ilo-global-estimates-international-migrants-labour-force
+- UNESCO_2026_Students: UNESCO, Number of students in higher education more than doubled in 20 years, https://www.unesco.org/en/articles/number-students-higher-education-more-doubled-20-years-inequalities-remain
+- MBO_Digital_Nomads: MBO Partners, 2025 Digital Nomads Trends Report, https://www.mbopartners.com/state-of-independence/digital-nomads/
+- Gallup_2026_US_Low: Gallup, Desire to Move Permanently to U.S. at New Low, https://news.gallup.com/poll/708614/desire-migrate-drops-new-low.aspx

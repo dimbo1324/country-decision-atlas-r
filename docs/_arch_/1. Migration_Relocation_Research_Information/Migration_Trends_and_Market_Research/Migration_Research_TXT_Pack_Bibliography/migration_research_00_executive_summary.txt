@@ -1,0 +1,86 @@
+MIGRATION MARKET RESEARCH PACK - EXECUTIVE SUMMARY
+Research date: 16 June 2026
+Language: English
+
+Scope
+This pack answers the research questions across nine areas: global migration dynamics, migration intent, causes, search demand, social media behaviour, willingness to pay, policy trends, country competition, and platform opportunities.
+
+Important methodological note
+Migration is measured differently across sources. UN DESA measures the stock of international migrants by country of residence and origin. OECD measures legal permanent-type inflows to OECD countries. UNHCR measures forced displacement. Gallup measures desire to migrate, not actual migration. Google Trends measures relative search interest, not absolute search volume. Telegram and private communities are difficult to measure reliably because many groups are closed, invite-only, renamed, or duplicated.
+
+Top findings
+
+1. The global stock of international migrants is still rising. UN DESA estimates 304 million international migrants in 2024, up from 154 million in 1990 and about 275 million in 2020. International migrants were about 3.7% of the world population in 2024.
+
+2. Europe is now the largest host region by absolute migrant stock. In 2024 Europe hosted about 94 million international migrants, Northern America about 61 million, and Northern Africa and Western Asia about 54 million. Europe also had the largest absolute increase from 1990 to 2024.
+
+3. The United States remains the largest destination country by stock. In 2024 the top destination countries included the United States, Germany, Saudi Arabia, the United Kingdom, France, Spain, Canada, the United Arab Emirates, Australia, Russia, Türkiye, and Italy.
+
+4. The largest origin countries are India, China, Mexico, Ukraine, and Russia. India is the largest country of origin for emigrants globally.
+
+5. The fastest-growing migration categories differ by metric. Digital nomad migration has the fastest relative growth from a small base; forced displacement and asylum show the strongest crisis-driven growth; international student mobility has tripled over roughly two decades; family migration remains the largest permanent-type category in OECD inflows; labour migration is structurally important but declined in OECD permanent labour inflows in 2024 after a strong post-pandemic rise.
+
+6. Desire to migrate rose during the 2010s and early 2020s, then eased slightly. Gallup reported a record-high 16% of adults worldwide wanting to move permanently abroad in 2021-2024; this declined to 15% in 2025, still implying roughly 900 million adults.
+
+7. Sub-Saharan Africa and Latin America are the strongest regions for migration desire. Gallup finds Sub-Saharan Africa has the highest regional desire to migrate, while Latin America remains elevated despite falling from its 2021-2022 peak.
+
+8. The United States is still the most desired destination, but its lead has weakened. Gallup reported that 15% of would-be migrants named the United States in 2025, the lowest share in almost two decades, while Canada remained second at about 9%.
+
+9. Political shocks can immediately increase online migration interest. After the 2024 US election, Google searches such as “move to Canada”, “move to New Zealand”, and “move to Australia” spiked sharply, according to Reuters and Sky News coverage of Google Trends data.
+
+10. Digital nomad visas are a major new demand category. More than 40 jurisdictions offered digital nomad or remote-worker permits by mid-2024 according to EY, and other trackers identify over 60 schemes by 2025. US digital nomads rose to about 18.5 million in 2025, up more than 150% from 2019 according to MBO Partners.
+
+11. Search demand clusters around a few practical questions: visa eligibility, residence permit path, job search, rent, taxes, banking, healthcare, schools, safety, cost of living, language, bureaucracy, and path to permanent residence/citizenship.
+
+12. Social media communities are active but fragmented. Reddit, Telegram, Facebook, YouTube, and WhatsApp groups contain high-value lived experience, but information is often anecdotal, outdated, country-specific, duplicated, or legally unreliable.
+
+13. People already pay for migration-risk reduction. Paid categories include immigration lawyers, visa consultants, relocation packages, tax-residency consultations, second-passport advice, investment-migration advisory, country reports, expat communities, school/housing support, and corporate global-mobility platforms.
+
+14. Pricing shows clear willingness to pay. Initial immigration consultations commonly cost from roughly USD 100 to USD 600+ depending on country and complexity; full legal/visa support can cost thousands; corporate relocations can cost thousands to tens of thousands per employee.
+
+15. The B2B global mobility market is already platformised. Companies buy immigration compliance, relocation workflows, assignment tracking, employee support, and risk dashboards. This supports the thesis that structured, personalised migration decision infrastructure has market value.
+
+16. Policy divergence is accelerating. Some countries are opening skilled, startup, remote-worker, or investor channels; others are tightening student visas, family migration, asylum, settlement, citizenship, or golden visa rules.
+
+17. Golden visa and citizenship-by-investment channels face stronger scrutiny. Spain ended its golden visa in 2025; the Netherlands abolished its foreign investor scheme in 2024; the EU revoked Vanuatu’s visa-free access over concerns about golden passports.
+
+18. Countries increasingly compete for specific migrant segments: skilled workers, healthcare workers, AI/tech talent, students, founders, wealthy investors, retirees, and remote workers. A country can be open to one group while becoming stricter for others.
+
+19. A migration platform opportunity exists because the decision problem is multi-variable and fragmented. Users need a country shortlist, migration path, risk report, cost estimate, tax/residency warning, legal trend summary, and evidence trail.
+
+20. The strongest platform differentiation would not be another country-ranking website. It would be a personalised decision engine combining official rules, live law-change tracking, search/social demand signals, verified user cases, cost modelling, risk scoring, and explainable recommendations.
+
+Recommended product thesis
+Build a platform that answers: “Where should I move, why, how, how much will it cost, what can go wrong, and what changed recently?”
+
+Core product output for a user
+- Personal country shortlist.
+- Best-fit migration routes.
+- Visa/residence/citizenship timeline.
+- Cost-of-move estimate and monthly living estimate.
+- Tax, banking, healthcare, school, housing, and safety risk flags.
+- Legal trend summary with sources.
+- Evidence-backed comparison of 3-5 countries.
+- Action checklist with document requirements.
+- Confidence score and data freshness label.
+
+Best market positioning
+Do not position the product as “Nomad List with visas”. Position it as “decision intelligence for international relocation”. The strongest wedge is personalised, evidence-backed country selection before the user pays lawyers, agencies, or relocation providers.
+
+Most promising early customer segments
+1. Skilled professionals considering relocation within 6-18 months.
+2. Tech workers and founders comparing tax, visas, safety, and business formation.
+3. Families comparing schools, healthcare, citizenship path, and risk.
+4. Digital nomads moving from short-term travel to legal residence.
+5. Companies relocating employees and needing a pre-relocation risk/fit screen.
+6. High-net-worth and upper-middle-income users evaluating second residence/citizenship options.
+
+Major data gaps to exploit
+- No single consumer platform combines law changes, cost, safety, tax, visa eligibility, social proof, and personal constraints.
+- Existing communities answer fragments, not decisions.
+- Official websites are authoritative but hard to compare.
+- Blogs are readable but often outdated or commercially biased.
+- Search trends reveal intent earlier than migration-flow statistics.
+- Law proposals can predict destination attractiveness before inflow data appears.
+
+Sources used heavily in this pack include UN DESA, OECD, ILO, UNESCO, UNHCR, Gallup, World Bank, IOM/Migration Data Portal, Google Trends, Reuters, national immigration agencies, MBO Partners, EY, InterNations, HSBC, OECD talent rankings, and market research firms.
