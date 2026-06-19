@@ -17,6 +17,39 @@
     },
     {
       "date": "2026-06-19",
+      "event": "task_started",
+      "type": "test",
+      "scope": "e2e-decision-nav-selector-hardening",
+      "task": "test/e2e-decision-nav-selector-hardening",
+      "branch": "test/e2e-decision-nav-selector-hardening",
+      "summary": "Started final Playwright selector hardening for the Decision navigation link in the main MVP flow.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "test",
+      "scope": "e2e-decision-nav-selector-hardening",
+      "task": "test/e2e-decision-nav-selector-hardening",
+      "branch": "test/e2e-decision-nav-selector-hardening",
+      "title": "Harden Decision navigation E2E selector in main MVP flow",
+      "summary": [
+        "Fixed strict mode violation in web-mvp-main-flow.spec.ts: getByRole('link', { name: 'Decision' }) matched 5 elements.",
+        "Replaced with getByRole('navigation').getByRole('link', { name: 'Decision', exact: true }) to scope to nav only.",
+        "All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass."
+      ],
+      "checks_run": [
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "ruff check . --fix: passed",
+        "ruff format .: 77 files unchanged",
+        "pnpm web:mvp:check: 34 passed, 0 failed"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
       "event": "task_completed",
       "type": "test",
       "scope": "e2e-selector-hardening",

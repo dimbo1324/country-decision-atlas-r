@@ -48,7 +48,10 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   await expect(page.getByText(/scenario scores/i)).toBeVisible();
   await expectNoAppCrash(page);
 
-  await page.getByRole("link", { name: "Decision" }).click();
+  await page
+    .getByRole("navigation")
+    .getByRole("link", { name: "Decision", exact: true })
+    .click();
   await expectHasMainHeading(page, /run a country decision/i);
   await expect(
     page.getByRole("combobox", { name: /origin country/i }),
