@@ -20,24 +20,16 @@ export function DataQualityReportView({ report }: Props) {
           value={report.overall_status}
           detail={report.valid ? "dataset ready" : "issues found"}
         />
-        <SummaryCard
-          label="Critical issues"
-          value={report.critical_issues_count}
-        />
+        <SummaryCard label="Critical issues" value={report.critical_issues_count} />
         <SummaryCard label="Warnings" value={report.warnings_count} />
         {report.checked_at && (
-          <SummaryCard
-            label="Checked at"
-            value={formatDate(report.checked_at)}
-          />
+          <SummaryCard label="Checked at" value={formatDate(report.checked_at)} />
         )}
       </div>
 
       <div className="dqStatusRow">
         <StatusBadge status={report.overall_status} />
-        {report.valid && (
-          <StatusBadge status="valid" />
-        )}
+        {report.valid && <StatusBadge status="valid" />}
       </div>
 
       {report.checks && report.checks.length > 0 && (

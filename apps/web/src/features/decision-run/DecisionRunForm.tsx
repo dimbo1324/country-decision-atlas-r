@@ -25,9 +25,10 @@ function DecisionFormInner() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [originCountrySlug, setOriginCountrySlug] = useState("russia");
-  const [candidateCountrySlugs, setCandidateCountrySlugs] = useState<string[]>(
-    ["russia", "uruguay"],
-  );
+  const [candidateCountrySlugs, setCandidateCountrySlugs] = useState<string[]>([
+    "russia",
+    "uruguay",
+  ]);
   const [scenarioSlug, setScenarioSlug] = useState("relocation_residence");
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
@@ -50,9 +51,7 @@ function DecisionFormInner() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setLoadError(
-            err instanceof Error ? err.message : "Failed to load data",
-          );
+          setLoadError(err instanceof Error ? err.message : "Failed to load data");
         }
       });
 
@@ -111,7 +110,7 @@ function DecisionFormInner() {
       : runError;
 
   return (
-    <div className="decisionFormWrap">
+    <div className="decisionLayout">
       <div className="decisionForm">
         <div className="formGroup">
           <label className="formLabel" htmlFor="origin-select">
@@ -181,9 +180,7 @@ function DecisionFormInner() {
           className="runButton"
           onClick={handleRun}
           disabled={
-            isRunning ||
-            candidateCountrySlugs.length === 0 ||
-            noScenariosAvailable
+            isRunning || candidateCountrySlugs.length === 0 || noScenariosAvailable
           }
           aria-busy={isRunning}
           data-testid="decision-run-button"
@@ -192,14 +189,16 @@ function DecisionFormInner() {
         </button>
       </div>
 
-      {isRunning && <LoadingState message="Running decision engine…" />}
-      {!isRunning && resolvedRunError !== null && (
-        <ErrorState error={resolvedRunError} />
-      )}
-      {!isRunning && resolvedRunError === null && result === null && (
-        <EmptyState message="Choose a scenario and run a decision to see the ranking." />
-      )}
-      {result !== null && <DecisionResults response={result} />}
+      <div>
+        {isRunning && <LoadingState message="Running decision engine…" />}
+        {!isRunning && resolvedRunError !== null && (
+          <ErrorState error={resolvedRunError} />
+        )}
+        {!isRunning && resolvedRunError === null && result === null && (
+          <EmptyState message="Choose a scenario and run a decision to see the ranking." />
+        )}
+        {result !== null && <DecisionResults response={result} />}
+      </div>
     </div>
   );
 }

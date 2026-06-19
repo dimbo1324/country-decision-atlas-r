@@ -26,7 +26,10 @@ export function CountryHeader({ country, locale = "en" }: CountryHeaderProps) {
         <Link href={`${routes.countries}${localeParam}`} className="quickAction">
           ← All countries
         </Link>
-        <Link href={`${routes.decision}${localeParam}`} className="quickAction quickActionPrimary">
+        <Link
+          href={`${routes.decision}${localeParam}`}
+          className="quickAction quickActionPrimary"
+        >
           Run decision
         </Link>
         <Link href={`${routes.legalSignals}${localeParam}`} className="quickAction">

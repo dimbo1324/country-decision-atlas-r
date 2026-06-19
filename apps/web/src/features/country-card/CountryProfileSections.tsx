@@ -30,7 +30,8 @@ export function CountryProfileSections({
   const filled = SECTIONS.filter(
     (s) => profile[s.key] && !(skipExecutiveSummary && s.key === "executive_summary"),
   );
-  if (filled.length === 0) return <EmptyState message="No profile sections available." />;
+  if (filled.length === 0)
+    return <EmptyState message="No profile sections available." />;
 
   return (
     <div className="sectionStack">

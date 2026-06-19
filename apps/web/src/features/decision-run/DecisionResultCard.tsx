@@ -28,9 +28,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
         {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
       </div>
 
-      {result.summary && (
-        <p className="resultSummary">{result.summary}</p>
-      )}
+      {result.summary && <p className="resultSummary">{result.summary}</p>}
 
       {result.strengths.length > 0 && (
         <div className="resultSection resultSectionPositive">

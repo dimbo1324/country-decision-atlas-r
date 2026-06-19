@@ -22,9 +22,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
               {source.source_type && (
                 <span className="metaChip">{source.source_type}</span>
               )}
-              {source.confidence && (
-                <ConfidenceBadge confidence={source.confidence} />
-              )}
+              {source.confidence && <ConfidenceBadge confidence={source.confidence} />}
             </div>
           </div>
           {source.publisher && (

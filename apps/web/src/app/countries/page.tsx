@@ -41,8 +41,8 @@ export default async function CountriesPage({ searchParams }: PageProps) {
         <p className="eyebrow">Countries</p>
         <h1>Decision-ready country cards</h1>
         <p className="pageSubtitle">
-          Each country card shows scenario scores, legal signals, source-backed evidence,
-          and profile sections to support relocation and decision making.
+          Each country card shows scenario scores, legal signals, source-backed
+          evidence, and profile sections to support relocation and decision making.
         </p>
       </header>
 
@@ -55,12 +55,8 @@ export default async function CountriesPage({ searchParams }: PageProps) {
               <div className="countryPreviewTop">
                 <span className="countryPreviewName">{country.name}</span>
                 <div className="countryPreviewMeta">
-                  {country.iso2 && (
-                    <span className="metaChip">{country.iso2}</span>
-                  )}
-                  {country.region && (
-                    <span className="metaChip">{country.region}</span>
-                  )}
+                  {country.iso2 && <span className="metaChip">{country.iso2}</span>}
+                  {country.region && <span className="metaChip">{country.region}</span>}
                 </div>
               </div>
               <div className="countryPreviewActions">

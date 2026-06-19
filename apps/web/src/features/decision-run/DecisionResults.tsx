@@ -54,9 +54,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
             <span className="metaChip">{winner.score_label}</span>
             {winner.confidence && <ConfidenceBadge confidence={winner.confidence} />}
           </div>
-          {winner.summary && (
-            <p className="decisionWinnerSummary">{winner.summary}</p>
-          )}
+          {winner.summary && <p className="decisionWinnerSummary">{winner.summary}</p>}
         </div>
       )}
 
@@ -66,7 +64,11 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         <div className="resultList">
           <h3 className="resultListTitle">Full ranking</h3>
           {results.map((result) => (
-            <DecisionResultCard key={result.country.id} result={result} locale={locale.resolved_locale} />
+            <DecisionResultCard
+              key={result.country.id}
+              result={result}
+              locale={locale.resolved_locale}
+            />
           ))}
         </div>
       )}

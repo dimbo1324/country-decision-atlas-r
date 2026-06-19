@@ -3,6 +3,26 @@
   "entries": [
     {
       "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "web-compact-dark-archive-ui-v1",
+      "task": "feat/web-compact-dark-archive-ui-v1",
+      "branch": "feat/web-compact-dark-archive-ui-v1",
+      "summary": "Completed compact dark archive UI: full CSS variable palette, dark theme, decisionLayout two-column, countryCardLayout two-column, scroll utilities. 38/38 E2E passed.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-compact-dark-archive-ui-v1",
+      "task": "feat/web-compact-dark-archive-ui-v1",
+      "branch": "feat/web-compact-dark-archive-ui-v1",
+      "summary": "Started compact dark archive UI polish for the MVP frontend.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
       "event": "task_started",
       "type": "fix",
       "scope": "decision-ready-scenario-filter",

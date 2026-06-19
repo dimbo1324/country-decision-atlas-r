@@ -8,11 +8,11 @@ type CountryLegalSignalsProps = {
   legalSignals: CountryReadModelResponse["legal_signals"];
 };
 
-export function CountryLegalSignals({
-  legalSignals,
-}: CountryLegalSignalsProps) {
+export function CountryLegalSignals({ legalSignals }: CountryLegalSignalsProps) {
   if (!legalSignals || legalSignals.length === 0) {
-    return <EmptyState message="No legal signals are available for this country yet." />;
+    return (
+      <EmptyState message="No legal signals are available for this country yet." />
+    );
   }
 
   return (
@@ -28,12 +28,8 @@ export function CountryLegalSignals({
             {signal.impact_direction && (
               <ImpactDirectionBadge direction={signal.impact_direction} />
             )}
-            {signal.impact_level && (
-              <ImpactLevelBadge level={signal.impact_level} />
-            )}
-            {signal.confidence && (
-              <ConfidenceBadge confidence={signal.confidence} />
-            )}
+            {signal.impact_level && <ImpactLevelBadge level={signal.impact_level} />}
+            {signal.confidence && <ConfidenceBadge confidence={signal.confidence} />}
             {signal.published_date && (
               <span className="metaChip">
                 Published: {formatDate(signal.published_date)}

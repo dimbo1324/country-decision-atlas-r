@@ -18,10 +18,7 @@ import { ImpactDirectionBadge, ImpactLevelBadge } from "../../shared/ui/ImpactBa
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 
-type ViewError =
-  | { error?: { code?: string; message?: string } }
-  | string
-  | null;
+type ViewError = { error?: { code?: string; message?: string } } | string | null;
 
 const SIGNAL_TYPES = [
   "law",
@@ -110,12 +107,7 @@ function LegalSignalsViewInner() {
     };
   }, [locale, countrySlug, signalType, impactDirection, impactLevel]);
 
-  const hasFilters = !!(
-    countrySlug ||
-    signalType ||
-    impactDirection ||
-    impactLevel
-  );
+  const hasFilters = !!(countrySlug || signalType || impactDirection || impactLevel);
 
   function clearFilters() {
     setCountrySlug("");
@@ -138,7 +130,9 @@ function LegalSignalsViewInner() {
 
       <div className="filterBar">
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="ls-country">Country</label>
+          <label className="filterLabel" htmlFor="ls-country">
+            Country
+          </label>
           <select
             id="ls-country"
             className="filterSelect"
@@ -154,7 +148,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="ls-type">Signal type</label>
+          <label className="filterLabel" htmlFor="ls-type">
+            Signal type
+          </label>
           <select
             id="ls-type"
             className="filterSelect"
@@ -170,7 +166,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="ls-direction">Impact direction</label>
+          <label className="filterLabel" htmlFor="ls-direction">
+            Impact direction
+          </label>
           <select
             id="ls-direction"
             className="filterSelect"
@@ -186,7 +184,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="ls-level">Impact level</label>
+          <label className="filterLabel" htmlFor="ls-level">
+            Impact level
+          </label>
           <select
             id="ls-level"
             className="filterSelect"
@@ -214,7 +214,9 @@ function LegalSignalsViewInner() {
             <span className="activeFilterChip">country: {countrySlug}</span>
           )}
           {signalType && (
-            <span className="activeFilterChip">type: {signalType.replace(/_/g, " ")}</span>
+            <span className="activeFilterChip">
+              type: {signalType.replace(/_/g, " ")}
+            </span>
           )}
           {impactDirection && (
             <span className="activeFilterChip">direction: {impactDirection}</span>
@@ -230,14 +232,8 @@ function LegalSignalsViewInner() {
       {!isLoading && error === null && signals !== null && (
         <>
           <div className="analyticalSummaryRow">
-            <SummaryCard
-              label="Signals shown"
-              value={signals.items.length}
-            />
-            <SummaryCard
-              label="Total"
-              value={signals.pagination.total}
-            />
+            <SummaryCard label="Signals shown" value={signals.items.length} />
+            <SummaryCard label="Total" value={signals.pagination.total} />
             <SummaryCard
               label="Locale"
               value={signals.locale.resolved_locale}

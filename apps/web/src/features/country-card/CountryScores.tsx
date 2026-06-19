@@ -21,12 +21,8 @@ export function CountryScores({ scores }: CountryScoresProps) {
             <span className="scoreScenario">{score.scenario_title}</span>
             <span className="scoreBadge">{formatScore(score.score)}</span>
           </div>
-          {score.confidence && (
-            <ConfidenceBadge confidence={score.confidence} />
-          )}
-          {score.explanation && (
-            <p className="scoreExplanation">{score.explanation}</p>
-          )}
+          {score.confidence && <ConfidenceBadge confidence={score.confidence} />}
+          {score.explanation && <p className="scoreExplanation">{score.explanation}</p>}
           {score.breakdowns && score.breakdowns.length > 0 && (
             <details className="breakdownDetails">
               <summary className="breakdownSummaryToggle">View breakdown</summary>

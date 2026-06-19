@@ -7,9 +7,7 @@ test.describe("legal signals page", () => {
   test("/legal-signals?country_slug=russia&locale=ru applies filter", async ({
     page,
   }) => {
-    await page.goto(
-      e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }),
-    );
+    await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }));
     await expectHasMainHeading(page, /traceable decision signals/i);
 
     await expect(page.locator(".filterBar")).toBeVisible();
@@ -18,7 +16,10 @@ test.describe("legal signals page", () => {
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("russia");
 
-    const hasItems = await page.locator(".signalList").isVisible().catch(() => false);
+    const hasItems = await page
+      .locator(".signalList")
+      .isVisible()
+      .catch(() => false);
     const hasEmpty = await page
       .getByText(/no legal signals match/i)
       .isVisible()
@@ -52,11 +53,12 @@ test.describe("legal signals page", () => {
   test("legal signals country card link exists when items are present", async ({
     page,
   }) => {
-    await page.goto(
-      e2eRoutes.legalSignals({ country_slug: "russia", locale: "en" }),
-    );
+    await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "en" }));
     await expectHasMainHeading(page, /traceable decision signals/i);
-    const hasItems = await page.locator(".signalList").isVisible().catch(() => false);
+    const hasItems = await page
+      .locator(".signalList")
+      .isVisible()
+      .catch(() => false);
     if (hasItems) {
       await expect(
         page.getByRole("link", { name: /open country card/i }).first(),
@@ -66,12 +68,8 @@ test.describe("legal signals page", () => {
 });
 
 test.describe("sources page", () => {
-  test("/sources?country_slug=uruguay&locale=ru applies filter", async ({
-    page,
-  }) => {
-    await page.goto(
-      e2eRoutes.sources({ country_slug: "uruguay", locale: "ru" }),
-    );
+  test("/sources?country_slug=uruguay&locale=ru applies filter", async ({ page }) => {
+    await page.goto(e2eRoutes.sources({ country_slug: "uruguay", locale: "ru" }));
     await expectHasMainHeading(page, /evidence sources/i);
 
     await expect(page.locator(".filterBar")).toBeVisible();
@@ -80,7 +78,10 @@ test.describe("sources page", () => {
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("uruguay");
 
-    const hasItems = await page.locator(".sourceList").isVisible().catch(() => false);
+    const hasItems = await page
+      .locator(".sourceList")
+      .isVisible()
+      .catch(() => false);
     const hasEmpty = await page
       .getByText(/no sources match/i)
       .isVisible()
@@ -102,7 +103,10 @@ test.describe("sources page", () => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
     await expectHasMainHeading(page, /evidence sources/i);
 
-    const hasItems = await page.locator(".sourceList").isVisible().catch(() => false);
+    const hasItems = await page
+      .locator(".sourceList")
+      .isVisible()
+      .catch(() => false);
     if (hasItems) {
       const externalLinks = page.locator("a.externalLink");
       const count = await externalLinks.count();
@@ -115,16 +119,15 @@ test.describe("sources page", () => {
     }
   });
 
-  test("sources country card link exists when items are present", async ({
-    page,
-  }) => {
+  test("sources country card link exists when items are present", async ({ page }) => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
     await expectHasMainHeading(page, /evidence sources/i);
-    const hasItems = await page.locator(".sourceList").isVisible().catch(() => false);
+    const hasItems = await page
+      .locator(".sourceList")
+      .isVisible()
+      .catch(() => false);
     if (hasItems) {
-      await expect(
-        page.getByRole("link", { name: /view/i }).first(),
-      ).toBeVisible();
+      await expect(page.getByRole("link", { name: /view/i }).first()).toBeVisible();
     }
   });
 });
@@ -203,8 +206,6 @@ test.describe("accessibility semantics", () => {
     await expect(page.locator("h1")).toBeVisible();
     await expect(page.getByLabel(/origin country/i)).toBeVisible();
     await expect(page.getByLabel(/scenario/i)).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /run decision/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /run decision/i })).toBeVisible();
   });
 });

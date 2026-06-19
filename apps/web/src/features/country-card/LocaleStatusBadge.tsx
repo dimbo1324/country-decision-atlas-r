@@ -27,14 +27,12 @@ export function LocaleStatusBadge({ locale }: LocaleStatusBadgeProps) {
       <div className="localeStatusRow">
         <span>Translation status:</span>
         <span className={`metaChip${isFallback ? " metaChipWarn" : ""}`}>
-          {STATUS_LABELS[locale.translation_status] ??
-            locale.translation_status}
+          {STATUS_LABELS[locale.translation_status] ?? locale.translation_status}
         </span>
       </div>
       {isFallback && locale.requested_locale === "ru" && (
         <p className="localeNotice">
-          Русский перевод частично отсутствует. Показана английская
-          fallback-версия.
+          Русский перевод частично отсутствует. Показана английская fallback-версия.
         </p>
       )}
     </div>

@@ -18,10 +18,7 @@ import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { Badge } from "../../shared/ui/Badge";
 
-type ViewError =
-  | { error?: { code?: string; message?: string } }
-  | string
-  | null;
+type ViewError = { error?: { code?: string; message?: string } } | string | null;
 
 type ConfidenceFilter = "" | "high" | "medium" | "low";
 
@@ -119,7 +116,9 @@ function SourcesViewInner() {
     <div className="filterPageWrap">
       <div className="filterBar">
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-country">Country</label>
+          <label className="filterLabel" htmlFor="src-country">
+            Country
+          </label>
           <select
             id="src-country"
             className="filterSelect"
@@ -135,7 +134,9 @@ function SourcesViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-type">Source type</label>
+          <label className="filterLabel" htmlFor="src-type">
+            Source type
+          </label>
           <select
             id="src-type"
             className="filterSelect"
@@ -151,7 +152,9 @@ function SourcesViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-confidence">Confidence</label>
+          <label className="filterLabel" htmlFor="src-confidence">
+            Confidence
+          </label>
           <select
             id="src-confidence"
             className="filterSelect"
@@ -178,9 +181,7 @@ function SourcesViewInner() {
           {countrySlug && (
             <span className="activeFilterChip">country: {countrySlug}</span>
           )}
-          {sourceType && (
-            <span className="activeFilterChip">type: {sourceType}</span>
-          )}
+          {sourceType && <span className="activeFilterChip">type: {sourceType}</span>}
           {confidence && (
             <span className="activeFilterChip">confidence: {confidence}</span>
           )}
@@ -223,9 +224,7 @@ function SourcesViewInner() {
                         {source.language && (
                           <Badge variant="default">{source.language}</Badge>
                         )}
-                        {source.status && (
-                          <StatusBadge status={source.status} />
-                        )}
+                        {source.status && <StatusBadge status={source.status} />}
                       </div>
                     </div>
                     {source.publisher && (

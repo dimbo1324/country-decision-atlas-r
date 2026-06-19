@@ -3,9 +3,7 @@ import { expectNoAppCrash } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("decision-ready scenario filtering", () => {
-  test("/decision?locale=en shows only decision-ready scenarios", async ({
-    page,
-  }) => {
+  test("/decision?locale=en shows only decision-ready scenarios", async ({ page }) => {
     await page.goto(e2eRoutes.decision("en"));
     await expect(page.locator("h1")).toBeVisible();
 
@@ -32,9 +30,7 @@ test.describe("decision-ready scenario filtering", () => {
     await expectNoAppCrash(page);
   });
 
-  test("/decision?locale=ru shows only decision-ready scenarios", async ({
-    page,
-  }) => {
+  test("/decision?locale=ru shows only decision-ready scenarios", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await expect(page.locator("h1")).toBeVisible();
 

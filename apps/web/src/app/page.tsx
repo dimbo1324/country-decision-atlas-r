@@ -44,7 +44,10 @@ export default function Home() {
               <Link href={`${routes.country("russia")}`} className="homeCountryLink">
                 View country card
               </Link>
-              <Link href={`${routes.decision}?origin=russia`} className="homeCountryLink">
+              <Link
+                href={`${routes.decision}?origin=russia`}
+                className="homeCountryLink"
+              >
                 Run decision
               </Link>
             </div>
@@ -56,7 +59,10 @@ export default function Home() {
               <Link href={`${routes.country("uruguay")}`} className="homeCountryLink">
                 View country card
               </Link>
-              <Link href={`${routes.decision}?origin=uruguay`} className="homeCountryLink">
+              <Link
+                href={`${routes.decision}?origin=uruguay`}
+                className="homeCountryLink"
+              >
                 Run decision
               </Link>
             </div>
@@ -82,8 +88,8 @@ export default function Home() {
         <h2 className="homeSectionTitle">Source-backed decision making</h2>
         <p className="homeSectionDesc">
           Scores are not shown alone. Every score is connected to a breakdown of
-          weighted criteria, legal signals, source documents, and evidence — so you
-          can see why a country ranks where it does, not just that it does.
+          weighted criteria, legal signals, source documents, and evidence — so you can
+          see why a country ranks where it does, not just that it does.
         </p>
         <div className="homeTrustLinks">
           <Link href={routes.legalSignals} className="homeTrustLink">

@@ -1,4 +1,10 @@
-type ImpactDirection = "positive" | "negative" | "mixed" | "neutral" | "uncertain" | string;
+type ImpactDirection =
+  | "positive"
+  | "negative"
+  | "mixed"
+  | "neutral"
+  | "uncertain"
+  | string;
 type ImpactLevel = "low" | "medium" | "high" | "critical" | string;
 
 type ImpactDirectionBadgeProps = {

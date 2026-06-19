@@ -18,9 +18,7 @@ export function CountryEvidenceSummary({
         <span className="summaryLabel">High confidence</span>
       </div>
       <div className="summaryItem">
-        <span className="summaryValue">
-          {evidenceSummary.medium_confidence}
-        </span>
+        <span className="summaryValue">{evidenceSummary.medium_confidence}</span>
         <span className="summaryLabel">Medium confidence</span>
       </div>
       <div className="summaryItem">

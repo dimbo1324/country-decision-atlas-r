@@ -13,9 +13,7 @@ test.describe("MVP page availability", () => {
       page,
       /compare countries with source-backed intelligence/i,
     );
-    await expect(
-      page.getByRole("link", { name: /explore countries/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("link", { name: /explore countries/i })).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -54,18 +52,14 @@ test.describe("MVP page availability", () => {
   test("/decision?locale=en shows decision form", async ({ page }) => {
     await page.goto(e2eRoutes.decision("en"));
     await expectHasMainHeading(page, /run a country decision/i);
-    await expect(
-      page.getByRole("button", { name: /run decision/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /run decision/i })).toBeVisible();
     await expectNoAppCrash(page);
   });
 
   test("/decision?locale=ru shows decision form", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await expectHasMainHeading(page, /run a country decision/i);
-    await expect(
-      page.getByRole("button", { name: /run decision/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /run decision/i })).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -91,7 +85,9 @@ test.describe("MVP page availability", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.countries);
     await expectHasMainHeading(page, /decision-ready country cards/i);
-    await expect(page.getByRole("link", { name: "Country Decision Atlas" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Country Decision Atlas" }),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 });

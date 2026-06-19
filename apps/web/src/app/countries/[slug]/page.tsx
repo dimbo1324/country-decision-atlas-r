@@ -26,9 +26,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const resolvedSearchParams = await searchParams;
   const rawLocale = resolvedSearchParams["locale"];
-  const locale = normalizeLocale(
-    typeof rawLocale === "string" ? rawLocale : undefined,
-  );
+  const locale = normalizeLocale(typeof rawLocale === "string" ? rawLocale : undefined);
 
   let card;
   try {
@@ -44,14 +42,20 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           <Link href={routes.countries} className="breadcrumbLink">
             Countries
           </Link>
-          <span className="breadcrumbSep" aria-hidden="true">/</span>
+          <span className="breadcrumbSep" aria-hidden="true">
+            /
+          </span>
           <span className="breadcrumbCurrent">{slug}</span>
         </nav>
         <header className="pageHeader">
           <p className="eyebrow">Country</p>
           <h1>{slug}</h1>
         </header>
-        <ErrorState error={errProp} backHref={routes.countries} backLabel="Back to countries" />
+        <ErrorState
+          error={errProp}
+          backHref={routes.countries}
+          backLabel="Back to countries"
+        />
       </div>
     );
   }
@@ -64,7 +68,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <Link href={`${routes.countries}?locale=${locale}`} className="breadcrumbLink">
           Countries
         </Link>
-        <span className="breadcrumbSep" aria-hidden="true">/</span>
+        <span className="breadcrumbSep" aria-hidden="true">
+          /
+        </span>
         <span className="breadcrumbCurrent">{card.country.name}</span>
       </nav>
 
@@ -133,9 +139,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">User stories summary</h2>
-          <CountryUserStoriesSummary
-            userStoriesSummary={card.user_stories_summary}
-          />
+          <CountryUserStoriesSummary userStoriesSummary={card.user_stories_summary} />
         </section>
 
         <section className="cardSection" data-testid="locale-status">
