@@ -91,14 +91,19 @@ function DecisionFormInner() {
   }
 
   if (loadError) return <ErrorState error={loadError} />;
-  if (!countries || !scenarios) return <LoadingState />;
+  if (!countries || !scenarios) {
+    return <LoadingState message="Loading countries and scenarios…" />;
+  }
 
   return (
     <div className="decisionFormWrap">
       <div className="decisionForm">
         <div className="formGroup">
-          <label className="formLabel">Origin country</label>
+          <label className="formLabel" htmlFor="origin-select">
+            Origin country
+          </label>
           <select
+            id="origin-select"
             className="formSelect"
             value={originCountrySlug}
             onChange={(e) => setOriginCountrySlug(e.target.value)}
@@ -126,15 +131,18 @@ function DecisionFormInner() {
             ))}
           </div>
           {candidateCountrySlugs.length === 0 && (
-            <p className="formError">
+            <p className="formError" role="alert">
               Select at least one candidate country.
             </p>
           )}
         </div>
 
         <div className="formGroup">
-          <label className="formLabel">Scenario</label>
+          <label className="formLabel" htmlFor="scenario-select">
+            Scenario
+          </label>
           <select
+            id="scenario-select"
             className="formSelect"
             value={scenarioSlug}
             onChange={(e) => setScenarioSlug(e.target.value)}
@@ -151,14 +159,17 @@ function DecisionFormInner() {
           className="runButton"
           onClick={handleRun}
           disabled={isRunning || candidateCountrySlugs.length === 0}
+          aria-busy={isRunning}
         >
-          {isRunning ? "Running…" : "Run decision"}
+          {isRunning ? "Running decision…" : "Run decision"}
         </button>
       </div>
 
-      {isRunning && <LoadingState />}
+      {isRunning && <LoadingState message="Running decision engine…" />}
       {!isRunning && runError !== null && <ErrorState error={runError} />}
-      {!isRunning && runError === null && result === null && <EmptyState />}
+      {!isRunning && runError === null && result === null && (
+        <EmptyState message="Choose a scenario and run a decision to see the ranking." />
+      )}
       {result !== null && <DecisionResults response={result} />}
     </div>
   );
@@ -166,7 +177,7 @@ function DecisionFormInner() {
 
 export function DecisionRunForm() {
   return (
-    <Suspense fallback={<LoadingState />}>
+    <Suspense fallback={<LoadingState message="Loading decision form…" />}>
       <DecisionFormInner />
     </Suspense>
   );

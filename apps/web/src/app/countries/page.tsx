@@ -30,7 +30,7 @@ export default async function CountriesPage({ searchParams }: PageProps) {
           <p className="eyebrow">Countries</p>
           <h1>Decision-ready country cards</h1>
         </header>
-        <ErrorState error={errProp} />
+        <ErrorState error={errProp} backHref={routes.home} backLabel="Back to home" />
       </div>
     );
   }
@@ -40,31 +40,53 @@ export default async function CountriesPage({ searchParams }: PageProps) {
       <header className="pageHeader">
         <p className="eyebrow">Countries</p>
         <h1>Decision-ready country cards</h1>
+        <p className="pageSubtitle">
+          Each country card shows scenario scores, legal signals, source-backed evidence,
+          and profile sections to support relocation and decision making.
+        </p>
       </header>
 
       {countries.items.length === 0 ? (
-        <EmptyState />
+        <EmptyState message="No countries are available yet." />
       ) : (
-        <section className="dataGrid">
+        <div className="countryCardGrid">
           {countries.items.map((country) => (
-            <Link
-              className="dataCard"
-              href={`${routes.country(country.slug)}?locale=${locale}`}
-              key={country.slug}
-            >
-              <span>{country.name}</span>
-              <div className="metaRow">
-                {country.iso2 && (
-                  <span className="metaChip">{country.iso2}</span>
-                )}
-                {country.region && (
-                  <small>{country.region}</small>
-                )}
+            <div key={country.slug} className="countryPreviewCard">
+              <div className="countryPreviewTop">
+                <span className="countryPreviewName">{country.name}</span>
+                <div className="countryPreviewMeta">
+                  {country.iso2 && (
+                    <span className="metaChip">{country.iso2}</span>
+                  )}
+                  {country.region && (
+                    <span className="metaChip">{country.region}</span>
+                  )}
+                </div>
               </div>
-            </Link>
+              <div className="countryPreviewActions">
+                <Link
+                  href={`${routes.country(country.slug)}?locale=${locale}`}
+                  className="countryPreviewLink countryPreviewLinkPrimary"
+                >
+                  View country card
+                </Link>
+                <Link
+                  href={`${routes.decision}?locale=${locale}`}
+                  className="countryPreviewLink"
+                >
+                  Run decision
+                </Link>
+              </div>
+            </div>
           ))}
-        </section>
+        </div>
       )}
+
+      <div className="countryPageFooter">
+        <Link href={`${routes.decision}?locale=${locale}`} className="footerAction">
+          Run Russia vs Uruguay decision →
+        </Link>
+      </div>
     </div>
   );
 }

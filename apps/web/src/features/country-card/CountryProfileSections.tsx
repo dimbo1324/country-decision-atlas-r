@@ -3,6 +3,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 
 type CountryProfileSectionsProps = {
   profile: CountryReadModelResponse["profile"];
+  skipExecutiveSummary?: boolean;
 };
 
 const SECTIONS: {
@@ -22,11 +23,14 @@ const SECTIONS: {
 
 export function CountryProfileSections({
   profile,
+  skipExecutiveSummary = false,
 }: CountryProfileSectionsProps) {
-  if (!profile) return <EmptyState />;
+  if (!profile) return <EmptyState message="No profile data available." />;
 
-  const filled = SECTIONS.filter((s) => profile[s.key]);
-  if (filled.length === 0) return <EmptyState />;
+  const filled = SECTIONS.filter(
+    (s) => profile[s.key] && !(skipExecutiveSummary && s.key === "executive_summary"),
+  );
+  if (filled.length === 0) return <EmptyState message="No profile sections available." />;
 
   return (
     <div className="sectionStack">

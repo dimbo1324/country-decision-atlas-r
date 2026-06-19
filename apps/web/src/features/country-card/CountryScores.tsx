@@ -1,5 +1,6 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { formatScore } from "../../shared/lib/format";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 
@@ -8,7 +9,9 @@ type CountryScoresProps = {
 };
 
 export function CountryScores({ scores }: CountryScoresProps) {
-  if (!scores || scores.length === 0) return <EmptyState />;
+  if (!scores || scores.length === 0) {
+    return <EmptyState message="No scenario scores available." />;
+  }
 
   return (
     <div className="scoreList">
@@ -19,13 +22,16 @@ export function CountryScores({ scores }: CountryScoresProps) {
             <span className="scoreBadge">{formatScore(score.score)}</span>
           </div>
           {score.confidence && (
-            <span className="metaChip">Confidence: {score.confidence}</span>
+            <ConfidenceBadge confidence={score.confidence} />
           )}
           {score.explanation && (
             <p className="scoreExplanation">{score.explanation}</p>
           )}
           {score.breakdowns && score.breakdowns.length > 0 && (
-            <ScoreBreakdown breakdowns={score.breakdowns} />
+            <details className="breakdownDetails">
+              <summary className="breakdownSummaryToggle">View breakdown</summary>
+              <ScoreBreakdown breakdowns={score.breakdowns} />
+            </details>
           )}
         </div>
       ))}

@@ -1,4 +1,5 @@
 import type { DecisionRunResponse } from "../../shared/api/decision";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionBreakdown } from "./DecisionBreakdown";
 import { DecisionSources } from "./DecisionSources";
@@ -14,11 +15,13 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
   return (
     <div className="resultCard">
       <div className="resultCardHeader">
-        <span className="resultRank">#{result.rank}</span>
+        <span className="resultRank" aria-label={`Rank ${result.rank}`}>
+          #{result.rank}
+        </span>
         <span className="resultCountryName">{result.country.name}</span>
         <span className="resultScore">{formatScore(result.score)}</span>
         <span className="metaChip">{result.score_label}</span>
-        <span className="metaChip">{result.confidence}</span>
+        {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
       </div>
 
       {result.summary && (
@@ -26,9 +29,9 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
       )}
 
       {result.strengths.length > 0 && (
-        <div className="resultSection">
+        <div className="resultSection resultSectionPositive">
           <h4 className="resultSectionTitle">Strengths</h4>
-          <ul className="pointsList">
+          <ul className="pointsList pointsListPositive">
             {result.strengths.map((s, i) => (
               <li key={i}>{s.message}</li>
             ))}
@@ -37,9 +40,9 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
       )}
 
       {result.weaknesses.length > 0 && (
-        <div className="resultSection">
+        <div className="resultSection resultSectionNegative">
           <h4 className="resultSectionTitle">Weaknesses</h4>
-          <ul className="pointsList">
+          <ul className="pointsList pointsListNegative">
             {result.weaknesses.map((w, i) => (
               <li key={i}>{w.message}</li>
             ))}
@@ -48,7 +51,7 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
       )}
 
       {result.risk_warnings.length > 0 && (
-        <div className="resultSection">
+        <div className="resultSection resultSectionRisk">
           <h4 className="resultSectionTitle">Risk warnings</h4>
           <DecisionWarnings warnings={result.risk_warnings} />
         </div>
@@ -56,13 +59,13 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
 
       {result.breakdown.length > 0 && (
         <div className="resultSection">
-          <h4 className="resultSectionTitle">Breakdown</h4>
+          <h4 className="resultSectionTitle">Score breakdown</h4>
           <DecisionBreakdown breakdown={result.breakdown} />
         </div>
       )}
 
       <div className="resultSection">
-        <h4 className="resultSectionTitle">Sources</h4>
+        <h4 className="resultSectionTitle">Evidence sources</h4>
         <DecisionSources sources={result.sources} />
       </div>
     </div>

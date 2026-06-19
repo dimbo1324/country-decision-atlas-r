@@ -1,4 +1,5 @@
 import type { DecisionRunResponse } from "../../shared/api/decision";
+import { ImpactLevelBadge } from "../../shared/ui/ImpactBadge";
 
 type DecisionRiskWarning =
   DecisionRunResponse["results"][number]["risk_warnings"][number];
@@ -11,10 +12,10 @@ export function DecisionWarnings({ warnings }: DecisionWarningsProps) {
   if (warnings.length === 0) return null;
 
   return (
-    <ul className="warningsList">
+    <ul className="warningsList" role="list">
       {warnings.map((w, i) => (
         <li key={i} className="warningItem">
-          <span className={`metaChip metaChipWarn`}>{w.level}</span>
+          <ImpactLevelBadge level={w.level} />
           <span>{w.message}</span>
         </li>
       ))}

@@ -1,5 +1,6 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { formatDate } from "../../shared/lib/format";
 
 type CountrySourcesProps = {
@@ -7,7 +8,9 @@ type CountrySourcesProps = {
 };
 
 export function CountrySources({ sources }: CountrySourcesProps) {
-  if (!sources || sources.length === 0) return <EmptyState />;
+  if (!sources || sources.length === 0) {
+    return <EmptyState message="No sources are attached to this country yet." />;
+  }
 
   return (
     <div className="sourceList">
@@ -20,7 +23,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
                 <span className="metaChip">{source.source_type}</span>
               )}
               {source.confidence && (
-                <span className="metaChip">{source.confidence}</span>
+                <ConfidenceBadge confidence={source.confidence} />
               )}
             </div>
           </div>
@@ -40,7 +43,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
             )}
           </div>
           <a href={source.url} target="_blank" rel="noreferrer" className="sourceLink">
-            Open source
+            Open source ↗
           </a>
         </div>
       ))}

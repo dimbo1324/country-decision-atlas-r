@@ -163,6 +163,54 @@
       "date": "2026-06-19",
       "event": "task_completed",
       "type": "feat",
+      "scope": "web-mvp-ux-polish-v1",
+      "task": "feat/web-mvp-ux-polish-v1",
+      "branch": "feat/web-mvp-ux-polish-v1",
+      "title": "Complete MVP UX polish for first country card and decision flow",
+      "summary": [
+        "Rewrote home page with product explanation, primary CTAs, Russia vs Uruguay block, analysis list, and source-backed trust section.",
+        "Improved /countries page with structured country preview cards, primary/secondary action links, locale preserved.",
+        "Improved /countries/[slug] page: added breadcrumbs, fallback banner, executive summary section at top, quick action links on CountryHeader, reordered sections.",
+        "Improved /decision page with explanation text; DecisionResults now shows winner/top-ranked block prominently.",
+        "Added semantic badge components: Badge, ImpactBadge (direction + level), ConfidenceBadge.",
+        "Added Skeleton component for loading states.",
+        "Added loading.tsx files for /countries, /countries/[slug], /decision.",
+        "Improved EmptyState (message prop), ErrorState (backend-down detection, back link), LoadingState (message + animated dots).",
+        "Updated CountryScores to show collapsible breakdown, CountryLegalSignals and CountrySources to use semantic badges.",
+        "Updated DecisionResultCard: strengths/weaknesses/risks visually distinct via background color sections.",
+        "Updated DecisionWarnings to use ImpactLevelBadge.",
+        "Extended styles.css with badge, skeleton, loading, fallback banner, breadcrumbs, quick actions, home sections, country cards, decision winner block styles.",
+        "No backend changes. OpenAPI unchanged. Generated types unchanged."
+      ],
+      "status": "completed",
+      "checks": [
+        "pnpm typecheck",
+        "pnpm lint",
+        "pnpm build",
+        "python -m pytest",
+        "python -m ruff check . --fix",
+        "python -m ruff format .",
+        "python -m mypy apps packages scripts tests"
+      ]
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-mvp-ux-polish-v1",
+      "task": "feat/web-mvp-ux-polish-v1",
+      "branch": "feat/web-mvp-ux-polish-v1",
+      "title": "Start MVP UX polish for first country card and decision flow",
+      "summary": [
+        "Started MVP UX polish for the first country card and decision flow.",
+        "Improves home page to explain the product, adds country cards with action links, adds breadcrumbs and quick actions on country pages, adds winner highlight to decision results, hardens loading/error/empty states, adds impact/confidence badges."
+      ],
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
       "scope": "web-legal-signals-sources-quality-pages",
       "task": "feat/web-legal-signals-sources-quality-pages",
       "branch": "feat/web-legal-signals-sources-quality-pages",

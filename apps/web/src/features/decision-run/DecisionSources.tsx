@@ -1,5 +1,6 @@
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import { EmptyState } from "../../shared/ui/EmptyState";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 
 type DecisionSource =
   DecisionRunResponse["results"][number]["sources"][number];
@@ -9,7 +10,9 @@ type DecisionSourcesProps = {
 };
 
 export function DecisionSources({ sources }: DecisionSourcesProps) {
-  if (sources.length === 0) return <EmptyState />;
+  if (sources.length === 0) {
+    return <EmptyState message="No sources are attached to this result." />;
+  }
 
   return (
     <div className="sourceList">
@@ -22,7 +25,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
                 <span className="metaChip">{source.source_type}</span>
               )}
               {source.confidence && (
-                <span className="metaChip">{source.confidence}</span>
+                <ConfidenceBadge confidence={source.confidence} />
               )}
             </div>
           </div>
@@ -32,7 +35,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
             rel="noreferrer"
             className="sourceLink"
           >
-            Open source
+            Open source ↗
           </a>
         </div>
       ))}

@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import { countriesApi } from "../../../shared/api";
 import { normalizeLocale } from "../../../shared/lib/locale";
+import { routes } from "../../../shared/lib/routes";
 import { ErrorState } from "../../../shared/ui/ErrorState";
 import {
   CountryHeader,
@@ -37,37 +40,73 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         : (err as { error?: { code?: string; message?: string } });
     return (
       <div className="pageShell">
+        <nav className="breadcrumbs" aria-label="Breadcrumb">
+          <Link href={routes.countries} className="breadcrumbLink">
+            Countries
+          </Link>
+          <span className="breadcrumbSep" aria-hidden="true">/</span>
+          <span className="breadcrumbCurrent">{slug}</span>
+        </nav>
         <header className="pageHeader">
           <p className="eyebrow">Country</p>
           <h1>{slug}</h1>
         </header>
-        <ErrorState error={errProp} />
+        <ErrorState error={errProp} backHref={routes.countries} backLabel="Back to countries" />
       </div>
     );
   }
 
+  const isFallback = card.locale.translation_status === "fallback";
+
   return (
     <div className="pageShell">
-      <CountryHeader country={card.country} />
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <Link href={`${routes.countries}?locale=${locale}`} className="breadcrumbLink">
+          Countries
+        </Link>
+        <span className="breadcrumbSep" aria-hidden="true">/</span>
+        <span className="breadcrumbCurrent">{card.country.name}</span>
+      </nav>
+
+      {isFallback && (
+        <div className="fallbackBanner">
+          {locale === "ru"
+            ? "Русский перевод частично отсутствует. Показана английская fallback-версия."
+            : "Translation content is missing. Showing fallback language content."}
+        </div>
+      )}
+
+      <CountryHeader country={card.country} locale={locale} />
 
       <div className="cardSections">
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Profile</h2>
-          <CountryProfileSections profile={card.profile} />
-        </section>
+        {card.profile?.executive_summary && (
+          <section className="cardSection cardSectionHighlight">
+            <h2 className="cardSectionTitle">Overview</h2>
+            <p className="executiveSummaryText">{card.profile.executive_summary}</p>
+          </section>
+        )}
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Scores</h2>
+          <h2 className="cardSectionTitle">Scenario scores</h2>
           <CountryScores scores={card.scores} />
         </section>
 
         <section className="cardSection">
+          <h2 className="cardSectionTitle">Country profile</h2>
+          <CountryProfileSections profile={card.profile} skipExecutiveSummary />
+        </section>
+
+        <section className="cardSection">
           <h2 className="cardSectionTitle">Legal signals</h2>
+          <p className="cardSectionDesc">
+            Legal signals are structured changes or risks that may affect relocation,
+            business, safety, or long-term planning.
+          </p>
           <CountryLegalSignals legalSignals={card.legal_signals} />
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Sources</h2>
+          <h2 className="cardSectionTitle">Source-backed data</h2>
           <CountrySources sources={card.sources} />
         </section>
 
