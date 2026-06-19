@@ -149,7 +149,6 @@ generated_reports/
 *.tsv
 !data/seed/**/*.csv
 !data/reference/**/*.csv
-!docs/_arch_/**/*.csv
 !docs/**/*.pdf
 .llm_cache/
 .openai_cache/
@@ -303,3 +302,4 @@ moderation_exports/
 !compose.yml
 !Dockerfile
 !Dockerfile.*
+!docs/_arch_/**
