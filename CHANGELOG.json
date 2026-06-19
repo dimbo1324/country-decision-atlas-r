@@ -488,6 +488,46 @@
         "pnpm web:mvp:check",
         "make quality unavailable: make command is not installed in this Windows environment"
       ]
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "source-backed-content-depth-v1",
+      "task": "feat/source-backed-content-depth-v1",
+      "branch": "feat/source-backed-content-depth-v1",
+      "summary": "Started source-backed content depth expansion for Russia and Uruguay.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "source-backed-content-depth-v1",
+      "task": "feat/source-backed-content-depth-v1",
+      "branch": "feat/source-backed-content-depth-v1",
+      "summary": [
+        "Added idempotent source-backed content depth migration for Russia and Uruguay.",
+        "Reached 20 published sources per country, 25/26 published evidence items, and 10 published legal signals per country.",
+        "Updated Russia and Uruguay country cards, 10 country score explanations, and 70 score breakdown explanations/source_ids without changing score math.",
+        "Strengthened data-quality checks for MVP country content depth, real source URLs, evidence/legal signal traceability, breakdown source_ids, and country card source summaries.",
+        "Verified backend, frontend, data-quality report, migrations, sqlfluff, pre-commit, and 38/38 Playwright E2E tests."
+      ],
+      "status": "completed",
+      "checks": [
+        "scripts/apply_migrations.py",
+        "python -m pytest: 79 passed, 23 skipped",
+        "python -m mypy apps tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format . --check: passed",
+        "python -m sqlfluff lint database/migrations/009_source_backed_content_depth_v1.sql: passed",
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "pnpm format:check: passed",
+        "pnpm web:mvp:check: 38 passed",
+        "python -m pre_commit run --all-files: passed"
+      ]
     }
   ]
 }

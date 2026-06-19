@@ -11,6 +11,9 @@ MVP_SCENARIO_SLUGS = (
     "business_self_employment",
     "safety_political_risk",
 )
+MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY = 15
+MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY = 20
+MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY = 8
 
 
 def list_missing_mvp_countries(connection: Connection[Any]) -> list[dict[str, Any]]:
@@ -72,6 +75,93 @@ def list_published_countries_without_sources(
         ORDER BY c.slug
         """,
         (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_mvp_countries_with_too_few_published_sources(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.id::text AS id,
+            c.slug,
+            COUNT(s.id)::int AS published_sources_count,
+            %s::int AS required_sources_count
+        FROM countries c
+        LEFT JOIN sources s
+            ON s.country_id = c.id
+            AND s.status = 'published'
+        WHERE c.slug = ANY(%s)
+          AND c.is_active = TRUE
+        GROUP BY c.id, c.slug
+        HAVING COUNT(s.id) < %s
+        ORDER BY c.slug
+        """,
+        (
+            MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
+            list(MVP_COUNTRY_SLUGS),
+            MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
+        ),
+    )
+
+
+def list_mvp_countries_with_too_few_published_evidence(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.id::text AS id,
+            c.slug,
+            COUNT(e.id)::int AS published_evidence_count,
+            %s::int AS required_evidence_count
+        FROM countries c
+        LEFT JOIN evidence_items e
+            ON e.country_id = c.id
+            AND e.status = 'published'
+        WHERE c.slug = ANY(%s)
+          AND c.is_active = TRUE
+        GROUP BY c.id, c.slug
+        HAVING COUNT(e.id) < %s
+        ORDER BY c.slug
+        """,
+        (
+            MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
+            list(MVP_COUNTRY_SLUGS),
+            MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
+        ),
+    )
+
+
+def list_mvp_countries_with_too_few_published_legal_signals(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.id::text AS id,
+            c.slug,
+            COUNT(ls.id)::int AS published_legal_signals_count,
+            %s::int AS required_legal_signals_count
+        FROM countries c
+        LEFT JOIN legal_signals ls
+            ON ls.country_id = c.id
+            AND ls.status = 'published'
+        WHERE c.slug = ANY(%s)
+          AND c.is_active = TRUE
+        GROUP BY c.id, c.slug
+        HAVING COUNT(ls.id) < %s
+        ORDER BY c.slug
+        """,
+        (
+            MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
+            list(MVP_COUNTRY_SLUGS),
+            MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
+        ),
     )
 
 
@@ -176,6 +266,35 @@ def list_scores_with_invalid_weight_sum(
         GROUP BY cs.id, c.slug, s.slug
         HAVING ABS(COALESCE(SUM(csb.weight), 0) - 1.0) > 0.001
         ORDER BY c.slug, s.slug
+        """,
+        (list(MVP_COUNTRY_SLUGS), list(MVP_SCENARIO_SLUGS)),
+    )
+
+
+def list_published_score_breakdowns_without_source_ids(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            csb.id::text AS id,
+            cs.id::text AS country_score_id,
+            c.slug AS country_slug,
+            s.slug AS scenario_slug,
+            csb.criterion
+        FROM country_score_breakdowns csb
+        JOIN country_scores cs ON cs.id = csb.country_score_id
+        JOIN countries c ON c.id = cs.country_id
+        JOIN scenarios s ON s.id = cs.scenario_id
+        WHERE c.slug = ANY(%s)
+          AND s.slug = ANY(%s)
+          AND (
+              csb.source_ids IS NULL
+              OR jsonb_typeof(csb.source_ids) <> 'array'
+              OR jsonb_array_length(csb.source_ids) = 0
+          )
+        ORDER BY c.slug, s.slug, csb.criterion
         """,
         (list(MVP_COUNTRY_SLUGS), list(MVP_SCENARIO_SLUGS)),
     )
@@ -286,6 +405,24 @@ def list_published_sources_with_missing_required_fields(
     )
 
 
+def list_published_sources_with_example_invalid_url(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text AS id,
+            title,
+            url
+        FROM sources
+        WHERE status = 'published'
+          AND LOWER(COALESCE(url, '')) LIKE '%%example.invalid%%'
+        ORDER BY title
+        """,
+    )
+
+
 def list_invalid_synthetic_user_stories(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
@@ -337,6 +474,33 @@ def list_country_cards_with_empty_major_sections(
               OR COALESCE(cc.legal_signals_summary, '') = ''
               OR COALESCE(cc.risk_summary, '') = ''
               OR COALESCE(cc.source_summary, '') = ''
+          )
+        ORDER BY c.slug, cc.locale
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_country_cards_with_demo_source_summary(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            cc.id::text AS id,
+            c.slug AS country_slug,
+            cc.locale,
+            cc.source_summary
+        FROM country_cards cc
+        JOIN countries c ON c.id = cc.country_id
+        WHERE c.slug = ANY(%s)
+          AND cc.status = 'published'
+          AND (
+              LOWER(COALESCE(cc.source_summary, '')) LIKE '%%demo%%'
+              OR LOWER(COALESCE(cc.source_summary, '')) LIKE '%%placeholder%%'
+              OR LOWER(COALESCE(cc.source_summary, '')) LIKE '%%example.invalid%%'
+              OR LOWER(COALESCE(cc.source_summary, '')) LIKE '%%mvp demonstration%%'
           )
         ORDER BY c.slug, cc.locale
         """,

@@ -8,6 +8,9 @@ SEED_SQL = "\n".join(
 CONTENT_SQL = Path(
     "database/migrations/005_country_content_decision_logic_v0.sql"
 ).read_text(encoding="utf-8")
+SOURCE_DEPTH_SQL = Path(
+    "database/migrations/009_source_backed_content_depth_v1.sql"
+).read_text(encoding="utf-8")
 SCHEMA_SQL = Path("database/migrations/003_country_decision_engine.sql").read_text(
     encoding="utf-8"
 )
@@ -62,3 +65,18 @@ def test_content_v0_contains_required_product_data() -> None:
     assert "source_quality_score" in CONTENT_SQL
     assert "World Justice Project" in CONTENT_SQL
     assert "Synthetic example for MVP demonstration only." in CONTENT_SQL
+
+
+def test_source_depth_migration_contains_real_traceable_content() -> None:
+    assert SOURCE_DEPTH_SQL.count("https://") >= 70
+    assert "example.invalid" not in SOURCE_DEPTH_SQL
+    assert "INSERT INTO sources" in SOURCE_DEPTH_SQL
+    assert "INSERT INTO evidence_items" in SOURCE_DEPTH_SQL
+    assert "INSERT INTO legal_signals" in SOURCE_DEPTH_SQL
+    assert "UPDATE country_cards" in SOURCE_DEPTH_SQL
+    assert "UPDATE country_scores" in SOURCE_DEPTH_SQL
+    assert "UPDATE country_score_breakdowns" in SOURCE_DEPTH_SQL
+    assert "World Bank" in SOURCE_DEPTH_SQL
+    assert "Freedom House" in SOURCE_DEPTH_SQL
+    assert "IMPO Uruguay" in SOURCE_DEPTH_SQL
+    assert "Federal Tax Service of Russia" in SOURCE_DEPTH_SQL

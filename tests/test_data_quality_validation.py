@@ -21,17 +21,23 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_missing_mvp_countries",
         "list_published_countries_without_cards",
         "list_published_countries_without_sources",
+        "list_mvp_countries_with_too_few_published_sources",
+        "list_mvp_countries_with_too_few_published_evidence",
+        "list_mvp_countries_with_too_few_published_legal_signals",
         "list_missing_country_scores_for_required_scenarios",
         "list_scores_without_breakdowns",
         "list_scores_with_incomplete_breakdowns",
         "list_scores_with_invalid_weight_sum",
+        "list_published_score_breakdowns_without_source_ids",
         "list_published_legal_signals_without_source",
         "list_published_legal_signals_without_evidence",
         "list_evidence_without_source",
         "list_evidence_without_country",
         "list_published_sources_with_missing_required_fields",
+        "list_published_sources_with_example_invalid_url",
         "list_invalid_synthetic_user_stories",
         "list_country_cards_with_empty_major_sections",
+        "list_country_cards_with_demo_source_summary",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
@@ -83,6 +89,97 @@ def test_data_quality_report_aggregates_critical_and_warning_issues(
     }
     assert any(issue.severity == "critical" for issue in report.issues)
     assert any(issue.severity == "warning" for issue in report.issues)
+
+
+def test_data_quality_report_enforces_source_backed_depth(
+    monkeypatch: Any,
+) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_mvp_countries_with_too_few_published_sources",
+        lambda *_: [
+            {
+                "id": "country-id",
+                "slug": "russia",
+                "published_sources_count": 14,
+                "required_sources_count": 15,
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_mvp_countries_with_too_few_published_evidence",
+        lambda *_: [
+            {
+                "id": "country-id",
+                "slug": "russia",
+                "published_evidence_count": 19,
+                "required_evidence_count": 20,
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_mvp_countries_with_too_few_published_legal_signals",
+        lambda *_: [
+            {
+                "id": "country-id",
+                "slug": "russia",
+                "published_legal_signals_count": 7,
+                "required_legal_signals_count": 8,
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_sources_with_example_invalid_url",
+        lambda *_: [
+            {
+                "id": "source-id",
+                "title": "Synthetic source",
+                "url": "https://example.invalid/source",
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_score_breakdowns_without_source_ids",
+        lambda *_: [
+            {
+                "id": "breakdown-id",
+                "country_score_id": "score-id",
+                "country_slug": "russia",
+                "scenario_slug": "relocation_residence",
+                "criterion": "legalization_score",
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_country_cards_with_demo_source_summary",
+        lambda *_: [
+            {
+                "id": "card-id",
+                "country_slug": "russia",
+                "locale": "en",
+                "source_summary": "Demo source summary",
+            }
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert {issue.code for issue in report.issues} == {
+        "mvp_country_published_source_count_low",
+        "mvp_country_published_evidence_count_low",
+        "mvp_country_published_legal_signal_count_low",
+        "published_source_example_invalid_url",
+        "score_breakdown_source_ids_missing",
+        "country_card_source_summary_demo",
+    }
+    assert report.critical_issues_count == 6
 
 
 def test_source_publish_validation_requires_required_metadata() -> None:

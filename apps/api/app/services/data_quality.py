@@ -63,6 +63,54 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     checks.append(
         _check("mvp_countries_have_sources", issues, ["country_sources_missing"])
     )
+    for row in repository.list_mvp_countries_with_too_few_published_sources(connection):
+        issues.append(
+            _issue(
+                "mvp_country_published_source_count_low",
+                "critical",
+                "country",
+                row.get("id"),
+                "Published MVP country has too few published sources.",
+                row,
+            )
+        )
+    for row in repository.list_mvp_countries_with_too_few_published_evidence(
+        connection
+    ):
+        issues.append(
+            _issue(
+                "mvp_country_published_evidence_count_low",
+                "critical",
+                "country",
+                row.get("id"),
+                "Published MVP country has too few published evidence items.",
+                row,
+            )
+        )
+    for row in repository.list_mvp_countries_with_too_few_published_legal_signals(
+        connection
+    ):
+        issues.append(
+            _issue(
+                "mvp_country_published_legal_signal_count_low",
+                "critical",
+                "country",
+                row.get("id"),
+                "Published MVP country has too few published legal signals.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "mvp_country_content_depth",
+            issues,
+            [
+                "mvp_country_published_source_count_low",
+                "mvp_country_published_evidence_count_low",
+                "mvp_country_published_legal_signal_count_low",
+            ],
+        )
+    )
     for row in repository.list_missing_country_scores_for_required_scenarios(
         connection
     ):
@@ -112,6 +160,19 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    for row in repository.list_published_score_breakdowns_without_source_ids(
+        connection
+    ):
+        issues.append(
+            _issue(
+                "score_breakdown_source_ids_missing",
+                "critical",
+                "country_score_breakdown",
+                row.get("id"),
+                "Country score breakdown must reference at least one source.",
+                row,
+            )
+        )
     checks.append(
         _check(
             "mvp_score_breakdowns_complete",
@@ -120,6 +181,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 "score_breakdown_missing",
                 "score_breakdown_count_invalid",
                 "score_breakdown_weight_sum_invalid",
+                "score_breakdown_source_ids_missing",
             ],
         )
     )
@@ -208,6 +270,24 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
             ["published_source_required_field_missing"],
         )
     )
+    for row in repository.list_published_sources_with_example_invalid_url(connection):
+        issues.append(
+            _issue(
+                "published_source_example_invalid_url",
+                "critical",
+                "source",
+                row.get("id"),
+                "Published source must not use example.invalid URLs.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "published_sources_use_real_urls",
+            issues,
+            ["published_source_example_invalid_url"],
+        )
+    )
     for row in repository.list_invalid_synthetic_user_stories(connection):
         issues.append(
             _issue(
@@ -237,11 +317,22 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
                 row,
             )
         )
+    for row in repository.list_country_cards_with_demo_source_summary(connection):
+        issues.append(
+            _issue(
+                "country_card_source_summary_demo",
+                "critical",
+                "country_card",
+                row.get("id"),
+                "Published country card source summary must describe real sources.",
+                row,
+            )
+        )
     checks.append(
         _check(
             "country_cards_have_public_sections",
             issues,
-            ["country_card_section_missing"],
+            ["country_card_section_missing", "country_card_source_summary_demo"],
         )
     )
     critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
