@@ -1,16 +1,22 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { LegalSignalListResponse } from "../../shared/api/legal-signals";
 import { countriesApi, legalSignalsApi } from "../../shared/api";
 import { normalizeLocale } from "../../shared/lib/locale";
+import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
+import { SummaryCard } from "../../shared/ui/SummaryCard";
+import { ImpactDirectionBadge, ImpactLevelBadge } from "../../shared/ui/ImpactBadge";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { StatusBadge } from "../../shared/ui/StatusBadge";
 
 type ViewError =
   | { error?: { code?: string; message?: string } }
@@ -39,10 +45,23 @@ function LegalSignalsViewInner() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ViewError>(null);
 
-  const [countrySlug, setCountrySlug] = useState("");
-  const [signalType, setSignalType] = useState("");
-  const [impactDirection, setImpactDirection] = useState("");
-  const [impactLevel, setImpactLevel] = useState("");
+  const [countrySlug, setCountrySlug] = useState(
+    () => searchParams.get("country_slug") ?? "",
+  );
+  const [signalType, setSignalType] = useState(
+    () => searchParams.get("signal_type") ?? "",
+  );
+  const [impactDirection, setImpactDirection] = useState(
+    () => searchParams.get("impact_direction") ?? "",
+  );
+  const [impactLevel, setImpactLevel] = useState(
+    () => searchParams.get("impact_level") ?? "",
+  );
+
+  const countriesById = useMemo(
+    () => new Map(countries?.items.map((c) => [c.id, c]) ?? []),
+    [countries],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -98,12 +117,30 @@ function LegalSignalsViewInner() {
     impactLevel
   );
 
+  function clearFilters() {
+    setCountrySlug("");
+    setSignalType("");
+    setImpactDirection("");
+    setImpactLevel("");
+  }
+
+  const isFallback = signals?.locale?.translation_status === "fallback";
+
   return (
     <div className="filterPageWrap">
+      {isFallback && (
+        <div className="fallbackBanner">
+          {locale === "ru"
+            ? "Русский перевод частично отсутствует. Показана английская fallback-версия."
+            : "Translation content is missing. Showing fallback language content."}
+        </div>
+      )}
+
       <div className="filterBar">
         <div className="filterGroup">
-          <label className="filterLabel">Country</label>
+          <label className="filterLabel" htmlFor="ls-country">Country</label>
           <select
+            id="ls-country"
             className="filterSelect"
             value={countrySlug}
             onChange={(e) => setCountrySlug(e.target.value)}
@@ -117,8 +154,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel">Signal type</label>
+          <label className="filterLabel" htmlFor="ls-type">Signal type</label>
           <select
+            id="ls-type"
             className="filterSelect"
             value={signalType}
             onChange={(e) => setSignalType(e.target.value)}
@@ -132,8 +170,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel">Impact direction</label>
+          <label className="filterLabel" htmlFor="ls-direction">Impact direction</label>
           <select
+            id="ls-direction"
             className="filterSelect"
             value={impactDirection}
             onChange={(e) => setImpactDirection(e.target.value)}
@@ -147,8 +186,9 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel">Impact level</label>
+          <label className="filterLabel" htmlFor="ls-level">Impact level</label>
           <select
+            id="ls-level"
             className="filterSelect"
             value={impactLevel}
             onChange={(e) => setImpactLevel(e.target.value)}
@@ -162,74 +202,105 @@ function LegalSignalsViewInner() {
           </select>
         </div>
         {hasFilters && (
-          <button
-            className="clearButton"
-            onClick={() => {
-              setCountrySlug("");
-              setSignalType("");
-              setImpactDirection("");
-              setImpactLevel("");
-            }}
-          >
+          <button className="clearButton" onClick={clearFilters}>
             Clear filters
           </button>
         )}
       </div>
 
-      {isLoading && <LoadingState />}
-      {!isLoading && error !== null && <ErrorState error={error} />}
-      {!isLoading && error === null && signals?.items.length === 0 && (
-        <EmptyState />
+      {hasFilters && (
+        <div className="activeFilters">
+          {countrySlug && (
+            <span className="activeFilterChip">country: {countrySlug}</span>
+          )}
+          {signalType && (
+            <span className="activeFilterChip">type: {signalType.replace(/_/g, " ")}</span>
+          )}
+          {impactDirection && (
+            <span className="activeFilterChip">direction: {impactDirection}</span>
+          )}
+          {impactLevel && (
+            <span className="activeFilterChip">level: {impactLevel}</span>
+          )}
+        </div>
       )}
-      {!isLoading && error === null && signals && signals.items.length > 0 && (
+
+      {isLoading && <LoadingState message="Loading legal signals…" />}
+      {!isLoading && error !== null && <ErrorState error={error} />}
+      {!isLoading && error === null && signals !== null && (
         <>
-          <p className="resultCount">
-            {signals.items.length} signal
-            {signals.items.length !== 1 ? "s" : ""}
-          </p>
-          <div className="signalList">
-            {signals.items.map((signal) => (
-              <div key={signal.id} className="signalCard">
-                <div className="signalCardHeader">
-                  <span className="signalTitle">{signal.title}</span>
-                  <span className="metaChip">
-                    {signal.signal_type.replace(/_/g, " ")}
-                  </span>
-                </div>
-                {signal.summary && <p>{signal.summary}</p>}
-                <div className="metaRow">
-                  {signal.impact_direction && (
-                    <span className="metaChip">
-                      Direction: {signal.impact_direction}
-                    </span>
-                  )}
-                  {signal.impact_level && (
-                    <span className="metaChip">
-                      Level: {signal.impact_level}
-                    </span>
-                  )}
-                  {signal.confidence && (
-                    <span className="metaChip">
-                      Confidence: {signal.confidence}
-                    </span>
-                  )}
-                  <span className="metaChip">{signal.status}</span>
-                </div>
-                <div className="metaRow">
-                  {signal.published_date && (
-                    <span className="metaChip">
-                      Published: {formatDate(signal.published_date)}
-                    </span>
-                  )}
-                  {signal.effective_date && (
-                    <span className="metaChip">
-                      Effective: {formatDate(signal.effective_date)}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="analyticalSummaryRow">
+            <SummaryCard
+              label="Signals shown"
+              value={signals.items.length}
+            />
+            <SummaryCard
+              label="Total"
+              value={signals.pagination.total}
+            />
+            <SummaryCard
+              label="Locale"
+              value={signals.locale.resolved_locale}
+              detail={signals.locale.translation_status}
+            />
           </div>
+
+          {signals.items.length === 0 ? (
+            <EmptyState message="No legal signals match the selected filters." />
+          ) : (
+            <div className="signalList">
+              {signals.items.map((signal) => {
+                const country = countriesById.get(signal.country_id);
+                return (
+                  <div key={signal.id} className="signalCard">
+                    <div className="signalCardHeader">
+                      <span className="signalTitle">{signal.title}</span>
+                      <span className="metaChip">
+                        {signal.signal_type.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                    {signal.summary && (
+                      <p className="signalSummary">{signal.summary}</p>
+                    )}
+                    <div className="metaRow">
+                      {signal.impact_direction && (
+                        <ImpactDirectionBadge direction={signal.impact_direction} />
+                      )}
+                      {signal.impact_level && (
+                        <ImpactLevelBadge level={signal.impact_level} />
+                      )}
+                      {signal.confidence && (
+                        <ConfidenceBadge confidence={signal.confidence} />
+                      )}
+                      <StatusBadge status={signal.status} />
+                    </div>
+                    <div className="metaRow">
+                      {signal.published_date && (
+                        <span className="metaChip">
+                          Published: {formatDate(signal.published_date)}
+                        </span>
+                      )}
+                      {signal.effective_date && (
+                        <span className="metaChip">
+                          Effective: {formatDate(signal.effective_date)}
+                        </span>
+                      )}
+                    </div>
+                    {country && (
+                      <div className="entityLinkRow">
+                        <Link
+                          href={routes.countryWithLocale(country.slug, locale)}
+                          className="internalLink"
+                        >
+                          Open country card: {country.name} →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </>
       )}
     </div>
@@ -238,7 +309,7 @@ function LegalSignalsViewInner() {
 
 export function LegalSignalsView() {
   return (
-    <Suspense fallback={<LoadingState />}>
+    <Suspense fallback={<LoadingState message="Loading legal signals…" />}>
       <LegalSignalsViewInner />
     </Suspense>
   );

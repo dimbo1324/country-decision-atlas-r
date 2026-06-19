@@ -66,7 +66,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         <div className="resultList">
           <h3 className="resultListTitle">Full ranking</h3>
           {results.map((result) => (
-            <DecisionResultCard key={result.country.id} result={result} />
+            <DecisionResultCard key={result.country.id} result={result} locale={locale.resolved_locale} />
           ))}
         </div>
       )}

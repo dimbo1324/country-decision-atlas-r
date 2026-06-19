@@ -6,4 +6,10 @@ export const routes = {
   legalSignals: "/legal-signals",
   sources: "/sources",
   dataQuality: "/internal/data-quality",
+  legalSignalsForCountry: (slug: string, locale: string) =>
+    `/legal-signals?country_slug=${slug}&locale=${locale}`,
+  sourcesForCountry: (slug: string, locale: string) =>
+    `/sources?country_slug=${slug}&locale=${locale}`,
+  countryWithLocale: (slug: string, locale: string) =>
+    `/countries/${slug}?locale=${locale}`,
 };

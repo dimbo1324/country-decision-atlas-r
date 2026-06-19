@@ -103,11 +103,27 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             business, safety, or long-term planning.
           </p>
           <CountryLegalSignals legalSignals={card.legal_signals} />
+          <div className="entityLinkRow">
+            <Link
+              href={routes.legalSignalsForCountry(card.country.slug, locale)}
+              className="internalLink"
+            >
+              View all legal signals for {card.country.name} →
+            </Link>
+          </div>
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Source-backed data</h2>
           <CountrySources sources={card.sources} />
+          <div className="entityLinkRow">
+            <Link
+              href={routes.sourcesForCountry(card.country.slug, locale)}
+              className="internalLink"
+            >
+              View all sources for {card.country.name} →
+            </Link>
+          </div>
         </section>
 
         <section className="cardSection">

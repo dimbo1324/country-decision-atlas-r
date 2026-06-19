@@ -1373,6 +1373,144 @@ h1 {
   color: #991b1b;
 }
 
+/* ───────────────────────── analytical summary row ───────────────────────── */
+.analyticalSummaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-width: 130px;
+}
+.summaryLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.summaryValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+.summaryDetail {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ───────────────────────── section header ───────────────────────── */
+.sectionHeaderBlock {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.sectionHeaderMain {
+  display: grid;
+  gap: 4px;
+}
+.sectionHeaderTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+.sectionHeaderDesc {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+.sectionHeaderActions {
+  flex-shrink: 0;
+}
+
+/* ───────────────────────── active filter chips ───────────────────────── */
+.activeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.activeFilterChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+/* ───────────────────────── internal / external links ───────────────────────── */
+.internalLink {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563eb;
+  text-decoration: none;
+}
+.internalLink:hover {
+  text-decoration: underline;
+}
+.externalLink {
+  font-size: 13px;
+  font-weight: 500;
+  color: #059669;
+  text-decoration: none;
+}
+.externalLink:hover {
+  text-decoration: underline;
+}
+.entityLinkRow {
+  padding-top: 8px;
+  border-top: 1px solid #f3f4f6;
+}
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 6px;
+}
+
+/* ───────────────────────── data quality checks ───────────────────────── */
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.checkCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+.checkCode {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: ui-monospace, monospace;
+  color: #374151;
+  flex: 1;
+}
+.dqStatusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .appHeaderInner {
     padding: 0 16px;

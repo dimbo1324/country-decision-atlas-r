@@ -1,4 +1,7 @@
+import Link from "next/link";
 import type { DecisionRunResponse } from "../../shared/api/decision";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { routes } from "../../shared/lib/routes";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionBreakdown } from "./DecisionBreakdown";
@@ -9,9 +12,10 @@ type DecisionCountryResult = DecisionRunResponse["results"][number];
 
 type DecisionResultCardProps = {
   result: DecisionCountryResult;
+  locale: SupportedLocale;
 };
 
-export function DecisionResultCard({ result }: DecisionResultCardProps) {
+export function DecisionResultCard({ result, locale }: DecisionResultCardProps) {
   return (
     <div className="resultCard">
       <div className="resultCardHeader">
@@ -67,6 +71,15 @@ export function DecisionResultCard({ result }: DecisionResultCardProps) {
       <div className="resultSection">
         <h4 className="resultSectionTitle">Evidence sources</h4>
         <DecisionSources sources={result.sources} />
+      </div>
+
+      <div className="entityLinkRow">
+        <Link
+          href={routes.countryWithLocale(result.country.slug, locale)}
+          className="internalLink"
+        >
+          Open country card →
+        </Link>
       </div>
     </div>
   );

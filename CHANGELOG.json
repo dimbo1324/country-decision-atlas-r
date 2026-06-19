@@ -2,6 +2,42 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-19",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "web-analytical-pages-and-mvp-regression",
+      "task": "feat/web-analytical-pages-and-mvp-regression",
+      "branch": "feat/web-analytical-pages-and-mvp-regression",
+      "title": "Start analytical pages UX polish and MVP regression",
+      "summary": [
+        "Started analytical pages UX polish, cross-links, shared UI patterns, and MVP regression pass.",
+        "Improves /legal-signals, /sources, /internal/data-quality with summary blocks, semantic badges, URL filter support, and country cross-links.",
+        "Adds cross-links: country card ↔ legal signals, country card ↔ sources, decision result → country card.",
+        "Adds StatusBadge, SectionHeader, SummaryCard shared components."
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-19",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "web-analytical-pages-and-mvp-regression",
+      "task": "feat/web-analytical-pages-and-mvp-regression",
+      "branch": "feat/web-analytical-pages-and-mvp-regression",
+      "title": "Polish analytical pages and MVP regression",
+      "summary": [
+        "Rewrote LegalSignalsView with URL filter init from query params, summary cards, active filter chips, and country card cross-links.",
+        "Rewrote SourcesView with URL filter init, summary cards, semantic badges, external links with rel=noreferrer, and country card cross-links.",
+        "Rewrote DataQualityReportView with summary cards, checks list, issues list, status badges, and SectionHeader.",
+        "Added country card cross-links from /legal-signals and /sources back to country page.",
+        "Added DecisionResultCard country card link via locale-aware route.",
+        "Added StatusBadge, SectionHeader, SummaryCard shared components.",
+        "Added analyticalSummaryRow, summaryCard, sectionHeaderBlock, activeFilters, internalLink, externalLink, entityLinkRow, checkList, checkCard, dqStatusRow CSS classes.",
+        "All TypeScript, ESLint, and Next.js build checks pass."
+      ],
+      "status": "completed"
+    },
+    {
       "date": "2026-06-18",
       "type": "chore",
       "scope": "frontend-readiness",
