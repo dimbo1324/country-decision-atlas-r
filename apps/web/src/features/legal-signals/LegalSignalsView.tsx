@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { LegalSignalListResponse } from "../../shared/api/legal-signals";
-import { countriesApi, legalSignalsApi } from "../../shared/api";
+import type { EvidenceItem } from "../../shared/api/evidence";
+import { countriesApi, legalSignalsApi, evidenceApi } from "../../shared/api";
 import { normalizeLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
@@ -14,11 +15,14 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { SummaryCard } from "../../shared/ui/SummaryCard";
+import { EvidenceCard } from "../../shared/ui/EvidenceCard";
 import { ImpactDirectionBadge, ImpactLevelBadge } from "../../shared/ui/ImpactBadge";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 
 type ViewError = { error?: { code?: string; message?: string } } | string | null;
+
+type EvidenceState = EvidenceItem[] | "loading" | "error" | null;
 
 const SIGNAL_TYPES = [
   "law",
@@ -55,6 +59,11 @@ function LegalSignalsViewInner() {
     () => searchParams.get("impact_level") ?? "",
   );
 
+  const [expandedSignalId, setExpandedSignalId] = useState<string | null>(null);
+  const [evidenceBySignalId, setEvidenceBySignalId] = useState<
+    Record<string, EvidenceState>
+  >({});
+
   const countriesById = useMemo(
     () => new Map(countries?.items.map((c) => [c.id, c]) ?? []),
     [countries],
@@ -77,6 +86,7 @@ function LegalSignalsViewInner() {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
+    setExpandedSignalId(null);
     legalSignalsApi
       .listLegalSignals({
         locale,
@@ -106,6 +116,32 @@ function LegalSignalsViewInner() {
       cancelled = true;
     };
   }, [locale, countrySlug, signalType, impactDirection, impactLevel]);
+
+  useEffect(() => {
+    if (!expandedSignalId) return;
+    if (evidenceBySignalId[expandedSignalId] !== undefined) return;
+
+    setEvidenceBySignalId((prev) => ({ ...prev, [expandedSignalId]: "loading" }));
+
+    evidenceApi
+      .listEvidenceForLegalSignal(expandedSignalId)
+      .then((res) => {
+        setEvidenceBySignalId((prev) => ({
+          ...prev,
+          [expandedSignalId]: res.items,
+        }));
+      })
+      .catch(() => {
+        setEvidenceBySignalId((prev) => ({
+          ...prev,
+          [expandedSignalId]: "error",
+        }));
+      });
+  }, [expandedSignalId, evidenceBySignalId]);
+
+  function toggleSignal(id: string) {
+    setExpandedSignalId((prev) => (prev === id ? null : id));
+  }
 
   const hasFilters = !!(countrySlug || signalType || impactDirection || impactLevel);
 
@@ -247,6 +283,8 @@ function LegalSignalsViewInner() {
             <div className="signalList" data-testid="legal-signals-list">
               {signals.items.map((signal) => {
                 const country = countriesById.get(signal.country_id);
+                const isExpanded = expandedSignalId === signal.id;
+                const evidence = evidenceBySignalId[signal.id];
                 return (
                   <div key={signal.id} className="signalCard">
                     <div className="signalCardHeader">
@@ -270,6 +308,15 @@ function LegalSignalsViewInner() {
                       )}
                       <StatusBadge status={signal.status} />
                     </div>
+                    {signal.affected_groups && signal.affected_groups.length > 0 && (
+                      <div className="metaRow">
+                        {signal.affected_groups.map((g) => (
+                          <span key={g} className="metaChip">
+                            {g}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <div className="metaRow">
                       {signal.published_date && (
                         <span className="metaChip">
@@ -282,14 +329,44 @@ function LegalSignalsViewInner() {
                         </span>
                       )}
                     </div>
-                    {country && (
-                      <div className="entityLinkRow">
+                    <div className="cardActions">
+                      {country && (
                         <Link
                           href={routes.countryWithLocale(country.slug, locale)}
                           className="internalLink"
                         >
                           Open country card: {country.name} →
                         </Link>
+                      )}
+                      <button
+                        className="evidenceToggleBtn"
+                        onClick={() => toggleSignal(signal.id)}
+                        data-testid="legal-signal-evidence-toggle"
+                        aria-expanded={isExpanded}
+                      >
+                        {isExpanded
+                          ? "Hide supporting evidence"
+                          : "Show supporting evidence"}
+                      </button>
+                    </div>
+                    {isExpanded && (
+                      <div className="evidencePanel">
+                        {evidence === "loading" && (
+                          <LoadingState message="Loading supporting evidence…" />
+                        )}
+                        {evidence === "error" && (
+                          <ErrorState error="Unable to load supporting evidence." />
+                        )}
+                        {Array.isArray(evidence) && evidence.length === 0 && (
+                          <EmptyState message="No supporting evidence is attached yet." />
+                        )}
+                        {Array.isArray(evidence) && evidence.length > 0 && (
+                          <div className="evidenceList">
+                            {evidence.map((item) => (
+                              <EvidenceCard key={item.id} item={item} />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

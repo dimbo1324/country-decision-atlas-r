@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { SourceListResponse } from "../../shared/api/sources";
-import { countriesApi, sourcesApi } from "../../shared/api";
+import type { EvidenceItem } from "../../shared/api/evidence";
+import { countriesApi, sourcesApi, evidenceApi } from "../../shared/api";
 import { normalizeLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
@@ -14,9 +15,12 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { SummaryCard } from "../../shared/ui/SummaryCard";
+import { EvidenceCard } from "../../shared/ui/EvidenceCard";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { Badge } from "../../shared/ui/Badge";
+
+type EvidenceState = EvidenceItem[] | "loading" | "error" | null;
 
 type ViewError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -53,6 +57,11 @@ function SourcesViewInner() {
     () => (searchParams.get("confidence") ?? "") as ConfidenceFilter,
   );
 
+  const [expandedSourceId, setExpandedSourceId] = useState<string | null>(null);
+  const [evidenceBySourceId, setEvidenceBySourceId] = useState<
+    Record<string, EvidenceState>
+  >({});
+
   const countriesById = useMemo(
     () => new Map(countries?.items.map((c) => [c.id, c]) ?? []),
     [countries],
@@ -75,6 +84,7 @@ function SourcesViewInner() {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
+    setExpandedSourceId(null);
     sourcesApi
       .listSources({
         locale,
@@ -103,6 +113,32 @@ function SourcesViewInner() {
       cancelled = true;
     };
   }, [locale, countrySlug, sourceType, confidence]);
+
+  useEffect(() => {
+    if (!expandedSourceId) return;
+    if (evidenceBySourceId[expandedSourceId] !== undefined) return;
+
+    setEvidenceBySourceId((prev) => ({ ...prev, [expandedSourceId]: "loading" }));
+
+    evidenceApi
+      .listEvidenceForSource(expandedSourceId)
+      .then((res) => {
+        setEvidenceBySourceId((prev) => ({
+          ...prev,
+          [expandedSourceId]: res.items,
+        }));
+      })
+      .catch(() => {
+        setEvidenceBySourceId((prev) => ({
+          ...prev,
+          [expandedSourceId]: "error",
+        }));
+      });
+  }, [expandedSourceId, evidenceBySourceId]);
+
+  function toggleSource(id: string) {
+    setExpandedSourceId((prev) => (prev === id ? null : id));
+  }
 
   const hasFilters = !!(countrySlug || sourceType || confidence);
 
@@ -210,6 +246,8 @@ function SourcesViewInner() {
                 const country = source.country_id
                   ? countriesById.get(source.country_id)
                   : undefined;
+                const isExpanded = expandedSourceId === source.id;
+                const evidence = evidenceBySourceId[source.id];
                 return (
                   <div key={source.id} className="sourceCard">
                     <div className="sourceCardHeader">
@@ -259,7 +297,40 @@ function SourcesViewInner() {
                           View {country.name} →
                         </Link>
                       )}
+                      <button
+                        className="evidenceToggleBtn"
+                        onClick={() => toggleSource(source.id)}
+                        data-testid="source-evidence-toggle"
+                        aria-expanded={isExpanded}
+                      >
+                        {isExpanded ? "Hide related evidence" : "Show related evidence"}
+                      </button>
                     </div>
+                    {isExpanded && (
+                      <div className="evidencePanel">
+                        {evidence === "loading" && (
+                          <LoadingState message="Loading related evidence…" />
+                        )}
+                        {evidence === "error" && (
+                          <ErrorState error="Unable to load related evidence." />
+                        )}
+                        {Array.isArray(evidence) && evidence.length === 0 && (
+                          <EmptyState message="No evidence items are linked to this source." />
+                        )}
+                        {Array.isArray(evidence) && evidence.length > 0 && (
+                          <div className="evidenceList">
+                            {evidence.map((item) => (
+                              <EvidenceCard
+                                key={item.id}
+                                item={item}
+                                sourceTitle={source.title}
+                                sourceUrl={source.url}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })}

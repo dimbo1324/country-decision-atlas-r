@@ -6,9 +6,12 @@ import { ScoreBreakdown } from "./ScoreBreakdown";
 
 type CountryScoresProps = {
   scores: CountryReadModelResponse["scores"];
+  sources: CountryReadModelResponse["sources"];
 };
 
-export function CountryScores({ scores }: CountryScoresProps) {
+export function CountryScores({ scores, sources }: CountryScoresProps) {
+  const sourcesById = new Map(sources.map((s) => [s.id, s]));
+
   if (!scores || scores.length === 0) {
     return <EmptyState message="No scenario scores available." />;
   }
@@ -26,7 +29,7 @@ export function CountryScores({ scores }: CountryScoresProps) {
           {score.breakdowns && score.breakdowns.length > 0 && (
             <details className="breakdownDetails">
               <summary className="breakdownSummaryToggle">View breakdown</summary>
-              <ScoreBreakdown breakdowns={score.breakdowns} />
+              <ScoreBreakdown breakdowns={score.breakdowns} sourcesById={sourcesById} />
             </details>
           )}
         </div>

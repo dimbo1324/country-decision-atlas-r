@@ -2,6 +2,7 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
+import type { EvidenceListResponse } from "./evidence";
 
 export type LegalSignalListResponse =
   components["schemas"]["LegalSignalDetailListResponse"];
@@ -43,6 +44,16 @@ export function listLegalSignals(
   );
 }
 
+export function getLegalSignalEvidence(
+  signalId: string,
+  limit = 20,
+): Promise<EvidenceListResponse> {
+  return apiGet<EvidenceListResponse>(
+    `/api/v1/legal-signals/${signalId}/evidence${queryString({ limit })}`,
+  );
+}
+
 export const legalSignalsApi = {
   listLegalSignals,
+  getLegalSignalEvidence,
 };
