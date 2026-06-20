@@ -4,6 +4,52 @@
     {
       "date": "2026-06-20",
       "event": "task_completed",
+      "type": "feat",
+      "scope": "content-localization-foundation-v1",
+      "task": "feat/content-localization-foundation-v1",
+      "branch": "feat/content-localization-foundation-v1",
+      "summary": "Added a non-breaking content-localization foundation with translation units, variants, SHA-256 source hashing, RU-original and EN-legacy backfill, repository and service layers, stale detection, data-quality integration, and regression coverage.",
+      "migration": "011_content_localization_foundation_v1.sql",
+      "localization_quality": {
+        "translation_units": 379,
+        "ru_original_variants": 379,
+        "en_legacy_variants": 158,
+        "units_without_original": 0,
+        "original_mismatches": 0,
+        "stale_variants": 0,
+        "status": "passed"
+      },
+      "checks": [
+        "python scripts/apply_migrations.py: passed after local workaround for pre-existing 008/010 fresh-database constraint conflict",
+        "migration 011 idempotent reapply: passed",
+        "python -m pytest: 87 passed, 23 skipped",
+        "python -m ruff check . --fix: passed",
+        "python -m ruff format .: passed",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m sqlfluff lint database/migrations/011_content_localization_foundation_v1.sql --dialect postgres: passed",
+        "python -m pre_commit run --all-files: passed",
+        "pnpm format: passed",
+        "pnpm format:check: passed",
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "pnpm web:mvp:check: 38 passed"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "content-localization-foundation-v1",
+      "task": "feat/content-localization-foundation-v1",
+      "branch": "feat/content-localization-foundation-v1",
+      "summary": "Started content-localization foundation with translation units, variants, hashing, backfill, repository, service, and data-quality checks.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_completed",
       "type": "refactor",
       "scope": "russian-translation-full",
       "task": "refactor/russian-translation-full",

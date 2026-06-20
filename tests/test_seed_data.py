@@ -64,7 +64,7 @@ def test_content_v0_contains_required_product_data() -> None:
     assert CONTENT_SQL.count("user_stories") >= 1
     assert "source_quality_score" in CONTENT_SQL
     assert "World Justice Project" in CONTENT_SQL
-    assert "Synthetic example for MVP demonstration only." in CONTENT_SQL
+    assert "Синтетический пример только для MVP-демонстрации." in CONTENT_SQL
 
 
 def test_source_depth_migration_contains_real_traceable_content() -> None:
