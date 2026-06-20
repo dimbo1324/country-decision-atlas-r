@@ -11,10 +11,10 @@ export default async function DataQualityPage() {
     return (
       <div className="pageShell">
         <header className="pageHeader">
-          <p className="eyebrow">Internal</p>
-          <h1>Data quality report</h1>
+          <p className="eyebrow">Внутреннее</p>
+          <h1>Отчёт качества данных</h1>
         </header>
-        <ErrorState error="ADMIN_TOKEN is not configured on this server." />
+        <ErrorState error="ADMIN_TOKEN не настроен на сервере." />
       </div>
     );
   }
@@ -24,12 +24,14 @@ export default async function DataQualityPage() {
     report = await dataQualityApi.getDataQualityReport(adminToken);
   } catch (err: unknown) {
     const message =
-      err instanceof Error ? err.message : "Failed to load data quality report.";
+      err instanceof Error
+        ? err.message
+        : "Не удалось загрузить отчёт качества данных.";
     return (
       <div className="pageShell">
         <header className="pageHeader">
-          <p className="eyebrow">Internal</p>
-          <h1>Data quality report</h1>
+          <p className="eyebrow">Внутреннее</p>
+          <h1>Отчёт качества данных</h1>
         </header>
         <ErrorState error={message} />
       </div>
@@ -39,8 +41,8 @@ export default async function DataQualityPage() {
   return (
     <div className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Internal</p>
-        <h1>Data quality report</h1>
+        <p className="eyebrow">Внутреннее</p>
+        <h1>Отчёт качества данных</h1>
       </header>
       <DataQualityReportView report={report} />
     </div>

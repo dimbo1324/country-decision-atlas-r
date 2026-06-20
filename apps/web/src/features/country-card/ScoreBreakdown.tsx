@@ -32,11 +32,11 @@ export function ScoreBreakdown({ breakdowns, sourcesById }: ScoreBreakdownProps)
         <table className="breakdownTable">
           <thead>
             <tr>
-              <th>Criterion</th>
-              <th>Score</th>
-              <th>Weight</th>
-              <th>Weighted</th>
-              <th>Confidence</th>
+              <th>Критерий</th>
+              <th>Оценка</th>
+              <th>Вес</th>
+              <th>Взвешенная</th>
+              <th>Достоверность</th>
             </tr>
           </thead>
           <tbody>
@@ -55,18 +55,18 @@ export function ScoreBreakdown({ breakdowns, sourcesById }: ScoreBreakdownProps)
 
       {linkedSources.length > 0 && (
         <div className="supportingSourcesList" data-testid="supporting-sources">
-          <p className="sectionTitle">Supporting sources</p>
+          <p className="sectionTitle">Подтверждающие источники</p>
           {linkedSources.map((s) => (
             <div key={s.id} className="sourceLinkCard">
               <span className="sourceLinkTitle">{s.title}</span>
               <div className="metaRow">
                 {s.source_type && <span className="metaChip">{s.source_type}</span>}
                 {s.confidence && (
-                  <span className="metaChip">Confidence: {s.confidence}</span>
+                  <span className="metaChip">Достоверность: {s.confidence}</span>
                 )}
               </div>
               <a href={s.url} target="_blank" rel="noreferrer" className="externalLink">
-                Open source ↗
+                Открыть источник ↗
               </a>
             </div>
           ))}

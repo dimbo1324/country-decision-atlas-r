@@ -158,16 +158,14 @@ function LegalSignalsViewInner() {
     <div className="filterPageWrap">
       {isFallback && (
         <div className="fallbackBanner">
-          {locale === "ru"
-            ? "Русский перевод частично отсутствует. Показана английская fallback-версия."
-            : "Translation content is missing. Showing fallback language content."}
+          Русский перевод частично отсутствует. Показана английская fallback-версия.
         </div>
       )}
 
       <div className="filterBar">
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="ls-country">
-            Country
+            Страна
           </label>
           <select
             id="ls-country"
@@ -175,7 +173,7 @@ function LegalSignalsViewInner() {
             value={countrySlug}
             onChange={(e) => setCountrySlug(e.target.value)}
           >
-            <option value="">All countries</option>
+            <option value="">Все страны</option>
             {countries?.items.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.name}
@@ -185,7 +183,7 @@ function LegalSignalsViewInner() {
         </div>
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="ls-type">
-            Signal type
+            Тип сигнала
           </label>
           <select
             id="ls-type"
@@ -193,7 +191,7 @@ function LegalSignalsViewInner() {
             value={signalType}
             onChange={(e) => setSignalType(e.target.value)}
           >
-            <option value="">All types</option>
+            <option value="">Все типы</option>
             {SIGNAL_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t.replace(/_/g, " ")}
@@ -203,7 +201,7 @@ function LegalSignalsViewInner() {
         </div>
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="ls-direction">
-            Impact direction
+            Направление влияния
           </label>
           <select
             id="ls-direction"
@@ -211,7 +209,7 @@ function LegalSignalsViewInner() {
             value={impactDirection}
             onChange={(e) => setImpactDirection(e.target.value)}
           >
-            <option value="">All directions</option>
+            <option value="">Все направления</option>
             {IMPACT_DIRECTIONS.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -221,7 +219,7 @@ function LegalSignalsViewInner() {
         </div>
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="ls-level">
-            Impact level
+            Уровень влияния
           </label>
           <select
             id="ls-level"
@@ -229,7 +227,7 @@ function LegalSignalsViewInner() {
             value={impactLevel}
             onChange={(e) => setImpactLevel(e.target.value)}
           >
-            <option value="">All levels</option>
+            <option value="">Все уровни</option>
             {IMPACT_LEVELS.map((l) => (
               <option key={l} value={l}>
                 {l}
@@ -239,7 +237,7 @@ function LegalSignalsViewInner() {
         </div>
         {hasFilters && (
           <button className="clearButton" onClick={clearFilters}>
-            Clear filters
+            Сбросить фильтры
           </button>
         )}
       </div>
@@ -247,38 +245,38 @@ function LegalSignalsViewInner() {
       {hasFilters && (
         <div className="activeFilters">
           {countrySlug && (
-            <span className="activeFilterChip">country: {countrySlug}</span>
+            <span className="activeFilterChip">страна: {countrySlug}</span>
           )}
           {signalType && (
             <span className="activeFilterChip">
-              type: {signalType.replace(/_/g, " ")}
+              тип: {signalType.replace(/_/g, " ")}
             </span>
           )}
           {impactDirection && (
-            <span className="activeFilterChip">direction: {impactDirection}</span>
+            <span className="activeFilterChip">направление: {impactDirection}</span>
           )}
           {impactLevel && (
-            <span className="activeFilterChip">level: {impactLevel}</span>
+            <span className="activeFilterChip">уровень: {impactLevel}</span>
           )}
         </div>
       )}
 
-      {isLoading && <LoadingState message="Loading legal signals…" />}
+      {isLoading && <LoadingState message="Загрузка правовых сигналов…" />}
       {!isLoading && error !== null && <ErrorState error={error} />}
       {!isLoading && error === null && signals !== null && (
         <>
           <div className="analyticalSummaryRow">
-            <SummaryCard label="Signals shown" value={signals.items.length} />
-            <SummaryCard label="Total" value={signals.pagination.total} />
+            <SummaryCard label="Показано сигналов" value={signals.items.length} />
+            <SummaryCard label="Всего" value={signals.pagination.total} />
             <SummaryCard
-              label="Locale"
+              label="Язык"
               value={signals.locale.resolved_locale}
               detail={signals.locale.translation_status}
             />
           </div>
 
           {signals.items.length === 0 ? (
-            <EmptyState message="No legal signals match the selected filters." />
+            <EmptyState message="По выбранным фильтрам правовые сигналы не найдены." />
           ) : (
             <div className="signalList" data-testid="legal-signals-list">
               {signals.items.map((signal) => {
@@ -320,12 +318,12 @@ function LegalSignalsViewInner() {
                     <div className="metaRow">
                       {signal.published_date && (
                         <span className="metaChip">
-                          Published: {formatDate(signal.published_date)}
+                          Опубликовано: {formatDate(signal.published_date)}
                         </span>
                       )}
                       {signal.effective_date && (
                         <span className="metaChip">
-                          Effective: {formatDate(signal.effective_date)}
+                          Действует с: {formatDate(signal.effective_date)}
                         </span>
                       )}
                     </div>
@@ -335,7 +333,7 @@ function LegalSignalsViewInner() {
                           href={routes.countryWithLocale(country.slug, locale)}
                           className="internalLink"
                         >
-                          Open country card: {country.name} →
+                          Карточка страны: {country.name} →
                         </Link>
                       )}
                       <button
@@ -345,20 +343,20 @@ function LegalSignalsViewInner() {
                         aria-expanded={isExpanded}
                       >
                         {isExpanded
-                          ? "Hide supporting evidence"
-                          : "Show supporting evidence"}
+                          ? "Скрыть доказательства"
+                          : "Показать доказательства"}
                       </button>
                     </div>
                     {isExpanded && (
                       <div className="evidencePanel">
                         {evidence === "loading" && (
-                          <LoadingState message="Loading supporting evidence…" />
+                          <LoadingState message="Загрузка доказательств…" />
                         )}
                         {evidence === "error" && (
-                          <ErrorState error="Unable to load supporting evidence." />
+                          <ErrorState error="Не удалось загрузить доказательства." />
                         )}
                         {Array.isArray(evidence) && evidence.length === 0 && (
-                          <EmptyState message="No supporting evidence is attached yet." />
+                          <EmptyState message="Подтверждающие доказательства пока не прикреплены." />
                         )}
                         {Array.isArray(evidence) && evidence.length > 0 && (
                           <div className="evidenceList">
@@ -382,7 +380,7 @@ function LegalSignalsViewInner() {
 
 export function LegalSignalsView() {
   return (
-    <Suspense fallback={<LoadingState message="Loading legal signals…" />}>
+    <Suspense fallback={<LoadingState message="Загрузка правовых сигналов…" />}>
       <LegalSignalsViewInner />
     </Suspense>
   );

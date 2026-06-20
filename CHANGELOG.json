@@ -2,6 +2,38 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-20",
+      "event": "task_completed",
+      "type": "refactor",
+      "scope": "web-style-reset-russian-ui",
+      "task": "refactor/web-style-reset-russian-ui",
+      "branch": "refactor/web-style-reset-russian-ui",
+      "summary": "Completed frontend visual reset and Russian-only UI conversion. Removed dark theme, CSS variables, animations, transitions, and box-shadows. Replaced all visible English UI text with Russian. Removed locale switcher from header. Updated all E2E tests to match Russian text patterns. All 38 E2E tests pass.",
+      "status": "completed",
+      "checks": {
+        "typecheck": "pass",
+        "lint": "pass",
+        "build": "pass",
+        "format_check": "pass",
+        "e2e": "38/38 pass",
+        "pytest": "79 passed, 23 skipped",
+        "ruff_check": "pass",
+        "ruff_format": "pass",
+        "mypy": "pass",
+        "sqlfluff": "pass"
+      }
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_started",
+      "type": "refactor",
+      "scope": "web-style-reset-russian-ui",
+      "task": "refactor/web-style-reset-russian-ui",
+      "branch": "refactor/web-style-reset-russian-ui",
+      "summary": "Started frontend visual reset and Russian-only UI conversion while preserving navigation and functionality.",
+      "status": "in_progress"
+    },
+    {
       "date": "2026-06-19",
       "event": "task_completed",
       "type": "feat",

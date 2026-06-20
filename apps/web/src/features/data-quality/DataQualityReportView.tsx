@@ -16,14 +16,17 @@ export function DataQualityReportView({ report }: Props) {
     <div className="dqWrap" data-testid="data-quality-report">
       <div className="analyticalSummaryRow">
         <SummaryCard
-          label="Status"
+          label="Статус"
           value={report.overall_status}
-          detail={report.valid ? "dataset ready" : "issues found"}
+          detail={report.valid ? "данные готовы" : "обнаружены проблемы"}
         />
-        <SummaryCard label="Critical issues" value={report.critical_issues_count} />
-        <SummaryCard label="Warnings" value={report.warnings_count} />
+        <SummaryCard
+          label="Критические проблемы"
+          value={report.critical_issues_count}
+        />
+        <SummaryCard label="Предупреждения" value={report.warnings_count} />
         {report.checked_at && (
-          <SummaryCard label="Checked at" value={formatDate(report.checked_at)} />
+          <SummaryCard label="Проверено" value={formatDate(report.checked_at)} />
         )}
       </div>
 
@@ -34,7 +37,7 @@ export function DataQualityReportView({ report }: Props) {
 
       {report.checks && report.checks.length > 0 && (
         <section className="cardSection">
-          <SectionHeader title="Checks" eyebrow="Quality checks" />
+          <SectionHeader title="Проверки" eyebrow="Проверки качества" />
           <div className="checkList">
             {report.checks.map((check) => (
               <div key={check.code} className="checkCard">
@@ -48,11 +51,11 @@ export function DataQualityReportView({ report }: Props) {
 
       <section className="cardSection">
         <SectionHeader
-          title={`Issues (${report.issues?.length ?? 0})`}
-          eyebrow="Data quality issues"
+          title={`Проблемы (${report.issues?.length ?? 0})`}
+          eyebrow="Проблемы качества данных"
         />
         {!report.issues || report.issues.length === 0 ? (
-          <EmptyState message="No data-quality issues found. The MVP dataset is ready for frontend usage." />
+          <EmptyState message="Проблем качества данных не найдено." />
         ) : (
           <div className="dqIssueList">
             {report.issues.map((issue, i) => (
@@ -77,7 +80,7 @@ export function DataQualityReportView({ report }: Props) {
 
       <div className="entityLinkRow">
         <Link href={routes.countries} className="internalLink">
-          ← Back to countries
+          ← Назад к странам
         </Link>
       </div>
     </div>

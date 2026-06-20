@@ -6,8 +6,8 @@ export default function SourcesPage() {
   return (
     <div className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Sources</p>
-        <h1>Evidence sources</h1>
+        <p className="eyebrow">Источники</p>
+        <h1>Источники доказательств</h1>
       </header>
       <SourcesView />
     </div>

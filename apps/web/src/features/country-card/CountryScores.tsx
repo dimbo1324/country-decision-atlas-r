@@ -13,7 +13,7 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
   const sourcesById = new Map(sources.map((s) => [s.id, s]));
 
   if (!scores || scores.length === 0) {
-    return <EmptyState message="No scenario scores available." />;
+    return <EmptyState message="Оценки сценариев отсутствуют." />;
   }
 
   return (
@@ -28,7 +28,7 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
           {score.explanation && <p className="scoreExplanation">{score.explanation}</p>}
           {score.breakdowns && score.breakdowns.length > 0 && (
             <details className="breakdownDetails">
-              <summary className="breakdownSummaryToggle">View breakdown</summary>
+              <summary className="breakdownSummaryToggle">Разбор оценки</summary>
               <ScoreBreakdown breakdowns={score.breakdowns} sourcesById={sourcesById} />
             </details>
           )}

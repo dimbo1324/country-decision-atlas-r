@@ -10,28 +10,27 @@ const SECTIONS: {
   key: keyof NonNullable<CountryReadModelResponse["profile"]>;
   label: string;
 }[] = [
-  { key: "executive_summary", label: "Overview" },
-  { key: "migration_overview", label: "Migration / Residence" },
-  { key: "tax_overview", label: "Tax" },
-  { key: "cost_of_living_overview", label: "Cost of living" },
-  { key: "business_overview", label: "Business" },
-  { key: "safety_overview", label: "Safety" },
-  { key: "legal_signals_summary", label: "Legal signals" },
-  { key: "risk_summary", label: "Risks" },
-  { key: "source_summary", label: "Sources" },
+  { key: "executive_summary", label: "Обзор" },
+  { key: "migration_overview", label: "Миграция / резидентство" },
+  { key: "tax_overview", label: "Налоги" },
+  { key: "cost_of_living_overview", label: "Стоимость жизни" },
+  { key: "business_overview", label: "Бизнес" },
+  { key: "safety_overview", label: "Безопасность" },
+  { key: "legal_signals_summary", label: "Правовые сигналы" },
+  { key: "risk_summary", label: "Риски" },
+  { key: "source_summary", label: "Источники" },
 ];
 
 export function CountryProfileSections({
   profile,
   skipExecutiveSummary = false,
 }: CountryProfileSectionsProps) {
-  if (!profile) return <EmptyState message="No profile data available." />;
+  if (!profile) return <EmptyState message="Данные профиля отсутствуют." />;
 
   const filled = SECTIONS.filter(
     (s) => profile[s.key] && !(skipExecutiveSummary && s.key === "executive_summary"),
   );
-  if (filled.length === 0)
-    return <EmptyState message="No profile sections available." />;
+  if (filled.length === 0) return <EmptyState message="Разделы профиля отсутствуют." />;
 
   return (
     <div className="sectionStack">

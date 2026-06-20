@@ -22,24 +22,24 @@ export function CountryEvidenceSummary({
       <div className="summaryGrid">
         <div className="summaryItem">
           <span className="summaryValue">{evidenceSummary.total}</span>
-          <span className="summaryLabel">Total evidence</span>
+          <span className="summaryLabel">Всего доказательств</span>
         </div>
         <div className="summaryItem">
           <span className="summaryValue">{evidenceSummary.high_confidence}</span>
-          <span className="summaryLabel">High confidence</span>
+          <span className="summaryLabel">Высокая достоверность</span>
         </div>
         <div className="summaryItem">
           <span className="summaryValue">{evidenceSummary.medium_confidence}</span>
-          <span className="summaryLabel">Medium confidence</span>
+          <span className="summaryLabel">Средняя достоверность</span>
         </div>
         <div className="summaryItem">
           <span className="summaryValue">{evidenceSummary.low_confidence}</span>
-          <span className="summaryLabel">Low confidence</span>
+          <span className="summaryLabel">Низкая достоверность</span>
         </div>
       </div>
 
       <div className="traceChain">
-        Trace: country card → score breakdown → evidence → source
+        Трассировка: карточка → оценка → доказательство → источник
       </div>
 
       <div className="cardActions">
@@ -47,13 +47,13 @@ export function CountryEvidenceSummary({
           href={routes.legalSignalsForCountry(countrySlug, locale)}
           className="internalLink"
         >
-          Browse legal signals →
+          Правовые сигналы →
         </Link>
         <Link
           href={routes.sourcesForCountry(countrySlug, locale)}
           className="internalLink"
         >
-          Browse all sources →
+          Все источники →
         </Link>
       </div>
     </div>

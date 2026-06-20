@@ -2,7 +2,7 @@ type LoadingStateProps = {
   message?: string;
 };
 
-export function LoadingState({ message = "Loading data…" }: LoadingStateProps) {
+export function LoadingState({ message = "Загрузка данных…" }: LoadingStateProps) {
   return (
     <div className="loadingState">
       <span className="loadingDot" aria-hidden="true" />

@@ -10,7 +10,7 @@ test.describe("locale preservation", () => {
     await expect(page.locator("h1")).toBeVisible();
 
     const countryCardLink = page
-      .getByRole("link", { name: /view country card/i })
+      .getByRole("link", { name: /карточка страны/i })
       .first();
     await expect(countryCardLink).toBeVisible();
     const href = await countryCardLink.getAttribute("href");
@@ -25,7 +25,7 @@ test.describe("locale preservation", () => {
   test("locale=en is preserved in navigation links", async ({ page }) => {
     await page.goto(`${e2eRoutes.countries}?locale=en`);
     const countryCardLink = page
-      .getByRole("link", { name: /view country card/i })
+      .getByRole("link", { name: /карточка страны/i })
       .first();
     const href = await countryCardLink.getAttribute("href");
     expect(href).toContain("locale=en");
@@ -50,7 +50,7 @@ test.describe("locale preservation", () => {
     await page.goto(e2eRoutes.decision("ru"));
     await expect(page.locator("h1")).toBeVisible();
 
-    const runButton = page.getByRole("button", { name: /run decision/i });
+    const runButton = page.getByRole("button", { name: /запустить подбор/i });
     await expect(runButton).toBeVisible();
     await runButton.click();
 

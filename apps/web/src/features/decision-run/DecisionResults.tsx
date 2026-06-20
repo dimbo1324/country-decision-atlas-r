@@ -18,34 +18,32 @@ export function DecisionResults({ response }: DecisionResultsProps) {
     <div className="decisionResults" data-testid="decision-results">
       {isFallback && (
         <div className="fallbackBanner">
-          {locale.requested_locale === "ru"
-            ? "Русский перевод частично отсутствует. Показана английская fallback-версия."
-            : "Translation content is missing. Showing fallback language content."}
+          Русский перевод частично отсутствует. Показана английская fallback-версия.
         </div>
       )}
 
       <div className="decisionResultsMeta">
         <div className="resultMetaRow">
-          <span>Scenario:</span>
+          <span>Сценарий:</span>
           <strong>{scenario.title}</strong>
         </div>
         <div className="resultMetaRow">
-          <span>Origin:</span>
+          <span>Отправление:</span>
           <strong>{origin_country.name}</strong>
         </div>
         <div className="resultMetaRow">
-          <span>Generated:</span>
-          <span>{new Date(meta.generated_at).toLocaleString("en")}</span>
+          <span>Создано:</span>
+          <span>{new Date(meta.generated_at).toLocaleString("ru")}</span>
         </div>
         <div className="resultMetaRow">
-          <span>Translation:</span>
+          <span>Перевод:</span>
           <span className="metaChip">{locale.translation_status}</span>
         </div>
       </div>
 
       {winner && (
         <div className="decisionWinnerBlock">
-          <p className="decisionWinnerLabel">Recommended first</p>
+          <p className="decisionWinnerLabel">Рекомендуемый вариант</p>
           <div className="decisionWinnerHeader">
             <span className="decisionWinnerName">{winner.country.name}</span>
             <span className="decisionWinnerScore">{formatScore(winner.score)}</span>
@@ -59,10 +57,10 @@ export function DecisionResults({ response }: DecisionResultsProps) {
       )}
 
       {results.length === 0 ? (
-        <EmptyState message="No decision results were returned." />
+        <EmptyState message="Результаты подбора не получены." />
       ) : (
         <div className="resultList">
-          <h3 className="resultListTitle">Full ranking</h3>
+          <h3 className="resultListTitle">Полный рейтинг</h3>
           {results.map((result) => (
             <DecisionResultCard
               key={result.country.id}

@@ -6,8 +6,8 @@ export default function LegalSignalsPage() {
   return (
     <div className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Legal signals</p>
-        <h1>Traceable decision signals</h1>
+        <p className="eyebrow">Правовые сигналы</p>
+        <h1>Отслеживаемые правовые сигналы</h1>
       </header>
       <LegalSignalsView />
     </div>

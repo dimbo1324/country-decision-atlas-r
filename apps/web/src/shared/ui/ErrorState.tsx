@@ -18,10 +18,10 @@ export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
   let message: string;
 
   if (typeof error === "string") {
-    message = error || "An unexpected error occurred.";
+    message = error || "Произошла непредвиденная ошибка.";
   } else {
     code = error?.error?.code;
-    message = error?.error?.message ?? "An unexpected error occurred.";
+    message = error?.error?.message ?? "Произошла непредвиденная ошибка.";
   }
 
   const isBackendDown =
@@ -32,17 +32,17 @@ export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
   return (
     <div className="errorState">
       <strong className="errorTitle">
-        {isBackendDown ? "Backend unavailable" : "Something went wrong"}
+        {isBackendDown ? "Backend недоступен" : "Что-то пошло не так"}
       </strong>
       {code && <span className="errorCode">{code}</span>}
       <span className="errorMessage">
         {isBackendDown
-          ? "The API is not available right now. Check that the backend is running and try again."
+          ? "API недоступен. Убедитесь, что backend запущен, и повторите попытку."
           : message}
       </span>
       {backHref && (
         <Link href={backHref} className="errorBack">
-          {backLabel ?? "Go back"}
+          {backLabel ?? "Назад"}
         </Link>
       )}
     </div>

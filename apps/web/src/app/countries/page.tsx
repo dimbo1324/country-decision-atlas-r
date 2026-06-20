@@ -27,10 +27,10 @@ export default async function CountriesPage({ searchParams }: PageProps) {
     return (
       <div className="pageShell">
         <header className="pageHeader">
-          <p className="eyebrow">Countries</p>
-          <h1>Decision-ready country cards</h1>
+          <p className="eyebrow">Страны</p>
+          <h1>Карточки стран для подбора</h1>
         </header>
-        <ErrorState error={errProp} backHref={routes.home} backLabel="Back to home" />
+        <ErrorState error={errProp} backHref={routes.home} backLabel="На главную" />
       </div>
     );
   }
@@ -38,16 +38,16 @@ export default async function CountriesPage({ searchParams }: PageProps) {
   return (
     <div className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Countries</p>
-        <h1>Decision-ready country cards</h1>
+        <p className="eyebrow">Страны</p>
+        <h1>Карточки стран для подбора</h1>
         <p className="pageSubtitle">
-          Each country card shows scenario scores, legal signals, source-backed
-          evidence, and profile sections to support relocation and decision making.
+          Каждая карточка страны содержит сценарные оценки, правовые сигналы,
+          доказательства с источниками и профильные разделы для принятия решений.
         </p>
       </header>
 
       {countries.items.length === 0 ? (
-        <EmptyState message="No countries are available yet." />
+        <EmptyState message="Страны пока отсутствуют." />
       ) : (
         <div className="countryCardGrid">
           {countries.items.map((country) => (
@@ -64,13 +64,13 @@ export default async function CountriesPage({ searchParams }: PageProps) {
                   href={`${routes.country(country.slug)}?locale=${locale}`}
                   className="countryPreviewLink countryPreviewLinkPrimary"
                 >
-                  View country card
+                  Карточка страны
                 </Link>
                 <Link
                   href={`${routes.decision}?locale=${locale}`}
                   className="countryPreviewLink"
                 >
-                  Run decision
+                  Запустить подбор
                 </Link>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default async function CountriesPage({ searchParams }: PageProps) {
 
       <div className="countryPageFooter">
         <Link href={`${routes.decision}?locale=${locale}`} className="footerAction">
-          Run Russia vs Uruguay decision →
+          Сравнение Россия vs Уругвай →
         </Link>
       </div>
     </div>

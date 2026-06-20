@@ -39,7 +39,7 @@ export function EvidenceCard({ item, sourceTitle, sourceUrl }: EvidenceCardProps
               rel="noreferrer"
               className="externalLink"
             >
-              Open source ↗
+              Открыть источник ↗
             </a>
           )}
         </div>

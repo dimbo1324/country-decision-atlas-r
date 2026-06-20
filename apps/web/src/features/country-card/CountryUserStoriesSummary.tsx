@@ -11,11 +11,11 @@ export function CountryUserStoriesSummary({
     <div className="summaryGrid">
       <div className="summaryItem">
         <span className="summaryValue">{userStoriesSummary.total}</span>
-        <span className="summaryLabel">Total stories</span>
+        <span className="summaryLabel">Всего историй</span>
       </div>
       <div className="summaryItem">
         <span className="summaryValue">{userStoriesSummary.synthetic}</span>
-        <span className="summaryLabel">Synthetic</span>
+        <span className="summaryLabel">Синтетические</span>
       </div>
       {userStoriesSummary.average_satisfaction_score !== null &&
         userStoriesSummary.average_satisfaction_score !== undefined && (
@@ -23,7 +23,7 @@ export function CountryUserStoriesSummary({
             <span className="summaryValue">
               {userStoriesSummary.average_satisfaction_score}
             </span>
-            <span className="summaryLabel">Avg. satisfaction</span>
+            <span className="summaryLabel">Ср. удовлетворённость</span>
           </div>
         )}
     </div>

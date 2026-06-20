@@ -38,9 +38,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         : (err as { error?: { code?: string; message?: string } });
     return (
       <div className="pageShell">
-        <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <nav className="breadcrumbs" aria-label="Навигация">
           <Link href={routes.countries} className="breadcrumbLink">
-            Countries
+            Страны
           </Link>
           <span className="breadcrumbSep" aria-hidden="true">
             /
@@ -48,13 +48,13 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           <span className="breadcrumbCurrent">{slug}</span>
         </nav>
         <header className="pageHeader">
-          <p className="eyebrow">Country</p>
+          <p className="eyebrow">Страна</p>
           <h1>{slug}</h1>
         </header>
         <ErrorState
           error={errProp}
           backHref={routes.countries}
-          backLabel="Back to countries"
+          backLabel="Назад к странам"
         />
       </div>
     );
@@ -64,9 +64,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
   return (
     <div className="pageShell">
-      <nav className="breadcrumbs" aria-label="Breadcrumb">
+      <nav className="breadcrumbs" aria-label="Навигация">
         <Link href={`${routes.countries}?locale=${locale}`} className="breadcrumbLink">
-          Countries
+          Страны
         </Link>
         <span className="breadcrumbSep" aria-hidden="true">
           /
@@ -76,9 +76,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
       {isFallback && (
         <div className="fallbackBanner">
-          {locale === "ru"
-            ? "Русский перевод частично отсутствует. Показана английская fallback-версия."
-            : "Translation content is missing. Showing fallback language content."}
+          Русский перевод частично отсутствует. Показана английская fallback-версия.
         </div>
       )}
 
@@ -87,26 +85,26 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
       <div className="cardSections" data-testid="country-card">
         {card.profile?.executive_summary && (
           <section className="cardSection cardSectionHighlight">
-            <h2 className="cardSectionTitle">Overview</h2>
+            <h2 className="cardSectionTitle">Обзор</h2>
             <p className="executiveSummaryText">{card.profile.executive_summary}</p>
           </section>
         )}
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Scenario scores</h2>
+          <h2 className="cardSectionTitle">Оценки сценариев</h2>
           <CountryScores scores={card.scores} sources={card.sources} />
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Country profile</h2>
+          <h2 className="cardSectionTitle">Профиль страны</h2>
           <CountryProfileSections profile={card.profile} skipExecutiveSummary />
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Legal signals</h2>
+          <h2 className="cardSectionTitle">Правовые сигналы</h2>
           <p className="cardSectionDesc">
-            Legal signals are structured changes or risks that may affect relocation,
-            business, safety, or long-term planning.
+            Правовые сигналы — структурированные изменения и риски, способные повлиять
+            на переезд, бизнес, безопасность или долгосрочное планирование.
           </p>
           <CountryLegalSignals legalSignals={card.legal_signals} />
           <div className="entityLinkRow">
@@ -114,26 +112,26 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               href={routes.legalSignalsForCountry(card.country.slug, locale)}
               className="internalLink"
             >
-              View all legal signals for {card.country.name} →
+              Все правовые сигналы для {card.country.name} →
             </Link>
           </div>
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Source-backed data</h2>
+          <h2 className="cardSectionTitle">Данные с источниками</h2>
           <CountrySources sources={card.sources} />
           <div className="entityLinkRow">
             <Link
               href={routes.sourcesForCountry(card.country.slug, locale)}
               className="internalLink"
             >
-              View all sources for {card.country.name} →
+              Все источники для {card.country.name} →
             </Link>
           </div>
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">Evidence &amp; Sources</h2>
+          <h2 className="cardSectionTitle">Доказательства и источники</h2>
           <CountryEvidenceSummary
             evidenceSummary={card.evidence_summary}
             countrySlug={card.country.slug}
@@ -143,12 +141,12 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         </section>
 
         <section className="cardSection">
-          <h2 className="cardSectionTitle">User stories summary</h2>
+          <h2 className="cardSectionTitle">Пользовательские истории</h2>
           <CountryUserStoriesSummary userStoriesSummary={card.user_stories_summary} />
         </section>
 
         <section className="cardSection" data-testid="locale-status">
-          <h2 className="cardSectionTitle">Translation status</h2>
+          <h2 className="cardSectionTitle">Статус перевода</h2>
           <LocaleStatusBadge locale={card.locale} />
         </section>
       </div>

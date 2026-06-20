@@ -9,7 +9,7 @@ type CountrySourcesProps = {
 
 export function CountrySources({ sources }: CountrySourcesProps) {
   if (!sources || sources.length === 0) {
-    return <EmptyState message="No sources are attached to this country yet." />;
+    return <EmptyState message="К этой стране источники не прикреплены." />;
   }
 
   return (
@@ -31,17 +31,17 @@ export function CountrySources({ sources }: CountrySourcesProps) {
           <div className="metaRow">
             {source.last_checked_at && (
               <span className="metaChip">
-                Checked: {formatDate(source.last_checked_at)}
+                Проверено: {formatDate(source.last_checked_at)}
               </span>
             )}
             {source.published_at && (
               <span className="metaChip">
-                Published: {formatDate(source.published_at)}
+                Опубликовано: {formatDate(source.published_at)}
               </span>
             )}
           </div>
           <a href={source.url} target="_blank" rel="noreferrer" className="sourceLink">
-            Open source ↗
+            Открыть источник ↗
           </a>
         </div>
       ))}
