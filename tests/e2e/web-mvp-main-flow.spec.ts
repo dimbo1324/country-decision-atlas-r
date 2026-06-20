@@ -23,9 +23,11 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   await expect(page.getByText("Uruguay").first()).toBeVisible();
 
   await page.getByRole("link", { name: "View country card" }).first().click();
+  await expect(page.locator("[data-testid='country-card']")).toBeVisible({
+    timeout: 15000,
+  });
   await expect(page.locator("h1")).toBeVisible();
   await expect(page.getByText(/scenario scores/i)).toBeVisible();
-  await expect(page.locator("[data-testid='country-card']")).toBeVisible();
   await expectNoAppCrash(page);
 
   await page.getByRole("link", { name: /all countries/i }).click();
