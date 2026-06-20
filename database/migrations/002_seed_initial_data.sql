@@ -81,11 +81,11 @@ SET summary = EXCLUDED.summary,
     risk_overview = EXCLUDED.risk_overview;
 INSERT INTO scenarios (slug, name, description)
 VALUES
-    ('residence', 'Residence', 'Evaluate residence pathways and practical requirements.'),
-    ('citizenship', 'Citizenship', 'Evaluate naturalization and citizenship planning signals.'),
-    ('digital-nomad', 'Digital nomad', 'Evaluate remote-work and temporary stay fit.'),
-    ('business', 'Business', 'Evaluate company setup and operating environment fit.'),
-    ('family-relocation', 'Family relocation', 'Evaluate family relocation and dependent needs.')
+    ('residence', 'Резидентство', 'Оценка путей к ВНЖ и практических требований.'),
+    ('citizenship', 'Гражданство', 'Оценка натурализации и сигналов планирования гражданства.'),
+    ('digital-nomad', 'Цифровой кочевник', 'Оценка подходящих условий для удалённой работы и временного пребывания.'),
+    ('business', 'Бизнес', 'Оценка возможностей регистрации компании и деловой среды.'),
+    ('family-relocation', 'Семейная релокация', 'Оценка условий для семейной релокации и потребностей иждивенцев.')
 ON CONFLICT (slug) DO UPDATE
 SET name = EXCLUDED.name,
     description = EXCLUDED.description,
@@ -95,13 +95,13 @@ SELECT scenarios.id, criteria.key, criteria.label, criteria.weight, criteria.is_
 FROM scenarios
 JOIN (
     VALUES
-        ('residence', 'pathway_clarity', 'Pathway clarity', 1.50, TRUE),
-        ('residence', 'processing_predictability', 'Processing predictability', 1.00, FALSE),
-        ('citizenship', 'timeline', 'Timeline', 1.20, TRUE),
-        ('citizenship', 'eligibility_clarity', 'Eligibility clarity', 1.10, TRUE),
-        ('digital-nomad', 'remote_work_fit', 'Remote work fit', 1.40, TRUE),
-        ('business', 'company_setup', 'Company setup', 1.30, TRUE),
-        ('family-relocation', 'dependent_support', 'Dependent support', 1.30, TRUE)
+        ('residence', 'pathway_clarity', 'Понятность пути', 1.50, TRUE),
+        ('residence', 'processing_predictability', 'Предсказуемость сроков', 1.00, FALSE),
+        ('citizenship', 'timeline', 'Сроки', 1.20, TRUE),
+        ('citizenship', 'eligibility_clarity', 'Понятность требований', 1.10, TRUE),
+        ('digital-nomad', 'remote_work_fit', 'Пригодность для удалённой работы', 1.40, TRUE),
+        ('business', 'company_setup', 'Регистрация компании', 1.30, TRUE),
+        ('family-relocation', 'dependent_support', 'Поддержка иждивенцев', 1.30, TRUE)
 ) AS criteria(scenario_slug, key, label, weight, is_required)
     ON criteria.scenario_slug = scenarios.slug
 ON CONFLICT (scenario_id, key) DO UPDATE
@@ -130,7 +130,7 @@ SELECT
 FROM (
     VALUES
         (
-            'Russia official migration placeholder source',
+            'Россия: официальный placeholder-источник по миграции',
             'https://example.invalid/sources/russia-migration-placeholder',
             'official',
             'Placeholder publisher',
@@ -139,7 +139,7 @@ FROM (
             'medium'
         ),
         (
-            'Uruguay official residence placeholder source',
+            'Уругвай: официальный placeholder-источник по резидентству',
             'https://example.invalid/sources/uruguay-residence-placeholder',
             'official',
             'Placeholder publisher',
@@ -148,7 +148,7 @@ FROM (
             'medium'
         ),
         (
-            'Regional relocation market placeholder source',
+            'Региональный placeholder-источник по релокации',
             'https://example.invalid/sources/regional-relocation-placeholder',
             'research',
             'Placeholder research desk',
@@ -193,30 +193,30 @@ FROM (
         (
             'russia',
             'https://example.invalid/sources/russia-migration-placeholder',
-            'Russia migration policy placeholder evidence',
-            'Neutral placeholder evidence for early API validation.',
+            'Россия: placeholder-доказательство по миграционной политике',
+            'Нейтральное placeholder-доказательство для начальной проверки API.',
             'https://example.invalid/evidence/russia-policy-placeholder',
-            'Placeholder quote; not a factual legal claim.',
+            'Placeholder-цитата; не является фактическим правовым утверждением.',
             'policy_note',
             'low'
         ),
         (
             'uruguay',
             'https://example.invalid/sources/uruguay-residence-placeholder',
-            'Uruguay residence pathway placeholder evidence',
-            'Neutral placeholder evidence for early API validation.',
+            'Уругвай: placeholder-доказательство по пути к резидентству',
+            'Нейтральное placeholder-доказательство для начальной проверки API.',
             'https://example.invalid/evidence/uruguay-residence-placeholder',
-            'Placeholder quote; not a factual legal claim.',
+            'Placeholder-цитата; не является фактическим правовым утверждением.',
             'policy_note',
             'low'
         ),
         (
             'uruguay',
             'https://example.invalid/sources/regional-relocation-placeholder',
-            'Regional relocation comparison placeholder evidence',
-            'Draft comparison evidence used to validate linking tables.',
+            'Региональное placeholder-доказательство для сравнительного анализа релокации',
+            'Черновое сравнительное доказательство для проверки таблиц связей.',
             'https://example.invalid/evidence/regional-comparison-placeholder',
-            'Placeholder quote; not a factual legal claim.',
+            'Placeholder-цитата; не является фактическим правовым утверждением.',
             'research_note',
             'low'
         )
@@ -262,8 +262,8 @@ FROM (
     VALUES
         (
             'russia',
-            'Draft migration administration signal',
-            'Placeholder signal used to validate legal signal storage.',
+            'Черновой административный сигнал по миграции',
+            'Placeholder-сигнал для проверки хранения правовых сигналов.',
             'administrative_change',
             'neutral',
             'medium',
@@ -272,8 +272,8 @@ FROM (
         ),
         (
             'uruguay',
-            'Draft residence pathway signal',
-            'Placeholder signal used to validate residence-related tracking.',
+            'Черновой сигнал по пути к резидентству',
+            'Placeholder-сигнал для проверки отслеживания резидентства.',
             'policy',
             'neutral',
             'low',
@@ -282,8 +282,8 @@ FROM (
         ),
         (
             'uruguay',
-            'Draft business relocation signal',
-            'Placeholder signal used to validate business scenario evidence.',
+            'Черновой сигнал по бизнес-релокации',
+            'Placeholder-сигнал для проверки доказательств бизнес-сценария.',
             'other',
             'mixed',
             'low',
@@ -326,16 +326,16 @@ SELECT
     score_rows.summary
 FROM (
     VALUES
-        ('russia', 'residence', 45.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('russia', 'citizenship', 40.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('russia', 'digital-nomad', 35.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('russia', 'business', 42.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('russia', 'family-relocation', 38.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('uruguay', 'residence', 62.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('uruguay', 'citizenship', 58.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('uruguay', 'digital-nomad', 64.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('uruguay', 'business', 60.00, 'Draft', 'Placeholder score; not production guidance.'),
-        ('uruguay', 'family-relocation', 63.00, 'Draft', 'Placeholder score; not production guidance.')
+        ('russia', 'residence', 45.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('russia', 'citizenship', 40.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('russia', 'digital-nomad', 35.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('russia', 'business', 42.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('russia', 'family-relocation', 38.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('uruguay', 'residence', 62.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('uruguay', 'citizenship', 58.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('uruguay', 'digital-nomad', 64.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('uruguay', 'business', 60.00, 'Черновик', 'Placeholder-оценка; не для продакшена.'),
+        ('uruguay', 'family-relocation', 63.00, 'Черновик', 'Placeholder-оценка; не для продакшена.')
 ) AS score_rows(country_slug, scenario_slug, score, score_label, summary)
 JOIN countries ON countries.slug = score_rows.country_slug
 JOIN scenarios ON scenarios.slug = score_rows.scenario_slug

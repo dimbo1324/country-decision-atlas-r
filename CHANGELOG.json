@@ -5,6 +5,26 @@
       "date": "2026-06-20",
       "event": "task_completed",
       "type": "refactor",
+      "scope": "russian-translation-full",
+      "task": "refactor/russian-translation-full",
+      "branch": "refactor/russian-translation-full",
+      "summary": "Completed full Russian translation of all remaining English text across frontend and database. Translated StatusBadge labels, LocaleStatusBadge fallback text, API error messages, compare/scenarios page UI strings. Created migration 010 for live-DB translation of country_profiles, sources (titles and notes), evidence_items, user_stories, country_scores, and user_story_documents. Updated existing migrations 002, 004, 005, 009 with Russian content for fresh installs.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_started",
+      "type": "refactor",
+      "scope": "russian-translation-full",
+      "task": "refactor/russian-translation-full",
+      "branch": "refactor/russian-translation-full",
+      "summary": "Started full Russian translation pass covering all remaining English text in frontend components and all database migration content.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_completed",
+      "type": "refactor",
       "scope": "web-style-reset-russian-ui",
       "task": "refactor/web-style-reset-russian-ui",
       "branch": "refactor/web-style-reset-russian-ui",

@@ -7,13 +7,13 @@ type Scenarios = {
 };
 
 export default async function ScenariosPage() {
-  const scenarios = await apiGet<Scenarios>("/api/v1/scenarios?locale=en");
+  const scenarios = await apiGet<Scenarios>("/api/v1/scenarios?locale=ru");
 
   return (
     <main className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Scenarios</p>
-        <h1>Decision scenarios</h1>
+        <p className="eyebrow">Сценарии</p>
+        <h1>Сценарии подбора страны</h1>
       </header>
 
       {scenarios.ok ? (
