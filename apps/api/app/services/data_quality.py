@@ -5,6 +5,7 @@ from app.schemas.data_quality import (
     DataQualityIssue,
     DataQualityReport,
 )
+from app.services.translation_quality import build_translation_quality_results
 from psycopg import Connection
 from typing import Any
 
@@ -335,6 +336,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
             ["country_card_section_missing", "country_card_source_summary_demo"],
         )
     )
+    translation_checks, translation_issues = build_translation_quality_results(
+        connection
+    )
+    checks.extend(translation_checks)
+    issues.extend(translation_issues)
     critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
     warnings_count = sum(1 for issue in issues if issue.severity == "warning")
     return DataQualityReport(

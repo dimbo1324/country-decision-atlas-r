@@ -6,7 +6,10 @@ SupportedLocale = Literal["en", "ru"]
 
 SUPPORTED_LOCALES: tuple[SupportedLocale, ...] = ("en", "ru")
 DEFAULT_LOCALE: SupportedLocale = "en"
-SOURCE_LOCALE: SupportedLocale = "en"
+AUTHORING_LOCALE: SupportedLocale = "ru"
+DEFAULT_CONTENT_LOCALE: SupportedLocale = AUTHORING_LOCALE
+LEGACY_SOURCE_LOCALE: SupportedLocale = "en"
+SOURCE_LOCALE: SupportedLocale = LEGACY_SOURCE_LOCALE
 
 
 def validate_locale(locale: str | None = None) -> SupportedLocale:
