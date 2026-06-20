@@ -15,11 +15,11 @@ export function DecisionBreakdown({ breakdown }: DecisionBreakdownProps) {
       <table className="breakdownTable">
         <thead>
           <tr>
-            <th>Criterion</th>
-            <th>Score</th>
-            <th>Weight</th>
-            <th>Weighted</th>
-            <th>Confidence</th>
+            <th>Критерий</th>
+            <th>Оценка</th>
+            <th>Вес</th>
+            <th>Взвешенная</th>
+            <th>Достоверность</th>
           </tr>
         </thead>
         <tbody>

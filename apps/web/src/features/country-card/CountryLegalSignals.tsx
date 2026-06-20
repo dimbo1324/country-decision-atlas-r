@@ -10,9 +10,7 @@ type CountryLegalSignalsProps = {
 
 export function CountryLegalSignals({ legalSignals }: CountryLegalSignalsProps) {
   if (!legalSignals || legalSignals.length === 0) {
-    return (
-      <EmptyState message="No legal signals are available for this country yet." />
-    );
+    return <EmptyState message="Правовые сигналы для этой страны пока отсутствуют." />;
   }
 
   return (
@@ -32,12 +30,12 @@ export function CountryLegalSignals({ legalSignals }: CountryLegalSignalsProps) 
             {signal.confidence && <ConfidenceBadge confidence={signal.confidence} />}
             {signal.published_date && (
               <span className="metaChip">
-                Published: {formatDate(signal.published_date)}
+                Опубликовано: {formatDate(signal.published_date)}
               </span>
             )}
             {signal.effective_date && (
               <span className="metaChip">
-                Effective: {formatDate(signal.effective_date)}
+                Действует с: {formatDate(signal.effective_date)}
               </span>
             )}
           </div>

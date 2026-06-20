@@ -2,6 +2,6 @@ type EmptyStateProps = {
   message?: string;
 };
 
-export function EmptyState({ message = "No data available." }: EmptyStateProps) {
+export function EmptyState({ message = "Данные отсутствуют." }: EmptyStateProps) {
   return <p className="notice emptyNotice">{message}</p>;
 }

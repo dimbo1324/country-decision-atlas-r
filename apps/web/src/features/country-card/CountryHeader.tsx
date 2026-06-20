@@ -13,30 +13,30 @@ export function CountryHeader({ country, locale = "en" }: CountryHeaderProps) {
   return (
     <div className="countryHeaderBlock">
       <header className="pageHeader">
-        <p className="eyebrow">{country.region ?? "Country"}</p>
+        <p className="eyebrow">{country.region ?? "Страна"}</p>
         <h1>{country.name}</h1>
         <div className="metaRow">
           {country.iso_code && (
             <span className="metaChip">ISO: {country.iso_code}</span>
           )}
-          <span className="metaChip">Status: {country.status}</span>
+          <span className="metaChip">Статус: {country.status}</span>
         </div>
       </header>
       <div className="quickActions">
         <Link href={`${routes.countries}${localeParam}`} className="quickAction">
-          ← All countries
+          ← Все страны
         </Link>
         <Link
           href={`${routes.decision}${localeParam}`}
           className="quickAction quickActionPrimary"
         >
-          Run decision
+          Запустить подбор
         </Link>
         <Link href={`${routes.legalSignals}${localeParam}`} className="quickAction">
-          Legal signals
+          Правовые сигналы
         </Link>
         <Link href={`${routes.sources}${localeParam}`} className="quickAction">
-          Sources
+          Источники
         </Link>
       </div>
     </div>

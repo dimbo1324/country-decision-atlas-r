@@ -10,7 +10,7 @@ type DecisionSourcesProps = {
 
 export function DecisionSources({ sources }: DecisionSourcesProps) {
   if (sources.length === 0) {
-    return <EmptyState message="No sources are attached to this result." />;
+    return <EmptyState message="К этому результату источники не прикреплены." />;
   }
 
   return (
@@ -27,7 +27,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
             </div>
           </div>
           <a href={source.url} target="_blank" rel="noreferrer" className="sourceLink">
-            Open source ↗
+            Открыть источник ↗
           </a>
         </div>
       ))}

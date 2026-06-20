@@ -153,7 +153,7 @@ function SourcesViewInner() {
       <div className="filterBar">
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="src-country">
-            Country
+            Страна
           </label>
           <select
             id="src-country"
@@ -161,7 +161,7 @@ function SourcesViewInner() {
             value={countrySlug}
             onChange={(e) => setCountrySlug(e.target.value)}
           >
-            <option value="">All countries</option>
+            <option value="">Все страны</option>
             {countries?.items.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.name}
@@ -171,7 +171,7 @@ function SourcesViewInner() {
         </div>
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="src-type">
-            Source type
+            Тип источника
           </label>
           <select
             id="src-type"
@@ -179,7 +179,7 @@ function SourcesViewInner() {
             value={sourceType}
             onChange={(e) => setSourceType(e.target.value)}
           >
-            <option value="">All types</option>
+            <option value="">Все типы</option>
             {SOURCE_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -189,7 +189,7 @@ function SourcesViewInner() {
         </div>
         <div className="filterGroup">
           <label className="filterLabel" htmlFor="src-confidence">
-            Confidence
+            Достоверность
           </label>
           <select
             id="src-confidence"
@@ -197,7 +197,7 @@ function SourcesViewInner() {
             value={confidence}
             onChange={(e) => setConfidence(e.target.value as ConfidenceFilter)}
           >
-            <option value="">All confidence</option>
+            <option value="">Все уровни</option>
             {CONFIDENCE_OPTIONS.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -207,7 +207,7 @@ function SourcesViewInner() {
         </div>
         {hasFilters && (
           <button className="clearButton" onClick={clearFilters}>
-            Clear filters
+            Сбросить фильтры
           </button>
         )}
       </div>
@@ -215,31 +215,31 @@ function SourcesViewInner() {
       {hasFilters && (
         <div className="activeFilters">
           {countrySlug && (
-            <span className="activeFilterChip">country: {countrySlug}</span>
+            <span className="activeFilterChip">страна: {countrySlug}</span>
           )}
-          {sourceType && <span className="activeFilterChip">type: {sourceType}</span>}
+          {sourceType && <span className="activeFilterChip">тип: {sourceType}</span>}
           {confidence && (
-            <span className="activeFilterChip">confidence: {confidence}</span>
+            <span className="activeFilterChip">достоверность: {confidence}</span>
           )}
         </div>
       )}
 
-      {isLoading && <LoadingState message="Loading sources…" />}
+      {isLoading && <LoadingState message="Загрузка источников…" />}
       {!isLoading && error !== null && <ErrorState error={error} />}
       {!isLoading && error === null && sources !== null && (
         <>
           <div className="analyticalSummaryRow">
-            <SummaryCard label="Sources shown" value={sources.items.length} />
-            <SummaryCard label="Total" value={sources.pagination.total} />
+            <SummaryCard label="Показано источников" value={sources.items.length} />
+            <SummaryCard label="Всего" value={sources.pagination.total} />
             <SummaryCard
-              label="Locale"
+              label="Язык"
               value={sources.locale.resolved_locale}
               detail={sources.locale.translation_status}
             />
           </div>
 
           {sources.items.length === 0 ? (
-            <EmptyState message="No sources match the selected filters." />
+            <EmptyState message="По выбранным фильтрам источники не найдены." />
           ) : (
             <div className="sourceList" data-testid="sources-list">
               {sources.items.map((source) => {
@@ -271,12 +271,12 @@ function SourcesViewInner() {
                     <div className="metaRow">
                       {source.last_checked_at && (
                         <span className="metaChip">
-                          Checked: {formatDate(source.last_checked_at)}
+                          Проверено: {formatDate(source.last_checked_at)}
                         </span>
                       )}
                       {source.published_at && (
                         <span className="metaChip">
-                          Published: {formatDate(source.published_at)}
+                          Опубликовано: {formatDate(source.published_at)}
                         </span>
                       )}
                     </div>
@@ -287,14 +287,14 @@ function SourcesViewInner() {
                         rel="noreferrer"
                         className="externalLink"
                       >
-                        Open official source ↗
+                        Открыть источник ↗
                       </a>
                       {country && (
                         <Link
                           href={routes.countryWithLocale(country.slug, locale)}
                           className="internalLink"
                         >
-                          View {country.name} →
+                          Страна: {country.name} →
                         </Link>
                       )}
                       <button
@@ -303,19 +303,21 @@ function SourcesViewInner() {
                         data-testid="source-evidence-toggle"
                         aria-expanded={isExpanded}
                       >
-                        {isExpanded ? "Hide related evidence" : "Show related evidence"}
+                        {isExpanded
+                          ? "Скрыть связанные доказательства"
+                          : "Показать связанные доказательства"}
                       </button>
                     </div>
                     {isExpanded && (
                       <div className="evidencePanel">
                         {evidence === "loading" && (
-                          <LoadingState message="Loading related evidence…" />
+                          <LoadingState message="Загрузка связанных доказательств…" />
                         )}
                         {evidence === "error" && (
-                          <ErrorState error="Unable to load related evidence." />
+                          <ErrorState error="Не удалось загрузить связанные доказательства." />
                         )}
                         {Array.isArray(evidence) && evidence.length === 0 && (
-                          <EmptyState message="No evidence items are linked to this source." />
+                          <EmptyState message="К этому источнику доказательства не прикреплены." />
                         )}
                         {Array.isArray(evidence) && evidence.length > 0 && (
                           <div className="evidenceList">
@@ -344,7 +346,7 @@ function SourcesViewInner() {
 
 export function SourcesView() {
   return (
-    <Suspense fallback={<LoadingState message="Loading sources…" />}>
+    <Suspense fallback={<LoadingState message="Загрузка источников…" />}>
       <SourcesViewInner />
     </Suspense>
   );

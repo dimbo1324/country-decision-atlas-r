@@ -30,12 +30,29 @@ const LEVEL_VARIANT: Record<string, string> = {
   critical: "badge--critical",
 };
 
+const DIRECTION_LABELS: Record<string, string> = {
+  positive: "положительное",
+  negative: "отрицательное",
+  mixed: "смешанное",
+  neutral: "нейтральное",
+  uncertain: "неопределённое",
+};
+
+const LEVEL_LABELS: Record<string, string> = {
+  low: "низкий",
+  medium: "средний",
+  high: "высокий",
+  critical: "критический",
+};
+
 export function ImpactDirectionBadge({ direction }: ImpactDirectionBadgeProps) {
   const cls = DIRECTION_VARIANT[direction] ?? "badge--default";
-  return <span className={`badge ${cls}`}>{direction}</span>;
+  const label = DIRECTION_LABELS[direction] ?? direction;
+  return <span className={`badge ${cls}`}>{label}</span>;
 }
 
 export function ImpactLevelBadge({ level }: ImpactLevelBadgeProps) {
   const cls = LEVEL_VARIANT[level] ?? "badge--default";
-  return <span className={`badge ${cls}`}>{level}</span>;
+  const label = LEVEL_LABELS[level] ?? level;
+  return <span className={`badge ${cls}`}>{label}</span>;
 }

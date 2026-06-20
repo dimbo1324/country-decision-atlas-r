@@ -5,10 +5,10 @@ type LocaleStatusBadgeProps = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  source: "Source language",
-  translated: "Translated",
-  fallback: "Fallback",
-  missing: "Missing translation",
+  source: "Исходный язык",
+  translated: "Переведено",
+  fallback: "Fallback-версия",
+  missing: "Перевод отсутствует",
 };
 
 export function LocaleStatusBadge({ locale }: LocaleStatusBadgeProps) {
@@ -17,15 +17,15 @@ export function LocaleStatusBadge({ locale }: LocaleStatusBadgeProps) {
   return (
     <div className="localeStatusBlock">
       <div className="localeStatusRow">
-        <span>Requested locale:</span>
+        <span>Запрошенный язык:</span>
         <span className="metaChip">{locale.requested_locale}</span>
       </div>
       <div className="localeStatusRow">
-        <span>Resolved locale:</span>
+        <span>Фактически показанный язык:</span>
         <span className="metaChip">{locale.resolved_locale}</span>
       </div>
       <div className="localeStatusRow">
-        <span>Translation status:</span>
+        <span>Статус перевода:</span>
         <span className={`metaChip${isFallback ? " metaChipWarn" : ""}`}>
           {STATUS_LABELS[locale.translation_status] ?? locale.translation_status}
         </span>

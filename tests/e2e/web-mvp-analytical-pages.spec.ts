@@ -8,7 +8,7 @@ test.describe("legal signals page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }));
-    await expectHasMainHeading(page, /traceable decision signals/i);
+    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
 
     await expect(page.locator(".filterBar")).toBeVisible();
 
@@ -21,7 +21,7 @@ test.describe("legal signals page", () => {
       .isVisible()
       .catch(() => false);
     const hasEmpty = await page
-      .getByText(/no legal signals match/i)
+      .getByText(/по выбранным фильтрам правовые сигналы/i)
       .isVisible()
       .catch(() => false);
     expect(hasItems || hasEmpty).toBe(true);
@@ -39,14 +39,14 @@ test.describe("legal signals page", () => {
         locale: "en",
       }),
     );
-    await expectHasMainHeading(page, /traceable decision signals/i);
+    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
     await expectNoAppCrash(page);
   });
 
   test("legal signals summary cards appear when data loads", async ({ page }) => {
     await page.goto(e2eRoutes.legalSignals({ locale: "en" }));
-    await expectHasMainHeading(page, /traceable decision signals/i);
-    await expect(page.getByText(/signals shown/i)).toBeVisible({ timeout: 10_000 });
+    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
+    await expect(page.getByText(/показано сигналов/i)).toBeVisible({ timeout: 10_000 });
     await expectNoAppCrash(page);
   });
 
@@ -54,14 +54,14 @@ test.describe("legal signals page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "en" }));
-    await expectHasMainHeading(page, /traceable decision signals/i);
+    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
     const hasItems = await page
       .locator(".signalList")
       .isVisible()
       .catch(() => false);
     if (hasItems) {
       await expect(
-        page.getByRole("link", { name: /open country card/i }).first(),
+        page.getByRole("link", { name: /карточка страны/i }).first(),
       ).toBeVisible();
     }
   });
@@ -70,7 +70,7 @@ test.describe("legal signals page", () => {
 test.describe("sources page", () => {
   test("/sources?country_slug=uruguay&locale=ru applies filter", async ({ page }) => {
     await page.goto(e2eRoutes.sources({ country_slug: "uruguay", locale: "ru" }));
-    await expectHasMainHeading(page, /evidence sources/i);
+    await expectHasMainHeading(page, /источники доказательств/i);
 
     await expect(page.locator(".filterBar")).toBeVisible();
 
@@ -83,7 +83,7 @@ test.describe("sources page", () => {
       .isVisible()
       .catch(() => false);
     const hasEmpty = await page
-      .getByText(/no sources match/i)
+      .getByText(/по выбранным фильтрам источники/i)
       .isVisible()
       .catch(() => false);
     expect(hasItems || hasEmpty).toBe(true);
@@ -93,7 +93,7 @@ test.describe("sources page", () => {
 
   test("/sources?confidence=high&locale=en does not crash", async ({ page }) => {
     await page.goto(e2eRoutes.sources({ confidence: "high", locale: "en" }));
-    await expectHasMainHeading(page, /evidence sources/i);
+    await expectHasMainHeading(page, /источники доказательств/i);
     await expectNoAppCrash(page);
   });
 
@@ -101,7 +101,7 @@ test.describe("sources page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
-    await expectHasMainHeading(page, /evidence sources/i);
+    await expectHasMainHeading(page, /источники доказательств/i);
 
     const hasItems = await page
       .locator(".sourceList")
@@ -121,13 +121,13 @@ test.describe("sources page", () => {
 
   test("sources country card link exists when items are present", async ({ page }) => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
-    await expectHasMainHeading(page, /evidence sources/i);
+    await expectHasMainHeading(page, /источники доказательств/i);
     const hasItems = await page
       .locator(".sourceList")
       .isVisible()
       .catch(() => false);
     if (hasItems) {
-      await expect(page.getByRole("link", { name: /view/i }).first()).toBeVisible();
+      await expect(page.getByRole("link", { name: /страна:/i }).first()).toBeVisible();
     }
   });
 });
@@ -135,7 +135,7 @@ test.describe("sources page", () => {
 test.describe("data quality page", () => {
   test("/internal/data-quality opens with correct heading", async ({ page }) => {
     await page.goto(e2eRoutes.dataQuality);
-    await expectHasMainHeading(page, /data quality report/i);
+    await expectHasMainHeading(page, /отчёт качества данных/i);
     await expectNoAppCrash(page);
   });
 
@@ -143,7 +143,7 @@ test.describe("data quality page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.dataQuality);
-    await expectHasMainHeading(page, /data quality report/i);
+    await expectHasMainHeading(page, /отчёт качества данных/i);
 
     const hasReport = await page
       .locator("[data-testid='data-quality-report']")
@@ -197,15 +197,15 @@ test.describe("accessibility semantics", () => {
   }) => {
     await page.goto("/countries");
     await expect(page.locator("h1")).toBeVisible();
-    const cardLinks = page.getByRole("link", { name: /view country card/i });
+    const cardLinks = page.getByRole("link", { name: /карточка страны/i });
     await expect(cardLinks.first()).toBeVisible();
   });
 
   test("decision page form inputs have labels", async ({ page }) => {
     await page.goto("/decision");
     await expect(page.locator("h1")).toBeVisible();
-    await expect(page.getByLabel(/origin country/i)).toBeVisible();
-    await expect(page.getByLabel(/scenario/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: /run decision/i })).toBeVisible();
+    await expect(page.getByLabel(/страна отправления/i)).toBeVisible();
+    await expect(page.getByLabel(/сценарий/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: /запустить подбор/i })).toBeVisible();
   });
 });

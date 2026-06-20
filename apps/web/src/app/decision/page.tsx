@@ -6,12 +6,12 @@ export default function DecisionPage() {
   return (
     <div className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Decision engine</p>
-        <h1>Run a country decision</h1>
+        <p className="eyebrow">Движок подбора</p>
+        <h1>Запустить подбор страны</h1>
         <p className="pageSubtitle">
-          Choose an origin country, select candidates, and pick a scenario. The engine
-          returns a ranked, explainable result with scores, strengths, weaknesses, risk
-          warnings, and source-backed breakdown.
+          Выберите страну отправления, страны-кандидаты и сценарий. Движок вернёт
+          ранжированный объяснимый результат с оценками, сильными сторонами, слабыми
+          сторонами, рисками и разбором оценки с источниками.
         </p>
       </header>
       <DecisionRunForm />

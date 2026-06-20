@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { routes } from "../lib/routes";
 
 const NAV_ITEMS = [
-  { label: "Countries", href: routes.countries },
-  { label: "Decision", href: routes.decision },
-  { label: "Legal Signals", href: routes.legalSignals },
-  { label: "Sources", href: routes.sources },
-  { label: "Data Quality", href: routes.dataQuality },
+  { label: "Страны", href: routes.countries },
+  { label: "Подбор", href: routes.decision },
+  { label: "Правовые сигналы", href: routes.legalSignals },
+  { label: "Источники", href: routes.sources },
+  { label: "Качество данных", href: routes.dataQuality },
 ];
 
 export function AppNavigation() {

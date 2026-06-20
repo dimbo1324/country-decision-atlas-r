@@ -4,7 +4,7 @@ import "./styles.css";
 
 export const metadata: Metadata = {
   title: "Country Decision Atlas",
-  description: "A relocation and country decision workspace.",
+  description: "Платформа для сравнения стран и принятия решений о переезде.",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body>
         <AppShell>{children}</AppShell>
       </body>

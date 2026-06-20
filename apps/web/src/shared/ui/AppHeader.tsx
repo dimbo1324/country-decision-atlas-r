@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { routes } from "../lib/routes";
 import { AppNavigation } from "./AppNavigation";
-import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function AppHeader() {
   return (
@@ -12,9 +10,6 @@ export function AppHeader() {
           Country Decision Atlas
         </Link>
         <AppNavigation />
-        <Suspense>
-          <LocaleSwitcher />
-        </Suspense>
       </div>
     </header>
   );

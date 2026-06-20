@@ -19,7 +19,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
   return (
     <div className="resultCard">
       <div className="resultCardHeader">
-        <span className="resultRank" aria-label={`Rank ${result.rank}`}>
+        <span className="resultRank" aria-label={`Место ${result.rank}`}>
           #{result.rank}
         </span>
         <span className="resultCountryName">{result.country.name}</span>
@@ -32,7 +32,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
 
       {result.strengths.length > 0 && (
         <div className="resultSection resultSectionPositive">
-          <h4 className="resultSectionTitle">Strengths</h4>
+          <h4 className="resultSectionTitle">Сильные стороны</h4>
           <ul className="pointsList pointsListPositive">
             {result.strengths.map((s) => (
               <li key={s.message}>{s.message}</li>
@@ -43,7 +43,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
 
       {result.weaknesses.length > 0 && (
         <div className="resultSection resultSectionNegative">
-          <h4 className="resultSectionTitle">Weaknesses</h4>
+          <h4 className="resultSectionTitle">Слабые стороны</h4>
           <ul className="pointsList pointsListNegative">
             {result.weaknesses.map((w) => (
               <li key={w.message}>{w.message}</li>
@@ -54,20 +54,20 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
 
       {result.risk_warnings.length > 0 && (
         <div className="resultSection resultSectionRisk">
-          <h4 className="resultSectionTitle">Risk warnings</h4>
+          <h4 className="resultSectionTitle">Риски</h4>
           <DecisionWarnings warnings={result.risk_warnings} />
         </div>
       )}
 
       {result.breakdown.length > 0 && (
         <div className="resultSection">
-          <h4 className="resultSectionTitle">Score breakdown</h4>
+          <h4 className="resultSectionTitle">Разбор оценки</h4>
           <DecisionBreakdown breakdown={result.breakdown} />
         </div>
       )}
 
       <div className="resultSection">
-        <h4 className="resultSectionTitle">Evidence sources</h4>
+        <h4 className="resultSectionTitle">Источники</h4>
         <DecisionSources sources={result.sources} />
       </div>
 
@@ -76,7 +76,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
           href={routes.countryWithLocale(result.country.slug, locale)}
           className="internalLink"
         >
-          Open country card →
+          Карточка страны →
         </Link>
       </div>
     </div>

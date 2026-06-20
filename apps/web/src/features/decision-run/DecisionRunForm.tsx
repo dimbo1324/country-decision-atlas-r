@@ -56,7 +56,9 @@ function DecisionFormInner() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setLoadError(err instanceof Error ? err.message : "Failed to load data");
+          setLoadError(
+            err instanceof Error ? err.message : "Не удалось загрузить данные",
+          );
         }
       });
 
@@ -97,7 +99,7 @@ function DecisionFormInner() {
 
   if (loadError) return <ErrorState error={loadError} />;
   if (!countries || !scenarios) {
-    return <LoadingState message="Loading countries and scenarios…" />;
+    return <LoadingState message="Загрузка стран и сценариев…" />;
   }
 
   const decisionReadyScenarios = scenarios.items.filter((s) =>
@@ -111,7 +113,7 @@ function DecisionFormInner() {
     typeof runError === "object" &&
     (runError as { error?: { code?: string } }).error?.code ===
       "decision_score_not_found"
-      ? "This scenario is not available for the selected countries yet. Please choose one of the MVP decision scenarios."
+      ? "Этот сценарий пока недоступен для выбранных стран. Пожалуйста, выберите один из MVP-сценариев подбора."
       : runError;
 
   return (
@@ -119,7 +121,7 @@ function DecisionFormInner() {
       <div className="decisionForm">
         <div className="formGroup">
           <label className="formLabel" htmlFor="origin-select">
-            Origin country
+            Страна отправления
           </label>
           <select
             id="origin-select"
@@ -136,7 +138,7 @@ function DecisionFormInner() {
         </div>
 
         <div className="formGroup">
-          <label className="formLabel">Candidate countries</label>
+          <label className="formLabel">Страны-кандидаты</label>
           <div className="checkboxList">
             {countries.items.map((c) => (
               <label key={c.slug} className="checkboxLabel">
@@ -151,18 +153,18 @@ function DecisionFormInner() {
           </div>
           {candidateCountrySlugs.length === 0 && (
             <p className="formError" role="alert">
-              Select at least one candidate country.
+              Выберите хотя бы одну страну-кандидат.
             </p>
           )}
         </div>
 
         <div className="formGroup">
           <label className="formLabel" htmlFor="scenario-select">
-            Scenario
+            Сценарий
           </label>
           {noScenariosAvailable ? (
             <p className="formError" role="alert">
-              No decision-ready scenarios are available yet.
+              Готовые сценарии подбора пока отсутствуют.
             </p>
           ) : (
             <select
@@ -190,17 +192,17 @@ function DecisionFormInner() {
           aria-busy={isRunning}
           data-testid="decision-run-button"
         >
-          {isRunning ? "Running decision…" : "Run decision"}
+          {isRunning ? "Выполняется подбор…" : "Запустить подбор"}
         </button>
       </div>
 
       <div>
-        {isRunning && <LoadingState message="Running decision engine…" />}
+        {isRunning && <LoadingState message="Выполняется движок подбора…" />}
         {!isRunning && resolvedRunError !== null && (
           <ErrorState error={resolvedRunError} />
         )}
         {!isRunning && resolvedRunError === null && result === null && (
-          <EmptyState message="Choose a scenario and run a decision to see the ranking." />
+          <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
         )}
         {result !== null && <DecisionResults response={result} />}
       </div>
@@ -210,7 +212,7 @@ function DecisionFormInner() {
 
 export function DecisionRunForm() {
   return (
-    <Suspense fallback={<LoadingState message="Loading decision form…" />}>
+    <Suspense fallback={<LoadingState message="Загрузка формы подбора…" />}>
       <DecisionFormInner />
     </Suspense>
   );
