@@ -365,6 +365,29 @@ def list_original_variant_mismatches(
     )
 
 
+def list_units_without_english_variant(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            tu.id::text AS id,
+            tu.entity_type,
+            tu.entity_id::text AS entity_id,
+            tu.field_name
+        FROM translation_units tu
+        LEFT JOIN translation_variants tv
+            ON tv.translation_unit_id = tu.id
+            AND tv.locale_code = 'en'
+            AND tv.status NOT IN ('missing', 'fallback', 'stale')
+        WHERE tu.is_active = TRUE
+          AND tv.id IS NULL
+        ORDER BY tu.entity_type, tu.entity_id, tu.field_name
+        """,
+    )
+
+
 def list_invalid_reviewed_machine_variants(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
