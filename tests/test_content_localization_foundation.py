@@ -164,6 +164,7 @@ def install_quality_fakes(monkeypatch: Any) -> None:
         "list_active_units_without_variants",
         "list_units_without_original_variant",
         "list_original_variant_mismatches",
+        "list_units_without_english_variant",
         "list_stale_translation_variants",
         "list_invalid_reviewed_machine_variants",
         "list_persisted_fallback_variants",
@@ -200,5 +201,34 @@ def test_translation_quality_detects_stale_variant(monkeypatch: Any) -> None:
     assert any(issue.code == "translation_variant_stale" for issue in issues)
     assert any(
         check.code == "localization_stale_variants" and check.status == "failed"
+        for check in checks
+    )
+
+
+def test_translation_quality_reports_missing_english_as_warning(
+    monkeypatch: Any,
+) -> None:
+    install_quality_fakes(monkeypatch)
+    monkeypatch.setattr(
+        translation_repository,
+        "list_units_without_english_variant",
+        lambda *_: [
+            {
+                "id": "unit-id",
+                "entity_type": "evidence_item",
+                "entity_id": "entity-id",
+                "field_name": "claim",
+            }
+        ],
+    )
+
+    checks, issues = build_translation_quality_results(CONNECTION)
+
+    missing_issue = next(
+        issue for issue in issues if issue.code == "translation_english_variant_missing"
+    )
+    assert missing_issue.severity == "warning"
+    assert any(
+        check.code == "localization_english_coverage" and check.status == "failed"
         for check in checks
     )

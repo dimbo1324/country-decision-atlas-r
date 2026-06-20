@@ -147,6 +147,22 @@ def build_translation_quality_results(
             ["translation_original_mismatch"],
         )
     )
+    for row in repository.list_units_without_english_variant(connection):
+        issues.append(
+            _row_issue(
+                "translation_english_variant_missing",
+                "warning",
+                row,
+                "Translation unit has no current English variant.",
+            )
+        )
+    checks.append(
+        _check(
+            "localization_english_coverage",
+            issues,
+            ["translation_english_variant_missing"],
+        )
+    )
     for row in repository.list_stale_translation_variants(connection):
         issues.append(
             _row_issue(

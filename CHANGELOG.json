@@ -14,15 +14,16 @@
         "translation_units": 379,
         "ru_original_variants": 379,
         "en_legacy_variants": 158,
+        "missing_en_variants": 221,
         "units_without_original": 0,
         "original_mismatches": 0,
         "stale_variants": 0,
-        "status": "passed"
+        "status": "passed_with_warnings"
       },
       "checks": [
         "python scripts/apply_migrations.py: passed after local workaround for pre-existing 008/010 fresh-database constraint conflict",
         "migration 011 idempotent reapply: passed",
-        "python -m pytest: 87 passed, 23 skipped",
+        "python -m pytest: 88 passed, 23 skipped",
         "python -m ruff check . --fix: passed",
         "python -m ruff format .: passed",
         "python -m mypy apps packages scripts tests: passed",
