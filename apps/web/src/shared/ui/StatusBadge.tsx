@@ -20,10 +20,36 @@ const STATUS_VARIANTS: Record<string, BadgeVariant> = {
   archived: "default",
 };
 
+const STATUS_LABELS_RU: Record<string, string> = {
+  published: "Опубликовано",
+  valid: "Действует",
+  passed: "Пройдено",
+  draft: "Черновик",
+  review: "На проверке",
+  warning: "Предупреждение",
+  invalid: "Недействительно",
+  failed: "Ошибка",
+  archived: "Архив",
+  active: "Активно",
+  inactive: "Неактивно",
+  pending: "В ожидании",
+  approved: "Одобрено",
+  rejected: "Отклонено",
+  critical: "Критично",
+  medium: "Средний",
+  low: "Низкий",
+  high: "Высокий",
+  ok: "Норма",
+};
+
 type StatusBadgeProps = {
   status: string;
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  return <Badge variant={STATUS_VARIANTS[status] ?? "default"}>{status}</Badge>;
+  return (
+    <Badge variant={STATUS_VARIANTS[status] ?? "default"}>
+      {STATUS_LABELS_RU[status] ?? status}
+    </Badge>
+  );
 }

@@ -28,13 +28,13 @@ async function apiRequest<TResponse, TBody = never>(
       ...requestInit,
     });
     if (!response.ok) {
-      return { ok: false, error: `Request failed with ${response.status}` };
+      return { ok: false, error: `Запрос завершился с ошибкой ${response.status}` };
     }
     return { ok: true, data: (await response.json()) as TResponse };
   } catch (error) {
     return {
       ok: false,
-      error: error instanceof Error ? error.message : "Backend request failed",
+      error: error instanceof Error ? error.message : "Ошибка запроса к серверу",
     };
   }
 }

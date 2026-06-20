@@ -118,23 +118,23 @@ WITH profile_rows AS (
         VALUES
             (
                 'russia',
-                'Russia is a high-risk baseline for country-decision comparison, with material legal, banking, political, and mobility uncertainty.',
-                'Residence and legal stay questions require current document review and should not be inferred from generic rules.',
-                'Long-term status and citizenship planning are highly case-specific and sensitive to rule changes.',
-                'Tax exposure depends on residence, income source, currency restrictions, and treaty context.',
-                'Business activity faces banking, payment, sanctions, and compliance friction.',
-                'Quality of life varies by location, but institutional and mobility risks dominate the decision model.',
-                'Primary risks are administrative unpredictability, geopolitical exposure, banking friction, and weak personal certainty.'
+                'Россия является контекстом с высоким уровнем риска для сравнительного анализа, с существенной правовой, банковской, политической и мобильной неопределённостью.',
+                'Вопросы проживания и легального пребывания требуют актуальной проверки документов и не должны выводиться из общих правил.',
+                'Долгосрочный статус и планирование гражданства крайне индивидуальны и чувствительны к изменениям правил.',
+                'Налоговая нагрузка зависит от резидентства, источников дохода, валютных ограничений и договорного контекста.',
+                'Предпринимательская деятельность сталкивается с ограничениями банковского доступа, платёжной инфраструктуры, санкций и комплаенса.',
+                'Качество жизни варьируется по регионам, однако институциональные и мобильные риски доминируют в модели принятия решений.',
+                'Основные риски: административная непредсказуемость, геополитическая уязвимость, банковские ограничения и низкая персональная определённость.'
             ),
             (
                 'uruguay',
-                'Uruguay is a stability-oriented candidate for residence and lifestyle planning, with meaningful tradeoffs around cost, bureaucracy, and banking.',
-                'Residence planning is comparatively legible, but document readiness and current procedure checks remain essential.',
-                'Long-term residence and citizenship may be realistic, but timelines and continuity rules require verification.',
-                'Tax treatment depends on residence status, income source, and current professional guidance.',
-                'Small business and self-employment are plausible but need banking and compliance planning.',
-                'Quality of life may be strong for stability-oriented users, while Montevideo costs and housing can be constraints.',
-                'Primary risks are cost of living, administrative delays, labour-market limits, housing, and banking friction.'
+                'Уругвай является кандидатом с ориентацией на стабильность для планирования места проживания и образа жизни, с важными компромиссами по стоимости жизни, бюрократии и банковскому обслуживанию.',
+                'Планирование резидентства сравнительно понятно, однако готовность документов и актуальные проверки процедур остаются необходимыми.',
+                'Долгосрочное резидентство и гражданство могут быть реальными, однако сроки и правила непрерывности проживания требуют проверки.',
+                'Налоговый режим зависит от статуса резидентства, источника дохода и текущих профессиональных рекомендаций.',
+                'Малый бизнес и самозанятость возможны, однако требуют планирования банковского обслуживания и комплаенса.',
+                'Качество жизни может быть высоким для пользователей, ориентированных на стабильность, тогда как стоимость жилья в Монтевидео может стать ограничением.',
+                'Основные риски: стоимость жизни, административные задержки, ограничения рынка труда, жильё и банковские трудности.'
             )
     ) AS profile(
         country_slug,
@@ -186,223 +186,223 @@ WITH source_rows AS (
         VALUES
             (
                 'russia',
-                'Russia Ministry of Foreign Affairs electronic visa portal',
+                'МИД России: портал электронной визы',
                 'https://evisa.kdmid.ru/',
                 'official',
                 'Ministry of Foreign Affairs of the Russian Federation',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Official entry and visa portal used as a high-confidence migration source.'
+                'Официальный визовый портал МИД используется как высококонфидентный миграционный источник.'
             ),
             (
                 'russia',
-                'Russian Federal Tax Service English portal',
+                'ФНС России: официальный портал',
                 'https://www.nalog.gov.ru/eng/',
                 'official',
                 'Federal Tax Service of Russia',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Official tax authority portal used for tax-context screening.'
+                'Официальный портал налогового органа используется для скрининга налогового контекста.'
             ),
             (
                 'russia',
-                'Central Bank of Russia English portal',
+                'Банк России: официальный портал',
                 'https://www.cbr.ru/eng/',
                 'official',
                 'Bank of Russia',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Official central-bank source for banking and financial-system context.'
+                'Официальный источник центрального банка для банковского и финансово-системного контекста.'
             ),
             (
                 'russia',
-                'Russia public services portal',
+                'Портал государственных услуг России',
                 'https://www.gosuslugi.ru/',
                 'official',
                 'Gosuslugi',
                 'ru',
                 'medium',
                 DATE '2026-06-18',
-                'Official public services portal; confidence is medium for non-personalized decision use.'
+                'Официальный портал государственных услуг; достоверность средняя для обезличенных решений.'
             ),
             (
                 'russia',
-                'World Bank Russia country data',
+                'Всемирный банк: данные по России',
                 'https://data.worldbank.org/country/russian-federation',
                 'dataset',
                 'World Bank',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Institutional dataset for macro and country-level screening indicators.'
+                'Институциональный набор данных для макроэкономических и страновых скрининговых показателей.'
             ),
             (
                 'russia',
-                'Freedom House Russia country profile',
+                'Freedom House: профиль страны Россия 2026',
                 'https://freedomhouse.org/country/russia/freedom-world/2026',
                 'research',
                 'Freedom House',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Institutional research source for political-rights and civil-liberties context.'
+                'Институциональный исследовательский источник для контекста политических прав и гражданских свобод.'
             ),
             (
                 'russia',
-                'World Justice Project Rule of Law Index',
+                'World Justice Project: Индекс верховенства права 2025',
                 'https://worldjusticeproject.org/rule-of-law-index/downloads/2025/WJPIndex2025.pdf',
                 'dataset',
                 'World Justice Project',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Institutional rule-of-law dataset for comparative legal-stability screening.'
+                'Институциональный набор данных верховенства права для сравнительного скрининга правовой стабильности.'
             ),
             (
                 'russia',
-                'World Bank Doing Business Russia archive',
+                'Всемирный банк: архив Doing Business, Россия',
                 'https://archive.doingbusiness.org/en/data/exploreeconomies/russia',
                 'dataset',
                 'World Bank',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Archived business-environment dataset used cautiously for historical context.'
+                'Архивный набор данных деловой среды, используется осторожно для исторического контекста.'
             ),
             (
                 'russia',
-                'ConsultantPlus Russian Tax Code reference',
+                'КонсультантПлюс: Налоговый кодекс РФ',
                 'https://www.consultant.ru/document/cons_doc_LAW_19671/',
                 'expert',
                 'ConsultantPlus',
                 'ru',
                 'medium',
                 DATE '2026-06-18',
-                'Legal reference source for tax-code screening, not a substitute for legal advice.'
+                'Правовой справочный источник для скрининга налогового кодекса, не заменяет юридическую консультацию.'
             ),
             (
                 'russia',
-                'Official Russian government portal',
+                'Официальный сайт Правительства России',
                 'http://government.ru/en/',
                 'official',
                 'Government of the Russian Federation',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Official government information portal used for institutional context.'
+                'Официальный информационный портал правительства для институционального контекста.'
             ),
             (
                 'uruguay',
-                'Uruguay Ministry of Interior residence types',
+                'МВД Уругвая: типы резиденции',
                 'https://www.gub.uy/ministerio-interior/comunicacion/publicaciones/types-of-residencies-in-uruguay',
                 'official',
                 'Ministry of Interior of Uruguay',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Official migration source for residence-category screening.'
+                'Официальный миграционный источник для скрининга категорий резидентства.'
             ),
             (
                 'uruguay',
-                'Uruguay permanent legal residence procedure',
+                'Уругвай: процедура постоянного легального резидентства',
                 'https://www.gub.uy/tramites/residencia-legal-permanente',
                 'official',
                 'Government of Uruguay',
                 'es',
                 'high',
                 DATE '2026-06-18',
-                'Official procedure page for permanent legal residence.'
+                'Официальная процедурная страница для постоянного легального резидентства.'
             ),
             (
                 'uruguay',
-                'Live in Uruguay tax residence overview',
+                'Uruguay XXI: обзор налогового резидентства',
                 'https://www.liveinuruguay.uy/tax-residence',
                 'official',
                 'Uruguay XXI',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Government investment-promotion source used for tax-residence screening.'
+                'Государственный источник по продвижению инвестиций для скрининга налогового резидентства.'
             ),
             (
                 'uruguay',
-                'Uruguay National Migration Directorate',
+                'Национальная дирекция миграции Уругвая',
                 'https://www.gub.uy/direccion-nacional-migracion/',
                 'official',
                 'National Migration Directorate of Uruguay',
                 'es',
                 'high',
                 DATE '2026-06-18',
-                'Official migration authority portal.'
+                'Официальный портал миграционного органа.'
             ),
             (
                 'uruguay',
-                'Central Bank of Uruguay',
+                'Центральный банк Уругвая',
                 'https://www.bcu.gub.uy/',
                 'official',
                 'Central Bank of Uruguay',
                 'es',
                 'high',
                 DATE '2026-06-18',
-                'Official source for financial-system and banking context.'
+                'Официальный источник для финансово-системного и банковского контекста.'
             ),
             (
                 'uruguay',
-                'Uruguay Ministry of Economy and Finance',
+                'Министерство экономики и финансов Уругвая',
                 'https://www.gub.uy/ministerio-economia-finanzas/',
                 'official',
                 'Ministry of Economy and Finance of Uruguay',
                 'es',
                 'high',
                 DATE '2026-06-18',
-                'Official source for economic and tax-policy context.'
+                'Официальный источник для экономического и налогово-политического контекста.'
             ),
             (
                 'uruguay',
-                'World Bank Uruguay country data',
+                'Всемирный банк: данные по Уругваю',
                 'https://data.worldbank.org/country/uruguay',
                 'dataset',
                 'World Bank',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Institutional dataset for macro and country-level screening indicators.'
+                'Институциональный набор данных для макроэкономических и страновых скрининговых показателей.'
             ),
             (
                 'uruguay',
-                'World Bank Uruguay country overview',
+                'Всемирный банк: обзор страны Уругвай',
                 'https://www.worldbank.org/ext/en/country/uruguay',
                 'research',
                 'World Bank',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Institutional country overview for economic and development context.'
+                'Институциональный обзор страны для экономического и контекста развития.'
             ),
             (
                 'uruguay',
-                'Freedom House Uruguay country profile',
+                'Freedom House: профиль страны Уругвай 2024',
                 'https://freedomhouse.org/country/uruguay/freedom-world/2024',
                 'research',
                 'Freedom House',
                 'en',
                 'medium',
                 DATE '2026-06-18',
-                'Institutional research source for political-rights and civil-liberties context.'
+                'Институциональный исследовательский источник для контекста политических прав и гражданских свобод.'
             ),
             (
                 'uruguay',
-                'World Justice Project Rule of Law Index',
+                'World Justice Project: Глобальный индекс верховенства права 2025',
                 'https://worldjusticeproject.org/rule-of-law-index/global/2025',
                 'dataset',
                 'World Justice Project',
                 'en',
                 'high',
                 DATE '2026-06-18',
-                'Institutional rule-of-law dataset for comparative legal-stability screening.'
+                'Институциональный набор данных верховенства права для сравнительного скрининга правовой стабильности.'
             )
     ) AS source(
         country_slug,
@@ -927,8 +927,8 @@ SELECT
     scored.country_id,
     scored.scenario_id,
     scored.total_score,
-    'Source-aware MVP decision score',
-    'Stored v0 score built from seven explainable criteria and linked source quality.',
+    'MVP-оценка с учётом источников',
+    'Версия 0 оценки по семи критериям с учётом качества источников.',
     'This v0 score is an editor-seeded screening estimate based on residence, long-term status, budget, safety, business, legal-stability, and source-quality criteria. It is not legal, tax, or immigration advice.',
     'Эта v0-оценка является редакторской скрининговой оценкой по семи критериям: легализация, долгосрочный статус, бюджет, безопасность, бизнес, правовая стабильность и качество источников. Это не юридическая, налоговая или миграционная консультация.',
     scored.confidence,
@@ -1071,12 +1071,12 @@ WITH story_rows AS (
                 'relocation_residence',
                 9500,
                 2800,
-                'Residence planning with document preparation and professional review.',
+                'Планирование резидентства с подготовкой документов и профессиональной проверкой.',
                 '["passports","birth_certificates","income_records","apostilled_documents"]',
-                'Housing search, Spanish-language paperwork, and banking onboarding took longer than expected.',
-                'The family obtained a clearer residence plan and reduced political-risk exposure.',
-                'Costs were higher than the initial budget, especially housing and setup expenses.',
-                'Prepare documents before arrival and budget for slower administrative steps.',
+                'Поиск жилья, испаноязычное оформление документов и открытие банковских счетов заняли больше времени, чем ожидалось.',
+                'Семья получила более чёткий план резидентства и снизила политические риски.',
+                'Расходы превысили начальный бюджет, особенно на жильё и оформление.',
+                'Подготовьте документы до приезда и закладывайте в бюджет время на медленные административные процедуры.',
                 7.4
             ),
             (
@@ -1087,12 +1087,12 @@ WITH story_rows AS (
                 'business_self_employment',
                 12000,
                 3200,
-                'Self-employment exploration with tax and banking review.',
+                'Изучение самозанятости с налоговой и банковской проверкой.',
                 '["passports","income_records","business_contracts","bank_statements"]',
-                'Bank onboarding and tax-residence questions required local professional support.',
-                'The user found a more stable operating base for client work.',
-                'Setup was slower and more expensive than expected.',
-                'Validate banking and tax assumptions before committing to the move.',
+                'Открытие банковских счетов и вопросы налогового резидентства потребовали местной профессиональной поддержки.',
+                'Пользователь нашёл более стабильную базу для работы с клиентами.',
+                'Процесс занял больше времени и оказался дороже, чем ожидалось.',
+                'Проверьте банковские и налоговые предположения до принятия окончательного решения о переезде.',
                 7.0
             ),
             (
@@ -1103,12 +1103,12 @@ WITH story_rows AS (
                 'low_budget_living',
                 7000,
                 2400,
-                'Short-term stay used to test budget and housing assumptions.',
+                'Краткосрочное пребывание для проверки бюджетных и жилищных предположений.',
                 '["passports","rental_agreement","income_records"]',
-                'Seasonal housing costs made the budget less predictable.',
-                'The user confirmed that Uruguay felt stable and administratively understandable.',
-                'The country was not as low-cost as expected.',
-                'Test the city and season before treating Uruguay as a low-budget destination.',
+                'Сезонные расходы на жильё сделали бюджет менее предсказуемым.',
+                'Пользователь подтвердил, что Уругвай воспринимается как стабильный и административно понятный.',
+                'Страна оказалась не такой дешёвой, как ожидалось.',
+                'Проверьте город и сезон, прежде чем считать Уругвай бюджетным направлением.',
                 6.8
             ),
             (
@@ -1119,12 +1119,12 @@ WITH story_rows AS (
                 'permanent_residence_citizenship',
                 11000,
                 3000,
-                'Long-term residence planning with staged document collection.',
+                'Долгосрочное планирование резидентства с поэтапным сбором документов.',
                 '["passports","civil_records","income_records","police_certificates"]',
-                'Document timelines and translation requirements created friction.',
-                'The household created a realistic multi-year status plan.',
-                'Citizenship expectations had to be made more conservative.',
-                'Separate residence planning from citizenship assumptions and verify every timeline.',
+                'Сроки оформления документов и требования к переводу создали дополнительные трудности.',
+                'Семья создала реалистичный многолетний план получения статуса.',
+                'Ожидания относительно гражданства пришлось скорректировать в сторону консерватизма.',
+                'Разделите планирование резидентства и гражданства, и проверяйте каждый срок.',
                 7.2
             )
     ) AS story(
@@ -1183,7 +1183,7 @@ SELECT
     'synthetic',
     'published',
     TRUE,
-    'Synthetic example for MVP demonstration only.'
+    'Синтетический пример только для MVP-демонстрации.'
 FROM
     story_rows story
     JOIN countries origin ON origin.slug = story.origin_slug

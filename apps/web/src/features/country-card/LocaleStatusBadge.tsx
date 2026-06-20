@@ -7,7 +7,7 @@ type LocaleStatusBadgeProps = {
 const STATUS_LABELS: Record<string, string> = {
   source: "Исходный язык",
   translated: "Переведено",
-  fallback: "Fallback-версия",
+  fallback: "Резервная версия",
   missing: "Перевод отсутствует",
 };
 
@@ -32,7 +32,7 @@ export function LocaleStatusBadge({ locale }: LocaleStatusBadgeProps) {
       </div>
       {isFallback && locale.requested_locale === "ru" && (
         <p className="localeNotice">
-          Русский перевод частично отсутствует. Показана английская fallback-версия.
+          Русский перевод частично отсутствует. Показана английская резервная версия.
         </p>
       )}
     </div>

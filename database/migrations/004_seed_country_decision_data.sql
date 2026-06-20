@@ -761,8 +761,8 @@ SELECT
     country_id,
     scenario_id,
     score,
-    'MVP decision score',
-    'Stored editor score for the MVP decision engine.',
+    'MVP-оценка подбора',
+    'Редакторская оценка для MVP-движка подбора.',
     'Score is based on seeded breakdown criteria, legal signals, evidence links, and source quality. It is not legal advice.',
     'Оценка основана на демо-критериях, правовых сигналах, evidence-связях и качестве источников. Это не юридическая консультация.',
     'medium',
@@ -907,7 +907,7 @@ SELECT
     'synthetic',
     'published',
     TRUE,
-    'Synthetic example for MVP demonstration only.'
+    'Синтетический пример только для MVP-демонстрации.'
 FROM
     (
         VALUES
@@ -918,12 +918,12 @@ FROM
                 'relocation_residence',
                 12000,
                 2500,
-                'Residence planning',
+                'Планирование резидентства',
                 '["passport","apostilled_records","income_evidence"]',
-                'Budget planning and document timing were the main simulated problems.',
-                'The simulated user achieved a clearer decision path.',
-                'The process still required expert review.',
-                'Validate every document requirement before travel.',
+                'Планирование бюджета и сроки документов были основными смоделированными проблемами.',
+                'Смоделированный пользователь получил более чёткий путь принятия решений.',
+                'Процесс всё равно потребовал экспертной проверки.',
+                'Проверяйте каждое документальное требование перед поездкой.',
                 7.5
             ),
             (
@@ -933,12 +933,12 @@ FROM
                 'business_self_employment',
                 18000,
                 3200,
-                'Self-employment setup',
+                'Оформление самозанятости',
                 '["passport","business_plan","bank_reference"]',
-                'Banking assumptions were uncertain in the simulation.',
-                'The simulated user identified business setup questions early.',
-                'Costs were higher than expected.',
-                'Separate residence, tax, and banking advice.',
+                'Банковские предположения были неопределёнными в симуляции.',
+                'Смоделированный пользователь выявил вопросы регистрации бизнеса на раннем этапе.',
+                'Расходы оказались выше ожидаемых.',
+                'Разделяйте консультации по резидентству, налогам и банковским вопросам.',
                 6.8
             ),
             (
@@ -948,12 +948,12 @@ FROM
                 'low_budget_living',
                 7000,
                 1600,
-                'Temporary stay planning',
+                'Планирование временного пребывания',
                 '["passport","insurance","rental_agreement"]',
-                'City-level cost assumptions were hard to compare.',
-                'The simulated user built a clearer budget checklist.',
-                'Legal path remained uncertain.',
-                'Treat cost comparisons as city-specific.',
+                'Предположения о расходах на уровне города было сложно сравнивать.',
+                'Смоделированный пользователь составил более чёткий бюджетный чеклист.',
+                'Правовой путь остался неопределённым.',
+                'Рассматривайте сравнения расходов в контексте конкретного города.',
                 5.9
             ),
             (
@@ -963,12 +963,12 @@ FROM
                 'safety_political_risk',
                 15000,
                 2800,
-                'Family relocation planning',
+                'Планирование семейной релокации',
                 '["passport","birth_certificates","school_records"]',
-                'School and family logistics needed more source depth.',
-                'The simulated family prioritized stability signals.',
-                'Timeline uncertainty remained.',
-                'Use the card as a question list for expert review.',
+                'Логистика школы и семьи требовала более глубокой проработки источников.',
+                'Смоделированная семья приоритизировала сигналы стабильности.',
+                'Неопределённость сроков сохранилась.',
+                'Используйте карточку как список вопросов для экспертной проверки.',
                 7.2
             )
     ) AS story(

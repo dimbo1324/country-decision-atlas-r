@@ -22,14 +22,14 @@ export default async function ComparePage() {
   >("/api/v1/decision/compare", {
     scenario_slug: "relocation_residence",
     country_slugs: ["russia", "uruguay"],
-    locale: "en",
+    locale: "ru",
   });
 
   return (
     <main className="pageShell">
       <header className="pageHeader">
-        <p className="eyebrow">Compare</p>
-        <h1>Russia vs Uruguay</h1>
+        <p className="eyebrow">Сравнение</p>
+        <h1>Россия vs Уругвай</h1>
       </header>
 
       {result.ok ? (
