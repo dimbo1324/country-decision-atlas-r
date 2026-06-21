@@ -638,7 +638,7 @@ resolved_evidence_rows AS (
     JOIN sources s ON s.url = er.source_url
     JOIN legal_signals ls
         ON ls.country_id = c.id
-        AND ls.title = er.legal_signal_title
+        AND ls.title_ru = er.legal_signal_title
 )
 INSERT INTO evidence_items (
     source_id,
@@ -749,7 +749,7 @@ resolved_evidence_rows AS (
     JOIN sources s ON s.url = er.source_url
     JOIN legal_signals ls
         ON ls.country_id = c.id
-        AND ls.title = er.legal_signal_title
+        AND ls.title_ru = er.legal_signal_title
 )
 UPDATE evidence_items ei
 SET

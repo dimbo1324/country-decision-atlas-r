@@ -303,6 +303,11 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
     }
 
     monkeypatch.setattr(
+        country_read_model,
+        "overlay_localized_fields",
+        lambda _conn, items, *_args, **_kw: items,
+    )
+    monkeypatch.setattr(
         country_read_model, "get_country_read_model_country", lambda *_: country
     )
     monkeypatch.setattr(

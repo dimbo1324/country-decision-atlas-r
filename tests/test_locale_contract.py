@@ -191,6 +191,11 @@ def test_score_and_breakdown_locale(monkeypatch: Any) -> None:
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
+        decision_engine,
+        "overlay_localized_fields",
+        lambda _conn, items, *_args, **_kw: items,
+    )
+    monkeypatch.setattr(
         decision_repository,
         "list_scenario_countries",
         lambda *_: [row],
@@ -219,6 +224,11 @@ def test_score_breakdown_fallback(monkeypatch: Any) -> None:
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
+        decision_engine,
+        "overlay_localized_fields",
+        lambda _conn, items, *_args, **_kw: items,
+    )
+    monkeypatch.setattr(
         decision_repository,
         "list_scenario_countries",
         lambda *_: [row],
@@ -243,6 +253,11 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
     breakdown = breakdown_row(RU_BREAKDOWN)
     breakdown["country_score_id"] = row["id"]
 
+    monkeypatch.setattr(
+        decision_engine,
+        "overlay_localized_fields",
+        lambda _conn, items, *_args, **_kw: items,
+    )
     monkeypatch.setattr(
         decision_repository,
         "get_decision_scenario",

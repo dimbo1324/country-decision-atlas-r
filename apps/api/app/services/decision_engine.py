@@ -40,6 +40,7 @@ from app.services.decision_labels import (
     weakness_message,
 )
 from app.services.decision_warnings import build_risk_warnings
+from app.services.localization import overlay_localized_fields
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from psycopg import Connection
@@ -80,7 +81,23 @@ def get_scenario(connection: Connection[Any], slug: str, locale: str) -> dict[st
 def list_scenario_countries(
     connection: Connection[Any], scenario_slug: str, locale: str
 ) -> list[DecisionCountryScore]:
-    rows = repository.list_scenario_countries(connection, scenario_slug, locale)
+    rows = repository.list_scenario_countries(connection, scenario_slug)
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "scenario",
+        "scenario_id",
+        [("title", "scenario_name", "title_ru", "title_en")],
+        locale,
+    )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "country_score",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
+    )
     return _attach_breakdowns_and_sources(connection, rows, locale)
 
 
@@ -135,7 +152,6 @@ def list_legal_signals(
 ) -> tuple[list[dict[str, Any]], Pagination, LocaleResolution, SortMeta]:
     rows = repository.list_legal_signals(
         connection=connection,
-        locale=locale,
         country_slug=country_slug,
         signal_type=signal_type,
         impact_direction=impact_direction,
@@ -145,6 +161,17 @@ def list_legal_signals(
         offset=offset,
         sort=sort,
         order=order,
+    )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "legal_signal",
+        "id",
+        [
+            ("title", "title", "title_ru", "title_en"),
+            ("summary", "summary", "summary_ru", "summary_en"),
+        ],
+        locale,
     )
     total = repository.count_legal_signals(
         connection,
@@ -261,8 +288,24 @@ def compare_countries(
 ) -> DecisionCompareResult:
     locale = validate_locale(str(payload.locale))
     scenario_row = get_scenario(connection, payload.scenario_slug, locale)
-    rows = repository.list_scenario_countries(connection, payload.scenario_slug, locale)
+    rows = repository.list_scenario_countries(connection, payload.scenario_slug)
     rows = [row for row in rows if row["country_slug"] in payload.country_slugs]
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "scenario",
+        "scenario_id",
+        [("title", "scenario_name", "title_ru", "title_en")],
+        locale,
+    )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "country_score",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
+    )
     countries = _attach_breakdowns_and_sources(connection, rows, locale)
     if len(countries) != len(set(payload.country_slugs)):
         raise LookupError("One or more country scores were not found")
@@ -325,7 +368,15 @@ def run_decision(
             },
         )
     score_rows = repository.list_decision_scores(
-        connection, payload.scenario_slug, candidate_slugs, locale
+        connection, payload.scenario_slug, candidate_slugs
+    )
+    score_rows = overlay_localized_fields(
+        connection,
+        score_rows,
+        "country_score",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
     )
     scores_by_country = {row["country_slug"]: row for row in score_rows}
     missing_score_slugs = [
@@ -342,11 +393,28 @@ def run_decision(
             },
         )
     score_ids = [row["id"] for row in score_rows]
-    breakdown_rows = repository.list_decision_score_breakdowns(
-        connection, score_ids, locale
+    breakdown_rows = repository.list_decision_score_breakdowns(connection, score_ids)
+    breakdown_rows = overlay_localized_fields(
+        connection,
+        breakdown_rows,
+        "country_score_breakdown",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
     )
     legal_signal_rows = repository.list_decision_legal_signals(
-        connection, candidate_slugs, locale
+        connection, candidate_slugs
+    )
+    legal_signal_rows = overlay_localized_fields(
+        connection,
+        legal_signal_rows,
+        "legal_signal",
+        "id",
+        [
+            ("title", "title", "title_ru", "title_en"),
+            ("summary", "summary", "summary_ru", "summary_en"),
+        ],
+        locale,
     )
     source_ids = _collect_source_ids(breakdown_rows, legal_signal_rows)
     source_rows = repository.list_decision_sources_by_ids(connection, source_ids)

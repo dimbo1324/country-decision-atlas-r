@@ -167,6 +167,69 @@ def get_best_translation_variant(
     )
 
 
+def list_best_translation_variants(
+    connection: Connection[Any],
+    entity_type: str,
+    entity_ids: list[str],
+    field_names: list[str],
+    requested_locale: str,
+    fallback_locale: str,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    if not entity_ids or not field_names:
+        return {}
+    rows = fetch_all(
+        connection,
+        """
+        SELECT DISTINCT ON (tu.entity_id, tu.field_name)
+            tu.entity_id::text AS entity_id,
+            tu.field_name,
+            tv.locale_code,
+            tv.text,
+            tv.status,
+            tv.is_original
+        FROM translation_units tu
+        JOIN translation_variants tv ON tv.translation_unit_id = tu.id
+        WHERE tu.entity_type = %s
+          AND tu.entity_id = ANY(%s::uuid[])
+          AND tu.field_name = ANY(%s::text[])
+          AND tu.is_active = TRUE
+          AND tv.locale_code IN (%s, %s)
+          AND tv.status NOT IN ('missing', 'fallback', 'stale')
+        ORDER BY
+            tu.entity_id,
+            tu.field_name,
+            CASE
+                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 1
+                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 2
+                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 3
+                WHEN tv.locale_code = %s AND tv.status = 'machine_translated' THEN 4
+                WHEN tv.locale_code = %s AND tv.status = 'needs_review' THEN 5
+                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 6
+                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 7
+                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 8
+                ELSE 99
+            END,
+            tv.updated_at DESC
+        """,
+        (
+            entity_type,
+            entity_ids,
+            field_names,
+            requested_locale,
+            fallback_locale,
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            requested_locale,
+            fallback_locale,
+            fallback_locale,
+            fallback_locale,
+        ),
+    )
+    return {(row["entity_id"], row["field_name"]): row for row in rows}
+
+
 def list_stale_translation_variants(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:

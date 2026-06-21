@@ -186,39 +186,12 @@ def list_decision_scores(
     connection: Connection[Any],
     scenario_slug: str,
     country_slugs: list[str],
-    locale: str,
 ) -> list[dict[str, Any]]:
     if not country_slugs:
         return []
-    requested_locale = validate_locale(locale)
-    explanation_column = localized_column(
-        requested_locale, "cs.explanation_en", "cs.explanation_ru"
-    )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = """
-            CASE
-                WHEN cs.explanation_en IS NOT NULL OR cs.summary IS NOT NULL THEN 'source'
-                ELSE 'missing'
-            END
-        """
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN cs.explanation_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN cs.explanation_ru IS NOT NULL THEN 'translated'
-                WHEN cs.explanation_en IS NOT NULL OR cs.summary IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
             cs.id::text AS id,
             cs.country_id::text AS country_id,
@@ -226,11 +199,10 @@ def list_decision_scores(
             s.slug AS scenario_slug,
             cs.score::float AS score,
             cs.score_label,
-            COALESCE({explanation_column}, cs.explanation_en, cs.summary, '') AS explanation,
+            cs.explanation_ru,
+            COALESCE(cs.explanation_en, cs.summary, '') AS explanation_en,
             cs.confidence,
-            cs.calculated_at,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            cs.calculated_at
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -243,45 +215,24 @@ def list_decision_scores(
 
 
 def list_decision_score_breakdowns(
-    connection: Connection[Any], country_score_ids: list[str], locale: str
+    connection: Connection[Any], country_score_ids: list[str]
 ) -> list[dict[str, Any]]:
     if not country_score_ids:
         return []
-    requested_locale = validate_locale(locale)
-    explanation_column = localized_column(
-        requested_locale, "explanation_en", "explanation_ru"
-    )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = "'source'"
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN explanation_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN explanation_ru IS NOT NULL THEN 'translated'
-                WHEN explanation_en IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
+            id::text AS id,
             country_score_id::text AS country_score_id,
             criterion,
             score::float AS score,
             weight::float AS weight,
             weighted_score::float AS weighted_score,
-            COALESCE({explanation_column}, explanation_en, '') AS explanation,
+            explanation_ru,
+            COALESCE(explanation_en, '') AS explanation_en,
             source_ids,
-            confidence,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            confidence
         FROM country_score_breakdowns
         WHERE country_score_id = ANY(%s::uuid[])
         ORDER BY criterion
@@ -293,52 +244,24 @@ def list_decision_score_breakdowns(
 def list_decision_legal_signals(
     connection: Connection[Any],
     country_slugs: list[str],
-    locale: str,
 ) -> list[dict[str, Any]]:
     if not country_slugs:
         return []
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
-    summary_column = localized_column(
-        requested_locale, "ls.summary_en", "ls.summary_ru"
-    )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = """
-            CASE
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'source'
-                ELSE 'missing'
-            END
-        """
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'translated'
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
             ls.id::text AS id,
             c.slug AS country_slug,
-            COALESCE({title_column}, ls.title_en, ls.title, '') AS title,
-            COALESCE({summary_column}, ls.summary_en, ls.summary, '') AS summary,
+            ls.title_ru,
+            COALESCE(ls.title_en, ls.title, '') AS title_en,
+            ls.summary_ru,
+            COALESCE(ls.summary_en, ls.summary, '') AS summary_en,
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
             ls.source_id::text AS source_id,
-            ls.confidence,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            ls.confidence
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.slug = ANY(%s)
@@ -382,38 +305,11 @@ def list_decision_sources_by_ids(
 
 
 def list_scenario_countries(
-    connection: Connection[Any], scenario_slug: str, locale: str
+    connection: Connection[Any], scenario_slug: str
 ) -> list[dict[str, Any]]:
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "s.title_en", "s.title_ru")
-    explanation_column = localized_column(
-        requested_locale, "cs.explanation_en", "cs.explanation_ru"
-    )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = """
-            CASE
-                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'source'
-                ELSE 'missing'
-            END
-        """
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN s.title_ru IS NOT NULL AND cs.explanation_ru IS NOT NULL THEN 'translated'
-                WHEN s.title_en IS NOT NULL OR cs.explanation_en IS NOT NULL OR s.name IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
             cs.id,
             cs.country_id,
@@ -421,14 +317,13 @@ def list_scenario_countries(
             c.name AS country_name,
             cs.scenario_id,
             s.slug AS scenario_slug,
-            COALESCE({title_column}, s.title_en, s.name, '') AS scenario_name,
+            s.title_ru,
+            COALESCE(s.title_en, s.name, '') AS title_en,
             cs.score::float AS score,
-            COALESCE({explanation_column}, cs.explanation_en, cs.summary, '') AS explanation,
+            cs.explanation_ru,
+            COALESCE(cs.explanation_en, cs.summary, '') AS explanation_en,
             cs.confidence,
-            cs.calculated_at,
-            {title_column} IS NOT NULL AND {explanation_column} IS NOT NULL AS is_translated,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            cs.calculated_at
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -573,7 +468,6 @@ def count_country_sources(
 
 def list_legal_signals(
     connection: Connection[Any],
-    locale: str,
     country_slug: str | None,
     signal_type: str | None = None,
     impact_direction: str | None = None,
@@ -584,47 +478,22 @@ def list_legal_signals(
     sort: str = "published_date",
     order: str = "desc",
 ) -> list[dict[str, Any]]:
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
-    summary_column = localized_column(
-        requested_locale, "ls.summary_en", "ls.summary_ru"
-    )
     filter_sql, filter_params = _legal_signal_filters(
         country_slug, signal_type, impact_direction, impact_level, status
     )
     sort_column, order_sql = resolve_sort_clause(
         sort, order, LEGAL_SIGNAL_SORT_COLUMNS, "published_date"
     )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = """
-            CASE
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'source'
-                ELSE 'missing'
-            END
-        """
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'translated'
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     return fetch_all(
         connection,
         f"""
         SELECT
-            ls.id,
+            ls.id::text AS id,
             ls.country_id,
-            COALESCE({title_column}, ls.title_en, ls.title, '') AS title,
-            COALESCE({summary_column}, ls.summary_en, ls.summary, '') AS summary,
+            ls.title_ru,
+            COALESCE(ls.title_en, ls.title, '') AS title_en,
+            ls.summary_ru,
+            COALESCE(ls.summary_en, ls.summary, '') AS summary_en,
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
@@ -635,10 +504,7 @@ def list_legal_signals(
             ls.confidence,
             ls.status,
             ls.created_at,
-            ls.updated_at,
-            {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            ls.updated_at
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE {filter_sql}

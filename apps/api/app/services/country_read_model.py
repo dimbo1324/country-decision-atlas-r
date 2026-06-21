@@ -14,6 +14,7 @@ from app.schemas.country_read_model import (
     CountryReadModelMeta,
     CountryReadModelResponse,
 )
+from app.services.localization import overlay_localized_fields
 from datetime import UTC, date, datetime, time
 from psycopg import Connection
 from typing import Any
@@ -32,14 +33,49 @@ def get_country_read_model(
     if country is None:
         return None
     profile = get_country_read_model_profile(connection, country_slug, locale)
-    scores = list_country_read_model_scores(connection, country_slug, locale)
+    scores = list_country_read_model_scores(connection, country_slug)
+    scores = overlay_localized_fields(
+        connection,
+        scores,
+        "scenario",
+        "scenario_id",
+        [("title", "scenario_title", "title_ru", "title_en")],
+        locale,
+    )
+    scores = overlay_localized_fields(
+        connection,
+        scores,
+        "country_score",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
+    )
     score_ids = [score["id"] for score in scores]
-    breakdowns = list_country_read_model_score_breakdowns(connection, score_ids, locale)
+    breakdowns = list_country_read_model_score_breakdowns(connection, score_ids)
+    breakdowns = overlay_localized_fields(
+        connection,
+        breakdowns,
+        "country_score_breakdown",
+        "id",
+        [("explanation", "explanation", "explanation_ru", "explanation_en")],
+        locale,
+    )
     breakdowns_by_score_id = group_breakdowns_by_score_id(breakdowns)
     for score in scores:
         score["breakdowns"] = breakdowns_by_score_id.get(score["id"], [])
     legal_signals = list_country_read_model_legal_signals(
-        connection, country_slug, locale, LEGAL_SIGNAL_LIMIT
+        connection, country_slug, LEGAL_SIGNAL_LIMIT
+    )
+    legal_signals = overlay_localized_fields(
+        connection,
+        legal_signals,
+        "legal_signal",
+        "id",
+        [
+            ("title", "title", "title_ru", "title_en"),
+            ("summary", "summary", "summary_ru", "summary_en"),
+        ],
+        locale,
     )
     sources = list_country_read_model_sources(connection, country_slug, SOURCE_LIMIT)
     evidence_summary = get_country_read_model_evidence_summary(connection, country_slug)

@@ -52,9 +52,8 @@ def install_repository_fakes(monkeypatch: Any) -> None:
         ]
 
     def fake_scores(
-        _: Connection[Any], scenario_slug: str, slugs: list[str], locale: str
+        _: Connection[Any], scenario_slug: str, slugs: list[str]
     ) -> list[dict[str, Any]]:
-        status = "source" if locale == "en" else "translated"
         scores = {"uruguay": 78.0, "russia": 42.0}
         return [
             {
@@ -65,19 +64,20 @@ def install_repository_fakes(monkeypatch: Any) -> None:
                 "score": scores[slug],
                 "score_label": "stored",
                 "explanation": "Stored score",
+                "explanation_ru": "Stored score",
+                "explanation_en": "Stored score",
                 "confidence": "high" if slug == "uruguay" else "medium",
                 "calculated_at": NOW,
-                "resolved_locale": locale,
-                "translation_status": status,
+                "resolved_locale": "en",
+                "translation_status": "source",
             }
             for slug in slugs
             if slug in scores
         ]
 
     def fake_breakdowns(
-        _: Connection[Any], score_ids: list[str], locale: str
+        _: Connection[Any], score_ids: list[str]
     ) -> list[dict[str, Any]]:
-        status = "source" if locale == "en" else "translated"
         rows = []
         for score_id in score_ids:
             is_uruguay = score_id.startswith("uruguay")
@@ -107,31 +107,36 @@ def install_repository_fakes(monkeypatch: Any) -> None:
                         "weight": 0.1,
                         "weighted_score": float(score) / 10,
                         "explanation": "Breakdown",
+                        "explanation_ru": "Breakdown",
+                        "explanation_en": "Breakdown",
                         "source_ids": ["source-1"],
                         "confidence": "high" if is_uruguay else "medium",
-                        "resolved_locale": locale,
-                        "translation_status": status,
+                        "resolved_locale": "en",
+                        "translation_status": "source",
                     }
                 )
         return rows
 
     def fake_signals(
-        _: Connection[Any], slugs: list[str], locale: str
+        _: Connection[Any], slugs: list[str]
     ) -> list[dict[str, Any]]:
-        status = "source" if locale == "en" else "translated"
         return [
             {
                 "id": "signal-1",
                 "country_slug": slug,
                 "title": "Signal",
+                "title_ru": "Signal",
+                "title_en": "Signal",
                 "summary": "Review banking and tax constraints.",
+                "summary_ru": "Review banking and tax constraints.",
+                "summary_en": "Review banking and tax constraints.",
                 "signal_type": "banking",
                 "impact_direction": "mixed",
                 "impact_level": "high",
                 "source_id": "source-1",
                 "confidence": "medium",
-                "resolved_locale": locale,
-                "translation_status": status,
+                "resolved_locale": "en",
+                "translation_status": "source",
             }
             for slug in slugs
         ]
@@ -144,6 +149,11 @@ def install_repository_fakes(monkeypatch: Any) -> None:
     )
     monkeypatch.setattr(
         decision_repository, "list_decision_legal_signals", fake_signals
+    )
+    monkeypatch.setattr(
+        decision_engine,
+        "overlay_localized_fields",
+        lambda _conn, items, *_args, **_kw: items,
     )
     monkeypatch.setattr(
         decision_repository,
