@@ -23,7 +23,9 @@ export default async function CountriesPage({ searchParams }: PageProps) {
     const errProp =
       err instanceof Error
         ? err.message
-        : (err as { error?: { code?: string; message?: string } });
+        : typeof err === "object" && err !== null && "error" in err
+          ? (err as { error?: { code?: string; message?: string } })
+          : "Произошла ошибка при загрузке";
     return (
       <div className="pageShell">
         <header className="pageHeader">

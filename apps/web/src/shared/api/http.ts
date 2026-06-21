@@ -22,6 +22,23 @@ export function queryString(
   return encoded ? `?${encoded}` : "";
 }
 
+export function isApiError(e: unknown): e is ApiErrorResponse {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    "error" in (e as Record<string, unknown>)
+  );
+}
+
+async function parseJsonSafe<T>(response: Response): Promise<T> {
+  const text = await response.text();
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new Error(`Unexpected non-JSON response (HTTP ${response.status})`);
+  }
+}
+
 export async function apiGet<TResponse>(
   path: string,
   options: RequestOptions = {},
@@ -35,10 +52,10 @@ export async function apiGet<TResponse>(
   });
 
   if (!response.ok) {
-    throw (await response.json()) as ApiErrorResponse;
+    throw await parseJsonSafe<ApiErrorResponse>(response);
   }
 
-  return (await response.json()) as TResponse;
+  return parseJsonSafe<TResponse>(response);
 }
 
 export async function apiPost<TResponse, TBody>(
@@ -58,8 +75,8 @@ export async function apiPost<TResponse, TBody>(
   });
 
   if (!response.ok) {
-    throw (await response.json()) as ApiErrorResponse;
+    throw await parseJsonSafe<ApiErrorResponse>(response);
   }
 
-  return (await response.json()) as TResponse;
+  return parseJsonSafe<TResponse>(response);
 }

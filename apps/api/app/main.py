@@ -10,13 +10,28 @@ from app.api.v1 import (
 )
 from app.core.config import get_settings
 from app.core.database import close_database_pool, open_database_pool
-from collections.abc import AsyncIterator
+from collections import defaultdict
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+import logging
+from psycopg import Error as PsycopgError
+import time
 from typing import Any
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+_rate_windows: defaultdict[str, list[float]] = defaultdict(list)
+_RATE_LIMIT = 120
+_RATE_WINDOW = 60.0
 
 
 def error_response(
@@ -30,6 +45,9 @@ def error_response(
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    settings = get_settings()
+    if not settings.admin_token:
+        logger.warning("Admin token is not configured — admin endpoints are disabled.")
     open_database_pool()
     try:
         yield
@@ -50,9 +68,38 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allow_headers=["Content-Type", "Authorization", "X-Admin-Token"],
 )
+
+
+@app.middleware("http")
+async def security_headers_middleware(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    return response
+
+
+@app.middleware("http")
+async def rate_limit_middleware(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    if request.client is not None:
+        ip = request.client.host
+        now = time.monotonic()
+        cutoff = now - _RATE_WINDOW
+        _rate_windows[ip] = [t for t in _rate_windows[ip] if t > cutoff]
+        if len(_rate_windows[ip]) >= _RATE_LIMIT:
+            return error_response(429, "rate_limit_exceeded", "Too many requests.")
+        _rate_windows[ip].append(now)
+    return await call_next(request)
 
 
 @app.exception_handler(HTTPException)
@@ -77,9 +124,21 @@ async def lookup_exception_handler(_: Request, exc: LookupError) -> JSONResponse
     return error_response(404, "not_found", str(exc))
 
 
+@app.exception_handler(PsycopgError)
+async def database_exception_handler(_: Request, exc: PsycopgError) -> JSONResponse:
+    logger.error("Database error", exc_info=exc)
+    return error_response(500, "database_error", "A database error occurred.")
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONResponse:
+    logger.error("Unhandled exception", exc_info=exc)
+    return error_response(500, "internal_error", "An unexpected error occurred.")
+
+
 @app.get("/health", tags=["system"])
 async def health() -> dict[str, str]:
-    return {"status": "ok", "service": "api", "environment": settings.app_env}
+    return {"status": "ok", "service": "api"}
 
 
 app.include_router(countries.router, prefix="/api/v1")

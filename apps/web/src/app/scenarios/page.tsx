@@ -1,3 +1,4 @@
+import { getLocaleFromSearchParams } from "../../shared/lib/locale";
 import { apiGet } from "../lib/api";
 
 export const dynamic = "force-dynamic";
@@ -6,8 +7,14 @@ type Scenarios = {
   items: Array<{ slug: string; name: string; description?: string | null }>;
 };
 
-export default async function ScenariosPage() {
-  const scenarios = await apiGet<Scenarios>("/api/v1/scenarios?locale=ru");
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function ScenariosPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const locale = getLocaleFromSearchParams(params);
+  const scenarios = await apiGet<Scenarios>(`/api/v1/scenarios?locale=${locale}`);
 
   return (
     <main className="pageShell">

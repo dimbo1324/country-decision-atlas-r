@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -63,6 +63,7 @@ function LegalSignalsViewInner() {
   const [evidenceBySignalId, setEvidenceBySignalId] = useState<
     Record<string, EvidenceState>
   >({});
+  const loadedSignalIds = useRef<Set<string>>(new Set());
 
   const countriesById = useMemo(
     () => new Map(countries?.items.map((c) => [c.id, c]) ?? []),
@@ -76,7 +77,9 @@ function LegalSignalsViewInner() {
       .then((c) => {
         if (!cancelled) setCountries(c);
       })
-      .catch(() => {});
+      .catch((err: unknown) => {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Ошибка загрузки стран");
+      });
     return () => {
       cancelled = true;
     };
@@ -107,7 +110,9 @@ function LegalSignalsViewInner() {
           setError(
             err instanceof Error
               ? err.message
-              : (err as { error?: { code?: string; message?: string } }),
+              : typeof err === "object" && err !== null && "error" in err
+                ? (err as { error?: { code?: string; message?: string } })
+                : "Произошла ошибка при загрузке",
           );
           setIsLoading(false);
         }
@@ -119,8 +124,9 @@ function LegalSignalsViewInner() {
 
   useEffect(() => {
     if (!expandedSignalId) return;
-    if (evidenceBySignalId[expandedSignalId] !== undefined) return;
+    if (loadedSignalIds.current.has(expandedSignalId)) return;
 
+    loadedSignalIds.current.add(expandedSignalId);
     setEvidenceBySignalId((prev) => ({ ...prev, [expandedSignalId]: "loading" }));
 
     evidenceApi
@@ -132,12 +138,13 @@ function LegalSignalsViewInner() {
         }));
       })
       .catch(() => {
+        loadedSignalIds.current.delete(expandedSignalId);
         setEvidenceBySignalId((prev) => ({
           ...prev,
           [expandedSignalId]: "error",
         }));
       });
-  }, [expandedSignalId, evidenceBySignalId]);
+  }, [expandedSignalId]);
 
   function toggleSignal(id: string) {
     setExpandedSignalId((prev) => (prev === id ? null : id));
