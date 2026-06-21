@@ -11,6 +11,8 @@ from app.schemas.translation_jobs import (
     TranslationJobProcessBatchRequest,
     TranslationJobProcessNextRequest,
     TranslationJobProcessResult,
+    TranslationJobRetryFailedRequest,
+    TranslationJobRetryFailedResponse,
 )
 from app.services import translation_jobs as svc
 from app.services.translation_providers import get_translation_provider
@@ -26,8 +28,13 @@ router = APIRouter(prefix="/admin/translation-jobs", tags=["admin-translation-jo
 async def list_jobs(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
-    status: str | None = Query(None),
-    target_locale: str | None = Query(None),
+    status: Annotated[
+        str | None,
+        Query(
+            pattern="^(queued|running|pending|processing|completed|failed|cancelled)$"
+        ),
+    ] = None,
+    target_locale: Annotated[str | None, Query(pattern="^[a-z]{2}$")] = None,
     limit: int = Query(50, ge=1, le=500),
     offset: int = Query(0, ge=0),
 ) -> TranslationJobListResponse:
@@ -81,6 +88,8 @@ async def process_next(
     )
     if result is None:
         return TranslationJobProcessResult(job_id="", status="no_pending_jobs")
+    if result.get("status") != "dry_run":
+        connection.commit()
     return TranslationJobProcessResult.model_validate(result)
 
 
@@ -106,3 +115,19 @@ async def process_batch(
         failed=result["failed"],
         results=results,
     )
+
+
+@router.post(
+    "/retry-failed",
+    response_model=TranslationJobRetryFailedResponse,
+    status_code=200,
+)
+async def retry_failed(
+    payload: TranslationJobRetryFailedRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> TranslationJobRetryFailedResponse:
+    jobs = svc.retry_failed_jobs(connection, payload.target_locale, payload.limit)
+    connection.commit()
+    items = [TranslationJobItem.model_validate(j) for j in jobs]
+    return TranslationJobRetryFailedResponse(reset_count=len(items), items=items)

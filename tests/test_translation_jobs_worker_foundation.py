@@ -125,8 +125,8 @@ class TestCreateMissingNoDuplicates:
                 side_effect=[[_unit()], []],
             ),
             patch(
-                f"{_REPO}.create_translation_job",
-                side_effect=[_job(), None],
+                f"{_REPO}._batch_create_translation_jobs",
+                side_effect=[[_job()], []],
             ),
         ):
             first = create_missing_translation_jobs(conn, "en", 50, 100)
@@ -148,8 +148,8 @@ class TestCreateStaleNoDuplicates:
                 side_effect=[[stale_unit], []],
             ),
             patch(
-                f"{_REPO}.create_translation_job",
-                side_effect=[_job(), None],
+                f"{_REPO}._batch_create_translation_jobs",
+                side_effect=[[_job()], []],
             ),
         ):
             first = create_stale_translation_jobs(conn, "en", 50, 80)

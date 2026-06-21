@@ -18,13 +18,13 @@ class Settings(BaseSettings):
     default_locale: str = "en"
     supported_locales: str = "en,ru"
     admin_token: str | None = None
+    api_rate_limit_per_minute: int = 120
     translation_provider: str = "fake"
     ai_translation_provider: str = "openai"
     ai_translation_model: str = "gpt-4o-mini"
     ai_translation_api_key: str | None = None
     ai_translation_timeout_seconds: int = 30
     ai_translation_max_retries: int = 2
-    ai_translation_dry_run: bool = False
 
     @property
     def cors_origins(self) -> list[str]:

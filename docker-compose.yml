@@ -40,7 +40,7 @@ services:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-true}
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
-      ADMIN_TOKEN: ${ADMIN_TOKEN:-change-me-local-admin-token}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
       DATABASE_URL: postgresql://country_atlas:change-me@postgres:5432/country_atlas
       REDIS_URL: redis://redis:6379/0
     ports:
@@ -53,6 +53,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
 
 volumes:
   postgres-data:

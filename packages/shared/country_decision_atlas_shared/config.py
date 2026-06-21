@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     )
     app_name: str = "Country Decision Atlas"
     app_env: str = "local"
-    app_debug: bool = True
+    app_debug: bool = False
     app_host: str = "0.0.0.0"
     app_port: int = 8000
     api_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"

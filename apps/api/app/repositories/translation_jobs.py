@@ -151,6 +151,48 @@ def create_translation_job(
     )
 
 
+def _batch_create_translation_jobs(
+    connection: Connection[Any],
+    units: list[dict[str, Any]],
+    target_locale: str,
+    priority: int,
+) -> list[dict[str, Any]]:
+    if not units:
+        return []
+    placeholders = ", ".join(
+        "(%s, %s, %s, 'pending', %s, NULL, NULL, '{}'::jsonb)" for _ in units
+    )
+    params: list[Any] = []
+    for unit in units:
+        params.extend(
+            [
+                unit["translation_unit_id"],
+                unit["original_locale_code"],
+                target_locale,
+                priority,
+            ]
+        )
+    return fetch_all(
+        connection,
+        f"""
+        INSERT INTO translation_jobs (
+            translation_unit_id,
+            source_locale_code,
+            target_locale_code,
+            status,
+            priority,
+            provider,
+            provider_model,
+            metadata
+        )
+        VALUES {placeholders}
+        ON CONFLICT DO NOTHING
+        RETURNING {_JOB_COLUMNS}
+        """,
+        params,
+    )
+
+
 def create_missing_translation_jobs(
     connection: Connection[Any],
     target_locale: str,
@@ -158,18 +200,7 @@ def create_missing_translation_jobs(
     priority: int = 100,
 ) -> list[dict[str, Any]]:
     units = find_missing_translation_units(connection, target_locale, limit)
-    created: list[dict[str, Any]] = []
-    for unit in units:
-        job = create_translation_job(
-            connection,
-            translation_unit_id=unit["translation_unit_id"],
-            source_locale_code=unit["original_locale_code"],
-            target_locale_code=target_locale,
-            priority=priority,
-        )
-        if job:
-            created.append(job)
-    return created
+    return _batch_create_translation_jobs(connection, units, target_locale, priority)
 
 
 def create_stale_translation_jobs(
@@ -179,18 +210,7 @@ def create_stale_translation_jobs(
     priority: int = 80,
 ) -> list[dict[str, Any]]:
     units = find_stale_translation_units(connection, target_locale, limit)
-    created: list[dict[str, Any]] = []
-    for unit in units:
-        job = create_translation_job(
-            connection,
-            translation_unit_id=unit["translation_unit_id"],
-            source_locale_code=unit["original_locale_code"],
-            target_locale_code=target_locale,
-            priority=priority,
-        )
-        if job:
-            created.append(job)
-    return created
+    return _batch_create_translation_jobs(connection, units, target_locale, priority)
 
 
 def list_translation_jobs(
@@ -325,22 +345,6 @@ def mark_job_failed(
         RETURNING {_JOB_COLUMNS}
         """,
         (error_message, job_id),
-    )
-
-
-def increment_job_attempts(
-    connection: Connection[Any],
-    job_id: str,
-) -> dict[str, Any] | None:
-    return fetch_one(
-        connection,
-        f"""
-        UPDATE translation_jobs
-        SET attempts = attempts + 1, updated_at = NOW()
-        WHERE id = %s
-        RETURNING {_JOB_COLUMNS}
-        """,
-        (job_id,),
     )
 
 

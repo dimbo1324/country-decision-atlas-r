@@ -31,7 +31,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 _rate_windows: defaultdict[str, list[float]] = defaultdict(list)
-_RATE_LIMIT = 120
 _RATE_WINDOW = 60.0
 
 
@@ -96,10 +95,14 @@ async def rate_limit_middleware(
         ip = request.client.host
         now = time.monotonic()
         cutoff = now - _RATE_WINDOW
-        _rate_windows[ip] = [t for t in _rate_windows[ip] if t > cutoff]
-        if len(_rate_windows[ip]) >= _RATE_LIMIT:
+        recent = [t for t in _rate_windows[ip] if t > cutoff]
+        if len(recent) >= settings.api_rate_limit_per_minute:
             return error_response(429, "rate_limit_exceeded", "Too many requests.")
-        _rate_windows[ip].append(now)
+        recent.append(now)
+        if recent:
+            _rate_windows[ip] = recent
+        else:
+            del _rate_windows[ip]
     return await call_next(request)
 
 

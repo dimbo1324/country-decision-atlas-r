@@ -10,7 +10,7 @@ from psycopg import Connection
 from typing import Any
 
 
-_STATUS_PRIORITY: dict[str, int] = {
+_STATUS_DEGRADATION_RANK: dict[str, int] = {
     "source": 0,
     "translated": 1,
     "fallback": 2,
@@ -21,7 +21,11 @@ _STATUS_PRIORITY: dict[str, int] = {
 def _worse_status(a: str | None, b: str) -> str:
     if a is None:
         return b
-    return a if _STATUS_PRIORITY.get(a, 3) >= _STATUS_PRIORITY.get(b, 3) else b
+    return (
+        a
+        if _STATUS_DEGRADATION_RANK.get(a, 3) >= _STATUS_DEGRADATION_RANK.get(b, 3)
+        else b
+    )
 
 
 def field_meta_from_variant(

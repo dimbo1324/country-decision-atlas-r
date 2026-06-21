@@ -4,6 +4,24 @@ from psycopg import Connection
 from typing import Any
 
 
+_VARIANT_PRIORITY_ORDER = """
+    CASE
+        WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 1
+        WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 2
+        WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 3
+        WHEN tv.locale_code = %s AND tv.status = 'machine_translated' THEN 4
+        WHEN tv.locale_code = %s AND tv.status = 'needs_review' THEN 5
+        WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 6
+        WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 7
+        WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 8
+        ELSE 99
+    END,
+    tv.updated_at DESC
+"""
+
+_PRIORITY_PARAMS_COUNT = 8
+
+
 def list_translations(
     connection: Connection[Any],
     limit: int,
@@ -135,18 +153,9 @@ def get_best_translation_variant(
           AND tv.locale_code IN (%s, %s)
           AND tv.status NOT IN ('missing', 'fallback', 'stale')
         ORDER BY
-            CASE
-                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 1
-                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 2
-                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 3
-                WHEN tv.locale_code = %s AND tv.status = 'machine_translated' THEN 4
-                WHEN tv.locale_code = %s AND tv.status = 'needs_review' THEN 5
-                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 6
-                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 7
-                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 8
-                ELSE 99
-            END,
-            tv.updated_at DESC
+        """
+        + _VARIANT_PRIORITY_ORDER
+        + """
         LIMIT 1
         """,
         (
@@ -206,18 +215,9 @@ def list_best_translation_variants(
         ORDER BY
             tu.entity_id,
             tu.field_name,
-            CASE
-                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 1
-                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 2
-                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 3
-                WHEN tv.locale_code = %s AND tv.status = 'machine_translated' THEN 4
-                WHEN tv.locale_code = %s AND tv.status = 'needs_review' THEN 5
-                WHEN tv.locale_code = %s AND tv.is_original = TRUE THEN 6
-                WHEN tv.locale_code = %s AND tv.status = 'human_reviewed' THEN 7
-                WHEN tv.locale_code = %s AND tv.status = 'human_authored' THEN 8
-                ELSE 99
-            END,
-            tv.updated_at DESC
+        """
+        + _VARIANT_PRIORITY_ORDER
+        + """
         """,
         (
             entity_type,
