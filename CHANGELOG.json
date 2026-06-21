@@ -3,6 +3,41 @@
   "entries": [
     {
       "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "multilingual-foundation-closeout-v1",
+      "task": "feat/multilingual-foundation-closeout-v1",
+      "branch": "feat/multilingual-foundation-closeout-v1",
+      "summary": "Multilingual MVP/Foundation block closed. Phase 1 (translation-jobs-worker-foundation-v1): migration 013 (jobs schema, SKIP LOCKED, unique active job index), migration 014 (nullable legacy columns), repository/service/provider/validation layers, fake provider pipeline, worker CLI, admin endpoints (5), OpenAPI+TS contracts updated, 161 tests pass. Phase 2 (baseline-freeze): clean DB chain 14 migrations apply/idempotent, /health+/countries+/card+localization-metadata verified, admin translation-jobs smoke (create=5/process=3 completed), all checks green: pytest 161/0, mypy 90 files clean, ruff check+format clean, pnpm typecheck+lint+build+mvp:check 44/44, format:check clean, sqlfluff clean, pre-commit 10/10 passed.",
+      "status": "completed",
+      "phase1": "feat/translation-jobs-worker-foundation-v1",
+      "phase2": "chore/multilingual-foundation-baseline-freeze",
+      "migrations": ["013_translation_jobs_worker_foundation_v1.sql", "014_translation_jobs_nullable_legacy_columns.sql"],
+      "worker_command": "python apps/worker/main.py translation-jobs --limit 10 --target-locale en --worker-id local-worker",
+      "admin_endpoints": [
+        "GET /api/v1/admin/translation-jobs",
+        "POST /api/v1/admin/translation-jobs/create-missing",
+        "POST /api/v1/admin/translation-jobs/create-stale",
+        "POST /api/v1/admin/translation-jobs/process-next",
+        "POST /api/v1/admin/translation-jobs/process-batch"
+      ],
+      "tests_added": 64,
+      "checks_run": ["pytest", "mypy", "ruff", "pnpm-contracts", "pnpm-typecheck", "pnpm-lint", "pnpm-build", "pnpm-mvp:check", "pnpm-format:check", "sqlfluff", "pre-commit"],
+      "clean_db_result": "14 migrations applied on fresh DB, repeat run idempotent",
+      "final_status": "Multilingual MVP/Foundation block closed."
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "multilingual-foundation-closeout-v1",
+      "task": "feat/multilingual-foundation-closeout-v1",
+      "branch": "feat/multilingual-foundation-closeout-v1",
+      "summary": "Started final multilingual MVP foundation closeout with translation jobs worker foundation and baseline freeze.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-21",
       "event": "task_started",
       "type": "feat",
       "scope": "ai-translation-provider-v1",

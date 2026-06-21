@@ -67,7 +67,9 @@ class TestTranslationInput:
     def test_input_model_defaults(self) -> None:
         from app.services.translation_providers import TranslationInput
 
-        inp = TranslationInput(source_text="Hello", source_locale="ru", target_locale="en")
+        inp = TranslationInput(
+            source_text="Hello", source_locale="ru", target_locale="en"
+        )
         assert inp.domain == "legal_migration"
         assert inp.glossary_terms is None
         assert inp.entity_type is None
@@ -92,7 +94,9 @@ class TestFakeProviderNewInterface:
         )
 
         provider = FakeTranslationProvider()
-        inp = TranslationInput(source_text="Тест", source_locale="ru", target_locale="en")
+        inp = TranslationInput(
+            source_text="Тест", source_locale="ru", target_locale="en"
+        )
         result = provider.translate(inp)
         assert result.text == "[FAKE en] Тест"
         assert result.provider == "fake"
@@ -107,7 +111,9 @@ class TestFakeProviderNewInterface:
         )
 
         provider = FakeTranslationProvider()
-        inp = TranslationInput(source_text="Hello", source_locale="en", target_locale="de")
+        inp = TranslationInput(
+            source_text="Hello", source_locale="en", target_locale="de"
+        )
         result = provider.translate(inp)
         assert result.input_chars == 5
         assert result.output_chars is not None
@@ -129,7 +135,9 @@ class TestAITranslationProvider:
         mock_response.raise_for_status = MagicMock()
 
         provider = AITranslationProvider(api_key="sk-test", model="gpt-4o-mini")
-        inp = TranslationInput(source_text="Привет мир", source_locale="ru", target_locale="en")
+        inp = TranslationInput(
+            source_text="Привет мир", source_locale="ru", target_locale="en"
+        )
 
         with patch("httpx.Client") as mock_client_cls:
             mock_client = MagicMock()
@@ -153,14 +161,21 @@ class TestAITranslationProvider:
             TranslationInput,
         )
 
-        provider = AITranslationProvider(api_key="sk-test", model="gpt-4o-mini", max_retries=1)
-        inp = TranslationInput(source_text="test", source_locale="ru", target_locale="en")
+        provider = AITranslationProvider(
+            api_key="sk-test", model="gpt-4o-mini", max_retries=1
+        )
+        inp = TranslationInput(
+            source_text="test", source_locale="ru", target_locale="en"
+        )
 
         with patch("httpx.Client") as mock_client_cls:
             mock_client = MagicMock()
             mock_client.__enter__ = MagicMock(return_value=mock_client)
             mock_client.__exit__ = MagicMock(return_value=False)
-            mock_client.post.side_effect = [RuntimeError("timeout"), RuntimeError("timeout")]
+            mock_client.post.side_effect = [
+                RuntimeError("timeout"),
+                RuntimeError("timeout"),
+            ]
             mock_client_cls.return_value = mock_client
 
             with patch("time.sleep"), pytest.raises(RuntimeError, match="failed after"):
@@ -195,6 +210,7 @@ class TestAITranslationProvider:
             mock_client = MagicMock()
             mock_client.__enter__ = MagicMock(return_value=mock_client)
             mock_client.__exit__ = MagicMock(return_value=False)
+
             def _capture(_url: str, **kwargs: Any) -> Any:
                 captured_payload.append(kwargs.get("json", {}))
                 return mock_response
@@ -301,7 +317,9 @@ class TestTranslationValidation:
     def test_ai_noise_rejected(self) -> None:
         from app.services.translation_validation import validate_translation
 
-        ok, _ = validate_translation("text", "As an AI language model, I cannot...", "ru", "en")
+        ok, _ = validate_translation(
+            "text", "As an AI language model, I cannot...", "ru", "en"
+        )
         assert ok is False
 
     def test_suspiciously_long_rejected(self) -> None:
@@ -314,7 +332,10 @@ class TestTranslationValidation:
         from app.services.translation_validation import validate_translation
 
         ok, err = validate_translation(
-            "Согласно статье 12345 закона", "According to the article of the law", "ru", "en"
+            "Согласно статье 12345 закона",
+            "According to the article of the law",
+            "ru",
+            "en",
         )
         assert ok is False
         assert "12345" in (err or "")
@@ -323,7 +344,10 @@ class TestTranslationValidation:
         from app.services.translation_validation import validate_translation
 
         ok, _ = validate_translation(
-            "Статья 12345 налогового кодекса", "Article 12345 of the tax code", "ru", "en"
+            "Статья 12345 налогового кодекса",
+            "Article 12345 of the tax code",
+            "ru",
+            "en",
         )
         assert ok is True
 
@@ -440,7 +464,9 @@ class TestDryRun:
             patch(f"{_REPO}.save_translation_variant") as mock_save,
             patch(f"{_REPO}.mark_job_completed") as mock_complete,
         ):
-            result = process_next_job(conn, "worker-1", "en", mock_provider, dry_run=True)
+            result = process_next_job(
+                conn, "worker-1", "en", mock_provider, dry_run=True
+            )
 
         assert result is not None
         assert result["status"] == "dry_run"
@@ -464,7 +490,9 @@ class TestDryRun:
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
             patch(f"{_REPO}.mark_job_failed") as mock_fail,
         ):
-            result = process_next_job(conn, "worker-1", "en", mock_provider, dry_run=True)
+            result = process_next_job(
+                conn, "worker-1", "en", mock_provider, dry_run=True
+            )
 
         assert result is not None
         assert result["status"] == "failed"
@@ -494,7 +522,9 @@ class TestDryRun:
 
         with patch("app.services.translation_jobs.process_next_job") as mock_process:
             mock_process.side_effect = [dry_run_result, None]
-            result = process_batch(conn, "worker-1", "en", 5, mock_provider, dry_run=True)
+            result = process_batch(
+                conn, "worker-1", "en", 5, mock_provider, dry_run=True
+            )
 
         assert result["processed"] == 1
         assert result["completed"] == 1
@@ -541,14 +571,17 @@ class TestProviderMetadata:
 class TestRegressionAfterAIProvider:
     def test_countries_repo_still_importable(self) -> None:
         from app.repositories.countries import list_countries
+
         assert callable(list_countries)
 
     def test_localization_service_still_importable(self) -> None:
         from app.services.localization import overlay_localized_fields
+
         assert callable(overlay_localized_fields)
 
     def test_decision_engine_still_importable(self) -> None:
         from app.services.decision_engine import run_decision
+
         assert callable(run_decision)
 
     def test_translation_provider_interface_is_stable(self) -> None:
@@ -558,12 +591,14 @@ class TestRegressionAfterAIProvider:
             TranslationProvider,
             get_translation_provider,
         )
+
         assert issubclass(FakeTranslationProvider, TranslationProvider)
         assert issubclass(AITranslationProvider, TranslationProvider)
         assert callable(get_translation_provider)
 
     def test_validation_module_importable(self) -> None:
         from app.services.translation_validation import validate_translation
+
         assert callable(validate_translation)
 
     def test_config_has_translation_provider_settings(self) -> None:

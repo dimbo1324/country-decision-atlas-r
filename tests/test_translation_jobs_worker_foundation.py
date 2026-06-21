@@ -246,7 +246,9 @@ class TestFakeProvider:
         )
 
         provider = FakeTranslationProvider()
-        inp = TranslationInput(source_text="Привет", source_locale="ru", target_locale="en")
+        inp = TranslationInput(
+            source_text="Привет", source_locale="ru", target_locale="en"
+        )
         result = provider.translate(inp)
         assert result.text == "[FAKE en] Привет"
         assert result.provider == "fake"
@@ -259,7 +261,9 @@ class TestFakeProvider:
         )
 
         provider = FakeTranslationProvider()
-        inp = TranslationInput(source_text="test", source_locale="ru", target_locale="de")
+        inp = TranslationInput(
+            source_text="test", source_locale="ru", target_locale="de"
+        )
         result = provider.translate(inp)
         assert result.text.startswith("[FAKE de]")
 

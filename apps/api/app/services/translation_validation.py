@@ -30,8 +30,14 @@ def validate_translation(
     if len(cleaned) < _MIN_LENGTH:
         return False, f"translated_text too short: {len(cleaned)} chars"
 
-    if source_locale != target_locale and cleaned.lower() == source_text.strip().lower():
-        return False, "translated_text identical to source_text despite different locales"
+    if (
+        source_locale != target_locale
+        and cleaned.lower() == source_text.strip().lower()
+    ):
+        return (
+            False,
+            "translated_text identical to source_text despite different locales",
+        )
 
     src_len = len(source_text)
     if src_len > 0:
@@ -43,7 +49,10 @@ def validate_translation(
 
     for pattern in _AI_GARBAGE_PATTERNS:
         if pattern.search(cleaned[:200]):
-            return False, f"translated_text contains AI system noise: matched {pattern.pattern!r}"
+            return (
+                False,
+                f"translated_text contains AI system noise: matched {pattern.pattern!r}",
+            )
 
     src_numbers = set(re.findall(r"\b\d{4,}\b", source_text))
     for num in src_numbers:
