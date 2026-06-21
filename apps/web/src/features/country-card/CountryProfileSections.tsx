@@ -6,8 +6,13 @@ type CountryProfileSectionsProps = {
   skipExecutiveSummary?: boolean;
 };
 
+type ProfileTextKey = Exclude<
+  keyof NonNullable<CountryReadModelResponse["profile"]>,
+  "localization"
+>;
+
 const SECTIONS: {
-  key: keyof NonNullable<CountryReadModelResponse["profile"]>;
+  key: ProfileTextKey;
   label: string;
 }[] = [
   { key: "executive_summary", label: "Обзор" },

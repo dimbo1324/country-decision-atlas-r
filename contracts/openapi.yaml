@@ -989,6 +989,17 @@ paths:
           minimum: 0
           default: 0
           title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -2084,6 +2095,10 @@ components:
         status:
           type: string
           title: Status
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -2162,6 +2177,10 @@ components:
           - type: string
           - type: 'null'
           title: Confidence
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -2238,6 +2257,10 @@ components:
           - type: string
           - type: 'null'
           title: Source Summary
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       title: CountryReadModelProfile
     CountryReadModelResponse:
@@ -2318,6 +2341,10 @@ components:
             $ref: '#/components/schemas/CountryReadModelScoreBreakdown'
           type: array
           title: Breakdowns
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -2354,6 +2381,10 @@ components:
             type: string
           type: array
           title: Source Ids
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - criterion
@@ -2399,6 +2430,10 @@ components:
             format: date
           - type: 'null'
           title: Last Checked At
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -2689,6 +2724,10 @@ components:
             type: string
           type: array
           title: Source Ids
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - criterion
@@ -2843,6 +2882,10 @@ components:
             $ref: '#/components/schemas/DecisionSourceRef'
           type: array
           title: Sources
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - rank
@@ -3103,6 +3146,10 @@ components:
           - type: string
           - type: 'null'
           title: Description
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - slug
@@ -3144,6 +3191,10 @@ components:
             - low
           - type: 'null'
           title: Confidence
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -3242,6 +3293,10 @@ components:
           type: string
           format: date-time
           title: Updated At
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -3310,6 +3365,10 @@ components:
         sort:
           anyOf:
           - $ref: '#/components/schemas/SortMeta'
+          - type: 'null'
+        locale:
+          anyOf:
+          - $ref: '#/components/schemas/LocaleResolution'
           - type: 'null'
       type: object
       required:
@@ -3456,6 +3515,10 @@ components:
           type: string
           format: date-time
           title: Updated At
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -3607,6 +3670,10 @@ components:
           type: string
           format: date-time
           title: Updated At
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -3768,6 +3835,57 @@ components:
       - resolved_locale
       - translation_status
       title: LocaleResolution
+    LocalizationMeta:
+      properties:
+        requested_locale:
+          type: string
+          title: Requested Locale
+        resolved_locale:
+          type: string
+          title: Resolved Locale
+        status:
+          type: string
+          title: Status
+        is_fallback:
+          type: boolean
+          title: Is Fallback
+        has_machine_translation:
+          type: boolean
+          title: Has Machine Translation
+        has_human_review:
+          type: boolean
+          title: Has Human Review
+        has_stale_fields:
+          type: boolean
+          title: Has Stale Fields
+        missing_fields:
+          items:
+            type: string
+          type: array
+          title: Missing Fields
+          default: []
+        stale_fields:
+          items:
+            type: string
+          type: array
+          title: Stale Fields
+          default: []
+        fields:
+          items:
+            $ref: '#/components/schemas/TranslationFieldMeta'
+          type: array
+          title: Fields
+          default: []
+      type: object
+      required:
+      - requested_locale
+      - resolved_locale
+      - status
+      - is_fallback
+      - has_machine_translation
+      - has_human_review
+      - has_stale_fields
+      title: LocalizationMeta
     Pagination:
       properties:
         limit:
@@ -4052,6 +4170,10 @@ components:
           type: string
           format: date-time
           title: Updated At
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
       type: object
       required:
       - id
@@ -4277,6 +4399,63 @@ components:
       - created_at
       - updated_at
       title: Translation
+    TranslationFieldMeta:
+      properties:
+        field_name:
+          type: string
+          title: Field Name
+        requested_locale:
+          type: string
+          title: Requested Locale
+        resolved_locale:
+          type: string
+          title: Resolved Locale
+        source_locale:
+          type: string
+          title: Source Locale
+        status:
+          type: string
+          title: Status
+        method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Method
+        is_original:
+          type: boolean
+          title: Is Original
+        is_fallback:
+          type: boolean
+          title: Is Fallback
+        is_stale:
+          type: boolean
+          title: Is Stale
+        translation_unit_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Translation Unit Id
+        translation_variant_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Translation Variant Id
+        quality_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Quality Score
+      type: object
+      required:
+      - field_name
+      - requested_locale
+      - resolved_locale
+      - source_locale
+      - status
+      - is_original
+      - is_fallback
+      - is_stale
+      title: TranslationFieldMeta
     TranslationJob:
       properties:
         id:

@@ -1,4 +1,5 @@
 from app.schemas.common import LocaleResolution, Pagination, PublicationStatus, SortMeta
+from app.schemas.localization import LocalizationMeta
 from datetime import date, datetime
 from pydantic import BaseModel
 from typing import Literal
@@ -34,6 +35,7 @@ class LegalSignal(BaseModel):
     published_at: date | None = None
     created_at: datetime
     updated_at: datetime
+    localization: LocalizationMeta | None = None
 
 
 class LegalSignalListResponse(BaseModel):

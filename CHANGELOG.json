@@ -4,6 +4,16 @@
     {
       "date": "2026-06-21",
       "event": "task_completed",
+      "type": "feat",
+      "scope": "localization-metadata-api-v1",
+      "task": "feat/localization-metadata-api-v1",
+      "branch": "feat/localization-metadata-api-v1",
+      "summary": "Exposed localization metadata in API responses. Added TranslationFieldMeta and LocalizationMeta schemas. Extended overlay_localized_fields to set item[localization]. Expanded list_best_translation_variants SQL. Added localization field to 10 response schemas. Sources and evidence-items endpoints now run overlay. Contracts regenerated. 10 new tests pass.",
+      "status": "done"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
       "type": "fix",
       "scope": "audit-remediation-v1",
       "task": "fix/audit-remediation-v1",

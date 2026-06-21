@@ -13,6 +13,7 @@ from app.schemas.sources import (
     SourceResponse,
 )
 from app.services import decision_engine
+from app.services.localization import overlay_localized_fields
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
@@ -49,6 +50,17 @@ async def read_sources(
         sort,
         order,
     )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "source",
+        "id",
+        [
+            ("title", "title", None, None),
+            ("notes", "notes", None, None),
+        ],
+        locale,
+    )
     total = count_sources(
         connection, country_slug, source_type, language, confidence, status
     )
@@ -63,6 +75,7 @@ async def read_sources(
 @router.get("/evidence-items", response_model=EvidenceItemListResponse)
 async def read_evidence_items(
     connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
     country_slug: str | None = None,
     source_id: str | None = None,
     legal_signal_id: str | None = None,
@@ -85,6 +98,20 @@ async def read_evidence_items(
         sort,
         order,
     )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "evidence_item",
+        "id",
+        [
+            ("title", "title", None, None),
+            ("summary", "summary", None, None),
+            ("claim", "claim", None, None),
+            ("excerpt", "excerpt", None, None),
+            ("quote", "quote", None, None),
+        ],
+        locale,
+    )
     total = count_evidence_items(
         connection, country_slug, source_id, legal_signal_id, confidence, status
     )
@@ -92,6 +119,7 @@ async def read_evidence_items(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),
         sort=SortMeta(sort=sort, order=order),
+        locale=source_locale_resolution(locale),
     )
 
 

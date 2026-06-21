@@ -33,6 +33,26 @@ def get_country_read_model(
     if country is None:
         return None
     profile = get_country_read_model_profile(connection, country_slug, locale)
+    if profile is not None:
+        profile_items = overlay_localized_fields(
+            connection,
+            [profile],
+            "country_card",
+            "id",
+            [
+                ("executive_summary", "executive_summary", None, None),
+                ("migration_overview", "migration_overview", None, None),
+                ("tax_overview", "tax_overview", None, None),
+                ("cost_of_living_overview", "cost_of_living_overview", None, None),
+                ("business_overview", "business_overview", None, None),
+                ("safety_overview", "safety_overview", None, None),
+                ("legal_signals_summary", "legal_signals_summary", None, None),
+                ("risk_summary", "risk_summary", None, None),
+                ("source_summary", "source_summary", None, None),
+            ],
+            locale,
+        )
+        profile = profile_items[0]
     scores = list_country_read_model_scores(connection, country_slug)
     scores = overlay_localized_fields(
         connection,

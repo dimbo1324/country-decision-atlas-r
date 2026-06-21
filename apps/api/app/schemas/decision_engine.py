@@ -6,6 +6,7 @@ from app.schemas.common import (
     SortMeta,
     TranslationStatus,
 )
+from app.schemas.localization import LocalizationMeta
 from app.schemas.sources import EvidenceItem, Source
 from datetime import date, datetime
 from decimal import Decimal
@@ -137,6 +138,7 @@ class DecisionScenarioRef(BaseModel):
     slug: str
     title: str
     description: str | None = None
+    localization: LocalizationMeta | None = None
 
 
 class DecisionPoint(BaseModel):
@@ -163,6 +165,7 @@ class DecisionBreakdownItem(BaseModel):
     explanation: str | None = None
     confidence: Literal["high", "medium", "low"] | None = None
     source_ids: list[str] = Field(default_factory=list)
+    localization: LocalizationMeta | None = None
 
 
 class DecisionSourceRef(BaseModel):
@@ -171,6 +174,7 @@ class DecisionSourceRef(BaseModel):
     url: str
     source_type: str | None = None
     confidence: Literal["high", "medium", "low"] | None = None
+    localization: LocalizationMeta | None = None
 
 
 class DecisionCountryResult(BaseModel):
@@ -185,6 +189,7 @@ class DecisionCountryResult(BaseModel):
     confidence: Literal["high", "medium", "low"]
     breakdown: list[DecisionBreakdownItem]
     sources: list[DecisionSourceRef]
+    localization: LocalizationMeta | None = None
 
 
 class DecisionRunMeta(BaseModel):
@@ -302,6 +307,7 @@ class LegalSignalDetail(BaseModel):
     status: PublicationStatus
     created_at: datetime
     updated_at: datetime
+    localization: LocalizationMeta | None = None
 
 
 class LegalSignalDetailResponse(BaseModel):

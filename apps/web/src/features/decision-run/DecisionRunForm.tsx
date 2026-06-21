@@ -91,10 +91,10 @@ function DecisionFormInner() {
         setRunError(err.message);
       } else {
         setRunError(
-        typeof err === "object" && err !== null && "error" in err
-          ? (err as { error?: { code?: string; message?: string } })
-          : "Произошла ошибка при запросе",
-      );
+          typeof err === "object" && err !== null && "error" in err
+            ? (err as { error?: { code?: string; message?: string } })
+            : "Произошла ошибка при запросе",
+        );
       }
     } finally {
       setIsRunning(false);

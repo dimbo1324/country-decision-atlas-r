@@ -62,6 +62,7 @@ def get_country_read_model_profile(
         connection,
         """
         SELECT
+            cc.id::text AS id,
             cc.executive_summary,
             cc.migration_overview,
             cc.tax_overview,
@@ -97,6 +98,7 @@ def get_country_read_model_profile(
         connection,
         """
         SELECT
+            cc.id::text AS id,
             cc.executive_summary,
             cc.migration_overview,
             cc.tax_overview,

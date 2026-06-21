@@ -207,6 +207,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         "confidence",
         "breakdown",
         "sources",
+        "localization",
     } == set(body["results"][0])
 
 
@@ -258,6 +259,7 @@ def test_list_endpoint_frontend_contracts(monkeypatch: Any) -> None:
     evidence = asyncio.run(
         sources_route.read_evidence_items(
             CONNECTION,
+            get_locale("en"),
             None,
             None,
             None,
@@ -272,7 +274,7 @@ def test_list_endpoint_frontend_contracts(monkeypatch: Any) -> None:
 
     assert {"items", "pagination", "sort", "locale"} == set(legal_signals)
     assert {"items", "pagination", "sort", "locale"} == set(sources)
-    assert {"items", "pagination", "sort"} == set(evidence)
+    assert {"items", "pagination", "sort", "locale"} == set(evidence)
     assert sources["locale"] == source_locale_resolution("en").model_dump(mode="json")
 
 

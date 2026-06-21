@@ -78,7 +78,8 @@ function LegalSignalsViewInner() {
         if (!cancelled) setCountries(c);
       })
       .catch((err: unknown) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Ошибка загрузки стран");
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : "Ошибка загрузки стран");
       });
     return () => {
       cancelled = true;
