@@ -240,19 +240,27 @@ class TestAttemptsMaxAttempts:
 
 class TestFakeProvider:
     def test_fake_provider_returns_deterministic_output(self) -> None:
-        from app.services.translation_providers import FakeTranslationProvider
+        from app.services.translation_providers import (
+            FakeTranslationProvider,
+            TranslationInput,
+        )
 
         provider = FakeTranslationProvider()
-        result = provider.translate("Привет", "ru", "en")
+        inp = TranslationInput(source_text="Привет", source_locale="ru", target_locale="en")
+        result = provider.translate(inp)
         assert result.text == "[FAKE en] Привет"
         assert result.provider == "fake"
         assert result.provider_model == "fake-v1"
 
     def test_fake_provider_does_not_call_external(self) -> None:
-        from app.services.translation_providers import FakeTranslationProvider
+        from app.services.translation_providers import (
+            FakeTranslationProvider,
+            TranslationInput,
+        )
 
         provider = FakeTranslationProvider()
-        result = provider.translate("test", "ru", "de")
+        inp = TranslationInput(source_text="test", source_locale="ru", target_locale="de")
+        result = provider.translate(inp)
         assert result.text.startswith("[FAKE de]")
 
 
