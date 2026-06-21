@@ -1,7 +1,7 @@
 from app.schemas.common import Pagination
 from datetime import datetime
-from pydantic import BaseModel
-from typing import Any
+from pydantic import BaseModel, field_validator
+from typing import Any, Literal
 
 
 class TranslationJobItem(BaseModel):
@@ -31,13 +31,13 @@ class TranslationJobListResponse(BaseModel):
 
 
 class TranslationJobCreateMissingRequest(BaseModel):
-    target_locale: str
+    target_locale: Literal["en", "ru"]
     limit: int = 50
     priority: int = 100
 
 
 class TranslationJobCreateStaleRequest(BaseModel):
-    target_locale: str
+    target_locale: Literal["en", "ru"]
     limit: int = 50
     priority: int = 80
 
@@ -48,16 +48,33 @@ class TranslationJobCreateResponse(BaseModel):
 
 
 class TranslationJobProcessNextRequest(BaseModel):
-    target_locale: str | None = None
+    target_locale: Literal["en", "ru"] | None = None
     worker_id: str = "api-admin"
     dry_run: bool = False
 
 
 class TranslationJobProcessBatchRequest(BaseModel):
-    target_locale: str | None = None
+    target_locale: Literal["en", "ru"] | None = None
     limit: int = 10
     worker_id: str = "api-admin"
     dry_run: bool = False
+
+
+class TranslationJobRetryFailedRequest(BaseModel):
+    target_locale: Literal["en", "ru"] | None = None
+    limit: int = 50
+
+    @field_validator("limit")
+    @classmethod
+    def limit_range(cls, v: int) -> int:
+        if v < 1 or v > 500:
+            raise ValueError("limit must be between 1 and 500")
+        return v
+
+
+class TranslationJobRetryFailedResponse(BaseModel):
+    reset_count: int
+    items: list[TranslationJobItem]
 
 
 class TranslationJobProcessResult(BaseModel):

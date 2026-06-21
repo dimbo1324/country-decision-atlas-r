@@ -461,6 +461,23 @@ def patch_legal_signal(
     )
 
 
+def get_country_profile_for_admin(
+    connection: Connection[Any],
+    country_slug: str,
+    locale: str,
+) -> dict[str, Any] | None:
+    return fetch_one(
+        connection,
+        f"""
+        SELECT {COUNTRY_CARD_RETURNING}
+        FROM country_cards cc
+        JOIN countries c ON c.id = cc.country_id
+        WHERE c.slug = %s AND cc.locale = %s
+        """,
+        (country_slug, locale),
+    )
+
+
 def patch_country_profile(
     connection: Connection[Any],
     country_slug: str,

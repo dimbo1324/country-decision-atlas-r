@@ -11,9 +11,6 @@ from psycopg import Connection
 from typing import Any
 
 
-_default_provider = FakeTranslationProvider()
-
-
 def discover_missing_jobs(
     connection: Connection[Any],
     target_locale: str,
@@ -55,7 +52,7 @@ def process_next_job(
     provider: TranslationProvider | None = None,
     dry_run: bool = False,
 ) -> dict[str, Any] | None:
-    effective_provider = provider or _default_provider
+    effective_provider = provider or FakeTranslationProvider()
     job = repo.lock_next_pending_job(connection, worker_id, target_locale)
     if job is None:
         return None
@@ -166,6 +163,8 @@ def process_batch(
         )
         if result is None:
             break
+        if not dry_run:
+            connection.commit()
         results.append(result)
         if result.get("status") in ("completed", "dry_run"):
             completed += 1

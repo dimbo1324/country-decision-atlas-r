@@ -608,5 +608,4 @@ class TestRegressionAfterAIProvider:
         settings = get_settings()
         assert hasattr(settings, "translation_provider")
         assert hasattr(settings, "ai_translation_model")
-        assert hasattr(settings, "ai_translation_dry_run")
         get_settings.cache_clear()

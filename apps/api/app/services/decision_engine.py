@@ -52,9 +52,9 @@ CAVEAT = (
     "Use it as a structured question list and verify every claim with qualified experts."
 )
 CAVEAT_RU = (
-    "\u042d\u0442\u043e\u0442 MVP-\u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u044e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u043e\u0439, \u043d\u0430\u043b\u043e\u0433\u043e\u0432\u043e\u0439, \u043c\u0438\u0433\u0440\u0430\u0446\u0438\u043e\u043d\u043d\u043e\u0439, "
-    "\u0438\u043d\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u043e\u043d\u043d\u043e\u0439 \u0438\u043b\u0438 \u043a\u043e\u043d\u0441\u0443\u043b\u044c\u0442\u0430\u0446\u0438\u0435\u0439 \u043f\u043e \u0431\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u043e\u0441\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435 \u0435\u0433\u043e \u043a\u0430\u043a "
-    "\u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0441\u043f\u0438\u0441\u043e\u043a \u0432\u043e\u043f\u0440\u043e\u0441\u043e\u0432 \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u044f\u0439\u0442\u0435 \u043a\u0430\u0436\u0434\u044b\u0439 \u0432\u044b\u0432\u043e\u0434 \u0441 \u044d\u043a\u0441\u043f\u0435\u0440\u0442\u0430\u043c\u0438."
+    "Этот MVP-результат не является юридической, налоговой, миграционной, "
+    "инвестиционной или консультацией по безопасности. Используйте его как "
+    "структурированный список вопросов и проверяйте каждый вывод с экспертами."
 )
 
 
@@ -588,9 +588,9 @@ def _build_summary(
     display_label = score_label_text(label, locale)
     if locale == LocaleCode.ru:
         return (
-            f"{country_name} \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u043e\u0446\u0435\u043d\u043a\u0443 {score:.0f}/100 \u043f\u043e \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u044e "
-            f"\u00ab{scenario_title}\u00bb. \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043e\u0446\u0435\u043d\u0438\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a {display_label}. "
-            "\u0412\u044b\u0432\u043e\u0434 \u043e\u0441\u043d\u043e\u0432\u0430\u043d \u043d\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0445 score breakdowns, legal signals \u0438 \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430\u0445."
+            f"{country_name} получает оценку {score:.0f}/100 по сценарию "
+            f"«{scenario_title}». Результат оценивается как {display_label}. "
+            "Вывод основан на сохранённых score breakdowns, legal signals и источниках."
         )
     return (
         f"{country_name} receives a {score:.0f}/100 score for the "
@@ -714,12 +714,12 @@ def _compare_explanation(
     ordered = sorted(countries, key=lambda item: item.score, reverse=True)
     if recommendation_type == "tie" or recommended_country is None:
         if locale == LocaleCode.ru:
-            return "\u0421\u0442\u0440\u0430\u043d\u044b-\u043b\u0438\u0434\u0435\u0440\u044b \u0431\u043b\u0438\u0437\u043a\u0438 \u043f\u043e \u0431\u0430\u043b\u043b\u0430\u043c, \u043f\u043e\u044d\u0442\u043e\u043c\u0443 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044f \u0438\u043c\u0435\u0435\u0442 \u043d\u0438\u0437\u043a\u0443\u044e \u0443\u0432\u0435\u0440\u0435\u043d\u043d\u043e\u0441\u0442\u044c."
+            return "Страны-лидеры близки по баллам, поэтому рекомендация имеет низкую уверенность."
         return "The top countries are close in score, so the recommendation is low-confidence."
     if locale == LocaleCode.ru:
         return (
-            f"{recommended_country} \u0438\u043c\u0435\u0435\u0442 \u0441\u0430\u043c\u044b\u0439 \u0432\u044b\u0441\u043e\u043a\u0438\u0439 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439 MVP-\u0431\u0430\u043b\u043b "
-            f"({ordered[0].score:.1f}) \u0434\u043b\u044f \u044d\u0442\u043e\u0433\u043e \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u044f. \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0440\u0430\u0437\u0431\u0438\u0432\u043a\u0443 \u0438 \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0438 \u043f\u0435\u0440\u0435\u0434 \u0440\u0435\u0448\u0435\u043d\u0438\u0435\u043c."
+            f"{recommended_country} имеет самый высокий сохранённый MVP-балл "
+            f"({ordered[0].score:.1f}) для этого сценария. Проверьте разбивку и источники перед решением."
         )
     return (
         f"{recommended_country} has the highest stored MVP decision score "

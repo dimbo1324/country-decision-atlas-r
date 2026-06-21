@@ -162,8 +162,8 @@ def patch_country_profile(
 ) -> dict[str, Any]:
     data = _model_data(payload, exclude_unset=True)
     before = _require(
-        repository.patch_country_profile(
-            connection, country_slug, {"locale": data.get("locale", "en")}
+        repository.get_country_profile_for_admin(
+            connection, country_slug, data.get("locale", "en")
         ),
         "Country profile",
     )
