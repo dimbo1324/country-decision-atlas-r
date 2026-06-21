@@ -5,6 +5,26 @@
       "date": "2026-06-21",
       "event": "task_completed",
       "type": "feat",
+      "scope": "frontend-localization-badges-v1",
+      "task": "feat/frontend-localization-badges-v1",
+      "branch": "feat/frontend-localization-badges-v1",
+      "summary": "Frontend localization badge layer complete. Created localization-labels.ts helper, LocalizationBadge component with 8 variant classes, added badges to CountryHeader, CountryProfileSections, CountryScores, CountryLegalSignals, CountrySources, EvidenceCard, LegalSignalsView, SourcesView, DecisionResultCard, DecisionSources. 6 E2E badge tests added. pnpm typecheck/lint/build/web:mvp:check/format:check all pass. pytest 98 passed, mypy/ruff clean.",
+      "status": "done"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "frontend-localization-badges-v1",
+      "task": "feat/frontend-localization-badges-v1",
+      "branch": "feat/frontend-localization-badges-v1",
+      "summary": "Started frontend localization badge layer using existing API localization metadata.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "feat",
       "scope": "localization-metadata-api-v1",
       "task": "feat/localization-metadata-api-v1",
       "branch": "feat/localization-metadata-api-v1",

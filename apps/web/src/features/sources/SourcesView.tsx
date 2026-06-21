@@ -19,6 +19,7 @@ import { EvidenceCard } from "../../shared/ui/EvidenceCard";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { Badge } from "../../shared/ui/Badge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type EvidenceState = EvidenceItem[] | "loading" | "error" | null;
 
@@ -271,6 +272,7 @@ function SourcesViewInner() {
                           <Badge variant="default">{source.language}</Badge>
                         )}
                         {source.status && <StatusBadge status={source.status} />}
+                        <LocalizationBadge localization={source.localization} compact />
                       </div>
                     </div>
                     {source.publisher && (

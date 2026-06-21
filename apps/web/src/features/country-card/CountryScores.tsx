@@ -1,6 +1,7 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatScore } from "../../shared/lib/format";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 
@@ -23,6 +24,7 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
           <div className="scoreCardHeader">
             <span className="scoreScenario">{score.scenario_title}</span>
             <span className="scoreBadge">{formatScore(score.score)}</span>
+            <LocalizationBadge localization={score.localization} compact />
           </div>
           {score.confidence && <ConfidenceBadge confidence={score.confidence} />}
           {score.explanation && <p className="scoreExplanation">{score.explanation}</p>}

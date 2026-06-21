@@ -19,6 +19,7 @@ import { EvidenceCard } from "../../shared/ui/EvidenceCard";
 import { ImpactDirectionBadge, ImpactLevelBadge } from "../../shared/ui/ImpactBadge";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type ViewError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -298,6 +299,7 @@ function LegalSignalsViewInner() {
                       <span className="metaChip">
                         {signal.signal_type.replace(/_/g, " ")}
                       </span>
+                      <LocalizationBadge localization={signal.localization} compact />
                     </div>
                     {signal.summary && (
                       <p className="signalSummary">{signal.summary}</p>
