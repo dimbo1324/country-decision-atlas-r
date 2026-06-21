@@ -1516,6 +1516,169 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
       - AdminTokenAuth: []
+  /api/v1/admin/translation-jobs:
+    get:
+      tags:
+      - admin-translation-jobs
+      summary: List Jobs
+      operationId: list_jobs_api_v1_admin_translation_jobs_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: target_locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Locale
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationJobListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/translation-jobs/create-missing:
+    post:
+      tags:
+      - admin-translation-jobs
+      summary: Create Missing
+      operationId: create_missing_api_v1_admin_translation_jobs_create_missing_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationJobCreateMissingRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationJobCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/translation-jobs/create-stale:
+    post:
+      tags:
+      - admin-translation-jobs
+      summary: Create Stale
+      operationId: create_stale_api_v1_admin_translation_jobs_create_stale_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationJobCreateStaleRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationJobCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/translation-jobs/process-next:
+    post:
+      tags:
+      - admin-translation-jobs
+      summary: Process Next
+      operationId: process_next_api_v1_admin_translation_jobs_process_next_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationJobProcessNextRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationJobProcessResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/translation-jobs/process-batch:
+    post:
+      tags:
+      - admin-translation-jobs
+      summary: Process Batch
+      operationId: process_batch_api_v1_admin_translation_jobs_process_batch_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationJobProcessBatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationJobBatchResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
   /api/v1/user-stories:
     get:
       tags:
@@ -4510,6 +4673,29 @@ components:
       - created_at
       - updated_at
       title: TranslationJob
+    TranslationJobBatchResult:
+      properties:
+        processed:
+          type: integer
+          title: Processed
+        completed:
+          type: integer
+          title: Completed
+        failed:
+          type: integer
+          title: Failed
+        results:
+          items:
+            $ref: '#/components/schemas/TranslationJobProcessResult'
+          type: array
+          title: Results
+      type: object
+      required:
+      - processed
+      - completed
+      - failed
+      - results
+      title: TranslationJobBatchResult
     TranslationJobCreate:
       properties:
         entity_type:
@@ -4537,6 +4723,221 @@ components:
       - entity_id
       - target_locale_code
       title: TranslationJobCreate
+    TranslationJobCreateMissingRequest:
+      properties:
+        target_locale:
+          type: string
+          title: Target Locale
+        limit:
+          type: integer
+          title: Limit
+          default: 50
+        priority:
+          type: integer
+          title: Priority
+          default: 100
+      type: object
+      required:
+      - target_locale
+      title: TranslationJobCreateMissingRequest
+    TranslationJobCreateResponse:
+      properties:
+        created_count:
+          type: integer
+          title: Created Count
+        items:
+          items:
+            $ref: '#/components/schemas/TranslationJobItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - created_count
+      - items
+      title: TranslationJobCreateResponse
+    TranslationJobCreateStaleRequest:
+      properties:
+        target_locale:
+          type: string
+          title: Target Locale
+        limit:
+          type: integer
+          title: Limit
+          default: 50
+        priority:
+          type: integer
+          title: Priority
+          default: 80
+      type: object
+      required:
+      - target_locale
+      title: TranslationJobCreateStaleRequest
+    TranslationJobItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        translation_unit_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Translation Unit Id
+        source_locale_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Locale Code
+        target_locale_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Locale Code
+        status:
+          type: string
+          title: Status
+        priority:
+          type: integer
+          title: Priority
+          default: 100
+        attempts:
+          type: integer
+          title: Attempts
+          default: 0
+        max_attempts:
+          type: integer
+          title: Max Attempts
+          default: 3
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+        provider_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Model
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        locked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Locked At
+        locked_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locked By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        failed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Failed At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      - updated_at
+      title: TranslationJobItem
+    TranslationJobListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TranslationJobItem'
+          type: array
+          title: Items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      type: object
+      required:
+      - items
+      - pagination
+      title: TranslationJobListResponse
+    TranslationJobProcessBatchRequest:
+      properties:
+        target_locale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Locale
+        limit:
+          type: integer
+          title: Limit
+          default: 10
+        worker_id:
+          type: string
+          title: Worker Id
+          default: api-admin
+      type: object
+      title: TranslationJobProcessBatchRequest
+    TranslationJobProcessNextRequest:
+      properties:
+        target_locale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Locale
+        worker_id:
+          type: string
+          title: Worker Id
+          default: api-admin
+      type: object
+      title: TranslationJobProcessNextRequest
+    TranslationJobProcessResult:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+        target_locale_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Locale Code
+        variant_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variant Id
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - job_id
+      - status
+      title: TranslationJobProcessResult
     TranslationJobResponse:
       properties:
         item:

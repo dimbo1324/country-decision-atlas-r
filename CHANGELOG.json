@@ -5,6 +5,26 @@
       "date": "2026-06-21",
       "event": "task_completed",
       "type": "feat",
+      "scope": "translation-jobs-worker-foundation-v1",
+      "task": "feat/translation-jobs-worker-foundation-v1",
+      "branch": "feat/translation-jobs-worker-foundation-v1",
+      "summary": "Translation jobs worker foundation complete. Migration 013 adds max_attempts/provider_model/locked_at/locked_by/metadata/failed_at + duplicate-active-job index. Repository: find_missing, find_stale, create_job, lock_next (FOR UPDATE SKIP LOCKED), mark_completed/failed, save_variant. Service: discover_missing/stale, process_next_job, process_batch, retry_failed. FakeTranslationProvider. Worker CLI: python apps/worker/main.py translation-jobs --limit N. Admin endpoints: GET/POST /api/v1/admin/translation-jobs/* (list, create-missing, create-stale, process-next, process-batch). OpenAPI regenerated, TS contracts regenerated. 31 new tests. pytest 129 passed, mypy clean, ruff clean, pnpm typecheck/lint/build/mvp:check all pass.",
+      "status": "done"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "translation-jobs-worker-foundation-v1",
+      "task": "feat/translation-jobs-worker-foundation-v1",
+      "branch": "feat/translation-jobs-worker-foundation-v1",
+      "summary": "Started translation jobs queue and worker foundation without real AI provider integration.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "feat",
       "scope": "frontend-localization-badges-v1",
       "task": "feat/frontend-localization-badges-v1",
       "branch": "feat/frontend-localization-badges-v1",

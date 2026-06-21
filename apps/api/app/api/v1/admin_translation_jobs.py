@@ -1,0 +1,98 @@
+from app.core.admin_auth import require_admin_token
+from app.core.database import get_connection
+from app.schemas.common import Pagination
+from app.schemas.translation_jobs import (
+    TranslationJobBatchResult,
+    TranslationJobCreateMissingRequest,
+    TranslationJobCreateResponse,
+    TranslationJobCreateStaleRequest,
+    TranslationJobItem,
+    TranslationJobListResponse,
+    TranslationJobProcessBatchRequest,
+    TranslationJobProcessNextRequest,
+    TranslationJobProcessResult,
+)
+from app.services import translation_jobs as svc
+from fastapi import APIRouter, Depends, Query
+from psycopg import Connection
+from typing import Annotated, Any
+
+
+router = APIRouter(prefix="/admin/translation-jobs", tags=["admin-translation-jobs"])
+
+
+@router.get("", response_model=TranslationJobListResponse)
+async def list_jobs(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+    status: str | None = Query(None),
+    target_locale: str | None = Query(None),
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+) -> TranslationJobListResponse:
+    data = svc.list_jobs(connection, status, target_locale, limit, offset)
+    items = [TranslationJobItem.model_validate(i) for i in data["items"]]
+    return TranslationJobListResponse(
+        items=items,
+        pagination=Pagination(total=data["total"], limit=limit, offset=offset),
+    )
+
+
+@router.post(
+    "/create-missing", response_model=TranslationJobCreateResponse, status_code=201
+)
+async def create_missing(
+    payload: TranslationJobCreateMissingRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> TranslationJobCreateResponse:
+    jobs = svc.discover_missing_jobs(
+        connection, payload.target_locale, payload.limit, payload.priority
+    )
+    items = [TranslationJobItem.model_validate(j) for j in jobs]
+    return TranslationJobCreateResponse(created_count=len(items), items=items)
+
+
+@router.post(
+    "/create-stale", response_model=TranslationJobCreateResponse, status_code=201
+)
+async def create_stale(
+    payload: TranslationJobCreateStaleRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> TranslationJobCreateResponse:
+    jobs = svc.discover_stale_jobs(
+        connection, payload.target_locale, payload.limit, payload.priority
+    )
+    items = [TranslationJobItem.model_validate(j) for j in jobs]
+    return TranslationJobCreateResponse(created_count=len(items), items=items)
+
+
+@router.post("/process-next", response_model=TranslationJobProcessResult)
+async def process_next(
+    payload: TranslationJobProcessNextRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> TranslationJobProcessResult:
+    result = svc.process_next_job(connection, payload.worker_id, payload.target_locale)
+    if result is None:
+        return TranslationJobProcessResult(job_id="", status="no_pending_jobs")
+    return TranslationJobProcessResult.model_validate(result)
+
+
+@router.post("/process-batch", response_model=TranslationJobBatchResult)
+async def process_batch(
+    payload: TranslationJobProcessBatchRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> TranslationJobBatchResult:
+    result = svc.process_batch(
+        connection, payload.worker_id, payload.target_locale, payload.limit
+    )
+    results = [TranslationJobProcessResult.model_validate(r) for r in result["results"]]
+    return TranslationJobBatchResult(
+        processed=result["processed"],
+        completed=result["completed"],
+        failed=result["failed"],
+        results=results,
+    )

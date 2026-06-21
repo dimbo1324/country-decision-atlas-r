@@ -531,6 +531,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/translation-jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Jobs */
+        get: operations["list_jobs_api_v1_admin_translation_jobs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/translation-jobs/create-missing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Missing */
+        post: operations["create_missing_api_v1_admin_translation_jobs_create_missing_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/translation-jobs/create-stale": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Stale */
+        post: operations["create_stale_api_v1_admin_translation_jobs_create_stale_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/translation-jobs/process-next": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Process Next */
+        post: operations["process_next_api_v1_admin_translation_jobs_process_next_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/translation-jobs/process-batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Process Batch */
+        post: operations["process_batch_api_v1_admin_translation_jobs_process_batch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/user-stories": {
         parameters: {
             query?: never;
@@ -2062,6 +2147,17 @@ export interface components {
              */
             updated_at: string;
         };
+        /** TranslationJobBatchResult */
+        TranslationJobBatchResult: {
+            /** Processed */
+            processed: number;
+            /** Completed */
+            completed: number;
+            /** Failed */
+            failed: number;
+            /** Results */
+            results: components["schemas"]["TranslationJobProcessResult"][];
+        };
         /** TranslationJobCreate */
         TranslationJobCreate: {
             /** Entity Type */
@@ -2080,6 +2176,141 @@ export interface components {
             target_locale_code: string;
             /** Provider */
             provider?: string | null;
+        };
+        /** TranslationJobCreateMissingRequest */
+        TranslationJobCreateMissingRequest: {
+            /** Target Locale */
+            target_locale: string;
+            /**
+             * Limit
+             * @default 50
+             */
+            limit: number;
+            /**
+             * Priority
+             * @default 100
+             */
+            priority: number;
+        };
+        /** TranslationJobCreateResponse */
+        TranslationJobCreateResponse: {
+            /** Created Count */
+            created_count: number;
+            /** Items */
+            items: components["schemas"]["TranslationJobItem"][];
+        };
+        /** TranslationJobCreateStaleRequest */
+        TranslationJobCreateStaleRequest: {
+            /** Target Locale */
+            target_locale: string;
+            /**
+             * Limit
+             * @default 50
+             */
+            limit: number;
+            /**
+             * Priority
+             * @default 80
+             */
+            priority: number;
+        };
+        /** TranslationJobItem */
+        TranslationJobItem: {
+            /** Id */
+            id: string;
+            /** Translation Unit Id */
+            translation_unit_id?: string | null;
+            /** Source Locale Code */
+            source_locale_code?: string | null;
+            /** Target Locale Code */
+            target_locale_code?: string | null;
+            /** Status */
+            status: string;
+            /**
+             * Priority
+             * @default 100
+             */
+            priority: number;
+            /**
+             * Attempts
+             * @default 0
+             */
+            attempts: number;
+            /**
+             * Max Attempts
+             * @default 3
+             */
+            max_attempts: number;
+            /** Provider */
+            provider?: string | null;
+            /** Provider Model */
+            provider_model?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            /** Locked At */
+            locked_at?: string | null;
+            /** Locked By */
+            locked_by?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at?: string | null;
+            /** Completed At */
+            completed_at?: string | null;
+            /** Failed At */
+            failed_at?: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TranslationJobListResponse */
+        TranslationJobListResponse: {
+            /** Items */
+            items: components["schemas"]["TranslationJobItem"][];
+            pagination: components["schemas"]["Pagination"];
+        };
+        /** TranslationJobProcessBatchRequest */
+        TranslationJobProcessBatchRequest: {
+            /** Target Locale */
+            target_locale?: string | null;
+            /**
+             * Limit
+             * @default 10
+             */
+            limit: number;
+            /**
+             * Worker Id
+             * @default api-admin
+             */
+            worker_id: string;
+        };
+        /** TranslationJobProcessNextRequest */
+        TranslationJobProcessNextRequest: {
+            /** Target Locale */
+            target_locale?: string | null;
+            /**
+             * Worker Id
+             * @default api-admin
+             */
+            worker_id: string;
+        };
+        /** TranslationJobProcessResult */
+        TranslationJobProcessResult: {
+            /** Job Id */
+            job_id: string;
+            /** Status */
+            status: string;
+            /** Target Locale Code */
+            target_locale_code?: string | null;
+            /** Variant Id */
+            variant_id?: string | null;
+            /** Error */
+            error?: string | null;
         };
         /** TranslationJobResponse */
         TranslationJobResponse: {
@@ -3454,6 +3685,172 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_jobs_api_v1_admin_translation_jobs_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                target_locale?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_missing_api_v1_admin_translation_jobs_create_missing_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslationJobCreateMissingRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobCreateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_stale_api_v1_admin_translation_jobs_create_stale_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslationJobCreateStaleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobCreateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    process_next_api_v1_admin_translation_jobs_process_next_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslationJobProcessNextRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobProcessResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    process_batch_api_v1_admin_translation_jobs_process_batch_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslationJobProcessBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranslationJobBatchResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
