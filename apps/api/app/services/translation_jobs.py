@@ -95,7 +95,9 @@ def process_next_job(
 
         if not ok:
             if not dry_run:
-                repo.mark_job_failed(connection, job_id, f"validation_failed: {validation_error}")
+                repo.mark_job_failed(
+                    connection, job_id, f"validation_failed: {validation_error}"
+                )
             return {
                 "job_id": job_id,
                 "status": "failed",
@@ -159,7 +161,9 @@ def process_batch(
     completed = 0
     failed = 0
     for _ in range(limit):
-        result = process_next_job(connection, worker_id, target_locale, provider, dry_run)
+        result = process_next_job(
+            connection, worker_id, target_locale, provider, dry_run
+        )
         if result is None:
             break
         results.append(result)

@@ -168,7 +168,9 @@ class AITranslationProvider(TranslationProvider):
                 last_exc = exc
                 if attempt < self._max_retries:
                     time.sleep(1.0 * (attempt + 1))
-        raise RuntimeError(f"AI translation failed after {self._max_retries + 1} attempts: {last_exc}")
+        raise RuntimeError(
+            f"AI translation failed after {self._max_retries + 1} attempts: {last_exc}"
+        )
 
 
 def get_translation_provider() -> TranslationProvider:
