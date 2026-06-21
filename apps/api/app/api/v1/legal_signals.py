@@ -10,6 +10,7 @@ from app.schemas.decision_engine import (
 )
 from app.schemas.legal_signals import LegalSignalListResponse
 from app.services import decision_engine
+from app.services.localization import overlay_localized_fields
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
@@ -39,7 +40,6 @@ async def read_country_legal_signals(
     rows = list_legal_signals(
         connection,
         country_id,
-        locale,
         limit,
         offset,
         signal_type,
@@ -48,6 +48,17 @@ async def read_country_legal_signals(
         status,
         sort,
         order,
+    )
+    rows = overlay_localized_fields(
+        connection,
+        rows,
+        "legal_signal",
+        "id",
+        [
+            ("title", "title", "title_ru", "title_en"),
+            ("summary", "summary", "summary_ru", "summary_en"),
+        ],
+        locale,
     )
     total = count_legal_signals(
         connection, country_id, signal_type, impact_direction, impact_level, status

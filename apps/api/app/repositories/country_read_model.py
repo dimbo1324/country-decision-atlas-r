@@ -1,5 +1,5 @@
 from app.core.database import fetch_all, fetch_one
-from app.core.locales import localized_column, validate_locale
+from app.core.locales import validate_locale
 from psycopg import Connection
 from typing import Any
 
@@ -125,41 +125,22 @@ def get_country_read_model_profile(
 def list_country_read_model_scores(
     connection: Connection[Any],
     country_slug: str,
-    locale: str,
 ) -> list[dict[str, Any]]:
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "s.title_en", "s.title_ru")
-    explanation_column = localized_column(
-        requested_locale, "cs.explanation_en", "cs.explanation_ru"
-    )
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
             cs.id::text AS id,
+            cs.scenario_id::text AS scenario_id,
             s.slug AS scenario_slug,
-            COALESCE({title_column}, s.title_en, s.name, s.slug) AS scenario_title,
+            s.title_ru,
+            COALESCE(s.title_en, s.name, s.slug) AS title_en,
             cs.score::float AS score,
             cs.confidence,
-            COALESCE({explanation_column}, cs.explanation_en, cs.summary, '')
-                AS explanation,
+            cs.explanation_ru,
+            COALESCE(cs.explanation_en, cs.summary, '') AS explanation_en,
             cs.calculated_at,
-            cs.updated_at,
-            CASE
-                WHEN %s = 'en' THEN 'en'
-                WHEN {title_column} IS NOT NULL
-                  OR {explanation_column} IS NOT NULL THEN %s
-                ELSE 'en'
-            END AS resolved_locale,
-            CASE
-                WHEN %s = 'en' THEN 'source'
-                WHEN {title_column} IS NOT NULL
-                  AND {explanation_column} IS NOT NULL THEN 'translated'
-                WHEN s.title_en IS NOT NULL
-                  OR cs.explanation_en IS NOT NULL
-                  OR s.name IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            cs.updated_at
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
         JOIN scenarios s ON s.id = cs.scenario_id
@@ -172,81 +153,53 @@ def list_country_read_model_scores(
           )
         ORDER BY s.slug
         """,
-        (
-            requested_locale,
-            requested_locale,
-            requested_locale,
-            country_slug,
-        ),
+        (country_slug,),
     )
 
 
 def list_country_read_model_score_breakdowns(
     connection: Connection[Any],
     country_score_ids: list[str],
-    locale: str,
 ) -> list[dict[str, Any]]:
     if not country_score_ids:
         return []
-    requested_locale = validate_locale(locale)
-    explanation_column = localized_column(
-        requested_locale, "explanation_en", "explanation_ru"
-    )
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
+            id::text AS id,
             country_score_id::text AS country_score_id,
             criterion,
             score::float AS score,
             weight::float AS weight,
             weighted_score::float AS weighted_score,
-            COALESCE({explanation_column}, explanation_en, '') AS explanation,
+            explanation_ru,
+            COALESCE(explanation_en, '') AS explanation_en,
             source_ids,
             confidence,
-            updated_at,
-            CASE
-                WHEN %s = 'en' THEN 'en'
-                WHEN {explanation_column} IS NOT NULL THEN %s
-                ELSE 'en'
-            END AS resolved_locale,
-            CASE
-                WHEN %s = 'en' THEN 'source'
-                WHEN {explanation_column} IS NOT NULL THEN 'translated'
-                WHEN explanation_en IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            updated_at
         FROM country_score_breakdowns
         WHERE country_score_id = ANY(%s::uuid[])
         ORDER BY criterion
         """,
-        (
-            requested_locale,
-            requested_locale,
-            requested_locale,
-            country_score_ids,
-        ),
+        (country_score_ids,),
     )
 
 
 def list_country_read_model_legal_signals(
     connection: Connection[Any],
     country_slug: str,
-    locale: str,
     limit: int,
 ) -> list[dict[str, Any]]:
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
-    summary_column = localized_column(
-        requested_locale, "ls.summary_en", "ls.summary_ru"
-    )
     return fetch_all(
         connection,
-        f"""
+        """
         SELECT
             ls.id::text AS id,
-            COALESCE({title_column}, ls.title_en, ls.title, '') AS title,
-            COALESCE({summary_column}, ls.summary_en, ls.summary, '') AS summary,
+            ls.title_ru,
+            COALESCE(ls.title_en, ls.title, '') AS title_en,
+            ls.summary_ru,
+            COALESCE(ls.summary_en, ls.summary, '') AS summary_en,
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
@@ -254,22 +207,7 @@ def list_country_read_model_legal_signals(
             ls.published_date,
             ls.effective_date,
             ls.confidence,
-            ls.updated_at,
-            CASE
-                WHEN %s = 'en' THEN 'en'
-                WHEN {title_column} IS NOT NULL
-                  OR {summary_column} IS NOT NULL THEN %s
-                ELSE 'en'
-            END AS resolved_locale,
-            CASE
-                WHEN %s = 'en' THEN 'source'
-                WHEN {title_column} IS NOT NULL
-                  AND {summary_column} IS NOT NULL THEN 'translated'
-                WHEN ls.title_en IS NOT NULL
-                  OR ls.summary_en IS NOT NULL
-                  OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END AS translation_status
+            ls.updated_at
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE c.slug = %s
@@ -285,13 +223,7 @@ def list_country_read_model_legal_signals(
             ls.title
         LIMIT %s
         """,
-        (
-            requested_locale,
-            requested_locale,
-            requested_locale,
-            country_slug,
-            limit,
-        ),
+        (country_slug, limit),
     )
 
 

@@ -63,6 +63,7 @@ WHERE
         OR (
             LOWER(notes) NOT LIKE '%synthetic%'
             AND LOWER(notes) NOT LIKE '%demo%'
+            AND LOWER(notes) NOT LIKE '%синтетич%'
         )
     );
 
@@ -180,6 +181,7 @@ BEGIN
                 AND (
                     LOWER(notes) LIKE '%synthetic%'
                     OR LOWER(notes) LIKE '%demo%'
+                    OR LOWER(notes) LIKE '%синтетич%'
                 )
             )
         );

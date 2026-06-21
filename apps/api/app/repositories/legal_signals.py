@@ -1,5 +1,4 @@
 from app.core.database import execute_one, fetch_all, fetch_one
-from app.core.locales import SOURCE_LOCALE, localized_column, validate_locale
 from app.repositories.sorting import resolve_sort_clause
 from app.schemas.legal_signals import LegalSignalCreate
 from psycopg import Connection
@@ -18,7 +17,6 @@ LEGAL_SIGNAL_SORT_COLUMNS = {
 def list_legal_signals(
     connection: Connection[Any],
     country_id: str,
-    locale: str,
     limit: int,
     offset: int,
     signal_type: str | None = None,
@@ -28,33 +26,6 @@ def list_legal_signals(
     sort: str = "published_date",
     order: str = "desc",
 ) -> list[dict[str, Any]]:
-    requested_locale = validate_locale(locale)
-    title_column = localized_column(requested_locale, "ls.title_en", "ls.title_ru")
-    summary_column = localized_column(
-        requested_locale, "ls.summary_en", "ls.summary_ru"
-    )
-    if requested_locale == SOURCE_LOCALE:
-        resolved_locale_sql = "'en'"
-        status_sql = """
-            CASE
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'source'
-                ELSE 'missing'
-            END
-        """
-    else:
-        resolved_locale_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'ru'
-                ELSE 'en'
-            END
-        """
-        status_sql = """
-            CASE
-                WHEN ls.title_ru IS NOT NULL AND ls.summary_ru IS NOT NULL THEN 'translated'
-                WHEN ls.title_en IS NOT NULL OR ls.summary_en IS NOT NULL OR ls.title IS NOT NULL THEN 'fallback'
-                ELSE 'missing'
-            END
-        """
     filter_sql, params = _filters(
         country_id, signal_type, impact_direction, impact_level, status
     )
@@ -65,10 +36,12 @@ def list_legal_signals(
         connection,
         f"""
         SELECT
-            ls.id,
+            ls.id::text AS id,
             ls.country_id,
-            COALESCE({title_column}, ls.title_en, ls.title, '') AS title,
-            COALESCE({summary_column}, ls.summary_en, ls.summary, '') AS summary,
+            ls.title_ru,
+            COALESCE(ls.title_en, ls.title, '') AS title_en,
+            ls.summary_ru,
+            COALESCE(ls.summary_en, ls.summary, '') AS summary_en,
             ls.signal_type,
             ls.sentiment,
             ls.severity,
@@ -77,10 +50,7 @@ def list_legal_signals(
             ls.effective_date,
             ls.published_at,
             ls.created_at,
-            ls.updated_at,
-            {title_column} IS NOT NULL AND {summary_column} IS NOT NULL AS is_translated,
-            {resolved_locale_sql} AS resolved_locale,
-            {status_sql} AS translation_status
+            ls.updated_at
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE {filter_sql}

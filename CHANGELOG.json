@@ -2,6 +2,31 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "read-models-localization-service-v1",
+      "task": "feat/read-models-localization-service-v1",
+      "branch": "fix/localization-clean-chain-and-read-models",
+      "summary": "Switched all public read-model paths (country_read_model, decision_engine, legal_signals) to resolve localized text via LocalizationService.overlay_localized_fields() batch resolver. Repo functions now return raw bilingual fields; service layer applies a single batch SQL lookup per entity type. Legacy fallback columns (title_ru/title_en, etc.) are preserved as safety fallback. Migration chain 001-011 verified clean from empty database. Phase A (migration chain idempotency) and Phase B (read-model overlay) both complete.",
+      "checks": [
+        "python -m pytest: 88 passed, 23 skipped",
+        "python -m ruff check apps/api/app/ tests/: passed",
+        "python -m mypy apps/api/app/ --ignore-missing-imports: no issues in 52 files"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-20",
+      "event": "task_started",
+      "type": "fix",
+      "scope": "localization-clean-chain-and-read-models",
+      "task": "fix/localization-clean-chain-and-read-models",
+      "branch": "fix/localization-clean-chain-and-read-models",
+      "summary": "Started clean database migration chain stabilization and read-model adoption of LocalizationService.",
+      "status": "in_progress"
+    },
+    {
       "date": "2026-06-20",
       "event": "task_completed",
       "type": "feat",
