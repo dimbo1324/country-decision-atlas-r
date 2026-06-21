@@ -19,12 +19,16 @@ def _run_translation_jobs(args: argparse.Namespace) -> None:
     settings = get_settings()
     with psycopg.connect(settings.database_url, row_factory=dict_row) as conn:
         from app.services.translation_jobs import process_batch
+        from app.services.translation_providers import get_translation_provider
 
+        provider = get_translation_provider()
         result = process_batch(
             conn,
             worker_id=args.worker_id,
             target_locale=args.target_locale or None,
             limit=args.limit,
+            provider=provider,
+            dry_run=args.dry_run,
         )
     print(
         f"processed={result['processed']} completed={result['completed']} failed={result['failed']}"
@@ -43,6 +47,7 @@ def run() -> None:
     tj.add_argument("--limit", type=int, default=10)
     tj.add_argument("--target-locale", type=str, default="en")
     tj.add_argument("--worker-id", type=str, default="local-worker")
+    tj.add_argument("--dry-run", action="store_true", default=False)
 
     args = parser.parse_args()
 

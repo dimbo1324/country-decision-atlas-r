@@ -3,6 +3,26 @@
   "entries": [
     {
       "date": "2026-06-21",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "ai-translation-provider-v1",
+      "task": "feat/ai-translation-provider-v1",
+      "branch": "feat/ai-translation-provider-v1",
+      "summary": "Started AI translation provider integration — pluggable provider abstraction, OpenAI backend, factory, glossary, validation, dry-run, cost metadata.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "ai-translation-provider-v1",
+      "task": "feat/ai-translation-provider-v1",
+      "branch": "feat/ai-translation-provider-v1",
+      "summary": "AI translation provider complete: TranslationInput/TranslationResult models extended, AITranslationProvider via httpx (OpenAI API), FakeTranslationProvider updated, provider factory, TranslationValidation (empty/identical/length/AI-noise/number-preservation), dry-run mode, cost/usage metadata in job results, config extended with 7 new env vars, 32 new tests, all 161 passed.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-21",
       "event": "task_completed",
       "type": "feat",
       "scope": "translation-jobs-worker-foundation-v1",

@@ -1,6 +1,7 @@
 from app.schemas.common import Pagination
 from datetime import datetime
 from pydantic import BaseModel
+from typing import Any
 
 
 class TranslationJobItem(BaseModel):
@@ -49,12 +50,14 @@ class TranslationJobCreateResponse(BaseModel):
 class TranslationJobProcessNextRequest(BaseModel):
     target_locale: str | None = None
     worker_id: str = "api-admin"
+    dry_run: bool = False
 
 
 class TranslationJobProcessBatchRequest(BaseModel):
     target_locale: str | None = None
     limit: int = 10
     worker_id: str = "api-admin"
+    dry_run: bool = False
 
 
 class TranslationJobProcessResult(BaseModel):
@@ -63,6 +66,7 @@ class TranslationJobProcessResult(BaseModel):
     target_locale_code: str | None = None
     variant_id: str | None = None
     error: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class TranslationJobBatchResult(BaseModel):

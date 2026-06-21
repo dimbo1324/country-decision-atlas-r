@@ -13,6 +13,7 @@ from app.schemas.translation_jobs import (
     TranslationJobProcessResult,
 )
 from app.services import translation_jobs as svc
+from app.services.translation_providers import get_translation_provider
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -74,7 +75,10 @@ async def process_next(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
 ) -> TranslationJobProcessResult:
-    result = svc.process_next_job(connection, payload.worker_id, payload.target_locale)
+    provider = get_translation_provider()
+    result = svc.process_next_job(
+        connection, payload.worker_id, payload.target_locale, provider, payload.dry_run
+    )
     if result is None:
         return TranslationJobProcessResult(job_id="", status="no_pending_jobs")
     return TranslationJobProcessResult.model_validate(result)
@@ -86,8 +90,14 @@ async def process_batch(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
 ) -> TranslationJobBatchResult:
+    provider = get_translation_provider()
     result = svc.process_batch(
-        connection, payload.worker_id, payload.target_locale, payload.limit
+        connection,
+        payload.worker_id,
+        payload.target_locale,
+        payload.limit,
+        provider,
+        payload.dry_run,
     )
     results = [TranslationJobProcessResult.model_validate(r) for r in result["results"]]
     return TranslationJobBatchResult(
