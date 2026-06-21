@@ -1,5 +1,6 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type CountryProfileSectionsProps = {
   profile: CountryReadModelResponse["profile"];
@@ -39,6 +40,9 @@ export function CountryProfileSections({
 
   return (
     <div className="sectionStack">
+      <div className="metaRow">
+        <LocalizationBadge localization={profile.localization} />
+      </div>
       {filled.map((s) => (
         <div key={s.key} className="profileSection">
           <h3 className="sectionTitle">{s.label}</h3>

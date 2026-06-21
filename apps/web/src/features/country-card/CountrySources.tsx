@@ -1,6 +1,7 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatDate } from "../../shared/lib/format";
 
 type CountrySourcesProps = {
@@ -23,6 +24,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
                 <span className="metaChip">{source.source_type}</span>
               )}
               {source.confidence && <ConfidenceBadge confidence={source.confidence} />}
+              <LocalizationBadge localization={source.localization} compact />
             </div>
           </div>
           {source.publisher && (

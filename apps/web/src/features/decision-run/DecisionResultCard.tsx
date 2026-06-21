@@ -3,6 +3,7 @@ import type { DecisionRunResponse } from "../../shared/api/decision";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionBreakdown } from "./DecisionBreakdown";
 import { DecisionSources } from "./DecisionSources";
@@ -26,6 +27,7 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
         <span className="resultScore">{formatScore(result.score)}</span>
         <span className="metaChip">{result.score_label}</span>
         {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
+        <LocalizationBadge localization={result.localization} compact />
       </div>
 
       {result.summary && <p className="resultSummary">{result.summary}</p>}

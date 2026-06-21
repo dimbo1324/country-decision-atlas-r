@@ -2,6 +2,7 @@ import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ImpactDirectionBadge, ImpactLevelBadge } from "../../shared/ui/ImpactBadge";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatDate } from "../../shared/lib/format";
 
 type CountryLegalSignalsProps = {
@@ -20,6 +21,7 @@ export function CountryLegalSignals({ legalSignals }: CountryLegalSignalsProps) 
           <div className="signalCardHeader">
             <span className="signalTitle">{signal.title}</span>
             <span className="metaChip">{signal.signal_type}</span>
+            <LocalizationBadge localization={signal.localization} compact />
           </div>
           {signal.summary && <p className="signalSummary">{signal.summary}</p>}
           <div className="metaRow">

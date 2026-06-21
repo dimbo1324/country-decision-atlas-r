@@ -1,4 +1,5 @@
 import pytest
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 
@@ -7,19 +8,19 @@ LOCALE_RU = "ru"
 LOCALE_EN = "en"
 
 
-def _mock_connection():
+def _mock_connection() -> Any:
     conn = MagicMock()
     conn.execute.return_value = MagicMock()
     return conn
 
 
 @pytest.fixture
-def mock_variants_empty():
+def mock_variants_empty() -> dict[Any, Any]:
     return {}
 
 
 @pytest.fixture
-def mock_variant_ru_original():
+def mock_variant_ru_original() -> dict[Any, Any]:
     return {
         ("entity-1", "title"): {
             "translation_unit_id": "unit-1",
@@ -41,7 +42,7 @@ def mock_variant_ru_original():
 
 
 @pytest.fixture
-def mock_variant_en_translated():
+def mock_variant_en_translated() -> dict[Any, Any]:
     return {
         ("entity-1", "title"): {
             "translation_unit_id": "unit-1",
@@ -63,7 +64,7 @@ def mock_variant_en_translated():
 
 
 @pytest.fixture
-def mock_variant_stale():
+def mock_variant_stale() -> dict[Any, Any]:
     return {
         ("entity-1", "title"): {
             "translation_unit_id": "unit-1",
@@ -85,7 +86,9 @@ def mock_variant_stale():
 
 
 class TestCountryCardLocalizationMeta:
-    def test_country_card_localization_present(self, mock_variant_ru_original):
+    def test_country_card_localization_present(
+        self, mock_variant_ru_original: dict[Any, Any]
+    ) -> None:
         from app.services.localization import overlay_localized_fields
 
         items = [{"id": "entity-1", "title": "Old Title"}]
@@ -95,7 +98,12 @@ class TestCountryCardLocalizationMeta:
             return_value=mock_variant_ru_original,
         ):
             result = overlay_localized_fields(
-                conn, items, "country_card", "id", [("title", "title", None, None)], "ru"
+                conn,
+                items,
+                "country_card",
+                "id",
+                [("title", "title", None, None)],
+                "ru",
             )
         loc = result[0].get("localization")
         assert loc is not None
@@ -106,7 +114,9 @@ class TestCountryCardLocalizationMeta:
 
 
 class TestRuOriginal:
-    def test_ru_original_status_and_flags(self, mock_variant_ru_original):
+    def test_ru_original_status_and_flags(
+        self, mock_variant_ru_original: dict[Any, Any]
+    ) -> None:
         from app.services.localization import field_meta_from_variant
 
         variant = mock_variant_ru_original[("entity-1", "title")]
@@ -119,10 +129,17 @@ class TestRuOriginal:
 
 
 class TestEnFallback:
-    def test_en_fallback_when_no_en_variant(self, mock_variant_ru_original):
+    def test_en_fallback_when_no_en_variant(self) -> None:
         from app.services.localization import overlay_localized_fields
 
-        items = [{"id": "entity-1", "title": "Old", "title_en": None, "title_ru": "Заголовок"}]
+        items = [
+            {
+                "id": "entity-1",
+                "title": "Old",
+                "title_en": None,
+                "title_ru": "Заголовок",
+            }
+        ]
         conn = _mock_connection()
         with patch(
             "app.repositories.translations.list_best_translation_variants",
@@ -144,7 +161,9 @@ class TestEnFallback:
 
 
 class TestStaleDetection:
-    def test_stale_flag_set_when_hashes_differ(self, mock_variant_stale):
+    def test_stale_flag_set_when_hashes_differ(
+        self, mock_variant_stale: dict[Any, Any]
+    ) -> None:
         from app.services.localization import field_meta_from_variant
 
         variant = mock_variant_stale[("entity-1", "title")]
@@ -154,7 +173,7 @@ class TestStaleDetection:
 
 
 class TestMissingFields:
-    def test_missing_field_status_and_meta(self):
+    def test_missing_field_status_and_meta(self) -> None:
         from app.services.localization import overlay_localized_fields
 
         items = [{"id": "entity-1", "title": None}]
@@ -164,7 +183,12 @@ class TestMissingFields:
             return_value={},
         ):
             result = overlay_localized_fields(
-                conn, items, "country_card", "id", [("title", "title", None, None)], "en"
+                conn,
+                items,
+                "country_card",
+                "id",
+                [("title", "title", None, None)],
+                "en",
             )
         loc = result[0].get("localization")
         assert loc is not None
@@ -172,7 +196,7 @@ class TestMissingFields:
 
 
 class TestLegacyFallback:
-    def test_legacy_method_used_when_no_unit(self):
+    def test_legacy_method_used_when_no_unit(self) -> None:
         from app.services.localization import legacy_field_meta
 
         meta = legacy_field_meta("summary", "en", "ru", "fallback")
@@ -183,9 +207,9 @@ class TestLegacyFallback:
 
 
 class TestBuildLocalizationMeta:
-    def test_aggregate_status_priority(self):
-        from app.services.localization import build_localization_meta
+    def test_aggregate_status_priority(self) -> None:
         from app.schemas.localization import TranslationFieldMeta
+        from app.services.localization import build_localization_meta
 
         metas = [
             TranslationFieldMeta(
@@ -218,7 +242,7 @@ class TestBuildLocalizationMeta:
 
 
 class TestLegalSignalLocalization:
-    def test_legal_signal_overlay_adds_localization(self):
+    def test_legal_signal_overlay_adds_localization(self) -> None:
         from app.services.localization import overlay_localized_fields
 
         items = [
@@ -253,7 +277,7 @@ class TestLegalSignalLocalization:
 
 
 class TestSourceLocalization:
-    def test_source_overlay_title_notes(self):
+    def test_source_overlay_title_notes(self) -> None:
         from app.services.localization import overlay_localized_fields
 
         items = [{"id": "src-1", "title": "Source Title", "notes": None}]
@@ -281,8 +305,11 @@ class TestSourceLocalization:
 
 
 class TestDecisionLocalization:
-    def test_decision_run_response_schema_accepts_localization(self):
-        from app.schemas.decision_engine import DecisionCountryResult, DecisionCountryRef, DecisionBreakdownItem, DecisionSourceRef
+    def test_decision_run_response_schema_accepts_localization(self) -> None:
+        from app.schemas.decision_engine import (
+            DecisionCountryRef,
+            DecisionCountryResult,
+        )
         from app.schemas.localization import LocalizationMeta
 
         loc = LocalizationMeta(

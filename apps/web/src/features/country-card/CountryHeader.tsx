@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
+import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type CountryHeaderProps = {
   country: CountryReadModelResponse["country"];
@@ -20,6 +21,7 @@ export function CountryHeader({ country, locale = "en" }: CountryHeaderProps) {
             <span className="metaChip">ISO: {country.iso_code}</span>
           )}
           <span className="metaChip">Статус: {country.status}</span>
+          <LocalizationBadge localization={country.localization} />
         </div>
       </header>
       <div className="quickActions">

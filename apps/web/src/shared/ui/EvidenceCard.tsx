@@ -1,5 +1,6 @@
 import type { EvidenceItem } from "../api/evidence";
 import { ConfidenceBadge } from "./ConfidenceBadge";
+import { LocalizationBadge } from "./LocalizationBadge";
 import { formatDate } from "../lib/format";
 
 type EvidenceCardProps = {
@@ -28,6 +29,7 @@ export function EvidenceCard({ item, sourceTitle, sourceUrl }: EvidenceCardProps
             {formatDate((item.retrieved_at ?? item.published_at) as string)}
           </span>
         )}
+        <LocalizationBadge localization={item.localization} compact />
       </div>
       {(sourceTitle || sourceUrl || item.url) && (
         <div className="evidenceSourceRef">

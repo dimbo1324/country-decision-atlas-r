@@ -1516,3 +1516,42 @@ ol {
     overflow: visible;
   }
 }
+
+.localizationBadge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.localizationBadgeCompact {
+  padding: 1px 6px;
+  font-size: 0.7rem;
+}
+
+.localizationBadgeFallback {
+  font-weight: 600;
+}
+
+.localizationBadgeOriginal {
+  font-weight: 500;
+}
+
+.localizationBadgeMachine {
+  font-weight: 500;
+}
+
+.localizationBadgeReviewed {
+  font-weight: 600;
+}
+
+.localizationBadgeStale,
+.localizationBadgeMissing,
+.localizationBadgeNeedsReview {
+  font-weight: 700;
+}
