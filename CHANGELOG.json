@@ -2,6 +2,45 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "cii-country-card-slice-v1",
+      "task": "feat/cii-country-card-slice-v1",
+      "branch": "feat/cii-country-card-slice-v1",
+      "summary": "First vertical slice of Country Investability Index: 4 DB tables, 6 metrics (rule_of_law, economic_freedom, political_stability, safety, corruption, digital_access), seed data for Russia and Uruguay, backend API (/card embeds cii + dedicated /cii endpoint), spider chart component on country card.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "cii-country-card-slice-v1",
+      "task": "feat/cii-country-card-slice-v1",
+      "branch": "feat/cii-country-card-slice-v1",
+      "summary": "CII slice complete. DB: cii_metric_definitions, country_metric_values, scenario_metric_weights, country_cii_scores. Seed: 6 metrics + Russia + Uruguay values + v1.0 weights. API: cii embedded in /card response (CountryReadModelCii optional field) + dedicated GET /api/v1/countries/{slug}/cii. OpenAPI updated, TypeScript contracts regenerated. Frontend: CountryCiiBlock with SVG spider chart, bar breakdown, confidence badge, drift badge, empty state. 184 tests pass, mypy/ruff/sqlfluff clean, TS typecheck+build pass.",
+      "status": "completed",
+      "tests_added": 11,
+      "new_files": [
+        "database/migrations/015_cii_country_card_slice_v1.sql",
+        "database/migrations/016_cii_seed_v1.sql",
+        "apps/api/app/repositories/cii.py",
+        "apps/web/src/features/country-card/CountryCiiBlock.tsx",
+        "tests/test_cii_country_card_slice.py"
+      ],
+      "modified_files": [
+        "apps/api/app/schemas/country_read_model.py",
+        "apps/api/app/services/country_read_model.py",
+        "apps/api/app/api/v1/countries.py",
+        "apps/web/src/features/country-card/index.ts",
+        "apps/web/src/app/countries/[slug]/page.tsx",
+        "contracts/openapi.yaml",
+        "packages/contracts/generated/types.ts",
+        "tests/test_country_read_model.py",
+        "tests/test_frontend_contract.py"
+      ]
+    },
+    {
       "date": "2026-06-21",
       "event": "task_started",
       "type": "chore",

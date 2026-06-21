@@ -135,6 +135,7 @@ def test_country_card_frontend_contract(monkeypatch: Any) -> None:
         "sources",
         "evidence_summary",
         "user_stories_summary",
+        "cii",
         "meta",
         "locale",
     } == set(body)

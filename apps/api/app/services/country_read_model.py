@@ -1,4 +1,5 @@
 from app.core.locales import SOURCE_LOCALE, SupportedLocale
+from app.repositories.cii import get_country_cii
 from app.repositories.country_read_model import (
     get_country_read_model_country,
     get_country_read_model_evidence_summary,
@@ -11,6 +12,8 @@ from app.repositories.country_read_model import (
 )
 from app.schemas.common import LocaleResolution, TranslationStatus, locale_resolution
 from app.schemas.country_read_model import (
+    CountryReadModelCii,
+    CountryReadModelCiiMetric,
     CountryReadModelMeta,
     CountryReadModelResponse,
 )
@@ -102,6 +105,7 @@ def get_country_read_model(
     user_stories_summary = get_country_read_model_user_stories_summary(
         connection, country_slug
     )
+    cii = build_cii(get_country_cii(connection, country_slug))
     localized_blocks = [
         country,
         profile,
@@ -117,6 +121,7 @@ def get_country_read_model(
         sources=sources,
         evidence_summary=evidence_summary,
         user_stories_summary=user_stories_summary,
+        cii=cii,
         meta=CountryReadModelMeta(
             scores_count=len(scores),
             legal_signals_count=len(legal_signals),
@@ -208,3 +213,18 @@ def normalize_datetime(value: Any) -> datetime | None:
     if isinstance(value, date):
         return datetime.combine(value, time.min, tzinfo=UTC)
     return None
+
+
+def build_cii(row: dict[str, Any] | None) -> CountryReadModelCii | None:
+    if row is None:
+        return None
+    raw_metrics = row.get("metrics") or []
+    metrics = [CountryReadModelCiiMetric.model_validate(m) for m in raw_metrics]
+    return CountryReadModelCii(
+        overall_score=float(row["overall_score"]),
+        confidence=str(row["confidence"]),
+        drift=float(row["drift"]) if row.get("drift") is not None else None,
+        version=str(row["version"]),
+        calculated_at=row["calculated_at"],
+        metrics=metrics,
+    )

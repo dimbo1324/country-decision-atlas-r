@@ -96,6 +96,27 @@ class CountryReadModelUserStoriesSummary(BaseModel):
     average_satisfaction_score: float | None = None
 
 
+class CountryReadModelCiiMetric(BaseModel):
+    slug: str
+    name_en: str
+    name_ru: str
+    score: float
+    weight: float
+    weighted_score: float
+    data_year: int | None = None
+    source_name: str | None = None
+    reliability: str | None = None
+
+
+class CountryReadModelCii(BaseModel):
+    overall_score: float
+    confidence: str
+    drift: float | None = None
+    version: str
+    calculated_at: datetime
+    metrics: list[CountryReadModelCiiMetric] = Field(default_factory=list)
+
+
 class CountryReadModelResponse(BaseModel):
     country: CountryReadModelCountry
     profile: CountryReadModelProfile | None
@@ -104,5 +125,6 @@ class CountryReadModelResponse(BaseModel):
     sources: list[CountryReadModelSource]
     evidence_summary: CountryReadModelEvidenceSummary
     user_stories_summary: CountryReadModelUserStoriesSummary
+    cii: CountryReadModelCii | None = None
     meta: CountryReadModelMeta
     locale: LocaleResolution

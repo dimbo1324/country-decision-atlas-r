@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/cii": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country CII */
+        get: operations["read_country_cii_api_v1_countries__country_slug__cii_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/{country_slug}/card": {
         parameters: {
             query?: never;
@@ -970,6 +987,48 @@ export interface components {
             source_summary?: string | null;
             localization?: components["schemas"]["LocalizationMeta"] | null;
         };
+        /** CountryReadModelCiiMetric */
+        CountryReadModelCiiMetric: {
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Score */
+            score: number;
+            /** Weight */
+            weight: number;
+            /** Weighted Score */
+            weighted_score: number;
+            /** Data Year */
+            data_year?: number | null;
+            /** Source Name */
+            source_name?: string | null;
+            /** Reliability */
+            reliability?: string | null;
+        };
+        /** CountryReadModelCii */
+        CountryReadModelCii: {
+            /** Overall Score */
+            overall_score: number;
+            /** Confidence */
+            confidence: string;
+            /** Drift */
+            drift?: number | null;
+            /** Version */
+            version: string;
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            /**
+             * Metrics
+             * @default []
+             */
+            metrics: components["schemas"]["CountryReadModelCiiMetric"][];
+        };
         /** CountryReadModelResponse */
         CountryReadModelResponse: {
             country: components["schemas"]["CountryReadModelCountry"];
@@ -982,6 +1041,7 @@ export interface components {
             sources: components["schemas"]["CountryReadModelSource"][];
             evidence_summary: components["schemas"]["CountryReadModelEvidenceSummary"];
             user_stories_summary: components["schemas"]["CountryReadModelUserStoriesSummary"];
+            cii?: components["schemas"]["CountryReadModelCii"] | null;
             meta: components["schemas"]["CountryReadModelMeta"];
             locale: components["schemas"]["LocaleResolution"];
         };
@@ -2687,6 +2747,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CountryScoreListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_country_cii_api_v1_countries__country_slug__cii_get: {
+        parameters: {
+            query?: {
+                version?: string;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryReadModelCii"];
                 };
             };
             /** @description Validation Error */

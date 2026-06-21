@@ -1,6 +1,7 @@
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.locales import LocaleQuery
+from app.repositories.cii import get_country_cii
 from app.repositories.common import build_locale
 from app.repositories.countries import (
     count_countries,
@@ -15,11 +16,11 @@ from app.schemas.countries import (
     CountryProfileResponse,
     CountryResponse,
 )
-from app.schemas.country_read_model import CountryReadModelResponse
+from app.schemas.country_read_model import CountryReadModelCii, CountryReadModelResponse
 from app.schemas.decision_engine import SourceListWithLocaleResponse
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
-from app.services.country_read_model import get_country_read_model
+from app.services.country_read_model import build_cii, get_country_read_model
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
@@ -109,6 +110,21 @@ async def read_country_card(
             },
         )
     return result
+
+
+@router.get("/{country_slug}/cii", response_model=CountryReadModelCii)
+async def read_country_cii(
+    country_slug: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    version: str = Query("v1.0", pattern=r"^v\d+\.\d+$"),
+) -> CountryReadModelCii:
+    row = get_country_cii(connection, country_slug, version)
+    cii = build_cii(row)
+    if cii is None:
+        raise HTTPException(
+            status_code=404, detail="CII data not available for this country."
+        )
+    return cii
 
 
 @router.get("/{country_slug}/sources", response_model=SourceListWithLocaleResponse)

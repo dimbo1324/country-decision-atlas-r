@@ -6,6 +6,7 @@ import { routes } from "../../../shared/lib/routes";
 import { ErrorState } from "../../../shared/ui/ErrorState";
 import {
   CountryHeader,
+  CountryCiiBlock,
   CountryEvidenceSummary,
   CountryLegalSignals,
   CountryProfileSections,
@@ -89,6 +90,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             <p className="executiveSummaryText">{card.profile.executive_summary}</p>
           </section>
         )}
+
+        <section className="cardSection" data-testid="cii-section">
+          <h2 className="cardSectionTitle">Индекс инвестиционной привлекательности (CII)</h2>
+          <CountryCiiBlock cii={card.cii} />
+        </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Оценки сценариев</h2>

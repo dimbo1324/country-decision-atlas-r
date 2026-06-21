@@ -195,6 +195,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/cii:
+    get:
+      tags:
+      - countries
+      summary: Read Country CII
+      operationId: read_country_cii_api_v1_countries__country_slug__cii_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: version
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: '^v\d+\.\d+$'
+          default: v1.0
+          title: Version
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryReadModelCii'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_slug}/card:
     get:
       tags:
@@ -2426,6 +2460,83 @@ components:
           - type: 'null'
       type: object
       title: CountryReadModelProfile
+    CountryReadModelCiiMetric:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        score:
+          type: number
+          title: Score
+        weight:
+          type: number
+          title: Weight
+        weighted_score:
+          type: number
+          title: Weighted Score
+        data_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Data Year
+        source_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Name
+        reliability:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reliability
+      type: object
+      required:
+      - slug
+      - name_en
+      - name_ru
+      - score
+      - weight
+      - weighted_score
+      title: CountryReadModelCiiMetric
+    CountryReadModelCii:
+      properties:
+        overall_score:
+          type: number
+          title: Overall Score
+        confidence:
+          type: string
+          title: Confidence
+        drift:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Drift
+        version:
+          type: string
+          title: Version
+        calculated_at:
+          type: string
+          format: date-time
+          title: Calculated At
+        metrics:
+          items:
+            $ref: '#/components/schemas/CountryReadModelCiiMetric'
+          type: array
+          title: Metrics
+          default: []
+      type: object
+      required:
+      - overall_score
+      - confidence
+      - version
+      - calculated_at
+      title: CountryReadModelCii
     CountryReadModelResponse:
       properties:
         country:
@@ -2453,6 +2564,10 @@ components:
           $ref: '#/components/schemas/CountryReadModelEvidenceSummary'
         user_stories_summary:
           $ref: '#/components/schemas/CountryReadModelUserStoriesSummary'
+        cii:
+          anyOf:
+          - $ref: '#/components/schemas/CountryReadModelCii'
+          - type: 'null'
         meta:
           $ref: '#/components/schemas/CountryReadModelMeta'
         locale:
