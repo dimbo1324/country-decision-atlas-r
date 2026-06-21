@@ -3,6 +3,28 @@
   "entries": [
     {
       "date": "2026-06-21",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "multilingual-operational-guardrails-v1",
+      "task": "chore/multilingual-operational-guardrails-v1",
+      "branch": "chore/multilingual-operational-guardrails-v1",
+      "summary": "Adding operational guardrails: end-to-end pipeline smoke test, provider default check, original variant protection test, diagnostic script.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "multilingual-operational-guardrails-v1",
+      "task": "chore/multilingual-operational-guardrails-v1",
+      "branch": "chore/multilingual-operational-guardrails-v1",
+      "summary": "Operational guardrails added: 12 new tests covering E2E pipeline smoke (create-missing→process-batch→variant), TRANSLATION_PROVIDER default=fake, AI key not required in default mode, original variant protection (SQL WHERE is_original=FALSE), diagnostic script scripts/translation_pipeline_status.py. All 173 tests pass, mypy/ruff/pre-commit clean.",
+      "status": "completed",
+      "tests_added": 12,
+      "new_files": ["tests/test_multilingual_operational_guardrails.py", "scripts/translation_pipeline_status.py"]
+    },
+    {
+      "date": "2026-06-21",
       "event": "task_completed",
       "type": "feat",
       "scope": "multilingual-foundation-closeout-v1",
