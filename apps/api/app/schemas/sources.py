@@ -1,4 +1,5 @@
 from app.schemas.common import LocaleResolution, Pagination, SortMeta
+from app.schemas.localization import LocalizationMeta
 from datetime import date, datetime
 from pydantic import BaseModel
 from uuid import UUID
@@ -22,6 +23,7 @@ class Source(BaseModel):
     notes: str | None = None
     created_at: datetime
     updated_at: datetime
+    localization: LocalizationMeta | None = None
 
 
 class SourceListResponse(BaseModel):
@@ -55,9 +57,11 @@ class EvidenceItem(BaseModel):
     published_at: date | None = None
     created_at: datetime
     updated_at: datetime
+    localization: LocalizationMeta | None = None
 
 
 class EvidenceItemListResponse(BaseModel):
     items: list[EvidenceItem]
     pagination: Pagination
     sort: SortMeta | None = None
+    locale: LocaleResolution | None = None

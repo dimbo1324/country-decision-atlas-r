@@ -815,6 +815,7 @@ export interface components {
             region?: string | null;
             /** Status */
             status: string;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelEvidenceSummary */
         CountryReadModelEvidenceSummary: {
@@ -849,6 +850,7 @@ export interface components {
             effective_date?: string | null;
             /** Confidence */
             confidence?: string | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelMeta */
         CountryReadModelMeta: {
@@ -881,6 +883,7 @@ export interface components {
             risk_summary?: string | null;
             /** Source Summary */
             source_summary?: string | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelResponse */
         CountryReadModelResponse: {
@@ -915,6 +918,7 @@ export interface components {
             calculated_at?: string | null;
             /** Breakdowns */
             breakdowns?: components["schemas"]["CountryReadModelScoreBreakdown"][];
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelScoreBreakdown */
         CountryReadModelScoreBreakdown: {
@@ -932,6 +936,7 @@ export interface components {
             confidence?: string | null;
             /** Source Ids */
             source_ids?: string[];
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelSource */
         CountryReadModelSource: {
@@ -951,6 +956,7 @@ export interface components {
             published_at?: string | null;
             /** Last Checked At */
             last_checked_at?: string | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** CountryReadModelUserStoriesSummary */
         CountryReadModelUserStoriesSummary: {
@@ -1129,6 +1135,7 @@ export interface components {
             confidence?: ("high" | "medium" | "low") | null;
             /** Source Ids */
             source_ids?: string[];
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** DecisionCompareInput */
         DecisionCompareInput: {
@@ -1206,6 +1213,7 @@ export interface components {
             breakdown: components["schemas"]["DecisionBreakdownItem"][];
             /** Sources */
             sources: components["schemas"]["DecisionSourceRef"][];
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** DecisionCountryScore */
         DecisionCountryScore: {
@@ -1350,6 +1358,7 @@ export interface components {
             title: string;
             /** Description */
             description?: string | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** DecisionScenarioResponse */
         DecisionScenarioResponse: {
@@ -1368,6 +1377,7 @@ export interface components {
             source_type?: string | null;
             /** Confidence */
             confidence?: ("high" | "medium" | "low") | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** ErrorResponse */
         ErrorResponse: {
@@ -1423,6 +1433,7 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** EvidenceItemCreate */
         EvidenceItemCreate: {
@@ -1452,6 +1463,7 @@ export interface components {
             items: components["schemas"]["EvidenceItem"][];
             pagination: components["schemas"]["Pagination"];
             sort?: components["schemas"]["SortMeta"] | null;
+            locale?: components["schemas"]["LocaleResolution"] | null;
         };
         /** EvidenceItemPatch */
         EvidenceItemPatch: {
@@ -1532,6 +1544,7 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** LegalSignalCreate */
         LegalSignalCreate: {
@@ -1610,6 +1623,7 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** LegalSignalDetailListResponse */
         LegalSignalDetailListResponse: {
@@ -1670,6 +1684,38 @@ export interface components {
             requested_locale: components["schemas"]["LocaleCode"];
             resolved_locale: components["schemas"]["LocaleCode"];
             translation_status: components["schemas"]["TranslationStatus"];
+        };
+        /** LocalizationMeta */
+        LocalizationMeta: {
+            /** Requested Locale */
+            requested_locale: string;
+            /** Resolved Locale */
+            resolved_locale: string;
+            /** Status */
+            status: string;
+            /** Is Fallback */
+            is_fallback: boolean;
+            /** Has Machine Translation */
+            has_machine_translation: boolean;
+            /** Has Human Review */
+            has_human_review: boolean;
+            /** Has Stale Fields */
+            has_stale_fields: boolean;
+            /**
+             * Missing Fields
+             * @default []
+             */
+            missing_fields: string[];
+            /**
+             * Stale Fields
+             * @default []
+             */
+            stale_fields: string[];
+            /**
+             * Fields
+             * @default []
+             */
+            fields: components["schemas"]["TranslationFieldMeta"][];
         };
         /** Pagination */
         Pagination: {
@@ -1839,6 +1885,7 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
         };
         /** SourceCreate */
         SourceCreate: {
@@ -1949,6 +1996,33 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** TranslationFieldMeta */
+        TranslationFieldMeta: {
+            /** Field Name */
+            field_name: string;
+            /** Requested Locale */
+            requested_locale: string;
+            /** Resolved Locale */
+            resolved_locale: string;
+            /** Source Locale */
+            source_locale: string;
+            /** Status */
+            status: string;
+            /** Method */
+            method?: string | null;
+            /** Is Original */
+            is_original: boolean;
+            /** Is Fallback */
+            is_fallback: boolean;
+            /** Is Stale */
+            is_stale: boolean;
+            /** Translation Unit Id */
+            translation_unit_id?: string | null;
+            /** Translation Variant Id */
+            translation_variant_id?: string | null;
+            /** Quality Score */
+            quality_score?: number | null;
         };
         /** TranslationJob */
         TranslationJob: {
@@ -2798,6 +2872,7 @@ export interface operations {
                 order?: "asc" | "desc";
                 limit?: number;
                 offset?: number;
+                locale?: "en" | "ru";
             };
             header?: never;
             path?: never;

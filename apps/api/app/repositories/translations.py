@@ -181,12 +181,20 @@ def list_best_translation_variants(
         connection,
         """
         SELECT DISTINCT ON (tu.entity_id, tu.field_name)
+            tu.id::text AS translation_unit_id,
             tu.entity_id::text AS entity_id,
             tu.field_name,
+            tu.original_locale_code,
+            tu.source_hash AS unit_source_hash,
+            tv.id::text AS translation_variant_id,
             tv.locale_code,
             tv.text,
             tv.status,
-            tv.is_original
+            tv.method,
+            tv.source_locale_code,
+            tv.source_hash,
+            tv.is_original,
+            tv.quality_score
         FROM translation_units tu
         JOIN translation_variants tv ON tv.translation_unit_id = tu.id
         WHERE tu.entity_type = %s

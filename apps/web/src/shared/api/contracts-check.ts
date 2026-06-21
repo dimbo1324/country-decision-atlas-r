@@ -13,6 +13,8 @@ type UserStoryListResponse = components["schemas"]["UserStoryListResponse"];
 type DataQualityReport = components["schemas"]["DataQualityReport"];
 type LocaleResolution = components["schemas"]["LocaleResolution"];
 type ErrorResponse = components["schemas"]["ErrorResponse"];
+type LocalizationMeta = components["schemas"]["LocalizationMeta"];
+type TranslationFieldMeta = components["schemas"]["TranslationFieldMeta"];
 
 export type FrontendCriticalContracts = {
   countryList: CountryListResponse;
@@ -28,4 +30,6 @@ export type FrontendCriticalContracts = {
   dataQualityReport: DataQualityReport;
   locale: LocaleResolution;
   error: ErrorResponse;
+  localizationMeta: LocalizationMeta;
+  translationFieldMeta: TranslationFieldMeta;
 };

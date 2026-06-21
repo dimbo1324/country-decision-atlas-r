@@ -24,9 +24,7 @@ export function queryString(
 
 export function isApiError(e: unknown): e is ApiErrorResponse {
   return (
-    typeof e === "object" &&
-    e !== null &&
-    "error" in (e as Record<string, unknown>)
+    typeof e === "object" && e !== null && "error" in (e as Record<string, unknown>)
   );
 }
 

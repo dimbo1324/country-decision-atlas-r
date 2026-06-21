@@ -1,4 +1,5 @@
 from app.schemas.common import LocaleResolution
+from app.schemas.localization import LocalizationMeta
 from datetime import date, datetime
 from pydantic import BaseModel, Field
 
@@ -10,6 +11,7 @@ class CountryReadModelCountry(BaseModel):
     name: str
     region: str | None = None
     status: str
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelProfile(BaseModel):
@@ -22,6 +24,7 @@ class CountryReadModelProfile(BaseModel):
     legal_signals_summary: str | None = None
     risk_summary: str | None = None
     source_summary: str | None = None
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelScoreBreakdown(BaseModel):
@@ -32,6 +35,7 @@ class CountryReadModelScoreBreakdown(BaseModel):
     explanation: str | None = None
     confidence: str | None = None
     source_ids: list[str] = Field(default_factory=list)
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelScore(BaseModel):
@@ -43,6 +47,7 @@ class CountryReadModelScore(BaseModel):
     explanation: str | None = None
     calculated_at: datetime | None = None
     breakdowns: list[CountryReadModelScoreBreakdown] = Field(default_factory=list)
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelLegalSignal(BaseModel):
@@ -56,6 +61,7 @@ class CountryReadModelLegalSignal(BaseModel):
     published_date: date | None = None
     effective_date: date | None = None
     confidence: str | None = None
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelSource(BaseModel):
@@ -67,6 +73,7 @@ class CountryReadModelSource(BaseModel):
     confidence: str | None = None
     published_at: date | None = None
     last_checked_at: date | None = None
+    localization: LocalizationMeta | None = None
 
 
 class CountryReadModelMeta(BaseModel):
