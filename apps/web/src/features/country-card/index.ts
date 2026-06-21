@@ -7,3 +7,4 @@ export * from "./CountrySources";
 export * from "./CountryEvidenceSummary";
 export * from "./CountryUserStoriesSummary";
 export * from "./LocaleStatusBadge";
+export * from "./CountryCiiBlock";

@@ -134,6 +134,7 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
         "sources",
         "evidence_summary",
         "user_stories_summary",
+        "cii",
         "meta",
         "locale",
     }
@@ -338,6 +339,11 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
         country_read_model,
         "get_country_read_model_user_stories_summary",
         lambda *_: user_stories_summary,
+    )
+    monkeypatch.setattr(
+        country_read_model,
+        "get_country_cii",
+        lambda *_: None,
     )
 
     result = country_read_model.get_country_read_model(CONNECTION, "uruguay", "ru")
