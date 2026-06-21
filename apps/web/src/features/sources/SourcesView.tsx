@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -61,6 +61,7 @@ function SourcesViewInner() {
   const [evidenceBySourceId, setEvidenceBySourceId] = useState<
     Record<string, EvidenceState>
   >({});
+  const loadedSourceIds = useRef<Set<string>>(new Set());
 
   const countriesById = useMemo(
     () => new Map(countries?.items.map((c) => [c.id, c]) ?? []),
@@ -74,7 +75,9 @@ function SourcesViewInner() {
       .then((c) => {
         if (!cancelled) setCountries(c);
       })
-      .catch(() => {});
+      .catch((err: unknown) => {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Ошибка загрузки стран");
+      });
     return () => {
       cancelled = true;
     };
@@ -104,7 +107,9 @@ function SourcesViewInner() {
           setError(
             err instanceof Error
               ? err.message
-              : (err as { error?: { code?: string; message?: string } }),
+              : typeof err === "object" && err !== null && "error" in err
+                ? (err as { error?: { code?: string; message?: string } })
+                : "Произошла ошибка при загрузке",
           );
           setIsLoading(false);
         }
@@ -116,8 +121,9 @@ function SourcesViewInner() {
 
   useEffect(() => {
     if (!expandedSourceId) return;
-    if (evidenceBySourceId[expandedSourceId] !== undefined) return;
+    if (loadedSourceIds.current.has(expandedSourceId)) return;
 
+    loadedSourceIds.current.add(expandedSourceId);
     setEvidenceBySourceId((prev) => ({ ...prev, [expandedSourceId]: "loading" }));
 
     evidenceApi
@@ -129,12 +135,13 @@ function SourcesViewInner() {
         }));
       })
       .catch(() => {
+        loadedSourceIds.current.delete(expandedSourceId);
         setEvidenceBySourceId((prev) => ({
           ...prev,
           [expandedSourceId]: "error",
         }));
       });
-  }, [expandedSourceId, evidenceBySourceId]);
+  }, [expandedSourceId]);
 
   function toggleSource(id: string) {
     setExpandedSourceId((prev) => (prev === id ? null : id));

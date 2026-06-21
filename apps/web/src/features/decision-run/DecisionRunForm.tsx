@@ -90,7 +90,11 @@ function DecisionFormInner() {
       if (err instanceof Error) {
         setRunError(err.message);
       } else {
-        setRunError(err as { error?: { code?: string; message?: string } });
+        setRunError(
+        typeof err === "object" && err !== null && "error" in err
+          ? (err as { error?: { code?: string; message?: string } })
+          : "Произошла ошибка при запросе",
+      );
       }
     } finally {
       setIsRunning(false);

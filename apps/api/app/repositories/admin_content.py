@@ -1,7 +1,7 @@
 from app.core.database import execute_one, fetch_one
 import json
-from psycopg import Connection
-from typing import Any
+from psycopg import Connection, sql
+from typing import Any, cast
 
 
 SOURCE_RETURNING = """
@@ -598,30 +598,31 @@ def _patch_entity(
 ) -> dict[str, Any] | None:
     data = {key: value for key, value in payload.items() if key in allowed_fields}
     if not data:
-        return fetch_one(
-            connection,
-            f"SELECT {returning} FROM {table} WHERE id::text = %s",
+        row = connection.execute(
+            sql.SQL("SELECT {} FROM {} WHERE id::text = %s").format(
+                sql.SQL(returning),
+                sql.Identifier(table),
+            ),
             (entity_id,),
-        )
-    set_clauses = []
-    values = []
+        ).fetchone()
+        return cast(dict[str, Any] | None, row)
+    set_parts = [sql.SQL("{} = %s").format(sql.Identifier(field)) for field in data]
+    values: list[Any] = []
     for field, value in data.items():
-        set_clauses.append(f"{field} = %s")
-        if field == "affected_groups":
-            values.append(json.dumps(value or []))
-        else:
-            values.append(value)
+        values.append(json.dumps(value or []) if field == "affected_groups" else value)
     values.append(entity_id)
-    return fetch_one(
-        connection,
-        f"""
-        UPDATE {table}
-        SET {", ".join(set_clauses)}, updated_at = NOW()
+    query = sql.SQL("""
+        UPDATE {}
+        SET {}, updated_at = NOW()
         WHERE id::text = %s
-        RETURNING {returning}
-        """,
-        tuple(values),
+        RETURNING {}
+    """).format(
+        sql.Identifier(table),
+        sql.SQL(", ").join(set_parts),
+        sql.SQL(returning),
     )
+    row = connection.execute(query, tuple(values)).fetchone()
+    return cast(dict[str, Any] | None, row)
 
 
 def _mirror_source_confidence(payload: dict[str, Any]) -> dict[str, Any]:

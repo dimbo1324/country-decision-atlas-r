@@ -4,6 +4,24 @@
     {
       "date": "2026-06-21",
       "event": "task_completed",
+      "type": "fix",
+      "scope": "audit-remediation-v1",
+      "task": "fix/audit-remediation-v1",
+      "branch": "fix/audit-remediation-v1",
+      "summary": "Remediated all 22 findings from the backend/database/frontend security and quality audit. Backend: added catch-all and psycopg exception handlers with structured logging, restricted CORS methods/headers, added security headers and in-memory rate limiting middleware, removed environment field from health endpoint, changed app_debug default to false, added startup warning for missing admin token, replaced f-string table/column interpolation in _patch_entity with psycopg.sql.Identifier. Database: migration 012 adds missing FK indexes (translation_jobs, translation_glossary, watchlists, legal_signal_evidence), composite indexes (sources/legal_signals country+status), and changes country_scores/legal_signals CASCADE to RESTRICT. Frontend: fixed useEffect dependency array races in LegalSignalsView and SourcesView via useRef sentinel, added JSON parse safety (response.text() + try/catch) for non-JSON error responses, eliminated silent .catch(() => {}), fixed hardcoded locale=ru in scenarios page, added runtime type guard for error object casts, unified two HTTP clients by fixing both for consistency.",
+      "checks": [
+        "python -m pytest: 89 passed, 23 skipped",
+        "python -m ruff check apps/api/app/ tests/: passed",
+        "python -m ruff format --check apps/api/app/ tests/: passed",
+        "python -m mypy apps/api/app/ --ignore-missing-imports: no issues in 52 files",
+        "pnpm typecheck: passed",
+        "pnpm lint: passed (0 errors, 0 warnings)"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-21",
+      "event": "task_completed",
       "type": "feat",
       "scope": "read-models-localization-service-v1",
       "task": "feat/read-models-localization-service-v1",

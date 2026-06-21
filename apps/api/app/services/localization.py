@@ -61,7 +61,9 @@ def overlay_localized_fields(
                     item.get(legacy_primary_key) or None if legacy_primary_key else None
                 )
                 fallback_text: str | None = (
-                    item.get(legacy_fallback_key) or None if legacy_fallback_key else None
+                    item.get(legacy_fallback_key) or None
+                    if legacy_fallback_key
+                    else None
                 )
                 text = primary_text or fallback_text
                 item[output_key] = text or ""

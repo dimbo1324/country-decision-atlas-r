@@ -117,9 +117,7 @@ def install_repository_fakes(monkeypatch: Any) -> None:
                 )
         return rows
 
-    def fake_signals(
-        _: Connection[Any], slugs: list[str]
-    ) -> list[dict[str, Any]]:
+    def fake_signals(_: Connection[Any], slugs: list[str]) -> list[dict[str, Any]]:
         return [
             {
                 "id": "signal-1",
