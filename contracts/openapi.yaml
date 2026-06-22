@@ -1794,6 +1794,27 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
       - AdminTokenAuth: []
+  /api/v1/admin/country-onboarding/report:
+    get:
+      tags:
+      - admin
+      summary: Admin Read Country Onboarding Report
+      operationId: admin_read_country_onboarding_report_api_v1_admin_country_onboarding_report_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCountriesOnboardingResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - AdminTokenAuth: []
   /api/v1/admin/translation-jobs:
     get:
       tags:
@@ -3148,6 +3169,92 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    AllCountriesOnboardingResult:
+      properties:
+        countries:
+          items:
+            $ref: '#/components/schemas/CountryOnboardingResult'
+          type: array
+          title: Countries
+        all_mvp_ready:
+          type: boolean
+          title: All Mvp Ready
+      type: object
+      required:
+      - all_mvp_ready
+      title: AllCountriesOnboardingResult
+    CountryOnboardingResult:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        mvp_ready:
+          type: boolean
+          title: Mvp Ready
+        sections:
+          additionalProperties:
+            $ref: '#/components/schemas/OnboardingSection'
+          type: object
+          title: Sections
+        findings:
+          items:
+            $ref: '#/components/schemas/OnboardingFinding'
+          type: array
+          title: Findings
+      type: object
+      required:
+      - country_slug
+      - mvp_ready
+      title: CountryOnboardingResult
+    OnboardingFinding:
+      properties:
+        code:
+          type: string
+          title: Code
+        severity:
+          type: string
+          title: Severity
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - severity
+      - message
+      title: OnboardingFinding
+    OnboardingSection:
+      properties:
+        status:
+          type: string
+          title: Status
+        severity:
+          type: string
+          title: Severity
+        required:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Required
+        actual:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Actual
+        missing:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Missing
+        message:
+          type: string
+          title: Message
+          default: ''
+      type: object
+      required:
+      - status
+      - severity
+      title: OnboardingSection
     DataQualityCheck:
       properties:
         code:

@@ -18,9 +18,11 @@ from app.schemas.admin_content import (
     UserStoryPatch,
 )
 from app.schemas.common import ContentValidationError, ErrorResponse
+from app.schemas.country_onboarding import AllCountriesOnboardingResult
 from app.schemas.data_quality import DataQualityReport
 from app.schemas.translations import TranslationJobCreate, TranslationJobResponse
 from app.services import admin_content
+from app.services.country_onboarding import evaluate_all_mvp_countries
 from app.services.data_quality import build_data_quality_report
 from fastapi import APIRouter, Depends
 from psycopg import Connection
@@ -210,3 +212,15 @@ async def admin_read_data_quality_report(
     _: Annotated[str, Depends(require_admin_token)],
 ) -> DataQualityReport:
     return build_data_quality_report(connection)
+
+
+@router.get(
+    "/country-onboarding/report",
+    response_model=AllCountriesOnboardingResult,
+    responses={401: {"model": ErrorResponse}},
+)
+async def admin_read_country_onboarding_report(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    _: Annotated[str, Depends(require_admin_token)],
+) -> AllCountriesOnboardingResult:
+    return evaluate_all_mvp_countries(connection)

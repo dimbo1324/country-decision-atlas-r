@@ -616,6 +616,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/country-onboarding/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Read Country Onboarding Report */
+        get: operations["admin_read_country_onboarding_report_api_v1_admin_country_onboarding_report_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/translation-jobs": {
         parameters: {
             query?: never;
@@ -1285,6 +1302,53 @@ export interface components {
             items: components["schemas"]["CountryScore"][];
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** AllCountriesOnboardingResult */
+        AllCountriesOnboardingResult: {
+            /** Countries */
+            countries?: components["schemas"]["CountryOnboardingResult"][];
+            /** All Mvp Ready */
+            all_mvp_ready: boolean;
+        };
+        /** CountryOnboardingResult */
+        CountryOnboardingResult: {
+            /** Country Slug */
+            country_slug: string;
+            /** Mvp Ready */
+            mvp_ready: boolean;
+            /** Sections */
+            sections?: {
+                [key: string]: components["schemas"]["OnboardingSection"];
+            };
+            /** Findings */
+            findings?: components["schemas"]["OnboardingFinding"][];
+        };
+        /** OnboardingFinding */
+        OnboardingFinding: {
+            /** Code */
+            code: string;
+            /** Severity */
+            severity: string;
+            /** Message */
+            message: string;
+        };
+        /** OnboardingSection */
+        OnboardingSection: {
+            /** Status */
+            status: string;
+            /** Severity */
+            severity: string;
+            /** Required */
+            required?: number | null;
+            /** Actual */
+            actual?: number | null;
+            /** Missing */
+            missing?: number | null;
+            /**
+             * Message
+             * @default
+             */
+            message: string;
         };
         /** DataQualityCheck */
         DataQualityCheck: {
@@ -4381,6 +4445,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataQualityReport"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    admin_read_country_onboarding_report_api_v1_admin_country_onboarding_report_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AllCountriesOnboardingResult"];
                 };
             };
             /** @description Unauthorized */

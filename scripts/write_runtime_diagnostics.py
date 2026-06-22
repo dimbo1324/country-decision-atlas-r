@@ -168,6 +168,13 @@ def checks() -> list[Check]:
             None,
             {"X-Admin-Token": ADMIN_TOKEN},
         ),
+        (
+            "country_onboarding_report.json",
+            "GET",
+            "/api/v1/admin/country-onboarding/report",
+            None,
+            {"X-Admin-Token": ADMIN_TOKEN},
+        ),
     ]
 
 
