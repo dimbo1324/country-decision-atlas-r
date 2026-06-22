@@ -62,8 +62,12 @@ def _run_report(**overrides: Any) -> Any:
     translation_patch = patch(
         f"{_SVC}.build_translation_quality_results", return_value=([], [])
     )
+    onboarding_patch = patch(
+        f"{_SVC}.build_country_onboarding_dq_results", return_value=([], [])
+    )
     with (
         translation_patch,
+        onboarding_patch,
         patch.multiple(_REPO, **{k.split(".")[-1]: v for k, v in patches.items()}),
     ):
         return build_data_quality_report(_make_connection())

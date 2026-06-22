@@ -3,6 +3,26 @@
   "entries": [
     {
       "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "country-onboarding-standard-v1",
+      "task": "chore/country-onboarding-standard-v1",
+      "branch": "chore/country-onboarding-standard-v1",
+      "summary": "Machine-checkable country onboarding standard: repository + service + schemas + DQ integration + admin endpoint + 63 tests. Discovered Uruguay evidence gap (14/15) — fixed via migration 021. Russia and Uruguay both mvp_ready=true. OpenAPI contract updated.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "country-onboarding-standard-v1",
+      "task": "chore/country-onboarding-standard-v1",
+      "branch": "chore/country-onboarding-standard-v1",
+      "summary": "Started machine-checkable country onboarding standard before adding a third country.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
       "event": "task_started",
       "type": "chore",
       "scope": "testclient-httpx2-compatibility-v1",

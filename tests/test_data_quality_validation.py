@@ -22,6 +22,11 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "build_translation_quality_results",
         lambda *_: ([], []),
     )
+    monkeypatch.setattr(
+        data_quality,
+        "build_country_onboarding_dq_results",
+        lambda *_: ([], []),
+    )
     for name in [
         "list_missing_mvp_countries",
         "list_published_countries_without_cards",

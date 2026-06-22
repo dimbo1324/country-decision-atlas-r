@@ -5,6 +5,7 @@ from app.schemas.data_quality import (
     DataQualityIssue,
     DataQualityReport,
 )
+from app.services.country_onboarding import build_country_onboarding_dq_results
 from app.services.translation_quality import build_translation_quality_results
 from psycopg import Connection
 from typing import Any
@@ -638,6 +639,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     )
     checks.extend(translation_checks)
     issues.extend(translation_issues)
+    onboarding_checks, onboarding_issues = build_country_onboarding_dq_results(
+        connection
+    )
+    checks.extend(onboarding_checks)
+    issues.extend(onboarding_issues)
     critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
     warnings_count = sum(1 for issue in issues if issue.severity == "warning")
     return DataQualityReport(
