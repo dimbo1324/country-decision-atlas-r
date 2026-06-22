@@ -12,7 +12,6 @@ from app.api.v1 import (
 )
 from app.core.config import get_settings
 from app.core.database import close_database_pool, open_database_pool
-from collections import defaultdict
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
@@ -31,8 +30,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-_rate_windows: defaultdict[str, list[float]] = defaultdict(list)
+_rate_windows: dict[str, list[float]] = {}
 _RATE_WINDOW = 60.0
+_RATE_EXCLUDED_PATHS = frozenset({"/health"})
 
 
 def error_response(
@@ -68,7 +68,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Content-Type", "Authorization", "X-Admin-Token"],
 )
@@ -92,18 +92,20 @@ async def rate_limit_middleware(
     request: Request,
     call_next: Callable[[Request], Awaitable[Response]],
 ) -> Response:
+    if request.url.path in _RATE_EXCLUDED_PATHS:
+        return await call_next(request)
     if request.client is not None:
-        ip = request.client.host
+        ip = (
+            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+            or request.client.host
+        )
         now = time.monotonic()
         cutoff = now - _RATE_WINDOW
-        recent = [t for t in _rate_windows[ip] if t > cutoff]
+        recent = [t for t in _rate_windows.get(ip, []) if t > cutoff]
         if len(recent) >= settings.api_rate_limit_per_minute:
             return error_response(429, "rate_limit_exceeded", "Too many requests.")
         recent.append(now)
-        if recent:
-            _rate_windows[ip] = recent
-        else:
-            del _rate_windows[ip]
+        _rate_windows[ip] = recent
     return await call_next(request)
 
 

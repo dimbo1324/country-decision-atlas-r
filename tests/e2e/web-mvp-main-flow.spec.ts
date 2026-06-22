@@ -5,6 +5,7 @@ import { e2eRoutes } from "./helpers/routes";
 test("main MVP user flow: home → countries → Russia → Uruguay → decision → result → country card", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   await page.goto(e2eRoutes.home);
   await expectHasMainHeading(page, /country decision atlas/i);
   await expect(

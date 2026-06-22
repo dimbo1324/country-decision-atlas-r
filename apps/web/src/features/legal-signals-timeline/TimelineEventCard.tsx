@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LocaleCode } from "../../shared/api/countries";
 import type { LegalSignalTimelineEvent } from "../../shared/api/legal-signals";
+import { routes } from "../../shared/lib/routes";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 const directionLabels: Record<string, string> = {
@@ -80,6 +81,12 @@ export function TimelineEventCard({
         {!event.evidence?.url && event.evidence && (
           <span>Доказательство: {event.evidence.claim}</span>
         )}
+        <Link
+          href={routes.countryWithLocale(event.country_slug, locale)}
+          className="internalLink"
+        >
+          Карточка страны: {event.country_name} →
+        </Link>
         <Link href={`/sources?country_slug=${event.country_slug}&locale=${locale}`}>
           Все источники страны
         </Link>

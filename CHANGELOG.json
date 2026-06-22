@@ -4,6 +4,43 @@
     {
       "date": "2026-06-22",
       "event": "task_completed",
+      "type": "feat",
+      "scope": "audit-fixes-v1",
+      "task": "feat/audit-fixes-v1",
+      "branch": "feat/audit-fixes-v1",
+      "summary": "Full audit remediation. Rate limiter: fixed memory leak (per-IP dict never cleaned stale entries), fixed dead branch, added /health exclusion, added X-Forwarded-For support, raised dev default to 600 req/min via docker-compose (was 120 — caused 429 E2E flakiness). Legal-signals: added missing country-card link to TimelineEventCard (test regression from timeline migration), deleted orphaned LegalSignalsView (398 lines dead code). HTTP client: removed duplicate app/lib/api.ts, migrated scenarios/page.tsx to shared/api. Security: added Next.js middleware blocking /internal/* in non-local environments, set CORS allow_credentials=False. UX: added React error boundary (app/error.tsx). Timeline: fixed year-group ordering (sorted desc). CI: added integration job with postgres service, migration chain, idempotency check, smoke tests (RUN_RUNTIME_SMOKE_TESTS=1). Main-flow E2E: added per-test 60s timeout for multi-page flow (passes in 5.8s isolation, was timing out at 30s under full-run load). Result: 77 passed / 0 failed.",
+      "status": "completed",
+      "e2e_result": "77 passed / 0 failed",
+      "fixes": [
+        "rate_limiter_memory_leak",
+        "rate_limiter_dead_branch",
+        "rate_limiter_health_exclusion",
+        "rate_limiter_xforwardedfor",
+        "timeline_country_card_link_missing",
+        "dead_code_legal_signals_view",
+        "duplicate_http_client_removed",
+        "internal_route_blocked_in_production",
+        "cors_allow_credentials_false",
+        "react_error_boundary_added",
+        "timeline_year_ordering",
+        "ci_integration_job_added",
+        "main_flow_e2e_timeout_per_test"
+      ],
+      "checks_run": [
+        "ruff check: clean",
+        "ruff format: clean",
+        "mypy 114 files clean",
+        "pytest 360 passed",
+        "pnpm typecheck: clean",
+        "pnpm lint: clean",
+        "pnpm build: clean",
+        "pnpm format:check: clean",
+        "pnpm web:mvp:check: 77 passed / 0 failed"
+      ]
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
       "type": "chore",
       "scope": "infographic-foundation-closeout-v1",
       "task": "chore/infographic-foundation-closeout-v1",

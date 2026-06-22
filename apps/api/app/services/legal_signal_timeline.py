@@ -78,7 +78,7 @@ def build_timeline_response(
         ),
         groups=[
             TimelineYearGroup(year=year, events=events)
-            for year, events in groups.items()
+            for year, events in sorted(groups.items(), reverse=True)
         ],
         total=total,
         limit=limit,

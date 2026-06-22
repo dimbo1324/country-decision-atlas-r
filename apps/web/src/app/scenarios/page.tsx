@@ -1,11 +1,7 @@
 import { getLocaleFromSearchParams } from "../../shared/lib/locale";
-import { apiGet } from "../lib/api";
+import { scenariosApi } from "../../shared/api";
 
 export const dynamic = "force-dynamic";
-
-type Scenarios = {
-  items: Array<{ slug: string; name: string; description?: string | null }>;
-};
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -14,7 +10,21 @@ type PageProps = {
 export default async function ScenariosPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const locale = getLocaleFromSearchParams(params);
-  const scenarios = await apiGet<Scenarios>(`/api/v1/scenarios?locale=${locale}`);
+
+  let scenarios;
+  try {
+    scenarios = await scenariosApi.listScenarios({ locale });
+  } catch {
+    return (
+      <main className="pageShell">
+        <header className="pageHeader">
+          <p className="eyebrow">Сценарии</p>
+          <h1>Сценарии подбора страны</h1>
+        </header>
+        <p className="notice">Не удалось загрузить сценарии.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="pageShell">
@@ -22,19 +32,14 @@ export default async function ScenariosPage({ searchParams }: PageProps) {
         <p className="eyebrow">Сценарии</p>
         <h1>Сценарии подбора страны</h1>
       </header>
-
-      {scenarios.ok ? (
-        <section className="dataGrid">
-          {scenarios.data.items.map((scenario) => (
-            <article className="dataCard" key={scenario.slug}>
-              <span>{scenario.name}</span>
-              <small>{scenario.description ?? scenario.slug}</small>
-            </article>
-          ))}
-        </section>
-      ) : (
-        <p className="notice">{scenarios.error}</p>
-      )}
+      <section className="dataGrid">
+        {scenarios.items.map((scenario) => (
+          <article className="dataCard" key={scenario.slug}>
+            <span>{scenario.name}</span>
+            <small>{scenario.description ?? scenario.slug}</small>
+          </article>
+        ))}
+      </section>
     </main>
   );
 }
