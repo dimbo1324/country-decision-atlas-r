@@ -132,6 +132,81 @@ def get_scenario_for_cii_comparison(
     )
 
 
+def list_matrix_countries(
+    connection: Connection[Any],
+    country_slugs: list[str],
+    locale: str,
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.slug,
+            COALESCE(t_name.translated_value, c.name) AS name,
+            c.iso2
+        FROM countries c
+        LEFT JOIN locales l ON l.code = %s
+        LEFT JOIN translations t_name
+            ON t_name.entity_type = 'country'
+            AND t_name.entity_id = c.id
+            AND t_name.field_name = 'name'
+            AND t_name.locale_id = l.id
+        WHERE c.slug = ANY(%s)
+        ORDER BY c.slug
+        """,
+        (locale, country_slugs),
+    )
+
+
+def list_matrix_scenarios(
+    connection: Connection[Any],
+    scenario_slugs: list[str],
+    locale: str,
+) -> list[dict[str, Any]]:
+    name_col = "title_ru" if locale == "ru" else "title_en"
+    return fetch_all(
+        connection,
+        f"""
+        SELECT
+            s.slug,
+            COALESCE(s.{name_col}, s.name) AS name
+        FROM scenarios s
+        WHERE s.slug = ANY(%s)
+          AND s.is_active = TRUE
+        ORDER BY s.slug
+        """,
+        (scenario_slugs,),
+    )
+
+
+def get_cii_matrix_cells(
+    connection: Connection[Any],
+    country_slugs: list[str],
+    scenario_slugs: list[str],
+    version: str = "v1.0",
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.slug AS country_slug,
+            ccs.scenario_slug,
+            ccs.overall_score::float AS cii_score,
+            ccs.confidence AS cii_confidence,
+            ccs.drift::float AS country_drift,
+            ccs.formula_version,
+            ccs.aggregation_method
+        FROM country_cii_scores ccs
+        JOIN countries c ON c.id = ccs.country_id
+        WHERE c.slug = ANY(%s)
+          AND ccs.scenario_slug = ANY(%s)
+          AND ccs.version = %s
+        ORDER BY c.slug, ccs.scenario_slug
+        """,
+        (country_slugs, scenario_slugs, version),
+    )
+
+
 def get_scenario_metric_weights(
     connection: Connection[Any],
     scenario_slug: str,

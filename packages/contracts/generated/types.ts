@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/matrix": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Countries Matrix */
+        get: operations["get_countries_matrix_api_v1_countries_matrix_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/compare": {
         parameters: {
             query?: never;
@@ -2690,6 +2707,82 @@ export interface components {
             /** Quality Warnings */
             quality_warnings?: string[];
         };
+        /** MatrixCountry */
+        MatrixCountry: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+        };
+        /** MatrixScenario */
+        MatrixScenario: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Display Order */
+            display_order: number;
+        };
+        /** MatrixCell */
+        MatrixCell: {
+            /** Country Slug */
+            country_slug: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Cii Score */
+            cii_score?: number | null;
+            /** Cii Confidence */
+            cii_confidence?: string | null;
+            /** Country Drift */
+            country_drift?: number | null;
+            /** Score Label */
+            score_label?: string | null;
+            /** Confidence Label */
+            confidence_label?: string | null;
+            /** Formula Version */
+            formula_version?: string | null;
+            /** Aggregation Method */
+            aggregation_method?: string | null;
+            /** Weights Version */
+            weights_version?: string | null;
+            /**
+             * Quality Warnings
+             * @default []
+             */
+            quality_warnings: string[];
+        };
+        /** CompareMatrixResponse */
+        CompareMatrixResponse: {
+            locale: components["schemas"]["LocaleResolution"];
+            /**
+             * Countries
+             * @default []
+             */
+            countries: components["schemas"]["MatrixCountry"][];
+            /**
+             * Scenarios
+             * @default []
+             */
+            scenarios: components["schemas"]["MatrixScenario"][];
+            /**
+             * Cells
+             * @default []
+             */
+            cells: components["schemas"]["MatrixCell"][];
+            /** Formula Version */
+            formula_version?: string | null;
+            /** Aggregation Method */
+            aggregation_method?: string | null;
+            /** Weights Version */
+            weights_version?: string | null;
+            /**
+             * Quality Warnings
+             * @default []
+             */
+            quality_warnings: string[];
+        };
     };
     responses: never;
     parameters: never;
@@ -2717,6 +2810,39 @@ export interface operations {
                     "application/json": {
                         [key: string]: string;
                     };
+                };
+            };
+        };
+    };
+    get_countries_matrix_api_v1_countries_matrix_get: {
+        parameters: {
+            query?: {
+                countries?: string | null;
+                scenarios?: string | null;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompareMatrixResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

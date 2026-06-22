@@ -19,6 +19,54 @@ paths:
                   type: string
                 type: object
                 title: Response Health Health Get
+  /api/v1/countries/matrix:
+    get:
+      tags:
+      - countries
+      - cii
+      summary: Get Countries Matrix
+      operationId: get_countries_matrix_api_v1_countries_matrix_get
+      parameters:
+      - name: countries
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Countries
+      - name: scenarios
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenarios
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompareMatrixResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/compare:
     get:
       tags:
@@ -5769,6 +5817,147 @@ components:
       required:
       - country_slug
       title: ComparedMetricValue
+    MatrixCountry:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+      type: object
+      required:
+      - slug
+      - name
+      title: MatrixCountry
+    MatrixScenario:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        display_order:
+          type: integer
+          title: Display Order
+      type: object
+      required:
+      - slug
+      - name
+      - display_order
+      title: MatrixScenario
+    MatrixCell:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        cii_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cii Score
+        cii_confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cii Confidence
+        country_drift:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Country Drift
+        score_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Score Label
+        confidence_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence Label
+        formula_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Formula Version
+        aggregation_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aggregation Method
+        weights_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weights Version
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+          default: []
+      type: object
+      required:
+      - country_slug
+      - scenario_slug
+      title: MatrixCell
+    CompareMatrixResponse:
+      properties:
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+        countries:
+          items:
+            $ref: '#/components/schemas/MatrixCountry'
+          type: array
+          title: Countries
+          default: []
+        scenarios:
+          items:
+            $ref: '#/components/schemas/MatrixScenario'
+          type: array
+          title: Scenarios
+          default: []
+        cells:
+          items:
+            $ref: '#/components/schemas/MatrixCell'
+          type: array
+          title: Cells
+          default: []
+        formula_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Formula Version
+        aggregation_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aggregation Method
+        weights_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weights Version
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+          default: []
+      type: object
+      required:
+      - locale
+      title: CompareMatrixResponse
   securitySchemes:
     AdminTokenAuth:
       type: apiKey

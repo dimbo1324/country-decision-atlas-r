@@ -1749,3 +1749,189 @@ ol {
     height: auto;
   }
 }
+
+.pageSubtitle {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0 0;
+}
+
+.matrixBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.matrixLoadingText {
+  font-size: 14px;
+  color: #888;
+}
+
+.matrixEmptyState {
+  font-size: 14px;
+  color: #888;
+  padding: 16px 0;
+}
+
+.matrixTableWrapper {
+  overflow-x: auto;
+}
+
+.matrixTable {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+.matrixCornerCell {
+  background: transparent;
+}
+
+.matrixScenarioHeader {
+  padding: 8px 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  white-space: nowrap;
+}
+
+.matrixCountryHeader {
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: #111;
+  border-right: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+.matrixCell {
+  padding: 0;
+  text-align: center;
+  border: 1px solid #e8e8e8;
+  min-width: 80px;
+}
+
+.matrixCellLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  text-decoration: none;
+  color: inherit;
+  gap: 2px;
+  min-height: 52px;
+}
+
+.matrixCellScore {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.matrixCellConfidence {
+  font-size: 10px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.matrixCellWeak {
+  background: #f9e0e0;
+}
+
+.matrixCellLimited {
+  background: #fdf0d5;
+}
+
+.matrixCellModerate {
+  background: #fdfbdc;
+}
+
+.matrixCellStrong {
+  background: #dff2e3;
+}
+
+.matrixCellExcellent {
+  background: #c5e8cc;
+}
+
+.matrixCellMissing {
+  background: #f5f5f5;
+  color: #aaa;
+}
+
+.matrixLegend {
+  padding: 12px 0;
+}
+
+.matrixLegendTitle {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.matrixLegendBands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.matrixLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.matrixLegendDot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.matrixSummary {
+  padding: 12px 0;
+}
+
+.matrixSummaryTitle {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.matrixSummarySection {
+  margin-bottom: 12px;
+}
+
+.matrixSummarySectionTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 6px;
+}
+
+.matrixSummaryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.matrixSummaryItem {
+  font-size: 13px;
+}
+
+.matrixSummaryScenario {
+  color: #555;
+}
+
+.matrixSummaryValue {
+  font-weight: 600;
+}
