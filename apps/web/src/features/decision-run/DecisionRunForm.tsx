@@ -16,6 +16,7 @@ import {
   DEFAULT_DECISION_READY_SCENARIO_SLUG,
   isDecisionReadyScenario,
 } from "./decision-ready-scenarios";
+import { DecisionCiiComparison } from "../decision-visual-comparison";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -209,6 +210,13 @@ function DecisionFormInner() {
           <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
         )}
         {result !== null && <DecisionResults response={result} />}
+        {result !== null && candidateCountrySlugs.length === 2 && (
+          <DecisionCiiComparison
+            countrySlugs={candidateCountrySlugs}
+            scenarioSlug={scenarioSlug}
+            locale={locale}
+          />
+        )}
       </div>
     </div>
   );

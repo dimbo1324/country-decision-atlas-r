@@ -10,6 +10,7 @@ from app.repositories.countries import (
     list_countries,
 )
 from app.repositories.scores import count_country_scores, list_country_scores
+from app.schemas.cii_comparison import CiiCountryComparisonResponse
 from app.schemas.common import Pagination
 from app.schemas.countries import (
     CountryListResponse,
@@ -20,6 +21,7 @@ from app.schemas.country_read_model import CountryReadModelCii, CountryReadModel
 from app.schemas.decision_engine import SourceListWithLocaleResponse
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
+from app.services.cii_comparison import build_cii_comparison
 from app.services.country_read_model import build_cii, get_country_read_model
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
@@ -27,6 +29,29 @@ from typing import Annotated, Any, Literal
 
 
 router = APIRouter(prefix="/countries", tags=["countries"])
+
+
+@router.get("/compare", response_model=CiiCountryComparisonResponse, tags=["cii"])
+async def compare_countries_cii(
+    countries: Annotated[
+        str, Query(description="Comma-separated country slugs, exactly 2 for MVP")
+    ],
+    scenario: Annotated[str, Query(description="Scenario slug")],
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
+) -> CiiCountryComparisonResponse:
+    slugs = [s.strip() for s in countries.split(",") if s.strip()]
+    unique_slugs = list(dict.fromkeys(slugs))
+    if len(unique_slugs) != 2:
+        raise api_error(
+            422,
+            "countries_count_invalid",
+            "Exactly 2 unique country slugs are required for comparison.",
+            {"provided": slugs},
+        )
+    if not scenario:
+        raise api_error(422, "scenario_required", "Scenario slug is required.", {})
+    return build_cii_comparison(connection, unique_slugs, scenario, locale)
 
 
 @router.get("", response_model=CountryListResponse)

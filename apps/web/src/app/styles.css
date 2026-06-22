@@ -1555,3 +1555,185 @@ ol {
 .localizationBadgeNeedsReview {
   font-weight: 700;
 }
+
+.ciiCompareBlock {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid currentColor;
+  margin-top: 14px;
+}
+
+.ciiCompareTitle {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.ciiCompareLoadingText,
+.ciiCompareEmptyText {
+  font-size: 13px;
+  margin: 0;
+}
+
+.ciiCompareSummary {
+  display: grid;
+  gap: 6px;
+}
+
+.ciiCompareSummaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ciiCompareSummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  min-width: 100px;
+}
+
+.ciiCompareSummaryName {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ciiCompareSummaryScore {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.ciiCompareMissing {
+  opacity: 0.5;
+}
+
+.ciiCompareMeta {
+  font-size: 11px;
+  margin: 0;
+  opacity: 0.6;
+}
+
+.ciiCompareChartArea {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.ciiSpiderChart {
+  flex-shrink: 0;
+}
+
+.ciiCompareBars {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ciiCompareBarsLegend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.ciiBarsLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ciiBarsLegendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ciiBarRow {
+  display: grid;
+  gap: 2px;
+}
+
+.ciiBarLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ciiBarTrack {
+  display: grid;
+  gap: 2px;
+}
+
+.ciiBarItem {
+  height: 14px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ciiBarFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+.ciiWinnerList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ciiWinnerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  font-size: 12px;
+}
+
+.ciiWinnerMetricName {
+  flex: 1;
+  font-weight: 500;
+}
+
+.ciiWinnerBadgeWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ciiWinnerBadge {
+  font-weight: 700;
+}
+
+.ciiWinnerTie {
+  opacity: 0.5;
+}
+
+.ciiWinnerDelta {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+  .ciiCompareChartArea {
+    grid-template-columns: 1fr;
+  }
+
+  .ciiSpiderChart {
+    width: 100%;
+    height: auto;
+  }
+}

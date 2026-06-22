@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Compare Countries Cii */
+        get: operations["compare_countries_cii_api_v1_countries_compare_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries": {
         parameters: {
             query?: never;
@@ -2604,6 +2621,71 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** CiiCountryComparisonResponse */
+        CiiCountryComparisonResponse: {
+            scenario: components["schemas"]["ComparedScenario"];
+            locale: components["schemas"]["LocaleResolution"];
+            /** Countries */
+            countries?: components["schemas"]["ComparedCountry"][];
+            /** Metrics */
+            metrics?: components["schemas"]["ComparedMetric"][];
+            /** Formula Version */
+            formula_version?: string | null;
+            /** Aggregation Method */
+            aggregation_method?: string | null;
+            /** Quality Warnings */
+            quality_warnings?: string[];
+        };
+        /** ComparedScenario */
+        ComparedScenario: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** ComparedCountry */
+        ComparedCountry: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+            /** Cii Score */
+            cii_score?: number | null;
+            /** Cii Confidence */
+            cii_confidence?: string | null;
+            /** Country Drift */
+            country_drift?: number | null;
+        };
+        /** ComparedMetric */
+        ComparedMetric: {
+            /** Metric Slug */
+            metric_slug: string;
+            /** Metric Name */
+            metric_name: string;
+            /** Display Order */
+            display_order: number;
+            /** Higher Is Better */
+            higher_is_better: boolean;
+            /** Delta */
+            delta?: number | null;
+            /** Winner Country Slug */
+            winner_country_slug?: string | null;
+            /** Values */
+            values?: components["schemas"]["ComparedMetricValue"][];
+        };
+        /** ComparedMetricValue */
+        ComparedMetricValue: {
+            /** Country Slug */
+            country_slug: string;
+            /** Value */
+            value?: number | null;
+            /** Effective Value */
+            effective_value?: number | null;
+            /** Quality Warnings */
+            quality_warnings?: string[];
+        };
     };
     responses: never;
     parameters: never;
@@ -2631,6 +2713,41 @@ export interface operations {
                     "application/json": {
                         [key: string]: string;
                     };
+                };
+            };
+        };
+    };
+    compare_countries_cii_api_v1_countries_compare_get: {
+        parameters: {
+            query: {
+                /** @description Comma-separated country slugs, exactly 2 for MVP */
+                countries: string;
+                /** @description Scenario slug */
+                scenario: string;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CiiCountryComparisonResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -19,6 +19,54 @@ paths:
                   type: string
                 type: object
                 title: Response Health Health Get
+  /api/v1/countries/compare:
+    get:
+      tags:
+      - countries
+      - cii
+      summary: Compare Countries Cii
+      operationId: compare_countries_cii_api_v1_countries_compare_get
+      parameters:
+      - name: countries
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Comma-separated country slugs, exactly 2 for MVP
+          title: Countries
+        description: Comma-separated country slugs, exactly 2 for MVP
+      - name: scenario
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Scenario slug
+          title: Scenario
+        description: Scenario slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CiiCountryComparisonResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries:
     get:
       tags:
@@ -5561,6 +5609,148 @@ components:
       - msg
       - type
       title: ValidationError
+    CiiCountryComparisonResponse:
+      properties:
+        scenario:
+          $ref: '#/components/schemas/ComparedScenario'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+        countries:
+          items:
+            $ref: '#/components/schemas/ComparedCountry'
+          type: array
+          title: Countries
+        metrics:
+          items:
+            $ref: '#/components/schemas/ComparedMetric'
+          type: array
+          title: Metrics
+        formula_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Formula Version
+        aggregation_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aggregation Method
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+      type: object
+      required:
+      - scenario
+      - locale
+      title: CiiCountryComparisonResponse
+    ComparedScenario:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+      type: object
+      required:
+      - slug
+      - title
+      title: ComparedScenario
+    ComparedCountry:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+        cii_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cii Score
+        cii_confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cii Confidence
+        country_drift:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Country Drift
+      type: object
+      required:
+      - slug
+      - name
+      title: ComparedCountry
+    ComparedMetric:
+      properties:
+        metric_slug:
+          type: string
+          title: Metric Slug
+        metric_name:
+          type: string
+          title: Metric Name
+        display_order:
+          type: integer
+          title: Display Order
+        higher_is_better:
+          type: boolean
+          title: Higher Is Better
+        delta:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Delta
+        winner_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Winner Country Slug
+        values:
+          items:
+            $ref: '#/components/schemas/ComparedMetricValue'
+          type: array
+          title: Values
+      type: object
+      required:
+      - metric_slug
+      - metric_name
+      - display_order
+      - higher_is_better
+      title: ComparedMetric
+    ComparedMetricValue:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+        effective_value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Effective Value
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+      type: object
+      required:
+      - country_slug
+      title: ComparedMetricValue
   securitySchemes:
     AdminTokenAuth:
       type: apiKey
