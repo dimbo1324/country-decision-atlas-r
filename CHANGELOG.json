@@ -3,6 +3,40 @@
   "entries": [
     {
       "date": "2026-06-22",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "testclient-httpx2-compatibility-v1",
+      "task": "chore/testclient-httpx2-compatibility-v1",
+      "branch": "chore/testclient-httpx2-compatibility-v1",
+      "summary": "Started TestClient/httpx2 compatibility cleanup to remove StarletteDeprecationWarning without changing product behaviour.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "testclient-httpx2-compatibility-v1",
+      "task": "chore/testclient-httpx2-compatibility-v1",
+      "branch": "chore/testclient-httpx2-compatibility-v1",
+      "summary": "Removed StarletteDeprecationWarning by adding httpx2 to dev dependencies. httpx retained as runtime dependency.",
+      "dependency_decision": "httpx2 added to [project.optional-dependencies].dev; httpx kept as runtime dependency (used in translation_providers.py)",
+      "warning_before": "StarletteDeprecationWarning: Using httpx with starlette.testclient is deprecated; install httpx2 instead.",
+      "warning_after": "none",
+      "checks": {
+        "pytest": "360 passed, 23 skipped, 0 warnings",
+        "mypy": "114 source files clean",
+        "ruff": "clean",
+        "sqlfluff": "clean",
+        "pnpm_typecheck": "clean",
+        "pnpm_lint": "clean",
+        "pnpm_build": "clean",
+        "pnpm_format_check": "clean",
+        "pre_commit": "passed (prettier hook crashed with Windows UV_HANDLE_CLOSING node bug; formatting verified clean via pnpm format:check)"
+      },
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-22",
       "event": "task_completed",
       "type": "feat",
       "scope": "audit-fixes-v1",
