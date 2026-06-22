@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/home/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Home Overview */
+        get: operations["read_home_overview_api_v1_home_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries": {
         parameters: {
             query?: never;
@@ -1693,6 +1710,185 @@ export interface components {
             pagination: components["schemas"]["Pagination"];
             sort?: components["schemas"]["SortMeta"] | null;
         };
+        /** CountryOverviewCard */
+        CountryOverviewCard: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+            /** Best Scenario Slug */
+            best_scenario_slug?: string | null;
+            /** Best Scenario Name */
+            best_scenario_name?: string | null;
+            /** Best Score */
+            best_score?: number | null;
+            /** Weakest Scenario Slug */
+            weakest_scenario_slug?: string | null;
+            /** Weakest Scenario Name */
+            weakest_scenario_name?: string | null;
+            /** Weakest Score */
+            weakest_score?: number | null;
+            /** Average Score */
+            average_score?: number | null;
+            /** Confidence */
+            confidence?: string | null;
+        };
+        /** HomeMatrixCountry */
+        HomeMatrixCountry: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+        };
+        /** HomeMatrixScenario */
+        HomeMatrixScenario: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Display Order */
+            display_order: number;
+        };
+        /** HomeMatrixCell */
+        HomeMatrixCell: {
+            /** Country Slug */
+            country_slug: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Score */
+            score?: number | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Score Label */
+            score_label?: string | null;
+        };
+        /** HomeMatrixPreview */
+        HomeMatrixPreview: {
+            /** Countries */
+            countries: components["schemas"]["HomeMatrixCountry"][];
+            /** Scenarios */
+            scenarios: components["schemas"]["HomeMatrixScenario"][];
+            /** Cells */
+            cells: components["schemas"]["HomeMatrixCell"][];
+        };
+        /** HomeLegalSourceRef */
+        HomeLegalSourceRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** LatestLegalEvent */
+        LatestLegalEvent: {
+            /** Country Slug */
+            country_slug: string;
+            /** Country Name */
+            country_name: string;
+            /**
+             * Event Date
+             * Format: date
+             */
+            event_date: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary?: string | null;
+            /** Impact Direction */
+            impact_direction: string;
+            /** Impact Level */
+            impact_level: string;
+            source?: components["schemas"]["HomeLegalSourceRef"] | null;
+        };
+        /** ScenarioWinner */
+        ScenarioWinner: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Scenario Name */
+            scenario_name: string;
+            /** Winner Country Slug */
+            winner_country_slug?: string | null;
+            /** Winner Country Name */
+            winner_country_name?: string | null;
+            /** Winner Score */
+            winner_score?: number | null;
+            /** Runner Up Country Slug */
+            runner_up_country_slug?: string | null;
+            /** Runner Up Country Name */
+            runner_up_country_name?: string | null;
+            /** Runner Up Score */
+            runner_up_score?: number | null;
+            /** Delta */
+            delta?: number | null;
+        };
+        /** HomeKeyInsight */
+        HomeKeyInsight: {
+            /** Kind */
+            kind: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "info" | "positive" | "warning" | "risk";
+            /** Target Url */
+            target_url: string;
+        };
+        /** HomeOverviewLinks */
+        HomeOverviewLinks: {
+            /**
+             * Countries Url
+             * @default /countries
+             */
+            countries_url: string;
+            /**
+             * Decision Url
+             * @default /decision
+             */
+            decision_url: string;
+            /**
+             * Compare Url
+             * @default /compare
+             */
+            compare_url: string;
+            /**
+             * Legal Signals Url
+             * @default /legal-signals
+             */
+            legal_signals_url: string;
+        };
+        /** HomeOverviewResponse */
+        HomeOverviewResponse: {
+            locale: components["schemas"]["LocaleResolution"];
+            /** Countries Summary */
+            countries_summary: components["schemas"]["CountryOverviewCard"][];
+            /** Scenario Winners */
+            scenario_winners: components["schemas"]["ScenarioWinner"][];
+            matrix_preview: components["schemas"]["HomeMatrixPreview"];
+            /** Latest Legal Events */
+            latest_legal_events: components["schemas"]["LatestLegalEvent"][];
+            /** Key Insights */
+            key_insights: components["schemas"]["HomeKeyInsight"][];
+            links: components["schemas"]["HomeOverviewLinks"];
+            /** Quality Warnings */
+            quality_warnings: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -2957,6 +3153,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CiiCountryComparisonResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_home_overview_api_v1_home_overview_get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeOverviewResponse"];
                 };
             };
             /** @description Validation Error */

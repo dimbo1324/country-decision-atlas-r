@@ -32,6 +32,7 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/translations",
         "/api/v1/legal-signals",
         "/api/v1/legal-signals/timeline",
+        "/api/v1/home/overview",
         "/api/v1/legal-signals/{signal_id}",
         "/api/v1/legal-signals/{signal_id}/evidence",
         "/api/v1/user-stories",

@@ -6,8 +6,10 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   page,
 }) => {
   await page.goto(e2eRoutes.home);
-  await expectHasMainHeading(page, /сравнивайте страны с источниками/i);
-  await expect(page.getByRole("link", { name: /смотреть страны/i })).toBeVisible();
+  await expectHasMainHeading(page, /country decision atlas/i);
+  await expect(
+    page.getByRole("link", { name: /перейти к странам/i }).first(),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /запустить подбор/i }).first(),
   ).toBeVisible();

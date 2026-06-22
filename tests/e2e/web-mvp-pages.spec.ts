@@ -9,8 +9,8 @@ import { e2eRoutes } from "./helpers/routes";
 test.describe("MVP page availability", () => {
   test("home / opens with main heading", async ({ page }) => {
     await page.goto(e2eRoutes.home);
-    await expectHasMainHeading(page, /сравнивайте страны с источниками/i);
-    await expect(page.getByRole("link", { name: /смотреть страны/i })).toBeVisible();
+    await expectHasMainHeading(page, /country decision atlas/i);
+    await expect(page.getByRole("link", { name: /запустить подбор/i })).toBeVisible();
     await expectNoAppCrash(page);
   });
 

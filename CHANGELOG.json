@@ -1120,6 +1120,36 @@
         "clean database migrations 001-019 and direct repeat of migration 019: passed",
         "Playwright: 73 passed, 0 failed"
       ]
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "home-visual-overview-v1",
+      "task": "feat/home-visual-overview-v1",
+      "branch": "feat/home-visual-overview-v1",
+      "summary": "Started homepage visual overview using existing CII matrix, scenario winners, country summaries, legal timeline events, and key insights.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "home-visual-overview-v1",
+      "task": "feat/home-visual-overview-v1",
+      "branch": "feat/home-visual-overview-v1",
+      "summary": "Delivered a localized homepage overview API and UI with country summaries, scenario winners, CII matrix preview, latest source-backed legal events, deterministic insights, generated OpenAPI and TypeScript contracts, responsive browser coverage, and clean database verification.",
+      "status": "done",
+      "checks": [
+        "python -m pytest: 345 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "python -m pre_commit run --all-files: passed",
+        "clean database migrations 001-019 and idempotent migration rerun: passed",
+        "Playwright: 77 passed, 0 failed"
+      ]
     }
   ]
 }

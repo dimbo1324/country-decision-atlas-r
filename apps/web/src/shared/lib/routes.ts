@@ -3,6 +3,7 @@ export const routes = {
   countries: "/countries",
   country: (slug: string) => `/countries/${slug}`,
   decision: "/decision",
+  compare: "/compare",
   legalSignals: "/legal-signals",
   sources: "/sources",
   dataQuality: "/internal/data-quality",

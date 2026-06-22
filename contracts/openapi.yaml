@@ -115,6 +115,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/home/overview:
+    get:
+      tags:
+      - home
+      summary: Read Home Overview
+      operationId: read_home_overview_api_v1_home_overview_get
+      parameters:
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: en
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeOverviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries:
     get:
       tags:
@@ -3940,6 +3971,359 @@ components:
       - items
       - pagination
       title: EvidenceListResponse
+    CountryOverviewCard:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+        best_scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Best Scenario Slug
+        best_scenario_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Best Scenario Name
+        best_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Best Score
+        weakest_scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weakest Scenario Slug
+        weakest_scenario_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weakest Scenario Name
+        weakest_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Weakest Score
+        average_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Score
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+      type: object
+      required:
+      - slug
+      - name
+      title: CountryOverviewCard
+    HomeMatrixCountry:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+      type: object
+      required:
+      - slug
+      - name
+      title: HomeMatrixCountry
+    HomeMatrixScenario:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        display_order:
+          type: integer
+          title: Display Order
+      type: object
+      required:
+      - slug
+      - name
+      - display_order
+      title: HomeMatrixScenario
+    HomeMatrixCell:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Score
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        score_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Score Label
+      type: object
+      required:
+      - country_slug
+      - scenario_slug
+      title: HomeMatrixCell
+    HomeMatrixPreview:
+      properties:
+        countries:
+          items:
+            $ref: '#/components/schemas/HomeMatrixCountry'
+          type: array
+          title: Countries
+        scenarios:
+          items:
+            $ref: '#/components/schemas/HomeMatrixScenario'
+          type: array
+          title: Scenarios
+        cells:
+          items:
+            $ref: '#/components/schemas/HomeMatrixCell'
+          type: array
+          title: Cells
+      type: object
+      required:
+      - countries
+      - scenarios
+      - cells
+      title: HomeMatrixPreview
+    HomeLegalSourceRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: HomeLegalSourceRef
+    LatestLegalEvent:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        country_name:
+          type: string
+          title: Country Name
+        event_date:
+          type: string
+          format: date
+          title: Event Date
+        title:
+          type: string
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        impact_direction:
+          type: string
+          title: Impact Direction
+        impact_level:
+          type: string
+          title: Impact Level
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/HomeLegalSourceRef'
+          - type: 'null'
+      type: object
+      required:
+      - country_slug
+      - country_name
+      - event_date
+      - title
+      - impact_direction
+      - impact_level
+      title: LatestLegalEvent
+    ScenarioWinner:
+      properties:
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        scenario_name:
+          type: string
+          title: Scenario Name
+        winner_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Winner Country Slug
+        winner_country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Winner Country Name
+        winner_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Winner Score
+        runner_up_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runner Up Country Slug
+        runner_up_country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runner Up Country Name
+        runner_up_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Runner Up Score
+        delta:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Delta
+      type: object
+      required:
+      - scenario_slug
+      - scenario_name
+      title: ScenarioWinner
+    HomeKeyInsight:
+      properties:
+        kind:
+          type: string
+          title: Kind
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        severity:
+          type: string
+          enum:
+          - info
+          - positive
+          - warning
+          - risk
+          title: Severity
+        target_url:
+          type: string
+          title: Target Url
+      type: object
+      required:
+      - kind
+      - title
+      - summary
+      - severity
+      - target_url
+      title: HomeKeyInsight
+    HomeOverviewLinks:
+      properties:
+        countries_url:
+          type: string
+          title: Countries Url
+          default: /countries
+        decision_url:
+          type: string
+          title: Decision Url
+          default: /decision
+        compare_url:
+          type: string
+          title: Compare Url
+          default: /compare
+        legal_signals_url:
+          type: string
+          title: Legal Signals Url
+          default: /legal-signals
+      type: object
+      required:
+      - countries_url
+      - decision_url
+      - compare_url
+      - legal_signals_url
+      title: HomeOverviewLinks
+    HomeOverviewResponse:
+      properties:
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+        countries_summary:
+          items:
+            $ref: '#/components/schemas/CountryOverviewCard'
+          type: array
+          title: Countries Summary
+        scenario_winners:
+          items:
+            $ref: '#/components/schemas/ScenarioWinner'
+          type: array
+          title: Scenario Winners
+        matrix_preview:
+          $ref: '#/components/schemas/HomeMatrixPreview'
+        latest_legal_events:
+          items:
+            $ref: '#/components/schemas/LatestLegalEvent'
+          type: array
+          title: Latest Legal Events
+        key_insights:
+          items:
+            $ref: '#/components/schemas/HomeKeyInsight'
+          type: array
+          title: Key Insights
+        links:
+          $ref: '#/components/schemas/HomeOverviewLinks'
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - locale
+      - countries_summary
+      - scenario_winners
+      - matrix_preview
+      - latest_legal_events
+      - key_insights
+      - links
+      - quality_warnings
+      - generated_at
+      title: HomeOverviewResponse
     HTTPValidationError:
       properties:
         detail:

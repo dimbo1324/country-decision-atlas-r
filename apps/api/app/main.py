@@ -3,6 +3,7 @@ from app.api.v1 import (
     admin_translation_jobs,
     countries,
     decision,
+    home,
     legal_signals,
     scenarios,
     sources,
@@ -155,3 +156,4 @@ app.include_router(admin.router, prefix="/api/v1")
 app.include_router(admin_translation_jobs.router, prefix="/api/v1")
 app.include_router(user_stories.router, prefix="/api/v1")
 app.include_router(decision.router, prefix="/api/v1")
+app.include_router(home.router, prefix="/api/v1")

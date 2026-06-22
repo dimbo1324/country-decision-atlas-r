@@ -2079,3 +2079,323 @@ ol {
     max-width: 100%;
   }
 }
+
+.homeOverview {
+  display: grid;
+  gap: 28px;
+}
+
+.homeOverview .homeHero {
+  min-height: auto;
+  padding-block: 20px 8px;
+}
+
+.homeOverview .homeHero h1 {
+  font-size: clamp(32px, 5vw, 54px);
+  letter-spacing: 0;
+  margin: 4px 0 8px;
+}
+
+.homeOverviewSection {
+  display: grid;
+  gap: 14px;
+}
+
+.homeSectionHeading {
+  align-items: flex-end;
+  border-bottom: 1px solid #d8d8d8;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 8px;
+}
+
+.homeSectionHeading h2,
+.homeSectionHeading p {
+  margin: 0;
+}
+
+.homeSectionHeading h2 {
+  font-size: 20px;
+}
+
+.homeSectionHeading p {
+  color: #555;
+  font-size: 13px;
+}
+
+.homeSectionHeading a,
+.homeOverviewCard a,
+.homeLegalEvent a,
+.homeInsight a {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.homeCountryCards {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.homeOverviewCard {
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.homeCountryOverviewHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.homeCountryOverviewHeader h3 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.homeCountryOverviewHeader span {
+  color: #666;
+  font-size: 12px;
+}
+
+.homeCountryOverviewHeader strong {
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-size: 22px;
+  min-width: 64px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.homeScoreStrong {
+  color: #315f41;
+}
+
+.homeScoreModerate {
+  color: #76571d;
+}
+
+.homeScoreWeak {
+  color: #7c3838;
+}
+
+.homeScoreMissing {
+  color: #666;
+}
+
+.homeCountryMetrics {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.homeCountryMetrics div {
+  display: grid;
+  gap: 2px;
+}
+
+.homeCountryMetrics dt {
+  color: #666;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.homeCountryMetrics dd {
+  font-size: 13px;
+  margin: 0;
+}
+
+.homeScenarioWinners {
+  border-top: 1px solid #e3e3e3;
+  display: grid;
+}
+
+.homeWinnerRow {
+  align-items: center;
+  border-bottom: 1px solid #e3e3e3;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 8px 4px;
+}
+
+.homeWinnerRow h3 {
+  font-size: 14px;
+  margin: 0 0 2px;
+}
+
+.homeWinnerRow span {
+  color: #555;
+  font-size: 12px;
+}
+
+.homeWinnerScores {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.homeWinnerScores strong {
+  font-size: 18px;
+}
+
+.homeWinnerScores span {
+  color: #315f41;
+  font-weight: 700;
+}
+
+.homeMatrixPreview {
+  overflow-x: auto;
+}
+
+.homeMatrixPreview table {
+  font-size: 12px;
+  min-width: 720px;
+  table-layout: fixed;
+}
+
+.homeMatrixPreview th,
+.homeMatrixPreview td {
+  border: 1px solid #e3e3e3;
+  padding: 8px;
+  text-align: center;
+}
+
+.homeMatrixPreview th:first-child {
+  text-align: left;
+  width: 130px;
+}
+
+.homeMatrixStrong {
+  background: #dff2e3;
+}
+
+.homeMatrixModerate {
+  background: #fdfbdc;
+}
+
+.homeMatrixLimited {
+  background: #fdf0d5;
+}
+
+.homeMatrixWeak {
+  background: #f9e0e0;
+}
+
+.homeMatrixMissing {
+  background: #f3f3f3;
+  color: #777;
+}
+
+.homeOverviewGrid {
+  align-items: start;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+}
+
+.homeLegalEvents,
+.homeKeyInsights {
+  display: grid;
+  gap: 10px;
+}
+
+.homeLegalEvent,
+.homeInsight {
+  border: 1px solid #d8d8d8;
+  border-left-width: 4px;
+  border-radius: 4px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.homeLegalEvent h3,
+.homeInsight h3,
+.homeLegalEvent p,
+.homeInsight p {
+  margin: 0;
+}
+
+.homeLegalEvent h3,
+.homeInsight h3 {
+  font-size: 14px;
+}
+
+.homeLegalEvent p,
+.homeInsight p {
+  font-size: 12px;
+}
+
+.homeLegalEventMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.homeLegalEventMeta span,
+.homeLegalEventMeta time,
+.homeInsight > span {
+  color: #555;
+  font-size: 11px;
+}
+
+.homeEventPositive,
+.homeInsightPositive {
+  border-left-color: #3f7d54;
+}
+
+.homeEventNegative,
+.homeInsightRisk {
+  border-left-color: #a54b4b;
+}
+
+.homeEventMixed,
+.homeInsightWarning {
+  border-left-color: #a27728;
+}
+
+.homeEventNeutral,
+.homeEventUncertain,
+.homeInsightInfo {
+  border-left-color: #777d86;
+}
+
+.homeQuickLinks {
+  border-top: 1px solid #d8d8d8;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding-top: 18px;
+}
+
+.homeQuickLinks a {
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .homeCountryCards,
+  .homeOverviewGrid,
+  .homeQuickLinks {
+    grid-template-columns: 1fr;
+  }
+
+  .homeSectionHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
