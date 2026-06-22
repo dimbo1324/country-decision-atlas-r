@@ -23,7 +23,12 @@ export function CiiMetricCompareBars({ metrics, countries }: Props) {
       </div>
       {metrics.map((m) => (
         <div key={m.metric_slug} className="ciiBarRow">
-          <span className="ciiBarLabel">{m.metric_name}</span>
+          <span className="ciiBarLabel">
+            {m.metric_name}
+            {m.weight != null && (
+              <span className="ciiBarWeight">{Math.round(m.weight * 100)}%</span>
+            )}
+          </span>
           <div className="ciiBarTrack">
             {(m.values ?? []).map((v, i) => {
               const pct =

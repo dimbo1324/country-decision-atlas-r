@@ -7,6 +7,7 @@ def get_country_cii(
     connection: Connection[Any],
     country_slug: str,
     version: str = "v1.0",
+    scenario_slug: str = "",
 ) -> dict[str, Any] | None:
     return fetch_one(
         connection,
@@ -16,6 +17,7 @@ def get_country_cii(
             ccs.confidence,
             ccs.drift::float AS drift,
             ccs.version,
+            ccs.scenario_slug,
             ccs.formula_version,
             ccs.aggregation_method,
             ccs.metric_scores AS metrics,
@@ -24,8 +26,9 @@ def get_country_cii(
         JOIN countries c ON c.id = ccs.country_id
         WHERE c.slug = %s
           AND ccs.version = %s
+          AND ccs.scenario_slug = %s
         """,
-        (country_slug, version),
+        (country_slug, version, scenario_slug),
     )
 
 
@@ -33,6 +36,7 @@ def get_cii_for_countries(
     connection: Connection[Any],
     country_slugs: list[str],
     version: str = "v1.0",
+    scenario_slug: str = "",
 ) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
@@ -48,11 +52,13 @@ def get_cii_for_countries(
             ccs.aggregation_method
         FROM countries c
         LEFT JOIN country_cii_scores ccs
-            ON ccs.country_id = c.id AND ccs.version = %s
+            ON ccs.country_id = c.id
+           AND ccs.version = %s
+           AND ccs.scenario_slug = %s
         WHERE c.slug = ANY(%s)
         ORDER BY c.slug
         """,
-        (version, country_slugs),
+        (version, scenario_slug, country_slugs),
     )
 
 
@@ -123,4 +129,26 @@ def get_scenario_for_cii_comparison(
         WHERE s.slug = %s
         """,
         (locale, scenario_slug),
+    )
+
+
+def get_scenario_metric_weights(
+    connection: Connection[Any],
+    scenario_slug: str,
+    version: str = "v1.0",
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            m.slug AS metric_slug,
+            smw.weight::float AS weight
+        FROM scenario_metric_weights smw
+        JOIN cii_metric_definitions m ON m.id = smw.metric_id
+        WHERE smw.scenario_slug = %s
+          AND smw.version = %s
+          AND m.is_active = TRUE
+        ORDER BY m.display_order
+        """,
+        (scenario_slug, version),
     )

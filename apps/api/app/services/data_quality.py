@@ -376,6 +376,94 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
             )
         )
     checks.append(_check("cii_weights_sum_to_one", issues, ["cii_weight_sum_invalid"]))
+    for row in repository.list_mvp_scenarios_missing_cii_weights(connection):
+        issues.append(
+            _issue(
+                "cii_scenario_weight_missing",
+                "critical",
+                "scenario_metric_weights",
+                None,
+                "MVP scenario is missing CII weight for an active metric.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "mvp_scenarios_have_cii_weights", issues, ["cii_scenario_weight_missing"]
+        )
+    )
+    for row in repository.list_cii_scenario_weights_with_negative_values(connection):
+        issues.append(
+            _issue(
+                "cii_scenario_weight_negative",
+                "critical",
+                "scenario_metric_weights",
+                None,
+                "CII scenario metric weight is negative.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_scenario_weights_non_negative",
+            issues,
+            ["cii_scenario_weight_negative"],
+        )
+    )
+    for row in repository.list_cii_scenario_weights_exceeding_one(connection):
+        issues.append(
+            _issue(
+                "cii_scenario_weight_exceeds_one",
+                "critical",
+                "scenario_metric_weights",
+                None,
+                "CII scenario metric weight exceeds 1.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_scenario_weights_not_exceeding_one",
+            issues,
+            ["cii_scenario_weight_exceeds_one"],
+        )
+    )
+    for row in repository.list_mvp_scenarios_missing_cii_scores(connection):
+        issues.append(
+            _issue(
+                "cii_scenario_score_missing",
+                "critical",
+                "country_cii_scores",
+                None,
+                "MVP country has no CII score for a required scenario.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "mvp_countries_have_scenario_cii_scores",
+            issues,
+            ["cii_scenario_score_missing"],
+        )
+    )
+    for row in repository.list_cii_scenario_scores_missing_formula_metadata(connection):
+        issues.append(
+            _issue(
+                "cii_scenario_formula_metadata_missing",
+                "critical",
+                "country_cii_scores",
+                None,
+                "Scenario-specific CII score is missing formula_version or aggregation_method.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_scenario_scores_have_formula_metadata",
+            issues,
+            ["cii_scenario_formula_metadata_missing"],
+        )
+    )
     for row in repository.list_mvp_metrics_missing_values(connection):
         issues.append(
             _issue(

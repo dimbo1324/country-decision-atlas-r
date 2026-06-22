@@ -2633,6 +2633,8 @@ export interface components {
             formula_version?: string | null;
             /** Aggregation Method */
             aggregation_method?: string | null;
+            /** Weights Version */
+            weights_version?: string | null;
             /** Quality Warnings */
             quality_warnings?: string[];
         };
@@ -2668,6 +2670,8 @@ export interface components {
             display_order: number;
             /** Higher Is Better */
             higher_is_better: boolean;
+            /** Weight */
+            weight?: number | null;
             /** Delta */
             delta?: number | null;
             /** Winner Country Slug */
@@ -2890,6 +2894,7 @@ export interface operations {
         parameters: {
             query?: {
                 version?: string;
+                scenario?: string | null;
             };
             header?: never;
             path: {

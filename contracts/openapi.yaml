@@ -264,6 +264,14 @@ paths:
           pattern: '^v\d+\.\d+$'
           default: v1.0
           title: Version
+      - name: scenario
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
       responses:
         '200':
           description: Successful Response
@@ -5635,6 +5643,11 @@ components:
           - type: string
           - type: 'null'
           title: Aggregation Method
+        weights_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weights Version
         quality_warnings:
           items:
             type: string
@@ -5705,6 +5718,11 @@ components:
         higher_is_better:
           type: boolean
           title: Higher Is Better
+        weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Weight
         delta:
           anyOf:
           - type: number
