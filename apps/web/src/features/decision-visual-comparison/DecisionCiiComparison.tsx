@@ -83,8 +83,11 @@ export function DecisionCiiComparison({ countrySlugs, scenarioSlug, locale }: Pr
   return (
     <section className="ciiCompareBlock" aria-label="CII сравнение стран">
       <h3 className="ciiCompareTitle">
-        Сравнение CII: {countries.map((c) => c.name).join(" vs ")}
+        Сценарные веса CII: {countries.map((c) => c.name).join(" vs ")}
       </h3>
+      {data.scenario?.title && (
+        <p className="ciiCompareScenarioLabel">Сценарий: {data.scenario.title}</p>
+      )}
       <CiiComparisonSummary
         countries={countries}
         formulaVersion={formula_version}

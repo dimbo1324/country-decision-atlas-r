@@ -1570,6 +1570,18 @@ ol {
   margin: 0;
 }
 
+.ciiCompareScenarioLabel {
+  font-size: 11px;
+  color: #666;
+  margin: 4px 0 8px;
+}
+
+.ciiBarWeight {
+  font-size: 10px;
+  color: #888;
+  margin-left: 4px;
+}
+
 .ciiCompareLoadingText,
 .ciiCompareEmptyText {
   font-size: 13px;

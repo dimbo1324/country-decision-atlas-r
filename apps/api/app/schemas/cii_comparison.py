@@ -28,6 +28,7 @@ class ComparedMetric(BaseModel):
     metric_name: str
     display_order: int
     higher_is_better: bool
+    weight: float | None = None
     delta: float | None = None
     winner_country_slug: str | None = None
     values: list[ComparedMetricValue] = Field(default_factory=list)
@@ -40,4 +41,5 @@ class CiiCountryComparisonResponse(BaseModel):
     metrics: list[ComparedMetric] = Field(default_factory=list)
     formula_version: str | None = None
     aggregation_method: str | None = None
+    weights_version: str | None = None
     quality_warnings: list[str] = Field(default_factory=list)

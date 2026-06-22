@@ -1,7 +1,7 @@
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.locales import LocaleQuery
-from app.repositories.cii import get_country_cii
+from app.repositories.cii import get_country_cii, get_scenario_metric_weights
 from app.repositories.common import build_locale
 from app.repositories.countries import (
     count_countries,
@@ -51,6 +51,13 @@ async def compare_countries_cii(
         )
     if not scenario:
         raise api_error(422, "scenario_required", "Scenario slug is required.", {})
+    if not get_scenario_metric_weights(connection, scenario):
+        raise api_error(
+            422,
+            "scenario_not_found",
+            "Scenario not found or has no CII weights configured.",
+            {"scenario": scenario},
+        )
     return build_cii_comparison(connection, unique_slugs, scenario, locale)
 
 
@@ -142,8 +149,19 @@ async def read_country_cii(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     version: str = Query("v1.0", pattern=r"^v\d+\.\d+$"),
+    scenario: str | None = Query(None),
 ) -> CountryReadModelCii:
-    row = get_country_cii(connection, country_slug, version)
+    if scenario is not None:
+        weights = get_scenario_metric_weights(connection, scenario)
+        if not weights:
+            raise api_error(
+                422,
+                "scenario_not_found",
+                "Scenario not found or has no CII weights configured.",
+                {"scenario": scenario},
+            )
+    scenario_slug = scenario if scenario is not None else ""
+    row = get_country_cii(connection, country_slug, version, scenario_slug)
     cii = build_cii(row)
     if cii is None:
         raise HTTPException(

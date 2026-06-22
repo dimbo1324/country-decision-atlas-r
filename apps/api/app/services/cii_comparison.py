@@ -3,6 +3,7 @@ from app.repositories.cii import (
     get_cii_for_countries,
     get_cii_metric_values_for_countries,
     get_scenario_for_cii_comparison,
+    get_scenario_metric_weights,
 )
 from app.schemas.cii_comparison import (
     CiiCountryComparisonResponse,
@@ -28,7 +29,15 @@ def build_cii_comparison(
         title=scenario_row["title"] if scenario_row else scenario_slug,
     )
 
-    cii_rows = get_cii_for_countries(connection, country_slugs)
+    scenario_weights_rows = get_scenario_metric_weights(connection, scenario_slug)
+    weights_by_metric: dict[str, float] = {
+        row["metric_slug"]: float(row["weight"]) for row in scenario_weights_rows
+    }
+    weights_version = "v1.0" if weights_by_metric else None
+
+    cii_rows = get_cii_for_countries(
+        connection, country_slugs, scenario_slug=scenario_slug
+    )
     cii_by_slug = {row["country_slug"]: row for row in cii_rows}
 
     quality_warnings: list[str] = []
@@ -41,7 +50,7 @@ def build_cii_comparison(
             continue
         if row.get("cii_score") is None:
             quality_warnings.append(
-                f"country '{slug}' has no CII data for version v1.0"
+                f"country '{slug}' has no CII data for scenario '{scenario_slug}'"
             )
         countries.append(
             ComparedCountry(
@@ -76,6 +85,7 @@ def build_cii_comparison(
         metric_slug = md["slug"]
         higher_is_better = md["polarity"] != "negative"
         metric_name = md["name_ru"] if locale == "ru" else md["name_en"]
+        metric_weight = weights_by_metric.get(metric_slug)
 
         metric_values: list[ComparedMetricValue] = []
         effective_values: dict[str, float] = {}
@@ -126,6 +136,7 @@ def build_cii_comparison(
                 metric_name=metric_name,
                 display_order=md["display_order"],
                 higher_is_better=higher_is_better,
+                weight=metric_weight,
                 delta=delta,
                 winner_country_slug=winner_slug,
                 values=metric_values,
@@ -141,6 +152,7 @@ def build_cii_comparison(
         metrics=metrics,
         formula_version=formula_version,
         aggregation_method=aggregation_method,
+        weights_version=weights_version,
         quality_warnings=quality_warnings,
     )
 
