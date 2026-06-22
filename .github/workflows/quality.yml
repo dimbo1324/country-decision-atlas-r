@@ -39,6 +39,64 @@ jobs:
       - name: SQLFluff
         run: python -m sqlfluff lint database --dialect postgres
 
+  integration:
+    name: Integration / migration smoke
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: country_atlas
+          POSTGRES_USER: country_atlas
+          POSTGRES_PASSWORD: change-me
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U country_atlas -d country_atlas" --health-interval
+          10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Apply migrations on clean DB
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/apply_migrations.py
+
+      - name: Apply migrations again (idempotency check)
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/apply_migrations.py
+
+      - name: Start API
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          REDIS_URL: redis://localhost:6379/0
+          ADMIN_TOKEN: ci-test-admin-token
+          APP_ENV: local
+        run: |
+          python -m uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port 8000 &
+          sleep 5
+
+      - name: Runtime smoke tests
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          API_BASE_URL: http://localhost:8000
+          ADMIN_TOKEN: ci-test-admin-token
+          RUN_RUNTIME_SMOKE_TESTS: "1"
+        run: python -m pytest tests/smoke/ -v
+
   frontend:
     name: Frontend quality
     runs-on: ubuntu-latest

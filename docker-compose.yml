@@ -38,8 +38,9 @@ services:
     environment:
       APP_NAME: ${APP_NAME:-Country Decision Atlas}
       APP_ENV: ${APP_ENV:-local}
-      APP_DEBUG: ${APP_DEBUG:-true}
+      APP_DEBUG: ${APP_DEBUG:-false}
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      API_RATE_LIMIT_PER_MINUTE: ${API_RATE_LIMIT_PER_MINUTE:-600}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
       DATABASE_URL: postgresql://country_atlas:change-me@postgres:5432/country_atlas
       REDIS_URL: redis://redis:6379/0
