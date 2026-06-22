@@ -225,6 +225,9 @@ def build_cii(row: dict[str, Any] | None) -> CountryReadModelCii | None:
         confidence=str(row["confidence"]),
         drift=float(row["drift"]) if row.get("drift") is not None else None,
         version=str(row["version"]),
+        formula_version=row.get("formula_version"),
+        aggregation_method=row.get("aggregation_method"),
+        quality_warnings=[],
         calculated_at=row["calculated_at"],
         metrics=metrics,
     )

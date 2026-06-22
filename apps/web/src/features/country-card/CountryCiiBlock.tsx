@@ -123,8 +123,7 @@ function SpiderChart({ metrics }: { metrics: CiiMetric[] }) {
       {axes.map((a) => {
         const labelR = R + 20;
         const p = polar(a.angle, labelR);
-        const anchor =
-          Math.abs(p.x - cx) < 5 ? "middle" : p.x < cx ? "end" : "start";
+        const anchor = Math.abs(p.x - cx) < 5 ? "middle" : p.x < cx ? "end" : "start";
         return (
           <text
             key={a.label}
@@ -171,6 +170,9 @@ export function CountryCiiBlock({ cii }: CountryCiiBlockProps) {
             <span className="ciiDriftBadge ciiDriftNa">Динамика: н/д</span>
           )}
           <span className="ciiVersion">Версия {cii.version}</span>
+          {cii.aggregation_method && (
+            <span className="ciiMethodBadge">{cii.aggregation_method}</span>
+          )}
         </div>
       </div>
 

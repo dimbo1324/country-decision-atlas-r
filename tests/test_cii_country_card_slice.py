@@ -78,6 +78,34 @@ class TestBuildCii:
         assert cii is not None
         assert cii.drift == pytest.approx(2.5)
 
+    def test_formula_version_mapped(self) -> None:
+        from app.services.country_read_model import build_cii
+
+        row = {
+            **_CII_ROW,
+            "formula_version": "cii-v1.0",
+            "aggregation_method": "geometric",
+        }
+        cii = build_cii(row)
+        assert cii is not None
+        assert cii.formula_version == "cii-v1.0"
+        assert cii.aggregation_method == "geometric"
+
+    def test_formula_version_none_when_absent(self) -> None:
+        from app.services.country_read_model import build_cii
+
+        cii = build_cii(_CII_ROW)
+        assert cii is not None
+        assert cii.formula_version is None
+        assert cii.aggregation_method is None
+
+    def test_quality_warnings_defaults_empty(self) -> None:
+        from app.services.country_read_model import build_cii
+
+        cii = build_cii(_CII_ROW)
+        assert cii is not None
+        assert cii.quality_warnings == []
+
     def test_empty_metrics_list(self) -> None:
         from app.services.country_read_model import build_cii
 
@@ -225,6 +253,41 @@ class TestCiiSchemas:
         )
         assert cii.overall_score == pytest.approx(36.42)
         assert cii.metrics == []
+
+    def test_country_read_model_cii_formula_metadata_defaults(self) -> None:
+        from app.schemas.country_read_model import CountryReadModelCii
+
+        cii = CountryReadModelCii.model_validate(
+            {
+                "overall_score": 36.42,
+                "confidence": "high",
+                "version": "v1.0",
+                "calculated_at": "2024-01-01T00:00:00Z",
+                "metrics": [],
+            }
+        )
+        assert cii.formula_version is None
+        assert cii.aggregation_method is None
+        assert cii.quality_warnings == []
+
+    def test_country_read_model_cii_with_formula_metadata(self) -> None:
+        from app.schemas.country_read_model import CountryReadModelCii
+
+        cii = CountryReadModelCii.model_validate(
+            {
+                "overall_score": 36.42,
+                "confidence": "high",
+                "version": "v1.0",
+                "formula_version": "cii-v1.0",
+                "aggregation_method": "geometric",
+                "quality_warnings": ["test warning"],
+                "calculated_at": "2024-01-01T00:00:00Z",
+                "metrics": [],
+            }
+        )
+        assert cii.formula_version == "cii-v1.0"
+        assert cii.aggregation_method == "geometric"
+        assert cii.quality_warnings == ["test warning"]
 
     def test_country_read_model_cii_metric_validates(self) -> None:
         from app.schemas.country_read_model import CountryReadModelCiiMetric

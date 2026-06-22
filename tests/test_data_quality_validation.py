@@ -43,6 +43,11 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_invalid_synthetic_user_stories",
         "list_country_cards_with_empty_major_sections",
         "list_country_cards_with_demo_source_summary",
+        "list_mvp_countries_missing_cii",
+        "list_cii_scores_missing_formula_metadata",
+        "list_cii_metric_weights_with_invalid_sum",
+        "list_mvp_metrics_missing_values",
+        "list_cii_scores_out_of_range",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
@@ -286,3 +291,83 @@ def test_openapi_has_admin_data_quality_report() -> None:
     assert "/api/v1/admin/data-quality/report" in contract["paths"]
     assert "DataQualityIssue" in contract["components"]["schemas"]
     assert "DataQualityReport" in contract["components"]["schemas"]
+
+
+def test_data_quality_report_detects_missing_cii(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_mvp_countries_missing_cii",
+        lambda *_: [{"country_slug": "russia"}],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(issue.code == "cii_score_missing" for issue in report.issues)
+    assert any(issue.severity == "critical" for issue in report.issues)
+
+
+def test_data_quality_report_detects_missing_formula_metadata(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_cii_scores_missing_formula_metadata",
+        lambda *_: [
+            {
+                "country_slug": "uruguay",
+                "version": "v1.0",
+                "formula_version": None,
+                "aggregation_method": None,
+            }
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(issue.code == "cii_formula_metadata_missing" for issue in report.issues)
+
+
+def test_data_quality_report_detects_invalid_weight_sum(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_cii_metric_weights_with_invalid_sum",
+        lambda *_: [{"version": "v1.0", "weight_sum": 1.2}],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(issue.code == "cii_weight_sum_invalid" for issue in report.issues)
+
+
+def test_data_quality_report_detects_missing_metric_values(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_mvp_metrics_missing_values",
+        lambda *_: [{"country_slug": "russia", "metric_slug": "safety"}],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(issue.code == "cii_metric_value_missing" for issue in report.issues)
+
+
+def test_data_quality_report_detects_score_out_of_range(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_cii_scores_out_of_range",
+        lambda *_: [
+            {"country_slug": "russia", "version": "v1.0", "overall_score": 150.0}
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(issue.code == "cii_score_out_of_range" for issue in report.issues)

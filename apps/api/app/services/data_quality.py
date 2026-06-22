@@ -336,6 +336,76 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
             ["country_card_section_missing", "country_card_source_summary_demo"],
         )
     )
+    for row in repository.list_mvp_countries_missing_cii(connection):
+        issues.append(
+            _issue(
+                "cii_score_missing",
+                "critical",
+                "country",
+                None,
+                "MVP country has no CII score for version v1.0.",
+                row,
+            )
+        )
+    checks.append(_check("mvp_countries_have_cii", issues, ["cii_score_missing"]))
+    for row in repository.list_cii_scores_missing_formula_metadata(connection):
+        issues.append(
+            _issue(
+                "cii_formula_metadata_missing",
+                "critical",
+                "country",
+                None,
+                "CII score is missing formula_version or aggregation_method.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_scores_have_formula_metadata", issues, ["cii_formula_metadata_missing"]
+        )
+    )
+    for row in repository.list_cii_metric_weights_with_invalid_sum(connection):
+        issues.append(
+            _issue(
+                "cii_weight_sum_invalid",
+                "critical",
+                "scenario_metric_weights",
+                None,
+                "CII metric weights do not sum to approximately 1.0.",
+                row,
+            )
+        )
+    checks.append(_check("cii_weights_sum_to_one", issues, ["cii_weight_sum_invalid"]))
+    for row in repository.list_mvp_metrics_missing_values(connection):
+        issues.append(
+            _issue(
+                "cii_metric_value_missing",
+                "critical",
+                "country",
+                None,
+                "MVP country is missing a value for an active CII metric.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "mvp_countries_have_all_cii_metrics", issues, ["cii_metric_value_missing"]
+        )
+    )
+    for row in repository.list_cii_scores_out_of_range(connection):
+        issues.append(
+            _issue(
+                "cii_score_out_of_range",
+                "critical",
+                "country",
+                None,
+                "CII overall_score is outside the valid 0-100 range.",
+                row,
+            )
+        )
+    checks.append(
+        _check("cii_scores_in_valid_range", issues, ["cii_score_out_of_range"])
+    )
     translation_checks, translation_issues = build_translation_quality_results(
         connection
     )

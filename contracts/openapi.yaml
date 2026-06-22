@@ -2520,6 +2520,22 @@ components:
         version:
           type: string
           title: Version
+        formula_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Formula Version
+        aggregation_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aggregation Method
+        quality_warnings:
+          items:
+            type: string
+          type: array
+          title: Quality Warnings
+          default: []
         calculated_at:
           type: string
           format: date-time
