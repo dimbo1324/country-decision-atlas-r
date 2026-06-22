@@ -53,6 +53,17 @@ def _run_report_with_patches(**overrides: Any) -> Any:
         "list_cii_scenario_weights_exceeding_one": empty,
         "list_mvp_scenarios_missing_cii_scores": empty,
         "list_cii_scenario_scores_missing_formula_metadata": empty,
+        "list_inactive_mvp_scenarios": empty,
+        "list_cii_scores_with_non_geometric_aggregation": empty,
+        "list_cii_metric_definitions_without_polarity": empty,
+        "list_mvp_countries_without_legal_events": empty,
+        "list_published_legal_signals_without_timeline_event": empty,
+        "list_timeline_events_with_invalid_date": empty,
+        "list_timeline_events_with_invalid_impact_direction": empty,
+        "list_timeline_events_with_invalid_impact_level": empty,
+        "list_timeline_events_with_country_mismatch": empty,
+        "list_timeline_events_without_traceability": empty,
+        "list_unplanned_future_timeline_events": empty,
     }
     defaults.update(overrides)
 

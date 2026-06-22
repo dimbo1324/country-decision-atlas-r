@@ -60,6 +60,10 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_cii_scenario_weights_exceeding_one",
         "list_mvp_scenarios_missing_cii_scores",
         "list_cii_scenario_scores_missing_formula_metadata",
+        "list_inactive_mvp_scenarios",
+        "list_cii_scores_with_non_geometric_aggregation",
+        "list_cii_metric_definitions_without_polarity",
+        "list_mvp_countries_without_legal_events",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 

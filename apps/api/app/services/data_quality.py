@@ -567,6 +567,72 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     checks.append(
         _check("cii_scores_in_valid_range", issues, ["cii_score_out_of_range"])
     )
+    for row in repository.list_inactive_mvp_scenarios(connection):
+        issues.append(
+            _issue(
+                "mvp_scenario_inactive",
+                "critical",
+                "scenario",
+                None,
+                "Required MVP scenario is missing or inactive.",
+                row,
+            )
+        )
+    checks.append(_check("mvp_scenarios_active", issues, ["mvp_scenario_inactive"]))
+    for row in repository.list_cii_scores_with_non_geometric_aggregation(connection):
+        issues.append(
+            _issue(
+                "cii_aggregation_method_not_geometric",
+                "critical",
+                "country_cii_scores",
+                None,
+                "CII scenario score does not use geometric aggregation.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_scores_use_geometric_aggregation",
+            issues,
+            ["cii_aggregation_method_not_geometric"],
+        )
+    )
+    for row in repository.list_cii_metric_definitions_without_polarity(connection):
+        issues.append(
+            _issue(
+                "cii_metric_polarity_missing",
+                "critical",
+                "cii_metric_definitions",
+                None,
+                "Active CII metric definition is missing polarity.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "cii_metric_definitions_have_polarity",
+            issues,
+            ["cii_metric_polarity_missing"],
+        )
+    )
+    for row in repository.list_mvp_countries_without_legal_events(connection):
+        issues.append(
+            _issue(
+                "legal_timeline_no_events_for_country",
+                "critical",
+                "country",
+                None,
+                "MVP country has no legal signal timeline events.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "legal_timeline_has_events_per_country",
+            issues,
+            ["legal_timeline_no_events_for_country"],
+        )
+    )
     translation_checks, translation_issues = build_translation_quality_results(
         connection
     )

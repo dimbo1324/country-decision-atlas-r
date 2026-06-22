@@ -549,6 +549,8 @@ def list_invalid_synthetic_user_stories(
               OR (
                   POSITION('synthetic' IN LOWER(notes)) = 0
                   AND POSITION('demo' IN LOWER(notes)) = 0
+                  AND POSITION('синтетич' IN LOWER(notes)) = 0
+                  AND POSITION('демонстра' IN LOWER(notes)) = 0
               )
           )
         ORDER BY created_at DESC
@@ -822,6 +824,83 @@ def list_cii_scores_out_of_range(
         JOIN countries c ON c.id = ccs.country_id
         WHERE c.slug = ANY(%s)
           AND (ccs.overall_score < 0 OR ccs.overall_score > 100)
+        ORDER BY c.slug
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_inactive_mvp_scenarios(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT expected.scenario_slug
+        FROM unnest(%s::text[]) AS expected(scenario_slug)
+        LEFT JOIN scenarios s
+            ON s.slug = expected.scenario_slug
+            AND s.is_active = TRUE
+        WHERE s.id IS NULL
+        ORDER BY expected.scenario_slug
+        """,
+        (list(MVP_SCENARIO_SLUGS),),
+    )
+
+
+def list_cii_scores_with_non_geometric_aggregation(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.slug AS country_slug,
+            ccs.scenario_slug,
+            ccs.aggregation_method
+        FROM country_cii_scores ccs
+        JOIN countries c ON c.id = ccs.country_id
+        WHERE c.slug = ANY(%s)
+          AND ccs.scenario_slug = ANY(%s)
+          AND ccs.aggregation_method IS NOT NULL
+          AND ccs.aggregation_method <> 'geometric'
+        ORDER BY c.slug, ccs.scenario_slug
+        """,
+        (list(MVP_COUNTRY_SLUGS), list(MVP_SCENARIO_SLUGS)),
+    )
+
+
+def list_cii_metric_definitions_without_polarity(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT slug, polarity
+        FROM cii_metric_definitions
+        WHERE is_active = TRUE
+          AND (polarity IS NULL OR polarity = '')
+        ORDER BY display_order
+        """,
+    )
+
+
+def list_mvp_countries_without_legal_events(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT c.slug AS country_slug
+        FROM countries c
+        WHERE c.slug = ANY(%s)
+          AND c.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1
+              FROM legal_signals ls
+              JOIN legal_signal_events lse ON lse.legal_signal_id = ls.id
+              WHERE ls.country_id = c.id
+          )
         ORDER BY c.slug
         """,
         (list(MVP_COUNTRY_SLUGS),),
