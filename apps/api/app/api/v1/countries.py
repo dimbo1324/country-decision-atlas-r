@@ -11,6 +11,7 @@ from app.repositories.countries import (
 )
 from app.repositories.scores import count_country_scores, list_country_scores
 from app.schemas.cii_comparison import CiiCountryComparisonResponse
+from app.schemas.cii_matrix import CompareMatrixResponse
 from app.schemas.common import Pagination
 from app.schemas.countries import (
     CountryListResponse,
@@ -22,6 +23,9 @@ from app.schemas.decision_engine import SourceListWithLocaleResponse
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
 from app.services.cii_comparison import build_cii_comparison
+from app.services.cii_matrix import (
+    build_matrix_response,
+)
 from app.services.country_read_model import build_cii, get_country_read_model
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
@@ -59,6 +63,60 @@ async def compare_countries_cii(
             {"scenario": scenario},
         )
     return build_cii_comparison(connection, unique_slugs, scenario, locale)
+
+
+@router.get("/matrix", response_model=CompareMatrixResponse, tags=["cii"])
+async def get_countries_matrix(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
+    countries: str | None = Query(None),
+    scenarios: str | None = Query(None),
+) -> CompareMatrixResponse:
+    country_slugs: list[str] | None = None
+    if countries:
+        tokens = [t.strip() for t in countries.split(",") if t.strip()]
+        if tokens:
+            unique = list(dict.fromkeys(tokens))
+            if len(unique) > 10:
+                raise api_error(
+                    422,
+                    "too_many_countries",
+                    "Maximum 10 countries allowed.",
+                    {"provided": len(unique)},
+                )
+            country_slugs = unique
+
+    scenario_slugs: list[str] | None = None
+    if scenarios and scenarios.strip() != "all":
+        tokens = [t.strip() for t in scenarios.split(",") if t.strip()]
+        if tokens:
+            scenario_slugs = list(dict.fromkeys(tokens))
+
+    if country_slugs:
+        from app.repositories.countries import get_country
+
+        for slug in country_slugs:
+            if get_country(connection, slug, locale) is None:
+                raise api_error(
+                    422,
+                    "country_not_found",
+                    f"Country '{slug}' not found.",
+                    {"country_slug": slug},
+                )
+
+    if scenario_slugs:
+        from app.repositories.cii import get_scenario_metric_weights
+
+        for slug in scenario_slugs:
+            if not get_scenario_metric_weights(connection, slug):
+                raise api_error(
+                    422,
+                    "scenario_not_found",
+                    f"Scenario '{slug}' not found or has no CII weights.",
+                    {"scenario_slug": slug},
+                )
+
+    return build_matrix_response(connection, country_slugs, scenario_slugs, locale)
 
 
 @router.get("", response_model=CountryListResponse)

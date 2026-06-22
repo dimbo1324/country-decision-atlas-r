@@ -1070,6 +1070,26 @@
       "branch": "main",
       "summary": "Make CII genuinely scenario-specific: migration 018 adds scenario_slug to scenario_metric_weights and country_cii_scores, seeds 5x6=30 scenario weights and 5x2=10 scenario scores for Russia/Uruguay, backend passes scenario_slug through repository layer to return scenario-specific CII scores and metric weights in API responses, OpenAPI updated, TypeScript contracts regenerated, frontend shows per-metric weight%, data quality checks extended with 5 new scenario weight/score validators, 50 new unit tests (all passing), E2E tests added.",
       "status": "done"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "compare-matrix-v1",
+      "task": "feat/compare-matrix-v1",
+      "branch": "feat/compare-matrix-v1",
+      "summary": "Started scenario-specific CII compare matrix for the /compare page.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "compare-matrix-v1",
+      "task": "feat/compare-matrix-v1",
+      "branch": "main",
+      "summary": "Delivered /compare matrix page: GET /api/v1/countries/matrix endpoint, CompareMatrixResponse schema, CountryScenarioMatrix table, heatmap CSS, legend, summary, and 30+ unit tests. No new libraries added.",
+      "status": "done"
     }
   ]
 }
