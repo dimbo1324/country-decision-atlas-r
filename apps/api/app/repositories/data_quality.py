@@ -506,3 +506,111 @@ def list_country_cards_with_demo_source_summary(
         """,
         (list(MVP_COUNTRY_SLUGS),),
     )
+
+
+def list_mvp_countries_missing_cii(connection: Connection[Any]) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT c.slug AS country_slug
+        FROM countries c
+        WHERE c.slug = ANY(%s)
+          AND c.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1 FROM country_cii_scores ccs
+              WHERE ccs.country_id = c.id AND ccs.version = 'v1.0'
+          )
+        ORDER BY c.slug
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_cii_scores_missing_formula_metadata(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.slug AS country_slug,
+            ccs.version,
+            ccs.formula_version,
+            ccs.aggregation_method
+        FROM country_cii_scores ccs
+        JOIN countries c ON c.id = ccs.country_id
+        WHERE c.slug = ANY(%s)
+          AND (
+              ccs.formula_version IS NULL
+              OR ccs.formula_version = ''
+              OR ccs.aggregation_method IS NULL
+              OR ccs.aggregation_method = ''
+          )
+        ORDER BY c.slug
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_cii_metric_weights_with_invalid_sum(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            version,
+            ROUND(SUM(weight)::numeric, 4) AS weight_sum
+        FROM scenario_metric_weights
+        GROUP BY version
+        HAVING ABS(SUM(weight) - 1.0) > 0.01
+        ORDER BY version
+        """,
+        (),
+    )
+
+
+def list_mvp_metrics_missing_values(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            expected.country_slug,
+            m.slug AS metric_slug
+        FROM unnest(%s::text[]) AS expected(country_slug)
+        CROSS JOIN cii_metric_definitions m
+        LEFT JOIN country_metric_values cmv
+            ON cmv.country_id = (
+                SELECT id FROM countries
+                WHERE slug = expected.country_slug AND is_active = TRUE
+                LIMIT 1
+            )
+            AND cmv.metric_id = m.id
+        WHERE m.is_active = TRUE
+          AND cmv.id IS NULL
+        ORDER BY expected.country_slug, m.display_order
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )
+
+
+def list_cii_scores_out_of_range(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            c.slug AS country_slug,
+            ccs.version,
+            ccs.overall_score
+        FROM country_cii_scores ccs
+        JOIN countries c ON c.id = ccs.country_id
+        WHERE c.slug = ANY(%s)
+          AND (ccs.overall_score < 0 OR ccs.overall_score > 100)
+        ORDER BY c.slug
+        """,
+        (list(MVP_COUNTRY_SLUGS),),
+    )

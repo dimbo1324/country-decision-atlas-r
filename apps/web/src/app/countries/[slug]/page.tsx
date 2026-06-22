@@ -92,7 +92,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         )}
 
         <section className="cardSection" data-testid="cii-section">
-          <h2 className="cardSectionTitle">Индекс инвестиционной привлекательности (CII)</h2>
+          <h2 className="cardSectionTitle">
+            Индекс инвестиционной привлекательности (CII)
+          </h2>
           <CountryCiiBlock cii={card.cii} />
         </section>
 

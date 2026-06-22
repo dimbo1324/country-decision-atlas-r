@@ -16,6 +16,8 @@ def get_country_cii(
             ccs.confidence,
             ccs.drift::float AS drift,
             ccs.version,
+            ccs.formula_version,
+            ccs.aggregation_method,
             ccs.metric_scores AS metrics,
             ccs.calculated_at
         FROM country_cii_scores ccs

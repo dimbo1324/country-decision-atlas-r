@@ -101,7 +101,10 @@
       "summary": "Operational guardrails added: 12 new tests covering E2E pipeline smoke (create-missing→process-batch→variant), TRANSLATION_PROVIDER default=fake, AI key not required in default mode, original variant protection (SQL WHERE is_original=FALSE), diagnostic script scripts/translation_pipeline_status.py. All 173 tests pass, mypy/ruff/pre-commit clean.",
       "status": "completed",
       "tests_added": 12,
-      "new_files": ["tests/test_multilingual_operational_guardrails.py", "scripts/translation_pipeline_status.py"]
+      "new_files": [
+        "tests/test_multilingual_operational_guardrails.py",
+        "scripts/translation_pipeline_status.py"
+      ]
     },
     {
       "date": "2026-06-21",
@@ -114,7 +117,10 @@
       "status": "completed",
       "phase1": "feat/translation-jobs-worker-foundation-v1",
       "phase2": "chore/multilingual-foundation-baseline-freeze",
-      "migrations": ["013_translation_jobs_worker_foundation_v1.sql", "014_translation_jobs_nullable_legacy_columns.sql"],
+      "migrations": [
+        "013_translation_jobs_worker_foundation_v1.sql",
+        "014_translation_jobs_nullable_legacy_columns.sql"
+      ],
       "worker_command": "python apps/worker/main.py translation-jobs --limit 10 --target-locale en --worker-id local-worker",
       "admin_endpoints": [
         "GET /api/v1/admin/translation-jobs",
@@ -124,7 +130,19 @@
         "POST /api/v1/admin/translation-jobs/process-batch"
       ],
       "tests_added": 64,
-      "checks_run": ["pytest", "mypy", "ruff", "pnpm-contracts", "pnpm-typecheck", "pnpm-lint", "pnpm-build", "pnpm-mvp:check", "pnpm-format:check", "sqlfluff", "pre-commit"],
+      "checks_run": [
+        "pytest",
+        "mypy",
+        "ruff",
+        "pnpm-contracts",
+        "pnpm-typecheck",
+        "pnpm-lint",
+        "pnpm-build",
+        "pnpm-mvp:check",
+        "pnpm-format:check",
+        "sqlfluff",
+        "pre-commit"
+      ],
       "clean_db_result": "14 migrations applied on fresh DB, repeat run idempotent",
       "final_status": "Multilingual MVP/Foundation block closed."
     },
@@ -904,6 +922,53 @@
         "pnpm format:check: passed",
         "pnpm web:mvp:check: 38 passed",
         "python -m pre_commit run --all-files: passed"
+      ]
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "cii-methodology-hardening-v1",
+      "task": "chore/cii-methodology-hardening-v1",
+      "branch": "chore/cii-methodology-hardening-v1",
+      "summary": "Replacing linear CII aggregation with geometric, adding CIIScoreAggregator service, migration 017, data-quality checks, tests, and updating OpenAPI/TS contracts.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "cii-methodology-hardening-v1",
+      "task": "chore/cii-methodology-hardening-v1",
+      "branch": "chore/cii-methodology-hardening-v1",
+      "summary": [
+        "Created CIIScoreAggregator service (apps/api/app/services/cii.py) with geometric aggregation formula: exp(sum(weight * ln(protected_score)) / sum(weight)) where protected_score = max(effective_value, 1.0).",
+        "Added polarity handling: effective_value = normalized_value if positive, 100 - normalized_value if negative.",
+        "Added confidence computation based on metric reliability and coverage.",
+        "Created migration 017_cii_methodology_hardening_v1.sql: adds formula_version and aggregation_method columns, recalculates existing CII scores geometrically.",
+        "Updated Pydantic schema CountryReadModelCii to include formula_version, aggregation_method, quality_warnings fields.",
+        "Updated repository cii.py to return formula_version and aggregation_method from DB.",
+        "Updated service build_cii() to map new fields.",
+        "Added 5 CII data-quality checks: cii_score_missing, cii_formula_metadata_missing, cii_weight_sum_invalid, cii_metric_value_missing, cii_score_out_of_range.",
+        "Added 5 CII data-quality repository queries in data_quality.py.",
+        "Updated OpenAPI schema CountryReadModelCii with new optional fields.",
+        "Regenerated TypeScript contracts (pnpm contracts:generate).",
+        "Added minimal CountryCiiBlock.tsx update to show aggregation_method badge.",
+        "Added 27 new tests: test_cii_score_aggregator.py (unit tests for aggregator, polarity, protected_score, confidence), expanded test_cii_country_card_slice.py (new schema fields, build_cii mapping), 5 CII checks in test_data_quality_validation.py."
+      ],
+      "status": "completed",
+      "checks": [
+        "python -m ruff check . --fix: passed",
+        "python -m ruff format .: 4 files reformatted, all checks passed",
+        "python -m mypy apps tests: 1 pre-existing httpx error (not introduced by this branch)",
+        "python -m pytest: 218 passed, 3 failed (pre-existing httpx), 23 skipped",
+        "python -m sqlfluff lint database/migrations/017_cii_methodology_hardening_v1.sql --dialect postgres: passed",
+        "python -m pre_commit run --all-files: passed",
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "pnpm format:check: passed",
+        "pnpm web:mvp:check: skipped (Docker not running)"
       ]
     }
   ]

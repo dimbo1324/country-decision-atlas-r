@@ -113,6 +113,9 @@ class CountryReadModelCii(BaseModel):
     confidence: str
     drift: float | None = None
     version: str
+    formula_version: str | None = None
+    aggregation_method: str | None = None
+    quality_warnings: list[str] = Field(default_factory=list)
     calculated_at: datetime
     metrics: list[CountryReadModelCiiMetric] = Field(default_factory=list)
 

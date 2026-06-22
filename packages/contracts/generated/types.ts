@@ -1018,6 +1018,15 @@ export interface components {
             drift?: number | null;
             /** Version */
             version: string;
+            /** Formula Version */
+            formula_version?: string | null;
+            /** Aggregation Method */
+            aggregation_method?: string | null;
+            /**
+             * Quality Warnings
+             * @default []
+             */
+            quality_warnings: string[];
             /**
              * Calculated At
              * Format: date-time
