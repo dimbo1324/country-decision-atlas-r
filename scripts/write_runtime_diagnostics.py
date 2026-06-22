@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
-RUNTIME_DIR = ROOT_DIR / "runtime" / "diagnostics"
+RUNTIME_DIR = ROOT_DIR / "local-artifacts" / "runtime-diagnostics"
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "change-me-local-admin-token")
 
@@ -83,6 +83,48 @@ def checks() -> list[Check]:
             "uruguay_card_ru.json",
             "GET",
             "/api/v1/countries/uruguay/card?locale=ru",
+            None,
+            None,
+        ),
+        (
+            "russia_cii.json",
+            "GET",
+            "/api/v1/countries/russia/cii?version=v1.0",
+            None,
+            None,
+        ),
+        (
+            "uruguay_cii.json",
+            "GET",
+            "/api/v1/countries/uruguay/cii?version=v1.0",
+            None,
+            None,
+        ),
+        (
+            "countries_compare.json",
+            "GET",
+            "/api/v1/countries/compare?countries=russia,uruguay&scenario=relocation_residence&locale=ru",
+            None,
+            None,
+        ),
+        (
+            "countries_matrix.json",
+            "GET",
+            "/api/v1/countries/matrix?countries=russia,uruguay&scenarios=all&locale=ru",
+            None,
+            None,
+        ),
+        (
+            "legal_timeline_ru.json",
+            "GET",
+            "/api/v1/legal-signals/timeline?locale=ru",
+            None,
+            None,
+        ),
+        (
+            "home_overview_ru.json",
+            "GET",
+            "/api/v1/home/overview?locale=ru",
             None,
             None,
         ),
