@@ -49,10 +49,30 @@ _METRIC_DEFS = [
 ]
 
 _METRIC_VALUES = [
-    {"country_slug": "russia", "metric_slug": "rule_of_law", "value": 20.0, "polarity": "positive"},
-    {"country_slug": "uruguay", "metric_slug": "rule_of_law", "value": 72.0, "polarity": "positive"},
-    {"country_slug": "russia", "metric_slug": "economic_freedom", "value": 54.2, "polarity": "positive"},
-    {"country_slug": "uruguay", "metric_slug": "economic_freedom", "value": 68.1, "polarity": "positive"},
+    {
+        "country_slug": "russia",
+        "metric_slug": "rule_of_law",
+        "value": 20.0,
+        "polarity": "positive",
+    },
+    {
+        "country_slug": "uruguay",
+        "metric_slug": "rule_of_law",
+        "value": 72.0,
+        "polarity": "positive",
+    },
+    {
+        "country_slug": "russia",
+        "metric_slug": "economic_freedom",
+        "value": 54.2,
+        "polarity": "positive",
+    },
+    {
+        "country_slug": "uruguay",
+        "metric_slug": "economic_freedom",
+        "value": 68.1,
+        "polarity": "positive",
+    },
 ]
 
 _SCENARIO_ROW = {"slug": "relocation_residence", "title": "Relocation and residence"}
@@ -84,11 +104,22 @@ class TestBuildCiiComparison:
 
         with (
             patch(f"{_SVC_CMP}.get_cii_for_countries", return_value=resolved_cii),
-            patch(f"{_SVC_CMP}.get_active_cii_metric_definitions", return_value=resolved_defs),
-            patch(f"{_SVC_CMP}.get_cii_metric_values_for_countries", return_value=resolved_vals),
-            patch(f"{_SVC_CMP}.get_scenario_for_cii_comparison", return_value=resolved_scenario),
+            patch(
+                f"{_SVC_CMP}.get_active_cii_metric_definitions",
+                return_value=resolved_defs,
+            ),
+            patch(
+                f"{_SVC_CMP}.get_cii_metric_values_for_countries",
+                return_value=resolved_vals,
+            ),
+            patch(
+                f"{_SVC_CMP}.get_scenario_for_cii_comparison",
+                return_value=resolved_scenario,
+            ),
         ):
-            return build_cii_comparison(_make_connection(), country_slugs, scenario_slug, locale)
+            return build_cii_comparison(
+                _make_connection(), country_slugs, scenario_slug, locale
+            )
 
     def test_returns_two_countries(self) -> None:
         result = self._run()
@@ -146,7 +177,11 @@ class TestBuildCiiComparison:
         assert any("russia" in w for w in result.quality_warnings)
 
     def test_missing_metric_value_adds_quality_warning(self) -> None:
-        partial_vals = [v for v in _METRIC_VALUES if v["metric_slug"] != "rule_of_law" or v["country_slug"] != "russia"]
+        partial_vals = [
+            v
+            for v in _METRIC_VALUES
+            if v["metric_slug"] != "rule_of_law" or v["country_slug"] != "russia"
+        ]
         result = self._run(metric_values=partial_vals)
         assert any("russia" in w for w in result.quality_warnings)
 
@@ -183,8 +218,18 @@ class TestBuildCiiComparison:
             {**_METRIC_DEFS[0], "polarity": "negative"},
         ]
         vals = [
-            {"country_slug": "russia", "metric_slug": "rule_of_law", "value": 20.0, "polarity": "negative"},
-            {"country_slug": "uruguay", "metric_slug": "rule_of_law", "value": 30.0, "polarity": "negative"},
+            {
+                "country_slug": "russia",
+                "metric_slug": "rule_of_law",
+                "value": 20.0,
+                "polarity": "negative",
+            },
+            {
+                "country_slug": "uruguay",
+                "metric_slug": "rule_of_law",
+                "value": 30.0,
+                "polarity": "negative",
+            },
         ]
         result = self._run(metric_defs=defs_with_negative, metric_values=vals)
         rol = result.metrics[0]
@@ -199,8 +244,18 @@ class TestBuildCiiComparison:
             {**_METRIC_DEFS[0], "polarity": "negative"},
         ]
         vals = [
-            {"country_slug": "russia", "metric_slug": "rule_of_law", "value": 20.0, "polarity": "negative"},
-            {"country_slug": "uruguay", "metric_slug": "rule_of_law", "value": 30.0, "polarity": "negative"},
+            {
+                "country_slug": "russia",
+                "metric_slug": "rule_of_law",
+                "value": 20.0,
+                "polarity": "negative",
+            },
+            {
+                "country_slug": "uruguay",
+                "metric_slug": "rule_of_law",
+                "value": 30.0,
+                "polarity": "negative",
+            },
         ]
         result = self._run(metric_defs=defs_with_negative, metric_values=vals)
         rol = result.metrics[0]
@@ -208,10 +263,30 @@ class TestBuildCiiComparison:
 
     def test_tie_has_no_winner(self) -> None:
         vals = [
-            {"country_slug": "russia", "metric_slug": "rule_of_law", "value": 50.0, "polarity": "positive"},
-            {"country_slug": "uruguay", "metric_slug": "rule_of_law", "value": 50.0, "polarity": "positive"},
-            {"country_slug": "russia", "metric_slug": "economic_freedom", "value": 60.0, "polarity": "positive"},
-            {"country_slug": "uruguay", "metric_slug": "economic_freedom", "value": 60.0, "polarity": "positive"},
+            {
+                "country_slug": "russia",
+                "metric_slug": "rule_of_law",
+                "value": 50.0,
+                "polarity": "positive",
+            },
+            {
+                "country_slug": "uruguay",
+                "metric_slug": "rule_of_law",
+                "value": 50.0,
+                "polarity": "positive",
+            },
+            {
+                "country_slug": "russia",
+                "metric_slug": "economic_freedom",
+                "value": 60.0,
+                "polarity": "positive",
+            },
+            {
+                "country_slug": "uruguay",
+                "metric_slug": "economic_freedom",
+                "value": 60.0,
+                "polarity": "positive",
+            },
         ]
         result = self._run(metric_values=vals)
         by_slug = {m.metric_slug: m for m in result.metrics}
