@@ -970,6 +970,53 @@
         "pnpm format:check: passed",
         "pnpm web:mvp:check: skipped (Docker not running)"
       ]
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "cii-runtime-gate-and-decision-visual-v1",
+      "task": "feat/cii-runtime-gate-and-decision-visual-v1",
+      "branch": "feat/cii-runtime-gate-and-decision-visual-v1",
+      "summary": "Started CII runtime regression gate and decision visual comparison block.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "cii-runtime-gate-and-decision-visual-v1",
+      "task": "feat/cii-runtime-gate-and-decision-visual-v1",
+      "branch": "feat/cii-runtime-gate-and-decision-visual-v1",
+      "summary": [
+        "Phase A (runtime gate): Verified clean DB migration chain, Docker runtime, /health, /countries/russia/cii, /countries/uruguay/cii. Fixed pre-existing httpx failures by running pip install -e \".[dev]\". Achieved 221 passed, 23 skipped, 0 failed.",
+        "Phase B (decision visual comparison): Added GET /api/v1/countries/compare endpoint registered before dynamic /{slug} routes.",
+        "Created Pydantic schemas: CiiCountryComparisonResponse, ComparedCountry, ComparedMetric, ComparedMetricValue, ComparedScenario (apps/api/app/schemas/cii_comparison.py).",
+        "Added 4 repository functions: get_cii_for_countries (LEFT JOIN, graceful missing), get_active_cii_metric_definitions, get_cii_metric_values_for_countries, get_scenario_for_cii_comparison (locale-aware title) in apps/api/app/repositories/cii.py.",
+        "Created service apps/api/app/services/cii_comparison.py: polarity-aware effective_value, delta/winner computation, quality_warnings for missing data.",
+        "Updated contracts/openapi.yaml with /api/v1/countries/compare path and 5 new schemas. Regenerated packages/contracts/generated/types.ts.",
+        "Added CiiCountryComparisonResponse to contracts-check.ts.",
+        "Created apps/web/src/shared/api/cii.ts (compareCountriesCii, ciiApi).",
+        "Created feature folder apps/web/src/features/decision-visual-comparison/ with: DecisionCiiComparison.tsx, CiiCompareSpiderChart.tsx (SVG, dynamic axes), CiiMetricCompareBars.tsx, CiiMetricWinnerList.tsx, CiiComparisonSummary.tsx, CiiComparisonEmptyState.tsx.",
+        "Integrated visual comparison into DecisionRunForm.tsx when result is non-null and exactly 2 candidates selected. Old text result preserved.",
+        "Added CSS classes for all visual comparison components to apps/web/src/app/styles.css.",
+        "Added 18 unit tests in tests/test_cii_country_comparison.py (polarity, delta, winner, locale, quality_warnings, negative polarity inversion).",
+        "Added E2E tests in tests/e2e/web-mvp-decision-visual-comparison.spec.ts (6 tests: block visible, spider chart, bars, winner list, reload).",
+        "All quality checks passed: 239 pytest (221+18), mypy 98 files OK, ruff clean, pnpm typecheck+lint+build+format:check all green.",
+        "pnpm web:mvp:check: 49 passed, 1 pre-existing failure (data quality admin API test requires ADMIN_TOKEN env var not set in local Docker)."
+      ],
+      "status": "completed",
+      "checks": [
+        "python -m pytest: 239 passed, 23 skipped, 0 failed",
+        "python -m mypy .: Success, no issues found in 98 source files",
+        "python -m ruff check . --fix: All checks passed",
+        "python -m ruff format .: 2 files reformatted",
+        "pnpm typecheck: passed",
+        "pnpm lint: passed",
+        "pnpm build: passed",
+        "pnpm format:check: All matched files use Prettier code style",
+        "pnpm web:mvp:check: 49 passed, 1 pre-existing failure (data quality admin token not configured)"
+      ]
     }
   ]
 }

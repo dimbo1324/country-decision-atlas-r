@@ -1,5 +1,7 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
+type CiiCountryComparisonResponse =
+  components["schemas"]["CiiCountryComparisonResponse"];
 type CountryListResponse = components["schemas"]["CountryListResponse"];
 type CountryResponse = components["schemas"]["CountryResponse"];
 type CountryReadModelResponse = components["schemas"]["CountryReadModelResponse"];
@@ -17,6 +19,7 @@ type LocalizationMeta = components["schemas"]["LocalizationMeta"];
 type TranslationFieldMeta = components["schemas"]["TranslationFieldMeta"];
 
 export type FrontendCriticalContracts = {
+  ciiComparison: CiiCountryComparisonResponse;
   countryList: CountryListResponse;
   countryDetail: CountryResponse;
   countryReadModel: CountryReadModelResponse;
