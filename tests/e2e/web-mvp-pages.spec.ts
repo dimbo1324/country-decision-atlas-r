@@ -62,7 +62,7 @@ test.describe("MVP page availability", () => {
 
   test("/legal-signals?locale=ru opens", async ({ page }) => {
     await page.goto(e2eRoutes.legalSignals({ locale: "ru" }));
-    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
+    await expectHasMainHeading(page, /лента правовых сигналов/i);
     await expectNoAppCrash(page);
   });
 

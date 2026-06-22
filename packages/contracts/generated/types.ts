@@ -191,6 +191,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/legal-signals/timeline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Legal Signal Timeline */
+        get: operations["read_legal_signal_timeline_api_v1_legal_signals_timeline_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/legal-signals": {
         parameters: {
             query?: never;
@@ -1768,6 +1785,77 @@ export interface components {
             /** @default draft */
             status: components["schemas"]["PublicationStatus"];
         };
+        /** TimelineSourceRef */
+        TimelineSourceRef: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            url: string;
+            publisher?: string | null;
+            source_type: string;
+            confidence?: string | null;
+        };
+        /** TimelineEvidenceRef */
+        TimelineEvidenceRef: {
+            /** Format: uuid */
+            id: string;
+            claim: string;
+            excerpt?: string | null;
+            url?: string | null;
+            confidence?: string | null;
+        };
+        /** LegalSignalTimelineEvent */
+        LegalSignalTimelineEvent: {
+            /** Format: uuid */
+            id: string;
+            country_slug: string;
+            country_name: string;
+            /** Format: uuid */
+            legal_signal_id: string;
+            legal_signal_title: string;
+            /** Format: date */
+            event_date: string;
+            event_year: number;
+            /** @enum {string} */
+            event_type: "created" | "updated" | "amended" | "effective" | "expired" | "confirmed";
+            signal_type: string;
+            /** @enum {string} */
+            impact_direction: "positive" | "negative" | "neutral" | "mixed" | "uncertain";
+            /** @enum {string} */
+            impact_level: "low" | "medium" | "high" | "critical";
+            affected_groups: string[];
+            title: string;
+            summary?: string | null;
+            source?: components["schemas"]["TimelineSourceRef"] | null;
+            evidence?: components["schemas"]["TimelineEvidenceRef"] | null;
+            localization?: components["schemas"]["LocalizationMeta"] | null;
+            quality_warnings: string[];
+        };
+        /** TimelineYearGroup */
+        TimelineYearGroup: {
+            year: number;
+            events: components["schemas"]["LegalSignalTimelineEvent"][];
+        };
+        /** TimelineFilters */
+        TimelineFilters: {
+            country_slug?: string | null;
+            signal_type?: string | null;
+            impact_direction?: string | null;
+            impact_level?: string | null;
+            affected_group?: string | null;
+            year_from?: number | null;
+            year_to?: number | null;
+        };
+        /** LegalSignalTimelineResponse */
+        LegalSignalTimelineResponse: {
+            locale: components["schemas"]["LocaleResolution"];
+            filters: components["schemas"]["TimelineFilters"];
+            groups: components["schemas"]["TimelineYearGroup"][];
+            total: number;
+            limit: number;
+            offset: number;
+            available_years: number[];
+        };
         /** LegalSignalDetail */
         LegalSignalDetail: {
             /**
@@ -3152,6 +3240,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LegalSignalListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_legal_signal_timeline_api_v1_legal_signals_timeline_get: {
+        parameters: {
+            query?: {
+                country_slug?: string | null;
+                signal_type?: ("law" | "bill" | "policy" | "court_decision" | "administrative_change" | "political_signal" | "other") | null;
+                impact_direction?: ("positive" | "negative" | "neutral" | "mixed" | "uncertain") | null;
+                impact_level?: ("low" | "medium" | "high" | "critical") | null;
+                affected_group?: string | null;
+                year_from?: number | null;
+                year_to?: number | null;
+                limit?: number;
+                offset?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalSignalTimelineResponse"];
                 };
             };
             /** @description Validation Error */

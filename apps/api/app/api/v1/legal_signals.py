@@ -8,10 +8,11 @@ from app.schemas.decision_engine import (
     LegalSignalDetailListResponse,
     LegalSignalDetailResponse,
 )
+from app.schemas.legal_signal_events import LegalSignalTimelineResponse
 from app.schemas.legal_signals import LegalSignalListResponse
-from app.services import decision_engine
+from app.services import decision_engine, legal_signal_timeline
 from app.services.localization import overlay_localized_fields
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
 
@@ -72,6 +73,56 @@ async def read_country_legal_signals(
 
 
 top_level_router = APIRouter(prefix="/legal-signals", tags=["legal_signals"])
+
+
+@top_level_router.get("/timeline", response_model=LegalSignalTimelineResponse)
+async def read_legal_signal_timeline(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
+    country_slug: str | None = None,
+    signal_type: Literal[
+        "law",
+        "bill",
+        "policy",
+        "court_decision",
+        "administrative_change",
+        "political_signal",
+        "other",
+    ]
+    | None = None,
+    impact_direction: Literal["positive", "negative", "neutral", "mixed", "uncertain"]
+    | None = None,
+    impact_level: Literal["low", "medium", "high", "critical"] | None = None,
+    affected_group: str | None = None,
+    year_from: Annotated[int | None, Query(ge=1900, le=2100)] = None,
+    year_to: Annotated[int | None, Query(ge=1900, le=2100)] = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> LegalSignalTimelineResponse:
+    if year_from is not None and year_to is not None and year_from > year_to:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": {
+                    "code": "validation_error",
+                    "message": "year_from must be less than or equal to year_to",
+                    "details": {"year_from": year_from, "year_to": year_to},
+                }
+            },
+        )
+    return legal_signal_timeline.build_timeline_response(
+        connection,
+        locale,
+        country_slug,
+        signal_type,
+        impact_direction,
+        impact_level,
+        affected_group,
+        year_from,
+        year_to,
+        limit,
+        offset,
+    )
 
 
 @top_level_router.get("", response_model=LegalSignalDetailListResponse)

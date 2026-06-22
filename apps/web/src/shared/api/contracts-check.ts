@@ -9,6 +9,7 @@ type CountryReadModelResponse = components["schemas"]["CountryReadModelResponse"
 type DecisionRunRequest = components["schemas"]["DecisionRunRequest"];
 type DecisionRunResponse = components["schemas"]["DecisionRunResponse"];
 type LegalSignalListResponse = components["schemas"]["LegalSignalDetailListResponse"];
+type LegalSignalTimelineResponse = components["schemas"]["LegalSignalTimelineResponse"];
 type SourceListResponse = components["schemas"]["SourceListResponse"];
 type EvidenceItemListResponse = components["schemas"]["EvidenceItemListResponse"];
 type ScenarioListResponse = components["schemas"]["ScenarioListResponse"];
@@ -28,6 +29,7 @@ export type FrontendCriticalContracts = {
   decisionRunRequest: DecisionRunRequest;
   decisionRunResponse: DecisionRunResponse;
   legalSignals: LegalSignalListResponse;
+  legalSignalTimeline: LegalSignalTimelineResponse;
   sources: SourceListResponse;
   evidenceItems: EvidenceItemListResponse;
   scenarios: ScenarioListResponse;

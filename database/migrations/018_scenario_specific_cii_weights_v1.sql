@@ -112,7 +112,7 @@ computed_scores AS (
         ROUND(
             CAST(
                 EXP(
-                    SUM(sw.weight * LN(GREATEST(cmv.normalized_value::float, 1.0)))
+                    SUM(sw.weight * LN(GREATEST(cast(cmv.normalized_value AS float), 1.0)))
                     / NULLIF(SUM(sw.weight), 0)
                 ) AS NUMERIC
             ),
@@ -127,7 +127,7 @@ computed_scores AS (
                 'weight',         sw.weight,
                 'weighted_score', ROUND(
                     CAST(
-                        sw.weight * LN(GREATEST(cmv.normalized_value::float, 1.0))
+                        sw.weight * LN(GREATEST(cast(cmv.normalized_value AS float), 1.0))
                         AS NUMERIC
                     ),
                     4

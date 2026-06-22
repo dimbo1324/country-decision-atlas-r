@@ -36,6 +36,13 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_published_score_breakdowns_without_source_ids",
         "list_published_legal_signals_without_source",
         "list_published_legal_signals_without_evidence",
+        "list_published_legal_signals_without_timeline_event",
+        "list_timeline_events_with_invalid_date",
+        "list_timeline_events_with_invalid_impact_direction",
+        "list_timeline_events_with_invalid_impact_level",
+        "list_timeline_events_with_country_mismatch",
+        "list_timeline_events_without_traceability",
+        "list_unplanned_future_timeline_events",
         "list_evidence_without_source",
         "list_evidence_without_country",
         "list_published_sources_with_missing_required_fields",
@@ -104,6 +111,34 @@ def test_data_quality_report_aggregates_critical_and_warning_issues(
     }
     assert any(issue.severity == "critical" for issue in report.issues)
     assert any(issue.severity == "warning" for issue in report.issues)
+
+
+def test_data_quality_report_detects_invalid_timeline_data(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_legal_signals_without_timeline_event",
+        lambda *_: [{"id": "signal-id", "country_slug": "russia"}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_timeline_events_without_traceability",
+        lambda *_: [{"id": "event-id", "legal_signal_id": "signal-id"}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_unplanned_future_timeline_events",
+        lambda *_: [{"id": "future-id", "event_date": "2100-01-01"}],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert {issue.code for issue in report.issues} == {
+        "published_legal_signal_timeline_event_missing",
+        "timeline_event_traceability_missing",
+        "timeline_event_future_date",
+    }
+    assert report.valid is False
 
 
 def test_data_quality_report_enforces_source_backed_depth(

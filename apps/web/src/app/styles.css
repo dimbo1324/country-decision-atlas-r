@@ -1935,3 +1935,147 @@ ol {
 .matrixSummaryValue {
   font-weight: 600;
 }
+
+.timelineContainer {
+  display: grid;
+  gap: 20px;
+}
+
+.timelineIntro,
+.timelineResultCount {
+  color: #555;
+  margin: 0;
+}
+
+.timelineFilters label {
+  min-width: 150px;
+}
+
+.timelineLegend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.timelineLegendItem,
+.timelineEventMeta span,
+.timelineEventMeta time {
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  padding: 4px 7px;
+}
+
+.timelineGroups,
+.timelineYearEvents {
+  display: grid;
+  gap: 16px;
+}
+
+.timelineYearGroup {
+  position: relative;
+}
+
+.timelineYearTitle {
+  border-bottom: 1px solid #d8d8d8;
+  font-size: 24px;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+}
+
+.timelineEventCard {
+  border: 1px solid #d8d8d8;
+  border-left-width: 5px;
+  border-radius: 6px;
+  padding: 16px;
+  position: relative;
+}
+
+.timelineEventCard h3 {
+  font-size: 18px;
+  margin: 12px 0 8px;
+}
+
+.timelineEventCard p {
+  margin: 0 0 12px;
+}
+
+.timelineEventMarker {
+  background: currentColor;
+  border-radius: 50%;
+  height: 9px;
+  left: -7px;
+  position: absolute;
+  top: 22px;
+  width: 9px;
+}
+
+.timelineEventPositive {
+  border-left-color: #3f7d54;
+  color: #315f41;
+}
+
+.timelineEventNegative {
+  border-left-color: #a54b4b;
+  color: #7c3838;
+}
+
+.timelineEventNeutral {
+  border-left-color: #777;
+  color: #555;
+}
+
+.timelineEventMixed {
+  border-left-color: #a27728;
+  color: #76571d;
+}
+
+.timelineEventUncertain {
+  border-left-color: #777d86;
+  color: #595e65;
+}
+
+.timelineEventCard h3,
+.timelineEventCard p,
+.timelineAffectedGroups,
+.timelineEventEvidence {
+  color: #1f1f1f;
+}
+
+.timelineEventMeta,
+.timelineEventEvidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timelineEventMeta {
+  font-size: 12px;
+}
+
+.timelineAffectedGroups {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.timelineEventEvidence {
+  border-top: 1px solid #d8d8d8;
+  font-size: 13px;
+  padding-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .timelineFilters label {
+    min-width: 100%;
+  }
+
+  .timelineEventCard {
+    padding: 14px;
+  }
+
+  .timelineEventMeta span,
+  .timelineEventMeta time {
+    max-width: 100%;
+  }
+}

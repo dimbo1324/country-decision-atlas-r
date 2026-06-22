@@ -8,20 +8,20 @@ test.describe("legal signals page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }));
-    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
+    await expectHasMainHeading(page, /лента правовых сигналов/i);
 
     await expect(page.locator(".filterBar")).toBeVisible();
 
-    const countrySelect = page.locator("#ls-country");
+    const countrySelect = page.locator("#timeline-country");
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("russia");
 
     const hasItems = await page
-      .locator(".signalList")
+      .locator(".timelineGroups")
       .isVisible()
       .catch(() => false);
     const hasEmpty = await page
-      .getByText(/по выбранным фильтрам правовые сигналы/i)
+      .getByText(/по выбранным фильтрам событий/i)
       .isVisible()
       .catch(() => false);
     expect(hasItems || hasEmpty).toBe(true);
@@ -39,14 +39,14 @@ test.describe("legal signals page", () => {
         locale: "en",
       }),
     );
-    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
+    await expectHasMainHeading(page, /лента правовых сигналов/i);
     await expectNoAppCrash(page);
   });
 
   test("legal signals summary cards appear when data loads", async ({ page }) => {
     await page.goto(e2eRoutes.legalSignals({ locale: "en" }));
-    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
-    await expect(page.getByText(/показано сигналов/i)).toBeVisible({ timeout: 10_000 });
+    await expectHasMainHeading(page, /лента правовых сигналов/i);
+    await expect(page.getByText(/событий:/i)).toBeVisible({ timeout: 10_000 });
     await expectNoAppCrash(page);
   });
 
@@ -54,9 +54,9 @@ test.describe("legal signals page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "en" }));
-    await expectHasMainHeading(page, /отслеживаемые правовые сигналы/i);
+    await expectHasMainHeading(page, /лента правовых сигналов/i);
     const hasItems = await page
-      .locator(".signalList")
+      .locator(".timelineGroups")
       .isVisible()
       .catch(() => false);
     if (hasItems) {

@@ -6,6 +6,11 @@ import type { EvidenceListResponse } from "./evidence";
 
 export type LegalSignalListResponse =
   components["schemas"]["LegalSignalDetailListResponse"];
+export type LegalSignalTimelineResponse =
+  components["schemas"]["LegalSignalTimelineResponse"];
+export type LegalSignalTimelineEvent =
+  components["schemas"]["LegalSignalTimelineEvent"];
+export type TimelineYearGroup = components["schemas"]["TimelineYearGroup"];
 
 type ListLegalSignalsParams = {
   locale?: LocaleCode;
@@ -21,6 +26,19 @@ type ListLegalSignalsParams = {
     | "created_at"
     | "updated_at";
   order?: "asc" | "desc";
+  limit?: number;
+  offset?: number;
+};
+
+export type LegalSignalTimelineParams = {
+  locale?: LocaleCode;
+  countrySlug?: string;
+  signalType?: string;
+  impactDirection?: string;
+  impactLevel?: string;
+  affectedGroup?: string;
+  yearFrom?: number;
+  yearTo?: number;
   limit?: number;
   offset?: number;
 };
@@ -53,7 +71,27 @@ export function getLegalSignalEvidence(
   );
 }
 
+export function getLegalSignalTimeline(
+  params: LegalSignalTimelineParams = {},
+): Promise<LegalSignalTimelineResponse> {
+  return apiGet<LegalSignalTimelineResponse>(
+    `/api/v1/legal-signals/timeline${queryString({
+      locale: params.locale ?? "en",
+      country_slug: params.countrySlug,
+      signal_type: params.signalType,
+      impact_direction: params.impactDirection,
+      impact_level: params.impactLevel,
+      affected_group: params.affectedGroup,
+      year_from: params.yearFrom,
+      year_to: params.yearTo,
+      limit: params.limit,
+      offset: params.offset,
+    })}`,
+  );
+}
+
 export const legalSignalsApi = {
   listLegalSignals,
   getLegalSignalEvidence,
+  getTimeline: getLegalSignalTimeline,
 };

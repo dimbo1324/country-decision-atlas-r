@@ -340,6 +340,112 @@ def list_published_legal_signals_without_evidence(
     )
 
 
+def list_published_legal_signals_without_timeline_event(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT ls.id::text AS id, ls.title, c.slug AS country_slug
+        FROM legal_signals ls
+        JOIN countries c ON c.id = ls.country_id
+        LEFT JOIN legal_signal_events lse ON lse.legal_signal_id = ls.id
+        WHERE ls.status = 'published'
+        GROUP BY ls.id, ls.title, c.slug
+        HAVING COUNT(lse.id) = 0
+        ORDER BY c.slug, ls.title
+        """,
+    )
+
+
+def list_timeline_events_with_invalid_date(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT id::text AS id, legal_signal_id::text AS legal_signal_id
+        FROM legal_signal_events
+        WHERE event_date IS NULL
+        ORDER BY id
+        """,
+    )
+
+
+def list_timeline_events_with_invalid_impact_direction(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT id::text AS id, impact_direction
+        FROM legal_signal_events
+        WHERE impact_direction NOT IN ('positive', 'negative', 'neutral', 'mixed', 'uncertain')
+        ORDER BY id
+        """,
+    )
+
+
+def list_timeline_events_with_invalid_impact_level(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT id::text AS id, impact_level
+        FROM legal_signal_events
+        WHERE impact_level NOT IN ('low', 'medium', 'high', 'critical')
+        ORDER BY id
+        """,
+    )
+
+
+def list_timeline_events_with_country_mismatch(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            lse.id::text AS id,
+            lse.country_id::text AS event_country_id,
+            ls.country_id::text AS signal_country_id
+        FROM legal_signal_events lse
+        JOIN legal_signals ls ON ls.id = lse.legal_signal_id
+        WHERE lse.country_id <> ls.country_id
+        ORDER BY lse.id
+        """,
+    )
+
+
+def list_timeline_events_without_traceability(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT id::text AS id, legal_signal_id::text AS legal_signal_id
+        FROM legal_signal_events
+        WHERE source_id IS NULL AND evidence_item_id IS NULL
+        ORDER BY id
+        """,
+    )
+
+
+def list_unplanned_future_timeline_events(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT id::text AS id, event_date, event_type
+        FROM legal_signal_events
+        WHERE event_date > CURRENT_DATE
+        ORDER BY event_date
+        """,
+    )
+
+
 def list_evidence_without_source(connection: Connection[Any]) -> list[dict[str, Any]]:
     return fetch_all(
         connection,

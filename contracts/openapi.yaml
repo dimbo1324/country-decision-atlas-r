@@ -596,6 +596,115 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/legal-signals/timeline:
+    get:
+      tags:
+      - legal_signals
+      summary: Read Legal Signal Timeline
+      operationId: read_legal_signal_timeline_api_v1_legal_signals_timeline_get
+      parameters:
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: signal_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            enum: [law, bill, policy, court_decision, administrative_change, political_signal, other]
+          - type: 'null'
+          title: Signal Type
+      - name: impact_direction
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            enum: [positive, negative, neutral, mixed, uncertain]
+          - type: 'null'
+          title: Impact Direction
+      - name: impact_level
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            enum: [low, medium, high, critical]
+          - type: 'null'
+          title: Impact Level
+      - name: affected_group
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Affected Group
+      - name: year_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1900
+            maximum: 2100
+          - type: 'null'
+          title: Year From
+      - name: year_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1900
+            maximum: 2100
+          - type: 'null'
+          title: Year To
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum: [en, ru]
+          default: en
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegalSignalTimelineResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/legal-signals:
     get:
       tags:
@@ -4007,6 +4116,179 @@ components:
       required:
       - country_slug
       title: LegalSignalCreate
+    TimelineSourceRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        url:
+          type: string
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+        source_type:
+          type: string
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+      type: object
+      required: [id, title, url, source_type]
+      title: TimelineSourceRef
+    TimelineEvidenceRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim:
+          type: string
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+      type: object
+      required: [id, claim]
+      title: TimelineEvidenceRef
+    LegalSignalTimelineEvent:
+      properties:
+        id:
+          type: string
+          format: uuid
+        country_slug:
+          type: string
+        country_name:
+          type: string
+        legal_signal_id:
+          type: string
+          format: uuid
+        legal_signal_title:
+          type: string
+        event_date:
+          type: string
+          format: date
+        event_year:
+          type: integer
+        event_type:
+          type: string
+          enum: [created, updated, amended, effective, expired, confirmed]
+        signal_type:
+          type: string
+        impact_direction:
+          type: string
+          enum: [positive, negative, neutral, mixed, uncertain]
+        impact_level:
+          type: string
+          enum: [low, medium, high, critical]
+        affected_groups:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/TimelineSourceRef'
+          - type: 'null'
+        evidence:
+          anyOf:
+          - $ref: '#/components/schemas/TimelineEvidenceRef'
+          - type: 'null'
+        localization:
+          anyOf:
+          - $ref: '#/components/schemas/LocalizationMeta'
+          - type: 'null'
+        quality_warnings:
+          type: array
+          items:
+            type: string
+      type: object
+      required: [id, country_slug, country_name, legal_signal_id, legal_signal_title, event_date, event_year, event_type, signal_type, impact_direction, impact_level, affected_groups, title, quality_warnings]
+      title: LegalSignalTimelineEvent
+    TimelineYearGroup:
+      properties:
+        year:
+          type: integer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegalSignalTimelineEvent'
+      type: object
+      required: [year, events]
+      title: TimelineYearGroup
+    TimelineFilters:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+        affected_group:
+          anyOf:
+          - type: string
+          - type: 'null'
+        year_from:
+          anyOf:
+          - type: integer
+          - type: 'null'
+        year_to:
+          anyOf:
+          - type: integer
+          - type: 'null'
+      type: object
+      title: TimelineFilters
+    LegalSignalTimelineResponse:
+      properties:
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+        filters:
+          $ref: '#/components/schemas/TimelineFilters'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineYearGroup'
+        total:
+          type: integer
+          minimum: 0
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        offset:
+          type: integer
+          minimum: 0
+        available_years:
+          type: array
+          items:
+            type: integer
+      type: object
+      required: [locale, filters, groups, total, limit, offset, available_years]
+      title: LegalSignalTimelineResponse
     LegalSignalDetail:
       properties:
         id:

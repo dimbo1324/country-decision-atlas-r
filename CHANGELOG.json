@@ -1090,6 +1090,36 @@
       "branch": "main",
       "summary": "Delivered /compare matrix page: GET /api/v1/countries/matrix endpoint, CompareMatrixResponse schema, CountryScenarioMatrix table, heatmap CSS, legend, summary, and 30+ unit tests. No new libraries added.",
       "status": "done"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "legal-signals-timeline-v1",
+      "task": "feat/legal-signals-timeline-v1",
+      "branch": "feat/legal-signals-timeline-v1",
+      "summary": "Started Legal Signals Timeline to show country legal and policy changes over time.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-22",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "legal-signals-timeline-v1",
+      "task": "feat/legal-signals-timeline-v1",
+      "branch": "feat/legal-signals-timeline-v1",
+      "summary": "Delivered migration 019 with 20 source-backed legal signal events, grouped timeline API with filters and localization metadata, generated OpenAPI and TypeScript contracts, minimal /legal-signals timeline UI, timeline data-quality checks, backend tests, clean database verification, and 73 passing Playwright tests.",
+      "status": "done",
+      "checks": [
+        "python -m pytest: 335 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed after formatting",
+        "python -m pre_commit run --all-files: passed after formatting",
+        "clean database migrations 001-019 and direct repeat of migration 019: passed",
+        "Playwright: 73 passed, 0 failed"
+      ]
     }
   ]
 }

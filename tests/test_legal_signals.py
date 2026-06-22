@@ -6,6 +6,7 @@ def test_legal_signal_paths_and_seed_sources_exist() -> None:
     paths = load_contract()["paths"]
 
     assert "/api/v1/legal-signals" in paths
+    assert "/api/v1/legal-signals/timeline" in paths
     assert "/api/v1/legal-signals/{signal_id}/evidence" in paths
     assert "source_id" in SEED_SQL
     assert "'published'" in SEED_SQL
