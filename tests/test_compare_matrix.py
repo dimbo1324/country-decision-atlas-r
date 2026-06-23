@@ -18,6 +18,7 @@ MVP_SCENARIOS = [
 _COUNTRY_ROWS = [
     {"slug": "russia", "name": "Россия", "iso2": "RU"},
     {"slug": "uruguay", "name": "Уругвай", "iso2": "UY"},
+    {"slug": "argentina", "name": "Аргентина", "iso2": "AR"},
 ]
 
 _SCENARIO_ROWS = [
@@ -115,6 +116,51 @@ _CELL_ROWS = [
         "formula_version": "cii-v1.0",
         "aggregation_method": "geometric",
     },
+    {
+        "country_slug": "argentina",
+        "scenario_slug": "relocation_residence",
+        "cii_score": 42.67,
+        "cii_confidence": "high",
+        "country_drift": None,
+        "formula_version": "cii-v1.0",
+        "aggregation_method": "geometric",
+    },
+    {
+        "country_slug": "argentina",
+        "scenario_slug": "permanent_residence_citizenship",
+        "cii_score": 39.41,
+        "cii_confidence": "high",
+        "country_drift": None,
+        "formula_version": "cii-v1.0",
+        "aggregation_method": "geometric",
+    },
+    {
+        "country_slug": "argentina",
+        "scenario_slug": "low_budget_living",
+        "cii_score": 43.03,
+        "cii_confidence": "high",
+        "country_drift": None,
+        "formula_version": "cii-v1.0",
+        "aggregation_method": "geometric",
+    },
+    {
+        "country_slug": "argentina",
+        "scenario_slug": "business_self_employment",
+        "cii_score": 43.51,
+        "cii_confidence": "high",
+        "country_drift": None,
+        "formula_version": "cii-v1.0",
+        "aggregation_method": "geometric",
+    },
+    {
+        "country_slug": "argentina",
+        "scenario_slug": "safety_political_risk",
+        "cii_score": 40.05,
+        "cii_confidence": "high",
+        "country_drift": None,
+        "formula_version": "cii-v1.0",
+        "aggregation_method": "geometric",
+    },
 ]
 
 
@@ -151,19 +197,20 @@ def _run_matrix(
 
 
 class TestMatrixDefaults:
-    def test_default_returns_two_countries(self) -> None:
+    def test_default_returns_three_countries(self) -> None:
         result = _run_matrix()
         slugs = [c.slug for c in result.countries]
         assert "russia" in slugs
         assert "uruguay" in slugs
+        assert "argentina" in slugs
 
     def test_default_returns_five_scenarios(self) -> None:
         result = _run_matrix()
         assert len(result.scenarios) == 5
 
-    def test_default_returns_ten_cells(self) -> None:
+    def test_default_returns_fifteen_cells(self) -> None:
         result = _run_matrix()
-        assert len(result.cells) == 10
+        assert len(result.cells) == 15
 
     def test_all_scenarios_present_by_default(self) -> None:
         result = _run_matrix()
@@ -286,7 +333,7 @@ class TestScoreLabels:
 class TestMissingCells:
     def test_missing_score_does_not_crash(self) -> None:
         result = _run_matrix(cell_rows=[])
-        assert len(result.cells) == 10
+        assert len(result.cells) == 15
 
     def test_missing_cells_have_none_score(self) -> None:
         result = _run_matrix(cell_rows=[])
@@ -305,7 +352,7 @@ class TestMissingCells:
     def test_partial_missing_still_returns_all_cells(self) -> None:
         partial_cells = _CELL_ROWS[:5]
         result = _run_matrix(cell_rows=partial_cells)
-        assert len(result.cells) == 10
+        assert len(result.cells) == 15
 
 
 class TestOrdering:
@@ -326,6 +373,7 @@ class TestOrdering:
         slugs = [c.slug for c in result.countries]
         assert "russia" in slugs
         assert "uruguay" in slugs
+        assert "argentina" in slugs
 
 
 class TestLocale:
@@ -347,7 +395,7 @@ class TestFiltering:
             cell_rows=single_cells,
         )
         assert len(result.scenarios) == 1
-        assert len(result.cells) == 2
+        assert len(result.cells) == 3
 
     def test_single_country_filter(self) -> None:
         single_country_rows = [{"slug": "russia", "name": "Россия", "iso2": "RU"}]

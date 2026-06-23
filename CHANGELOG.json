@@ -109,12 +109,20 @@
         "critical_issues": 2,
         "warnings": 273,
         "classified_remaining": {
-          "accepted_mvp_warning": ["mvp_country_published_evidence_count_low (×2)"],
-          "future_scope": ["translation_english_variant_missing (×266)"],
-          "warning_accepted": ["published_legal_signal_evidence_missing (×7)"]
+          "accepted_mvp_warning": [
+            "mvp_country_published_evidence_count_low (×2)"
+          ],
+          "future_scope": [
+            "translation_english_variant_missing (×266)"
+          ],
+          "warning_accepted": [
+            "published_legal_signal_evidence_missing (×7)"
+          ]
         }
       },
-      "migrations": ["020_closeout_data_quality_fixes.sql"],
+      "migrations": [
+        "020_closeout_data_quality_fixes.sql"
+      ],
       "tests_added": 37,
       "new_files": [
         "database/migrations/020_closeout_data_quality_fixes.sql",
@@ -1328,6 +1336,26 @@
         "clean database migrations 001-022 and idempotent migration rerun: passed",
         "Playwright: 84 passed, 0 failed"
       ]
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "argentina-cii-integration-v1",
+      "task": "feat/argentina-cii-integration-v1",
+      "branch": "feat/argentina-cii-integration-v1",
+      "summary": "Adding Argentina CII metric values (6/6), scenario-specific CII scores (5/5), connecting Argentina to the matrix/compare endpoints. Argentina becomes a full participant in the numerical analytics layer while remaining onboarding (not MVP-ready) for legal/timeline sections.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "argentina-cii-integration-v1",
+      "task": "feat/argentina-cii-integration-v1",
+      "branch": "feat/argentina-cii-integration-v1",
+      "summary": "Argentina CII integration: 6/6 metric values (WB WGI, Heritage, GPI, TI CPI, Freedom House), 6/6 CII scores (overall 43.81 + 5 scenario scores via geometric formula). Argentina added to MVP_COUNTRIES: matrix shows 3x5=15 cells. Compare works for argentina/uruguay and argentina/russia pairs. Home overview includes Argentina. Russia/Uruguay remain mvp_ready=true. Migration 023 idempotent. 476 tests pass.",
+      "status": "completed"
     }
   ]
 }

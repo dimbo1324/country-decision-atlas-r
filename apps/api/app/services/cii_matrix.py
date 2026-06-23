@@ -14,7 +14,7 @@ from psycopg import Connection
 from typing import Any
 
 
-MVP_COUNTRIES = ["russia", "uruguay"]
+MVP_COUNTRIES = ["russia", "uruguay", "argentina"]
 
 MVP_SCENARIOS = [
     "relocation_residence",

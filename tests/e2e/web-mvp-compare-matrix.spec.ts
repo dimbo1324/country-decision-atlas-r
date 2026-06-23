@@ -33,6 +33,14 @@ test.describe("compare matrix page", () => {
     await expectNoAppCrash(page);
   });
 
+  test("Argentina row exists in matrix", async ({ page }) => {
+    await page.goto(e2eRoutes.compare);
+    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+      timeout: 10_000,
+    });
+    await expectNoAppCrash(page);
+  });
+
   test("5 scenario columns exist", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
     await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
