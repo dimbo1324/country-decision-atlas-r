@@ -3176,6 +3176,11 @@ components:
             $ref: '#/components/schemas/CountryOnboardingResult'
           type: array
           title: Countries
+        onboarding_countries:
+          items:
+            $ref: '#/components/schemas/CountryOnboardingResult'
+          type: array
+          title: Onboarding Countries
         all_mvp_ready:
           type: boolean
           title: All Mvp Ready

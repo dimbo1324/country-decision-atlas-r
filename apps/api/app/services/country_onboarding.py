@@ -1,5 +1,9 @@
 from app.repositories import country_onboarding as repository
-from app.repositories.data_quality import MVP_COUNTRY_SLUGS, MVP_SCENARIO_SLUGS
+from app.repositories.data_quality import (
+    MVP_COUNTRY_SLUGS,
+    MVP_SCENARIO_SLUGS,
+    ONBOARDING_COUNTRY_SLUGS,
+)
 from app.schemas.country_onboarding import (
     AllCountriesOnboardingResult,
     CountryOnboardingResult,
@@ -380,12 +384,17 @@ def evaluate_country_onboarding(
 def evaluate_all_mvp_countries(
     connection: Connection[Any],
 ) -> AllCountriesOnboardingResult:
-    results = [
+    mvp_results = [
         evaluate_country_onboarding(connection, slug) for slug in MVP_COUNTRY_SLUGS
     ]
+    onboarding_results = [
+        evaluate_country_onboarding(connection, slug)
+        for slug in ONBOARDING_COUNTRY_SLUGS
+    ]
     return AllCountriesOnboardingResult(
-        countries=results,
-        all_mvp_ready=all(r.mvp_ready for r in results),
+        countries=mvp_results,
+        onboarding_countries=onboarding_results,
+        all_mvp_ready=all(r.mvp_ready for r in mvp_results),
     )
 
 
@@ -418,6 +427,23 @@ def build_country_onboarding_dq_results(
         checks.append(
             DataQualityCheck(code=check_code, status="failed" if failed else "passed")
         )
+
+    for result in all_results.onboarding_countries:
+        for finding in result.findings:
+            issues.append(
+                DataQualityIssue(
+                    code=f"onboarding_{finding.code}",
+                    severity="warning",
+                    entity_type="country",
+                    entity_id=result.country_slug,
+                    message=f"[onboarding:{result.country_slug}] {finding.message}",
+                    details={
+                        "country_slug": result.country_slug,
+                        "section": _finding_code_to_section(finding.code),
+                        "onboarding": True,
+                    },
+                )
+            )
 
     return checks, issues
 

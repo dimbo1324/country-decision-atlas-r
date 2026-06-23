@@ -1307,6 +1307,8 @@ export interface components {
         AllCountriesOnboardingResult: {
             /** Countries */
             countries?: components["schemas"]["CountryOnboardingResult"][];
+            /** Onboarding Countries */
+            onboarding_countries?: components["schemas"]["CountryOnboardingResult"][];
             /** All Mvp Ready */
             all_mvp_ready: boolean;
         };

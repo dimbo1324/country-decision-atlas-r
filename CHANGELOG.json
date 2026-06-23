@@ -1298,6 +1298,36 @@
       "branch": "chore/infographic-foundation-closeout-v1",
       "summary": "Started infographic foundation closeout with extended quality guardrails, data-quality debt classification, runtime verification, and episode closeout.",
       "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "argentina-core-country-slice-v1",
+      "task": "feat/argentina-core-country-slice-v1",
+      "branch": "feat/argentina-core-country-slice-v1",
+      "summary": "Adding Argentina as the first real third-country core slice: country row, RU+EN country cards, initial sources and evidence, ONBOARDING_COUNTRY_SLUGS architecture, onboarding report extended with onboarding_countries field.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "argentina-core-country-slice-v1",
+      "task": "feat/argentina-core-country-slice-v1",
+      "branch": "feat/argentina-core-country-slice-v1",
+      "summary": "Argentina added as first onboarding country: is_active=true, RU+EN country cards (published), translation_units+variants, 6 sources, 6 evidence items. ONBOARDING_COUNTRY_SLUGS=(argentina,) added to data_quality repo. AllCountriesOnboardingResult extended with onboarding_countries field. Argentina appears in /countries, opens without crash, renders empty states for CII and legal signals. Onboarding report shows russia/uruguay mvp_ready=true, argentina mvp_ready=false. DQ issues for onboarding countries are severity=warning and use onboarding_ prefixed codes so they do not fail MVP check codes. Main flow E2E test hardened to navigate to Russia/Uruguay by slug (not by list order) after Argentina changed list ordering.",
+      "status": "done",
+      "checks": [
+        "python -m pytest: 448 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pre-commit run --all-files: passed (prettier auto-formatted E2E test)",
+        "clean database migrations 001-022 and idempotent migration rerun: passed",
+        "Playwright: 84 passed, 0 failed"
+      ]
     }
   ]
 }

@@ -25,4 +25,5 @@ class CountryOnboardingResult(BaseModel):
 
 class AllCountriesOnboardingResult(BaseModel):
     countries: list[CountryOnboardingResult] = Field(default_factory=list)
+    onboarding_countries: list[CountryOnboardingResult] = Field(default_factory=list)
     all_mvp_ready: bool

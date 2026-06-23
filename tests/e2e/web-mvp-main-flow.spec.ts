@@ -24,20 +24,21 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   await expect(page.getByText("Russia").first()).toBeVisible();
   await expect(page.getByText("Uruguay").first()).toBeVisible();
 
-  await page.getByRole("link", { name: "Карточка страны" }).first().click();
+  await page.goto(e2eRoutes.country("russia", "ru"));
   await expect(page.locator("[data-testid='country-card']")).toBeVisible({
     timeout: 15000,
   });
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.getByText(/оценки сценариев/i)).toBeVisible();
+  await expect(
+    page.locator("h2").filter({ hasText: /оценки сценариев/i }),
+  ).toBeVisible();
   await expectNoAppCrash(page);
 
-  await page.getByRole("link", { name: /все страны/i }).click();
-  await expectHasMainHeading(page, /карточки стран для подбора/i);
-
-  await page.getByRole("link", { name: "Карточка страны" }).nth(1).click();
+  await page.goto(e2eRoutes.country("uruguay", "ru"));
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.getByText(/оценки сценариев/i)).toBeVisible();
+  await expect(
+    page.locator("h2").filter({ hasText: /оценки сценариев/i }),
+  ).toBeVisible();
   await expectNoAppCrash(page);
 
   await page
