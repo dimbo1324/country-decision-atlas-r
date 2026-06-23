@@ -1356,6 +1356,26 @@
       "branch": "feat/argentina-cii-integration-v1",
       "summary": "Argentina CII integration: 6/6 metric values (WB WGI, Heritage, GPI, TI CPI, Freedom House), 6/6 CII scores (overall 43.81 + 5 scenario scores via geometric formula). Argentina added to MVP_COUNTRIES: matrix shows 3x5=15 cells. Compare works for argentina/uruguay and argentina/russia pairs. Home overview includes Argentina. Russia/Uruguay remain mvp_ready=true. Migration 023 idempotent. 476 tests pass.",
       "status": "completed"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "argentina-legal-timeline-evidence-v1",
+      "task": "feat/argentina-legal-timeline-evidence-v1",
+      "branch": "feat/argentina-legal-timeline-evidence-v1",
+      "summary": "Adding Argentina legal signals (>=5), timeline events (>=5), evidence depth (>=15), sources (>=10), and onboarding readiness for legal/timeline/evidence sections.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "argentina-legal-timeline-evidence-v1",
+      "task": "feat/argentina-legal-timeline-evidence-v1",
+      "branch": "feat/argentina-legal-timeline-evidence-v1",
+      "summary": "Migration 024: Argentina gets 10 sources (+4), 15 evidence items (+9), 6 legal signals (residence/citizenship/tax/banking/business/political_risk), 6 timeline events (100% traceability). Argentina onboarding: legal_ready=true, timeline_ready=true, evidence_ready=true, mvp_ready=true. Russia/Uruguay remain mvp_ready=true, all_mvp_ready=true. 53 new tests, 529 total. APIs /legal-signals, /legal-signals/timeline, /sources all return Argentina data.",
+      "status": "completed"
     }
   ]
 }
