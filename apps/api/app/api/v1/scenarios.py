@@ -21,7 +21,7 @@ router = APIRouter(tags=["scenarios"])
 
 
 @router.get("/scenarios", response_model=ScenarioListResponse)
-async def read_scenarios(
+def read_scenarios(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
@@ -37,7 +37,7 @@ async def read_scenarios(
 
 
 @router.post("/scenario-runs", response_model=ScenarioRunResult)
-async def create_scenario_run(
+def create_scenario_run(
     payload: ScenarioRunInput,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> ScenarioRunResult:
@@ -50,7 +50,7 @@ async def create_scenario_run(
 
 
 @router.get("/scenarios/{slug}", response_model=DecisionScenarioResponse)
-async def read_scenario_detail(
+def read_scenario_detail(
     slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -71,7 +71,7 @@ async def read_scenario_detail(
 @router.get(
     "/scenarios/{slug}/countries", response_model=DecisionCountryScoreListResponse
 )
-async def read_scenario_countries(
+def read_scenario_countries(
     slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,

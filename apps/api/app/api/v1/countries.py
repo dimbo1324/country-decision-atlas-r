@@ -36,7 +36,7 @@ router = APIRouter(prefix="/countries", tags=["countries"])
 
 
 @router.get("/compare", response_model=CiiCountryComparisonResponse, tags=["cii"])
-async def compare_countries_cii(
+def compare_countries_cii(
     countries: Annotated[
         str, Query(description="Comma-separated country slugs, exactly 2 for MVP")
     ],
@@ -66,7 +66,7 @@ async def compare_countries_cii(
 
 
 @router.get("/matrix", response_model=CompareMatrixResponse, tags=["cii"])
-async def get_countries_matrix(
+def get_countries_matrix(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     countries: str | None = Query(None),
@@ -120,7 +120,7 @@ async def get_countries_matrix(
 
 
 @router.get("", response_model=CountryListResponse)
-async def read_countries(
+def read_countries(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
@@ -136,7 +136,7 @@ async def read_countries(
 
 
 @router.get("/{country_slug}", response_model=CountryResponse)
-async def read_country(
+def read_country(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -153,7 +153,7 @@ async def read_country(
 
 
 @router.get("/{country_id}/profile", response_model=CountryProfileResponse)
-async def read_country_profile(
+def read_country_profile(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -165,7 +165,7 @@ async def read_country_profile(
 
 
 @router.get("/{country_id}/scores", response_model=CountryScoreListResponse)
-async def read_country_scores(
+def read_country_scores(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -182,7 +182,7 @@ async def read_country_scores(
 
 
 @router.get("/{country_slug}/card", response_model=CountryReadModelResponse)
-async def read_country_card(
+def read_country_card(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -203,7 +203,7 @@ async def read_country_card(
 
 
 @router.get("/{country_slug}/cii", response_model=CountryReadModelCii)
-async def read_country_cii(
+def read_country_cii(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     version: str = Query("v1.0", pattern=r"^v\d+\.\d+$"),
@@ -229,7 +229,7 @@ async def read_country_cii(
 
 
 @router.get("/{country_slug}/sources", response_model=SourceListWithLocaleResponse)
-async def read_country_sources(
+def read_country_sources(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,

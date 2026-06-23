@@ -459,7 +459,11 @@ class TestDryRun:
         )
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
+            patch(
+                f"{_REPO}.list_pending_jobs_for_preview",
+                return_value=[processing_job],
+            ),
+            patch(f"{_REPO}.lock_next_pending_job") as mock_lock,
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
             patch(f"{_REPO}.save_translation_variant") as mock_save,
             patch(f"{_REPO}.mark_job_completed") as mock_complete,
@@ -474,6 +478,7 @@ class TestDryRun:
         assert result["translated_text"] == "Hello world"
         mock_save.assert_not_called()
         mock_complete.assert_not_called()
+        mock_lock.assert_not_called()
 
     def test_dry_run_does_not_persist_failure(self) -> None:
         from app.services.translation_jobs import process_next_job
@@ -486,7 +491,11 @@ class TestDryRun:
         mock_provider.translate.side_effect = RuntimeError("boom")
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
+            patch(
+                f"{_REPO}.list_pending_jobs_for_preview",
+                return_value=[processing_job],
+            ),
+            patch(f"{_REPO}.lock_next_pending_job") as mock_lock,
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
             patch(f"{_REPO}.mark_job_failed") as mock_fail,
         ):
@@ -497,6 +506,7 @@ class TestDryRun:
         assert result is not None
         assert result["status"] == "failed"
         mock_fail.assert_not_called()
+        mock_lock.assert_not_called()
 
     def test_process_batch_dry_run_counts_correctly(self) -> None:
         from app.services.translation_jobs import process_batch
@@ -520,8 +530,16 @@ class TestDryRun:
             "metadata": {},
         }
 
-        with patch("app.services.translation_jobs.process_next_job") as mock_process:
-            mock_process.side_effect = [dry_run_result, None]
+        with (
+            patch(
+                f"{_REPO}.list_pending_jobs_for_preview",
+                return_value=[_job()],
+            ),
+            patch(
+                "app.services.translation_jobs._process_job",
+                return_value=dry_run_result,
+            ),
+        ):
             result = process_batch(
                 conn, "worker-1", "en", 5, mock_provider, dry_run=True
             )

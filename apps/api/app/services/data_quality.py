@@ -69,11 +69,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
         issues.append(
             _issue(
                 "mvp_country_published_source_count_low",
-                "critical",
+                "accepted_mvp_warning",
                 "country",
                 row.get("id"),
-                "Published MVP country has too few published sources.",
-                row,
+                "Published MVP country is below the future source-depth target.",
+                {**row, "classification": "future_scope"},
             )
         )
     for row in repository.list_mvp_countries_with_too_few_published_evidence(
@@ -82,11 +82,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
         issues.append(
             _issue(
                 "mvp_country_published_evidence_count_low",
-                "critical",
+                "accepted_mvp_warning",
                 "country",
                 row.get("id"),
-                "Published MVP country has too few published evidence items.",
-                row,
+                "Published MVP country is below the future evidence-depth target.",
+                {**row, "classification": "future_scope"},
             )
         )
     for row in repository.list_mvp_countries_with_too_few_published_legal_signals(
@@ -95,11 +95,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
         issues.append(
             _issue(
                 "mvp_country_published_legal_signal_count_low",
-                "critical",
+                "accepted_mvp_warning",
                 "country",
                 row.get("id"),
-                "Published MVP country has too few published legal signals.",
-                row,
+                "Published MVP country is below the future legal-signal depth target.",
+                {**row, "classification": "future_scope"},
             )
         )
     checks.append(
@@ -645,7 +645,9 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     checks.extend(onboarding_checks)
     issues.extend(onboarding_issues)
     critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
-    warnings_count = sum(1 for issue in issues if issue.severity == "warning")
+    warnings_count = sum(
+        1 for issue in issues if issue.severity in {"warning", "accepted_mvp_warning"}
+    )
     return DataQualityReport(
         overall_status="valid" if critical_issues_count == 0 else "invalid",
         valid=critical_issues_count == 0,

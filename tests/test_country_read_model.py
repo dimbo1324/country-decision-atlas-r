@@ -6,7 +6,6 @@ from app.schemas.country_read_model import (
     CountryReadModelResponse,
 )
 from app.services import country_read_model
-import asyncio
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -121,9 +120,7 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
         "get_country_read_model",
         fake_get_country_read_model,
     )
-    result = asyncio.run(
-        countries_route.read_country_card("uruguay", CONNECTION, get_locale())
-    )
+    result = countries_route.read_country_card("uruguay", CONNECTION, get_locale())
     body = result.model_dump(mode="json")
 
     assert set(body) == {
@@ -140,9 +137,9 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
     }
     assert body["country"]["slug"] == "uruguay"
     assert body["profile"]["executive_summary"] == "Summary"
-    assert body["locale"]["requested_locale"] == "en"
-    assert body["locale"]["resolved_locale"] == "en"
-    assert body["locale"]["translation_status"] == "source"
+    assert body["locale"]["requested_locale"] == "ru"
+    assert body["locale"]["resolved_locale"] == "ru"
+    assert body["locale"]["translation_status"] == "translated"
     assert len(body["scores"]) >= 5
     assert body["scores"][0]["breakdowns"]
     assert len(body["legal_signals"]) <= 5
@@ -169,8 +166,8 @@ def test_country_read_model_route_supported_slugs_and_locales(
     )
     for slug in ("russia", "uruguay"):
         for locale in ("en", "ru"):
-            result = asyncio.run(
-                countries_route.read_country_card(slug, CONNECTION, get_locale(locale))
+            result = countries_route.read_country_card(
+                slug, CONNECTION, get_locale(locale)
             )
             body = result.model_dump(mode="json")
 
@@ -190,9 +187,7 @@ def test_country_read_model_route_unknown_country(monkeypatch: Any) -> None:
         lambda *_: None,
     )
     try:
-        asyncio.run(
-            countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
-        )
+        countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
     except HTTPException as error:
         details = cast(dict[str, Any], error.detail)
 

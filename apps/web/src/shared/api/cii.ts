@@ -1,5 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
+import { DEFAULT_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 export type CiiCountryComparisonResponse =
@@ -32,7 +33,7 @@ export function compareCountriesCii(
     `/api/v1/countries/compare${queryString({
       countries: params.countries.join(","),
       scenario: params.scenario,
-      locale: params.locale ?? "en",
+      locale: params.locale ?? DEFAULT_LOCALE,
     })}`,
   );
 }
@@ -46,7 +47,7 @@ export function getMatrix(params: GetMatrixParams): Promise<CompareMatrixRespons
     `/api/v1/countries/matrix${queryString({
       countries: params.countries?.join(","),
       scenarios: scenariosParam,
-      locale: params.locale ?? "en",
+      locale: params.locale ?? DEFAULT_LOCALE,
     })}`,
   );
 }

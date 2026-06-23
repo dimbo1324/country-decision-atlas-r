@@ -1,7 +1,7 @@
 from app.schemas.common import Pagination
 from datetime import datetime
-from pydantic import BaseModel, field_validator
-from typing import Any, Literal
+from pydantic import BaseModel, Field
+from typing import Annotated, Any, Literal
 
 
 class TranslationJobItem(BaseModel):
@@ -32,14 +32,14 @@ class TranslationJobListResponse(BaseModel):
 
 class TranslationJobCreateMissingRequest(BaseModel):
     target_locale: Literal["en", "ru"]
-    limit: int = 50
-    priority: int = 100
+    limit: int = Field(default=50, ge=1, le=500)
+    priority: int = Field(default=100, ge=0, le=1000)
 
 
 class TranslationJobCreateStaleRequest(BaseModel):
     target_locale: Literal["en", "ru"]
-    limit: int = 50
-    priority: int = 80
+    limit: int = Field(default=50, ge=1, le=500)
+    priority: int = Field(default=80, ge=0, le=1000)
 
 
 class TranslationJobCreateResponse(BaseModel):
@@ -49,27 +49,20 @@ class TranslationJobCreateResponse(BaseModel):
 
 class TranslationJobProcessNextRequest(BaseModel):
     target_locale: Literal["en", "ru"] | None = None
-    worker_id: str = "api-admin"
+    worker_id: Annotated[str, Field(min_length=1, max_length=100)] = "api-admin"
     dry_run: bool = False
 
 
 class TranslationJobProcessBatchRequest(BaseModel):
     target_locale: Literal["en", "ru"] | None = None
-    limit: int = 10
-    worker_id: str = "api-admin"
+    limit: int = Field(default=10, ge=1, le=100)
+    worker_id: Annotated[str, Field(min_length=1, max_length=100)] = "api-admin"
     dry_run: bool = False
 
 
 class TranslationJobRetryFailedRequest(BaseModel):
     target_locale: Literal["en", "ru"] | None = None
-    limit: int = 50
-
-    @field_validator("limit")
-    @classmethod
-    def limit_range(cls, v: int) -> int:
-        if v < 1 or v > 500:
-            raise ValueError("limit must be between 1 and 500")
-        return v
+    limit: int = Field(default=50, ge=1, le=500)
 
 
 class TranslationJobRetryFailedResponse(BaseModel):
@@ -82,6 +75,7 @@ class TranslationJobProcessResult(BaseModel):
     status: str
     target_locale_code: str | None = None
     variant_id: str | None = None
+    translated_text: str | None = None
     error: str | None = None
     metadata: dict[str, Any] | None = None
 

@@ -109,20 +109,12 @@
         "critical_issues": 2,
         "warnings": 273,
         "classified_remaining": {
-          "accepted_mvp_warning": [
-            "mvp_country_published_evidence_count_low (×2)"
-          ],
-          "future_scope": [
-            "translation_english_variant_missing (×266)"
-          ],
-          "warning_accepted": [
-            "published_legal_signal_evidence_missing (×7)"
-          ]
+          "accepted_mvp_warning": ["mvp_country_published_evidence_count_low (×2)"],
+          "future_scope": ["translation_english_variant_missing (×266)"],
+          "warning_accepted": ["published_legal_signal_evidence_missing (×7)"]
         }
       },
-      "migrations": [
-        "020_closeout_data_quality_fixes.sql"
-      ],
+      "migrations": ["020_closeout_data_quality_fixes.sql"],
       "tests_added": 37,
       "new_files": [
         "database/migrations/020_closeout_data_quality_fixes.sql",
@@ -1395,6 +1387,38 @@
       "task": "chore/country-expansion-closeout-v1",
       "branch": "chore/country-expansion-closeout-v1",
       "summary": "Argentina promoted from ONBOARDING_COUNTRY_SLUGS to MVP_COUNTRY_SLUGS. All 3 countries mvp_ready=True, all_mvp_ready=True, onboarding_countries=[]. Matrix 3x5=15 cells. Clean DB chain 001-024 verified. 33 new closeout tests. 563 total tests. All gates green: ruff, mypy, sqlfluff, pnpm build, pnpm typecheck, pnpm lint, web:mvp:check. Episode Country Expansion Pipeline closed.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "full-audit-stabilization-v1",
+      "task": "chore/full-audit-stabilization-v1",
+      "branch": "chore/full-audit-stabilization-v1",
+      "summary": "Started full audit stabilization across decision flow, data-quality, OpenAPI/runtime contracts, security/config, CI/E2E, migrations, locale, and dependency hygiene.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "full-audit-stabilization-v1",
+      "task": "chore/full-audit-stabilization-v1",
+      "branch": "chore/full-audit-stabilization-v1",
+      "summary": "Full audit stabilization complete across 8 phases. Phase 1: CHANGELOG formatting fixed, stale E2E fixed, Playwright E2E job added to GitHub Actions with migration idempotency check and artifact upload. Phase 2: Argentina country_scores + breakdowns added (migration 025), onboarding/data-quality thresholds unified via mvp_requirements.py single source of truth. Phase 3: user-stories validates origin/destination/scenario (422 not 500), rate limiter uses request.client.host by default (X-Forwarded-For not trusted), trusted_proxy_headers config added, /health and /ready excluded from rate limiter, old rate-limit windows cleaned, app_env defaults to production (fail-closed). Phase 4: translation jobs dry_run fully read-only (no status/attempts/lock mutation), stale processing lock recovery added, batch size limited via Pydantic/config. Phase 5: /ready endpoint added with DB connectivity check, /health returns environment field, OpenAPI updated and TypeScript contracts regenerated. Phase 6: Docker DATABASE_URL env-driven, migration runner adds SHA-256 checksum + advisory lock, score labels unified (score_labels.py), postcss vulnerability resolved. Phase 7: default locale normalized to ru across API/frontend, locale preserved in navigation, LocaleSwitcher connected, E2E locale tests added. Phase 8 (async safety): time.sleep removed from async flows, translation batch limits validated. 592 tests pass (0 failures). mypy/ruff/sqlfluff/pnpm quality/format:check/typecheck/lint/build all green. pre-commit clean. pnpm audit --prod no vulnerabilities.",
+      "phases_completed": [
+        "Phase 1 — Restore gates",
+        "Phase 2 — Business consistency",
+        "Phase 3 — Public API safety",
+        "Phase 4 — Translation job safety",
+        "Phase 5 — Runtime contracts",
+        "Phase 6 — Platform integrity",
+        "Phase 7 — Locale contract normalization",
+        "Phase 8 — Async/sync blocking safety"
+      ],
+      "tests_added": 29,
+      "total_tests": 592,
       "status": "completed"
     }
   ]

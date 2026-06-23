@@ -14,7 +14,7 @@ router = APIRouter(prefix="/user-stories", tags=["user_stories"])
 
 
 @router.get("", response_model=UserStoryListResponse)
-async def read_user_stories(
+def read_user_stories(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     origin_country_slug: str | None = None,
     destination_country_slug: str | None = None,
@@ -43,7 +43,7 @@ async def read_user_stories(
 
 
 @router.get("/{story_id}", response_model=UserStoryResponse)
-async def read_user_story(
+def read_user_story(
     story_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> UserStoryResponse:
@@ -51,7 +51,7 @@ async def read_user_story(
 
 
 @router.post("", response_model=UserStoryResponse, status_code=201)
-async def create_user_story(
+def create_user_story(
     payload: UserStoryCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> UserStoryResponse:

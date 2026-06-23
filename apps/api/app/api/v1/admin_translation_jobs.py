@@ -25,7 +25,7 @@ router = APIRouter(prefix="/admin/translation-jobs", tags=["admin-translation-jo
 
 
 @router.get("", response_model=TranslationJobListResponse)
-async def list_jobs(
+def list_jobs(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
     status: Annotated[
@@ -49,7 +49,7 @@ async def list_jobs(
 @router.post(
     "/create-missing", response_model=TranslationJobCreateResponse, status_code=201
 )
-async def create_missing(
+def create_missing(
     payload: TranslationJobCreateMissingRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
@@ -64,7 +64,7 @@ async def create_missing(
 @router.post(
     "/create-stale", response_model=TranslationJobCreateResponse, status_code=201
 )
-async def create_stale(
+def create_stale(
     payload: TranslationJobCreateStaleRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
@@ -77,7 +77,7 @@ async def create_stale(
 
 
 @router.post("/process-next", response_model=TranslationJobProcessResult)
-async def process_next(
+def process_next(
     payload: TranslationJobProcessNextRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
@@ -87,6 +87,8 @@ async def process_next(
         connection, payload.worker_id, payload.target_locale, provider, payload.dry_run
     )
     if result is None:
+        if not payload.dry_run:
+            connection.commit()
         return TranslationJobProcessResult(job_id="", status="no_pending_jobs")
     if result.get("status") != "dry_run":
         connection.commit()
@@ -94,7 +96,7 @@ async def process_next(
 
 
 @router.post("/process-batch", response_model=TranslationJobBatchResult)
-async def process_batch(
+def process_batch(
     payload: TranslationJobProcessBatchRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
@@ -122,7 +124,7 @@ async def process_batch(
     response_model=TranslationJobRetryFailedResponse,
     status_code=200,
 )
-async def retry_failed(
+def retry_failed(
     payload: TranslationJobRetryFailedRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],

@@ -42,7 +42,7 @@ services:
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       API_RATE_LIMIT_PER_MINUTE: ${API_RATE_LIMIT_PER_MINUTE:-600}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
-      DATABASE_URL: postgresql://country_atlas:change-me@postgres:5432/country_atlas
+      DATABASE_URL: postgresql://${POSTGRES_USER:-country_atlas}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-country_atlas}
       REDIS_URL: redis://redis:6379/0
     ports:
       - "${APP_PORT:-8000}:8000"
@@ -51,8 +51,6 @@ services:
       - ./packages:/app/packages
     depends_on:
       postgres:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     healthcheck:
       test:

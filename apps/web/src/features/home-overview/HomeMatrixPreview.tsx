@@ -2,8 +2,13 @@ import Link from "next/link";
 import type { HomeMatrixPreview as HomeMatrixPreviewData } from "../../shared/api/home";
 
 export function HomeMatrixPreview({ matrix }: { matrix: HomeMatrixPreviewData }) {
+  const countries = matrix.countries ?? [];
+  const scenarios = matrix.scenarios ?? [];
   const cells = new Map(
-    matrix.cells.map((cell) => [`${cell.country_slug}:${cell.scenario_slug}`, cell]),
+    (matrix.cells ?? []).map((cell) => [
+      `${cell.country_slug}:${cell.scenario_slug}`,
+      cell,
+    ]),
   );
   return (
     <section className="homeOverviewSection" aria-labelledby="home-matrix-title">
@@ -15,23 +20,23 @@ export function HomeMatrixPreview({ matrix }: { matrix: HomeMatrixPreviewData })
         <Link href="/compare">Полная матрица</Link>
       </div>
       <div className="homeMatrixPreview" data-testid="home-matrix-preview">
-        {matrix.countries.length === 0 || matrix.scenarios.length === 0 ? (
+        {countries.length === 0 || scenarios.length === 0 ? (
           <span>Матрица пока недоступна.</span>
         ) : (
           <table>
             <thead>
               <tr>
                 <th>Страна</th>
-                {matrix.scenarios.map((scenario) => (
+                {scenarios.map((scenario) => (
                   <th key={scenario.slug}>{scenario.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {matrix.countries.map((country) => (
+              {countries.map((country) => (
                 <tr key={country.slug}>
                   <th>{country.name}</th>
-                  {matrix.scenarios.map((scenario) => {
+                  {scenarios.map((scenario) => {
                     const cell = cells.get(`${country.slug}:${scenario.slug}`);
                     return (
                       <td

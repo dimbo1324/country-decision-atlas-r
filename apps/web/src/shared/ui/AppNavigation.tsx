@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { routes } from "../lib/routes";
+import { usePathname, useSearchParams } from "next/navigation";
+import { normalizeLocale } from "../lib/locale";
+import { routes, withLocale } from "../lib/routes";
 
 const NAV_ITEMS = [
   { label: "Страны", href: routes.countries },
@@ -14,13 +15,15 @@ const NAV_ITEMS = [
 
 export function AppNavigation() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const locale = normalizeLocale(searchParams.get("locale"));
 
   return (
     <nav className="appNav">
       {NAV_ITEMS.map((item) => (
         <Link
           key={item.href}
-          href={item.href}
+          href={withLocale(item.href, locale)}
           className="navLink"
           data-active={pathname === item.href || pathname.startsWith(item.href + "/")}
         >

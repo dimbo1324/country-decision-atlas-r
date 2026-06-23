@@ -3,7 +3,6 @@ from app.core.locales import get_locale
 from app.repositories import decision_engine as decision_repository
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
-import asyncio
 from fastapi import HTTPException
 from psycopg import Connection
 from tests.test_decision_run import install_repository_fakes
@@ -36,9 +35,7 @@ def test_unknown_country_detail_error_contract(monkeypatch: Any) -> None:
     monkeypatch.setattr(countries_route, "get_country", lambda *_: None)
 
     try:
-        asyncio.run(
-            countries_route.read_country("unknown", CONNECTION, get_locale("en"))
-        )
+        countries_route.read_country("unknown", CONNECTION, get_locale("en"))
     except HTTPException as error:
         assert error.status_code == 404
         assert_error_shape(error, "country_not_found")
@@ -50,9 +47,7 @@ def test_unknown_country_card_error_contract(monkeypatch: Any) -> None:
     monkeypatch.setattr(countries_route, "get_country_read_model", lambda *_: None)
 
     try:
-        asyncio.run(
-            countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
-        )
+        countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
     except HTTPException as error:
         assert error.status_code == 404
         assert_error_shape(error, "country_not_found")

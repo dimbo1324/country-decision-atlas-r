@@ -315,6 +315,61 @@ def lock_next_pending_job(
     )
 
 
+def list_pending_jobs_for_preview(
+    connection: Connection[Any],
+    target_locale: str | None = None,
+    limit: int = 1,
+) -> list[dict[str, Any]]:
+    locale_clause = "AND target_locale_code = %s" if target_locale else ""
+    params: list[Any] = []
+    if target_locale:
+        params.append(target_locale)
+    params.append(limit)
+    return fetch_all(
+        connection,
+        f"""
+        SELECT {_JOB_COLUMNS}
+        FROM translation_jobs
+        WHERE status IN ('queued', 'pending')
+          AND attempts < max_attempts
+          {locale_clause}
+        ORDER BY priority ASC, created_at ASC
+        LIMIT %s
+        """,
+        params,
+    )
+
+
+def recover_stale_processing_jobs(
+    connection: Connection[Any], timeout_seconds: int, limit: int = 100
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        f"""
+        UPDATE translation_jobs
+        SET
+            status = 'pending',
+            attempts = GREATEST(attempts - 1, 0),
+            locked_at = NULL,
+            locked_by = NULL,
+            started_at = NULL,
+            error_message = NULL,
+            updated_at = NOW()
+        WHERE id IN (
+            SELECT id
+            FROM translation_jobs
+            WHERE status = 'processing'
+              AND locked_at < NOW() - (%s * INTERVAL '1 second')
+            ORDER BY locked_at ASC
+            LIMIT %s
+            FOR UPDATE SKIP LOCKED
+        )
+        RETURNING {_JOB_COLUMNS}
+        """,
+        (timeout_seconds, limit),
+    )
+
+
 def mark_job_completed(
     connection: Connection[Any],
     job_id: str,

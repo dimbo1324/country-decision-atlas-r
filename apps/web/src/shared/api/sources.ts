@@ -1,5 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
+import { DEFAULT_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
 import type { EvidenceItemListResponse } from "./evidence";
@@ -24,7 +25,7 @@ export function listSources(
 ): Promise<SourceListResponse> {
   return apiGet<SourceListResponse>(
     `/api/v1/sources${queryString({
-      locale: params.locale ?? "en",
+      locale: params.locale ?? DEFAULT_LOCALE,
       country_slug: params.countrySlug,
       source_type: params.sourceType,
       language: params.language,

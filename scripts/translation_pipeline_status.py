@@ -36,7 +36,7 @@ def _scalar(
 def main() -> None:
     database_url = os.environ.get(
         "DATABASE_URL",
-        "postgresql://country_atlas:change-me@localhost:5433/country_atlas",
+        "postgresql://localhost:5433/country_atlas",
     )
 
     with psycopg.connect(database_url, row_factory=dict_row) as conn:

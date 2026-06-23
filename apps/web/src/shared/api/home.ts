@@ -1,4 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
+import { DEFAULT_LOCALE } from "../lib/locale";
 import type { LocaleCode } from "./countries";
 import { apiGet, queryString } from "./http";
 
@@ -13,7 +14,7 @@ export function getHomeOverview(
   params: { locale?: LocaleCode } = {},
 ): Promise<HomeOverviewResponse> {
   return apiGet<HomeOverviewResponse>(
-    `/api/v1/home/overview${queryString({ locale: params.locale ?? "en" })}`,
+    `/api/v1/home/overview${queryString({ locale: params.locale ?? DEFAULT_LOCALE })}`,
   );
 }
 

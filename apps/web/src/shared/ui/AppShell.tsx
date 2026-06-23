@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AppHeader } from "./AppHeader";
 
 type AppShellProps = {
@@ -7,7 +8,9 @@ type AppShellProps = {
 export function AppShell({ children }: AppShellProps) {
   return (
     <div className="appShell">
-      <AppHeader />
+      <Suspense fallback={null}>
+        <AppHeader />
+      </Suspense>
       <main className="appMain">{children}</main>
     </div>
   );

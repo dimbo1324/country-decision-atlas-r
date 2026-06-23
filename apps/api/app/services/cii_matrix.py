@@ -1,3 +1,4 @@
+from app.core.mvp_requirements import MVP_COUNTRY_SLUGS, MVP_SCENARIO_SLUGS
 from app.repositories.cii import (
     get_cii_matrix_cells,
     list_matrix_countries,
@@ -10,19 +11,13 @@ from app.schemas.cii_matrix import (
     MatrixScenario,
 )
 from app.schemas.common import TranslationStatus, locale_resolution
+from app.services.score_labels import optional_score_label
 from psycopg import Connection
 from typing import Any
 
 
-MVP_COUNTRIES = ["russia", "uruguay", "argentina"]
-
-MVP_SCENARIOS = [
-    "relocation_residence",
-    "permanent_residence_citizenship",
-    "low_budget_living",
-    "business_self_employment",
-    "safety_political_risk",
-]
+MVP_COUNTRIES = list(MVP_COUNTRY_SLUGS)
+MVP_SCENARIOS = list(MVP_SCENARIO_SLUGS)
 
 _MVP_SCENARIO_ORDER: dict[str, int] = {
     slug: i + 1 for i, slug in enumerate(MVP_SCENARIOS)
@@ -32,17 +27,7 @@ WEIGHTS_VERSION = "cii-scenario-weights-v1.0"
 
 
 def _score_label(score: float | None) -> str | None:
-    if score is None:
-        return "missing"
-    if score < 30:
-        return "weak"
-    if score < 50:
-        return "limited"
-    if score < 70:
-        return "moderate"
-    if score < 85:
-        return "strong"
-    return "excellent"
+    return optional_score_label(score)
 
 
 def _confidence_label(confidence: str | None) -> str | None:

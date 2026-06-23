@@ -48,7 +48,7 @@ export function CompareMatrixView({ locale }: Props) {
     );
   }
 
-  if (!data || data.countries.length === 0 || data.scenarios.length === 0) {
+  if (!data) {
     return (
       <div className="matrixBlock">
         <MatrixEmptyState />
@@ -59,6 +59,14 @@ export function CompareMatrixView({ locale }: Props) {
   const countries = data.countries ?? [];
   const scenarios = data.scenarios ?? [];
   const cells = data.cells ?? [];
+
+  if (countries.length === 0 || scenarios.length === 0) {
+    return (
+      <div className="matrixBlock">
+        <MatrixEmptyState />
+      </div>
+    );
+  }
 
   return (
     <div className="matrixBlock" data-testid="compare-matrix-block">

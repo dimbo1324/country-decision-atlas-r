@@ -5,7 +5,7 @@ from typing import Annotated, Literal
 SupportedLocale = Literal["en", "ru"]
 
 SUPPORTED_LOCALES: tuple[SupportedLocale, ...] = ("en", "ru")
-DEFAULT_LOCALE: SupportedLocale = "en"
+DEFAULT_LOCALE: SupportedLocale = "ru"
 AUTHORING_LOCALE: SupportedLocale = "ru"
 DEFAULT_CONTENT_LOCALE: SupportedLocale = AUTHORING_LOCALE
 LEGACY_SOURCE_LOCALE: SupportedLocale = "en"

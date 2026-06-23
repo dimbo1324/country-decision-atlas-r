@@ -3,7 +3,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 
 type CiiData = NonNullable<CountryReadModelResponse["cii"]>;
-type CiiMetric = CiiData["metrics"][number];
+type CiiMetric = NonNullable<CiiData["metrics"]>[number];
 
 type CountryCiiBlockProps = {
   cii: CiiData | null | undefined;
@@ -148,6 +148,7 @@ export function CountryCiiBlock({ cii }: CountryCiiBlockProps) {
   }
 
   const tier = scoreTier(cii.overall_score);
+  const metrics = cii.metrics ?? [];
 
   return (
     <div className="ciiBlock" data-testid="cii-block">
@@ -177,11 +178,11 @@ export function CountryCiiBlock({ cii }: CountryCiiBlockProps) {
       </div>
 
       <div className="ciiChartRow">
-        <SpiderChart metrics={cii.metrics} />
+        <SpiderChart metrics={metrics} />
 
-        {cii.metrics.length > 0 && (
+        {metrics.length > 0 && (
           <div className="ciiMetricList">
-            {cii.metrics.map((m) => {
+            {metrics.map((m) => {
               const mTier = scoreTier(m.score);
               return (
                 <div key={m.slug} className="ciiMetricRow">

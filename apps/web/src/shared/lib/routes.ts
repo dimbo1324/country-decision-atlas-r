@@ -14,3 +14,10 @@ export const routes = {
   countryWithLocale: (slug: string, locale: string) =>
     `/countries/${slug}?locale=${locale}`,
 };
+
+export function withLocale(href: string, locale: string) {
+  const [pathname, query = ""] = href.split("?", 2);
+  const params = new URLSearchParams(query);
+  params.set("locale", locale);
+  return `${pathname}?${params.toString()}`;
+}

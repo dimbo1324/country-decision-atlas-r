@@ -1,9 +1,10 @@
-from app.repositories import country_onboarding as repository
-from app.repositories.data_quality import (
+from app.core.mvp_requirements import (
     MVP_COUNTRY_SLUGS,
+    MVP_READINESS_THRESHOLDS,
     MVP_SCENARIO_SLUGS,
     ONBOARDING_COUNTRY_SLUGS,
 )
+from app.repositories import country_onboarding as repository
 from app.schemas.country_onboarding import (
     AllCountriesOnboardingResult,
     CountryOnboardingResult,
@@ -15,19 +16,7 @@ from psycopg import Connection
 from typing import Any
 
 
-COUNTRY_ONBOARDING_THRESHOLDS: dict[str, Any] = {
-    "required_cii_metrics": 6,
-    "required_scenario_scores": 5,
-    "minimum_sources": 10,
-    "minimum_evidence_items": 15,
-    "minimum_legal_signals": 5,
-    "minimum_timeline_events": 5,
-    "timeline_events_with_source_ratio": 1.0,
-    "country_card_required": True,
-    "localization_metadata_required": True,
-    "matrix_ready_required": True,
-    "home_overview_ready_required": True,
-}
+COUNTRY_ONBOARDING_THRESHOLDS: dict[str, Any] = MVP_READINESS_THRESHOLDS
 
 _ONBOARDING_CHECK_CODES = [
     "country_onboarding_country_card_exists",

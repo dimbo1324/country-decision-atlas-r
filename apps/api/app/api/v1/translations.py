@@ -11,7 +11,7 @@ router = APIRouter(prefix="/translations", tags=["translations"])
 
 
 @router.get("", response_model=TranslationListResponse)
-async def read_translations(
+def read_translations(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,

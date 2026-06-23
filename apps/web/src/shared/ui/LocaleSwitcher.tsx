@@ -20,10 +20,13 @@ export function LocaleSwitcher() {
     <div className="localeSwitcher">
       {SUPPORTED_LOCALES.map((locale) => (
         <button
+          type="button"
           key={locale}
           onClick={() => switchLocale(locale)}
           data-active={currentLocale === locale}
           className="localeButton"
+          aria-label={`Переключить язык на ${locale.toUpperCase()}`}
+          data-testid={`locale-switch-${locale}`}
         >
           {locale.toUpperCase()}
         </button>

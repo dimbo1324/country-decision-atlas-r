@@ -11,7 +11,7 @@ from app.schemas.sources import EvidenceItem, Source
 from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 from uuid import UUID
 
 
@@ -250,22 +250,28 @@ class UserStory(BaseModel):
 
 
 class UserStoryCreate(BaseModel):
-    origin_country_slug: str | None = None
-    destination_country_slug: str
-    city: str | None = None
+    origin_country_slug: Annotated[str, Field(min_length=1, max_length=100)] | None = (
+        None
+    )
+    destination_country_slug: Annotated[str, Field(min_length=1, max_length=100)]
+    city: Annotated[str, Field(min_length=1, max_length=120)] | None = None
     year: int | None = Field(default=None, ge=1990, le=2100)
-    scenario: str
+    scenario: Annotated[str, Field(min_length=1, max_length=100)]
     budget_initial_usd: Decimal | None = Field(default=None, ge=0)
     budget_monthly_usd: Decimal | None = Field(default=None, ge=0)
-    legal_path: str | None = None
-    documents_used: list[str] = Field(default_factory=list)
-    problems: str | None = None
-    positive_outcome: str | None = None
-    negative_outcome: str | None = None
-    advice: str | None = None
+    legal_path: Annotated[str, Field(max_length=4000)] | None = None
+    documents_used: list[Annotated[str, Field(min_length=1, max_length=200)]] = Field(
+        default_factory=list, max_length=30
+    )
+    problems: Annotated[str, Field(max_length=4000)] | None = None
+    positive_outcome: Annotated[str, Field(max_length=4000)] | None = None
+    negative_outcome: Annotated[str, Field(max_length=4000)] | None = None
+    advice: Annotated[str, Field(max_length=4000)] | None = None
     satisfaction_score: Decimal | None = Field(default=None, ge=0, le=10)
     is_synthetic: bool = True
-    notes: str = "Synthetic example for MVP demonstration only."
+    notes: Annotated[str, Field(min_length=1, max_length=4000)] = (
+        "Synthetic example for MVP demonstration only."
+    )
 
 
 class UserStoryListResponse(BaseModel):

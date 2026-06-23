@@ -43,19 +43,10 @@ test.describe("argentina core country slice", () => {
     expect(hasEmptyState || hasCiiBlock).toBe(true);
   });
 
-  test("Argentina page renders without legal signals", async ({ page }) => {
+  test("Argentina page renders current legal signals", async ({ page }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
-    const hasEmptySignals = await page
-      .getByText(/правовые сигналы.*пока отсутствуют|сигналов нет/i)
-      .isVisible()
-      .catch(() => false);
-    const hasSignalsBlock = await page
-      .locator('[data-testid*="legal"]')
-      .first()
-      .isVisible()
-      .catch(() => false);
-    expect(hasEmptySignals || hasSignalsBlock).toBe(true);
+    await expect(page.locator('[data-testid="country-legal-signals"]')).toBeVisible();
   });
 
   test("Russia and Uruguay remain accessible after Argentina added", async ({

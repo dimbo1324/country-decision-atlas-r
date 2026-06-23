@@ -23,7 +23,7 @@ router = APIRouter(
 
 
 @router.get("", response_model=LegalSignalListResponse)
-async def read_country_legal_signals(
+def read_country_legal_signals(
     country_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -76,7 +76,7 @@ top_level_router = APIRouter(prefix="/legal-signals", tags=["legal_signals"])
 
 
 @top_level_router.get("/timeline", response_model=LegalSignalTimelineResponse)
-async def read_legal_signal_timeline(
+def read_legal_signal_timeline(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     country_slug: str | None = None,
@@ -126,7 +126,7 @@ async def read_legal_signal_timeline(
 
 
 @top_level_router.get("", response_model=LegalSignalDetailListResponse)
-async def read_legal_signals(
+def read_legal_signals(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     country_slug: str | None = None,
@@ -160,7 +160,7 @@ async def read_legal_signals(
 
 
 @top_level_router.get("/{signal_id}", response_model=LegalSignalDetailResponse)
-async def read_legal_signal(
+def read_legal_signal(
     signal_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -169,7 +169,7 @@ async def read_legal_signal(
 
 
 @top_level_router.get("/{signal_id}/evidence", response_model=EvidenceListResponse)
-async def read_legal_signal_evidence(
+def read_legal_signal_evidence(
     signal_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> EvidenceListResponse:

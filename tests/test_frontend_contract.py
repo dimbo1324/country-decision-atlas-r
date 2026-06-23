@@ -21,7 +21,6 @@ from app.schemas.decision_engine import (
     DecisionRunResponse,
     DecisionScenarioRef,
 )
-import asyncio
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -74,9 +73,7 @@ def test_countries_list_frontend_contract(monkeypatch: Any) -> None:
     monkeypatch.setattr(countries_route, "list_countries", lambda *_: rows)
     monkeypatch.setattr(countries_route, "count_countries", lambda *_: 2)
 
-    result = asyncio.run(
-        countries_route.read_countries(CONNECTION, get_locale("en"), 50, 0)
-    )
+    result = countries_route.read_countries(CONNECTION, get_locale("en"), 50, 0)
     body = result.model_dump(mode="json")
 
     assert {"items", "pagination", "locale"} == set(body)
@@ -105,9 +102,7 @@ def test_country_detail_frontend_contract(monkeypatch: Any) -> None:
     }
     monkeypatch.setattr(countries_route, "get_country", lambda *_: row)
 
-    result = asyncio.run(
-        countries_route.read_country("uruguay", CONNECTION, get_locale("en"))
-    )
+    result = countries_route.read_country("uruguay", CONNECTION, get_locale("en"))
     body = result.model_dump(mode="json")
 
     assert {"item", "locale"} == set(body)
@@ -122,9 +117,7 @@ def test_country_card_frontend_contract(monkeypatch: Any) -> None:
         lambda *_: sample_response("russia", "en"),
     )
 
-    result = asyncio.run(
-        countries_route.read_country_card("russia", CONNECTION, get_locale("en"))
-    )
+    result = countries_route.read_country_card("russia", CONNECTION, get_locale("en"))
     body = result.model_dump(mode="json")
 
     assert {
@@ -183,15 +176,13 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         "app.api.v1.decision.decision_engine.run_decision", lambda *_: response
     )
 
-    result = asyncio.run(
-        decision_route.run_decision(
-            DecisionRunRequest(
-                origin_country_slug="russia",
-                candidate_country_slugs=["uruguay", "russia"],
-                scenario_slug="relocation_residence",
-            ),
-            CONNECTION,
-        )
+    result = decision_route.run_decision(
+        DecisionRunRequest(
+            origin_country_slug="russia",
+            candidate_country_slugs=["uruguay", "russia"],
+            scenario_slug="relocation_residence",
+        ),
+        CONNECTION,
     )
     body = result.model_dump(mode="json")
 
@@ -227,50 +218,44 @@ def test_list_endpoint_frontend_contracts(monkeypatch: Any) -> None:
     monkeypatch.setattr(sources_route, "list_evidence_items", lambda *_: [])
     monkeypatch.setattr(sources_route, "count_evidence_items", lambda *_: 0)
 
-    legal_signals = asyncio.run(
-        legal_signals_route.read_legal_signals(
-            CONNECTION,
-            get_locale("en"),
-            None,
-            None,
-            None,
-            None,
-            "published",
-            "published_date",
-            "desc",
-            20,
-            0,
-        )
+    legal_signals = legal_signals_route.read_legal_signals(
+        CONNECTION,
+        get_locale("en"),
+        None,
+        None,
+        None,
+        None,
+        "published",
+        "published_date",
+        "desc",
+        20,
+        0,
     ).model_dump(mode="json")
-    sources = asyncio.run(
-        sources_route.read_sources(
-            CONNECTION,
-            get_locale("en"),
-            None,
-            None,
-            None,
-            None,
-            "published",
-            "last_checked_at",
-            "desc",
-            20,
-            0,
-        )
+    sources = sources_route.read_sources(
+        CONNECTION,
+        get_locale("en"),
+        None,
+        None,
+        None,
+        None,
+        "published",
+        "last_checked_at",
+        "desc",
+        20,
+        0,
     ).model_dump(mode="json")
-    evidence = asyncio.run(
-        sources_route.read_evidence_items(
-            CONNECTION,
-            get_locale("en"),
-            None,
-            None,
-            None,
-            None,
-            "published",
-            "retrieved_at",
-            "desc",
-            20,
-            0,
-        )
+    evidence = sources_route.read_evidence_items(
+        CONNECTION,
+        get_locale("en"),
+        None,
+        None,
+        None,
+        None,
+        "published",
+        "retrieved_at",
+        "desc",
+        20,
+        0,
     ).model_dump(mode="json")
 
     assert {"items", "pagination", "sort", "locale"} == set(legal_signals)
@@ -286,9 +271,7 @@ def test_data_quality_report_frontend_contract(monkeypatch: Any) -> None:
         lambda *_: DataQualityReport(valid=True),
     )
 
-    result = asyncio.run(
-        admin_route.admin_read_data_quality_report(CONNECTION, "admin")
-    )
+    result = admin_route.admin_read_data_quality_report(CONNECTION, "admin")
     body = result.model_dump(mode="json")
 
     assert {

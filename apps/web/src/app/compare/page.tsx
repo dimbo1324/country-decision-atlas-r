@@ -1,8 +1,14 @@
 import { CompareMatrixView } from "../../features/compare-matrix/CompareMatrixView";
+import { getLocaleFromSearchParams } from "../../shared/lib/locale";
 
 export const dynamic = "force-dynamic";
 
-export default function ComparePage() {
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function ComparePage({ searchParams }: PageProps) {
+  const locale = getLocaleFromSearchParams(await searchParams);
   return (
     <main className="pageShell">
       <header className="pageHeader">
@@ -12,7 +18,7 @@ export default function ComparePage() {
           Матрица показывает CII-оценку по каждому сценарию для каждой страны.
         </p>
       </header>
-      <CompareMatrixView locale="ru" />
+      <CompareMatrixView locale={locale} />
     </main>
   );
 }

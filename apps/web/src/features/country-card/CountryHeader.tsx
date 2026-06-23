@@ -8,7 +8,7 @@ type CountryHeaderProps = {
   locale?: string;
 };
 
-export function CountryHeader({ country, locale = "en" }: CountryHeaderProps) {
+export function CountryHeader({ country, locale = "ru" }: CountryHeaderProps) {
   const localeParam = `?locale=${locale}`;
 
   return (

@@ -2,7 +2,6 @@ from app.api.v1 import admin as admin_route
 from app.repositories import data_quality as data_quality_repository
 from app.schemas.data_quality import DataQualityReport
 from app.services import data_quality
-import asyncio
 from fastapi import HTTPException
 from pathlib import Path
 from psycopg import Connection
@@ -238,7 +237,13 @@ def test_data_quality_report_enforces_source_backed_depth(
         "score_breakdown_source_ids_missing",
         "country_card_source_summary_demo",
     }
-    assert report.critical_issues_count == 6
+    assert report.critical_issues_count == 3
+    assert report.warnings_count == 3
+    assert {
+        issue.severity
+        for issue in report.issues
+        if issue.code.startswith("mvp_country_published_")
+    } == {"accepted_mvp_warning"}
 
 
 def test_source_publish_validation_requires_required_metadata() -> None:
@@ -326,9 +331,7 @@ def test_admin_data_quality_report_route(monkeypatch: Any) -> None:
         lambda *_: DataQualityReport(valid=True),
     )
 
-    result = asyncio.run(
-        admin_route.admin_read_data_quality_report(CONNECTION, "admin")
-    )
+    result = admin_route.admin_read_data_quality_report(CONNECTION, "admin")
 
     assert result.valid is True
     assert result.issues == []

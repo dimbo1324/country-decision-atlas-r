@@ -69,12 +69,23 @@ def count_cii_scenario_scores(
     row = fetch_one(
         connection,
         """
-        SELECT COUNT(ccs.id)::int AS cnt
+        SELECT COUNT(DISTINCT ccs.id)::int AS cnt
         FROM country_cii_scores ccs
         JOIN countries c ON c.id = ccs.country_id
+        JOIN scenarios scenario ON scenario.slug = ccs.scenario_slug
+        JOIN country_scores score
+          ON score.country_id = c.id
+         AND score.scenario_id = scenario.id
         WHERE c.slug = %s
           AND ccs.scenario_slug = ANY(%s)
           AND ccs.version = 'v1.0'
+          AND (
+              SELECT COUNT(*)
+              FROM country_score_breakdowns breakdown
+              WHERE breakdown.country_score_id = score.id
+                AND jsonb_typeof(breakdown.source_ids) = 'array'
+                AND jsonb_array_length(breakdown.source_ids) > 0
+          ) = 7
         """,
         (country_slug, list(scenario_slugs)),
     )

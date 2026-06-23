@@ -37,11 +37,16 @@ function HomeOverviewViewInner() {
     };
   }, [locale]);
 
+  const countriesSummary = overview?.countries_summary ?? [];
+  const scenarioWinners = overview?.scenario_winners ?? [];
+  const latestLegalEvents = overview?.latest_legal_events ?? [];
+  const keyInsights = overview?.key_insights ?? [];
+  const matrixCells = overview?.matrix_preview.cells ?? [];
   const isEmpty =
     overview != null &&
-    overview.countries_summary.length === 0 &&
-    overview.matrix_preview.cells.length === 0 &&
-    overview.latest_legal_events.length === 0;
+    countriesSummary.length === 0 &&
+    matrixCells.length === 0 &&
+    latestLegalEvents.length === 0;
 
   return (
     <div className="homeOverview" data-testid="home-overview">
@@ -68,31 +73,36 @@ function HomeOverviewViewInner() {
       {isEmpty && <HomeOverviewEmptyState />}
       {overview && !isEmpty && (
         <>
-          <CountryOverviewCards
-            countries={overview.countries_summary}
-            locale={locale}
-          />
-          <ScenarioWinnersPanel winners={overview.scenario_winners} />
+          <CountryOverviewCards countries={countriesSummary} locale={locale} />
+          <ScenarioWinnersPanel winners={scenarioWinners} />
           <HomeMatrixPreview matrix={overview.matrix_preview} />
           <div className="homeOverviewGrid">
-            <LatestLegalEventsPanel events={overview.latest_legal_events} />
-            <KeyInsightsPanel insights={overview.key_insights} />
+            <LatestLegalEventsPanel events={latestLegalEvents} />
+            <KeyInsightsPanel insights={keyInsights} />
           </div>
           <nav
             className="homeQuickLinks"
             data-testid="home-quick-links"
             aria-label="Основные разделы"
           >
-            <Link href={`${overview.links.countries_url}?locale=${locale}`}>
+            <Link
+              href={`${overview.links?.countries_url ?? "/countries"}?locale=${locale}`}
+            >
               Перейти к странам
             </Link>
-            <Link href={`${overview.links.decision_url}?locale=${locale}`}>
+            <Link
+              href={`${overview.links?.decision_url ?? "/decision"}?locale=${locale}`}
+            >
               Запустить decision
             </Link>
-            <Link href={`${overview.links.compare_url}?locale=${locale}`}>
+            <Link
+              href={`${overview.links?.compare_url ?? "/compare"}?locale=${locale}`}
+            >
               Открыть матрицу
             </Link>
-            <Link href={`${overview.links.legal_signals_url}?locale=${locale}`}>
+            <Link
+              href={`${overview.links?.legal_signals_url ?? "/legal-signals"}?locale=${locale}`}
+            >
               Открыть правовые сигналы
             </Link>
           </nav>

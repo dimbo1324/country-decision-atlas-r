@@ -15,7 +15,7 @@ export function CountryLegalSignals({ legalSignals }: CountryLegalSignalsProps) 
   }
 
   return (
-    <div className="signalList">
+    <div className="signalList" data-testid="country-legal-signals">
       {legalSignals.map((signal) => (
         <div key={signal.id} className="signalCard">
           <div className="signalCardHeader">

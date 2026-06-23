@@ -1,20 +1,26 @@
 from app.core.database import fetch_all
+from app.core.mvp_requirements import (
+    MVP_CONTENT_DEPTH_TARGETS,
+    MVP_COUNTRY_SLUGS as SHARED_MVP_COUNTRY_SLUGS,
+    MVP_SCENARIO_SLUGS as SHARED_MVP_SCENARIO_SLUGS,
+    ONBOARDING_COUNTRY_SLUGS as SHARED_ONBOARDING_COUNTRY_SLUGS,
+)
 from psycopg import Connection
 from typing import Any
 
 
-MVP_COUNTRY_SLUGS = ("russia", "uruguay", "argentina")
-ONBOARDING_COUNTRY_SLUGS: tuple[str, ...] = ()
-MVP_SCENARIO_SLUGS = (
-    "relocation_residence",
-    "permanent_residence_citizenship",
-    "low_budget_living",
-    "business_self_employment",
-    "safety_political_risk",
-)
-MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY = 15
-MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY = 20
-MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY = 8
+TARGET_PUBLISHED_SOURCES_PER_MVP_COUNTRY = MVP_CONTENT_DEPTH_TARGETS[
+    "published_sources"
+]
+TARGET_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY = MVP_CONTENT_DEPTH_TARGETS[
+    "published_evidence_items"
+]
+TARGET_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY = MVP_CONTENT_DEPTH_TARGETS[
+    "published_legal_signals"
+]
+MVP_COUNTRY_SLUGS = SHARED_MVP_COUNTRY_SLUGS
+MVP_SCENARIO_SLUGS = SHARED_MVP_SCENARIO_SLUGS
+ONBOARDING_COUNTRY_SLUGS = SHARED_ONBOARDING_COUNTRY_SLUGS
 
 
 def list_missing_mvp_countries(connection: Connection[Any]) -> list[dict[str, Any]]:
@@ -101,9 +107,9 @@ def list_mvp_countries_with_too_few_published_sources(
         ORDER BY c.slug
         """,
         (
-            MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
             list(MVP_COUNTRY_SLUGS),
-            MIN_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
         ),
     )
 
@@ -130,9 +136,9 @@ def list_mvp_countries_with_too_few_published_evidence(
         ORDER BY c.slug
         """,
         (
-            MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
             list(MVP_COUNTRY_SLUGS),
-            MIN_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_EVIDENCE_PER_MVP_COUNTRY,
         ),
     )
 
@@ -159,9 +165,9 @@ def list_mvp_countries_with_too_few_published_legal_signals(
         ORDER BY c.slug
         """,
         (
-            MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
             list(MVP_COUNTRY_SLUGS),
-            MIN_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
+            TARGET_PUBLISHED_LEGAL_SIGNALS_PER_MVP_COUNTRY,
         ),
     )
 

@@ -133,3 +133,100 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: country_atlas
+          POSTGRES_USER: country_atlas
+          POSTGRES_PASSWORD: change-me
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U country_atlas -d country_atlas" --health-interval
+          10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Apply migrations
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/apply_migrations.py
+
+      - name: Check migration idempotency
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/apply_migrations.py
+
+      - name: Start API
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          REDIS_URL: redis://localhost:6379/0
+          ADMIN_TOKEN: ci-test-admin-token
+          APP_ENV: local
+          API_RATE_LIMIT_PER_MINUTE: 5000
+        run: |
+          python -m uvicorn app.main:app --app-dir apps/api --host 127.0.0.1 --port 8000 > api.log 2>&1 &
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:8000/ready && exit 0
+            sleep 1
+          done
+          cat api.log
+          exit 1
+
+      - name: Run frontend regression gate
+        env:
+          API_BASE_URL: http://127.0.0.1:8000
+          NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+          ADMIN_TOKEN: ci-test-admin-token
+          APP_ENV: local
+        run: pnpm web:mvp:check
+
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            local-artifacts/playwright-report
+            local-artifacts/test-results
+            api.log
+          if-no-files-found: ignore

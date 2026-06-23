@@ -11,7 +11,7 @@ router = APIRouter(prefix="/home", tags=["home"])
 
 
 @router.get("/overview", response_model=HomeOverviewResponse)
-async def read_home_overview(
+def read_home_overview(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> HomeOverviewResponse:

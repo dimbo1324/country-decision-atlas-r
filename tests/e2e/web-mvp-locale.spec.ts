@@ -3,6 +3,24 @@ import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("locale preservation", () => {
+  test("public default locale is ru", async ({ page }) => {
+    await page.goto(e2eRoutes.countries);
+    await expect(page.getByTestId("locale-switch-ru")).toHaveAttribute(
+      "data-active",
+      "true",
+    );
+    const decisionLink = page.locator("nav.appNav a[href*='/decision']");
+    await expect(decisionLink).toHaveAttribute("href", /locale=ru/);
+  });
+
+  test("locale switcher preserves the current route", async ({ page }) => {
+    await page.goto(`${e2eRoutes.countries}?locale=ru`);
+    await page.getByTestId("locale-switch-en").click();
+    await expect(page).toHaveURL(/\/countries\?locale=en/);
+    const sourcesLink = page.locator("nav.appNav a[href*='/sources']");
+    await expect(sourcesLink).toHaveAttribute("href", /locale=en/);
+  });
+
   test("locale=ru is preserved when navigating from countries list to country card", async ({
     page,
   }) => {

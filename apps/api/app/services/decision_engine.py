@@ -41,6 +41,7 @@ from app.services.decision_labels import (
 )
 from app.services.decision_warnings import build_risk_warnings
 from app.services.localization import overlay_localized_fields
+from app.services.score_labels import score_label
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from psycopg import Connection
@@ -278,6 +279,31 @@ def get_user_story(connection: Connection[Any], story_id: str) -> UserStoryRespo
 def create_user_story(
     connection: Connection[Any], payload: UserStoryCreate
 ) -> UserStoryResponse:
+    if payload.origin_country_slug and not repository.active_country_exists(
+        connection, payload.origin_country_slug
+    ):
+        raise api_error(
+            422,
+            "user_story_country_invalid",
+            "Origin country does not exist or is inactive.",
+            {"field": "origin_country_slug"},
+        )
+    if not repository.active_country_exists(
+        connection, payload.destination_country_slug
+    ):
+        raise api_error(
+            422,
+            "user_story_country_invalid",
+            "Destination country does not exist or is inactive.",
+            {"field": "destination_country_slug"},
+        )
+    if not repository.active_scenario_exists(connection, payload.scenario):
+        raise api_error(
+            422,
+            "user_story_scenario_invalid",
+            "Scenario does not exist or is inactive.",
+            {"field": "scenario"},
+        )
     row = repository.create_user_story(connection, payload)
     connection.commit()
     return UserStoryResponse(item=row)
@@ -460,15 +486,7 @@ def run_decision(
 
 
 def get_score_label(score: float) -> str:
-    if score >= 85:
-        return "excellent"
-    if score >= 75:
-        return "strong"
-    if score >= 60:
-        return "moderate"
-    if score >= 40:
-        return "limited"
-    return "weak"
+    return score_label(score)
 
 
 def aggregate_confidence(values: Iterable[str | None]) -> str:

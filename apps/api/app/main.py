@@ -11,7 +11,9 @@ from app.api.v1 import (
     user_stories,
 )
 from app.core.config import get_settings
-from app.core.database import close_database_pool, open_database_pool
+from app.core.database import close_database_pool, get_pool, open_database_pool
+from app.core.errors import api_error
+from app.schemas.system import HealthResponse, ReadinessResponse
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
@@ -20,6 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 import logging
 from psycopg import Error as PsycopgError
+from psycopg_pool import PoolTimeout
 import time
 from typing import Any
 
@@ -32,7 +35,42 @@ logger = logging.getLogger(__name__)
 
 _rate_windows: dict[str, list[float]] = {}
 _RATE_WINDOW = 60.0
-_RATE_EXCLUDED_PATHS = frozenset({"/health"})
+_RATE_EXCLUDED_PATHS = frozenset({"/health", "/ready"})
+_last_rate_cleanup = 0.0
+
+
+def _rate_limit_client(request: Request) -> str | None:
+    if request.client is None:
+        return None
+    if settings.trusted_proxy_headers:
+        forwarded = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        if forwarded:
+            return forwarded
+    return request.client.host
+
+
+def _cleanup_rate_windows(now: float) -> None:
+    global _last_rate_cleanup
+    if (
+        now - _last_rate_cleanup < _RATE_WINDOW
+        and len(_rate_windows) <= settings.api_rate_limit_max_clients
+    ):
+        return
+    cutoff = now - _RATE_WINDOW
+    active = {
+        client: [timestamp for timestamp in timestamps if timestamp > cutoff]
+        for client, timestamps in _rate_windows.items()
+    }
+    active = {client: timestamps for client, timestamps in active.items() if timestamps}
+    if len(active) > settings.api_rate_limit_max_clients:
+        active = dict(
+            sorted(active.items(), key=lambda item: item[1][-1], reverse=True)[
+                : settings.api_rate_limit_max_clients
+            ]
+        )
+    _rate_windows.clear()
+    _rate_windows.update(active)
+    _last_rate_cleanup = now
 
 
 def error_response(
@@ -94,18 +132,16 @@ async def rate_limit_middleware(
 ) -> Response:
     if request.url.path in _RATE_EXCLUDED_PATHS:
         return await call_next(request)
-    if request.client is not None:
-        ip = (
-            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-            or request.client.host
-        )
+    client = _rate_limit_client(request)
+    if client is not None:
         now = time.monotonic()
+        _cleanup_rate_windows(now)
         cutoff = now - _RATE_WINDOW
-        recent = [t for t in _rate_windows.get(ip, []) if t > cutoff]
+        recent = [t for t in _rate_windows.get(client, []) if t > cutoff]
         if len(recent) >= settings.api_rate_limit_per_minute:
             return error_response(429, "rate_limit_exceeded", "Too many requests.")
         recent.append(now)
-        _rate_windows[ip] = recent
+        _rate_windows[client] = recent
     return await call_next(request)
 
 
@@ -143,9 +179,33 @@ async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONRespons
     return error_response(500, "internal_error", "An unexpected error occurred.")
 
 
-@app.get("/health", tags=["system"])
-async def health() -> dict[str, str]:
-    return {"status": "ok", "service": "api"}
+@app.get("/health", tags=["system"], response_model=HealthResponse)
+async def health() -> HealthResponse:
+    return HealthResponse(status="ok", service="api", environment=settings.app_env)
+
+
+@app.get(
+    "/ready",
+    tags=["system"],
+    response_model=ReadinessResponse,
+    responses={503: {"description": "Database unavailable"}},
+)
+def ready() -> ReadinessResponse:
+    try:
+        with get_pool().connection() as connection:
+            connection.execute("SELECT 1").fetchone()
+    except (PoolTimeout, PsycopgError, RuntimeError) as exc:
+        raise api_error(
+            503,
+            "readiness_database_unavailable",
+            "Database connectivity check failed.",
+        ) from exc
+    return ReadinessResponse(
+        status="ready",
+        service="api",
+        environment=settings.app_env,
+        database="ok",
+    )
 
 
 app.include_router(countries.router, prefix="/api/v1")

@@ -23,7 +23,7 @@ router = APIRouter(tags=["sources"])
 
 
 @router.get("/sources", response_model=SourceListResponse)
-async def read_sources(
+def read_sources(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     country_slug: str | None = None,
@@ -73,7 +73,7 @@ async def read_sources(
 
 
 @router.get("/evidence-items", response_model=EvidenceItemListResponse)
-async def read_evidence_items(
+def read_evidence_items(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     country_slug: str | None = None,
@@ -124,7 +124,7 @@ async def read_evidence_items(
 
 
 @router.get("/sources/{source_id}", response_model=SourceResponse)
-async def read_source(
+def read_source(
     source_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
@@ -136,7 +136,7 @@ async def read_source(
 
 
 @router.get("/sources/{source_id}/evidence", response_model=EvidenceItemListResponse)
-async def read_source_evidence(
+def read_source_evidence(
     source_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     limit: Annotated[int, Query(ge=1, le=100)] = 50,

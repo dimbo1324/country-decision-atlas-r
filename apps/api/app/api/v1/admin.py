@@ -44,7 +44,7 @@ ADMIN_RESPONSES: dict[int | str, dict[str, Any]] = {
     status_code=201,
     responses=ADMIN_RESPONSES,
 )
-async def admin_create_source(
+def admin_create_source(
     payload: SourceCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     changed_by: Annotated[str, Depends(require_admin_token)],
@@ -59,7 +59,7 @@ async def admin_create_source(
     response_model=AdminSourceResponse,
     responses=ADMIN_RESPONSES,
 )
-async def admin_patch_source(
+def admin_patch_source(
     source_id: str,
     payload: SourcePatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -76,7 +76,7 @@ async def admin_patch_source(
     status_code=201,
     responses=ADMIN_RESPONSES,
 )
-async def admin_create_evidence_item(
+def admin_create_evidence_item(
     payload: EvidenceItemCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     changed_by: Annotated[str, Depends(require_admin_token)],
@@ -91,7 +91,7 @@ async def admin_create_evidence_item(
     response_model=AdminEvidenceItemResponse,
     responses=ADMIN_RESPONSES,
 )
-async def admin_patch_evidence_item(
+def admin_patch_evidence_item(
     evidence_item_id: str,
     payload: EvidenceItemPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -110,7 +110,7 @@ async def admin_patch_evidence_item(
     status_code=201,
     responses=ADMIN_RESPONSES,
 )
-async def admin_create_legal_signal(
+def admin_create_legal_signal(
     payload: LegalSignalCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     changed_by: Annotated[str, Depends(require_admin_token)],
@@ -125,7 +125,7 @@ async def admin_create_legal_signal(
     response_model=AdminLegalSignalResponse,
     responses=ADMIN_RESPONSES,
 )
-async def admin_patch_legal_signal(
+def admin_patch_legal_signal(
     signal_id: str,
     payload: LegalSignalPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -141,7 +141,7 @@ async def admin_patch_legal_signal(
     response_model=AdminCountryProfileResponse,
     responses=ADMIN_RESPONSES,
 )
-async def admin_patch_country_profile(
+def admin_patch_country_profile(
     country_slug: str,
     payload: CountryProfilePatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -160,7 +160,7 @@ async def admin_patch_country_profile(
     status_code=201,
     responses=ADMIN_RESPONSES,
 )
-async def admin_create_user_story(
+def admin_create_user_story(
     payload: UserStoryAdminCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     changed_by: Annotated[str, Depends(require_admin_token)],
@@ -175,7 +175,7 @@ async def admin_create_user_story(
     response_model=AdminUserStoryResponse,
     responses=ADMIN_RESPONSES,
 )
-async def admin_patch_user_story(
+def admin_patch_user_story(
     story_id: str,
     payload: UserStoryPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -192,7 +192,7 @@ async def admin_patch_user_story(
     status_code=201,
     responses=ADMIN_RESPONSES,
 )
-async def admin_create_translation_job(
+def admin_create_translation_job(
     payload: TranslationJobCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
@@ -207,7 +207,7 @@ async def admin_create_translation_job(
     response_model=DataQualityReport,
     responses={401: {"model": ErrorResponse}},
 )
-async def admin_read_data_quality_report(
+def admin_read_data_quality_report(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
 ) -> DataQualityReport:
@@ -219,7 +219,7 @@ async def admin_read_data_quality_report(
     response_model=AllCountriesOnboardingResult,
     responses={401: {"model": ErrorResponse}},
 )
-async def admin_read_country_onboarding_report(
+def admin_read_country_onboarding_report(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[str, Depends(require_admin_token)],
 ) -> AllCountriesOnboardingResult:

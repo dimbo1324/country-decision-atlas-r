@@ -1,9 +1,9 @@
 export const SUPPORTED_LOCALES = ["en", "ru"] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE: SupportedLocale = "en";
+export const DEFAULT_LOCALE: SupportedLocale = "ru";
 
 export function normalizeLocale(value: string | undefined | null): SupportedLocale {
-  if (value === "ru") return "ru";
+  if (value === "en" || value === "ru") return value;
   return DEFAULT_LOCALE;
 }
 
@@ -15,5 +15,5 @@ export function getLocaleFromSearchParams(
 }
 
 export function resolveLocale(value?: string | null): SupportedLocale {
-  return value === "ru" ? "ru" : "en";
+  return normalizeLocale(value);
 }

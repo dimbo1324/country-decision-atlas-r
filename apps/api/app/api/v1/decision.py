@@ -15,7 +15,7 @@ router = APIRouter(prefix="/decision", tags=["decision"])
 
 
 @router.post("/compare", response_model=DecisionCompareResult)
-async def compare_countries(
+def compare_countries(
     payload: DecisionCompareInput,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> DecisionCompareResult:
@@ -23,7 +23,7 @@ async def compare_countries(
 
 
 @router.post("/run", response_model=DecisionRunResponse)
-async def run_decision(
+def run_decision(
     payload: DecisionRunRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> DecisionRunResponse:

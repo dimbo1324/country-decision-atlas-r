@@ -3,7 +3,6 @@ from app.core.locales import validate_locale
 from app.repositories import decision_engine as decision_repository
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
-import asyncio
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -377,7 +376,7 @@ def test_decision_run_missing_score_fails(monkeypatch: Any) -> None:
 def test_decision_run_route_is_thin(monkeypatch: Any) -> None:
     install_repository_fakes(monkeypatch)
 
-    result = asyncio.run(decision_route.run_decision(payload(), CONNECTION))
+    result = decision_route.run_decision(payload(), CONNECTION)
 
     assert result.results[0].rank == 1
     assert result.results[0].country.slug == "uruguay"

@@ -981,3 +981,25 @@ def create_user_story(
             payload.destination_country_slug,
         ),
     )
+
+
+def active_country_exists(connection: Connection[Any], country_slug: str) -> bool:
+    return (
+        fetch_one(
+            connection,
+            "SELECT id FROM countries WHERE slug = %s AND is_active = TRUE",
+            (country_slug,),
+        )
+        is not None
+    )
+
+
+def active_scenario_exists(connection: Connection[Any], scenario_slug: str) -> bool:
+    return (
+        fetch_one(
+            connection,
+            "SELECT id FROM scenarios WHERE slug = %s AND is_active = TRUE",
+            (scenario_slug,),
+        )
+        is not None
+    )
