@@ -17,8 +17,8 @@ test.describe("MVP page availability", () => {
   test("/countries shows Russia and Uruguay", async ({ page }) => {
     await page.goto(e2eRoutes.countries);
     await expectHasMainHeading(page, /карточки стран для подбора/i);
-    await expect(page.getByText(/россия|russia/i).first()).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByText(/уругвай|uruguay/i).first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Russia").first()).toBeVisible();
+    await expect(page.getByText("Uruguay").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 
