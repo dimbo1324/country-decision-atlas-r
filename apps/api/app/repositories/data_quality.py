@@ -3,8 +3,8 @@ from psycopg import Connection
 from typing import Any
 
 
-MVP_COUNTRY_SLUGS = ("russia", "uruguay")
-ONBOARDING_COUNTRY_SLUGS = ("argentina",)
+MVP_COUNTRY_SLUGS = ("russia", "uruguay", "argentina")
+ONBOARDING_COUNTRY_SLUGS: tuple[str, ...] = ()
 MVP_SCENARIO_SLUGS = (
     "relocation_residence",
     "permanent_residence_citizenship",

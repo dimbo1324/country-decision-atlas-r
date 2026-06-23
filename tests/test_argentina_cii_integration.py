@@ -213,10 +213,10 @@ _BASE_ROWS = {
     "argentina": _argentina_cii_ready_defaults()["get_country_base"],
 }
 
-_SOURCE_COUNTS = {"russia": 20, "uruguay": 20, "argentina": 6}
-_EVIDENCE_COUNTS = {"russia": 30, "uruguay": 15, "argentina": 6}
-_LEGAL_COUNTS = {"russia": 10, "uruguay": 10, "argentina": 0}
-_TIMELINE_COUNTS = {"russia": 12, "uruguay": 12, "argentina": 0}
+_SOURCE_COUNTS = {"russia": 20, "uruguay": 20, "argentina": 10}
+_EVIDENCE_COUNTS = {"russia": 30, "uruguay": 15, "argentina": 15}
+_LEGAL_COUNTS = {"russia": 10, "uruguay": 10, "argentina": 6}
+_TIMELINE_COUNTS = {"russia": 12, "uruguay": 12, "argentina": 6}
 
 
 def _evaluate_all_mvp_with_argentina_cii() -> Any:
@@ -265,15 +265,14 @@ class TestAllMvpReadyWithArgentinaCiiReady:
         result = _evaluate_all_mvp_with_argentina_cii()
         assert result.all_mvp_ready is True
 
-    def test_mvp_countries_do_not_include_argentina(self) -> None:
+    def test_mvp_countries_include_argentina(self) -> None:
         result = _evaluate_all_mvp_with_argentina_cii()
         mvp_slugs = [r.country_slug for r in result.countries]
-        assert "argentina" not in mvp_slugs
+        assert "argentina" in mvp_slugs
 
-    def test_onboarding_countries_include_argentina(self) -> None:
+    def test_onboarding_countries_is_empty(self) -> None:
         result = _evaluate_all_mvp_with_argentina_cii()
-        onboarding_slugs = [r.country_slug for r in result.onboarding_countries]
-        assert "argentina" in onboarding_slugs
+        assert len(result.onboarding_countries) == 0
 
     def test_russia_remains_mvp_ready(self) -> None:
         result = _evaluate_all_mvp_with_argentina_cii()
@@ -522,15 +521,15 @@ class TestArgentinaCiiComparison:
 
 
 class TestArgentinaCiiSlugsArchitecture:
-    def test_argentina_not_in_mvp_country_slugs(self) -> None:
+    def test_argentina_in_mvp_country_slugs(self) -> None:
         from app.repositories.data_quality import MVP_COUNTRY_SLUGS
 
-        assert "argentina" not in MVP_COUNTRY_SLUGS
+        assert "argentina" in MVP_COUNTRY_SLUGS
 
-    def test_argentina_in_onboarding_country_slugs(self) -> None:
+    def test_onboarding_country_slugs_is_empty(self) -> None:
         from app.repositories.data_quality import ONBOARDING_COUNTRY_SLUGS
 
-        assert "argentina" in ONBOARDING_COUNTRY_SLUGS
+        assert len(ONBOARDING_COUNTRY_SLUGS) == 0
 
     def test_argentina_in_matrix_mvp_countries(self) -> None:
         from app.services.cii_matrix import MVP_COUNTRIES

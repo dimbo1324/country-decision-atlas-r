@@ -54,6 +54,28 @@ def _russia_pass_defaults() -> dict[str, Any]:
     }
 
 
+def _argentina_complete_defaults() -> dict[str, Any]:
+    return {
+        "get_country_base": {
+            "id": "arg-id",
+            "slug": "argentina",
+            "name": "Argentina",
+            "iso2": "AR",
+            "is_active": True,
+        },
+        "count_published_country_cards": 2,
+        "count_active_cii_metrics": 6,
+        "count_country_cii_metric_values": 6,
+        "count_cii_scenario_scores": 5,
+        "count_published_sources": 10,
+        "count_published_evidence": 15,
+        "count_published_legal_signals": 6,
+        "count_timeline_events": 6,
+        "count_timeline_events_with_traceability": 6,
+        "check_localization_metadata": True,
+    }
+
+
 def _evaluate_argentina(**overrides: Any) -> Any:
     from app.services.country_onboarding import evaluate_country_onboarding
 
@@ -151,19 +173,24 @@ class TestArgentinaIsIncomplete:
         assert "country_onboarding_timeline_events_threshold" in codes
 
 
-class TestOnboardingCountrySlugsArchitecture:
-    def test_onboarding_country_slugs_contains_argentina(self) -> None:
-        from app.repositories.data_quality import ONBOARDING_COUNTRY_SLUGS
-
-        assert "argentina" in ONBOARDING_COUNTRY_SLUGS
-
-    def test_mvp_country_slugs_does_not_contain_argentina(self) -> None:
+class TestMvpCountrySlugsArchitecture:
+    def test_argentina_in_mvp_country_slugs(self) -> None:
         from app.repositories.data_quality import MVP_COUNTRY_SLUGS
 
-        assert "argentina" not in MVP_COUNTRY_SLUGS
+        assert "argentina" in MVP_COUNTRY_SLUGS
+
+    def test_onboarding_country_slugs_is_empty(self) -> None:
+        from app.repositories.data_quality import ONBOARDING_COUNTRY_SLUGS
+
+        assert len(ONBOARDING_COUNTRY_SLUGS) == 0
+
+    def test_mvp_country_slugs_has_three_countries(self) -> None:
+        from app.repositories.data_quality import MVP_COUNTRY_SLUGS
+
+        assert len(MVP_COUNTRY_SLUGS) == 3
 
 
-class TestAllMvpCountriesUnaffectedByArgentina:
+class TestAllMvpCountriesWithArgentinaPromoted:
     def _run_all_mvp(
         self,
         russia_defaults: dict[str, Any],
@@ -198,7 +225,7 @@ class TestAllMvpCountriesUnaffectedByArgentina:
         ):
             return evaluate_all_mvp_countries(conn)
 
-    def test_all_mvp_ready_true_when_russia_and_uruguay_pass(self) -> None:
+    def test_all_mvp_ready_true_when_all_three_pass(self) -> None:
         ru = _russia_pass_defaults()
         uy = {
             **_russia_pass_defaults(),
@@ -210,7 +237,7 @@ class TestAllMvpCountriesUnaffectedByArgentina:
                 "is_active": True,
             },
         }
-        ar = _argentina_incomplete_defaults()
+        ar = _argentina_complete_defaults()
         result = self._run_all_mvp(ru, uy, ar)
         assert result.all_mvp_ready is True
 
@@ -226,11 +253,11 @@ class TestAllMvpCountriesUnaffectedByArgentina:
                 "is_active": True,
             },
         }
-        ar = _argentina_incomplete_defaults()
+        ar = _argentina_complete_defaults()
         result = self._run_all_mvp(ru, uy, ar)
         assert result.all_mvp_ready is False
 
-    def test_onboarding_countries_includes_argentina(self) -> None:
+    def test_mvp_countries_includes_argentina(self) -> None:
         ru = _russia_pass_defaults()
         uy = {
             **_russia_pass_defaults(),
@@ -242,11 +269,11 @@ class TestAllMvpCountriesUnaffectedByArgentina:
                 "is_active": True,
             },
         }
-        ar = _argentina_incomplete_defaults()
+        ar = _argentina_complete_defaults()
         result = self._run_all_mvp(ru, uy, ar)
-        assert any(r.country_slug == "argentina" for r in result.onboarding_countries)
+        assert any(r.country_slug == "argentina" for r in result.countries)
 
-    def test_mvp_countries_does_not_include_argentina(self) -> None:
+    def test_onboarding_countries_is_empty(self) -> None:
         ru = _russia_pass_defaults()
         uy = {
             **_russia_pass_defaults(),
@@ -258,9 +285,9 @@ class TestAllMvpCountriesUnaffectedByArgentina:
                 "is_active": True,
             },
         }
-        ar = _argentina_incomplete_defaults()
+        ar = _argentina_complete_defaults()
         result = self._run_all_mvp(ru, uy, ar)
-        assert all(r.country_slug != "argentina" for r in result.countries)
+        assert len(result.onboarding_countries) == 0
 
 
 class TestArgentinaDqIntegration:

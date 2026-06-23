@@ -390,7 +390,7 @@ class TestEvaluateAllMvpCountries:
         with patch.multiple(_REPO, **patchers):
             result = evaluate_all_mvp_countries(_make_connection())
         assert result.all_mvp_ready is True
-        assert len(result.countries) == 2
+        assert len(result.countries) == 3
 
     def test_not_all_ready_when_one_fails(self) -> None:
         from app.services.country_onboarding import evaluate_all_mvp_countries

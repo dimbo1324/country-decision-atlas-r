@@ -1376,6 +1376,26 @@
       "branch": "feat/argentina-legal-timeline-evidence-v1",
       "summary": "Migration 024: Argentina gets 10 sources (+4), 15 evidence items (+9), 6 legal signals (residence/citizenship/tax/banking/business/political_risk), 6 timeline events (100% traceability). Argentina onboarding: legal_ready=true, timeline_ready=true, evidence_ready=true, mvp_ready=true. Russia/Uruguay remain mvp_ready=true, all_mvp_ready=true. 53 new tests, 529 total. APIs /legal-signals, /legal-signals/timeline, /sources all return Argentina data.",
       "status": "completed"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "country-expansion-closeout-v1",
+      "task": "chore/country-expansion-closeout-v1",
+      "branch": "chore/country-expansion-closeout-v1",
+      "summary": "Closeout of the Country Expansion Pipeline episode: promote Argentina from onboarding to MVP, verify all three countries are mvp_ready, full quality gate.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-23",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "country-expansion-closeout-v1",
+      "task": "chore/country-expansion-closeout-v1",
+      "branch": "chore/country-expansion-closeout-v1",
+      "summary": "Argentina promoted from ONBOARDING_COUNTRY_SLUGS to MVP_COUNTRY_SLUGS. All 3 countries mvp_ready=True, all_mvp_ready=True, onboarding_countries=[]. Matrix 3x5=15 cells. Clean DB chain 001-024 verified. 33 new closeout tests. 563 total tests. All gates green: ruff, mypy, sqlfluff, pnpm build, pnpm typecheck, pnpm lint, web:mvp:check. Episode Country Expansion Pipeline closed.",
+      "status": "completed"
     }
   ]
 }

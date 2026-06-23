@@ -429,22 +429,19 @@ class TestAllMvpReadyAfterArgentinaLegal:
         uruguay = next(c for c in result.countries if c.country_slug == "uruguay")
         assert uruguay.mvp_ready is True
 
-    def test_argentina_in_onboarding_countries(self) -> None:
+    def test_argentina_in_mvp_countries(self) -> None:
         result = _evaluate_all_mvp_with_argentina_full()
-        slugs = [c.country_slug for c in result.onboarding_countries]
+        slugs = [c.country_slug for c in result.countries]
         assert "argentina" in slugs
 
     def test_argentina_mvp_ready_when_full(self) -> None:
         result = _evaluate_all_mvp_with_argentina_full()
-        argentina = next(
-            c for c in result.onboarding_countries if c.country_slug == "argentina"
-        )
+        argentina = next(c for c in result.countries if c.country_slug == "argentina")
         assert argentina.mvp_ready is True
 
-    def test_argentina_not_in_mvp_countries(self) -> None:
+    def test_onboarding_countries_is_empty(self) -> None:
         result = _evaluate_all_mvp_with_argentina_full()
-        mvp_slugs = [c.country_slug for c in result.countries]
-        assert "argentina" not in mvp_slugs
+        assert len(result.onboarding_countries) == 0
 
 
 class TestArgentinaLegalSignalsData:
@@ -563,15 +560,15 @@ class TestArgentinaLegalSignalsApi:
 
 
 class TestArgentinaArchitectureSlugs:
-    def test_argentina_in_onboarding_country_slugs(self) -> None:
+    def test_onboarding_country_slugs_is_empty(self) -> None:
         from app.repositories.data_quality import ONBOARDING_COUNTRY_SLUGS
 
-        assert "argentina" in ONBOARDING_COUNTRY_SLUGS
+        assert len(ONBOARDING_COUNTRY_SLUGS) == 0
 
-    def test_argentina_not_in_mvp_country_slugs(self) -> None:
+    def test_argentina_in_mvp_country_slugs(self) -> None:
         from app.repositories.data_quality import MVP_COUNTRY_SLUGS
 
-        assert "argentina" not in MVP_COUNTRY_SLUGS
+        assert "argentina" in MVP_COUNTRY_SLUGS
 
     def test_russia_in_mvp_country_slugs(self) -> None:
         from app.repositories.data_quality import MVP_COUNTRY_SLUGS
