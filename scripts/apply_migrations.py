@@ -9,7 +9,9 @@ from typing import Any
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 MIGRATIONS_DIR = ROOT_DIR / "database" / "migrations"
-DEFAULT_DATABASE_URL = "postgresql://localhost:5433/country_atlas"
+DEFAULT_DATABASE_URL = (
+    "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
+)
 MIGRATION_ADVISORY_LOCK_ID = 2727268367744705
 
 

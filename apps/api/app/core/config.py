@@ -11,7 +11,9 @@ class Settings(BaseSettings):
     app_env: str = "production"
     app_debug: bool = False
     api_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
-    database_url: str = Field(default="postgresql://localhost:5432/country_atlas")
+    database_url: str = Field(
+        default="postgresql://country_atlas:change-me@localhost:5433/country_atlas"
+    )
     redis_url: str = "redis://localhost:6379/0"
     default_locale: str = "ru"
     supported_locales: str = "en,ru"
