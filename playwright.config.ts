@@ -31,9 +31,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm --filter @country-decision-atlas/web dev",
+    command: "pnpm --filter @country-decision-atlas/web start",
     url: WEB_BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    env: {
+      APP_ENV: "local",
+    },
   },
 });
