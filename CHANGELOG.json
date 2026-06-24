@@ -2,6 +2,54 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-24",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "global-project-operating-standard-v0",
+      "task": "chore/global-project-operating-standard-v0",
+      "branch": "chore/global-project-operating-standard-v0",
+      "summary": "Episode 0 ratified as the binding development regulation for all subsequent episodes (editorial, routes, persona, alerts, drift, search, AI), to be applied starting with feat/editorial-publication-foundation-v1. Per the accepted conclusion, Episode 0 is a regulation rather than a code block: no product code, repositories, services, schemas, routers, migrations, contracts, frontend, or docs were changed. The episode records the standard in the append-only CHANGELOG and proves the full green baseline gate on current main before the seven feature episodes begin.",
+      "standard_blocks": [
+        "0.1 branch workflow and git discipline",
+        "0.2 unified quality gate",
+        "0.3 top-down implementation order",
+        "0.4 hard rules",
+        "0.5 architecture invariants",
+        "0.6 final report format"
+      ],
+      "baseline_gate": {
+        "pytest": "592 passed, 23 skipped",
+        "mypy": "no issues in 127 source files",
+        "ruff_check": "all checks passed",
+        "ruff_format_check": "129 files already formatted",
+        "sqlfluff": "clean",
+        "pnpm_quality": "format:check + lint + typecheck + build clean",
+        "pnpm_web_mvp_check": "125 passed",
+        "pre_commit": "all hooks passed (including prettier and sqlfluff-fix)"
+      },
+      "data_quality_impact": "none — no data-quality checks weakened, no fake data added",
+      "not_changed": [
+        "docs",
+        "CII math",
+        "scenario weights",
+        "decision scoring",
+        "migrations",
+        "openapi contract",
+        "generated TypeScript"
+      ],
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-24",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "global-project-operating-standard-v0",
+      "task": "chore/global-project-operating-standard-v0",
+      "branch": "chore/global-project-operating-standard-v0",
+      "summary": "Episode 0 — Global Project Operating Standard. Ratifying the single development standard (branch workflow, unified quality gate, top-down implementation order, hard rules, architecture invariants, final report format) that governs every subsequent episode starting with feat/editorial-publication-foundation-v1. No product code, migrations, schemas, or docs changed; this episode establishes the regulation and proves the green baseline gate.",
+      "status": "in_progress"
+    },
+    {
       "date": "2026-06-22",
       "event": "task_completed",
       "type": "chore",
