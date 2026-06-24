@@ -3,6 +3,16 @@
   "entries": [
     {
       "date": "2026-06-24",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "editorial-publication-foundation-v1",
+      "task": "feat/editorial-publication-foundation-v1",
+      "branch": "feat/editorial-publication-foundation-v1",
+      "summary": "Start editorial publication foundation with lifecycle, legal_status split, audit/outbox foundation, and data-quality guardrails.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-24",
       "event": "task_completed",
       "type": "chore",
       "scope": "global-project-operating-standard-v0",
@@ -157,12 +167,20 @@
         "critical_issues": 2,
         "warnings": 273,
         "classified_remaining": {
-          "accepted_mvp_warning": ["mvp_country_published_evidence_count_low (×2)"],
-          "future_scope": ["translation_english_variant_missing (×266)"],
-          "warning_accepted": ["published_legal_signal_evidence_missing (×7)"]
+          "accepted_mvp_warning": [
+            "mvp_country_published_evidence_count_low (×2)"
+          ],
+          "future_scope": [
+            "translation_english_variant_missing (×266)"
+          ],
+          "warning_accepted": [
+            "published_legal_signal_evidence_missing (×7)"
+          ]
         }
       },
-      "migrations": ["020_closeout_data_quality_fixes.sql"],
+      "migrations": [
+        "020_closeout_data_quality_fixes.sql"
+      ],
       "tests_added": 37,
       "new_files": [
         "database/migrations/020_closeout_data_quality_fixes.sql",
