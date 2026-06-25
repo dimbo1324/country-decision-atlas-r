@@ -1,6 +1,7 @@
 from app.core.errors import api_error
 from app.repositories import admin_content as repository
-from app.repositories.audit import create_audit_event
+from app.repositories.audit import insert_audit_event
+from app.repositories.domain_events import insert_domain_event
 from app.schemas.admin_content import (
     CountryProfilePatch,
     EvidenceItemCreate,
@@ -21,8 +22,90 @@ from app.services.data_quality import (
     validate_source_for_publish,
     validate_user_story_for_publish,
 )
+from app.services.publication import (
+    audit_action_for_transition,
+    ensure_allowed_transition,
+    is_publish_transition,
+)
+from enum import StrEnum
 from psycopg import Connection
 from typing import Any
+from uuid import UUID
+
+
+SOURCE_AUDIT_FIELDS = (
+    "country_id",
+    "title",
+    "url",
+    "source_type",
+    "publisher",
+    "language",
+    "confidence",
+    "published_at",
+    "last_checked_at",
+    "notes",
+    "status",
+)
+EVIDENCE_AUDIT_FIELDS = (
+    "source_id",
+    "country_id",
+    "legal_signal_id",
+    "claim",
+    "excerpt",
+    "url",
+    "confidence",
+    "status",
+)
+LEGAL_SIGNAL_AUDIT_FIELDS = (
+    "country_id",
+    "source_id",
+    "title_en",
+    "title_ru",
+    "summary_en",
+    "summary_ru",
+    "signal_type",
+    "impact_direction",
+    "impact_level",
+    "legal_status",
+    "affected_groups",
+    "published_date",
+    "effective_date",
+    "confidence",
+    "status",
+)
+COUNTRY_PROFILE_AUDIT_FIELDS = (
+    "locale",
+    "executive_summary",
+    "migration_overview",
+    "tax_overview",
+    "cost_of_living_overview",
+    "business_overview",
+    "safety_overview",
+    "legal_signals_summary",
+    "risk_summary",
+    "source_summary",
+    "status",
+)
+USER_STORY_AUDIT_FIELDS = (
+    "origin_country_id",
+    "destination_country_id",
+    "city",
+    "year",
+    "scenario",
+    "budget_initial_usd",
+    "budget_monthly_usd",
+    "legal_path",
+    "documents_used",
+    "problems",
+    "positive_outcome",
+    "negative_outcome",
+    "advice",
+    "satisfaction_score",
+    "verification_status",
+    "status",
+    "is_synthetic",
+    "notes",
+)
 
 
 def create_source(
@@ -34,8 +117,9 @@ def create_source(
     data["country_id"] = _country_id_or_none(connection, data.pop("country_slug", None))
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_source_for_publish(data))
-    row = repository.create_source(connection, data)
-    _audit(connection, "source", row, "created", changed_by, {"after": row})
+    with connection.transaction():
+        row = repository.create_source(connection, data)
+        _audit_create(connection, "source", row, changed_by)
     return row
 
 
@@ -45,20 +129,27 @@ def patch_source(
     payload: SourcePatch,
     changed_by: str,
 ) -> dict[str, Any]:
-    before = _require(repository.get_source_for_admin(connection, source_id), "Source")
-    data = _model_data(payload, exclude_unset=True)
-    candidate = {**before, **data}
-    if candidate.get("status") == PublicationStatus.published.value:
-        raise_if_critical_issues(validate_source_for_publish(candidate))
-    after = _require(repository.patch_source(connection, source_id, data), "Source")
-    _audit(
-        connection,
-        "source",
-        after,
-        _audit_action(before, after),
-        changed_by,
-        _diff(before, after),
-    )
+    with connection.transaction():
+        before = _require(
+            repository.get_source_for_admin(connection, source_id), "Source"
+        )
+        data = _model_data(payload, exclude_unset=True)
+        _ensure_status_transition(before, data)
+        candidate = {**before, **data}
+        if candidate.get("status") == PublicationStatus.published.value:
+            raise_if_critical_issues(validate_source_for_publish(candidate))
+        repository.patch_source(connection, source_id, data)
+        after = _require(
+            repository.get_source_for_admin(connection, source_id), "Source"
+        )
+        _audit_patch(
+            connection,
+            "source",
+            before,
+            after,
+            changed_by,
+            SOURCE_AUDIT_FIELDS,
+        )
     return after
 
 
@@ -73,8 +164,9 @@ def create_evidence_item(
     _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_evidence_item_for_publish(data))
-    row = repository.create_evidence_item(connection, data)
-    _audit(connection, "evidence_item", row, "created", changed_by, {"after": row})
+    with connection.transaction():
+        row = repository.create_evidence_item(connection, data)
+        _audit_create(connection, "evidence_item", row, changed_by)
     return row
 
 
@@ -84,28 +176,31 @@ def patch_evidence_item(
     payload: EvidenceItemPatch,
     changed_by: str,
 ) -> dict[str, Any]:
-    before = _require(
-        repository.get_evidence_item_for_admin(connection, evidence_item_id),
-        "Evidence item",
-    )
-    data = _model_data(payload, exclude_unset=True)
-    _validate_source_exists(connection, data.get("source_id"))
-    _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
-    candidate = {**before, **data}
-    if candidate.get("status") == PublicationStatus.published.value:
-        raise_if_critical_issues(validate_evidence_item_for_publish(candidate))
-    after = _require(
-        repository.patch_evidence_item(connection, evidence_item_id, data),
-        "Evidence item",
-    )
-    _audit(
-        connection,
-        "evidence_item",
-        after,
-        _audit_action(before, after),
-        changed_by,
-        _diff(before, after),
-    )
+    with connection.transaction():
+        before = _require(
+            repository.get_evidence_item_for_admin(connection, evidence_item_id),
+            "Evidence item",
+        )
+        data = _model_data(payload, exclude_unset=True)
+        _validate_source_exists(connection, data.get("source_id"))
+        _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
+        _ensure_status_transition(before, data)
+        candidate = {**before, **data}
+        if candidate.get("status") == PublicationStatus.published.value:
+            raise_if_critical_issues(validate_evidence_item_for_publish(candidate))
+        repository.patch_evidence_item(connection, evidence_item_id, data)
+        after = _require(
+            repository.get_evidence_item_for_admin(connection, evidence_item_id),
+            "Evidence item",
+        )
+        _audit_patch(
+            connection,
+            "evidence_item",
+            before,
+            after,
+            changed_by,
+            EVIDENCE_AUDIT_FIELDS,
+        )
     return after
 
 
@@ -119,8 +214,9 @@ def create_legal_signal(
     _validate_source_exists(connection, data.get("source_id"))
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_legal_signal_for_publish(data))
-    row = repository.create_legal_signal(connection, data)
-    _audit(connection, "legal_signal", row, "created", changed_by, {"after": row})
+    with connection.transaction():
+        row = repository.create_legal_signal(connection, data)
+        _audit_create(connection, "legal_signal", row, changed_by)
     return row
 
 
@@ -130,27 +226,31 @@ def patch_legal_signal(
     payload: LegalSignalPatch,
     changed_by: str,
 ) -> dict[str, Any]:
-    before = _require(
-        repository.get_legal_signal_for_admin(connection, signal_id),
-        "Legal signal",
-    )
-    data = _model_data(payload, exclude_unset=True)
-    _validate_source_exists(connection, data.get("source_id"))
-    candidate = {**before, **data}
-    if candidate.get("status") == PublicationStatus.published.value:
-        raise_if_critical_issues(validate_legal_signal_for_publish(candidate))
-    after = _require(
-        repository.patch_legal_signal(connection, signal_id, data),
-        "Legal signal",
-    )
-    _audit(
-        connection,
-        "legal_signal",
-        after,
-        _audit_action(before, after),
-        changed_by,
-        _diff(before, after),
-    )
+    with connection.transaction():
+        before = _require(
+            repository.get_legal_signal_for_admin(connection, signal_id),
+            "Legal signal",
+        )
+        data = _model_data(payload, exclude_unset=True)
+        _validate_source_exists(connection, data.get("source_id"))
+        _ensure_status_transition(before, data)
+        candidate = {**before, **data}
+        if candidate.get("status") == PublicationStatus.published.value:
+            raise_if_critical_issues(validate_legal_signal_for_publish(candidate))
+        repository.patch_legal_signal(connection, signal_id, data)
+        after = _require(
+            repository.get_legal_signal_for_admin(connection, signal_id),
+            "Legal signal",
+        )
+        _audit_patch(
+            connection,
+            "legal_signal",
+            before,
+            after,
+            changed_by,
+            LEGAL_SIGNAL_AUDIT_FIELDS,
+        )
+        _emit_legal_signal_published_event(connection, before, after)
     return after
 
 
@@ -160,23 +260,33 @@ def patch_country_profile(
     payload: CountryProfilePatch,
     changed_by: str,
 ) -> dict[str, Any]:
-    data = _model_data(payload, exclude_unset=True)
-    before = _require(
-        repository.get_country_profile_for_admin(
-            connection, country_slug, data.get("locale", "en")
-        ),
-        "Country profile",
-    )
-    candidate = {**before, **data}
-    if candidate.get("status") == PublicationStatus.published.value:
-        raise_if_critical_issues(validate_country_card_for_publish(candidate))
-    after = _require(
-        repository.patch_country_profile(connection, country_slug, data),
-        "Country profile",
-    )
-    _audit(
-        connection, "country_profile", after, "updated", changed_by, {"after": after}
-    )
+    with connection.transaction():
+        data = _model_data(payload, exclude_unset=True)
+        before = _require(
+            repository.get_country_profile_for_admin(
+                connection, country_slug, data.get("locale", "en")
+            ),
+            "Country profile",
+        )
+        _ensure_status_transition(before, data)
+        candidate = {**before, **data}
+        if candidate.get("status") == PublicationStatus.published.value:
+            raise_if_critical_issues(validate_country_card_for_publish(candidate))
+        repository.patch_country_profile(connection, country_slug, data)
+        after = _require(
+            repository.get_country_profile_for_admin(
+                connection, country_slug, data.get("locale", before.get("locale", "en"))
+            ),
+            "Country profile",
+        )
+        _audit_patch(
+            connection,
+            "country_profile",
+            before,
+            after,
+            changed_by,
+            COUNTRY_PROFILE_AUDIT_FIELDS,
+        )
     return after
 
 
@@ -194,8 +304,9 @@ def create_user_story(
     )
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_user_story_for_publish(data))
-    row = repository.create_user_story_for_admin(connection, data)
-    _audit(connection, "user_story", row, "created", changed_by, {"after": row})
+    with connection.transaction():
+        row = repository.create_user_story_for_admin(connection, data)
+        _audit_create(connection, "user_story", row, changed_by)
     return row
 
 
@@ -205,40 +316,56 @@ def patch_user_story(
     payload: UserStoryPatch,
     changed_by: str,
 ) -> dict[str, Any]:
-    before = _require(
-        repository.get_user_story_for_admin(connection, story_id), "User story"
-    )
-    data = _model_data(payload, exclude_unset=True)
-    if "origin_country_slug" in data:
-        data["origin_country_id"] = _country_id_or_none(
-            connection, data.pop("origin_country_slug")
+    with connection.transaction():
+        before = _require(
+            repository.get_user_story_for_admin(connection, story_id), "User story"
         )
-    if "destination_country_slug" in data:
-        data["destination_country_id"] = _country_id_required(
-            connection, data.pop("destination_country_slug")
+        data = _model_data(payload, exclude_unset=True)
+        if "origin_country_slug" in data:
+            data["origin_country_id"] = _country_id_or_none(
+                connection, data.pop("origin_country_slug")
+            )
+        if "destination_country_slug" in data:
+            data["destination_country_id"] = _country_id_required(
+                connection, data.pop("destination_country_slug")
+            )
+        _ensure_status_transition(before, data)
+        candidate = {**before, **data}
+        if candidate.get("status") == PublicationStatus.published.value:
+            raise_if_critical_issues(validate_user_story_for_publish(candidate))
+        repository.patch_user_story_for_admin(connection, story_id, data)
+        after = _require(
+            repository.get_user_story_for_admin(connection, story_id), "User story"
         )
-    candidate = {**before, **data}
-    if candidate.get("status") == PublicationStatus.published.value:
-        raise_if_critical_issues(validate_user_story_for_publish(candidate))
-    after = _require(
-        repository.patch_user_story_for_admin(connection, story_id, data),
-        "User story",
-    )
-    _audit(
-        connection,
-        "user_story",
-        after,
-        _audit_action(before, after),
-        changed_by,
-        _diff(before, after),
-    )
+        _audit_patch(
+            connection,
+            "user_story",
+            before,
+            after,
+            changed_by,
+            USER_STORY_AUDIT_FIELDS,
+        )
     return after
+
+
+def build_changes(
+    old_row: dict[str, Any],
+    new_row: dict[str, Any],
+    fields: tuple[str, ...],
+) -> dict[str, dict[str, Any]]:
+    changes: dict[str, dict[str, Any]] = {}
+    for field in fields:
+        old_value = _json_value(old_row.get(field))
+        new_value = _json_value(new_row.get(field))
+        if old_value != new_value:
+            changes[field] = {"old": old_value, "new": new_value}
+    return changes
 
 
 def _model_data(model: Any, exclude_unset: bool = False) -> dict[str, Any]:
     data = model.model_dump(exclude_unset=exclude_unset, mode="json")
     return {
-        key: (value.value if isinstance(value, PublicationStatus) else value)
+        key: (value.value if isinstance(value, StrEnum) else value)
         for key, value in data.items()
     }
 
@@ -292,22 +419,52 @@ def _require(row: dict[str, Any] | None, entity_name: str) -> dict[str, Any]:
     return row
 
 
+def _ensure_status_transition(
+    before: dict[str, Any], data: dict[str, Any]
+) -> tuple[str, str]:
+    old_status = str(before.get("status") or "")
+    new_status = str(data.get("status") or old_status)
+    if old_status != new_status:
+        ensure_allowed_transition(old_status, new_status)
+    return old_status, new_status
+
+
+def _audit_create(
+    connection: Connection[Any],
+    entity_type: str,
+    entity: dict[str, Any],
+    changed_by: str,
+) -> None:
+    _audit(connection, entity_type, entity, "created", changed_by, {"created": entity})
+
+
+def _audit_patch(
+    connection: Connection[Any],
+    entity_type: str,
+    before: dict[str, Any],
+    after: dict[str, Any],
+    changed_by: str,
+    fields: tuple[str, ...],
+) -> None:
+    changes = build_changes(before, after, fields)
+    if not changes:
+        return
+    _audit(
+        connection,
+        entity_type,
+        after,
+        _audit_action(before, after),
+        changed_by,
+        changes,
+    )
+
+
 def _audit_action(before: dict[str, Any], after: dict[str, Any]) -> str:
-    if before.get("status") == after.get("status"):
-        return "updated"
-    if after.get("status") == PublicationStatus.published.value:
-        return "published"
-    if after.get("status") == PublicationStatus.archived.value:
-        return "archived"
-    if after.get("status") == PublicationStatus.rejected.value:
-        return "rejected"
-    if after.get("status") == PublicationStatus.review.value:
-        return "submitted_for_review"
+    old_status = before.get("status")
+    new_status = after.get("status")
+    if old_status != new_status and old_status is not None and new_status is not None:
+        return audit_action_for_transition(str(old_status), str(new_status))
     return "updated"
-
-
-def _diff(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
-    return {"before": before, "after": after}
 
 
 def _audit(
@@ -318,11 +475,57 @@ def _audit(
     changed_by: str,
     changes: dict[str, Any],
 ) -> None:
-    create_audit_event(
+    insert_audit_event(
         connection,
-        entity_type,
-        str(entity["id"]),
-        action,
-        changed_by,
-        changes,
+        entity_type=entity_type,
+        entity_id=_as_uuid(entity["id"]),
+        action=action,
+        changed_by=changed_by,
+        changes=changes,
     )
+
+
+def _emit_legal_signal_published_event(
+    connection: Connection[Any],
+    before: dict[str, Any],
+    after: dict[str, Any],
+) -> None:
+    if not is_publish_transition(str(before.get("status")), str(after.get("status"))):
+        return
+    signal_id = str(after["id"])
+    country_slug = repository.get_country_slug_by_id(
+        connection, str(after["country_id"])
+    )
+    insert_domain_event(
+        connection,
+        event_key=f"legal_signal:{signal_id}:legal_signal.published",
+        event_type="legal_signal.published",
+        aggregate_type="legal_signal",
+        aggregate_id=_as_uuid(signal_id),
+        country_slug=country_slug,
+        payload={
+            "id": signal_id,
+            "country_slug": country_slug,
+            "title": after.get("title")
+            or after.get("title_en")
+            or after.get("title_ru"),
+            "signal_type": after.get("signal_type"),
+            "impact_direction": after.get("impact_direction"),
+            "impact_level": after.get("impact_level"),
+            "legal_status": after.get("legal_status", "unknown"),
+        },
+        status="pending",
+        notifiable=True,
+    )
+
+
+def _as_uuid(value: Any) -> UUID:
+    return value if isinstance(value, UUID) else UUID(str(value))
+
+
+def _json_value(value: Any) -> Any:
+    if isinstance(value, UUID):
+        return str(value)
+    if isinstance(value, list | dict | str | int | float | bool) or value is None:
+        return value
+    return str(value)

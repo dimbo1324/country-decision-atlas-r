@@ -66,6 +66,7 @@ effective_date,
 confidence,
 confidence_level,
 status,
+legal_status,
 published_at,
 created_at,
 updated_at
@@ -132,6 +133,7 @@ EVIDENCE_PATCH_FIELDS = {
     "excerpt",
     "url",
     "confidence",
+    "legal_status",
     "status",
 }
 LEGAL_SIGNAL_PATCH_FIELDS = {
@@ -192,6 +194,15 @@ def get_country_id_by_slug(
         (country_slug,),
     )
     return str(row["id"]) if row else None
+
+
+def get_country_slug_by_id(connection: Connection[Any], country_id: str) -> str | None:
+    row = fetch_one(
+        connection,
+        "SELECT slug FROM countries WHERE id::text = %s",
+        (country_id,),
+    )
+    return str(row["slug"]) if row else None
 
 
 def get_source_for_admin(
@@ -386,6 +397,7 @@ def create_legal_signal(
             confidence,
             confidence_level,
             status,
+            legal_status,
             published_at
         )
         VALUES (
@@ -403,6 +415,7 @@ def create_legal_signal(
             %s,
             %s,
             %s::jsonb,
+            %s,
             %s,
             %s,
             %s,
@@ -432,6 +445,7 @@ def create_legal_signal(
             payload.get("confidence") or "medium",
             payload.get("confidence") or "medium",
             payload.get("status"),
+            payload.get("legal_status") or "unknown",
             payload.get("published_date"),
         ),
     )

@@ -3060,6 +3060,9 @@ components:
           - type: string
           - type: 'null'
           title: Impact Level
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+          default: unknown
         affected_groups:
           anyOf:
           - items:
@@ -4648,6 +4651,9 @@ components:
           title: Severity
         status:
           $ref: '#/components/schemas/PublicationStatus'
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+          default: unknown
         confidence_level:
           type: string
           enum:
@@ -4739,6 +4745,9 @@ components:
           - type: string
           - type: 'null'
           title: Impact Level
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+          default: unknown
         affected_groups:
           items:
             type: string
@@ -4794,6 +4803,9 @@ components:
         impact_level:
           type: string
           title: Impact Level
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+          default: unknown
         affected_groups:
           items:
             type: string
@@ -4945,6 +4957,10 @@ components:
           - type: string
           - type: 'null'
           title: Impact Level
+        legal_status:
+          anyOf:
+          - $ref: '#/components/schemas/LegalStatus'
+          - type: 'null'
         affected_groups:
           anyOf:
           - items:
@@ -5114,6 +5130,16 @@ components:
       - limit
       - offset
       title: LegalSignalTimelineResponse
+    LegalStatus:
+      type: string
+      enum:
+      - proposed
+      - adopted
+      - effective
+      - expired
+      - revoked
+      - unknown
+      title: LegalStatus
     LocaleCode:
       type: string
       enum:

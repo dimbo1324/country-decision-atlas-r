@@ -167,20 +167,12 @@
         "critical_issues": 2,
         "warnings": 273,
         "classified_remaining": {
-          "accepted_mvp_warning": [
-            "mvp_country_published_evidence_count_low (×2)"
-          ],
-          "future_scope": [
-            "translation_english_variant_missing (×266)"
-          ],
-          "warning_accepted": [
-            "published_legal_signal_evidence_missing (×7)"
-          ]
+          "accepted_mvp_warning": ["mvp_country_published_evidence_count_low (×2)"],
+          "future_scope": ["translation_english_variant_missing (×266)"],
+          "warning_accepted": ["published_legal_signal_evidence_missing (×7)"]
         }
       },
-      "migrations": [
-        "020_closeout_data_quality_fixes.sql"
-      ],
+      "migrations": ["020_closeout_data_quality_fixes.sql"],
       "tests_added": 37,
       "new_files": [
         "database/migrations/020_closeout_data_quality_fixes.sql",
@@ -1485,6 +1477,40 @@
       ],
       "tests_added": 29,
       "total_tests": 592,
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-25",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "editorial-publication-foundation-v1",
+      "task": "feat/editorial-publication-foundation-v1-admin-integration",
+      "branch": "feat/editorial-publication-foundation-v1-admin-integration",
+      "summary": "Start admin content integration for publication lifecycle, audit events, legal signal domain events, legal_status contracts, and editorial data-quality checks.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-25",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "editorial-publication-foundation-v1",
+      "task": "feat/editorial-publication-foundation-v1-admin-integration",
+      "branch": "feat/editorial-publication-foundation-v1-admin-integration",
+      "summary": "Integrated editorial publication foundation into admin content flow: transactional audit for create/patch/status changes, publication transition validation, legal_signal.published domain event emission, legal_status API/OpenAPI/TypeScript contracts, and editorial data-quality guardrails. Verified clean Docker migration chain, idempotent migration rerun, domain_events count 0 after clean migration, runtime publish smoke with rollback, pytest/mypy/ruff/sqlfluff/pnpm quality/web:mvp/pre-commit green.",
+      "tests_added": 24,
+      "checks": [
+        "python -m pytest: 671 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check . --fix: passed",
+        "python -m ruff format .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "pnpm web:mvp:check: 125 passed",
+        "python -m pre_commit run --all-files: passed",
+        "docker compose clean migration chain: passed",
+        "domain_events count after clean migration: 0"
+      ],
       "status": "completed"
     }
   ]

@@ -24,6 +24,15 @@ class PublicationStatus(StrEnum):
     rejected = "rejected"
 
 
+class LegalStatus(StrEnum):
+    proposed = "proposed"
+    adopted = "adopted"
+    effective = "effective"
+    expired = "expired"
+    revoked = "revoked"
+    unknown = "unknown"
+
+
 class LocaleResolution(BaseModel):
     requested_locale: LocaleCode
     resolved_locale: LocaleCode

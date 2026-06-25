@@ -260,6 +260,7 @@ def list_decision_legal_signals(
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
+            ls.legal_status,
             ls.source_id::text AS source_id,
             ls.confidence
         FROM legal_signals ls
@@ -497,6 +498,7 @@ def list_legal_signals(
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
+            ls.legal_status,
             ls.affected_groups,
             ls.published_date,
             ls.effective_date,
@@ -578,6 +580,7 @@ def get_legal_signal(
             signal_type,
             impact_direction,
             impact_level,
+            legal_status,
             affected_groups,
             published_date,
             effective_date,

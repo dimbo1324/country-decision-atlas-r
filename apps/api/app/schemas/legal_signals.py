@@ -1,4 +1,10 @@
-from app.schemas.common import LocaleResolution, Pagination, PublicationStatus, SortMeta
+from app.schemas.common import (
+    LegalStatus,
+    LocaleResolution,
+    Pagination,
+    PublicationStatus,
+    SortMeta,
+)
 from app.schemas.localization import LocalizationMeta
 from datetime import date, datetime
 from pydantic import BaseModel
@@ -30,6 +36,7 @@ class LegalSignal(BaseModel):
     sentiment: Sentiment
     severity: Severity
     status: SignalStatus
+    legal_status: LegalStatus = LegalStatus.unknown
     confidence_level: ConfidenceLevel
     effective_date: date | None = None
     published_at: date | None = None
@@ -53,6 +60,7 @@ class LegalSignalCreate(BaseModel):
     sentiment: Sentiment = "unknown"
     severity: Severity = "low"
     status: SignalStatus = PublicationStatus.draft
+    legal_status: LegalStatus = LegalStatus.unknown
     confidence_level: ConfidenceLevel = "low"
     effective_date: date | None = None
     published_at: date | None = None

@@ -1,5 +1,6 @@
 from app.core.locales import DEFAULT_LOCALE, SUPPORTED_LOCALES
 from app.schemas.common import (
+    LegalStatus,
     LocaleResolution,
     Pagination,
     PublicationStatus,
@@ -305,6 +306,7 @@ class LegalSignalDetail(BaseModel):
     signal_type: str
     impact_direction: str
     impact_level: str
+    legal_status: LegalStatus = LegalStatus.unknown
     affected_groups: list[str]
     published_date: date | None = None
     effective_date: date | None = None

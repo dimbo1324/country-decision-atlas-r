@@ -1,4 +1,4 @@
-from app.schemas.common import PublicationStatus
+from app.schemas.common import LegalStatus, PublicationStatus
 from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field
@@ -74,6 +74,7 @@ class LegalSignalCreate(BaseModel):
     signal_type: str | None = None
     impact_direction: str | None = None
     impact_level: str | None = None
+    legal_status: LegalStatus = LegalStatus.unknown
     affected_groups: list[str] = Field(default_factory=list)
     published_date: date | None = None
     effective_date: date | None = None
@@ -90,6 +91,7 @@ class LegalSignalPatch(BaseModel):
     signal_type: str | None = None
     impact_direction: str | None = None
     impact_level: str | None = None
+    legal_status: LegalStatus | None = None
     affected_groups: list[str] | None = None
     published_date: date | None = None
     effective_date: date | None = None

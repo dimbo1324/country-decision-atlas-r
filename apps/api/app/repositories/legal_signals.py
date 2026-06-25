@@ -46,6 +46,7 @@ def list_legal_signals(
             ls.sentiment,
             ls.severity,
             ls.status,
+            ls.legal_status,
             ls.confidence_level,
             ls.effective_date,
             ls.published_at,
@@ -121,11 +122,12 @@ def create_legal_signal(
             sentiment,
             severity,
             status,
+            legal_status,
             confidence_level,
             effective_date,
             published_at
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING
             id,
             country_id,
@@ -135,6 +137,7 @@ def create_legal_signal(
             sentiment,
             severity,
             status,
+            legal_status,
             confidence_level,
             effective_date,
             published_at,
@@ -149,6 +152,7 @@ def create_legal_signal(
             payload.sentiment,
             payload.severity,
             payload.status,
+            payload.legal_status,
             payload.confidence_level,
             payload.effective_date,
             payload.published_at,

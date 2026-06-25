@@ -1242,6 +1242,8 @@ export interface components {
             impact_direction?: string | null;
             /** Impact Level */
             impact_level?: string | null;
+            /** @default unknown */
+            legal_status: components["schemas"]["LegalStatus"];
             /** Affected Groups */
             affected_groups?: string[] | null;
             /** Published Date */
@@ -2071,6 +2073,8 @@ export interface components {
              */
             severity: "low" | "medium" | "high" | "critical";
             status: components["schemas"]["PublicationStatus"];
+            /** @default unknown */
+            legal_status: components["schemas"]["LegalStatus"];
             /**
              * Confidence Level
              * @enum {string}
@@ -2112,6 +2116,8 @@ export interface components {
             impact_direction?: string | null;
             /** Impact Level */
             impact_level?: string | null;
+            /** @default unknown */
+            legal_status: components["schemas"]["LegalStatus"];
             /** Affected Groups */
             affected_groups?: string[];
             /** Published Date */
@@ -2148,6 +2154,8 @@ export interface components {
             impact_direction: string;
             /** Impact Level */
             impact_level: string;
+            /** @default unknown */
+            legal_status: components["schemas"]["LegalStatus"];
             /** Affected Groups */
             affected_groups: string[];
             /** Published Date */
@@ -2210,6 +2218,7 @@ export interface components {
             impact_direction?: string | null;
             /** Impact Level */
             impact_level?: string | null;
+            legal_status?: components["schemas"]["LegalStatus"] | null;
             /** Affected Groups */
             affected_groups?: string[] | null;
             /** Published Date */
@@ -2289,6 +2298,11 @@ export interface components {
             /** Available Years */
             available_years?: number[];
         };
+        /**
+         * LegalStatus
+         * @enum {string}
+         */
+        LegalStatus: "proposed" | "adopted" | "effective" | "expired" | "revoked" | "unknown";
         /**
          * LocaleCode
          * @enum {string}

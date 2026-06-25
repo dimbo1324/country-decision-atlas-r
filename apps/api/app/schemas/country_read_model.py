@@ -1,4 +1,4 @@
-from app.schemas.common import LocaleResolution
+from app.schemas.common import LegalStatus, LocaleResolution
 from app.schemas.localization import LocalizationMeta
 from datetime import date, datetime
 from pydantic import BaseModel, Field
@@ -57,6 +57,7 @@ class CountryReadModelLegalSignal(BaseModel):
     signal_type: str
     impact_direction: str | None = None
     impact_level: str | None = None
+    legal_status: LegalStatus = LegalStatus.unknown
     affected_groups: list[str] | None = None
     published_date: date | None = None
     effective_date: date | None = None

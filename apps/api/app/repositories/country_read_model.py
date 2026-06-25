@@ -205,6 +205,7 @@ def list_country_read_model_legal_signals(
             ls.signal_type,
             ls.impact_direction,
             ls.impact_level,
+            ls.legal_status,
             ls.affected_groups,
             ls.published_date,
             ls.effective_date,
