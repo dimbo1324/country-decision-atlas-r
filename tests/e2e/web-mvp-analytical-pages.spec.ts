@@ -80,12 +80,15 @@ test.describe("sources page", () => {
 
     const hasItems = await page
       .locator(".sourceList")
-      .isVisible()
+      .waitFor({ timeout: 10_000 })
+      .then(() => true)
       .catch(() => false);
-    const hasEmpty = await page
-      .getByText(/по выбранным фильтрам источники/i)
-      .isVisible()
-      .catch(() => false);
+    const hasEmpty = hasItems
+      ? false
+      : await page
+          .getByText(/по выбранным фильтрам источники/i)
+          .isVisible()
+          .catch(() => false);
     expect(hasItems || hasEmpty).toBe(true);
 
     await expectNoAppCrash(page);

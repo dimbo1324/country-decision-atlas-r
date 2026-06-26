@@ -5,6 +5,25 @@
       "date": "2026-06-26",
       "event": "task_completed",
       "type": "fix",
+      "scope": "e2e-sources-filter-test-v1",
+      "task": "fix/e2e-sources-filter-test-v1",
+      "branch": "fix/e2e-sources-filter-test-v1",
+      "summary": "Fixed flaky E2E test: sources page filter test was checking .sourceList and empty state text immediately via .isVisible() (no timeout), creating a race condition where the sources API call had not yet completed. Changed to waitFor({ timeout: 10_000 }) so the test waits up to 10s for .sourceList before falling back to checking the empty state.",
+      "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "fix",
+      "scope": "e2e-sources-filter-test-v1",
+      "task": "fix/e2e-sources-filter-test-v1",
+      "branch": "fix/e2e-sources-filter-test-v1",
+      "summary": "Fix flaky E2E test: sources page filter checks sourceList without waiting for API response."
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "fix",
       "scope": "audit-findings-v1",
       "task": "fix/audit-findings-v1",
       "branch": "fix/audit-findings-v1",
