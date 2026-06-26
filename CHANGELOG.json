@@ -4,6 +4,38 @@
     {
       "date": "2026-06-26",
       "event": "task_completed",
+      "type": "feat",
+      "scope": "persona-layer-v1",
+      "task": "feat/persona-layer-v1",
+      "branch": "feat/persona-layer-v1",
+      "summary": "Persona Layer v1 backend/data foundation complete. Block 1: migration 029_persona_layer_v1.sql — personas table + persona_metric_modifiers table + 7 seeded active personas (digital_nomad, family, student, entrepreneur, low_budget_migrant, investor, skilled_worker) + 42 modifiers (7 personas × 6 active CII metrics). Migration idempotent and sqlfluff-clean. Block 2: apps/api/app/repositories/personas.py — list_personas (locale CASE SQL, positional params), get_persona_by_slug, list_persona_modifiers (active metrics only), list_active_persona_slugs, list_active_cii_metrics, list_base_scenario_weights, list_persona_weight_inputs (LEFT JOIN for missing modifier detection). Block 3: apps/api/app/services/persona_weights.py — validate_modifier_coverage, ensure_adjusted_weights_valid, build_adjusted_weights (Decimal, clamp, normalize, sum=1.0 guarantee), build_persona_weight_profile, maybe_build_persona_weight_profile. Tests: 40 new tests (15 repository + 25 service). No CII math/scenario weights/decision scoring/API routes/OpenAPI/frontend changed.",
+      "status": "completed",
+      "gate": {
+        "pytest_focused": "40 passed",
+        "pytest_full": "784 passed, 23 skipped",
+        "mypy": "no issues found in 147 source files",
+        "ruff_check": "All checks passed",
+        "ruff_format": "149 files already formatted",
+        "sqlfluff": "All Finished",
+        "docker_migration": "029_persona_layer_v1.sql applied clean",
+        "docker_idempotency": "second apply skipped 029",
+        "active_personas_sql": "7",
+        "modifiers_sql": "42"
+      }
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "persona-layer-v1",
+      "task": "feat/persona-layer-v1",
+      "branch": "feat/persona-layer-v1",
+      "summary": "Start Persona Layer v1 foundation with persona registry, metric modifiers, and runtime adjusted weight service.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
       "type": "fix",
       "scope": "e2e-sources-filter-test-v1",
       "task": "fix/e2e-sources-filter-test-v1",
