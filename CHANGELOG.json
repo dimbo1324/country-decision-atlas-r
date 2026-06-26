@@ -1557,6 +1557,41 @@
         "runtime diagnostics: wrote ignored local-artifacts/runtime-diagnostics output"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "route-explorer-v1",
+      "task": "feat/route-explorer-v1",
+      "branch": "feat/route-explorer-v1",
+      "summary": "Start Route Explorer v1 foundation with route schema, source-backed seed data, and repository SQL layer.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "route-explorer-v1",
+      "task": "feat/route-explorer-v1",
+      "branch": "feat/route-explorer-v1",
+      "summary": "Added Route Explorer v1 data foundation with migration 027 routes, route_documents, route_sources, route_evidence, source-backed seed routes for Russia, Uruguay and Argentina, and SQL-only routes repository functions. Kept API, services, schemas, OpenAPI, frontend, DQ, E2E and route.published outbox integration deferred.",
+      "checks": [
+        "python -m pytest tests/test_routes_repository.py: 22 passed",
+        "python -m pytest: 693 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "docker compose clean migration chain: migrations 001-027 applied",
+        "docker compose migration idempotency: migrations 001-027 skipped",
+        "routes count: 9",
+        "route_documents count: 18",
+        "route_sources count: 13",
+        "route_evidence count: 9",
+        "domain_events route.published count: 0"
+      ],
+      "status": "completed"
     }
   ]
 }
