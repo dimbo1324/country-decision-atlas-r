@@ -64,6 +64,72 @@ services:
       retries: 3
       start_period: 15s
 
+  redpanda:
+    image: redpandadata/redpanda:v24.1.13
+    command:
+      - redpanda
+      - start
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr=internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://localhost:18082
+      - --schema-registry-addr=internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr=redpanda:33145
+      - --advertise-rpc-addr=redpanda:33145
+      - --smp=1
+      - --memory=512M
+      - --mode=dev-container
+      - --default-log-level=warn
+    ports:
+      - "19092:19092"
+      - "19644:9644"
+    profiles:
+      - alerts
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    profiles:
+      - alerts
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  notifier:
+    build:
+      context: .
+      dockerfile: apps/notifier/Dockerfile
+    environment:
+      KAFKA_BROKERS: ${KAFKA_BROKERS:-redpanda:9092}
+      KAFKA_TOPIC: ${KAFKA_TOPIC:-cda.domain-events}
+      KAFKA_CONSUMER_GROUP: ${KAFKA_CONSUMER_GROUP:-signal-notifier}
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017}
+      MONGO_DATABASE: ${MONGO_DATABASE:-country_decision_alerts}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_MODE: ${TELEGRAM_MODE:-fake}
+      NOTIFY_AFTER: ${NOTIFY_AFTER:-2026-01-01T00:00:00Z}
+      NOTIFIER_HTTP_ADDR: ${NOTIFIER_HTTP_ADDR:-:8081}
+    ports:
+      - "8081:8081"
+    depends_on:
+      redpanda:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    profiles:
+      - alerts
+
 volumes:
   postgres-data:
   redis-data:
+  mongo-data:

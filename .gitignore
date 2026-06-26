@@ -303,3 +303,7 @@ moderation_exports/
 !Dockerfile
 !Dockerfile.*
 !docs/_arch_/**
+mongo-data/
+redpanda-data/
+apps/notifier/notifier
+apps/notifier/bin/

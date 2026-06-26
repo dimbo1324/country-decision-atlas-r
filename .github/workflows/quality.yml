@@ -39,6 +39,35 @@ jobs:
       - name: SQLFluff
         run: python -m sqlfluff lint database --dialect postgres
 
+  notifier:
+    name: Go notifier quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.x"
+          cache: true
+          cache-dependency-path: apps/notifier/go.sum
+
+      - name: Go mod download
+        working-directory: apps/notifier
+        run: go mod download
+
+      - name: gofmt check
+        working-directory: apps/notifier
+        run: test -z "$(gofmt -l .)"
+
+      - name: go vet
+        working-directory: apps/notifier
+        run: go vet ./...
+
+      - name: go test
+        working-directory: apps/notifier
+        run: go test ./...
+
   integration:
     name: Integration / migration smoke
     runs-on: ubuntu-latest

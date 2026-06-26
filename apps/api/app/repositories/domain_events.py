@@ -169,6 +169,65 @@ def mark_domain_event_skipped(
     )
 
 
+def lock_pending_notifiable_domain_events(
+    conn: Connection[Any],
+    *,
+    batch_size: int,
+    notify_after: str,
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        conn,
+        """
+        SELECT
+            id,
+            event_key,
+            event_type,
+            aggregate_type,
+            aggregate_id,
+            country_slug,
+            payload,
+            status,
+            notifiable,
+            created_at,
+            relayed_at,
+            attempts,
+            last_error
+        FROM domain_events
+        WHERE status = 'pending'
+          AND notifiable = TRUE
+          AND created_at >= %s::timestamptz
+        ORDER BY created_at ASC
+        LIMIT %s
+        FOR UPDATE SKIP LOCKED
+        """,
+        (notify_after, batch_size),
+    )
+
+
+def mark_domain_event_publish_failed_or_retry(
+    conn: Connection[Any],
+    event_id: UUID,
+    error: str,
+    max_attempts: int,
+) -> dict[str, Any] | None:
+    return fetch_one(
+        conn,
+        """
+        UPDATE domain_events
+        SET
+            attempts = attempts + 1,
+            last_error = %s,
+            status = CASE WHEN attempts + 1 >= %s THEN 'failed' ELSE 'pending' END
+        WHERE id = %s::uuid
+        RETURNING
+            id, event_key, event_type, aggregate_type, aggregate_id,
+            country_slug, payload, status, notifiable, created_at,
+            relayed_at, attempts, last_error
+        """,
+        (error, max_attempts, str(event_id)),
+    )
+
+
 def list_invalid_domain_events_for_dq(
     conn: Connection[Any],
 ) -> list[dict[str, Any]]:
