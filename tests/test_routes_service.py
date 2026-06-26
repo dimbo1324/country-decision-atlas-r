@@ -45,6 +45,7 @@ def route_row(
     status: str = "published",
     title: str = "Temporary residence",
     summary: str = "Route summary",
+    total_count: int = 1,
 ) -> dict[str, Any]:
     return {
         "id": ROUTE_ID,
@@ -72,6 +73,7 @@ def route_row(
         "legal_status": "effective",
         "status": status,
         "updated_at": NOW,
+        "total_count": total_count,
     }
 
 
@@ -149,11 +151,6 @@ def patch_lifecycle(
         lambda *_: after,
     )
     monkeypatch.setattr(
-        routes_repository,
-        "get_country_slug_by_id",
-        lambda *_: "uruguay",
-    )
-    monkeypatch.setattr(
         service,
         "insert_audit_event",
         lambda _connection, **kwargs: audit_events.append(kwargs),
@@ -182,7 +179,6 @@ def test_list_country_routes_returns_response_with_items(
     monkeypatch.setattr(
         routes_repository, "list_routes_by_country", lambda *_: [route_row()]
     )
-    monkeypatch.setattr(routes_repository, "count_routes_by_country", lambda *_: 1)
 
     result = service.list_country_routes(CONNECTION, "uruguay", "ru")
 
@@ -207,7 +203,6 @@ def test_list_country_routes_valid_country_without_routes_returns_empty_items(
 ) -> None:
     patch_country_exists(monkeypatch)
     monkeypatch.setattr(routes_repository, "list_routes_by_country", lambda *_: [])
-    monkeypatch.setattr(routes_repository, "count_routes_by_country", lambda *_: 0)
 
     result = service.list_country_routes(CONNECTION, "uruguay", "ru")
 
@@ -246,7 +241,6 @@ def test_locale_ru_uses_repository_ru_fields(monkeypatch: pytest.MonkeyPatch) ->
         "list_routes_by_country",
         lambda *_: [route_row(title="ВНЖ", summary="Описание")],
     )
-    monkeypatch.setattr(routes_repository, "count_routes_by_country", lambda *_: 1)
 
     result = service.list_country_routes(CONNECTION, "uruguay", "ru")
 
@@ -262,7 +256,6 @@ def test_locale_en_uses_repository_en_fields(monkeypatch: pytest.MonkeyPatch) ->
         "list_routes_by_country",
         lambda *_: [route_row(title="Residence", summary="Summary")],
     )
-    monkeypatch.setattr(routes_repository, "count_routes_by_country", lambda *_: 1)
 
     result = service.list_country_routes(CONNECTION, "uruguay", "en")
 
@@ -354,10 +347,39 @@ def test_seeded_routes_do_not_create_route_published_events(
 
     patch_country_exists(monkeypatch)
     monkeypatch.setattr(routes_repository, "list_routes_by_country", lambda *_: [])
-    monkeypatch.setattr(routes_repository, "count_routes_by_country", lambda *_: 0)
     monkeypatch.setattr(service, "insert_domain_event", fail_insert_domain_event)
 
     service.list_country_routes(CONNECTION, "uruguay", "ru")
+
+
+def test_draft_to_archived_is_not_allowed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    before = route_row(status="draft")
+    after = route_row(status="archived")
+    patch_lifecycle(monkeypatch, before, after)
+
+    with pytest.raises(HTTPException) as exc:
+        service.change_route_status(
+            cast(Any, FakeConnection()), ROUTE_ID, "archived", "admin"
+        )
+
+    assert_error(exc.value, 422, "invalid_publication_transition")
+
+
+def test_locale_ru_returns_partial_translation_status(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    patch_country_exists(monkeypatch)
+    monkeypatch.setattr(
+        routes_repository,
+        "list_routes_by_country",
+        lambda *_: [route_row()],
+    )
+
+    result = service.list_country_routes(CONNECTION, "uruguay", "ru")
+
+    assert result.locale.translation_status == "fallback"
 
 
 def test_get_route_detail_by_slug_returns_detail(

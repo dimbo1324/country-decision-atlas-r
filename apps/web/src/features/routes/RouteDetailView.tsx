@@ -1,12 +1,40 @@
 import Link from "next/link";
 
 import type { LocaleCode } from "../../shared/api/countries";
-import type { RouteDetailResponse } from "../../shared/api/routes";
+import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
 import { routes } from "../../shared/lib/routes";
 import { RouteDocumentsList } from "./RouteDocumentsList";
 import { RouteEligibilityBadges } from "./RouteEligibilityBadges";
 import { RouteEvidenceList } from "./RouteEvidenceList";
 import { RouteSourcesList } from "./RouteSourcesList";
+
+const ROUTE_TYPE_LABELS: Record<RouteType, string> = {
+  temporary_residence: "Временное проживание",
+  permanent_residence: "ПМЖ",
+  citizenship: "Гражданство",
+  digital_nomad: "Digital nomad",
+  work: "Работа",
+  business: "Бизнес",
+  study: "Учёба",
+  investment: "Инвестиции",
+};
+
+const LEGAL_STATUS_LABELS: Record<string, string> = {
+  proposed: "Предложен",
+  adopted: "Принят",
+  effective: "Действует",
+  expired: "Истёк",
+  revoked: "Отозван",
+  unknown: "Статус неизвестен",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  draft: "Черновик",
+  review: "На проверке",
+  published: "Опубликован",
+  archived: "Архив",
+  rejected: "Отклонён",
+};
 
 type RouteDetailViewProps = {
   route: RouteDetailResponse;
@@ -20,9 +48,15 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
         <p className="eyebrow">Маршрут</p>
         <h1>{route.title}</h1>
         <div className="routeBadges">
-          <span className="metaChip">{route.route_type}</span>
-          <span className="metaChip">{route.legal_status}</span>
-          <span className="metaChip">{route.status}</span>
+          <span className="metaChip">
+            {ROUTE_TYPE_LABELS[route.route_type] ?? route.route_type}
+          </span>
+          <span className="metaChip">
+            {LEGAL_STATUS_LABELS[route.legal_status] ?? route.legal_status}
+          </span>
+          <span className="metaChip">
+            {STATUS_LABELS[route.status] ?? route.status}
+          </span>
         </div>
         <Link
           href={routes.countryWithLocale(route.country_slug, locale)}

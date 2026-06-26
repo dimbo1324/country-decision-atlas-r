@@ -86,11 +86,18 @@ export function CountryRoutesBlock({ countrySlug, locale }: CountryRoutesBlockPr
       {!isLoading && error && <div className="notice errorNotice">{error}</div>}
       {!isLoading && !error && data?.items.length === 0 && <RouteEmptyState />}
       {!isLoading && !error && data && data.items.length > 0 && (
-        <div className="routeGrid">
-          {data.items.map((route) => (
-            <RouteCard key={route.id} route={route} locale={locale} />
-          ))}
-        </div>
+        <>
+          {data.pagination.total > data.items.length && (
+            <p className="notice">
+              Показано {data.items.length} из {data.pagination.total} маршрутов
+            </p>
+          )}
+          <div className="routeGrid">
+            {data.items.map((route) => (
+              <RouteCard key={route.id} route={route} locale={locale} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

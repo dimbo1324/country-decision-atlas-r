@@ -48,6 +48,8 @@ ROUTE_PUBLIC_FIELDS = """
     r.updated_at
 """
 
+_LOCALE_PLACEHOLDER_COUNT: int = ROUTE_PUBLIC_FIELDS.count("%s")
+
 ADMIN_ROUTE_FIELDS = """
     id::text AS id,
     country_id::text AS country_id,
@@ -102,48 +104,28 @@ def list_routes_by_country(
     where_sql, params = _build_route_filters(
         country_slug, route_type, allows_work, allows_family, leads_to_pr
     )
+    title_col = (
+        "COALESCE(r.title_ru, r.title)" if requested_locale == "ru" else "r.title"
+    )
     return fetch_all(
         connection,
         f"""
         SELECT
-            {ROUTE_PUBLIC_FIELDS}
+            {ROUTE_PUBLIC_FIELDS},
+            COUNT(*) OVER() AS total_count
         FROM routes r
         JOIN countries c ON c.id = r.country_id
         WHERE {where_sql}
-        ORDER BY r.route_type, r.title
+        ORDER BY r.route_type, {title_col}
         LIMIT %s OFFSET %s
         """,
         (
-            *([requested_locale] * 10),
+            *([requested_locale] * _LOCALE_PLACEHOLDER_COUNT),
             *params,
             limit,
             offset,
         ),
     )
-
-
-def count_routes_by_country(
-    connection: Connection[Any],
-    country_slug: str,
-    route_type: str | None = None,
-    allows_work: str | None = None,
-    allows_family: str | None = None,
-    leads_to_pr: str | None = None,
-) -> int:
-    where_sql, params = _build_route_filters(
-        country_slug, route_type, allows_work, allows_family, leads_to_pr
-    )
-    row = fetch_one(
-        connection,
-        f"""
-        SELECT COUNT(*) AS total
-        FROM routes r
-        JOIN countries c ON c.id = r.country_id
-        WHERE {where_sql}
-        """,
-        params,
-    )
-    return int(row["total"]) if row else 0
 
 
 def get_route_by_id(
@@ -163,7 +145,7 @@ def get_route_by_id(
           AND r.status = 'published'
         """,
         (
-            *([requested_locale] * 10),
+            *([requested_locale] * _LOCALE_PLACEHOLDER_COUNT),
             route_id,
         ),
     )
@@ -188,7 +170,7 @@ def get_route_by_slug(
           AND r.status = 'published'
         """,
         (
-            *([requested_locale] * 10),
+            *([requested_locale] * _LOCALE_PLACEHOLDER_COUNT),
             country_slug,
             route_slug,
         ),
@@ -226,9 +208,7 @@ def list_route_documents(
 def list_route_sources(
     connection: Connection[Any],
     route_id: str,
-    locale: str,
 ) -> list[dict[str, Any]]:
-    validate_locale(locale)
     return fetch_all(
         connection,
         """
@@ -245,6 +225,7 @@ def list_route_sources(
         LEFT JOIN countries c ON c.id = s.country_id
         WHERE rs.route_id::text = %s
           AND s.status = 'published'
+          AND s.url IS NOT NULL
         ORDER BY
             CASE s.source_type
                 WHEN 'official' THEN 1
@@ -261,9 +242,7 @@ def list_route_sources(
 def list_route_evidence(
     connection: Connection[Any],
     route_id: str,
-    locale: str,
 ) -> list[dict[str, Any]]:
-    validate_locale(locale)
     return fetch_all(
         connection,
         """
@@ -318,29 +297,14 @@ def patch_route_status(
             updated_at = NOW()
         WHERE id::text = %s
         RETURNING
-            {ADMIN_ROUTE_FIELDS}
+            {ADMIN_ROUTE_FIELDS},
+            (SELECT slug FROM countries WHERE id = country_id) AS country_slug
         """,
         (
             new_status,
             route_id,
         ),
     )
-
-
-def get_country_slug_by_id(
-    connection: Connection[Any],
-    country_id: str,
-) -> str | None:
-    row = fetch_one(
-        connection,
-        """
-        SELECT slug
-        FROM countries
-        WHERE id::text = %s
-        """,
-        (country_id,),
-    )
-    return str(row["slug"]) if row else None
 
 
 def _build_route_filters(

@@ -38,6 +38,10 @@ _rate_windows: dict[str, list[float]] = {}
 _RATE_WINDOW = 60.0
 _RATE_EXCLUDED_PATHS = frozenset({"/health", "/ready"})
 _last_rate_cleanup = 0.0
+# NOTE: Rate limiting counters are stored per-process. In multi-worker deployments
+# (uvicorn --workers N) each worker maintains its own independent window, so the
+# effective limit scales with the number of workers. Migrate to Redis for
+# cross-worker enforcement before running more than one worker in production.
 
 
 def _rate_limit_client(request: Request) -> str | None:
@@ -88,6 +92,11 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     if not settings.admin_token:
         logger.warning("Admin token is not configured — admin endpoints are disabled.")
+    logger.warning(
+        "Rate limiting is per-process (in-memory). "
+        "In multi-worker deployments the effective limit scales with worker count. "
+        "Migrate to Redis for cross-worker enforcement."
+    )
     open_database_pool()
     try:
         yield

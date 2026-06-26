@@ -45,6 +45,7 @@ def test_list_routes_by_country_returns_only_published_routes(
     assert "r.status = 'published'" in captured["query"]
     assert "c.slug = %s" in captured["query"]
     assert "uruguay" in captured["params"]
+    assert "COUNT(*) OVER() AS total_count" in captured["query"]
 
 
 def test_list_routes_by_country_returns_routes_for_russia(monkeypatch: Any) -> None:
@@ -139,37 +140,6 @@ def test_list_routes_by_country_filters_leads_to_pr(monkeypatch: Any) -> None:
 
     assert "r.leads_to_pr = %s" in captured["query"]
     assert "yes" in captured["params"]
-
-
-def test_count_routes_by_country_matches_filters(monkeypatch: Any) -> None:
-    captured: dict[str, Any] = {}
-
-    def fake_fetch_one(_: Any, query: str, params: Any) -> dict[str, Any]:
-        captured["query"] = query
-        captured["params"] = params
-        return {"total": 2}
-
-    monkeypatch.setattr(repo, "fetch_one", fake_fetch_one)
-
-    result = repo.count_routes_by_country(
-        CONNECTION,
-        "argentina",
-        route_type="business",
-        allows_work="yes",
-        leads_to_pr="no",
-    )
-
-    assert result == 2
-    assert "r.route_type = %s" in captured["query"]
-    assert "r.allows_work = %s" in captured["query"]
-    assert "r.leads_to_pr = %s" in captured["query"]
-    assert captured["params"] == ("argentina", "business", "yes", "no")
-
-
-def test_count_routes_by_country_returns_zero_without_row(monkeypatch: Any) -> None:
-    monkeypatch.setattr(repo, "fetch_one", lambda *_: None)
-
-    assert repo.count_routes_by_country(CONNECTION, "missing") == 0
 
 
 def test_get_route_by_id_returns_published_route(monkeypatch: Any) -> None:
@@ -278,7 +248,7 @@ def test_list_route_sources_returns_linked_sources(monkeypatch: Any) -> None:
 
     monkeypatch.setattr(repo, "fetch_all", fake_fetch_all)
 
-    result = repo.list_route_sources(CONNECTION, "route-id", "en")
+    result = repo.list_route_sources(CONNECTION, "route-id")
 
     assert result == rows
     assert "JOIN route_sources" not in captured["query"]
@@ -302,7 +272,7 @@ def test_list_route_evidence_returns_linked_evidence(monkeypatch: Any) -> None:
     ]
     monkeypatch.setattr(repo, "fetch_all", lambda *_: rows)
 
-    result = repo.list_route_evidence(CONNECTION, "route-id", "ru")
+    result = repo.list_route_evidence(CONNECTION, "route-id")
 
     assert result == rows
 
@@ -310,7 +280,7 @@ def test_list_route_evidence_returns_linked_evidence(monkeypatch: Any) -> None:
 def test_list_route_evidence_returns_empty_safely(monkeypatch: Any) -> None:
     monkeypatch.setattr(repo, "fetch_all", lambda *_: [])
 
-    assert repo.list_route_evidence(CONNECTION, "route-id", "en") == []
+    assert repo.list_route_evidence(CONNECTION, "route-id") == []
 
 
 def test_public_queries_do_not_return_draft_routes(monkeypatch: Any) -> None:

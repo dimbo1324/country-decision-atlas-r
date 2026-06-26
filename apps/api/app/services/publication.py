@@ -10,7 +10,7 @@ PUBLICATION_STATUSES: tuple[str, ...] = (
 )
 
 _ALLOWED: dict[str, frozenset[str]] = {
-    "draft": frozenset({"review", "rejected", "archived"}),
+    "draft": frozenset({"review", "rejected"}),
     "review": frozenset({"published", "rejected", "draft"}),
     "published": frozenset({"archived"}),
     "archived": frozenset({"published"}),
@@ -36,7 +36,9 @@ def allowed_transition(old_status: str, new_status: str) -> bool:
 def ensure_allowed_transition(old_status: str, new_status: str) -> None:
     if not allowed_transition(old_status, new_status):
         raise api_error(
-            422, "invalid_publication_transition", "invalid_publication_transition"
+            422,
+            "invalid_publication_transition",
+            "This status transition is not allowed.",
         )
 
 

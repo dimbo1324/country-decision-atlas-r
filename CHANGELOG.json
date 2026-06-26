@@ -4,6 +4,33 @@
     {
       "date": "2026-06-26",
       "event": "task_completed",
+      "type": "fix",
+      "scope": "audit-findings-v1",
+      "task": "fix/audit-findings-v1",
+      "branch": "fix/audit-findings-v1",
+      "summary": "Applied all 25 audit findings. C-1: migration 028 re-migrates legal_signals rows missed by migration 026. C-2: per-process rate limiter limitation documented via startup warning. C-3: draft→archived transition disallowed. H-1: dead create_audit_event function deleted. H-2: magic *10 locale placeholder count replaced by self-documenting _LOCALE_PLACEHOLDER_COUNT. H-3: count_routes_by_country dead function removed. H-4: get_country_slug_by_id extra DB query eliminated via RETURNING correlated subquery. H-5: migration 028 adds routes updated_at trigger. M-1: ru locale now returns TranslationStatus.fallback. M-2: ensure_allowed_transition error message fixed to human-readable text. M-3: moot after C-3 fix. M-4: dead supported_locale_codes property removed. M-5: locale param removed from list_route_sources and list_route_evidence; sources guarded with s.url IS NOT NULL. M-6: M-5 fix also adds url guard. M-7: COUNT(*) OVER() window function atomically returns total+list; _strip_internal helper added. L-1: validate_locale uses api_error. L-2: RouteDetailView displays human-readable Russian labels for route_type/legal_status/status. L-3: error page h1 fixed to Маршрут не найден. L-4: CountryRoutesBlock shows partial result notice. L-5: migration 028 adds drift.changed to domain_events event_type constraint. L-6: kept COALESCE as-is for safety. Full quality gate passed.",
+      "status": "completed",
+      "gate": {
+        "pytest": "744 passed, 23 skipped",
+        "mypy": "no issues found in 86 source files",
+        "ruff_check": "All checks passed",
+        "ruff_format": "145 files already formatted",
+        "sqlfluff": "All Finished",
+        "pnpm_quality": "EXIT:0"
+      }
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "fix",
+      "scope": "audit-findings-v1",
+      "task": "fix/audit-findings-v1",
+      "branch": "fix/audit-findings-v1",
+      "summary": "Started applying all 25 audit findings identified in project audit."
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
       "type": "chore",
       "scope": "route-explorer-quality-closeout-v1",
       "task": "chore/route-explorer-quality-closeout-v1",

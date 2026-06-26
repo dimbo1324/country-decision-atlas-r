@@ -28,8 +28,8 @@ def test_draft_to_rejected_allowed() -> None:
     assert allowed_transition("draft", "rejected") is True
 
 
-def test_draft_to_archived_allowed() -> None:
-    assert allowed_transition("draft", "archived") is True
+def test_draft_to_archived_forbidden() -> None:
+    assert allowed_transition("draft", "archived") is False
 
 
 def test_review_to_published_allowed() -> None:
@@ -90,6 +90,7 @@ def test_ensure_allowed_transition_raises_on_forbidden() -> None:
     assert exc_info.value.status_code == 422
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "invalid_publication_transition"
+    assert detail["error"]["message"] != detail["error"]["code"]
 
 
 def test_ensure_allowed_transition_passes_on_allowed() -> None:

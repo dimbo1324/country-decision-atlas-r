@@ -38,14 +38,6 @@ class Settings(BaseSettings):
             if origin.strip()
         ]
 
-    @property
-    def supported_locale_codes(self) -> set[str]:
-        return {
-            locale.strip()
-            for locale in self.supported_locales.split(",")
-            if locale.strip()
-        }
-
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

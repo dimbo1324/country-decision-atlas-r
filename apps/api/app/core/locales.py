@@ -1,4 +1,5 @@
-from fastapi import Depends, HTTPException, Query
+from app.core.errors import api_error
+from fastapi import Depends, Query
 from typing import Annotated, Literal
 
 
@@ -16,17 +17,13 @@ def validate_locale(locale: str | None = None) -> SupportedLocale:
     candidate = locale or DEFAULT_LOCALE
     if candidate in SUPPORTED_LOCALES:
         return candidate
-    raise HTTPException(
-        status_code=422,
-        detail={
-            "error": {
-                "code": "unsupported_locale",
-                "message": "Unsupported locale.",
-                "details": {
-                    "requested_locale": candidate,
-                    "supported_locales": list(SUPPORTED_LOCALES),
-                },
-            }
+    raise api_error(
+        422,
+        "unsupported_locale",
+        "Unsupported locale.",
+        {
+            "requested_locale": candidate,
+            "supported_locales": list(SUPPORTED_LOCALES),
         },
     )
 

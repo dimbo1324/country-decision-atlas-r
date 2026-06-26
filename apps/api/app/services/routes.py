@@ -58,15 +58,8 @@ def list_country_routes(
         limit,
         offset,
     )
-    total = routes_repository.count_routes_by_country(
-        connection,
-        country_slug,
-        _enum_value(route_type),
-        _enum_value(allows_work),
-        _enum_value(allows_family),
-        _enum_value(leads_to_pr),
-    )
-    items = [RouteListItem(**_with_eligibility(row)) for row in rows]
+    total = int(rows[0]["total_count"]) if rows else 0
+    items = [RouteListItem(**_with_eligibility(_strip_internal(row))) for row in rows]
     return RouteListResponse(
         items=items,
         pagination=Pagination(limit=limit, offset=offset, total=total),
@@ -147,8 +140,8 @@ def _route_detail_response(
 ) -> RouteDetailResponse:
     route_id = str(row["id"])
     documents = routes_repository.list_route_documents(connection, route_id, locale)
-    sources = routes_repository.list_route_sources(connection, route_id, locale)
-    evidence = routes_repository.list_route_evidence(connection, route_id, locale)
+    sources = routes_repository.list_route_sources(connection, route_id)
+    evidence = routes_repository.list_route_evidence(connection, route_id)
     return RouteDetailResponse(
         **_with_eligibility(row),
         documents=documents,
@@ -156,6 +149,10 @@ def _route_detail_response(
         evidence=evidence,
         locale=_route_locale(locale),
     )
+
+
+def _strip_internal(row: dict[str, Any]) -> dict[str, Any]:
+    return {k: v for k, v in row.items() if k != "total_count"}
 
 
 def _with_eligibility(row: dict[str, Any]) -> dict[str, Any]:
@@ -199,9 +196,7 @@ def _emit_route_published_event(
     if not is_publish_transition(str(before.get("status")), str(after.get("status"))):
         return
     route_id = str(after["id"])
-    country_slug = routes_repository.get_country_slug_by_id(
-        connection, str(after["country_id"])
-    )
+    country_slug = after.get("country_slug")
     insert_domain_event(
         connection,
         event_key=f"route:{route_id}:route.published",
@@ -237,7 +232,7 @@ def _enum_value(value: Any) -> str | None:
 def _route_locale(locale: str) -> LocaleResolution:
     if locale == "en":
         return locale_resolution(locale, "en", TranslationStatus.source)
-    return locale_resolution(locale, locale, TranslationStatus.translated)
+    return locale_resolution(locale, locale, TranslationStatus.fallback)
 
 
 def _as_uuid(value: Any) -> UUID:

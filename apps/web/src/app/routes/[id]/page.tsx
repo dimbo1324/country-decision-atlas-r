@@ -68,7 +68,7 @@ export default async function RoutePage({ params, searchParams }: PageProps) {
         </nav>
         <header className="pageHeader">
           <p className="eyebrow">Маршрут</p>
-          <h1>{id}</h1>
+          <h1>Маршрут не найден</h1>
         </header>
         <ErrorState
           error={errProp}
