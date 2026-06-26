@@ -12,9 +12,15 @@ type Props = {
   countrySlugs: string[];
   scenarioSlug: string;
   locale: string;
+  personaSlug?: string | null;
 };
 
-export function DecisionCiiComparison({ countrySlugs, scenarioSlug, locale }: Props) {
+export function DecisionCiiComparison({
+  countrySlugs,
+  scenarioSlug,
+  locale,
+  personaSlug,
+}: Props) {
   const [data, setData] = useState<CiiCountryComparisonResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +37,12 @@ export function DecisionCiiComparison({ countrySlugs, scenarioSlug, locale }: Pr
     setData(null);
 
     ciiApi
-      .compareCountriesCii({ countries: countrySlugs, scenario: scenarioSlug, locale })
+      .compareCountriesCii({
+        countries: countrySlugs,
+        scenario: scenarioSlug,
+        locale,
+        persona: personaSlug,
+      })
       .then((res) => {
         if (!cancelled) {
           setData(res);
@@ -48,7 +59,7 @@ export function DecisionCiiComparison({ countrySlugs, scenarioSlug, locale }: Pr
     return () => {
       cancelled = true;
     };
-  }, [countrySlugs, scenarioSlug, locale]);
+  }, [countrySlugs, scenarioSlug, locale, personaSlug]);
 
   if (countrySlugs.length !== 2) return null;
 
@@ -87,6 +98,11 @@ export function DecisionCiiComparison({ countrySlugs, scenarioSlug, locale }: Pr
       </h3>
       {data.scenario?.title && (
         <p className="ciiCompareScenarioLabel">Сценарий: {data.scenario.title}</p>
+      )}
+      {data.applied_persona && (
+        <p className="ciiCompareScenarioLabel" data-testid="cii-persona-note">
+          Персона: {data.applied_persona.name}
+        </p>
       )}
       <CiiComparisonSummary
         countries={countries}

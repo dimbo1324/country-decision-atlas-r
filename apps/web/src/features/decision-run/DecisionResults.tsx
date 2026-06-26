@@ -9,7 +9,15 @@ type DecisionResultsProps = {
 };
 
 export function DecisionResults({ response }: DecisionResultsProps) {
-  const { scenario, origin_country, results, meta, locale } = response;
+  const {
+    scenario,
+    origin_country,
+    results,
+    meta,
+    locale,
+    applied_persona,
+    ranking_mode,
+  } = response;
 
   const winner = results[0] ?? null;
   const isFallback = locale.translation_status === "fallback";
@@ -41,12 +49,27 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         </div>
       </div>
 
+      {applied_persona && (
+        <div className="decisionPersonaMeta" data-testid="decision-persona-meta">
+          <div className="resultMetaRow">
+            <span>Рейтинг адаптирован под профиль:</span>
+            <strong>{applied_persona.name}</strong>
+          </div>
+          <div className="resultMetaRow">
+            <span>Режим ранжирования:</span>
+            <span className="metaChip">{ranking_mode}</span>
+          </div>
+        </div>
+      )}
+
       {winner && (
         <div className="decisionWinnerBlock">
           <p className="decisionWinnerLabel">Рекомендуемый вариант</p>
           <div className="decisionWinnerHeader">
             <span className="decisionWinnerName">{winner.country.name}</span>
-            <span className="decisionWinnerScore">{formatScore(winner.score)}</span>
+            <span className="decisionWinnerScore">
+              {formatScore(winner.persona_adjusted_score ?? winner.score)}
+            </span>
           </div>
           <div className="metaRow">
             <span className="metaChip">{winner.score_label}</span>

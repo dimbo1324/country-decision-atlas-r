@@ -1785,6 +1785,44 @@
         "pnpm web:mvp:check: 153 passed after Docker API was running on localhost:8000"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "persona-layer-v1",
+      "task": "feat/persona-layer-dq-frontend-closeout-v1",
+      "branch": "feat/persona-layer-dq-frontend-closeout-v1",
+      "summary": "Start Persona Layer closeout with data-quality guardrails, decision UI persona selector, E2E coverage, clean DB chain, and full quality gate.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "persona-layer-v1",
+      "task": "feat/persona-layer-dq-frontend-closeout-v1",
+      "branch": "feat/persona-layer-dq-frontend-closeout-v1",
+      "summary": "Closed Persona Layer v1 with SQL-backed data quality guardrails, decision UI persona selector, persona-aware CII comparison visuals, regression E2E coverage, and clean database validation.",
+      "checks": [
+        "pnpm contracts:generate: passed",
+        "python -m pytest: 804 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm quality: passed",
+        "pnpm format:check: passed",
+        "pnpm exec playwright test tests/e2e/web-mvp-personas.spec.ts --reporter=line: 7 passed",
+        "ADMIN_TOKEN=ci-local-admin pnpm web:mvp:check: 160 passed",
+        "docker compose clean migration chain: migrations 001-029 applied",
+        "docker compose migration idempotency: migrations 001-029 skipped",
+        "clean database seed counts: active personas=7, persona_metric_modifiers v1.0=42",
+        "runtime smoke: personas list ok, family relocation_residence weight_sum=1.0, country CII persona applied, country compare persona applied, decision ranking_mode=persona_adjusted",
+        "data quality smoke: overall_status=valid, critical_issues_count=0, persona_critical_count=0, persona checks passed",
+        "python -m pre_commit run --all-files: passed"
+      ],
+      "status": "completed"
     }
   ]
 }

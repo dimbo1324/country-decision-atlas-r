@@ -5,6 +5,7 @@ export * from "./evidence";
 export * from "./http";
 export * from "./home";
 export * from "./legal-signals";
+export * from "./personas";
 export * from "./routes";
 export * from "./scenarios";
 export * from "./sources";

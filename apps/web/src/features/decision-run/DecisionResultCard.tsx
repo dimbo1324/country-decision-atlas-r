@@ -32,6 +32,15 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
 
       {result.summary && <p className="resultSummary">{result.summary}</p>}
 
+      {result.persona_adjusted_score != null && (
+        <div className="resultPersonaScores" data-testid="persona-adjusted-score">
+          <span>Базовая оценка: {formatScore(result.score)}</span>
+          <span>
+            Оценка с учетом персоны: {formatScore(result.persona_adjusted_score)}
+          </span>
+        </div>
+      )}
+
       {result.strengths.length > 0 && (
         <div className="resultSection resultSectionPositive">
           <h4 className="resultSectionTitle">Сильные стороны</h4>

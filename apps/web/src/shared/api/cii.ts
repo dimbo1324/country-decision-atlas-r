@@ -18,6 +18,7 @@ type CompareCountriesParams = {
   countries: string[];
   scenario: string;
   locale?: string;
+  persona?: string | null;
 };
 
 type GetMatrixParams = {
@@ -34,6 +35,7 @@ export function compareCountriesCii(
       countries: params.countries.join(","),
       scenario: params.scenario,
       locale: params.locale ?? DEFAULT_LOCALE,
+      persona: params.persona,
     })}`,
   );
 }

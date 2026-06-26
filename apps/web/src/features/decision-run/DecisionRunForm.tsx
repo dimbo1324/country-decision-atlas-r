@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { ScenarioListResponse } from "../../shared/api/scenarios";
 import type { DecisionRunResponse } from "../../shared/api/decision";
-import { countriesApi, scenariosApi, decisionApi } from "../../shared/api";
+import type { PersonaListResponse } from "../../shared/api/personas";
+import { countriesApi, scenariosApi, decisionApi, personasApi } from "../../shared/api";
 import { normalizeLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -26,6 +27,7 @@ function DecisionFormInner() {
 
   const [countries, setCountries] = useState<CountryListResponse | null>(null);
   const [scenarios, setScenarios] = useState<ScenarioListResponse | null>(null);
+  const [personas, setPersonas] = useState<PersonaListResponse | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [originCountrySlug, setOriginCountrySlug] = useState("russia");
@@ -36,6 +38,7 @@ function DecisionFormInner() {
   const [scenarioSlug, setScenarioSlug] = useState<string>(
     DEFAULT_DECISION_READY_SCENARIO_SLUG,
   );
+  const [selectedPersonaSlug, setSelectedPersonaSlug] = useState("");
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -68,6 +71,36 @@ function DecisionFormInner() {
     };
   }, [locale]);
 
+  useEffect(() => {
+    let cancelled = false;
+    setPersonas(null);
+
+    personasApi
+      .listPersonas(locale)
+      .then((res) => {
+        if (!cancelled) {
+          setPersonas(res);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPersonas({
+            items: [],
+            locale: {
+              requested_locale: locale,
+              resolved_locale: locale,
+              translation_status: "missing",
+            },
+          });
+          setSelectedPersonaSlug("");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
+
   function toggleCandidate(slug: string) {
     setCandidateCountrySlugs((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],
@@ -85,6 +118,7 @@ function DecisionFormInner() {
         candidate_country_slugs: candidateCountrySlugs,
         scenario_slug: scenarioSlug,
         locale,
+        ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
       });
       setResult(res);
     } catch (err: unknown) {
@@ -188,6 +222,27 @@ function DecisionFormInner() {
           )}
         </div>
 
+        <div className="formGroup">
+          <label className="formLabel" htmlFor="persona-select">
+            Персона
+          </label>
+          <select
+            id="persona-select"
+            className="formSelect"
+            value={selectedPersonaSlug}
+            onChange={(e) => setSelectedPersonaSlug(e.target.value)}
+            data-testid="persona-selector"
+          >
+            <option value="">Без персонализации</option>
+            {(personas?.items ?? []).map((persona) => (
+              <option key={persona.slug} value={persona.slug}>
+                {persona.name}
+              </option>
+            ))}
+          </select>
+          <p className="formHint">Рейтинг будет адаптирован под выбранный профиль.</p>
+        </div>
+
         <button
           className="runButton"
           onClick={handleRun}
@@ -215,6 +270,7 @@ function DecisionFormInner() {
             countrySlugs={candidateCountrySlugs}
             scenarioSlug={scenarioSlug}
             locale={locale}
+            personaSlug={selectedPersonaSlug || result.applied_persona?.slug}
           />
         )}
       </div>

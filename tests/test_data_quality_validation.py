@@ -84,6 +84,12 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_route_evidence_country_mismatches",
         "list_published_routes_missing_legal_status",
         "list_published_routes_with_unknown_legal_status",
+        "list_active_personas_missing_required_fields",
+        "list_active_personas_missing_metric_modifiers",
+        "list_persona_modifiers_out_of_range",
+        "list_inactive_personas_with_modifiers",
+        "list_active_personas_missing_descriptions",
+        "list_persona_adjusted_weight_inputs",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
