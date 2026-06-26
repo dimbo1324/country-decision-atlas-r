@@ -27,15 +27,17 @@ const ELIGIBILITY_OPTIONS: { value: EligibilityFlag; label: string }[] = [
 type RouteFiltersProps = {
   filters: RouteFilterValues;
   onChange: (name: keyof RouteFilterValues, value: string) => void;
+  onReset?: () => void;
 };
 
-export function RouteFilters({ filters, onChange }: RouteFiltersProps) {
+export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) {
   return (
     <div className="filterBar routeFilters" data-testid="route-filters">
       <label>
         Тип маршрута
         <select
           value={filters.route_type}
+          data-testid="route-filter-route-type"
           onChange={(event) => onChange("route_type", event.target.value)}
         >
           <option value="">Все типы</option>
@@ -50,6 +52,7 @@ export function RouteFilters({ filters, onChange }: RouteFiltersProps) {
         Работа
         <select
           value={filters.allows_work}
+          data-testid="route-filter-allows-work"
           onChange={(event) => onChange("allows_work", event.target.value)}
         >
           <option value="">Любой статус</option>
@@ -64,6 +67,7 @@ export function RouteFilters({ filters, onChange }: RouteFiltersProps) {
         Семья
         <select
           value={filters.allows_family}
+          data-testid="route-filter-allows-family"
           onChange={(event) => onChange("allows_family", event.target.value)}
         >
           <option value="">Любой статус</option>
@@ -78,6 +82,7 @@ export function RouteFilters({ filters, onChange }: RouteFiltersProps) {
         ПМЖ
         <select
           value={filters.leads_to_pr}
+          data-testid="route-filter-leads-to-pr"
           onChange={(event) => onChange("leads_to_pr", event.target.value)}
         >
           <option value="">Любой статус</option>
@@ -88,6 +93,11 @@ export function RouteFilters({ filters, onChange }: RouteFiltersProps) {
           ))}
         </select>
       </label>
+      {onReset && (
+        <button type="button" data-testid="route-filter-reset" onClick={onReset}>
+          Сбросить
+        </button>
+      )}
     </div>
   );
 }

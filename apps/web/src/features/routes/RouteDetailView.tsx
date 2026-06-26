@@ -87,17 +87,17 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
         </section>
       )}
 
-      <section className="cardSection">
+      <section className="cardSection" data-testid="route-documents-section">
         <h2 className="cardSectionTitle">Документы</h2>
         <RouteDocumentsList documents={route.documents} />
       </section>
 
-      <section className="cardSection">
+      <section className="cardSection" data-testid="route-sources-section">
         <h2 className="cardSectionTitle">Источники</h2>
         <RouteSourcesList sources={route.sources} />
       </section>
 
-      <section className="cardSection">
+      <section className="cardSection" data-testid="route-evidence-section">
         <h2 className="cardSectionTitle">Доказательства</h2>
         <RouteEvidenceList evidence={route.evidence} />
       </section>

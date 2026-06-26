@@ -56,6 +56,14 @@ def _run_report(**overrides: Any) -> Any:
         "list_cii_scores_with_non_geometric_aggregation": empty,
         "list_cii_metric_definitions_without_polarity": empty,
         "list_mvp_countries_without_legal_events": empty,
+        "list_published_routes_without_sources": empty,
+        "list_published_routes_missing_required_text": empty,
+        "list_published_routes_with_all_eligibility_unknown": empty,
+        "list_published_routes_without_documents": empty,
+        "list_route_source_country_mismatches": empty,
+        "list_route_evidence_country_mismatches": empty,
+        "list_published_routes_missing_legal_status": empty,
+        "list_published_routes_with_unknown_legal_status": empty,
     }
     defaults.update(overrides)
     patches = {f"{_REPO}.{fn}": MagicMock(return_value=v) for fn, v in defaults.items()}

@@ -2,6 +2,45 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "route-explorer-quality-closeout-v1",
+      "task": "chore/route-explorer-quality-closeout-v1",
+      "branch": "chore/route-explorer-quality-closeout-v1",
+      "summary": "Route Explorer v1 quality closeout complete. Added 8 route DQ repository checks (published_routes_without_sources, missing_required_text, all_eligibility_unknown, without_documents, source_country_mismatches, evidence_country_mismatches, missing_legal_status, unknown_legal_status) and 6 DQ service check blocks with critical/warning severity policy. Created tests/test_routes_data_quality.py (20 tests). Updated DQ fakes in test_data_quality_validation.py and test_data_quality_closeout_guardrails.py. Added data-testid attributes to RouteFilters, CountryRoutesBlock, and RouteDetailView. Expanded web-mvp-routes.spec.ts to 4 describe blocks covering country routes block, route detail page, and route filters. Full quality gate: pytest 744 passed / 23 skipped, mypy clean (143 files), ruff check clean, ruff format clean, sqlfluff clean, pnpm quality EXIT:0, pre-commit all Passed, pnpm audit no vulnerabilities, git diff --check clean. Not changed: migration 027, CII math, scenario weights, decision scoring, docs, README, Persona, Drift, Search, Kafka.",
+      "status": "completed",
+      "gate": {
+        "pytest": "744 passed, 23 skipped",
+        "mypy": "no issues found in 143 source files",
+        "ruff_check": "All checks passed",
+        "ruff_format": "145 files already formatted",
+        "sqlfluff": "All Finished",
+        "pnpm_quality": "EXIT:0",
+        "pre_commit": "all Passed",
+        "pnpm_audit": "No known vulnerabilities found",
+        "git_diff_check": "clean"
+      },
+      "dq_checks_added": [
+        "published_routes_have_sources (critical)",
+        "published_routes_have_required_text (critical)",
+        "route_sources_match_route_country (critical)",
+        "route_evidence_matches_route_country (critical)",
+        "published_routes_have_legal_status (critical)",
+        "published_routes_quality (warning: all_eligibility_unknown, missing_documents, legal_status_unknown)"
+      ]
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "route-explorer-v1",
+      "task": "chore/route-explorer-quality-closeout-v1",
+      "branch": "chore/route-explorer-quality-closeout-v1",
+      "summary": "Start Route Explorer v1 quality closeout with route data-quality checks, backend regression tests, E2E route hardening, clean DB chain, and full quality gate.",
+      "status": "in_progress"
+    },
+    {
       "date": "2026-06-24",
       "event": "task_started",
       "type": "feat",

@@ -75,9 +75,13 @@ export function CountryRoutesBlock({ countrySlug, locale }: CountryRoutesBlockPr
     setFilters((current) => ({ ...current, [name]: value }));
   }
 
+  function resetFilters() {
+    setFilters(DEFAULT_FILTERS);
+  }
+
   return (
     <div className="routeBlock" data-testid="country-routes-block">
-      <RouteFilters filters={filters} onChange={updateFilter} />
+      <RouteFilters filters={filters} onChange={updateFilter} onReset={resetFilters} />
       {isLoading && <div className="notice">Загрузка маршрутов…</div>}
       {!isLoading && error && <div className="notice errorNotice">{error}</div>}
       {!isLoading && !error && data?.items.length === 0 && <RouteEmptyState />}

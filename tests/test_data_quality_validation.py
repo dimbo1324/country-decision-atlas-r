@@ -76,6 +76,14 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_cii_scores_with_non_geometric_aggregation",
         "list_cii_metric_definitions_without_polarity",
         "list_mvp_countries_without_legal_events",
+        "list_published_routes_without_sources",
+        "list_published_routes_missing_required_text",
+        "list_published_routes_with_all_eligibility_unknown",
+        "list_published_routes_without_documents",
+        "list_route_source_country_mismatches",
+        "list_route_evidence_country_mismatches",
+        "list_published_routes_missing_legal_status",
+        "list_published_routes_with_unknown_legal_status",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
