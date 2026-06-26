@@ -1512,6 +1512,51 @@
         "domain_events count after clean migration: 0"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "editorial-publication-foundation-v1",
+      "task": "chore/editorial-publication-foundation-closeout-v1",
+      "branch": "chore/editorial-publication-foundation-closeout-v1",
+      "summary": "Start final closeout for editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "editorial-publication-foundation-v1",
+      "task": "chore/editorial-publication-foundation-closeout-v1",
+      "branch": "chore/editorial-publication-foundation-closeout-v1",
+      "summary": "Closed editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration. Updated pre-commit to use the project pnpm format gate instead of the crashing Windows prettier mirror hook, and tightened Python dependency floors for pydantic-settings and pytest.",
+      "checks": [
+        "docker compose up --build -d api: passed after transient Docker Hub EOF retry",
+        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 applied",
+        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 skipped on idempotency rerun",
+        "domain_events count after clean migration: 0",
+        "legal_signals legal_status null count: 0",
+        "legal_signals.status values: published only, within editorial lifecycle",
+        "health: ok",
+        "ready: ok",
+        "public API smoke: countries=3, cards=3, cii=3, matrix=3x5/15 cells, home overview=3 countries/5 winners/15 preview cells, legal signals=26 with legal_status, timeline groups=6, sources=50",
+        "python -m pytest tests/test_admin_content_publication_flow.py tests/test_domain_events_outbox.py tests/test_publication_lifecycle.py tests/test_legal_signal_legal_status_contract.py tests/test_data_quality_editorial_foundation.py: 74 passed",
+        "python -m pytest: 671 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm contracts:generate: passed, no OpenAPI or generated TypeScript diff",
+        "pnpm quality: passed",
+        "pnpm web:mvp:check: 125 passed",
+        "python -m pre_commit run --all-files: passed",
+        "pnpm audit --prod: no known vulnerabilities found",
+        "python -m pip_audit: remaining sqlfluff 3.5.0 dev-tool vulnerability; sqlfluff 4.x requires separate PG01 historical migration policy work",
+        "git diff --check: passed",
+        "runtime diagnostics: wrote ignored local-artifacts/runtime-diagnostics output"
+      ],
+      "status": "completed"
     }
   ]
 }
