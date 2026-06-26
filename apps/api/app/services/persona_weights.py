@@ -81,7 +81,7 @@ def build_adjusted_weights(
         adjusted = cl / total
         result.append(
             {
-                "metric_id": row["metric_id"],
+                "metric_id": str(row["metric_id"]),
                 "metric_slug": row["metric_slug"],
                 "metric_name": row["metric_name"],
                 "base_weight": float(row["base_weight"]),
@@ -129,6 +129,8 @@ def build_persona_weight_profile(
             "slug": persona["slug"],
             "name": persona["name"],
             "description": persona["description"],
+            "is_active": persona["is_active"],
+            "display_order": persona["display_order"],
         },
         "scenario_slug": scenario_slug,
         "version": version,

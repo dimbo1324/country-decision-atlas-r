@@ -1750,6 +1750,41 @@
         "git diff --check: passed"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "persona-layer-api-decision-integration-v1",
+      "task": "feat/persona-layer-api-decision-integration-v1",
+      "branch": "feat/persona-layer-api-decision-integration-v1",
+      "summary": "Start Persona API and runtime integration with CII, country comparison, and decision flows without changing persisted base weights or scores.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "persona-layer-api-decision-integration-v1",
+      "task": "feat/persona-layer-api-decision-integration-v1",
+      "branch": "feat/persona-layer-api-decision-integration-v1",
+      "summary": "Added public Persona API, OpenAPI/TypeScript contracts, runtime persona-adjusted CII and comparison scoring, and persona-adjusted decision ranking while preserving base persisted scores and no-persona behaviour.",
+      "checks": [
+        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py: 49 passed",
+        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py tests/test_frontend_contract.py tests/test_openapi_contract.py tests/test_decision_run.py tests/test_cii_country_comparison.py tests/test_cii_scenario_weights.py: 128 passed",
+        "python -m pytest: 793 passed, 23 skipped",
+        "python -m ruff format .: passed",
+        "python -m ruff check .: passed",
+        "python -m mypy .: passed",
+        "python -m sqlfluff lint database/migrations --dialect postgres: passed",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "docker compose clean migration chain: migrations 001-029 applied",
+        "docker compose migration idempotency: migrations 001-029 skipped",
+        "runtime persona API smoke: health ok, ready ok, personas=7, weights sum=1.0, CII persona applied, compare persona applied, decision ranking_mode=persona_adjusted",
+        "pnpm web:mvp:check: 153 passed after Docker API was running on localhost:8000"
+      ],
+      "status": "completed"
     }
   ]
 }

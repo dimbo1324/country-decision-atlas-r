@@ -1,5 +1,6 @@
 from app.schemas.common import LegalStatus, LocaleResolution
 from app.schemas.localization import LocalizationMeta
+from app.schemas.personas import Persona, PersonaWeightProfile
 from datetime import date, datetime
 from pydantic import BaseModel, Field
 
@@ -107,6 +108,9 @@ class CountryReadModelCiiMetric(BaseModel):
     data_year: int | None = None
     source_name: str | None = None
     reliability: str | None = None
+    base_weight: float | None = None
+    modifier: float | None = None
+    adjusted_weight: float | None = None
 
 
 class CountryReadModelCii(BaseModel):
@@ -119,6 +123,8 @@ class CountryReadModelCii(BaseModel):
     quality_warnings: list[str] = Field(default_factory=list)
     calculated_at: datetime
     metrics: list[CountryReadModelCiiMetric] = Field(default_factory=list)
+    applied_persona: Persona | None = None
+    persona_weight_profile: PersonaWeightProfile | None = None
 
 
 class CountryReadModelResponse(BaseModel):

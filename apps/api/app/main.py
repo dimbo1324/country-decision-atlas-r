@@ -5,6 +5,7 @@ from app.api.v1 import (
     decision,
     home,
     legal_signals,
+    personas,
     routes,
     scenarios,
     sources,
@@ -223,6 +224,7 @@ app.include_router(routes.router, prefix="/api/v1")
 app.include_router(legal_signals.router, prefix="/api/v1")
 app.include_router(legal_signals.top_level_router, prefix="/api/v1")
 app.include_router(scenarios.router, prefix="/api/v1")
+app.include_router(personas.router, prefix="/api/v1")
 app.include_router(sources.router, prefix="/api/v1")
 app.include_router(translations.router, prefix="/api/v1")
 app.include_router(admin.router, prefix="/api/v1")

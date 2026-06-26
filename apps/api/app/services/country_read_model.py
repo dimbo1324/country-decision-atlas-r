@@ -17,7 +17,12 @@ from app.schemas.country_read_model import (
     CountryReadModelMeta,
     CountryReadModelResponse,
 )
+from app.services.cii import compute_confidence
 from app.services.localization import overlay_localized_fields
+from app.services.persona_runtime import (
+    aggregate_persona_cii_score,
+    persona_metric_weight_metadata,
+)
 from datetime import UTC, date, datetime, time
 from psycopg import Connection
 from typing import Any
@@ -230,4 +235,54 @@ def build_cii(row: dict[str, Any] | None) -> CountryReadModelCii | None:
         quality_warnings=[],
         calculated_at=row["calculated_at"],
         metrics=metrics,
+    )
+
+
+def build_persona_adjusted_cii(
+    row: dict[str, Any] | None,
+    profile: dict[str, Any],
+    metric_defs: list[dict[str, Any]],
+) -> CountryReadModelCii | None:
+    if row is None:
+        return None
+    raw_metrics = row.get("metrics") or []
+    metric_defs_by_slug = {str(item["slug"]): item for item in metric_defs}
+    aggregate = aggregate_persona_cii_score(raw_metrics, profile, metric_defs_by_slug)
+    metric_entries = []
+    for metric in raw_metrics:
+        metric_slug = str(metric["slug"])
+        weight_metadata = persona_metric_weight_metadata(metric_slug, profile)
+        if weight_metadata is None:
+            metric_entries.append(metric)
+            continue
+        score = float(metric["score"])
+        metric_entries.append(
+            {
+                **metric,
+                "weight": weight_metadata["adjusted_weight"],
+                "weighted_score": round(score * weight_metadata["adjusted_weight"], 4),
+                **weight_metadata,
+            }
+        )
+    return CountryReadModelCii(
+        overall_score=float(aggregate["overall_score"]),
+        confidence=compute_confidence(
+            [
+                {
+                    "reliability": metric.get("reliability", "medium"),
+                    "normalized_value": metric.get("score"),
+                }
+                for metric in raw_metrics
+            ]
+        ),
+        drift=float(row["drift"]) if row.get("drift") is not None else None,
+        version=str(row["version"]),
+        formula_version=aggregate.get("formula_version") or row.get("formula_version"),
+        aggregation_method=aggregate.get("aggregation_method")
+        or row.get("aggregation_method"),
+        quality_warnings=list(aggregate.get("warnings") or []),
+        calculated_at=row["calculated_at"],
+        metrics=[CountryReadModelCiiMetric.model_validate(m) for m in metric_entries],
+        applied_persona=profile["persona"],
+        persona_weight_profile=profile,
     )

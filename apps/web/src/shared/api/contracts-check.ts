@@ -22,6 +22,11 @@ type LocaleResolution = components["schemas"]["LocaleResolution"];
 type ErrorResponse = components["schemas"]["ErrorResponse"];
 type LocalizationMeta = components["schemas"]["LocalizationMeta"];
 type TranslationFieldMeta = components["schemas"]["TranslationFieldMeta"];
+type Persona = components["schemas"]["Persona"];
+type PersonaListResponse = components["schemas"]["PersonaListResponse"];
+type PersonaWeightProfile = components["schemas"]["PersonaWeightProfile"];
+type PersonaWeightProfileResponse =
+  components["schemas"]["PersonaWeightProfileResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -45,4 +50,8 @@ export type FrontendCriticalContracts = {
   error: ErrorResponse;
   localizationMeta: LocalizationMeta;
   translationFieldMeta: TranslationFieldMeta;
+  persona: Persona;
+  personas: PersonaListResponse;
+  personaWeightProfile: PersonaWeightProfile;
+  personaWeightProfileResponse: PersonaWeightProfileResponse;
 };

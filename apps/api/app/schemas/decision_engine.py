@@ -8,10 +8,11 @@ from app.schemas.common import (
     TranslationStatus,
 )
 from app.schemas.localization import LocalizationMeta
+from app.schemas.personas import Persona, PersonaWeightProfile
 from app.schemas.sources import EvidenceItem, Source
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
@@ -112,17 +113,25 @@ class DecisionCompareResult(BaseModel):
 
 
 class DecisionRunRequest(BaseModel):
-    origin_country_slug: str
+    model_config = ConfigDict(populate_by_name=True)
+
+    origin_country_slug: str = Field(
+        validation_alias=AliasChoices("origin_country_slug", "origin_country")
+    )
     candidate_country_slugs: list[str] = Field(
         min_length=1,
         max_length=10,
+        validation_alias=AliasChoices("candidate_country_slugs", "candidate_countries"),
         json_schema_extra={"uniqueItems": True},
     )
-    scenario_slug: str
+    scenario_slug: str = Field(
+        validation_alias=AliasChoices("scenario_slug", "scenario")
+    )
     locale: str = Field(
         default=DEFAULT_LOCALE,
         json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
     )
+    persona: str | None = None
 
 
 DecisionRunInput = DecisionRunRequest
@@ -183,6 +192,11 @@ class DecisionCountryResult(BaseModel):
     country: DecisionCountryRef
     score: float
     score_label: Literal["weak", "limited", "moderate", "strong", "excellent"]
+    persona_adjusted_score: float | None = None
+    persona_adjusted_label: (
+        Literal["weak", "limited", "moderate", "strong", "excellent"] | None
+    ) = None
+    persona_adjusted_rank: int | None = None
     summary: str
     strengths: list[DecisionPoint]
     weaknesses: list[DecisionPoint]
@@ -205,6 +219,9 @@ class DecisionRunResponse(BaseModel):
     results: list[DecisionCountryResult]
     meta: DecisionRunMeta
     locale: LocaleResolution
+    applied_persona: Persona | None = None
+    persona_weight_profile: PersonaWeightProfile | None = None
+    ranking_mode: Literal["base", "persona_adjusted"] = "base"
 
 
 class DecisionRunCountry(BaseModel):

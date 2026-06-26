@@ -1,4 +1,5 @@
 from app.schemas.common import LocaleResolution
+from app.schemas.personas import Persona, PersonaWeightProfile
 from pydantic import BaseModel, Field
 
 
@@ -29,6 +30,9 @@ class ComparedMetric(BaseModel):
     display_order: int
     higher_is_better: bool
     weight: float | None = None
+    base_weight: float | None = None
+    modifier: float | None = None
+    adjusted_weight: float | None = None
     delta: float | None = None
     winner_country_slug: str | None = None
     values: list[ComparedMetricValue] = Field(default_factory=list)
@@ -43,3 +47,5 @@ class CiiCountryComparisonResponse(BaseModel):
     aggregation_method: str | None = None
     weights_version: str | None = None
     quality_warnings: list[str] = Field(default_factory=list)
+    applied_persona: Persona | None = None
+    persona_weight_profile: PersonaWeightProfile | None = None

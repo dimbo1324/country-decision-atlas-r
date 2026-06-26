@@ -1,6 +1,10 @@
 from app.core.errors import api_error
 from app.core.locales import SOURCE_LOCALE, validate_locale
 from app.repositories import decision_engine as repository
+from app.repositories.cii import (
+    get_active_cii_metric_definitions,
+    get_cii_metric_values_for_countries,
+)
 from app.repositories.common import build_locale
 from app.schemas.common import (
     LocaleCode,
@@ -41,11 +45,16 @@ from app.services.decision_labels import (
 )
 from app.services.decision_warnings import build_risk_warnings
 from app.services.localization import overlay_localized_fields
+from app.services.persona_runtime import aggregate_persona_cii_score
+from app.services.persona_weights import build_persona_weight_profile
 from app.services.score_labels import score_label
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from psycopg import Connection
-from typing import Any
+from typing import Any, Literal, cast
+
+
+ScoreLabel = Literal["weak", "limited", "moderate", "strong", "excellent"]
 
 
 CAVEAT = (
@@ -447,6 +456,16 @@ def run_decision(
     breakdowns_by_score = _group_by(breakdown_rows, "country_score_id")
     signals_by_country = _group_by(legal_signal_rows, "country_slug")
     sources_by_id = {row["id"]: row for row in source_rows}
+    persona_profile: dict[str, Any] | None = None
+    persona_adjusted_scores: dict[str, float] = {}
+    if payload.persona:
+        persona_profile, persona_adjusted_scores = _build_persona_adjusted_scores(
+            connection,
+            candidate_slugs,
+            payload.scenario_slug,
+            payload.persona,
+            locale,
+        )
     results = [
         _build_country_result(
             country=countries_by_slug[slug],
@@ -460,7 +479,16 @@ def run_decision(
         )
         for slug in candidate_slugs
     ]
-    ranked_results = _rank_results(results)
+    if persona_profile is not None:
+        for result in results:
+            adjusted_score = persona_adjusted_scores.get(result.country.slug)
+            if adjusted_score is None:
+                continue
+            result.persona_adjusted_score = adjusted_score
+            result.persona_adjusted_label = _score_label_literal(adjusted_score)
+        ranked_results = _rank_persona_adjusted_results(results)
+    else:
+        ranked_results = _rank_results(results)
     locale_rows = [
         scenario_row,
         countries_by_slug[payload.origin_country_slug],
@@ -482,11 +510,18 @@ def run_decision(
             generated_at=datetime.now(UTC),
         ),
         locale=_locale(locale_rows, locale),
+        applied_persona=persona_profile["persona"] if persona_profile else None,
+        persona_weight_profile=persona_profile,
+        ranking_mode="persona_adjusted" if persona_profile else "base",
     )
 
 
 def get_score_label(score: float) -> str:
     return score_label(score)
+
+
+def _score_label_literal(score: float) -> ScoreLabel:
+    return cast(ScoreLabel, get_score_label(score))
 
 
 def aggregate_confidence(values: Iterable[str | None]) -> str:
@@ -632,6 +667,49 @@ def _rank_results(
     for index, result in enumerate(ranked, start=1):
         result.rank = index
     return ranked
+
+
+def _rank_persona_adjusted_results(
+    results: list[DecisionCountryResult],
+) -> list[DecisionCountryResult]:
+    confidence_rank = {"high": 3, "medium": 2, "low": 1}
+    ranked = sorted(
+        results,
+        key=lambda item: (
+            -(item.persona_adjusted_score or 0),
+            -confidence_rank.get(item.confidence, 0),
+            item.country.slug,
+        ),
+    )
+    for index, result in enumerate(ranked, start=1):
+        result.rank = index
+        result.persona_adjusted_rank = index
+    return ranked
+
+
+def _build_persona_adjusted_scores(
+    connection: Connection[Any],
+    candidate_slugs: list[str],
+    scenario_slug: str,
+    persona_slug: str,
+    locale: str,
+) -> tuple[dict[str, Any], dict[str, float]]:
+    profile = build_persona_weight_profile(
+        connection, scenario_slug, persona_slug, locale
+    )
+    metric_defs = get_active_cii_metric_definitions(connection)
+    metric_defs_by_slug = {str(item["slug"]): item for item in metric_defs}
+    raw_values = get_cii_metric_values_for_countries(connection, candidate_slugs)
+    values_by_country: dict[str, list[dict[str, Any]]] = {}
+    for row in raw_values:
+        values_by_country.setdefault(str(row["country_slug"]), []).append(row)
+    scores: dict[str, float] = {}
+    for slug in candidate_slugs:
+        aggregate = aggregate_persona_cii_score(
+            values_by_country.get(slug, []), profile, metric_defs_by_slug
+        )
+        scores[slug] = float(aggregate["overall_score"])
+    return profile, scores
 
 
 def _collect_source_ids(

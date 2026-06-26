@@ -1,7 +1,11 @@
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.locales import LocaleQuery
-from app.repositories.cii import get_country_cii, get_scenario_metric_weights
+from app.repositories.cii import (
+    get_active_cii_metric_definitions,
+    get_country_cii,
+    get_scenario_metric_weights,
+)
 from app.repositories.common import build_locale
 from app.repositories.countries import (
     count_countries,
@@ -26,7 +30,12 @@ from app.services.cii_comparison import build_cii_comparison
 from app.services.cii_matrix import (
     build_matrix_response,
 )
-from app.services.country_read_model import build_cii, get_country_read_model
+from app.services.country_read_model import (
+    build_cii,
+    build_persona_adjusted_cii,
+    get_country_read_model,
+)
+from app.services.persona_weights import build_persona_weight_profile
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
@@ -43,6 +52,7 @@ def compare_countries_cii(
     scenario: Annotated[str, Query(description="Scenario slug")],
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
+    persona: str | None = Query(None),
 ) -> CiiCountryComparisonResponse:
     slugs = [s.strip() for s in countries.split(",") if s.strip()]
     unique_slugs = list(dict.fromkeys(slugs))
@@ -62,7 +72,7 @@ def compare_countries_cii(
             "Scenario not found or has no CII weights configured.",
             {"scenario": scenario},
         )
-    return build_cii_comparison(connection, unique_slugs, scenario, locale)
+    return build_cii_comparison(connection, unique_slugs, scenario, locale, persona)
 
 
 @router.get("/matrix", response_model=CompareMatrixResponse, tags=["cii"])
@@ -206,8 +216,10 @@ def read_country_card(
 def read_country_cii(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
+    locale: LocaleQuery,
     version: str = Query("v1.0", pattern=r"^v\d+\.\d+$"),
     scenario: str | None = Query(None),
+    persona: str | None = Query(None),
 ) -> CountryReadModelCii:
     if scenario is not None:
         weights = get_scenario_metric_weights(connection, scenario)
@@ -221,6 +233,15 @@ def read_country_cii(
     scenario_slug = scenario if scenario is not None else ""
     row = get_country_cii(connection, country_slug, version, scenario_slug)
     cii = build_cii(row)
+    if persona:
+        profile = build_persona_weight_profile(
+            connection, scenario_slug, persona, locale, version
+        )
+        cii = build_persona_adjusted_cii(
+            row,
+            profile,
+            get_active_cii_metric_definitions(connection),
+        )
     if cii is None:
         raise HTTPException(
             status_code=404, detail="CII data not available for this country."

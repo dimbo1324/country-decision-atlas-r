@@ -395,6 +395,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/personas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Personas */
+        get: operations["read_personas_api_v1_personas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personas/{persona_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Persona */
+        get: operations["read_persona_api_v1_personas__persona_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personas/{persona_slug}/weights": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Persona Weights */
+        get: operations["read_persona_weights_api_v1_personas__persona_slug__weights_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sources": {
         parameters: {
             query?: never;
@@ -980,6 +1031,8 @@ export interface components {
             weights_version?: string | null;
             /** Quality Warnings */
             quality_warnings?: string[];
+            applied_persona?: components["schemas"]["Persona"] | null;
+            persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
         };
         /** CompareMatrixResponse */
         CompareMatrixResponse: {
@@ -1026,6 +1079,12 @@ export interface components {
             higher_is_better: boolean;
             /** Weight */
             weight?: number | null;
+            /** Base Weight */
+            base_weight?: number | null;
+            /** Modifier */
+            modifier?: number | null;
+            /** Adjusted Weight */
+            adjusted_weight?: number | null;
             /** Delta */
             delta?: number | null;
             /** Winner Country Slug */
@@ -1230,6 +1289,8 @@ export interface components {
             calculated_at: string;
             /** Metrics */
             metrics?: components["schemas"]["CountryReadModelCiiMetric"][];
+            applied_persona?: components["schemas"]["Persona"] | null;
+            persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
         };
         /** CountryReadModelCiiMetric */
         CountryReadModelCiiMetric: {
@@ -1251,6 +1312,12 @@ export interface components {
             source_name?: string | null;
             /** Reliability */
             reliability?: string | null;
+            /** Base Weight */
+            base_weight?: number | null;
+            /** Modifier */
+            modifier?: number | null;
+            /** Adjusted Weight */
+            adjusted_weight?: number | null;
         };
         /** CountryReadModelCountry */
         CountryReadModelCountry: {
@@ -1650,6 +1717,12 @@ export interface components {
              * @enum {string}
              */
             score_label: "weak" | "limited" | "moderate" | "strong" | "excellent";
+            /** Persona Adjusted Score */
+            persona_adjusted_score?: number | null;
+            /** Persona Adjusted Label */
+            persona_adjusted_label?: ("weak" | "limited" | "moderate" | "strong" | "excellent") | null;
+            /** Persona Adjusted Rank */
+            persona_adjusted_rank?: number | null;
             /** Summary */
             summary: string;
             /** Strengths */
@@ -1776,6 +1849,8 @@ export interface components {
              * @enum {string}
              */
             locale: "en" | "ru";
+            /** Persona */
+            persona?: string | null;
         };
         /** DecisionRunResponse */
         DecisionRunResponse: {
@@ -1785,6 +1860,14 @@ export interface components {
             results: components["schemas"]["DecisionCountryResult"][];
             meta: components["schemas"]["DecisionRunMeta"];
             locale: components["schemas"]["LocaleResolution"];
+            applied_persona?: components["schemas"]["Persona"] | null;
+            persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
+            /**
+             * Ranking Mode
+             * @default base
+             * @enum {string}
+             */
+            ranking_mode: "base" | "persona_adjusted";
         };
         /** DecisionScenario */
         DecisionScenario: {
@@ -2480,6 +2563,59 @@ export interface components {
             offset: number;
             /** Total */
             total: number;
+        };
+        /** Persona */
+        Persona: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: string | null;
+            /**
+             * Is Active
+             * @default true
+             */
+            is_active: boolean;
+            /** Display Order */
+            display_order: number;
+        };
+        /** PersonaAdjustedMetricWeight */
+        PersonaAdjustedMetricWeight: {
+            /** Metric Id */
+            metric_id: string;
+            /** Metric Slug */
+            metric_slug: string;
+            /** Metric Name */
+            metric_name: string;
+            /** Base Weight */
+            base_weight: number;
+            /** Modifier */
+            modifier: number;
+            /** Adjusted Weight */
+            adjusted_weight: number;
+        };
+        /** PersonaListResponse */
+        PersonaListResponse: {
+            /** Items */
+            items?: components["schemas"]["Persona"][];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** PersonaWeightProfile */
+        PersonaWeightProfile: {
+            persona: components["schemas"]["Persona"];
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Version */
+            version: string;
+            /** Weights */
+            weights?: components["schemas"]["PersonaAdjustedMetricWeight"][];
+            /** Weight Sum */
+            weight_sum: number;
+        };
+        /** PersonaWeightProfileResponse */
+        PersonaWeightProfileResponse: {
+            item: components["schemas"]["PersonaWeightProfile"];
         };
         /**
          * PublicationStatus
@@ -3558,6 +3694,7 @@ export interface operations {
                 countries: string;
                 /** @description Scenario slug */
                 scenario: string;
+                persona?: string | null;
                 locale?: "en" | "ru";
             };
             header?: never;
@@ -3791,6 +3928,8 @@ export interface operations {
             query?: {
                 version?: string;
                 scenario?: string | null;
+                persona?: string | null;
+                locale?: "en" | "ru";
             };
             header?: never;
             path: {
@@ -4271,6 +4410,106 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DecisionCountryScoreListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_personas_api_v1_personas_get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonaListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_persona_api_v1_personas__persona_slug__get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                persona_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Persona"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_persona_weights_api_v1_personas__persona_slug__weights_get: {
+        parameters: {
+            query: {
+                /** @description Scenario slug */
+                scenario: string;
+                version?: string;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                persona_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonaWeightProfileResponse"];
                 };
             };
             /** @description Validation Error */

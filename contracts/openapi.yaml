@@ -55,6 +55,14 @@ paths:
           description: Scenario slug
           title: Scenario
         description: Scenario slug
+      - name: persona
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona
       - name: locale
         in: query
         required: false
@@ -369,6 +377,25 @@ paths:
           - type: string
           - type: 'null'
           title: Scenario
+      - name: persona
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
       responses:
         '200':
           description: Successful Response
@@ -1218,6 +1245,127 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DecisionCountryScoreListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/personas:
+    get:
+      tags:
+      - personas
+      summary: Read Personas
+      operationId: read_personas_api_v1_personas_get
+      parameters:
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/personas/{persona_slug}:
+    get:
+      tags:
+      - personas
+      summary: Read Persona
+      operationId: read_persona_api_v1_personas__persona_slug__get
+      parameters:
+      - name: persona_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Persona Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Persona'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/personas/{persona_slug}/weights:
+    get:
+      tags:
+      - personas
+      summary: Read Persona Weights
+      operationId: read_persona_weights_api_v1_personas__persona_slug__weights_get
+      parameters:
+      - name: persona_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Persona Slug
+      - name: scenario
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Scenario slug
+          title: Scenario
+        description: Scenario slug
+      - name: version
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^v\d+\.\d+$
+          default: v1.0
+          title: Version
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaWeightProfileResponse'
         '422':
           description: Validation Error
           content:
@@ -2596,6 +2744,14 @@ components:
             type: string
           type: array
           title: Quality Warnings
+        applied_persona:
+          anyOf:
+          - $ref: '#/components/schemas/Persona'
+          - type: 'null'
+        persona_weight_profile:
+          anyOf:
+          - $ref: '#/components/schemas/PersonaWeightProfile'
+          - type: 'null'
       type: object
       required:
       - scenario
@@ -2696,6 +2852,21 @@ components:
           - type: number
           - type: 'null'
           title: Weight
+        base_weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Base Weight
+        modifier:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Modifier
+        adjusted_weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Adjusted Weight
         delta:
           anyOf:
           - type: number
@@ -3093,6 +3264,14 @@ components:
             $ref: '#/components/schemas/CountryReadModelCiiMetric'
           type: array
           title: Metrics
+        applied_persona:
+          anyOf:
+          - $ref: '#/components/schemas/Persona'
+          - type: 'null'
+        persona_weight_profile:
+          anyOf:
+          - $ref: '#/components/schemas/PersonaWeightProfile'
+          - type: 'null'
       type: object
       required:
       - overall_score
@@ -3135,6 +3314,21 @@ components:
           - type: string
           - type: 'null'
           title: Reliability
+        base_weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Base Weight
+        modifier:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Modifier
+        adjusted_weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Adjusted Weight
       type: object
       required:
       - slug
@@ -3927,6 +4121,27 @@ components:
           - strong
           - excellent
           title: Score Label
+        persona_adjusted_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Persona Adjusted Score
+        persona_adjusted_label:
+          anyOf:
+          - type: string
+            enum:
+            - weak
+            - limited
+            - moderate
+            - strong
+            - excellent
+          - type: 'null'
+          title: Persona Adjusted Label
+        persona_adjusted_rank:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Persona Adjusted Rank
         summary:
           type: string
           title: Summary
@@ -4156,6 +4371,11 @@ components:
           - ru
           title: Locale
           default: ru
+        persona:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona
       type: object
       required:
       - origin_country_slug
@@ -4177,6 +4397,21 @@ components:
           $ref: '#/components/schemas/DecisionRunMeta'
         locale:
           $ref: '#/components/schemas/LocaleResolution'
+        applied_persona:
+          anyOf:
+          - $ref: '#/components/schemas/Persona'
+          - type: 'null'
+        persona_weight_profile:
+          anyOf:
+          - $ref: '#/components/schemas/PersonaWeightProfile'
+          - type: 'null'
+        ranking_mode:
+          type: string
+          enum:
+          - base
+          - persona_adjusted
+          title: Ranking Mode
+          default: base
       type: object
       required:
       - scenario
@@ -5547,6 +5782,107 @@ components:
       - offset
       - total
       title: Pagination
+    Persona:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_active:
+          type: boolean
+          title: Is Active
+          default: true
+        display_order:
+          type: integer
+          title: Display Order
+      type: object
+      required:
+      - slug
+      - name
+      - display_order
+      title: Persona
+    PersonaAdjustedMetricWeight:
+      properties:
+        metric_id:
+          type: string
+          title: Metric Id
+        metric_slug:
+          type: string
+          title: Metric Slug
+        metric_name:
+          type: string
+          title: Metric Name
+        base_weight:
+          type: number
+          title: Base Weight
+        modifier:
+          type: number
+          title: Modifier
+        adjusted_weight:
+          type: number
+          title: Adjusted Weight
+      type: object
+      required:
+      - metric_id
+      - metric_slug
+      - metric_name
+      - base_weight
+      - modifier
+      - adjusted_weight
+      title: PersonaAdjustedMetricWeight
+    PersonaListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Persona'
+          type: array
+          title: Items
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - locale
+      title: PersonaListResponse
+    PersonaWeightProfile:
+      properties:
+        persona:
+          $ref: '#/components/schemas/Persona'
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        version:
+          type: string
+          title: Version
+        weights:
+          items:
+            $ref: '#/components/schemas/PersonaAdjustedMetricWeight'
+          type: array
+          title: Weights
+        weight_sum:
+          type: number
+          title: Weight Sum
+      type: object
+      required:
+      - persona
+      - scenario_slug
+      - version
+      - weight_sum
+      title: PersonaWeightProfile
+    PersonaWeightProfileResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/PersonaWeightProfile'
+      type: object
+      required:
+      - item
+      title: PersonaWeightProfileResponse
     PublicationStatus:
       type: string
       enum:

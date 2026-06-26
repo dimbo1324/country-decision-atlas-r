@@ -13,6 +13,11 @@ from app.schemas.cii_comparison import (
     ComparedScenario,
 )
 from app.schemas.common import LocaleResolution, TranslationStatus, locale_resolution
+from app.services.persona_runtime import (
+    aggregate_persona_cii_score,
+    persona_metric_weight_metadata,
+)
+from app.services.persona_weights import maybe_build_persona_weight_profile
 from psycopg import Connection
 from typing import Any
 
@@ -22,6 +27,7 @@ def build_cii_comparison(
     country_slugs: list[str],
     scenario_slug: str,
     locale: str,
+    persona_slug: str | None = None,
 ) -> CiiCountryComparisonResponse:
     scenario_row = get_scenario_for_cii_comparison(connection, scenario_slug, locale)
     scenario = ComparedScenario(
@@ -34,58 +40,81 @@ def build_cii_comparison(
         row["metric_slug"]: float(row["weight"]) for row in scenario_weights_rows
     }
     weights_version = "v1.0" if weights_by_metric else None
+    persona_profile = maybe_build_persona_weight_profile(
+        connection, scenario_slug, persona_slug, locale
+    )
 
     cii_rows = get_cii_for_countries(
         connection, country_slugs, scenario_slug=scenario_slug
     )
     cii_by_slug = {row["country_slug"]: row for row in cii_rows}
 
+    metric_defs = get_active_cii_metric_definitions(connection)
+    metric_defs_by_slug = {str(item["slug"]): item for item in metric_defs}
+    raw_values = get_cii_metric_values_for_countries(connection, country_slugs)
+
+    values_by_metric_by_country: dict[str, dict[str, dict[str, Any]]] = {}
+    values_by_country: dict[str, list[dict[str, Any]]] = {}
+    for row in raw_values:
+        metric_slug = row["metric_slug"]
+        c_slug = row["country_slug"]
+        values_by_metric_by_country.setdefault(metric_slug, {})[c_slug] = row
+        values_by_country.setdefault(c_slug, []).append(row)
+
+    persona_scores_by_country: dict[str, float] = {}
+    if persona_profile is not None:
+        for slug in country_slugs:
+            aggregate = aggregate_persona_cii_score(
+                values_by_country.get(slug, []), persona_profile, metric_defs_by_slug
+            )
+            persona_scores_by_country[slug] = float(aggregate["overall_score"])
+
     quality_warnings: list[str] = []
     countries: list[ComparedCountry] = []
     for slug in country_slugs:
-        row = cii_by_slug.get(slug)
-        if row is None:
+        cii_row = cii_by_slug.get(slug)
+        if cii_row is None:
             quality_warnings.append(f"country '{slug}' not found")
             countries.append(ComparedCountry(slug=slug, name=slug))
             continue
-        if row.get("cii_score") is None:
+        if cii_row.get("cii_score") is None:
             quality_warnings.append(
                 f"country '{slug}' has no CII data for scenario '{scenario_slug}'"
             )
         countries.append(
             ComparedCountry(
                 slug=slug,
-                name=row["country_name"],
-                iso2=row.get("iso2"),
-                cii_score=row.get("cii_score"),
-                cii_confidence=row.get("cii_confidence"),
-                country_drift=row.get("country_drift"),
+                name=cii_row["country_name"],
+                iso2=cii_row.get("iso2"),
+                cii_score=persona_scores_by_country.get(slug, cii_row.get("cii_score")),
+                cii_confidence=cii_row.get("cii_confidence"),
+                country_drift=cii_row.get("country_drift"),
             )
         )
-
-    metric_defs = get_active_cii_metric_definitions(connection)
-    raw_values = get_cii_metric_values_for_countries(connection, country_slugs)
-
-    values_by_metric_by_country: dict[str, dict[str, dict[str, Any]]] = {}
-    for row in raw_values:
-        metric_slug = row["metric_slug"]
-        c_slug = row["country_slug"]
-        values_by_metric_by_country.setdefault(metric_slug, {})[c_slug] = row
 
     formula_version: str | None = None
     aggregation_method: str | None = None
     for slug in country_slugs:
-        row = cii_by_slug.get(slug)
-        if row:
-            formula_version = formula_version or row.get("formula_version")
-            aggregation_method = aggregation_method or row.get("aggregation_method")
+        cii_row = cii_by_slug.get(slug)
+        if cii_row:
+            formula_version = formula_version or cii_row.get("formula_version")
+            aggregation_method = aggregation_method or cii_row.get("aggregation_method")
 
     metrics: list[ComparedMetric] = []
     for md in metric_defs:
         metric_slug = md["slug"]
         higher_is_better = md["polarity"] != "negative"
         metric_name = md["name_ru"] if locale == "ru" else md["name_en"]
-        metric_weight = weights_by_metric.get(metric_slug)
+        weight_metadata = (
+            persona_metric_weight_metadata(metric_slug, persona_profile)
+            if persona_profile is not None
+            else None
+        )
+        metric_weight = (
+            weight_metadata["adjusted_weight"]
+            if weight_metadata is not None
+            else weights_by_metric.get(metric_slug)
+        )
 
         metric_values: list[ComparedMetricValue] = []
         effective_values: dict[str, float] = {}
@@ -137,6 +166,15 @@ def build_cii_comparison(
                 display_order=md["display_order"],
                 higher_is_better=higher_is_better,
                 weight=metric_weight,
+                base_weight=weight_metadata["base_weight"]
+                if weight_metadata is not None
+                else None,
+                modifier=weight_metadata["modifier"]
+                if weight_metadata is not None
+                else None,
+                adjusted_weight=weight_metadata["adjusted_weight"]
+                if weight_metadata is not None
+                else None,
                 delta=delta,
                 winner_country_slug=winner_slug,
                 values=metric_values,
@@ -154,6 +192,8 @@ def build_cii_comparison(
         aggregation_method=aggregation_method,
         weights_version=weights_version,
         quality_warnings=quality_warnings,
+        applied_persona=persona_profile["persona"] if persona_profile else None,
+        persona_weight_profile=persona_profile,
     )
 
 

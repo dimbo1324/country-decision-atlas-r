@@ -186,12 +186,24 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
     )
     body = result.model_dump(mode="json")
 
-    assert {"scenario", "origin_country", "results", "meta", "locale"} == set(body)
+    assert {
+        "scenario",
+        "origin_country",
+        "results",
+        "meta",
+        "locale",
+        "applied_persona",
+        "persona_weight_profile",
+        "ranking_mode",
+    } == set(body)
     assert {
         "rank",
         "country",
         "score",
         "score_label",
+        "persona_adjusted_score",
+        "persona_adjusted_label",
+        "persona_adjusted_rank",
         "summary",
         "strengths",
         "weaknesses",
