@@ -5,6 +5,7 @@ from app.api.v1 import (
     decision,
     home,
     legal_signals,
+    routes,
     scenarios,
     sources,
     translations,
@@ -209,6 +210,7 @@ def ready() -> ReadinessResponse:
 
 
 app.include_router(countries.router, prefix="/api/v1")
+app.include_router(routes.router, prefix="/api/v1")
 app.include_router(legal_signals.router, prefix="/api/v1")
 app.include_router(legal_signals.top_level_router, prefix="/api/v1")
 app.include_router(scenarios.router, prefix="/api/v1")

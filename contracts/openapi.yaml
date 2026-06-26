@@ -497,6 +497,172 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/routes:
+    get:
+      tags:
+      - routes
+      summary: Read Country Routes
+      operationId: read_country_routes_api_v1_countries__country_slug__routes_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: route_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/RouteType'
+          - type: 'null'
+          title: Route Type
+      - name: allows_work
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/EligibilityFlag'
+          - type: 'null'
+          title: Allows Work
+      - name: allows_family
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/EligibilityFlag'
+          - type: 'null'
+          title: Allows Family
+      - name: leads_to_pr
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/EligibilityFlag'
+          - type: 'null'
+          title: Leads To Pr
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/routes/{route_slug}:
+    get:
+      tags:
+      - routes
+      summary: Read Country Route
+      operationId: read_country_route_api_v1_countries__country_slug__routes__route_slug__get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: route_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Route Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/routes/{route_id}:
+    get:
+      tags:
+      - routes
+      summary: Read Route
+      operationId: read_route_api_v1_routes__route_id__get
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Route Id
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}/legal-signals:
     get:
       tags:
@@ -4115,6 +4281,13 @@ components:
       - title
       - url
       title: DecisionSourceRef
+    EligibilityFlag:
+      type: string
+      enum:
+      - 'yes'
+      - 'no'
+      - unknown
+      title: EligibilityFlag
     ErrorResponse:
       properties:
         error:
@@ -5406,6 +5579,326 @@ components:
       - environment
       - database
       title: ReadinessResponse
+    RouteDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        country_slug:
+          type: string
+          title: Country Slug
+        route_type:
+          $ref: '#/components/schemas/RouteType'
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        eligibility_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eligibility Summary
+        income_requirement_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Income Requirement Note
+        fees_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fees Note
+        processing_time_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Processing Time Note
+        stay_period_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stay Period Note
+        renewal_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Renewal Note
+        tax_warning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tax Warning
+        legal_warning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Warning
+        eligibility:
+          $ref: '#/components/schemas/RouteEligibility'
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        documents:
+          items:
+            $ref: '#/components/schemas/RouteDocument'
+          type: array
+          title: Documents
+        sources:
+          items:
+            $ref: '#/components/schemas/RouteSourceRef'
+          type: array
+          title: Sources
+        evidence:
+          items:
+            $ref: '#/components/schemas/RouteEvidenceRef'
+          type: array
+          title: Evidence
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - id
+      - country_slug
+      - route_type
+      - slug
+      - title
+      - eligibility
+      - legal_status
+      - status
+      - updated_at
+      - documents
+      - sources
+      - evidence
+      - locale
+      title: RouteDetailResponse
+    RouteDocument:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        is_mandatory:
+          type: boolean
+          title: Is Mandatory
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        display_order:
+          type: integer
+          title: Display Order
+      type: object
+      required:
+      - id
+      - name
+      - is_mandatory
+      - display_order
+      title: RouteDocument
+    RouteEligibility:
+      properties:
+        allows_work:
+          $ref: '#/components/schemas/EligibilityFlag'
+        allows_family:
+          $ref: '#/components/schemas/EligibilityFlag'
+        leads_to_pr:
+          $ref: '#/components/schemas/EligibilityFlag'
+        leads_to_citizenship:
+          $ref: '#/components/schemas/EligibilityFlag'
+        requires_income_proof:
+          $ref: '#/components/schemas/EligibilityFlag'
+        requires_local_address:
+          $ref: '#/components/schemas/EligibilityFlag'
+        requires_criminal_record_check:
+          $ref: '#/components/schemas/EligibilityFlag'
+      type: object
+      required:
+      - allows_work
+      - allows_family
+      - leads_to_pr
+      - leads_to_citizenship
+      - requires_income_proof
+      - requires_local_address
+      - requires_criminal_record_check
+      title: RouteEligibility
+    RouteEvidenceRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        source_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Title
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      type: object
+      required:
+      - id
+      title: RouteEvidenceRef
+    RouteListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        country_slug:
+          type: string
+          title: Country Slug
+        route_type:
+          $ref: '#/components/schemas/RouteType'
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        eligibility_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eligibility Summary
+        eligibility:
+          $ref: '#/components/schemas/RouteEligibility'
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - country_slug
+      - route_type
+      - slug
+      - title
+      - eligibility
+      - legal_status
+      - status
+      - updated_at
+      title: RouteListItem
+    RouteListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/RouteListItem'
+          type: array
+          title: Items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - items
+      - pagination
+      - locale
+      title: RouteListResponse
+    RouteSourceRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: RouteSourceRef
+    RouteType:
+      type: string
+      enum:
+      - temporary_residence
+      - permanent_residence
+      - citizenship
+      - digital_nomad
+      - work
+      - business
+      - study
+      - investment
+      title: RouteType
     Scenario:
       properties:
         id:

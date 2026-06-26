@@ -327,6 +327,22 @@ def patch_route_status(
     )
 
 
+def get_country_slug_by_id(
+    connection: Connection[Any],
+    country_id: str,
+) -> str | None:
+    row = fetch_one(
+        connection,
+        """
+        SELECT slug
+        FROM countries
+        WHERE id::text = %s
+        """,
+        (country_id,),
+    )
+    return str(row["slug"]) if row else None
+
+
 def _build_route_filters(
     country_slug: str,
     route_type: str | None,

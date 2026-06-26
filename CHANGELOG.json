@@ -1592,6 +1592,47 @@
         "domain_events route.published count: 0"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "route-explorer-v1",
+      "task": "feat/route-explorer-service-api-ui-v1",
+      "branch": "feat/route-explorer-service-api-ui-v1",
+      "summary": "Start Route Explorer service, API, OpenAPI contracts, and minimal frontend route browsing package.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-26",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "route-explorer-v1",
+      "task": "feat/route-explorer-service-api-ui-v1",
+      "branch": "feat/route-explorer-service-api-ui-v1",
+      "summary": "Added Route Explorer service, lifecycle/outbox foundation, public route schemas and API endpoints, regenerated OpenAPI and TypeScript contracts, integrated a minimal country-page routes block, route detail page, and focused route smoke E2E coverage.",
+      "checks": [
+        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py: 53 passed",
+        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py tests/test_openapi_contract.py: 57 passed",
+        "python -m pytest: 724 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "pnpm build: passed",
+        "npx playwright test tests/e2e/web-mvp-routes.spec.ts: 2 passed",
+        "pnpm web:mvp:check: 127 passed",
+        "docker compose clean migration chain: migrations 001-027 applied",
+        "docker compose migration idempotency: migrations 001-027 skipped",
+        "runtime route API smoke: russia=3, uruguay=3, argentina=3, filters ok, detail returned documents/sources/evidence, unknown country=404, unknown route=404, invalid filter=422",
+        "domain_events route.published count after clean seed: 0",
+        "python -m pre_commit run --all-files: passed after line-ending auto-fix rerun",
+        "pnpm audit --prod: no known vulnerabilities found",
+        "git diff --check: passed"
+      ],
+      "status": "completed"
     }
   ]
 }

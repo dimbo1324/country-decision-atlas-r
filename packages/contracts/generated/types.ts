@@ -191,6 +191,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/routes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Routes */
+        get: operations["read_country_routes_api_v1_countries__country_slug__routes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/countries/{country_slug}/routes/{route_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Route */
+        get: operations["read_country_route_api_v1_countries__country_slug__routes__route_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/routes/{route_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Route */
+        get: operations["read_route_api_v1_routes__route_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/{country_id}/legal-signals": {
         parameters: {
             query?: never;
@@ -1782,6 +1833,11 @@ export interface components {
             confidence?: ("high" | "medium" | "low") | null;
             localization?: components["schemas"]["LocalizationMeta"] | null;
         };
+        /**
+         * EligibilityFlag
+         * @enum {string}
+         */
+        EligibilityFlag: "yes" | "no" | "unknown";
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ApiError"];
@@ -2447,6 +2503,161 @@ export interface components {
              */
             database: "ok";
         };
+        /** RouteDetailResponse */
+        RouteDetailResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Country Slug */
+            country_slug: string;
+            route_type: components["schemas"]["RouteType"];
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary?: string | null;
+            /** Eligibility Summary */
+            eligibility_summary?: string | null;
+            /** Income Requirement Note */
+            income_requirement_note?: string | null;
+            /** Fees Note */
+            fees_note?: string | null;
+            /** Processing Time Note */
+            processing_time_note?: string | null;
+            /** Stay Period Note */
+            stay_period_note?: string | null;
+            /** Renewal Note */
+            renewal_note?: string | null;
+            /** Tax Warning */
+            tax_warning?: string | null;
+            /** Legal Warning */
+            legal_warning?: string | null;
+            eligibility: components["schemas"]["RouteEligibility"];
+            legal_status: components["schemas"]["LegalStatus"];
+            status: components["schemas"]["PublicationStatus"];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Documents */
+            documents: components["schemas"]["RouteDocument"][];
+            /** Sources */
+            sources: components["schemas"]["RouteSourceRef"][];
+            /** Evidence */
+            evidence: components["schemas"]["RouteEvidenceRef"][];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** RouteDocument */
+        RouteDocument: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Is Mandatory */
+            is_mandatory: boolean;
+            /** Note */
+            note?: string | null;
+            /** Display Order */
+            display_order: number;
+        };
+        /** RouteEligibility */
+        RouteEligibility: {
+            allows_work: components["schemas"]["EligibilityFlag"];
+            allows_family: components["schemas"]["EligibilityFlag"];
+            leads_to_pr: components["schemas"]["EligibilityFlag"];
+            leads_to_citizenship: components["schemas"]["EligibilityFlag"];
+            requires_income_proof: components["schemas"]["EligibilityFlag"];
+            requires_local_address: components["schemas"]["EligibilityFlag"];
+            requires_criminal_record_check: components["schemas"]["EligibilityFlag"];
+        };
+        /** RouteEvidenceRef */
+        RouteEvidenceRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Source Title */
+            source_title?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+        };
+        /** RouteListItem */
+        RouteListItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Country Slug */
+            country_slug: string;
+            route_type: components["schemas"]["RouteType"];
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary?: string | null;
+            /** Eligibility Summary */
+            eligibility_summary?: string | null;
+            eligibility: components["schemas"]["RouteEligibility"];
+            legal_status: components["schemas"]["LegalStatus"];
+            status: components["schemas"]["PublicationStatus"];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** RouteListResponse */
+        RouteListResponse: {
+            /** Items */
+            items: components["schemas"]["RouteListItem"][];
+            pagination: components["schemas"]["Pagination"];
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** RouteSourceRef */
+        RouteSourceRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+        };
+        /**
+         * RouteType
+         * @enum {string}
+         */
+        RouteType: "temporary_residence" | "permanent_residence" | "citizenship" | "digital_nomad" | "work" | "business" | "study" | "investment";
         /** Scenario */
         Scenario: {
             /**
@@ -3637,6 +3848,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SourceListWithLocaleResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_country_routes_api_v1_countries__country_slug__routes_get: {
+        parameters: {
+            query?: {
+                route_type?: components["schemas"]["RouteType"] | null;
+                allows_work?: components["schemas"]["EligibilityFlag"] | null;
+                allows_family?: components["schemas"]["EligibilityFlag"] | null;
+                leads_to_pr?: components["schemas"]["EligibilityFlag"] | null;
+                limit?: number;
+                offset?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_country_route_api_v1_countries__country_slug__routes__route_slug__get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+                route_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_route_api_v1_routes__route_id__get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                route_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteDetailResponse"];
                 };
             };
             /** @description Validation Error */

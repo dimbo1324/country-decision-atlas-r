@@ -11,6 +11,8 @@ type DecisionRunResponse = components["schemas"]["DecisionRunResponse"];
 type LegalSignalListResponse = components["schemas"]["LegalSignalDetailListResponse"];
 type LegalSignalTimelineResponse = components["schemas"]["LegalSignalTimelineResponse"];
 type HomeOverviewResponse = components["schemas"]["HomeOverviewResponse"];
+type RouteListResponse = components["schemas"]["RouteListResponse"];
+type RouteDetailResponse = components["schemas"]["RouteDetailResponse"];
 type SourceListResponse = components["schemas"]["SourceListResponse"];
 type EvidenceItemListResponse = components["schemas"]["EvidenceItemListResponse"];
 type ScenarioListResponse = components["schemas"]["ScenarioListResponse"];
@@ -32,6 +34,8 @@ export type FrontendCriticalContracts = {
   legalSignals: LegalSignalListResponse;
   legalSignalTimeline: LegalSignalTimelineResponse;
   homeOverview: HomeOverviewResponse;
+  routeList: RouteListResponse;
+  routeDetail: RouteDetailResponse;
   sources: SourceListResponse;
   evidenceItems: EvidenceItemListResponse;
   scenarios: ScenarioListResponse;

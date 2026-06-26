@@ -2386,10 +2386,181 @@ ol {
   text-decoration: none;
 }
 
+.routeBlock {
+  display: grid;
+  gap: 14px;
+}
+
+.routeFilters {
+  align-items: end;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.routeFilters label {
+  color: #444;
+  display: grid;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 4px;
+}
+
+.routeGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.routeCard {
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.routeCardHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.routeCardHeader h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+
+.routeBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.routeEligibilitySummary {
+  color: #444;
+  font-size: 13px;
+}
+
+.routeEligibility {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.routeEligibilityBadge {
+  align-items: center;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px 7px;
+}
+
+.routeEligibilityBadge span {
+  color: #444;
+  font-size: 11px;
+}
+
+.routeEligibilityBadge strong {
+  font-size: 11px;
+}
+
+.routeEligibilityYes {
+  background: #eef7f0;
+}
+
+.routeEligibilityNo {
+  background: #f9eeee;
+}
+
+.routeEligibilityUnknown {
+  background: #f3f3f3;
+}
+
+.routeDetail {
+  display: grid;
+  gap: 16px;
+}
+
+.routeDetailGrid {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+}
+
+.routeFacts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.routeFacts div {
+  display: grid;
+  gap: 2px;
+}
+
+.routeFacts dt {
+  color: #555;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.routeFacts dd {
+  margin: 0;
+}
+
+.routeWarnings {
+  display: grid;
+  gap: 8px;
+}
+
+.routeWarnings p {
+  border-left: 4px solid #a27728;
+  padding-left: 10px;
+}
+
+.routeDocuments,
+.routeSources,
+.routeEvidence {
+  display: grid;
+  gap: 10px;
+}
+
+.routeDocuments {
+  list-style: none;
+  padding: 0;
+}
+
+.routeDocuments li,
+.routeSources a,
+.routeEvidence article {
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+}
+
+.routeDocuments span,
+.routeSources span,
+.routeEvidence a {
+  color: #555;
+  font-size: 12px;
+}
+
+.routeSources a {
+  text-decoration: none;
+}
+
 @media (max-width: 760px) {
   .homeCountryCards,
   .homeOverviewGrid,
-  .homeQuickLinks {
+  .homeQuickLinks,
+  .routeDetailGrid,
+  .routeFilters {
     grid-template-columns: 1fr;
   }
 

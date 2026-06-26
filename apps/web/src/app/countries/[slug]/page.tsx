@@ -15,6 +15,7 @@ import {
   CountryUserStoriesSummary,
   LocaleStatusBadge,
 } from "../../../features/country-card";
+import { CountryRoutesBlock } from "../../../features/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -101,6 +102,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection">
           <h2 className="cardSectionTitle">Оценки сценариев</h2>
           <CountryScores scores={card.scores} sources={card.sources} />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Маршруты</h2>
+          <CountryRoutesBlock countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">
