@@ -26,6 +26,10 @@
 | `business_self_employment` | Бизнес / самозанятость |
 | `safety_political_risk` | Безопасность / политический риск |
 
+## Актуальное состояние эпизодов (2026-06-28)
+
+Сверх исходного MVP-среза закрыты эпизоды 1–3: editorial-publication-foundation (lifecycle `draft→review→published→archived/rejected`, audit_events, transactional outbox `domain_events`, разделение `legal_status`), route-explorer (маршруты как первоклассный source-backed объект), persona-layer (persona как модификатор поверх scenario-весов). Эпизод 4 (async-контур Kafka/Go/Mongo/gRPC/Telegram, имитация) — в работе. Полный план дальнейших работ — `../09_План_реализации_проекта.md`.
+
 ## Что уже реализовано по состоянию последнего обсуждения
 
 ### Backend

@@ -2,6 +2,20 @@
   "schema_version": 1,
   "entries": [
     {
+      "date": "2026-06-28",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "plan-and-docs-refresh-v1",
+      "task": "chore/plan-and-docs-refresh-v1",
+      "branch": "main",
+      "summary": "Documentation-only refresh authorized by owner, committed directly to main. Added docs/_arch_/09_План_реализации_проекта.md: canonical execution plan from Episode 4 to full MVP (Episodes 4-13) and growth horizon (14-16), with per-episode goals/sub-blocks/acceptance/dependencies, brainstorm features mapped (unique self-computed metrics, Trust Score, methodology+glossary, drift+alerts, weight sliders+wizard, CBLC+Decision Passport+route checklists+what-changed, search, fake-AI grounded Q&A, community king-of-the-hill, auth/RBAC, migration board), dependency map, MVP line, and plan invariant registry. Updated 00_Эпизод_0 episode order and invariants (fake-provider seam, derived metrics never mix into CII, notifier channel abstraction+DLQ, community on Telegram identity, migration board after auth, early analytics/feature-flags). Reconciled 11_Дорожная_карта (phase->episode mapping), README index, 01 navigation changelog, and 04 current-state note. No product code, migrations, schemas, or contracts changed.",
+      "status": "completed",
+      "gate": {
+        "docs_only": true,
+        "code_migrations_schema_contracts_changed": "none"
+      }
+    },
+    {
       "date": "2026-06-26",
       "event": "task_completed",
       "type": "feat",
