@@ -11,6 +11,8 @@ from app.schemas.cii_matrix import (
     MatrixScenario,
 )
 from app.schemas.common import TranslationStatus, locale_resolution
+from app.services.cache import cache_ttl, get_cache_backend
+from app.services.cache_keys import countries_matrix_key
 from app.services.score_labels import optional_score_label
 from psycopg import Connection
 from typing import Any
@@ -37,6 +39,23 @@ def _confidence_label(confidence: str | None) -> str | None:
 
 
 def build_matrix_response(
+    connection: Connection[Any],
+    country_slugs_param: list[str] | None,
+    scenario_slugs_param: list[str] | None,
+    locale: str,
+) -> CompareMatrixResponse:
+    key = countries_matrix_key(locale, country_slugs_param, scenario_slugs_param)
+    cached = get_cache_backend().get_or_set_json(
+        key,
+        cache_ttl(),
+        lambda: _build_matrix_response_uncached(
+            connection, country_slugs_param, scenario_slugs_param, locale
+        ).model_dump(mode="json"),
+    )
+    return CompareMatrixResponse.model_validate(cached)
+
+
+def _build_matrix_response_uncached(
     connection: Connection[Any],
     country_slugs_param: list[str] | None,
     scenario_slugs_param: list[str] | None,

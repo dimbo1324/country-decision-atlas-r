@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     trusted_proxy_headers: bool = False
     analytics_enabled: bool = True
     analytics_salt: str = "local-dev-analytics-salt"
+    cache_mode: str = "null"
+    cache_namespace: str = "cda"
+    cache_default_ttl_seconds: int = 300
     translation_provider: str = "fake"
     ai_translation_provider: str = "openai"
     ai_translation_model: str = "gpt-4o-mini"

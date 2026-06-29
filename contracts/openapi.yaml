@@ -524,6 +524,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/data-journal:
+    get:
+      tags:
+      - data_journal
+      summary: Read Country Data Journal
+      operationId: read_country_data_journal_api_v1_countries__country_slug__data_journal_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDataJournalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_slug}/routes:
     get:
       tags:
@@ -2345,6 +2399,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/platform/features:
+    get:
+      tags:
+      - platform
+      summary: Read Feature Flags
+      operationId: read_feature_flags_api_v1_platform_features_get
+      parameters:
+      - name: access_tier
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/FeatureAccessTier'
+          default: public
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureFlagListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/platform/features/{feature_key}:
+    get:
+      tags:
+      - platform
+      summary: Read Feature Flag
+      operationId: read_feature_flag_api_v1_platform_features__feature_key__get
+      parameters:
+      - name: feature_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feature Key
+      - name: access_tier
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/FeatureAccessTier'
+          default: public
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureFlagDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/user-stories:
     get:
       tags:
@@ -3130,6 +3242,53 @@ components:
       - created_at
       - updated_at
       title: Country
+    CountryDataJournalResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        locale:
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
+        items:
+          items:
+            $ref: '#/components/schemas/DataJournalEntry'
+          type: array
+          title: Items
+        total:
+          type: integer
+          minimum: 0.0
+          title: Total
+        limit:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: Limit
+        offset:
+          type: integer
+          minimum: 0.0
+          title: Offset
+        last_verified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Verified At
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - country_slug
+      - locale
+      - total
+      - limit
+      - offset
+      title: CountryDataJournalResponse
     CountryListResponse:
       properties:
         items:
@@ -4015,6 +4174,65 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    DataJournalEntry:
+      properties:
+        id:
+          type: string
+          title: Id
+        entry_type:
+          type: string
+          enum:
+          - legal_signal_published
+          - route_published
+          - source_updated
+          - evidence_added
+          - country_profile_updated
+          - data_reviewed
+          title: Entry Type
+        country_slug:
+          type: string
+          title: Country Slug
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        event_date:
+          type: string
+          format: date-time
+          title: Event Date
+        source:
+          type: string
+          title: Source
+        is_source_backed:
+          type: boolean
+          title: Is Source Backed
+        last_verified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Verified At
+      type: object
+      required:
+      - id
+      - entry_type
+      - country_slug
+      - entity_type
+      - entity_id
+      - title
+      - summary
+      - event_date
+      - source
+      - is_source_backed
+      title: DataJournalEntry
     DataQualityCheck:
       properties:
         code:
@@ -4886,6 +5104,153 @@ components:
       - items
       - pagination
       title: EvidenceListResponse
+    FeatureAccessContext:
+      properties:
+        access_tier:
+          $ref: '#/components/schemas/FeatureAccessTier'
+          default: public
+        environment:
+          type: string
+          pattern: ^(local|production)$
+          title: Environment
+          default: local
+        is_admin:
+          type: boolean
+          title: Is Admin
+          default: false
+      type: object
+      title: FeatureAccessContext
+    FeatureAccessDecision:
+      properties:
+        feature_key:
+          type: string
+          title: Feature Key
+        is_enabled:
+          type: boolean
+          title: Is Enabled
+        reason:
+          type: string
+          title: Reason
+        access_tier:
+          $ref: '#/components/schemas/FeatureAccessTier'
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/FeatureFlagStatus'
+          - type: 'null'
+      type: object
+      required:
+      - feature_key
+      - is_enabled
+      - reason
+      - access_tier
+      title: FeatureAccessDecision
+    FeatureAccessRule:
+      properties:
+        feature_key:
+          type: string
+          title: Feature Key
+        access_tier:
+          $ref: '#/components/schemas/FeatureAccessTier'
+        is_enabled:
+          type: boolean
+          title: Is Enabled
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - feature_key
+      - access_tier
+      - is_enabled
+      title: FeatureAccessRule
+    FeatureAccessTier:
+      type: string
+      enum:
+      - public
+      - beta
+      - internal
+      - admin
+      title: FeatureAccessTier
+    FeatureFlag:
+      properties:
+        key:
+          type: string
+          title: Key
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        status:
+          $ref: '#/components/schemas/FeatureFlagStatus'
+        access_tier:
+          $ref: '#/components/schemas/FeatureAccessTier'
+        default_enabled:
+          type: boolean
+          title: Default Enabled
+        is_enabled_for_context:
+          type: boolean
+          title: Is Enabled For Context
+        decision_reason:
+          type: string
+          title: Decision Reason
+      type: object
+      required:
+      - key
+      - name
+      - status
+      - access_tier
+      - default_enabled
+      - is_enabled_for_context
+      - decision_reason
+      title: FeatureFlag
+    FeatureFlagDetailResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/FeatureFlag'
+        decision:
+          $ref: '#/components/schemas/FeatureAccessDecision'
+        context:
+          $ref: '#/components/schemas/FeatureAccessContext'
+        access_rules:
+          items:
+            $ref: '#/components/schemas/FeatureAccessRule'
+          type: array
+          title: Access Rules
+      type: object
+      required:
+      - item
+      - decision
+      - context
+      title: FeatureFlagDetailResponse
+    FeatureFlagListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeatureFlag'
+          type: array
+          title: Items
+        context:
+          $ref: '#/components/schemas/FeatureAccessContext'
+      type: object
+      required:
+      - items
+      - context
+      title: FeatureFlagListResponse
+    FeatureFlagStatus:
+      type: string
+      enum:
+      - enabled
+      - disabled
+      - internal
+      - deprecated
+      title: FeatureFlagStatus
     HTTPValidationError:
       properties:
         detail:

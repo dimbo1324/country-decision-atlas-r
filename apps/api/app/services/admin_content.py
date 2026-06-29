@@ -14,6 +14,11 @@ from app.schemas.admin_content import (
     UserStoryPatch,
 )
 from app.schemas.common import PublicationStatus
+from app.services.cache_invalidation import (
+    invalidate_country_cache,
+    invalidate_home_cache,
+    invalidate_legal_timeline_cache,
+)
 from app.services.data_quality import (
     raise_if_critical_issues,
     validate_country_card_for_publish,
@@ -251,6 +256,14 @@ def patch_legal_signal(
             LEGAL_SIGNAL_AUDIT_FIELDS,
         )
         _emit_legal_signal_published_event(connection, before, after)
+    if is_publish_transition(str(before.get("status")), str(after.get("status"))):
+        country_slug = repository.get_country_slug_by_id(
+            connection, str(after["country_id"])
+        )
+        if country_slug:
+            invalidate_legal_timeline_cache(country_slug)
+            invalidate_country_cache(country_slug)
+            invalidate_home_cache()
     return after
 
 
@@ -287,6 +300,9 @@ def patch_country_profile(
             changed_by,
             COUNTRY_PROFILE_AUDIT_FIELDS,
         )
+    country_slug_after = str(after.get("country_slug") or country_slug)
+    invalidate_country_cache(country_slug_after)
+    invalidate_home_cache()
     return after
 
 

@@ -5,12 +5,61 @@ from app.schemas.legal_signal_events import (
     TimelineFilters,
     TimelineYearGroup,
 )
+from app.services.cache import cache_ttl, get_cache_backend
+from app.services.cache_keys import legal_timeline_key
 from app.services.localization import overlay_localized_fields
 from psycopg import Connection
 from typing import Any
 
 
 def build_timeline_response(
+    connection: Connection[Any],
+    locale: str,
+    country_slug: str | None,
+    signal_type: str | None,
+    impact_direction: str | None,
+    impact_level: str | None,
+    affected_group: str | None,
+    year_from: int | None,
+    year_to: int | None,
+    limit: int,
+    offset: int,
+) -> LegalSignalTimelineResponse:
+    key = legal_timeline_key(
+        country_slug,
+        locale,
+        {
+            "signal_type": signal_type,
+            "impact_direction": impact_direction,
+            "impact_level": impact_level,
+            "affected_group": affected_group,
+            "year_from": year_from,
+            "year_to": year_to,
+            "limit": limit,
+            "offset": offset,
+        },
+    )
+    cached = get_cache_backend().get_or_set_json(
+        key,
+        cache_ttl(),
+        lambda: _build_timeline_response_uncached(
+            connection,
+            locale,
+            country_slug,
+            signal_type,
+            impact_direction,
+            impact_level,
+            affected_group,
+            year_from,
+            year_to,
+            limit,
+            offset,
+        ).model_dump(mode="json"),
+    )
+    return LegalSignalTimelineResponse.model_validate(cached)
+
+
+def _build_timeline_response_uncached(
     connection: Connection[Any],
     locale: str,
     country_slug: str | None,

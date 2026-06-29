@@ -43,7 +43,10 @@ services:
       API_RATE_LIMIT_PER_MINUTE: ${API_RATE_LIMIT_PER_MINUTE:-600}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
       DATABASE_URL: postgresql://${POSTGRES_USER:-country_atlas}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-country_atlas}
+      CACHE_MODE: ${CACHE_MODE:-null}
       REDIS_URL: redis://redis:6379/0
+      CACHE_NAMESPACE: ${CACHE_NAMESPACE:-cda}
+      CACHE_DEFAULT_TTL_SECONDS: ${CACHE_DEFAULT_TTL_SECONDS:-300}
     ports:
       - "${APP_PORT:-8000}:8000"
     volumes:

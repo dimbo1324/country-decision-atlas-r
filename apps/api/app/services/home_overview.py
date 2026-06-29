@@ -13,6 +13,8 @@ from app.schemas.home_overview import (
     LatestLegalEvent,
     ScenarioWinner,
 )
+from app.services.cache import cache_ttl, get_cache_backend
+from app.services.cache_keys import home_overview_key
 from app.services.cii_matrix import build_matrix_response
 from app.services.localization import overlay_localized_fields
 from psycopg import Connection
@@ -23,6 +25,20 @@ _CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
 
 
 def build_home_overview(
+    connection: Connection[Any], locale: str
+) -> HomeOverviewResponse:
+    key = home_overview_key(locale)
+    cached = get_cache_backend().get_or_set_json(
+        key,
+        cache_ttl(),
+        lambda: _build_home_overview_uncached(connection, locale).model_dump(
+            mode="json"
+        ),
+    )
+    return HomeOverviewResponse.model_validate(cached)
+
+
+def _build_home_overview_uncached(
     connection: Connection[Any], locale: str
 ) -> HomeOverviewResponse:
     matrix = build_matrix_response(connection, None, None, locale)

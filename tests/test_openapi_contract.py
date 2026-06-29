@@ -36,6 +36,9 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/legal-signals",
         "/api/v1/legal-signals/timeline",
         "/api/v1/home/overview",
+        "/api/v1/platform/features",
+        "/api/v1/platform/features/{feature_key}",
+        "/api/v1/countries/{country_slug}/data-journal",
         "/api/v1/legal-signals/{signal_id}",
         "/api/v1/legal-signals/{signal_id}/evidence",
         "/api/v1/user-stories",
@@ -97,6 +100,13 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "UserStoryCreate",
         "AnalyticsEventCreate",
         "AnalyticsEventCreateResponse",
+        "FeatureFlag",
+        "FeatureAccessRule",
+        "FeatureAccessDecision",
+        "FeatureFlagListResponse",
+        "FeatureFlagDetailResponse",
+        "DataJournalEntry",
+        "CountryDataJournalResponse",
     ]:
         assert schema_name in schemas
 

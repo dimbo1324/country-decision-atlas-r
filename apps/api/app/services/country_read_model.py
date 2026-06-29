@@ -17,6 +17,8 @@ from app.schemas.country_read_model import (
     CountryReadModelMeta,
     CountryReadModelResponse,
 )
+from app.services.cache import cache_ttl, get_cache_backend
+from app.services.cache_keys import country_card_key
 from app.services.cii import compute_confidence
 from app.services.localization import overlay_localized_fields
 from app.services.persona_runtime import (
@@ -33,6 +35,22 @@ SOURCE_LIMIT = 10
 
 
 def get_country_read_model(
+    connection: Connection[Any],
+    country_slug: str,
+    locale: SupportedLocale,
+) -> CountryReadModelResponse | None:
+    key = country_card_key(country_slug, locale)
+    cache = get_cache_backend()
+    cached = cache.get_json(key)
+    if cached is not None:
+        return CountryReadModelResponse.model_validate(cached)
+    result = _get_country_read_model_uncached(connection, country_slug, locale)
+    if result is not None:
+        cache.set_json(key, result.model_dump(mode="json"), cache_ttl())
+    return result
+
+
+def _get_country_read_model_uncached(
     connection: Connection[Any],
     country_slug: str,
     locale: SupportedLocale,

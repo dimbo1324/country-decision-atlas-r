@@ -15,6 +15,7 @@ import {
   CountryUserStoriesSummary,
   LocaleStatusBadge,
 } from "../../../features/country-card";
+import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { CountryRoutesBlock } from "../../../features/routes";
 
 export const dynamic = "force-dynamic";
@@ -112,6 +113,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection">
           <h2 className="cardSectionTitle">Профиль страны</h2>
           <CountryProfileSections profile={card.profile} skipExecutiveSummary />
+        </section>
+
+        <section className="cardSection">
+          <h2 className="cardSectionTitle">Последние обновления данных</h2>
+          <CountryDataJournalBlock countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">

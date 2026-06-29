@@ -326,6 +326,9 @@ def test_openapi_contains_frontend_critical_contract() -> None:
         "/api/v1/decision/run",
         "/api/v1/admin/data-quality/report",
         "/api/v1/analytics/events",
+        "/api/v1/platform/features",
+        "/api/v1/platform/features/{feature_key}",
+        "/api/v1/countries/{country_slug}/data-journal",
     }:
         assert path in paths
 
@@ -345,6 +348,13 @@ def test_openapi_contains_frontend_critical_contract() -> None:
         "ErrorResponse",
         "AnalyticsEventCreate",
         "AnalyticsEventCreateResponse",
+        "FeatureFlag",
+        "FeatureAccessRule",
+        "FeatureAccessDecision",
+        "FeatureFlagListResponse",
+        "FeatureFlagDetailResponse",
+        "DataJournalEntry",
+        "CountryDataJournalResponse",
     }:
         assert schema in schemas
 

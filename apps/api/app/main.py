@@ -3,7 +3,9 @@ from app.api.v1 import (
     admin_translation_jobs,
     analytics,
     countries,
+    data_journal,
     decision,
+    feature_flags,
     home,
     legal_signals,
     personas,
@@ -222,6 +224,7 @@ def ready() -> ReadinessResponse:
 
 
 app.include_router(countries.router, prefix="/api/v1")
+app.include_router(data_journal.router, prefix="/api/v1")
 app.include_router(routes.router, prefix="/api/v1")
 app.include_router(legal_signals.router, prefix="/api/v1")
 app.include_router(legal_signals.top_level_router, prefix="/api/v1")
@@ -232,6 +235,7 @@ app.include_router(translations.router, prefix="/api/v1")
 app.include_router(admin.router, prefix="/api/v1")
 app.include_router(admin_translation_jobs.router, prefix="/api/v1")
 app.include_router(analytics.router, prefix="/api/v1")
+app.include_router(feature_flags.router, prefix="/api/v1")
 app.include_router(user_stories.router, prefix="/api/v1")
 app.include_router(decision.router, prefix="/api/v1")
 app.include_router(home.router, prefix="/api/v1")

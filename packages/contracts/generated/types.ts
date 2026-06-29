@@ -191,6 +191,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/data-journal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Data Journal */
+        get: operations["read_country_data_journal_api_v1_countries__country_slug__data_journal_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/{country_slug}/routes": {
         parameters: {
             query?: never;
@@ -854,6 +871,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/platform/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Feature Flags */
+        get: operations["read_feature_flags_api_v1_platform_features_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/features/{feature_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Feature Flag */
+        get: operations["read_feature_flag_api_v1_platform_features__feature_key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/user-stories": {
         parameters: {
             query?: never;
@@ -1213,6 +1264,31 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** CountryDataJournalResponse */
+        CountryDataJournalResponse: {
+            /** Country Slug */
+            country_slug: string;
+            /**
+             * Locale
+             * @enum {string}
+             */
+            locale: "en" | "ru";
+            /** Items */
+            items?: components["schemas"]["DataJournalEntry"][];
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Last Verified At */
+            last_verified_at?: string | null;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at?: string;
         };
         /** CountryListResponse */
         CountryListResponse: {
@@ -1646,6 +1722,37 @@ export interface components {
             items: components["schemas"]["CountryScore"][];
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DataJournalEntry */
+        DataJournalEntry: {
+            /** Id */
+            id: string;
+            /**
+             * Entry Type
+             * @enum {string}
+             */
+            entry_type: "legal_signal_published" | "route_published" | "source_updated" | "evidence_added" | "country_profile_updated" | "data_reviewed";
+            /** Country Slug */
+            country_slug: string;
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Event Date
+             * Format: date-time
+             */
+            event_date: string;
+            /** Source */
+            source: string;
+            /** Is Source Backed */
+            is_source_backed: boolean;
+            /** Last Verified At */
+            last_verified_at?: string | null;
         };
         /** DataQualityCheck */
         DataQualityCheck: {
@@ -2092,6 +2199,83 @@ export interface components {
             pagination: components["schemas"]["Pagination"];
             sort?: components["schemas"]["SortMeta"] | null;
         };
+        /** FeatureAccessContext */
+        FeatureAccessContext: {
+            /** @default public */
+            access_tier: components["schemas"]["FeatureAccessTier"];
+            /**
+             * Environment
+             * @default local
+             */
+            environment: string;
+            /**
+             * Is Admin
+             * @default false
+             */
+            is_admin: boolean;
+        };
+        /** FeatureAccessDecision */
+        FeatureAccessDecision: {
+            /** Feature Key */
+            feature_key: string;
+            /** Is Enabled */
+            is_enabled: boolean;
+            /** Reason */
+            reason: string;
+            access_tier: components["schemas"]["FeatureAccessTier"];
+            status?: components["schemas"]["FeatureFlagStatus"] | null;
+        };
+        /** FeatureAccessRule */
+        FeatureAccessRule: {
+            /** Feature Key */
+            feature_key: string;
+            access_tier: components["schemas"]["FeatureAccessTier"];
+            /** Is Enabled */
+            is_enabled: boolean;
+            /** Created At */
+            created_at?: string | null;
+        };
+        /**
+         * FeatureAccessTier
+         * @enum {string}
+         */
+        FeatureAccessTier: "public" | "beta" | "internal" | "admin";
+        /** FeatureFlag */
+        FeatureFlag: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: string | null;
+            status: components["schemas"]["FeatureFlagStatus"];
+            access_tier: components["schemas"]["FeatureAccessTier"];
+            /** Default Enabled */
+            default_enabled: boolean;
+            /** Is Enabled For Context */
+            is_enabled_for_context: boolean;
+            /** Decision Reason */
+            decision_reason: string;
+        };
+        /** FeatureFlagDetailResponse */
+        FeatureFlagDetailResponse: {
+            item: components["schemas"]["FeatureFlag"];
+            decision: components["schemas"]["FeatureAccessDecision"];
+            context: components["schemas"]["FeatureAccessContext"];
+            /** Access Rules */
+            access_rules?: components["schemas"]["FeatureAccessRule"][];
+        };
+        /** FeatureFlagListResponse */
+        FeatureFlagListResponse: {
+            /** Items */
+            items: components["schemas"]["FeatureFlag"][];
+            context: components["schemas"]["FeatureAccessContext"];
+        };
+        /**
+         * FeatureFlagStatus
+         * @enum {string}
+         */
+        FeatureFlagStatus: "enabled" | "disabled" | "internal" | "deprecated";
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -4062,6 +4246,41 @@ export interface operations {
             };
         };
     };
+    read_country_data_journal_api_v1_countries__country_slug__data_journal_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryDataJournalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     read_country_routes_api_v1_countries__country_slug__routes_get: {
         parameters: {
             query?: {
@@ -5471,6 +5690,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnalyticsEventCreateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_feature_flags_api_v1_platform_features_get: {
+        parameters: {
+            query?: {
+                access_tier?: components["schemas"]["FeatureAccessTier"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeatureFlagListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_feature_flag_api_v1_platform_features__feature_key__get: {
+        parameters: {
+            query?: {
+                access_tier?: components["schemas"]["FeatureAccessTier"];
+            };
+            header?: never;
+            path: {
+                feature_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeatureFlagDetailResponse"];
                 };
             };
             /** @description Validation Error */

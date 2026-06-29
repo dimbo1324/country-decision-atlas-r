@@ -19,6 +19,13 @@ from app.schemas.routes import (
     RouteListResponse,
     RouteType,
 )
+from app.services.cache import cache_ttl, get_cache_backend
+from app.services.cache_invalidation import (
+    invalidate_country_cache,
+    invalidate_home_cache,
+    invalidate_routes_cache,
+)
+from app.services.cache_keys import routes_key
 from app.services.publication import (
     audit_action_for_transition,
     ensure_allowed_transition,
@@ -30,6 +37,47 @@ from uuid import UUID
 
 
 def list_country_routes(
+    connection: Connection[Any],
+    country_slug: str,
+    locale: str,
+    route_type: RouteType | str | None = None,
+    allows_work: EligibilityFlag | str | None = None,
+    allows_family: EligibilityFlag | str | None = None,
+    leads_to_pr: EligibilityFlag | str | None = None,
+    limit: int = 50,
+    offset: int = 0,
+) -> RouteListResponse:
+    key = routes_key(
+        country_slug,
+        locale,
+        {
+            "route_type": _enum_value(route_type),
+            "allows_work": _enum_value(allows_work),
+            "allows_family": _enum_value(allows_family),
+            "leads_to_pr": _enum_value(leads_to_pr),
+            "limit": limit,
+            "offset": offset,
+        },
+    )
+    cached = get_cache_backend().get_or_set_json(
+        key,
+        cache_ttl(),
+        lambda: _list_country_routes_uncached(
+            connection,
+            country_slug,
+            locale,
+            route_type,
+            allows_work,
+            allows_family,
+            leads_to_pr,
+            limit,
+            offset,
+        ).model_dump(mode="json"),
+    )
+    return RouteListResponse.model_validate(cached)
+
+
+def _list_country_routes_uncached(
     connection: Connection[Any],
     country_slug: str,
     locale: str,
@@ -122,6 +170,12 @@ def change_route_status(
         after = routes_repository.patch_route_status(connection, route_id, new_status)
         _audit_status_change(connection, before, after, changed_by)
         _emit_route_published_event(connection, before, after)
+    if is_publish_transition(old_status, new_status):
+        country_slug = str(after.get("country_slug") or "")
+        if country_slug:
+            invalidate_routes_cache(country_slug)
+            invalidate_country_cache(country_slug)
+            invalidate_home_cache()
     return after
 
 

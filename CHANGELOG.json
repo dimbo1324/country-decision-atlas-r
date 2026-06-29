@@ -2010,6 +2010,49 @@
         "redis_runtime_added": "false",
         "product_math_changed": "false"
       }
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "platform-runtime-foundations-v1",
+      "task": "feat/platform-runtime-foundations-v1",
+      "branch": "feat/platform-runtime-foundations-v1",
+      "summary": "Start Platform Runtime Foundations with feature flags runtime, Redis cache foundation, public country data journal, OpenAPI contracts, minimal frontend integration, DQ checks, and full quality gate.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "platform-runtime-foundations-v1",
+      "task": "feat/platform-runtime-foundations-v1",
+      "branch": "feat/platform-runtime-foundations-v1",
+      "summary": "Completed Platform Runtime Foundations v1: feature flags runtime and public API, optional Redis cache foundation with best-effort invalidation, public country data journal derived from public-safe source-backed data, minimal country page integration, OpenAPI/TypeScript contracts, runtime DQ checks, Docker migration smoke, and full quality gate.",
+      "status": "completed",
+      "gate": {
+        "baseline_pytest": "tests reached 100% but Windows temp cleanup raised PermissionError in system temp; rerun with local TMP passed later",
+        "baseline_ruff": "All checks passed",
+        "baseline_typecheck": "passed",
+        "focused_pytest": "42 passed",
+        "pytest_full": "880 passed, 23 skipped",
+        "mypy": "no issues found in 179 source files",
+        "ruff_check": "All checks passed",
+        "ruff_format": "181 files formatted/checked clean after format",
+        "sqlfluff": "All Finished",
+        "contracts_generate": "passed via corepack pnpm@9.12.0 contracts:generate",
+        "pnpm_quality": "passed",
+        "pnpm_format_check": "passed",
+        "pnpm_web_mvp_check": "167 passed",
+        "docker_migration_clean": "001-031 applied",
+        "docker_migration_idempotency": "001-031 skipped on second run",
+        "runtime_smoke": "health ok; platform features ok; data_journal_enabled enabled for public; Russia/Uruguay/Argentina journals ok",
+        "docs_unchanged": "true",
+        "readme_md_txt_unchanged": "true",
+        "migration_030_unchanged": "true",
+        "product_math_changed": "false",
+        "analytics_privacy_changed": "false"
+      }
     }
   ]
 }

@@ -30,6 +30,13 @@ type PersonaWeightProfileResponse =
 type AnalyticsEventCreate = components["schemas"]["AnalyticsEventCreate"];
 type AnalyticsEventCreateResponse =
   components["schemas"]["AnalyticsEventCreateResponse"];
+type FeatureFlag = components["schemas"]["FeatureFlag"];
+type FeatureAccessRule = components["schemas"]["FeatureAccessRule"];
+type FeatureAccessDecision = components["schemas"]["FeatureAccessDecision"];
+type FeatureFlagListResponse = components["schemas"]["FeatureFlagListResponse"];
+type FeatureFlagDetailResponse = components["schemas"]["FeatureFlagDetailResponse"];
+type DataJournalEntry = components["schemas"]["DataJournalEntry"];
+type CountryDataJournalResponse = components["schemas"]["CountryDataJournalResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -59,4 +66,11 @@ export type FrontendCriticalContracts = {
   personaWeightProfileResponse: PersonaWeightProfileResponse;
   analyticsEventCreate: AnalyticsEventCreate;
   analyticsEventCreateResponse: AnalyticsEventCreateResponse;
+  featureFlag: FeatureFlag;
+  featureAccessRule: FeatureAccessRule;
+  featureAccessDecision: FeatureAccessDecision;
+  featureFlagListResponse: FeatureFlagListResponse;
+  featureFlagDetailResponse: FeatureFlagDetailResponse;
+  dataJournalEntry: DataJournalEntry;
+  countryDataJournalResponse: CountryDataJournalResponse;
 };

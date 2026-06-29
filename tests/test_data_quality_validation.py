@@ -90,6 +90,10 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_inactive_personas_with_modifiers",
         "list_active_personas_missing_descriptions",
         "list_persona_adjusted_weight_inputs",
+        "list_enabled_feature_flags_without_access_rules",
+        "list_disabled_feature_flags_without_access_rules",
+        "list_data_journal_events_with_internal_payload_fields",
+        "list_data_journal_events_referencing_non_public_content",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
