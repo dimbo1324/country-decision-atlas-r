@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"os"
+	"strings"
 )
 
 type Config struct {
@@ -15,6 +16,8 @@ type Config struct {
 	TelegramMode       string
 	NotifyAfter        string
 	NotifierHTTPAddr   string
+	AllowedCountries   []string
+	GRPCAddr           string
 }
 
 func Load() (*Config, error) {
@@ -28,6 +31,8 @@ func Load() (*Config, error) {
 		TelegramMode:       getEnv("TELEGRAM_MODE", "fake"),
 		NotifyAfter:        getEnv("NOTIFY_AFTER", "2026-01-01T00:00:00Z"),
 		NotifierHTTPAddr:   getEnv("NOTIFIER_HTTP_ADDR", ":8081"),
+		AllowedCountries:   parseCSV(getEnv("NOTIFIER_ALLOWED_COUNTRIES", "russia,uruguay,argentina")),
+		GRPCAddr:           getEnv("GRPC_ADDR", ":9090"),
 	}
 	if err := c.validate(); err != nil {
 		return nil, err
@@ -47,4 +52,19 @@ func getEnv(key, defaultVal string) string {
 		return v
 	}
 	return defaultVal
+}
+
+func parseCSV(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]string, 0, len(parts))
+	for _, p := range parts {
+		t := strings.TrimSpace(strings.ToLower(p))
+		if t != "" {
+			result = append(result, t)
+		}
+	}
+	return result
 }

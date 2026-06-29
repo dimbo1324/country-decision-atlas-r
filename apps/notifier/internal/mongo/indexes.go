@@ -18,6 +18,9 @@ func EnsureIndexes(ctx context.Context, store *Store) error {
 	if err := ensureDeliveryLogIndexes(ctx, store); err != nil {
 		return err
 	}
+	if err := ensureTelegramIdentityIndexes(ctx, store); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -48,6 +51,14 @@ func ensureDeliveryLogIndexes(ctx context.Context, store *Store) error {
 	_, err := coll.Indexes().CreateMany(ctx, []mongodriver.IndexModel{
 		{Keys: bson.D{{Key: "event_key", Value: 1}}},
 		{Keys: bson.D{{Key: "telegram_user_id", Value: 1}}},
+	})
+	return err
+}
+
+func ensureTelegramIdentityIndexes(ctx context.Context, store *Store) error {
+	_, err := store.TelegramIdentities().Indexes().CreateOne(ctx, mongodriver.IndexModel{
+		Keys:    bson.D{{Key: "telegram_user_id", Value: 1}},
+		Options: options.Index().SetUnique(true),
 	})
 	return err
 }

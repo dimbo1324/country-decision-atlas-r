@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package country_decision_alerts.subscriptions.v1;
+
+option go_package = "github.com/country-decision-atlas/notifier/internal/grpc/pb";
+
+service SubscriptionService {
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (SubscriptionResponse);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (SubscriptionResponse);
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  rpc GetDeliveryStatus(GetDeliveryStatusRequest) returns (GetDeliveryStatusResponse);
+}
+
+message Subscription {
+  string telegram_user_id = 1;
+  string country_slug = 2;
+  bool active = 3;
+  string web_user_id = 4;
+}
+
+message DeliveryStatus {
+  string event_key = 1;
+  string telegram_user_id = 2;
+  string country_slug = 3;
+  string status = 4;
+  string sent_at = 5;
+  string error = 6;
+}
+
+message CreateSubscriptionRequest {
+  string telegram_user_id = 1;
+  string username = 2;
+  string country_slug = 3;
+}
+
+message DeleteSubscriptionRequest {
+  string telegram_user_id = 1;
+  string country_slug = 2;
+}
+
+message ListSubscriptionsRequest {
+  string telegram_user_id = 1;
+}
+
+message GetDeliveryStatusRequest {
+  string telegram_user_id = 1;
+  string event_key = 2;
+  string country_slug = 3;
+  int32 limit = 4;
+}
+
+message SubscriptionResponse {
+  Subscription subscription = 1;
+  string error = 2;
+}
+
+message ListSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+}
+
+message GetDeliveryStatusResponse {
+  repeated DeliveryStatus entries = 1;
+}
