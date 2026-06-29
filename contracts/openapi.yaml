@@ -2320,6 +2320,31 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - AdminTokenAuth: []
+  /api/v1/analytics/events:
+    post:
+      tags:
+      - analytics
+      summary: Create Analytics Event
+      operationId: create_analytics_event_api_v1_analytics_events_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsEventCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEventCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/user-stories:
     get:
       tags:
@@ -2650,6 +2675,112 @@ components:
       required:
       - all_mvp_ready
       title: AllCountriesOnboardingResult
+    AnalyticsEventCreate:
+      properties:
+        event_type:
+          type: string
+          maxLength: 64
+          minLength: 2
+          pattern: ^[a-z][a-z0-9_]{1,63}$
+          title: Event Type
+        session_id:
+          type: string
+          maxLength: 256
+          minLength: 8
+          title: Session Id
+        source:
+          $ref: '#/components/schemas/AnalyticsSource'
+          default: web
+        path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Path
+        locale:
+          anyOf:
+          - type: string
+            maxLength: 16
+          - type: 'null'
+          title: Locale
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Country Slug
+        scenario_slug:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Persona Slug
+        route_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Route Id
+        entity_type:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Entity Id
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - event_type
+      - session_id
+      title: AnalyticsEventCreate
+    AnalyticsEventCreateResponse:
+      properties:
+        accepted:
+          type: boolean
+          title: Accepted
+        stored:
+          type: boolean
+          title: Stored
+        event_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Event Id
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+      type: object
+      required:
+      - accepted
+      - stored
+      title: AnalyticsEventCreateResponse
+    AnalyticsSource:
+      type: string
+      enum:
+      - web
+      - api
+      - worker
+      - notifier
+      - unknown
+      title: AnalyticsSource
     ApiError:
       properties:
         code:

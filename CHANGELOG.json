@@ -1967,6 +1967,49 @@
         "python -m pre_commit run --all-files: passed"
       ],
       "status": "completed"
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "platform-foundations-v1",
+      "task": "feat/platform-foundations-v1",
+      "branch": "feat/platform-foundations-v1",
+      "summary": "Start Platform Foundations v1 with baseline inspection, migration 030 platform tables, anonymous analytics API, OpenAPI contracts, and minimal frontend analytics helper.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "platform-foundations-v1",
+      "task": "feat/platform-foundations-v1",
+      "branch": "feat/platform-foundations-v1",
+      "summary": "Started Episode 5 Platform Foundations v1 with migration 030 platform tables, privacy-safe anonymous analytics ingestion, HMAC session hashing, PII metadata rejection, OpenAPI/TypeScript contract updates, minimal frontend analytics helper, decision/persona instrumentation, and analytics E2E smoke. Feature flag tables were created as database foundation only; no feature flag runtime/admin/API/UI was added.",
+      "status": "completed",
+      "gate": {
+        "baseline_pytest": "823 passed, 23 skipped",
+        "baseline_ruff": "All checks passed",
+        "focused_pytest": "38 passed before full gate; analytics/platform tests included",
+        "pytest_full": "850 passed, 23 skipped",
+        "mypy": "no issues found in 163 source files",
+        "ruff_check": "All checks passed",
+        "ruff_format": "165 files already formatted",
+        "sqlfluff": "All Finished",
+        "contracts_generate": "passed via corepack pnpm@9.12.0 contracts:generate",
+        "pnpm_quality": "passed",
+        "pnpm_format_check": "passed",
+        "pnpm_web_mvp_check": "162 passed after recreating Docker API with ADMIN_TOKEN=ci-test-admin-token",
+        "pre_commit": "all hooks passed",
+        "docker_migration_clean": "001-030 applied",
+        "docker_migration_idempotency": "001-030 skipped on second run",
+        "runtime_smoke": "health ok; analytics valid event stored; PII email rejected; raw session not stored",
+        "docs_unchanged": "true",
+        "readme_md_txt_unchanged": "true",
+        "feature_flags_runtime_added": "false",
+        "redis_runtime_added": "false",
+        "product_math_changed": "false"
+      }
     }
   ]
 }

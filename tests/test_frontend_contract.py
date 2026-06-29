@@ -325,6 +325,7 @@ def test_openapi_contains_frontend_critical_contract() -> None:
         "/api/v1/user-stories",
         "/api/v1/decision/run",
         "/api/v1/admin/data-quality/report",
+        "/api/v1/analytics/events",
     }:
         assert path in paths
 
@@ -342,6 +343,8 @@ def test_openapi_contains_frontend_critical_contract() -> None:
         "DataQualityReport",
         "LocaleResolution",
         "ErrorResponse",
+        "AnalyticsEventCreate",
+        "AnalyticsEventCreateResponse",
     }:
         assert schema in schemas
 

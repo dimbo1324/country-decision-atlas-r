@@ -8,6 +8,7 @@ import type { ScenarioListResponse } from "../../shared/api/scenarios";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import type { PersonaListResponse } from "../../shared/api/personas";
 import { countriesApi, scenariosApi, decisionApi, personasApi } from "../../shared/api";
+import { trackEvent } from "../../shared/analytics/client";
 import { normalizeLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -109,6 +110,17 @@ function DecisionFormInner() {
 
   async function handleRun() {
     if (candidateCountrySlugs.length === 0) return;
+    void trackEvent({
+      event_type: "decision_started",
+      source: "web",
+      path: "/decision",
+      locale,
+      scenario_slug: scenarioSlug,
+      persona_slug: selectedPersonaSlug || undefined,
+      metadata: {
+        candidate_count: candidateCountrySlugs.length,
+      },
+    });
     setIsRunning(true);
     setRunError(null);
     setResult(null);
@@ -230,7 +242,19 @@ function DecisionFormInner() {
             id="persona-select"
             className="formSelect"
             value={selectedPersonaSlug}
-            onChange={(e) => setSelectedPersonaSlug(e.target.value)}
+            onChange={(e) => {
+              const personaSlug = e.target.value;
+              setSelectedPersonaSlug(personaSlug);
+              if (personaSlug) {
+                void trackEvent({
+                  event_type: "persona_selected",
+                  source: "web",
+                  path: "/decision",
+                  locale,
+                  persona_slug: personaSlug,
+                });
+              }
+            }}
             data-testid="persona-selector"
           >
             <option value="">Без персонализации</option>

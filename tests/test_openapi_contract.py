@@ -45,6 +45,7 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/admin/legal-signals",
         "/api/v1/admin/data-quality/report",
         "/api/v1/admin/translations/jobs",
+        "/api/v1/analytics/events",
     }
     assert expected_paths.issubset(set(contract["paths"]))
 
@@ -94,6 +95,8 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "SortMeta",
         "UserStory",
         "UserStoryCreate",
+        "AnalyticsEventCreate",
+        "AnalyticsEventCreateResponse",
     ]:
         assert schema_name in schemas
 
@@ -104,6 +107,14 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     assert run_path["responses"]["200"]["content"]["application/json"]["schema"] == {
         "$ref": "#/components/schemas/DecisionRunResponse"
     }
+
+    analytics_path = contract["paths"]["/api/v1/analytics/events"]["post"]
+    assert analytics_path["requestBody"]["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/AnalyticsEventCreate"
+    }
+    assert analytics_path["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/AnalyticsEventCreateResponse"}
 
 
 def test_openapi_contract_has_admin_token_security() -> None:

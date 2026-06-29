@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     api_rate_limit_per_minute: int = 120
     api_rate_limit_max_clients: int = 10000
     trusted_proxy_headers: bool = False
+    analytics_enabled: bool = True
+    analytics_salt: str = "local-dev-analytics-salt"
     translation_provider: str = "fake"
     ai_translation_provider: str = "openai"
     ai_translation_model: str = "gpt-4o-mini"

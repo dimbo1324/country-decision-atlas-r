@@ -837,6 +837,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analytics/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Analytics Event */
+        post: operations["create_analytics_event_api_v1_analytics_events_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/user-stories": {
         parameters: {
             query?: never;
@@ -976,6 +993,51 @@ export interface components {
             /** All Mvp Ready */
             all_mvp_ready: boolean;
         };
+        /** AnalyticsEventCreate */
+        AnalyticsEventCreate: {
+            /** Event Type */
+            event_type: string;
+            /** Session Id */
+            session_id: string;
+            /** @default web */
+            source: components["schemas"]["AnalyticsSource"];
+            /** Path */
+            path?: string | null;
+            /** Locale */
+            locale?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Entity Type */
+            entity_type?: string | null;
+            /** Entity Id */
+            entity_id?: string | null;
+            /** Metadata */
+            metadata?: {
+                [key: string]: unknown;
+            };
+        };
+        /** AnalyticsEventCreateResponse */
+        AnalyticsEventCreateResponse: {
+            /** Accepted */
+            accepted: boolean;
+            /** Stored */
+            stored: boolean;
+            /** Event Id */
+            event_id?: string | null;
+            /** Reason */
+            reason?: string | null;
+        };
+        /**
+         * AnalyticsSource
+         * @enum {string}
+         */
+        AnalyticsSource: "web" | "api" | "worker" | "notifier" | "unknown";
         /** ApiError */
         ApiError: {
             /** Code */
@@ -5376,6 +5438,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TranslationJobRetryFailedResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_analytics_event_api_v1_analytics_events_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalyticsEventCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalyticsEventCreateResponse"];
                 };
             };
             /** @description Validation Error */

@@ -27,6 +27,9 @@ type PersonaListResponse = components["schemas"]["PersonaListResponse"];
 type PersonaWeightProfile = components["schemas"]["PersonaWeightProfile"];
 type PersonaWeightProfileResponse =
   components["schemas"]["PersonaWeightProfileResponse"];
+type AnalyticsEventCreate = components["schemas"]["AnalyticsEventCreate"];
+type AnalyticsEventCreateResponse =
+  components["schemas"]["AnalyticsEventCreateResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -54,4 +57,6 @@ export type FrontendCriticalContracts = {
   personas: PersonaListResponse;
   personaWeightProfile: PersonaWeightProfile;
   personaWeightProfileResponse: PersonaWeightProfileResponse;
+  analyticsEventCreate: AnalyticsEventCreate;
+  analyticsEventCreateResponse: AnalyticsEventCreateResponse;
 };
