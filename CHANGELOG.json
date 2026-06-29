@@ -2053,6 +2053,53 @@
         "product_math_changed": "false",
         "analytics_privacy_changed": "false"
       }
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_started",
+      "type": "chore",
+      "scope": "platform-foundations-closeout-v1",
+      "task": "chore/platform-foundations-closeout-v1",
+      "branch": "chore/platform-foundations-closeout-v1",
+      "summary": "Start Platform Foundations closeout with clean DB chain, runtime diagnostics, cache mode smoke, Redis failure safety, regression flows, full gate, and final merge/push.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-29",
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "platform-foundations-closeout-v1",
+      "task": "chore/platform-foundations-closeout-v1",
+      "branch": "chore/platform-foundations-closeout-v1",
+      "summary": "Closed Platform Foundations with clean migration chain 001-031, idempotent migrations, runtime diagnostics for analytics/features/data-journal endpoints, CACHE_MODE null and redis smoke, Redis failure fallback, public-safe data journal checks, feature-flag visibility smoke, legacy countries/routes/persona/notifier flows, and full quality gate.",
+      "checks": [
+        "clean DB chain 001-031: 31 migrations applied through 031_platform_runtime_foundations_v1.sql",
+        "apply_migrations.py idempotency: second run skipped 001-031",
+        "runtime diagnostics captured for analytics events, platform features, data_journal_enabled, and Russia/Uruguay/Argentina data journals",
+        "CACHE_MODE=null runtime smoke passed",
+        "CACHE_MODE=redis runtime smoke passed",
+        "Redis stopped while CACHE_MODE=redis: health/countries/country card/features/data journal stayed available",
+        "data journal responses checked for no changed_by/raw_diff/internal_metadata",
+        "data_journal_enabled feature detail and E2E visibility verified",
+        "legacy flows verified: countries, routes, persona decision, analytics, frontend MVP flows",
+        "backend quality: ruff, ruff format check, mypy, pytest 880 passed / 23 skipped, sqlfluff",
+        "runtime smoke: 23 passed",
+        "notifier quality: protobuf generation, gofmt, go vet, go test passed in Linux Go container",
+        "frontend quality: contracts generated with no diff, prettier check, lint, typecheck, build passed",
+        "Playwright E2E: 167 passed"
+      ],
+      "status": "completed",
+      "risk": "No feature changes. Diagnostics only; runtime artifacts ignored. Local root frontend scripts required pinned pnpm direct invocation because bundled bare pnpm is newer than packageManager and mismatches lockfile overrides.",
+      "flags": {
+        "features_added": "false",
+        "admin_ui_added": "false",
+        "mutation_api_added": "false",
+        "redis_invalidation_expanded": "false",
+        "auth_rbac_changed": "false",
+        "trust_score_started": "false",
+        "drift_started": "false",
+        "ai_community_started": "false"
+      }
     }
   ]
 }
