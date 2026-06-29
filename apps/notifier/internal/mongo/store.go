@@ -46,3 +46,7 @@ func (s *Store) DedupKeys() *mongo.Collection {
 func (s *Store) TelegramIdentities() *mongo.Collection {
 	return s.db.Collection("telegram_identities")
 }
+
+func (s *Store) DeadLetters() *mongo.Collection {
+	return s.db.Collection("dead_letters")
+}

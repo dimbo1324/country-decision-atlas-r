@@ -2,8 +2,11 @@ package events
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 	"time"
+
+	"github.com/country-decision-atlas/notifier/internal/dlq"
 )
 
 func makeEvent(overrides map[string]interface{}) []byte {
@@ -47,6 +50,27 @@ func TestMissingEventTypeReturnsError(t *testing.T) {
 	_, err := Parse(data)
 	if err == nil {
 		t.Error("expected error for empty event_type")
+	}
+}
+
+func TestUnsupportedEventTypeReturnsReason(t *testing.T) {
+	data := makeEvent(map[string]interface{}{"event_type": "unknown.event"})
+	_, err := Parse(data)
+	if !errors.Is(err, ErrUnsupportedEventType) {
+		t.Fatalf("want ErrUnsupportedEventType got %v", err)
+	}
+	if ReasonForError(err) != dlq.ReasonUnsupportedEventType {
+		t.Errorf("want unsupported_event_type got %s", ReasonForError(err))
+	}
+}
+
+func TestInvalidJSONReturnsReason(t *testing.T) {
+	_, err := Parse([]byte("{bad"))
+	if !errors.Is(err, ErrInvalidJSON) {
+		t.Fatalf("want ErrInvalidJSON got %v", err)
+	}
+	if ReasonForError(err) != dlq.ReasonInvalidJSON {
+		t.Errorf("want invalid_json got %s", ReasonForError(err))
 	}
 }
 

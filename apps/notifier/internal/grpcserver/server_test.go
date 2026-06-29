@@ -7,10 +7,12 @@ import (
 	"time"
 
 	pb "github.com/country-decision-atlas/notifier/internal/grpc/pb"
+	"github.com/country-decision-atlas/notifier/internal/metrics"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/subscriptions"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 func startTestServer(t *testing.T) (pb.SubscriptionServiceClient, *mongostore.InMemorySubscriptionRepository, *mongostore.InMemoryDeliveryLogRepository) {
@@ -266,5 +268,27 @@ func TestGRPCWebUserIDRemainsNull(t *testing.T) {
 	})
 	if resp.Subscription.WebUserId != "" {
 		t.Errorf("want empty WebUserId got %s", resp.Subscription.WebUserId)
+	}
+}
+
+func TestGRPCAuthFailedMetric(t *testing.T) {
+	m := metrics.New()
+	interceptor := tokenAuthInterceptor("secret", m)
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs("authorization", "Bearer wrong"))
+
+	_, err := interceptor(ctx, nil, &grpc.UnaryServerInfo{FullMethod: "/test"}, func(context.Context, any) (any, error) {
+		t.Fatal("handler should not be called with invalid token")
+		return nil, nil
+	})
+
+	if err == nil {
+		t.Fatal("expected unauthenticated error")
+	}
+	snapshot := m.Snapshot()
+	if snapshot.GRPCRequests != 1 {
+		t.Errorf("want grpc_requests=1 got %d", snapshot.GRPCRequests)
+	}
+	if snapshot.GRPCAuthFailed != 1 {
+		t.Errorf("want grpc_auth_failed=1 got %d", snapshot.GRPCAuthFailed)
 	}
 }

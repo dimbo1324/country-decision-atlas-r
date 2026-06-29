@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict, dataclass
 from datetime import datetime
 import json
 import os
+from pathlib import Path
 import sys
+import time
 from typing import Any, Protocol
 from uuid import UUID
 
@@ -55,6 +58,24 @@ class KafkaPublisher:
         producer.flush()
 
 
+@dataclass
+class RelayMetrics:
+    selected_total: int = 0
+    published_total: int = 0
+    relayed_total: int = 0
+    failed_total: int = 0
+    marked_failed_total: int = 0
+    skipped_total: int = 0
+    dry_run_total: int = 0
+    duration_ms: int = 0
+    notifiable_false_skipped_total: int = 0
+    before_notify_after_skipped_total: int = 0
+    max_attempts_reached_total: int = 0
+
+    def to_dict(self) -> dict[str, int]:
+        return asdict(self)
+
+
 def build_relay_payload(event: dict[str, Any]) -> dict[str, Any]:
     created_at = event.get("created_at")
     if isinstance(created_at, datetime):
@@ -86,6 +107,7 @@ def run_relay(
     max_attempts: int = DEFAULT_MAX_ATTEMPTS,
     notify_after: str = DEFAULT_NOTIFY_AFTER,
     dry_run: bool = False,
+    metrics: RelayMetrics | None = None,
 ) -> int:
     from app.repositories.domain_events import (
         lock_pending_notifiable_domain_events,
@@ -93,32 +115,61 @@ def run_relay(
         mark_domain_event_relayed,
     )
 
-    with conn.transaction():
-        events = lock_pending_notifiable_domain_events(
-            conn,
-            batch_size=batch_size,
-            notify_after=notify_after,
-        )
+    started = time.monotonic()
+    metrics = metrics or RelayMetrics()
+    try:
+        with conn.transaction():
+            events = lock_pending_notifiable_domain_events(
+                conn,
+                batch_size=batch_size,
+                notify_after=notify_after,
+            )
 
-        if not events:
-            return 0
+            metrics.selected_total = len(events)
+            if not events:
+                return 0
 
-        if dry_run:
+            if dry_run:
+                metrics.dry_run_total = len(events)
+                metrics.skipped_total = len(events)
+                return len(events)
+
+            for event in events:
+                event_id = UUID(str(event["id"]))
+                payload = build_relay_payload(event)
+                key = relay_key(event)
+                try:
+                    publisher.publish(key, payload)
+                    metrics.published_total += 1
+                    mark_domain_event_relayed(conn, event_id)
+                    metrics.relayed_total += 1
+                except Exception as exc:
+                    metrics.failed_total += 1
+                    updated = mark_domain_event_publish_failed_or_retry(
+                        conn, event_id, str(exc), max_attempts
+                    )
+                    attempts = int(event.get("attempts") or 0) + 1
+                    if (
+                        updated and updated.get("status") == "failed"
+                    ) or attempts >= max_attempts:
+                        metrics.marked_failed_total += 1
+                        metrics.max_attempts_reached_total += 1
+
             return len(events)
+    finally:
+        metrics.duration_ms = int((time.monotonic() - started) * 1000)
 
-        for event in events:
-            event_id = UUID(str(event["id"]))
-            payload = build_relay_payload(event)
-            key = relay_key(event)
-            try:
-                publisher.publish(key, payload)
-                mark_domain_event_relayed(conn, event_id)
-            except Exception as exc:
-                mark_domain_event_publish_failed_or_retry(
-                    conn, event_id, str(exc), max_attempts
-                )
 
-        return len(events)
+def write_metrics(
+    metrics: RelayMetrics, *, metrics_json: bool, metrics_output: str | None
+) -> None:
+    payload = json.dumps(metrics.to_dict(), sort_keys=True)
+    if metrics_output:
+        path = Path(metrics_output)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(payload + "\n", encoding="utf-8")
+    if metrics_json:
+        print(payload)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -130,6 +181,8 @@ def main(argv: list[str] | None = None) -> int:
         default=os.environ.get("NOTIFY_AFTER", DEFAULT_NOTIFY_AFTER),
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--metrics-json", action="store_true")
+    parser.add_argument("--metrics-output")
     args = parser.parse_args(argv)
 
     database_url = os.environ.get("DATABASE_URL", "")
@@ -145,6 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     publisher: EventPublisher = KafkaPublisher(kafka_brokers, kafka_topic)
 
     with psycopg.connect(database_url, row_factory=psycopg.rows.dict_row) as conn:
+        metrics = RelayMetrics()
         count = run_relay(
             conn,
             publisher,
@@ -152,12 +206,18 @@ def main(argv: list[str] | None = None) -> int:
             max_attempts=args.max_attempts,
             notify_after=args.notify_after,
             dry_run=args.dry_run,
+            metrics=metrics,
         )
 
-    if args.dry_run:
-        print(f"dry-run: {count} eligible events found, nothing published")
+    if args.metrics_json or args.metrics_output:
+        write_metrics(
+            metrics, metrics_json=args.metrics_json, metrics_output=args.metrics_output
+        )
     else:
-        print(f"relayed: {count} events")
+        if args.dry_run:
+            print(f"dry-run: {count} eligible events found, nothing published")
+        else:
+            print(f"relayed: {count} events")
     return 0
 
 

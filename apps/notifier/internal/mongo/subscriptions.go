@@ -13,6 +13,8 @@ import (
 
 type Subscription struct {
 	TelegramUserID string    `bson:"telegram_user_id"`
+	ChannelType    string    `bson:"channel_type,omitempty"`
+	RecipientID    string    `bson:"recipient_id,omitempty"`
 	CountrySlug    string    `bson:"country_slug"`
 	Active         bool      `bson:"active"`
 	CreatedAt      time.Time `bson:"created_at"`
@@ -59,8 +61,10 @@ func (r *MongoSubscriptionRepository) CreateOrReactivate(ctx context.Context, te
 	filter := bson.M{"telegram_user_id": telegramUserID, "country_slug": countrySlug}
 	update := bson.M{
 		"$set": bson.M{
-			"active":     true,
-			"updated_at": now,
+			"active":       true,
+			"updated_at":   now,
+			"channel_type": "telegram",
+			"recipient_id": telegramUserID,
 		},
 		"$setOnInsert": bson.M{
 			"telegram_user_id": telegramUserID,
@@ -157,11 +161,15 @@ func (r *InMemorySubscriptionRepository) CreateOrReactivate(_ context.Context, t
 		if s.TelegramUserID == telegramUserID && s.CountrySlug == countrySlug {
 			s.Active = true
 			s.UpdatedAt = now
+			s.ChannelType = "telegram"
+			s.RecipientID = telegramUserID
 			return s, nil
 		}
 	}
 	sub := &Subscription{
 		TelegramUserID: telegramUserID,
+		ChannelType:    "telegram",
+		RecipientID:    telegramUserID,
 		CountrySlug:    countrySlug,
 		Active:         true,
 		CreatedAt:      now,

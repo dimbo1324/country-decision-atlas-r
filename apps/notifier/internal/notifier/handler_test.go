@@ -5,7 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/country-decision-atlas/notifier/internal/channels"
+	"github.com/country-decision-atlas/notifier/internal/dlq"
 	"github.com/country-decision-atlas/notifier/internal/events"
+	"github.com/country-decision-atlas/notifier/internal/metrics"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/telegram"
 )
@@ -39,7 +42,7 @@ func TestDuplicateEventSkipped(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-dup", "argentina")
@@ -62,7 +65,7 @@ func TestMatchingSubscriberReceivesMessage(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-match", "argentina")
@@ -83,7 +86,7 @@ func TestNonMatchingSubscriberDoesNotReceiveMessage(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-nomatch", "argentina")
@@ -101,7 +104,7 @@ func TestInactiveSubscriberDoesNotReceiveMessage(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-inactive", "argentina")
@@ -117,7 +120,7 @@ func TestNoSubscribersHandledSafely(t *testing.T) {
 	subs := mongostore.NewInMemorySubscriptionRepository(nil)
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-nosub", "argentina")
@@ -137,7 +140,7 @@ func TestSuccessCreatesDeliveryLogSent(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-success", "argentina")
@@ -158,7 +161,7 @@ func TestFailureCreatesDeliveryLogFailed(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &errorClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-fail", "argentina")
@@ -189,7 +192,7 @@ func TestMessageTemplateIncludesCountryAndEventType(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	tg := &telegram.FakeClient{}
-	h := NewHandler(dedup, subs, dl, tg)
+	h := NewTelegramHandler(dedup, subs, dl, tg)
 
 	ctx := context.Background()
 	e := makeTestEvent("key-template", "argentina")
@@ -201,5 +204,79 @@ func TestMessageTemplateIncludesCountryAndEventType(t *testing.T) {
 	msg := tg.Sent[0].Text
 	if msg == "" {
 		t.Error("message should not be empty")
+	}
+}
+
+func TestUnsupportedChannelWritesDeliveryDLQAndMetrics(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository([]*mongostore.Subscription{
+		{
+			TelegramUserID: "user1",
+			ChannelType:    "email",
+			RecipientID:    "user@example.test",
+			CountrySlug:    "argentina",
+			Active:         true,
+			CreatedAt:      time.Now().UTC(),
+		},
+	})
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	m := metrics.New()
+	h := NewHandler(dedup, subs, dl, deadLetters, registry, m)
+
+	err := h.Handle(context.Background(), makeTestEvent("key-unsupported", "argentina"))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(dl.Entries) != 1 {
+		t.Fatalf("want 1 delivery_log entry got %d", len(dl.Entries))
+	}
+	if dl.Entries[0].Status != "failed" {
+		t.Errorf("want failed got %s", dl.Entries[0].Status)
+	}
+	if len(deadLetters.Entries) != 1 {
+		t.Fatalf("want 1 dead letter got %d", len(deadLetters.Entries))
+	}
+	for _, entry := range deadLetters.Entries {
+		if entry.ReasonCode != dlq.ReasonUnsupportedChannel {
+			t.Errorf("want unsupported_channel got %s", entry.ReasonCode)
+		}
+	}
+	snapshot := m.Snapshot()
+	if snapshot.UnsupportedChannelTotal != 1 {
+		t.Errorf("want unsupported_channel_total=1 got %d", snapshot.UnsupportedChannelTotal)
+	}
+	if snapshot.DeliveriesDLQ != 1 {
+		t.Errorf("want deliveries_dlq=1 got %d", snapshot.DeliveriesDLQ)
+	}
+}
+
+func TestTelegramFailureWritesDeliveryDLQ(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository([]*mongostore.Subscription{
+		makeActiveSub("user1", "argentina"),
+	})
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	registry.Register(channels.NewTelegramChannel(&errorClient{}))
+	m := metrics.New()
+	h := NewHandler(dedup, subs, dl, deadLetters, registry, m)
+
+	err := h.Handle(context.Background(), makeTestEvent("key-telegram-dlq", "argentina"))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(deadLetters.Entries) != 1 {
+		t.Fatalf("want 1 dead letter got %d", len(deadLetters.Entries))
+	}
+	for _, entry := range deadLetters.Entries {
+		if entry.ReasonCode != dlq.ReasonTelegramPermanentFailure {
+			t.Errorf("want telegram permanent failure got %s", entry.ReasonCode)
+		}
+	}
+	if m.Snapshot().TelegramErrors != 1 {
+		t.Errorf("want telegram_errors=1 got %d", m.Snapshot().TelegramErrors)
 	}
 }

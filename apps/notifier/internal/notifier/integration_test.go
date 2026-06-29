@@ -26,7 +26,7 @@ func makeIntegrationSetup() (
 	dedup := mongostore.NewInMemoryDedupRepository()
 	tg := &telegram.FakeClient{}
 	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
-	h := NewHandler(dedup, subsRepo, dl, tg)
+	h := NewTelegramHandler(dedup, subsRepo, dl, tg)
 	return h, subsRepo, dl, dedup, tg, svc
 }
 
@@ -169,7 +169,7 @@ func TestIntegrationDeliveryLogFailedOnTelegramError(t *testing.T) {
 	_, _ = svc.CreateSubscription(ctx, "user1", "dima", "argentina")
 
 	tg := &errorClient{}
-	h := NewHandler(dedup, subsRepo, dl, tg)
+	h := NewTelegramHandler(dedup, subsRepo, dl, tg)
 
 	e := makeEvent("key-fail-integ", "argentina")
 	_ = h.Handle(ctx, e)

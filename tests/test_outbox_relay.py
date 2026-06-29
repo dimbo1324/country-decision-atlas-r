@@ -4,9 +4,11 @@ from datetime import UTC, datetime
 import pytest
 from scripts.outbox_relay import (
     FakePublisher,
+    RelayMetrics,
     build_relay_payload,
     relay_key,
     run_relay,
+    write_metrics,
 )
 from typing import Any
 from unittest.mock import MagicMock
@@ -79,6 +81,11 @@ def _patch_repo(
         _c: Any, event_id: UUID, error: str, max_attempts_arg: int
     ) -> dict[str, Any] | None:
         failed_calls.append((str(event_id), error, max_attempts_arg))
+        for event in events:
+            if str(event["id"]) == str(event_id):
+                attempts = int(event.get("attempts") or 0) + 1
+                if attempts >= max_attempts_arg:
+                    return {**event, "status": "failed", "attempts": attempts}
         return None
 
     monkeypatch.setattr(repo, "lock_pending_notifiable_domain_events", fake_lock)
@@ -112,6 +119,26 @@ class TestRelaySelection:
         run_relay(_make_conn(), pub, notify_after=NOTIFY_AFTER)
         assert len(relayed) == 1
 
+    def test_success_metrics_are_recorded(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        event = _make_event(event_key="key-metrics", created_at=AFTER_DT)
+        _patch_repo(monkeypatch, [event], relayed, failed)
+        metrics = RelayMetrics()
+        count = run_relay(
+            _make_conn(),
+            FakePublisher(),
+            notify_after=NOTIFY_AFTER,
+            metrics=metrics,
+        )
+        assert count == 1
+        assert metrics.selected_total == 1
+        assert metrics.published_total == 1
+        assert metrics.relayed_total == 1
+        assert metrics.failed_total == 0
+
     def test_no_events_returns_zero(self, monkeypatch: pytest.MonkeyPatch) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
@@ -144,6 +171,26 @@ class TestRelayFiltering:
         assert len(pub.published) == 0
         assert len(relayed) == 0
 
+    def test_dry_run_metrics_are_recorded(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        event = _make_event(event_key="key-dry-metrics", created_at=AFTER_DT)
+        _patch_repo(monkeypatch, [event], relayed, failed)
+        metrics = RelayMetrics()
+        run_relay(
+            _make_conn(),
+            FakePublisher(),
+            notify_after=NOTIFY_AFTER,
+            dry_run=True,
+            metrics=metrics,
+        )
+        assert metrics.selected_total == 1
+        assert metrics.dry_run_total == 1
+        assert metrics.skipped_total == 1
+        assert metrics.published_total == 0
+
     def test_dry_run_changes_no_rows(self, monkeypatch: pytest.MonkeyPatch) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
@@ -174,6 +221,30 @@ class TestRelayFailure:
             _make_conn(), _FailPublisher(), notify_after=NOTIFY_AFTER, max_attempts=3
         )
         assert len(failed) == 1
+
+    def test_failure_metrics_are_recorded(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        event = _make_event(event_key="key-fail-metrics", created_at=AFTER_DT)
+        _patch_repo(monkeypatch, [event], relayed, failed)
+
+        class _FailPublisher:
+            def publish(self, _key: str, _payload: dict[str, Any]) -> None:
+                raise RuntimeError("kafka unavailable")
+
+        metrics = RelayMetrics()
+        run_relay(
+            _make_conn(),
+            _FailPublisher(),
+            notify_after=NOTIFY_AFTER,
+            max_attempts=3,
+            metrics=metrics,
+        )
+        assert metrics.selected_total == 1
+        assert metrics.failed_total == 1
+        assert metrics.relayed_total == 0
 
     def test_failure_does_not_relay(self, monkeypatch: pytest.MonkeyPatch) -> None:
         relayed: list[str] = []
@@ -206,6 +277,29 @@ class TestRelayFailure:
             _make_conn(), _FailPublisher(), notify_after=NOTIFY_AFTER, max_attempts=3
         )
         assert failed[0][2] == 3
+
+    def test_last_attempt_metrics_mark_failed(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        event = _make_event(event_key="key-last", created_at=AFTER_DT, attempts=2)
+        _patch_repo(monkeypatch, [event], relayed, failed)
+
+        class _FailPublisher:
+            def publish(self, _key: str, _payload: dict[str, Any]) -> None:
+                raise RuntimeError("kafka unavailable")
+
+        metrics = RelayMetrics()
+        run_relay(
+            _make_conn(),
+            _FailPublisher(),
+            notify_after=NOTIFY_AFTER,
+            max_attempts=3,
+            metrics=metrics,
+        )
+        assert metrics.marked_failed_total == 1
+        assert metrics.max_attempts_reached_total == 1
 
 
 class TestPayloadShape:
@@ -248,3 +342,16 @@ class TestKafkaNotRequired:
         pub = FakePublisher()
         count = run_relay(_make_conn(), pub, notify_after=NOTIFY_AFTER)
         assert count == 1
+
+
+class TestRelayMetricsOutput:
+    def test_write_metrics_output_file(self, tmp_path: Any) -> None:
+        metrics = RelayMetrics(selected_total=1, published_total=1)
+        path = tmp_path / "relay-metrics.json"
+
+        write_metrics(metrics, metrics_json=False, metrics_output=str(path))
+
+        assert path.exists()
+        body = path.read_text(encoding="utf-8")
+        assert '"selected_total": 1' in body
+        assert '"published_total": 1' in body

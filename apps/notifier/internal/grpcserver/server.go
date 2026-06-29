@@ -8,6 +8,7 @@ import (
 	"time"
 
 	pb "github.com/country-decision-atlas/notifier/internal/grpc/pb"
+	"github.com/country-decision-atlas/notifier/internal/metrics"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/subscriptions"
 	"google.golang.org/grpc"
@@ -20,10 +21,15 @@ type Server struct {
 	pb.UnimplementedSubscriptionServiceServer
 	svc         *subscriptions.Service
 	deliveryLog mongostore.DeliveryLogRepository
+	metrics     *metrics.Metrics
 }
 
 func New(svc *subscriptions.Service, deliveryLog mongostore.DeliveryLogRepository) *Server {
-	return &Server{svc: svc, deliveryLog: deliveryLog}
+	return NewWithMetrics(svc, deliveryLog, nil)
+}
+
+func NewWithMetrics(svc *subscriptions.Service, deliveryLog mongostore.DeliveryLogRepository, metricsCollector *metrics.Metrics) *Server {
+	return &Server{svc: svc, deliveryLog: deliveryLog, metrics: metricsCollector}
 }
 
 func (s *Server) CreateSubscription(ctx context.Context, req *pb.CreateSubscriptionRequest) (*pb.SubscriptionResponse, error) {
@@ -104,18 +110,30 @@ func toProtoSub(sub *mongostore.Subscription) *pb.Subscription {
 	}
 }
 
-func tokenAuthInterceptor(token string) grpc.UnaryServerInterceptor {
+func tokenAuthInterceptor(token string, metricsCollector *metrics.Metrics) grpc.UnaryServerInterceptor {
 	expected := []byte("Bearer " + token)
 	return func(ctx context.Context, req any, _ *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+		if metricsCollector != nil {
+			metricsCollector.IncGRPCRequests()
+		}
 		if token == "" {
+			if metricsCollector != nil {
+				metricsCollector.IncGRPCAuthFailed()
+			}
 			return nil, status.Error(codes.Unauthenticated, "grpc auth is not configured")
 		}
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
+			if metricsCollector != nil {
+				metricsCollector.IncGRPCAuthFailed()
+			}
 			return nil, status.Error(codes.Unauthenticated, "missing metadata")
 		}
 		values := md.Get("authorization")
 		if len(values) == 0 || subtle.ConstantTimeCompare([]byte(values[0]), expected) != 1 {
+			if metricsCollector != nil {
+				metricsCollector.IncGRPCAuthFailed()
+			}
 			return nil, status.Error(codes.Unauthenticated, "invalid token")
 		}
 		return handler(ctx, req)
@@ -127,7 +145,7 @@ func Serve(ctx context.Context, addr string, authToken string, srv *Server) erro
 	if err != nil {
 		return err
 	}
-	gs := grpc.NewServer(grpc.UnaryInterceptor(tokenAuthInterceptor(authToken)))
+	gs := grpc.NewServer(grpc.UnaryInterceptor(tokenAuthInterceptor(authToken, srv.metrics)))
 	pb.RegisterSubscriptionServiceServer(gs, srv)
 	go func() {
 		<-ctx.Done()

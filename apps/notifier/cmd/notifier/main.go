@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -9,11 +10,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/country-decision-atlas/notifier/internal/channels"
 	"github.com/country-decision-atlas/notifier/internal/config"
+	"github.com/country-decision-atlas/notifier/internal/dlq"
 	"github.com/country-decision-atlas/notifier/internal/events"
 	"github.com/country-decision-atlas/notifier/internal/grpcserver"
 	"github.com/country-decision-atlas/notifier/internal/health"
 	kafkaconsumer "github.com/country-decision-atlas/notifier/internal/kafka"
+	"github.com/country-decision-atlas/notifier/internal/metrics"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/notifier"
 	"github.com/country-decision-atlas/notifier/internal/subscriptions"
@@ -50,17 +54,21 @@ func main() {
 	identityRepo := mongostore.NewTelegramIdentityRepository(store)
 	dl := mongostore.NewDeliveryLogRepository(store)
 	dedup := mongostore.NewDedupRepository(store)
+	deadLetters := mongostore.NewDeadLetterRepository(store)
+	metricsCollector := metrics.New()
 
 	svc := subscriptions.New(subRepo, identityRepo, cfg.AllowedCountries)
 
-	h := notifier.NewHandler(dedup, subRepo, dl, tgClient)
+	registry := channels.NewRegistry()
+	registry.Register(channels.NewTelegramChannel(tgClient))
+	h := notifier.NewHandler(dedup, subRepo, dl, deadLetters, registry, metricsCollector)
 
-	grpcSrv := grpcserver.New(svc, dl)
+	grpcSrv := grpcserver.NewWithMetrics(svc, dl, metricsCollector)
 
 	consumer := kafkaconsumer.NewKafkaConsumer(cfg.KafkaBrokers, cfg.KafkaTopic, cfg.KafkaConsumerGroup)
 	defer func() { _ = consumer.Close() }()
 
-	httpSrv := &http.Server{Addr: cfg.NotifierHTTPAddr, Handler: health.Handler()}
+	httpSrv := &http.Server{Addr: cfg.NotifierHTTPAddr, Handler: health.Handler(metricsCollector)}
 	go func() {
 		if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("health server error: %v", err)
@@ -86,12 +94,41 @@ func main() {
 				break
 			}
 			log.Printf("kafka read error: %v", err)
+			metricsCollector.IncKafkaMessagesFailed()
 			continue
 		}
+		metricsCollector.IncKafkaMessagesConsumed()
 		e, err := events.Parse(msg.Value)
 		if err != nil {
 			log.Printf("parse error: %v", err)
-			_ = consumer.Commit(ctx, msg)
+			var partial events.DomainEvent
+			_ = json.Unmarshal(msg.Value, &partial)
+			eventKey := partial.EventKey
+			if eventKey == "" {
+				eventKey = mongostore.StableMalformedEventKey(msg.Value)
+			}
+			if dlqErr := deadLetters.Upsert(ctx, &mongostore.DeadLetter{
+				EventKey:    eventKey,
+				Stage:       dlq.StageEventProcessing,
+				ReasonCode:  events.ReasonForError(err),
+				Error:       err.Error(),
+				EventType:   partial.EventType,
+				CountrySlug: partial.CountrySlug,
+				Payload:     partial.Payload,
+				Retryable:   false,
+				Status:      dlq.StatusOpen,
+			}); dlqErr != nil {
+				log.Printf("dlq write error: %v", dlqErr)
+				metricsCollector.IncMongoErrors()
+				continue
+			}
+			metricsCollector.IncEventsDLQ()
+			if err := consumer.Commit(ctx, msg); err != nil {
+				log.Printf("commit error malformed_event_key=%s: %v", eventKey, err)
+				metricsCollector.IncKafkaMessagesFailed()
+			} else {
+				metricsCollector.IncKafkaMessagesCommitted()
+			}
 			continue
 		}
 		if err := h.Handle(ctx, e); err != nil {
@@ -100,6 +137,9 @@ func main() {
 		}
 		if err := consumer.Commit(ctx, msg); err != nil {
 			log.Printf("commit error event_key=%s: %v", e.EventKey, err)
+			metricsCollector.IncKafkaMessagesFailed()
+		} else {
+			metricsCollector.IncKafkaMessagesCommitted()
 		}
 	}
 

@@ -12,6 +12,8 @@ import (
 type DeliveryLogEntry struct {
 	EventKey       string    `bson:"event_key"`
 	TelegramUserID string    `bson:"telegram_user_id"`
+	ChannelType    string    `bson:"channel_type,omitempty"`
+	RecipientID    string    `bson:"recipient_id,omitempty"`
 	CountrySlug    string    `bson:"country_slug"`
 	Status         string    `bson:"status"`
 	SentAt         time.Time `bson:"sent_at"`
@@ -20,6 +22,8 @@ type DeliveryLogEntry struct {
 
 type DeliveryLogQuery struct {
 	TelegramUserID string
+	ChannelType    string
+	RecipientID    string
 	EventKey       string
 	CountrySlug    string
 	Limit          int32
@@ -42,12 +46,39 @@ func (r *MongoDeliveryLogRepository) Insert(ctx context.Context, entry *Delivery
 	if entry.SentAt.IsZero() {
 		entry.SentAt = time.Now().UTC()
 	}
+	if entry.ChannelType == "" {
+		entry.ChannelType = "telegram"
+	}
+	if entry.RecipientID == "" {
+		entry.RecipientID = entry.TelegramUserID
+	}
 	_, err := r.store.DeliveryLog().InsertOne(ctx, entry)
 	return err
 }
 
 func (r *MongoDeliveryLogRepository) FindByUser(ctx context.Context, q DeliveryLogQuery) ([]*DeliveryLogEntry, error) {
-	filter := bson.M{"telegram_user_id": q.TelegramUserID}
+	filter := bson.M{}
+	if q.ChannelType != "" || q.RecipientID != "" {
+		channelType := q.ChannelType
+		if channelType == "" {
+			channelType = "telegram"
+		}
+		recipientID := q.RecipientID
+		if recipientID == "" {
+			recipientID = q.TelegramUserID
+		}
+		if channelType == "telegram" {
+			filter["$or"] = []bson.M{
+				{"channel_type": channelType, "recipient_id": recipientID},
+				{"telegram_user_id": recipientID, "channel_type": bson.M{"$exists": false}},
+			}
+		} else {
+			filter["channel_type"] = channelType
+			filter["recipient_id"] = recipientID
+		}
+	} else {
+		filter["telegram_user_id"] = q.TelegramUserID
+	}
 	if q.EventKey != "" {
 		filter["event_key"] = q.EventKey
 	}
@@ -89,6 +120,12 @@ func (r *InMemoryDeliveryLogRepository) Insert(_ context.Context, entry *Deliver
 	if entry.SentAt.IsZero() {
 		entry.SentAt = time.Now().UTC()
 	}
+	if entry.ChannelType == "" {
+		entry.ChannelType = "telegram"
+	}
+	if entry.RecipientID == "" {
+		entry.RecipientID = entry.TelegramUserID
+	}
 	r.Entries = append(r.Entries, entry)
 	return nil
 }
@@ -106,8 +143,30 @@ func (r *InMemoryDeliveryLogRepository) FindByUser(_ context.Context, q Delivery
 	var results []*DeliveryLogEntry
 	for i := len(r.Entries) - 1; i >= 0 && len(results) < limit; i-- {
 		e := r.Entries[i]
-		if e.TelegramUserID != q.TelegramUserID {
-			continue
+		if q.ChannelType != "" || q.RecipientID != "" {
+			channelType := q.ChannelType
+			if channelType == "" {
+				channelType = "telegram"
+			}
+			recipientID := q.RecipientID
+			if recipientID == "" {
+				recipientID = q.TelegramUserID
+			}
+			entryChannelType := e.ChannelType
+			if entryChannelType == "" {
+				entryChannelType = "telegram"
+			}
+			entryRecipientID := e.RecipientID
+			if entryRecipientID == "" {
+				entryRecipientID = e.TelegramUserID
+			}
+			if entryChannelType != channelType || entryRecipientID != recipientID {
+				continue
+			}
+		} else {
+			if e.TelegramUserID != q.TelegramUserID {
+				continue
+			}
 		}
 		if q.EventKey != "" && e.EventKey != q.EventKey {
 			continue

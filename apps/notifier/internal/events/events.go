@@ -3,7 +3,10 @@ package events
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
+
+	"github.com/country-decision-atlas/notifier/internal/dlq"
 )
 
 type DomainEvent struct {
@@ -16,10 +19,27 @@ type DomainEvent struct {
 	CreatedAt     time.Time              `json:"created_at"`
 }
 
+var (
+	ErrInvalidJSON          = errors.New("invalid json")
+	ErrMissingEventKey      = errors.New("event_key is required")
+	ErrMissingEventType     = errors.New("event_type is required")
+	ErrMissingAggregateType = errors.New("aggregate_type is required")
+	ErrMissingAggregateID   = errors.New("aggregate_id is required")
+	ErrMissingCountrySlug   = errors.New("country_slug is required")
+	ErrUnsupportedEventType = errors.New("unsupported event_type")
+	ErrInvalidCreatedAt     = errors.New("created_at is required")
+)
+
+var supportedEventTypes = map[string]struct{}{
+	"legal_signal.published":       {},
+	"legal_signal_event.published": {},
+	"route.published":              {},
+}
+
 func Parse(data []byte) (*DomainEvent, error) {
 	var e DomainEvent
 	if err := json.Unmarshal(data, &e); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrInvalidJSON, err)
 	}
 	if err := e.validate(); err != nil {
 		return nil, err
@@ -29,21 +49,42 @@ func Parse(data []byte) (*DomainEvent, error) {
 
 func (e *DomainEvent) validate() error {
 	if e.EventKey == "" {
-		return errors.New("event_key is required")
+		return ErrMissingEventKey
 	}
 	if e.EventType == "" {
-		return errors.New("event_type is required")
+		return ErrMissingEventType
+	}
+	if _, ok := supportedEventTypes[e.EventType]; !ok {
+		return fmt.Errorf("%w: %s", ErrUnsupportedEventType, e.EventType)
 	}
 	if e.AggregateType == "" {
-		return errors.New("aggregate_type is required")
+		return ErrMissingAggregateType
 	}
 	if e.AggregateID == "" {
-		return errors.New("aggregate_id is required")
+		return ErrMissingAggregateID
 	}
 	if e.CountrySlug == "" {
-		return errors.New("country_slug is required")
+		return ErrMissingCountrySlug
+	}
+	if e.CreatedAt.IsZero() {
+		return ErrInvalidCreatedAt
 	}
 	return nil
+}
+
+func ReasonForError(err error) string {
+	switch {
+	case errors.Is(err, ErrInvalidJSON):
+		return dlq.ReasonInvalidJSON
+	case errors.Is(err, ErrMissingEventKey):
+		return dlq.ReasonMissingEventKey
+	case errors.Is(err, ErrMissingCountrySlug):
+		return dlq.ReasonMissingCountrySlug
+	case errors.Is(err, ErrUnsupportedEventType):
+		return dlq.ReasonUnsupportedEventType
+	default:
+		return dlq.ReasonUnknownProcessingError
+	}
 }
 
 func (e *DomainEvent) Title() string {
