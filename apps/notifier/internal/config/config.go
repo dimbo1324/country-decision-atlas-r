@@ -18,6 +18,7 @@ type Config struct {
 	NotifierHTTPAddr   string
 	AllowedCountries   []string
 	GRPCAddr           string
+	GRPCAuthToken      string
 }
 
 func Load() (*Config, error) {
@@ -33,6 +34,7 @@ func Load() (*Config, error) {
 		NotifierHTTPAddr:   getEnv("NOTIFIER_HTTP_ADDR", ":8081"),
 		AllowedCountries:   parseCSV(getEnv("NOTIFIER_ALLOWED_COUNTRIES", "russia,uruguay,argentina")),
 		GRPCAddr:           getEnv("GRPC_ADDR", ":9090"),
+		GRPCAuthToken:      getEnv("GRPC_AUTH_TOKEN", ""),
 	}
 	if err := c.validate(); err != nil {
 		return nil, err

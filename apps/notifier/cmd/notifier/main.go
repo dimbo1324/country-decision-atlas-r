@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/country-decision-atlas/notifier/internal/config"
 	"github.com/country-decision-atlas/notifier/internal/events"
@@ -59,16 +60,19 @@ func main() {
 	consumer := kafkaconsumer.NewKafkaConsumer(cfg.KafkaBrokers, cfg.KafkaTopic, cfg.KafkaConsumerGroup)
 	defer func() { _ = consumer.Close() }()
 
+	httpSrv := &http.Server{Addr: cfg.NotifierHTTPAddr, Handler: health.Handler()}
 	go func() {
-		srv := &http.Server{Addr: cfg.NotifierHTTPAddr, Handler: health.Handler()}
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("health server error: %v", err)
 		}
 	}()
 
+	if cfg.GRPCAuthToken == "" {
+		log.Printf("warning: GRPC_AUTH_TOKEN is not set, gRPC subscription service will reject all calls")
+	}
 	go func() {
 		log.Printf("gRPC server starting addr=%s", cfg.GRPCAddr)
-		if err := grpcserver.Listen(cfg.GRPCAddr, grpcSrv); err != nil {
+		if err := grpcserver.Serve(ctx, cfg.GRPCAddr, cfg.GRPCAuthToken, grpcSrv); err != nil {
 			log.Printf("gRPC server error: %v", err)
 		}
 	}()
@@ -87,12 +91,21 @@ func main() {
 		e, err := events.Parse(msg.Value)
 		if err != nil {
 			log.Printf("parse error: %v", err)
+			_ = consumer.Commit(ctx, msg)
 			continue
 		}
 		if err := h.Handle(ctx, e); err != nil {
 			log.Printf("handle error event_key=%s: %v", e.EventKey, err)
+			continue
+		}
+		if err := consumer.Commit(ctx, msg); err != nil {
+			log.Printf("commit error event_key=%s: %v", e.EventKey, err)
 		}
 	}
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_ = httpSrv.Shutdown(shutdownCtx)
 
 	log.Println("notifier stopped")
 }

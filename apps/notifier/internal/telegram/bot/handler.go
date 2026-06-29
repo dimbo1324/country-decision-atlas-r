@@ -12,7 +12,7 @@ import (
 	"github.com/country-decision-atlas/notifier/internal/telegram/commands"
 )
 
-const disclaimer = "Это не юридическая консультация."
+const disclaimer = telegram.Disclaimer
 
 const helpText = `/subscribe <страна> — подписаться на уведомления
 /unsubscribe <страна> — отписаться

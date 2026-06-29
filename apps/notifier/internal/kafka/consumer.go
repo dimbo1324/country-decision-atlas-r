@@ -10,10 +10,12 @@ import (
 type Message struct {
 	Key   []byte
 	Value []byte
+	raw   kafkago.Message
 }
 
 type Consumer interface {
 	ReadMessage(ctx context.Context) (*Message, error)
+	Commit(ctx context.Context, msg *Message) error
 	Close() error
 }
 
@@ -31,11 +33,15 @@ func NewKafkaConsumer(brokers string, topic string, groupID string) *KafkaConsum
 }
 
 func (c *KafkaConsumer) ReadMessage(ctx context.Context) (*Message, error) {
-	msg, err := c.reader.ReadMessage(ctx)
+	msg, err := c.reader.FetchMessage(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &Message{Key: msg.Key, Value: msg.Value}, nil
+	return &Message{Key: msg.Key, Value: msg.Value, raw: msg}, nil
+}
+
+func (c *KafkaConsumer) Commit(ctx context.Context, msg *Message) error {
+	return c.reader.CommitMessages(ctx, msg.raw)
 }
 
 func (c *KafkaConsumer) Close() error {
@@ -59,6 +65,10 @@ func (f *FakeConsumer) ReadMessage(ctx context.Context) (*Message, error) {
 	msg := f.messages[f.pos]
 	f.pos++
 	return msg, nil
+}
+
+func (f *FakeConsumer) Commit(_ context.Context, _ *Message) error {
+	return nil
 }
 
 func (f *FakeConsumer) Close() error {

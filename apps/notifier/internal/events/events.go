@@ -40,6 +40,9 @@ func (e *DomainEvent) validate() error {
 	if e.AggregateID == "" {
 		return errors.New("aggregate_id is required")
 	}
+	if e.CountrySlug == "" {
+		return errors.New("country_slug is required")
+	}
 	return nil
 }
 

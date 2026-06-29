@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -48,6 +49,7 @@ func (r *MongoTelegramIdentityRepository) Upsert(ctx context.Context, telegramUs
 }
 
 type InMemoryTelegramIdentityRepository struct {
+	mu         sync.Mutex
 	identities map[string]*TelegramIdentity
 }
 
@@ -56,6 +58,8 @@ func NewInMemoryTelegramIdentityRepository() *InMemoryTelegramIdentityRepository
 }
 
 func (r *InMemoryTelegramIdentityRepository) Upsert(_ context.Context, telegramUserID string, username string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	now := time.Now().UTC()
 	if existing, ok := r.identities[telegramUserID]; ok {
 		existing.Username = username
@@ -73,6 +77,8 @@ func (r *InMemoryTelegramIdentityRepository) Upsert(_ context.Context, telegramU
 }
 
 func (r *InMemoryTelegramIdentityRepository) Get(telegramUserID string) *TelegramIdentity {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	return r.identities[telegramUserID]
 }
 

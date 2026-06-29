@@ -2,11 +2,14 @@ package notifier
 
 import (
 	"context"
+	"errors"
 
 	"github.com/country-decision-atlas/notifier/internal/events"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/telegram"
 )
+
+var ErrDeliveryIncomplete = errors.New("delivery incomplete")
 
 type Handler struct {
 	dedup       mongostore.DedupRepository
@@ -25,11 +28,11 @@ func NewHandler(
 }
 
 func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
-	inserted, err := h.dedup.TryInsert(ctx, e.EventKey)
+	processed, err := h.dedup.Exists(ctx, e.EventKey)
 	if err != nil {
 		return err
 	}
-	if !inserted {
+	if processed {
 		return nil
 	}
 
@@ -40,7 +43,16 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 
 	text := telegram.FormatMessage(e.CountrySlug, e.EventType, e.Title())
 
+	delivered := true
 	for _, sub := range subscribers {
+		already, err := h.alreadyDelivered(ctx, e.EventKey, sub.TelegramUserID)
+		if err != nil {
+			return err
+		}
+		if already {
+			continue
+		}
+
 		sendErr := h.tg.SendMessage(ctx, sub.TelegramUserID, text)
 		entry := &mongostore.DeliveryLogEntry{
 			EventKey:       e.EventKey,
@@ -51,10 +63,37 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 			errStr := sendErr.Error()
 			entry.Status = "failed"
 			entry.Error = &errStr
+			delivered = false
 		} else {
 			entry.Status = "sent"
 		}
-		_ = h.deliveryLog.Insert(ctx, entry)
+		if err := h.deliveryLog.Insert(ctx, entry); err != nil {
+			return err
+		}
+	}
+
+	if !delivered {
+		return ErrDeliveryIncomplete
+	}
+
+	if _, err := h.dedup.TryInsert(ctx, e.EventKey); err != nil {
+		return err
 	}
 	return nil
+}
+
+func (h *Handler) alreadyDelivered(ctx context.Context, eventKey string, telegramUserID string) (bool, error) {
+	entries, err := h.deliveryLog.FindByUser(ctx, mongostore.DeliveryLogQuery{
+		TelegramUserID: telegramUserID,
+		EventKey:       eventKey,
+	})
+	if err != nil {
+		return false, err
+	}
+	for _, entry := range entries {
+		if entry.Status == "sent" {
+			return true, nil
+		}
+	}
+	return false, nil
 }

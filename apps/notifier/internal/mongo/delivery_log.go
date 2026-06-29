@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -74,6 +75,7 @@ func (r *MongoDeliveryLogRepository) FindByUser(ctx context.Context, q DeliveryL
 }
 
 type InMemoryDeliveryLogRepository struct {
+	mu      sync.Mutex
 	Entries []*DeliveryLogEntry
 }
 
@@ -82,6 +84,8 @@ func NewInMemoryDeliveryLogRepository() *InMemoryDeliveryLogRepository {
 }
 
 func (r *InMemoryDeliveryLogRepository) Insert(_ context.Context, entry *DeliveryLogEntry) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	if entry.SentAt.IsZero() {
 		entry.SentAt = time.Now().UTC()
 	}
@@ -90,6 +94,8 @@ func (r *InMemoryDeliveryLogRepository) Insert(_ context.Context, entry *Deliver
 }
 
 func (r *InMemoryDeliveryLogRepository) FindByUser(_ context.Context, q DeliveryLogQuery) ([]*DeliveryLogEntry, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	limit := int(q.Limit)
 	if limit <= 0 {
 		limit = 50

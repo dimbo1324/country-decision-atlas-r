@@ -28,19 +28,16 @@ test.describe("argentina core country slice", () => {
     await expectNoAppCrash(page);
   });
 
-  test("Argentina page renders without CII data", async ({ page }) => {
+  test("Argentina page renders the CII section", async ({ page }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
-    const hasEmptyState = await page
-      .getByText(/ещё не рассчитаны|не рассчитан|данные.*отсутствуют/i)
-      .isVisible()
-      .catch(() => false);
-    const hasCiiBlock = await page
-      .locator('[data-testid*="cii"]')
-      .first()
-      .isVisible()
-      .catch(() => false);
-    expect(hasEmptyState || hasCiiBlock).toBe(true);
+    const ciiSection = page.locator('[data-testid="cii-section"]');
+    await expect(ciiSection).toBeVisible();
+    const emptyState = ciiSection.getByText(
+      /ещё не рассчитаны|не рассчитан|данные.*отсутствуют/i,
+    );
+    const ciiBlock = ciiSection.locator('[data-testid="cii-block"]');
+    await expect(emptyState.or(ciiBlock).first()).toBeVisible();
   });
 
   test("Argentina page renders current legal signals", async ({ page }) => {

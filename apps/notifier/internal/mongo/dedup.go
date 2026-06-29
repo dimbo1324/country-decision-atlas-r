@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,6 +17,7 @@ type DedupKey struct {
 
 type DedupRepository interface {
 	TryInsert(ctx context.Context, eventKey string) (inserted bool, err error)
+	Exists(ctx context.Context, eventKey string) (bool, error)
 }
 
 type MongoDedupRepository struct {
@@ -38,31 +40,8 @@ func (r *MongoDedupRepository) TryInsert(ctx context.Context, eventKey string) (
 	return true, nil
 }
 
-type InMemoryDedupRepository struct {
-	seen map[string]bool
-}
-
-func NewInMemoryDedupRepository() *InMemoryDedupRepository {
-	return &InMemoryDedupRepository{seen: make(map[string]bool)}
-}
-
-func (r *InMemoryDedupRepository) TryInsert(_ context.Context, eventKey string) (bool, error) {
-	if r.seen[eventKey] {
-		return false, nil
-	}
-	r.seen[eventKey] = true
-	return true, nil
-}
-
-var _ DedupRepository = (*MongoDedupRepository)(nil)
-var _ DedupRepository = (*InMemoryDedupRepository)(nil)
-
-func IsDuplicateKey(err error) bool {
-	return mongo.IsDuplicateKeyError(err)
-}
-
-func ExistsDedupKey(ctx context.Context, store *Store, eventKey string) (bool, error) {
-	count, err := store.DedupKeys().CountDocuments(
+func (r *MongoDedupRepository) Exists(ctx context.Context, eventKey string) (bool, error) {
+	count, err := r.store.DedupKeys().CountDocuments(
 		ctx,
 		bson.M{"event_key": eventKey},
 		options.Count().SetLimit(1),
@@ -72,3 +51,31 @@ func ExistsDedupKey(ctx context.Context, store *Store, eventKey string) (bool, e
 	}
 	return count > 0, nil
 }
+
+type InMemoryDedupRepository struct {
+	mu   sync.Mutex
+	seen map[string]bool
+}
+
+func NewInMemoryDedupRepository() *InMemoryDedupRepository {
+	return &InMemoryDedupRepository{seen: make(map[string]bool)}
+}
+
+func (r *InMemoryDedupRepository) TryInsert(_ context.Context, eventKey string) (bool, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if r.seen[eventKey] {
+		return false, nil
+	}
+	r.seen[eventKey] = true
+	return true, nil
+}
+
+func (r *InMemoryDedupRepository) Exists(_ context.Context, eventKey string) (bool, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return r.seen[eventKey], nil
+}
+
+var _ DedupRepository = (*MongoDedupRepository)(nil)
+var _ DedupRepository = (*InMemoryDedupRepository)(nil)

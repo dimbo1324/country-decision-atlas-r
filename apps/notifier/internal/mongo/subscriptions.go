@@ -2,6 +2,8 @@ package mongo
 
 import (
 	"context"
+	"errors"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -91,7 +93,7 @@ func (r *MongoSubscriptionRepository) Deactivate(ctx context.Context, telegramUs
 	var sub Subscription
 	err := r.store.Subscriptions().FindOneAndUpdate(ctx, filter, update, opts).Decode(&sub)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
+		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
 		}
 		return nil, err
@@ -118,7 +120,7 @@ func (r *MongoSubscriptionRepository) Get(ctx context.Context, telegramUserID st
 	var sub Subscription
 	err := r.store.Subscriptions().FindOne(ctx, filter).Decode(&sub)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
+		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
 		}
 		return nil, err
@@ -127,6 +129,7 @@ func (r *MongoSubscriptionRepository) Get(ctx context.Context, telegramUserID st
 }
 
 type InMemorySubscriptionRepository struct {
+	mu            sync.Mutex
 	subscriptions []*Subscription
 }
 
@@ -135,6 +138,8 @@ func NewInMemorySubscriptionRepository(subs []*Subscription) *InMemorySubscripti
 }
 
 func (r *InMemorySubscriptionRepository) FindActiveByCountry(_ context.Context, countrySlug string) ([]*Subscription, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	var results []*Subscription
 	for _, s := range r.subscriptions {
 		if s.CountrySlug == countrySlug && s.Active {
@@ -145,6 +150,8 @@ func (r *InMemorySubscriptionRepository) FindActiveByCountry(_ context.Context, 
 }
 
 func (r *InMemorySubscriptionRepository) CreateOrReactivate(_ context.Context, telegramUserID string, countrySlug string) (*Subscription, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	now := time.Now().UTC()
 	for _, s := range r.subscriptions {
 		if s.TelegramUserID == telegramUserID && s.CountrySlug == countrySlug {
@@ -166,6 +173,8 @@ func (r *InMemorySubscriptionRepository) CreateOrReactivate(_ context.Context, t
 }
 
 func (r *InMemorySubscriptionRepository) Deactivate(_ context.Context, telegramUserID string, countrySlug string) (*Subscription, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	now := time.Now().UTC()
 	for _, s := range r.subscriptions {
 		if s.TelegramUserID == telegramUserID && s.CountrySlug == countrySlug {
@@ -178,6 +187,8 @@ func (r *InMemorySubscriptionRepository) Deactivate(_ context.Context, telegramU
 }
 
 func (r *InMemorySubscriptionRepository) ListActive(_ context.Context, telegramUserID string) ([]*Subscription, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	var results []*Subscription
 	for _, s := range r.subscriptions {
 		if s.TelegramUserID == telegramUserID && s.Active {
@@ -188,6 +199,8 @@ func (r *InMemorySubscriptionRepository) ListActive(_ context.Context, telegramU
 }
 
 func (r *InMemorySubscriptionRepository) Get(_ context.Context, telegramUserID string, countrySlug string) (*Subscription, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	for _, s := range r.subscriptions {
 		if s.TelegramUserID == telegramUserID && s.CountrySlug == countrySlug {
 			return s, nil

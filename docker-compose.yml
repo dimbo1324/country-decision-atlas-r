@@ -121,6 +121,7 @@ services:
       NOTIFIER_HTTP_ADDR: ${NOTIFIER_HTTP_ADDR:-:8081}
       NOTIFIER_ALLOWED_COUNTRIES: ${NOTIFIER_ALLOWED_COUNTRIES:-russia,uruguay,argentina}
       GRPC_ADDR: ${GRPC_ADDR:-:9090}
+      GRPC_AUTH_TOKEN: ${GRPC_AUTH_TOKEN:-dev-grpc-token}
     ports:
       - "8081:8081"
       - "9090:9090"

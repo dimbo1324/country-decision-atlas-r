@@ -3,16 +3,12 @@ package subscriptions
 import (
 	"context"
 	"errors"
+	"strings"
 
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 )
 
 var ErrUnknownCountry = errors.New("unknown country")
-var ErrNotSubscribed = errors.New("not subscribed")
-
-type Result struct {
-	Subscription *mongostore.Subscription
-}
 
 type Service struct {
 	subs       mongostore.SubscriptionManager
@@ -27,37 +23,40 @@ func New(
 ) *Service {
 	m := make(map[string]struct{}, len(allowedCountries))
 	for _, c := range allowedCountries {
-		m[c] = struct{}{}
+		m[normalizeSlug(c)] = struct{}{}
 	}
 	return &Service{subs: subs, identities: identities, allowed: m}
 }
 
-func (s *Service) validateCountry(slug string) error {
-	if _, ok := s.allowed[slug]; !ok {
-		return ErrUnknownCountry
+func normalizeSlug(slug string) string {
+	return strings.ToLower(strings.TrimSpace(slug))
+}
+
+func (s *Service) resolveCountry(slug string) (string, error) {
+	normalized := normalizeSlug(slug)
+	if _, ok := s.allowed[normalized]; !ok {
+		return "", ErrUnknownCountry
 	}
-	return nil
+	return normalized, nil
 }
 
 func (s *Service) CreateSubscription(ctx context.Context, telegramUserID string, username string, countrySlug string) (*mongostore.Subscription, error) {
-	if err := s.validateCountry(countrySlug); err != nil {
+	slug, err := s.resolveCountry(countrySlug)
+	if err != nil {
 		return nil, err
 	}
 	if err := s.identities.Upsert(ctx, telegramUserID, username); err != nil {
 		return nil, err
 	}
-	return s.subs.CreateOrReactivate(ctx, telegramUserID, countrySlug)
+	return s.subs.CreateOrReactivate(ctx, telegramUserID, slug)
 }
 
 func (s *Service) DeleteSubscription(ctx context.Context, telegramUserID string, countrySlug string) (*mongostore.Subscription, error) {
-	if err := s.validateCountry(countrySlug); err != nil {
-		return nil, err
-	}
-	sub, err := s.subs.Deactivate(ctx, telegramUserID, countrySlug)
+	slug, err := s.resolveCountry(countrySlug)
 	if err != nil {
 		return nil, err
 	}
-	return sub, nil
+	return s.subs.Deactivate(ctx, telegramUserID, slug)
 }
 
 func (s *Service) ListSubscriptions(ctx context.Context, telegramUserID string) ([]*mongostore.Subscription, error) {
