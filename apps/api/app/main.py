@@ -21,6 +21,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse, Response
 import logging
 from psycopg import Error as PsycopgError
@@ -232,3 +233,49 @@ app.include_router(admin_translation_jobs.router, prefix="/api/v1")
 app.include_router(user_stories.router, prefix="/api/v1")
 app.include_router(decision.router, prefix="/api/v1")
 app.include_router(home.router, prefix="/api/v1")
+
+
+def _normalize_openapi_contract(value: Any) -> None:
+    if isinstance(value, dict):
+        description = value.get("description")
+        if description == "Unprocessable Content":
+            value["description"] = "Unprocessable Entity"
+        enum_values = value.get("enum")
+        if isinstance(enum_values, list) and set(enum_values) == {
+            "low",
+            "medium",
+            "high",
+        }:
+            value["enum"] = ["high", "medium", "low"]
+        for nested in value.values():
+            _normalize_openapi_contract(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            _normalize_openapi_contract(nested)
+
+
+def stable_openapi() -> dict[str, Any]:
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        openapi_version=app.openapi_version,
+        summary=app.summary,
+        description=app.description,
+        routes=app.routes,
+        webhooks=app.webhooks.routes,
+        tags=app.openapi_tags,
+        servers=app.servers,
+        terms_of_service=app.terms_of_service,
+        contact=app.contact,
+        license_info=app.license_info,
+        separate_input_output_schemas=app.separate_input_output_schemas,
+    )
+    _normalize_openapi_contract(schema)
+    app.openapi_schema = schema
+    return app.openapi_schema
+
+
+openapi_app: Any = app
+openapi_app.openapi = stable_openapi

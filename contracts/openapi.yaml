@@ -444,9 +444,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -1409,9 +1409,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -1526,9 +1526,9 @@ paths:
         schema:
           anyOf:
           - enum:
-            - low
-            - medium
             - high
+            - medium
+            - low
             type: string
           - type: 'null'
           title: Confidence
@@ -1747,7 +1747,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1793,7 +1793,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/evidence-items:
     post:
       tags:
@@ -1820,7 +1820,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1866,7 +1866,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/legal-signals:
     post:
       tags:
@@ -1893,7 +1893,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -1939,7 +1939,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/countries/{country_slug}/profile:
     patch:
       tags:
@@ -1979,7 +1979,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/user-stories:
     post:
       tags:
@@ -2006,7 +2006,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -2052,7 +2052,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
-          description: Unprocessable Content
+          description: Unprocessable Entity
   /api/v1/admin/translations/jobs:
     post:
       tags:
@@ -2079,7 +2079,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: Unprocessable Content
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -5065,9 +5065,9 @@ components:
         confidence_level:
           type: string
           enum:
-          - low
-          - medium
           - high
+          - medium
+          - low
           title: Confidence Level
         effective_date:
           anyOf:

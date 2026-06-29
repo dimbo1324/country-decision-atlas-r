@@ -2218,7 +2218,7 @@ export interface components {
              * Confidence Level
              * @enum {string}
              */
-            confidence_level: "low" | "medium" | "high";
+            confidence_level: "high" | "medium" | "low";
             /** Effective Date */
             effective_date?: string | null;
             /** Published At */
@@ -3964,7 +3964,7 @@ export interface operations {
             query?: {
                 source_type?: string | null;
                 language?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
                 order?: "asc" | "desc";
@@ -4529,7 +4529,7 @@ export interface operations {
                 country_slug?: string | null;
                 source_type?: string | null;
                 language?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
                 order?: "asc" | "desc";
@@ -4569,7 +4569,7 @@ export interface operations {
                 country_slug?: string | null;
                 source_id?: string | null;
                 legal_signal_id?: string | null;
-                confidence?: ("low" | "medium" | "high") | null;
+                confidence?: ("high" | "medium" | "low") | null;
                 status?: "published" | "archived";
                 sort?: "retrieved_at" | "created_at" | "confidence";
                 order?: "asc" | "desc";
@@ -4733,7 +4733,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4777,7 +4777,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4819,7 +4819,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4863,7 +4863,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4905,7 +4905,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4949,7 +4949,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4993,7 +4993,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -5035,7 +5035,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -5079,7 +5079,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -5121,7 +5121,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
