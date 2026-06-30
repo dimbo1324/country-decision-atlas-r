@@ -3,13 +3,13 @@ from app.services.trust_runtime import (
     compute_and_store_trust_for_all_countries,
     compute_and_store_trust_for_country,
 )
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
 
-_NOW = datetime(2025, 6, 1, tzinfo=timezone.utc)
+_NOW = datetime(2025, 6, 1, tzinfo=UTC)
 
 _RICH_INPUTS = {
     "country_id": "country-uuid-1",
@@ -18,7 +18,7 @@ _RICH_INPUTS = {
     "legal_signal_count": 8,
     "route_count": 5,
     "platform_metric_count": 3,
-    "last_verified_at": datetime(2025, 3, 1, tzinfo=timezone.utc),
+    "last_verified_at": datetime(2025, 3, 1, tzinfo=UTC),
     "contradiction_score_value": 10.0,
 }
 

@@ -1,6 +1,7 @@
 import type { DecisionRunResponse } from "../../shared/api/decision";
-import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
+import { EmptyState } from "../../shared/ui/EmptyState";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionResultCard } from "./DecisionResultCard";
 
@@ -93,6 +94,8 @@ export function DecisionResults({ response }: DecisionResultsProps) {
           ))}
         </div>
       )}
+
+      <DisclaimerNotice />
     </div>
   );
 }

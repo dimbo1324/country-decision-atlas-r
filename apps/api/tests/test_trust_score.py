@@ -10,11 +10,11 @@ from app.services.trust_score import (
     compute_trust_score_from_inputs,
     has_sufficient_data,
 )
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 import pytest
 
 
-_NOW = datetime(2025, 1, 1, tzinfo=timezone.utc)
+_NOW = datetime(2025, 1, 1, tzinfo=UTC)
 
 
 class TestSourceQualityScore:

@@ -65,6 +65,23 @@ def test_missing_methodology_section_is_detected(monkeypatch: Any) -> None:
     assert any(i.severity == "critical" for i in report.issues if i.code == "methodology_section_missing")
 
 
+def test_missing_trust_score_for_active_country_is_detected(monkeypatch: Any) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_active_countries_missing_trust_scores",
+        lambda *_: [{"slug": "test-country"}],
+    )
+    report = data_quality.build_data_quality_report(CONNECTION)
+    assert any(i.code == "trust_score_missing_for_active_country" for i in report.issues)
+    assert any(
+        i.severity == "critical"
+        for i in report.issues
+        if i.code == "trust_score_missing_for_active_country"
+    )
+    assert report.valid is False
+
+
 def test_missing_glossary_term_is_detected(monkeypatch: Any) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(

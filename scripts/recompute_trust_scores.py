@@ -40,7 +40,7 @@ def main() -> int:
                 if not args.dry_run:
                     conn.commit()
                 print(json.dumps(summary, indent=2, default=str))
-                failed = summary.get("failed", 0)
+                failed = summary.get("countries_failed", 0)
                 return 1 if failed > 0 else 0
             else:
                 result = compute_and_store_trust_for_country(

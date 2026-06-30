@@ -3,7 +3,13 @@ type LastVerifiedAtProps = {
 };
 
 export function LastVerifiedAt({ date }: LastVerifiedAtProps) {
-  if (!date) return null;
+  if (!date) {
+    return (
+      <span className="last-verified-at last-verified-unknown">
+        Дата последней проверки неизвестна
+      </span>
+    );
+  }
   const formatted = new Date(date).toLocaleDateString("ru-RU", {
     year: "numeric",
     month: "long",

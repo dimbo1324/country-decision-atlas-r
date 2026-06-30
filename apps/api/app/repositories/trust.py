@@ -248,6 +248,25 @@ def list_active_countries(
     )
 
 
+def count_missing_country_trust_scores(
+    connection: Connection[Any],
+) -> int:
+    result = fetch_one(
+        connection,
+        """
+        SELECT COUNT(*) AS count
+        FROM countries c
+        WHERE c.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1
+              FROM country_trust_scores cts
+              WHERE cts.country_id = c.id
+          )
+        """,
+    )
+    return int(result["count"]) if result else 0
+
+
 def list_stale_country_trust_scores(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:

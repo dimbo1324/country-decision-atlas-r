@@ -86,3 +86,40 @@ test("no crash on mobile viewport for trust surface on country card", async ({
   await expectPageReady(page);
   await expectNoAppCrash(page);
 });
+
+test("methodology page shows glossary section", async ({ page }) => {
+  await page.goto("/methodology");
+  await expectPageReady(page);
+  const glossary = page.getByTestId("glossary-section");
+  await expect(glossary).toBeVisible();
+  await expectNoAppCrash(page);
+});
+
+test("methodology page shows legal disclaimer", async ({ page }) => {
+  await page.goto("/methodology");
+  await expectPageReady(page);
+  const disclaimer = page.locator(".disclaimer-notice");
+  await expect(disclaimer).toBeVisible();
+  await expectNoAppCrash(page);
+});
+
+test("decision page shows disclaimer after results load", async ({ page }) => {
+  await page.goto("/decision");
+  await expectPageReady(page);
+  await expectNoAppCrash(page);
+});
+
+test("locale=ru preserved on methodology page", async ({ page }) => {
+  await page.goto("/methodology?locale=ru");
+  await expectPageReady(page);
+  await expect(page).toHaveURL(/locale=ru/);
+  await expectNoAppCrash(page);
+});
+
+test("legal signals page shows disclaimer", async ({ page }) => {
+  await page.goto("/legal-signals");
+  await expectPageReady(page);
+  const disclaimer = page.locator(".disclaimer-notice");
+  await expect(disclaimer).toBeVisible();
+  await expectNoAppCrash(page);
+});

@@ -10,6 +10,24 @@ def _append_trust_surface_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
+    for row in repository.list_active_countries_missing_trust_scores(connection):
+        issues.append(
+            _issue(
+                "trust_score_missing_for_active_country",
+                "critical",
+                "country_trust_score",
+                row.get("slug"),
+                "Active country has no trust score computed.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "all_active_countries_have_trust_scores",
+            issues,
+            ["trust_score_missing_for_active_country"],
+        )
+    )
     for row in repository.list_invalid_trust_score_values(connection):
         issues.append(
             _issue(

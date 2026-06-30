@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import type { CountryTrustResponse, LocaleCode } from "../../shared/api";
 import { getCountryTrust } from "../../shared/api/trust";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
@@ -53,13 +55,14 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
       <div className="trustBadgeRow">
         <TrustBadge label={data.trust_label} score={data.trust_score ?? undefined} />
         <FreshnessBadge status={data.freshness_status} />
-        {data.confidence && (
-          <span className="badge badge--default">
-            Уверенность: {data.confidence === "high" ? "высокая" : data.confidence === "medium" ? "средняя" : "низкая"}
-          </span>
-        )}
+        {data.confidence && <ConfidenceBadge confidence={data.confidence} />}
       </div>
       <LastVerifiedAt date={data.last_verified_at ?? undefined} />
+      <p className="infoNote">
+        <Link href="/methodology" className="internalLink">
+          О методологии →
+        </Link>
+      </p>
       <DisclaimerNotice text={data.disclaimer} />
     </div>
   );

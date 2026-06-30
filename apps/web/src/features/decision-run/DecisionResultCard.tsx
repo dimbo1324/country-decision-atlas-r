@@ -6,6 +6,7 @@ import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionBreakdown } from "./DecisionBreakdown";
+import { DecisionCountryTrustBadge } from "./DecisionCountryTrustBadge";
 import { DecisionSources } from "./DecisionSources";
 import { DecisionWarnings } from "./DecisionWarnings";
 
@@ -29,6 +30,8 @@ export function DecisionResultCard({ result, locale }: DecisionResultCardProps) 
         {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
         <LocalizationBadge localization={result.localization} compact />
       </div>
+
+      <DecisionCountryTrustBadge countrySlug={result.country.slug} locale={locale} />
 
       {result.summary && <p className="resultSummary">{result.summary}</p>}
 

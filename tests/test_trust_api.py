@@ -1,7 +1,6 @@
 from app.api.v1 import trust as trust_api
-from app.repositories import feature_flags as ff_repo, trust as trust_repo
+from app.repositories import trust as trust_repo
 from app.schemas.trust import TrustRecomputeRequest
-from app.services import trust_runtime as trust_runtime_module
 from datetime import UTC, datetime
 from psycopg import Connection
 import pytest

@@ -2067,6 +2067,39 @@
       ],
       "status": "completed",
       "risk": ""
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_completed",
+      "type": "fix",
+      "scope": "trust-transparency",
+      "task": "trust_transparency_surface_v1_gaps",
+      "branch": "main",
+      "summary": "Episode 7 gap fixes: (1) script bug fixed - recompute_trust_scores.py exit code now uses countries_failed key; (2) DQ check added for active countries missing trust scores (critical); (3) count_missing_country_trust_scores added to trust repo; (4) Glossary section added to /methodology page fetched from API; (5) Decision page now shows per-country trust label and freshness via DecisionCountryTrustBadge; (6) DisclaimerNotice added to decision results, route detail, and legal signals pages; (7) ConfidenceBadge now reused in TrustSurfaceBlock; (8) LastVerifiedAt shows explicit unknown state text; (9) Link to /methodology added in TrustSurfaceBlock; (10) E2E tests extended with glossary, disclaimer, locale, and legal-signals coverage.",
+      "quality_gate": {
+        "mypy": "pass - 0 issues in 236 files",
+        "ruff": "pass - all checks passed",
+        "pytest_root": "pass - 55 passed",
+        "pytest_api": "pass - 49 passed",
+        "pnpm_typecheck": "pass",
+        "pnpm_lint": "pass"
+      },
+      "changed_files": [
+        "scripts/recompute_trust_scores.py",
+        "apps/api/app/repositories/trust.py",
+        "apps/api/app/services/data_quality/trust_checks.py",
+        "tests/test_data_quality_validation.py",
+        "tests/test_trust_data_quality.py",
+        "apps/web/src/shared/ui/LastVerifiedAt.tsx",
+        "apps/web/src/features/trust-surface/TrustSurfaceBlock.tsx",
+        "apps/web/src/features/decision-run/DecisionCountryTrustBadge.tsx",
+        "apps/web/src/features/decision-run/DecisionResultCard.tsx",
+        "apps/web/src/features/decision-run/DecisionResults.tsx",
+        "apps/web/src/app/methodology/page.tsx",
+        "apps/web/src/app/routes/[id]/page.tsx",
+        "apps/web/src/app/legal-signals/page.tsx",
+        "tests/e2e/web-mvp-trust-transparency.spec.ts"
+      ]
     }
   ]
 }

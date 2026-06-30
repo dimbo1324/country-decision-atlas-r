@@ -1,4 +1,5 @@
 import { getLocaleFromSearchParams } from "../../shared/lib/locale";
+import { listGlossaryTerms } from "../../shared/api/glossary";
 import { listMethodologySections } from "../../shared/api/methodology";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 
@@ -13,6 +14,7 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
   const locale = getLocaleFromSearchParams(params);
 
   let sections;
+  let glossaryItems: Awaited<ReturnType<typeof listGlossaryTerms>>["items"] = [];
   try {
     const response = await listMethodologySections(locale);
     sections = response.items;
@@ -26,6 +28,12 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
         <p className="notice">Не удалось загрузить методологию.</p>
       </main>
     );
+  }
+  try {
+    const glossary = await listGlossaryTerms(locale);
+    glossaryItems = glossary.items;
+  } catch {
+    glossaryItems = [];
   }
 
   return (
@@ -51,6 +59,26 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
           </article>
         ))}
       </section>
+      {glossaryItems.length > 0 && (
+        <section
+          className="methodologySections"
+          data-testid="glossary-section"
+          aria-label="Глоссарий"
+        >
+          <h2 className="pageSubheader">Глоссарий терминов</h2>
+          {glossaryItems.map((term) => (
+            <article className="methodologySection" key={term.slug} data-term-slug={term.slug}>
+              <h3 className="methodologySectionTitle">{term.term}</h3>
+              <p>{term.definition}</p>
+              {term.related_terms.length > 0 && (
+                <p className="relatedTerms">
+                  Связанные термины: {term.related_terms.join(", ")}
+                </p>
+              )}
+            </article>
+          ))}
+        </section>
+      )}
       <DisclaimerNotice />
     </main>
   );

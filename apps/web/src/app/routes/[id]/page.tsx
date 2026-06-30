@@ -3,6 +3,7 @@ import Link from "next/link";
 import { routesApi } from "../../../shared/api/routes";
 import { normalizeLocale } from "../../../shared/lib/locale";
 import { routes } from "../../../shared/lib/routes";
+import { DisclaimerNotice } from "../../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../../shared/ui/ErrorState";
 import { RouteDetailView } from "../../../features/routes";
 
@@ -45,6 +46,7 @@ export default async function RoutePage({ params, searchParams }: PageProps) {
           <span className="breadcrumbCurrent">{route.title}</span>
         </nav>
         <RouteDetailView route={route} locale={locale} />
+        <DisclaimerNotice />
       </div>
     );
   } catch (err: unknown) {
