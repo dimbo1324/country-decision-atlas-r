@@ -1,35 +1,12 @@
-from app.api.v1 import (
-    admin,
-    admin_translation_jobs,
-    analytics,
-    countries,
-    data_journal,
-    decision,
-    feature_flags,
-    home,
-    legal_signals,
-    personas,
-    routes,
-    scenarios,
-    sources,
-    translations,
-    user_stories,
-)
+from app.bootstrap.app_factory import create_app
 from app.core.config import get_settings
-from app.core.database import close_database_pool, get_pool, open_database_pool
+from app.core.database import get_pool
 from app.core.errors import api_error
 from app.schemas.system import HealthResponse, ReadinessResponse
-from collections.abc import AsyncIterator, Awaitable, Callable
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse, Response
+from fastapi import Request
 import logging
 from psycopg import Error as PsycopgError
 from psycopg_pool import PoolTimeout
-import time
 from typing import Any
 
 
@@ -37,16 +14,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
-logger = logging.getLogger(__name__)
-
+settings = get_settings()
 _rate_windows: dict[str, list[float]] = {}
 _RATE_WINDOW = 60.0
-_RATE_EXCLUDED_PATHS = frozenset({"/health", "/ready"})
 _last_rate_cleanup = 0.0
-# NOTE: Rate limiting counters are stored per-process. In multi-worker deployments
-# (uvicorn --workers N) each worker maintains its own independent window, so the
-# effective limit scales with the number of workers. Migrate to Redis for
-# cross-worker enforcement before running more than one worker in production.
 
 
 def _rate_limit_client(request: Request) -> str | None:
@@ -83,128 +54,10 @@ def _cleanup_rate_windows(now: float) -> None:
     _last_rate_cleanup = now
 
 
-def error_response(
-    status_code: int, code: str, message: str, details: Any = None
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=status_code,
-        content={"error": {"code": code, "message": message, "details": details}},
-    )
-
-
-@asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    settings = get_settings()
-    if not settings.admin_token:
-        logger.warning("Admin token is not configured — admin endpoints are disabled.")
-    logger.warning(
-        "Rate limiting is per-process (in-memory). "
-        "In multi-worker deployments the effective limit scales with worker count. "
-        "Migrate to Redis for cross-worker enforcement."
-    )
-    open_database_pool()
-    try:
-        yield
-    finally:
-        close_database_pool()
-
-
-settings = get_settings()
-app = FastAPI(
-    title=settings.app_name,
-    version="0.1.0",
-    docs_url="/api/docs",
-    redoc_url="/api/redoc",
-    openapi_url="/api/openapi.json",
-    lifespan=lifespan,
-)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allow_headers=["Content-Type", "Authorization", "X-Admin-Token"],
-)
-
-
-@app.middleware("http")
-async def security_headers_middleware(
-    request: Request,
-    call_next: Callable[[Request], Awaitable[Response]],
-) -> Response:
-    response = await call_next(request)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    return response
-
-
-@app.middleware("http")
-async def rate_limit_middleware(
-    request: Request,
-    call_next: Callable[[Request], Awaitable[Response]],
-) -> Response:
-    if request.url.path in _RATE_EXCLUDED_PATHS:
-        return await call_next(request)
-    client = _rate_limit_client(request)
-    if client is not None:
-        now = time.monotonic()
-        _cleanup_rate_windows(now)
-        cutoff = now - _RATE_WINDOW
-        recent = [t for t in _rate_windows.get(client, []) if t > cutoff]
-        if len(recent) >= settings.api_rate_limit_per_minute:
-            return error_response(429, "rate_limit_exceeded", "Too many requests.")
-        recent.append(now)
-        _rate_windows[client] = recent
-    return await call_next(request)
-
-
-@app.exception_handler(HTTPException)
-async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
-    if isinstance(exc.detail, dict) and "error" in exc.detail:
-        return JSONResponse(status_code=exc.status_code, content=exc.detail)
-    message = exc.detail if isinstance(exc.detail, str) else "HTTP error."
-    return error_response(exc.status_code, "http_error", message, exc.detail)
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(
-    _: Request, exc: RequestValidationError
-) -> JSONResponse:
-    return error_response(
-        422, "validation_error", "Request validation failed.", exc.errors()
-    )
-
-
-@app.exception_handler(LookupError)
-async def lookup_exception_handler(_: Request, exc: LookupError) -> JSONResponse:
-    return error_response(404, "not_found", str(exc))
-
-
-@app.exception_handler(PsycopgError)
-async def database_exception_handler(_: Request, exc: PsycopgError) -> JSONResponse:
-    logger.error("Database error", exc_info=exc)
-    return error_response(500, "database_error", "A database error occurred.")
-
-
-@app.exception_handler(Exception)
-async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONResponse:
-    logger.error("Unhandled exception", exc_info=exc)
-    return error_response(500, "internal_error", "An unexpected error occurred.")
-
-
-@app.get("/health", tags=["system"], response_model=HealthResponse)
 async def health() -> HealthResponse:
     return HealthResponse(status="ok", service="api", environment=settings.app_env)
 
 
-@app.get(
-    "/ready",
-    tags=["system"],
-    response_model=ReadinessResponse,
-    responses={503: {"description": "Database unavailable"}},
-)
 def ready() -> ReadinessResponse:
     try:
         with get_pool().connection() as connection:
@@ -223,65 +76,18 @@ def ready() -> ReadinessResponse:
     )
 
 
-app.include_router(countries.router, prefix="/api/v1")
-app.include_router(data_journal.router, prefix="/api/v1")
-app.include_router(routes.router, prefix="/api/v1")
-app.include_router(legal_signals.router, prefix="/api/v1")
-app.include_router(legal_signals.top_level_router, prefix="/api/v1")
-app.include_router(scenarios.router, prefix="/api/v1")
-app.include_router(personas.router, prefix="/api/v1")
-app.include_router(sources.router, prefix="/api/v1")
-app.include_router(translations.router, prefix="/api/v1")
-app.include_router(admin.router, prefix="/api/v1")
-app.include_router(admin_translation_jobs.router, prefix="/api/v1")
-app.include_router(analytics.router, prefix="/api/v1")
-app.include_router(feature_flags.router, prefix="/api/v1")
-app.include_router(user_stories.router, prefix="/api/v1")
-app.include_router(decision.router, prefix="/api/v1")
-app.include_router(home.router, prefix="/api/v1")
-
-
-def _normalize_openapi_contract(value: Any) -> None:
-    if isinstance(value, dict):
-        description = value.get("description")
-        if description == "Unprocessable Content":
-            value["description"] = "Unprocessable Entity"
-        enum_values = value.get("enum")
-        if isinstance(enum_values, list) and set(enum_values) == {
-            "low",
-            "medium",
-            "high",
-        }:
-            value["enum"] = ["high", "medium", "low"]
-        for nested in value.values():
-            _normalize_openapi_contract(nested)
-    elif isinstance(value, list):
-        for nested in value:
-            _normalize_openapi_contract(nested)
+app = create_app(
+    settings=settings,
+    rate_limit_client=_rate_limit_client,
+    cleanup_rate_windows=_cleanup_rate_windows,
+    rate_windows=_rate_windows,
+    health_handler=health,
+    readiness_handler=ready,
+)
 
 
 def stable_openapi() -> dict[str, Any]:
-    if app.openapi_schema:
-        return app.openapi_schema
-    schema = get_openapi(
-        title=app.title,
-        version=app.version,
-        openapi_version=app.openapi_version,
-        summary=app.summary,
-        description=app.description,
-        routes=app.routes,
-        webhooks=app.webhooks.routes,
-        tags=app.openapi_tags,
-        servers=app.servers,
-        terms_of_service=app.terms_of_service,
-        contact=app.contact,
-        license_info=app.license_info,
-        separate_input_output_schemas=app.separate_input_output_schemas,
-    )
-    _normalize_openapi_contract(schema)
-    app.openapi_schema = schema
-    return app.openapi_schema
+    return app.openapi()
 
 
 openapi_app: Any = app
-openapi_app.openapi = stable_openapi
