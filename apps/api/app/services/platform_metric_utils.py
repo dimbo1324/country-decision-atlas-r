@@ -53,7 +53,7 @@ def normalize_groups(value: Any) -> list[str]:
         except json.JSONDecodeError:
             decoded = [raw]
         raw = decoded
-    if isinstance(raw, Iterable) and not isinstance(raw, (bytes, bytearray, str)):
+    if isinstance(raw, Iterable) and not isinstance(raw, bytes | bytearray | str):
         return sorted(
             {
                 str(item).strip()

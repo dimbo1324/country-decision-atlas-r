@@ -65,6 +65,16 @@ from app.repositories.data_quality.platform import (
     list_disabled_feature_flags_without_access_rules as list_disabled_feature_flags_without_access_rules,
     list_enabled_feature_flags_without_access_rules as list_enabled_feature_flags_without_access_rules,
 )
+from app.repositories.data_quality.platform_metrics import (
+    list_high_confidence_low_sample_metrics as list_high_confidence_low_sample_metrics,
+    list_inconsistent_insufficient_data_metrics as list_inconsistent_insufficient_data_metrics,
+    list_invalid_platform_metric_values as list_invalid_platform_metric_values,
+    list_mvp_countries_missing_global_platform_metrics as list_mvp_countries_missing_global_platform_metrics,
+    list_mvp_countries_missing_scenario_risk_metrics as list_mvp_countries_missing_scenario_risk_metrics,
+    list_platform_metrics_with_missing_computed_at as list_platform_metrics_with_missing_computed_at,
+    list_platform_metrics_with_missing_methodology as list_platform_metrics_with_missing_methodology,
+    list_stale_platform_metrics as list_stale_platform_metrics,
+)
 from app.repositories.data_quality.review import (
     count_domain_events_for_dq as count_domain_events_for_dq,
     list_invalid_domain_events_for_dq as list_invalid_domain_events_for_dq,

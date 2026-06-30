@@ -19,6 +19,7 @@ import {
   isDecisionReadyScenario,
 } from "./decision-ready-scenarios";
 import { DecisionCiiComparison } from "../decision-visual-comparison";
+import { DecisionRiskContext } from "../platform-intelligence";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -295,6 +296,13 @@ function DecisionFormInner() {
             scenarioSlug={scenarioSlug}
             locale={locale}
             personaSlug={selectedPersonaSlug || result.applied_persona?.slug}
+          />
+        )}
+        {result !== null && (
+          <DecisionRiskContext
+            countrySlugs={candidateCountrySlugs}
+            scenarioSlug={scenarioSlug}
+            locale={locale}
           />
         )}
       </div>

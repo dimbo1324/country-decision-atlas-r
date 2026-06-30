@@ -31,6 +31,118 @@ paths:
                 $ref: '#/components/schemas/ReadinessResponse'
         '503':
           description: Database unavailable
+  /api/v1/countries/{country_slug}/platform-metrics:
+    get:
+      tags:
+      - platform-metrics
+      summary: List Country Platform Metrics
+      operationId: list_country_platform_metrics_api_v1_countries__country_slug__platform_metrics_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: scenario
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      - name: include_input_summary
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Input Summary
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformMetricListResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+  /api/v1/countries/{country_slug}/platform-metrics/{metric_key}:
+    get:
+      tags:
+      - platform-metrics
+      summary: Get Country Platform Metric
+      operationId: get_country_platform_metric_api_v1_countries__country_slug__platform_metrics__metric_key__get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: metric_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Metric Key
+      - name: scenario
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      - name: include_input_summary
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Input Summary
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformMetricDetailResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
   /api/v1/countries/compare:
     get:
       tags:
@@ -2182,6 +2294,75 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
       - AdminTokenAuth: []
+  /api/v1/admin/platform-metrics/recompute:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute All Platform Metrics
+      operationId: admin_recompute_all_platform_metrics_api_v1_admin_platform_metrics_recompute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformMetricsRecomputeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformMetricsRecomputeSummary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/platform-metrics/recompute/{country_slug}:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute Country Platform Metrics
+      operationId: admin_recompute_country_platform_metrics_api_v1_admin_platform_metrics_recompute__country_slug__post
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformMetricsRecomputeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformMetricsRecomputeResult'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
   /api/v1/admin/translation-jobs:
     get:
       tags:
@@ -6379,6 +6560,206 @@ components:
       required:
       - item
       title: PersonaWeightProfileResponse
+    PlatformMetric:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        metric_key:
+          type: string
+          title: Metric Key
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+        label:
+          type: string
+          title: Label
+        confidence:
+          type: string
+          title: Confidence
+        freshness_status:
+          type: string
+          title: Freshness Status
+        window_days:
+          type: integer
+          title: Window Days
+        methodology_version:
+          type: string
+          title: Methodology Version
+        input_summary:
+          anyOf:
+          - $ref: '#/components/schemas/PlatformMetricInputSummary'
+          - type: 'null'
+        source_count:
+          type: integer
+          title: Source Count
+        evidence_count:
+          type: integer
+          title: Evidence Count
+        signal_count:
+          type: integer
+          title: Signal Count
+        event_count:
+          type: integer
+          title: Event Count
+        computed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Computed At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - country_slug
+      - metric_key
+      - label
+      - confidence
+      - freshness_status
+      - window_days
+      - methodology_version
+      - source_count
+      - evidence_count
+      - signal_count
+      - event_count
+      title: PlatformMetric
+    PlatformMetricDetailResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/PlatformMetric'
+      type: object
+      required:
+      - item
+      title: PlatformMetricDetailResponse
+    PlatformMetricInputSummary:
+      properties:
+        raw:
+          additionalProperties: true
+          type: object
+          title: Raw
+      type: object
+      title: PlatformMetricInputSummary
+    PlatformMetricListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PlatformMetric'
+          type: array
+          title: Items
+        country_slug:
+          type: string
+          title: Country Slug
+      type: object
+      required:
+      - items
+      - country_slug
+      title: PlatformMetricListResponse
+    PlatformMetricsRecomputeRequest:
+      properties:
+        dry_run:
+          type: boolean
+          title: Dry Run
+          default: false
+        metric_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Key
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+      type: object
+      title: PlatformMetricsRecomputeRequest
+    PlatformMetricsRecomputeResult:
+      properties:
+        feature_enabled:
+          type: boolean
+          title: Feature Enabled
+        dry_run:
+          type: boolean
+          title: Dry Run
+        country_slug:
+          type: string
+          title: Country Slug
+        metrics_computed:
+          type: integer
+          title: Metrics Computed
+        metrics_written:
+          type: integer
+          title: Metrics Written
+        metrics_failed:
+          type: integer
+          title: Metrics Failed
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+      type: object
+      required:
+      - feature_enabled
+      - dry_run
+      - country_slug
+      - metrics_computed
+      - metrics_written
+      - metrics_failed
+      title: PlatformMetricsRecomputeResult
+    PlatformMetricsRecomputeSummary:
+      properties:
+        feature_enabled:
+          type: boolean
+          title: Feature Enabled
+        dry_run:
+          type: boolean
+          title: Dry Run
+        countries_requested:
+          type: integer
+          title: Countries Requested
+        countries_processed:
+          type: integer
+          title: Countries Processed
+        countries_skipped:
+          type: integer
+          title: Countries Skipped
+        metrics_computed:
+          type: integer
+          title: Metrics Computed
+        metrics_written:
+          type: integer
+          title: Metrics Written
+        metrics_failed:
+          type: integer
+          title: Metrics Failed
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+      type: object
+      required:
+      - feature_enabled
+      - dry_run
+      - countries_requested
+      - countries_processed
+      - countries_skipped
+      - metrics_computed
+      - metrics_written
+      - metrics_failed
+      title: PlatformMetricsRecomputeSummary
     PublicationStatus:
       type: string
       enum:

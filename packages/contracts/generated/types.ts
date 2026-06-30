@@ -38,6 +38,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/platform-metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Country Platform Metrics */
+        get: operations["list_country_platform_metrics_api_v1_countries__country_slug__platform_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/countries/{country_slug}/platform-metrics/{metric_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Country Platform Metric */
+        get: operations["get_country_platform_metric_api_v1_countries__country_slug__platform_metrics__metric_key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/compare": {
         parameters: {
             query?: never;
@@ -746,6 +780,40 @@ export interface paths {
         get: operations["admin_read_country_onboarding_report_api_v1_admin_country_onboarding_report_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/platform-metrics/recompute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute All Platform Metrics */
+        post: operations["admin_recompute_all_platform_metrics_api_v1_admin_platform_metrics_recompute_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/platform-metrics/recompute/{country_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute Country Platform Metrics */
+        post: operations["admin_recompute_country_platform_metrics_api_v1_admin_platform_metrics_recompute__country_slug__post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2863,6 +2931,108 @@ export interface components {
         PersonaWeightProfileResponse: {
             item: components["schemas"]["PersonaWeightProfile"];
         };
+        /** PlatformMetric */
+        PlatformMetric: {
+            /** Country Slug */
+            country_slug: string;
+            /** Metric Key */
+            metric_key: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Value */
+            value?: number | null;
+            /** Label */
+            label: string;
+            /** Confidence */
+            confidence: string;
+            /** Freshness Status */
+            freshness_status: string;
+            /** Window Days */
+            window_days: number;
+            /** Methodology Version */
+            methodology_version: string;
+            input_summary?: components["schemas"]["PlatformMetricInputSummary"] | null;
+            /** Source Count */
+            source_count: number;
+            /** Evidence Count */
+            evidence_count: number;
+            /** Signal Count */
+            signal_count: number;
+            /** Event Count */
+            event_count: number;
+            /** Computed At */
+            computed_at?: string | null;
+            /** Expires At */
+            expires_at?: string | null;
+        };
+        /** PlatformMetricDetailResponse */
+        PlatformMetricDetailResponse: {
+            item: components["schemas"]["PlatformMetric"];
+        };
+        /** PlatformMetricInputSummary */
+        PlatformMetricInputSummary: {
+            /** Raw */
+            raw?: {
+                [key: string]: unknown;
+            };
+        };
+        /** PlatformMetricListResponse */
+        PlatformMetricListResponse: {
+            /** Items */
+            items: components["schemas"]["PlatformMetric"][];
+            /** Country Slug */
+            country_slug: string;
+        };
+        /** PlatformMetricsRecomputeRequest */
+        PlatformMetricsRecomputeRequest: {
+            /**
+             * Dry Run
+             * @default false
+             */
+            dry_run: boolean;
+            /** Metric Key */
+            metric_key?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+        };
+        /** PlatformMetricsRecomputeResult */
+        PlatformMetricsRecomputeResult: {
+            /** Feature Enabled */
+            feature_enabled: boolean;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Country Slug */
+            country_slug: string;
+            /** Metrics Computed */
+            metrics_computed: number;
+            /** Metrics Written */
+            metrics_written: number;
+            /** Metrics Failed */
+            metrics_failed: number;
+            /** Errors */
+            errors?: string[];
+        };
+        /** PlatformMetricsRecomputeSummary */
+        PlatformMetricsRecomputeSummary: {
+            /** Feature Enabled */
+            feature_enabled: boolean;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Countries Requested */
+            countries_requested: number;
+            /** Countries Processed */
+            countries_processed: number;
+            /** Countries Skipped */
+            countries_skipped: number;
+            /** Metrics Computed */
+            metrics_computed: number;
+            /** Metrics Written */
+            metrics_written: number;
+            /** Metrics Failed */
+            metrics_failed: number;
+            /** Errors */
+            errors?: string[];
+        };
         /**
          * PublicationStatus
          * @enum {string}
@@ -3926,6 +4096,105 @@ export interface operations {
             };
             /** @description Database unavailable */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_country_platform_metrics_api_v1_countries__country_slug__platform_metrics_get: {
+        parameters: {
+            query?: {
+                scenario?: string | null;
+                locale?: string | null;
+                include_input_summary?: boolean;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMetricListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_country_platform_metric_api_v1_countries__country_slug__platform_metrics__metric_key__get: {
+        parameters: {
+            query?: {
+                scenario?: string | null;
+                locale?: string | null;
+                include_input_summary?: boolean;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+                metric_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMetricDetailResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5468,6 +5737,102 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
+            };
+        };
+    };
+    admin_recompute_all_platform_metrics_api_v1_admin_platform_metrics_recompute_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformMetricsRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMetricsRecomputeSummary"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    admin_recompute_country_platform_metrics_api_v1_admin_platform_metrics_recompute__country_slug__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformMetricsRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMetricsRecomputeResult"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

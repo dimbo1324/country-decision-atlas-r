@@ -16,6 +16,7 @@ import {
   LocaleStatusBadge,
 } from "../../../features/country-card";
 import { CountryDataJournalBlock } from "../../../features/data-journal";
+import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
 
 export const dynamic = "force-dynamic";
@@ -98,6 +99,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             Индекс инвестиционной привлекательности (CII)
           </h2>
           <CountryCiiBlock cii={card.cii} />
+        </section>
+
+        <section className="cardSection" data-testid="platform-intelligence-section">
+          <h2 className="cardSectionTitle">Платформенный интеллект</h2>
+          <PlatformIntelligenceBlock countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">

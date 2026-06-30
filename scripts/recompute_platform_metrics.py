@@ -1,0 +1,69 @@
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+import sys
+
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR / "apps" / "api"))
+    sys.path.insert(0, str(ROOT_DIR))
+
+from app.core.config import get_settings  # noqa: E402
+from app.services.platform_metrics_runtime import (  # noqa: E402
+    compute_platform_metrics_for_all_countries,
+    compute_platform_metrics_for_country,
+)
+import psycopg  # noqa: E402
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Recompute platform metrics.")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--all", action="store_true")
+    group.add_argument("--country", type=str)
+    parser.add_argument("--dry-run", action="store_true", default=False)
+    parser.add_argument("--metric-key", type=str, default=None)
+    parser.add_argument("--scenario-slug", type=str, default=None)
+    args = parser.parse_args()
+
+    settings = get_settings()
+    try:
+        with psycopg.connect(settings.database_url, row_factory=psycopg.rows.dict_row) as conn:
+            if args.all:
+                result = compute_platform_metrics_for_all_countries(
+                    conn,
+                    dry_run=args.dry_run,
+                    metric_key=args.metric_key,
+                    scenario_slug=args.scenario_slug,
+                )
+                print(json.dumps(result.model_dump(), default=str))
+                if not result.feature_enabled:
+                    return 1
+                if result.metrics_failed > 0:
+                    return 1
+            else:
+                result = compute_platform_metrics_for_country(
+                    conn,
+                    args.country,
+                    dry_run=args.dry_run,
+                    metric_key=args.metric_key,
+                    scenario_slug=args.scenario_slug,
+                )
+                print(json.dumps(result.model_dump(), default=str))
+                if not result.feature_enabled:
+                    return 1
+                if result.errors and result.metrics_computed == 0:
+                    return 1
+                if result.metrics_failed > 0:
+                    return 1
+    except Exception as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

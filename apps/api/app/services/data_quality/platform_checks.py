@@ -1,6 +1,9 @@
 from app.repositories import data_quality as repository
 from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
 from app.services.data_quality._issues import _check, _issue
+from app.services.data_quality.platform_metrics_checks import (
+    _append_platform_metrics_checks,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -87,3 +90,4 @@ def _append_platform_runtime_checks(
         )
     )
     checks.append(_check("cache_config_is_safe", issues, []))
+    _append_platform_metrics_checks(connection, issues, checks)

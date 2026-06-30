@@ -9,6 +9,7 @@ from app.api.v1 import (
     home,
     legal_signals,
     personas,
+    platform_metrics,
     routes,
     scenarios,
     sources,
@@ -182,6 +183,7 @@ def _register_system_routes(
 
 
 def _register_api_routes(app: FastAPI) -> None:
+    app.include_router(platform_metrics.router, prefix="/api/v1")
     app.include_router(countries.router, prefix="/api/v1")
     app.include_router(data_journal.router, prefix="/api/v1")
     app.include_router(routes.router, prefix="/api/v1")
@@ -192,6 +194,7 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(sources.router, prefix="/api/v1")
     app.include_router(translations.router, prefix="/api/v1")
     app.include_router(admin.router, prefix="/api/v1")
+    app.include_router(platform_metrics.admin_router, prefix="/api/v1")
     app.include_router(admin_translation_jobs.router, prefix="/api/v1")
     app.include_router(analytics.router, prefix="/api/v1")
     app.include_router(feature_flags.router, prefix="/api/v1")

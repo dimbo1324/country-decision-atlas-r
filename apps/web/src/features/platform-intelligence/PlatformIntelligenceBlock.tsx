@@ -1,0 +1,87 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import type { PlatformMetricListResponse } from "../../shared/api/platform-metrics";
+import type { LocaleCode } from "../../shared/api/countries";
+import { getCountryPlatformMetrics } from "../../shared/api/platform-metrics";
+import { PlatformMetricCard } from "./PlatformMetricCard";
+import { PlatformMetricEmptyState } from "./PlatformMetricEmptyState";
+
+type PlatformIntelligenceBlockProps = {
+  countrySlug: string;
+  locale: LocaleCode;
+};
+
+export function PlatformIntelligenceBlock({
+  countrySlug,
+  locale,
+}: PlatformIntelligenceBlockProps) {
+  const [data, setData] = useState<PlatformMetricListResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    getCountryPlatformMetrics(countrySlug, locale)
+      .then((res) => {
+        if (isMounted) {
+          setData(res);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setData(null);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [countrySlug, locale]);
+
+  if (isLoading) {
+    return <div className="notice">Загрузка данных платформенного интеллекта...</div>;
+  }
+
+  const items = data?.items ?? [];
+
+  if (items.length === 0) {
+    return <PlatformMetricEmptyState />;
+  }
+
+  const globalMetrics = items.filter((m) => m.scenario_slug === null);
+  const scenarioMetrics = items.filter((m) => m.scenario_slug !== null);
+
+  return (
+    <div data-testid="platform-intelligence-block">
+      {globalMetrics.length > 0 && (
+        <div className="platformMetricGroup">
+          <h3 className="platformMetricGroupTitle">Глобальные показатели</h3>
+          <div className="platformMetricGrid">
+            {globalMetrics.map((metric) => (
+              <PlatformMetricCard key={metric.metric_key} metric={metric} />
+            ))}
+          </div>
+        </div>
+      )}
+      {scenarioMetrics.length > 0 && (
+        <div className="platformMetricGroup">
+          <h3 className="platformMetricGroupTitle">Риски по сценариям</h3>
+          <div className="platformMetricGrid">
+            {scenarioMetrics.map((metric) => (
+              <PlatformMetricCard
+                key={`${metric.metric_key}-${metric.scenario_slug}`}
+                metric={metric}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

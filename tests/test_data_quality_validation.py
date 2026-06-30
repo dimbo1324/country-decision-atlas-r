@@ -94,6 +94,14 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_disabled_feature_flags_without_access_rules",
         "list_data_journal_events_with_internal_payload_fields",
         "list_data_journal_events_referencing_non_public_content",
+        "list_invalid_platform_metric_values",
+        "list_inconsistent_insufficient_data_metrics",
+        "list_platform_metrics_with_missing_methodology",
+        "list_platform_metrics_with_missing_computed_at",
+        "list_stale_platform_metrics",
+        "list_high_confidence_low_sample_metrics",
+        "list_mvp_countries_missing_global_platform_metrics",
+        "list_mvp_countries_missing_scenario_risk_metrics",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 

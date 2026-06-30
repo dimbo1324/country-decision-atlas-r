@@ -37,6 +37,10 @@ type FeatureFlagListResponse = components["schemas"]["FeatureFlagListResponse"];
 type FeatureFlagDetailResponse = components["schemas"]["FeatureFlagDetailResponse"];
 type DataJournalEntry = components["schemas"]["DataJournalEntry"];
 type CountryDataJournalResponse = components["schemas"]["CountryDataJournalResponse"];
+type PlatformMetric = components["schemas"]["PlatformMetric"];
+type PlatformMetricListResponse = components["schemas"]["PlatformMetricListResponse"];
+type PlatformMetricsRecomputeSummary =
+  components["schemas"]["PlatformMetricsRecomputeSummary"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -73,4 +77,7 @@ export type FrontendCriticalContracts = {
   featureFlagDetailResponse: FeatureFlagDetailResponse;
   dataJournalEntry: DataJournalEntry;
   countryDataJournalResponse: CountryDataJournalResponse;
+  platformMetric: PlatformMetric;
+  platformMetricListResponse: PlatformMetricListResponse;
+  platformMetricsRecomputeSummary: PlatformMetricsRecomputeSummary;
 };
