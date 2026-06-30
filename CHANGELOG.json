@@ -1587,6 +1587,52 @@
       ],
       "status": "completed",
       "risk": "No product behavior changes were intended. Compatibility re-exports were kept for old imports and tests. Local web MVP gate requires ADMIN_TOKEN to match the API container token for the protected data-quality API smoke."
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "self-computed-intelligence-v1",
+      "task": "feat/self-computed-intelligence-v1",
+      "branch": "feat/self-computed-intelligence-v1",
+      "summary": "Start self-computed intelligence foundation with platform metrics table, SQL-only repositories, and deterministic calculation services for LVI, SSRS, and contradiction score.",
+      "status": "in_progress"
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "self-computed-intelligence-v1",
+      "task": "feat/self-computed-intelligence-v1",
+      "branch": "feat/self-computed-intelligence-v1",
+      "summary": "Completed the self-computed intelligence foundation by adding the country_platform_metrics persistence layer, SQL-only metric repositories, deterministic LVI/SSRS/contradiction services, and focused regression coverage without exposing new API or frontend surface.",
+      "changes": [
+        "added migration 032_self_computed_intelligence_v1.sql with country_platform_metrics, deterministic constraints, idempotent indexes, and no seed metric rows",
+        "added apps/api/app/repositories/platform_metrics.py as a SQL-only repository for active countries, legal inputs, scenario inputs, contradiction inputs, and metric upserts/reads",
+        "added deterministic metric services for legal_velocity_index, scenario_specific_risk_score, and contradiction_score with methodology metadata, confidence/freshness labels, and input summaries",
+        "added orchestration helpers for computing and storing one country or all active countries without changing public API, OpenAPI, frontend, contracts, CII, DQ, decision engine, auth, or docs",
+        "added focused repository, service, and orchestration tests covering constraints, idempotent upserts, sample guards, deterministic labels, scenario scoping, and no mutation of inputs"
+      ],
+      "checks": [
+        "branch started from main after git pull --ff-only origin main",
+        "baseline checks passed before implementation: python -m pytest tests/test_frontend_contract.py, python -m ruff check ., git diff --check",
+        "clean Docker migration chain 001-032 applied from an empty database; second scripts/apply_migrations.py run skipped all applied migrations",
+        "country_platform_metrics remained empty after migrations as required",
+        "python -m pytest tests/test_platform_metrics_repository.py tests/test_legal_velocity.py tests/test_scenario_risk.py tests/test_contradiction_score.py tests/test_platform_metrics_service.py: 73 passed",
+        "python -m pytest: 953 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests passed",
+        "python -m ruff check . --fix passed",
+        "python -m ruff format . left 209 files unchanged",
+        "python -m sqlfluff lint database --dialect postgres passed",
+        "pnpm typecheck, pnpm lint, pnpm build, pnpm quality, pnpm format:check, and pnpm format passed with pnpm 9.12.0",
+        "pnpm web:mvp:check passed with 167 Playwright tests",
+        "notifier Linux Go 1.25 container gate passed after local protobuf generation: go test ./..., go vet ./..., gofmt clean",
+        "forbidden-scope check passed: no docs, README, markdown/txt, frontend, OpenAPI/generated contract, pnpm-lock, CII, DQ, decision, or auth changes",
+        "new-file inventory passed: no new file exceeds 1000 lines and no comments/docstrings were added to the new backend/test files",
+        "git diff --check passed"
+      ],
+      "status": "completed",
+      "risk": "Foundation-only change. Metrics are persisted and computed by internal services only; no public API, frontend, generated contract, CII, data-quality, decision-engine, auth/RBAC, Trust Score, Drift, AI, or community behavior was changed."
     }
   ]
 }
