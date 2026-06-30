@@ -38,7 +38,11 @@ def _install_feature_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         ff_repo,
         "get_feature_flag",
-        lambda *_a: {"status": "enabled", "access_tier": "public", "default_enabled": True},
+        lambda *_a: {
+            "status": "enabled",
+            "access_tier": "public",
+            "default_enabled": True,
+        },
     )
     monkeypatch.setattr(
         ff_repo,
@@ -51,7 +55,11 @@ def _install_feature_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         ff_repo,
         "get_feature_flag",
-        lambda *_a: {"status": "disabled", "access_tier": "public", "default_enabled": False},
+        lambda *_a: {
+            "status": "disabled",
+            "access_tier": "public",
+            "default_enabled": False,
+        },
     )
     monkeypatch.setattr(
         ff_repo,
@@ -60,7 +68,9 @@ def _install_feature_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def test_returns_feature_disabled_when_flag_off(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_returns_feature_disabled_when_flag_off(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_disabled(monkeypatch)
     conn = MagicMock()
     result = compute_and_store_trust_for_country(conn, "russia", now=_NOW)
@@ -68,7 +78,9 @@ def test_returns_feature_disabled_when_flag_off(monkeypatch: pytest.MonkeyPatch)
     assert result["computed"] is False
 
 
-def test_returns_country_not_found_when_inputs_none(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_returns_country_not_found_when_inputs_none(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(trust_repo, "get_trust_inputs_for_country", lambda *_: None)
     conn = MagicMock()
@@ -79,9 +91,13 @@ def test_returns_country_not_found_when_inputs_none(monkeypatch: pytest.MonkeyPa
 
 def test_computes_trust_with_rich_inputs(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
-    monkeypatch.setattr(trust_repo, "get_trust_inputs_for_country", lambda *_: _RICH_INPUTS)
+    monkeypatch.setattr(
+        trust_repo, "get_trust_inputs_for_country", lambda *_: _RICH_INPUTS
+    )
     stored: list[dict[str, Any]] = []
-    monkeypatch.setattr(trust_repo, "upsert_country_trust_score", lambda _conn, p: stored.append(p))
+    monkeypatch.setattr(
+        trust_repo, "upsert_country_trust_score", lambda _conn, p: stored.append(p)
+    )
     conn = MagicMock()
     result = compute_and_store_trust_for_country(conn, "russia", now=_NOW)
     assert result["computed"] is True
@@ -93,9 +109,13 @@ def test_computes_trust_with_rich_inputs(monkeypatch: pytest.MonkeyPatch) -> Non
 
 def test_dry_run_does_not_store(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
-    monkeypatch.setattr(trust_repo, "get_trust_inputs_for_country", lambda *_: _RICH_INPUTS)
+    monkeypatch.setattr(
+        trust_repo, "get_trust_inputs_for_country", lambda *_: _RICH_INPUTS
+    )
     stored: list[Any] = []
-    monkeypatch.setattr(trust_repo, "upsert_country_trust_score", lambda _conn, p: stored.append(p))
+    monkeypatch.setattr(
+        trust_repo, "upsert_country_trust_score", lambda _conn, p: stored.append(p)
+    )
     conn = MagicMock()
     result = compute_and_store_trust_for_country(conn, "russia", now=_NOW, dry_run=True)
     assert result["computed"] is True
@@ -105,7 +125,9 @@ def test_dry_run_does_not_store(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_insufficient_data_still_computes(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
-    monkeypatch.setattr(trust_repo, "get_trust_inputs_for_country", lambda *_: _SPARSE_INPUTS)
+    monkeypatch.setattr(
+        trust_repo, "get_trust_inputs_for_country", lambda *_: _SPARSE_INPUTS
+    )
     monkeypatch.setattr(trust_repo, "upsert_country_trust_score", lambda *_: None)
     conn = MagicMock()
     result = compute_and_store_trust_for_country(conn, "russia", now=_NOW)

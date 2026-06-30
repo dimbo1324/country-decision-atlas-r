@@ -65,6 +65,7 @@ class TestFreshnessScore:
 
     def test_fresh_within_180_days(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=90)
         score, status = compute_freshness_score(last, _NOW)
         assert score == 100
@@ -72,6 +73,7 @@ class TestFreshnessScore:
 
     def test_aging_between_180_and_365(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=200)
         score, status = compute_freshness_score(last, _NOW)
         assert score == 70
@@ -79,6 +81,7 @@ class TestFreshnessScore:
 
     def test_stale_over_365(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=400)
         score, status = compute_freshness_score(last, _NOW)
         assert score == 40
@@ -86,6 +89,7 @@ class TestFreshnessScore:
 
     def test_exactly_180_days(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=180)
         score, status = compute_freshness_score(last, _NOW)
         assert score == 100
@@ -225,6 +229,7 @@ class TestComputeTrustScoreFromInputs:
 
     def test_downside_cap_applied(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=400)
         inputs = self._inputs(
             source_count=15,
@@ -245,6 +250,7 @@ class TestComputeTrustScoreFromInputs:
 
     def test_with_fresh_data_and_no_contradiction(self) -> None:
         from datetime import timedelta
+
         last = _NOW - timedelta(days=10)
         inputs = self._inputs(
             source_count=15,
