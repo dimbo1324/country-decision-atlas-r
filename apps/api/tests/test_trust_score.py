@@ -201,7 +201,7 @@ class TestComputeTrustScoreFromInputs:
         platform_metric_count: int = 2,
         last_verified_at: datetime | None = None,
         contradiction_score_value: float | None = None,
-    ) -> dict:
+    ) -> dict[str, object]:
         return {
             "country_id": "test-country-uuid",
             "source_count": source_count,
