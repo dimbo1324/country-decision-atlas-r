@@ -6,14 +6,17 @@ from app.api.v1 import (
     data_journal,
     decision,
     feature_flags,
+    glossary,
     home,
     legal_signals,
+    methodology,
     personas,
     platform_metrics,
     routes,
     scenarios,
     sources,
     translations,
+    trust,
     user_stories,
 )
 from app.core.database import close_database_pool, open_database_pool
@@ -183,6 +186,9 @@ def _register_system_routes(
 
 
 def _register_api_routes(app: FastAPI) -> None:
+    app.include_router(trust.router, prefix="/api/v1")
+    app.include_router(methodology.router, prefix="/api/v1")
+    app.include_router(glossary.router, prefix="/api/v1")
     app.include_router(platform_metrics.router, prefix="/api/v1")
     app.include_router(countries.router, prefix="/api/v1")
     app.include_router(data_journal.router, prefix="/api/v1")
@@ -195,6 +201,7 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(translations.router, prefix="/api/v1")
     app.include_router(admin.router, prefix="/api/v1")
     app.include_router(platform_metrics.admin_router, prefix="/api/v1")
+    app.include_router(trust.admin_router, prefix="/api/v1")
     app.include_router(admin_translation_jobs.router, prefix="/api/v1")
     app.include_router(analytics.router, prefix="/api/v1")
     app.include_router(feature_flags.router, prefix="/api/v1")

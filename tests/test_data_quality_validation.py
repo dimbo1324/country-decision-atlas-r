@@ -102,6 +102,11 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_high_confidence_low_sample_metrics",
         "list_mvp_countries_missing_global_platform_metrics",
         "list_mvp_countries_missing_scenario_risk_metrics",
+        "list_invalid_trust_score_values",
+        "list_inconsistent_trust_insufficient_data",
+        "list_stale_trust_scores",
+        "list_missing_required_methodology_sections",
+        "list_missing_required_glossary_terms",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 

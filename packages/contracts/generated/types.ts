@@ -38,6 +38,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/trust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Country Trust */
+        get: operations["get_country_trust_api_v1_countries__country_slug__trust_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/methodology": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Methodology Sections */
+        get: operations["list_methodology_sections_api_v1_methodology_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/methodology/{section_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Methodology Section */
+        get: operations["get_methodology_section_api_v1_methodology__section_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/glossary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Glossary Terms */
+        get: operations["list_glossary_terms_api_v1_glossary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/glossary/{term_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Glossary Term */
+        get: operations["get_glossary_term_api_v1_glossary__term_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/{country_slug}/platform-metrics": {
         parameters: {
             query?: never;
@@ -814,6 +899,40 @@ export interface paths {
         put?: never;
         /** Admin Recompute Country Platform Metrics */
         post: operations["admin_recompute_country_platform_metrics_api_v1_admin_platform_metrics_recompute__country_slug__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/trust/recompute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute All Trust */
+        post: operations["admin_recompute_all_trust_api_v1_admin_trust_recompute_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/trust/recompute/{country_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute Country Trust */
+        post: operations["admin_recompute_country_trust_api_v1_admin_trust_recompute__country_slug__post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1791,6 +1910,45 @@ export interface components {
             pagination: components["schemas"]["Pagination"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** CountryTrustResponse */
+        CountryTrustResponse: {
+            /** Country Slug */
+            country_slug: string;
+            /** Trust Score */
+            trust_score?: number | null;
+            /** Trust Label */
+            trust_label: string;
+            /** Confidence */
+            confidence: string;
+            /** Freshness Status */
+            freshness_status: string;
+            /** Source Count */
+            source_count: number;
+            /** Evidence Count */
+            evidence_count: number;
+            /** Legal Signal Count */
+            legal_signal_count: number;
+            /** Route Count */
+            route_count: number;
+            /** Platform Metric Count */
+            platform_metric_count: number;
+            /** Contradiction Score */
+            contradiction_score?: number | null;
+            components: components["schemas"]["TrustComponentBreakdown"];
+            /** Last Verified At */
+            last_verified_at?: string | null;
+            /** Computed At */
+            computed_at?: string | null;
+            /** Expires At */
+            expires_at?: string | null;
+            /** Methodology Version */
+            methodology_version: string;
+            /**
+             * Disclaimer
+             * @default This is a data quality indicator, not a recommendation. Not legal advice.
+             */
+            disclaimer: string;
+        };
         /** DataJournalEntry */
         DataJournalEntry: {
             /** Id */
@@ -2344,6 +2502,31 @@ export interface components {
          * @enum {string}
          */
         FeatureFlagStatus: "enabled" | "disabled" | "internal" | "deprecated";
+        /** GlossaryListResponse */
+        GlossaryListResponse: {
+            /** Items */
+            items: components["schemas"]["GlossaryTerm"][];
+        };
+        /** GlossaryTerm */
+        GlossaryTerm: {
+            /** Slug */
+            slug: string;
+            /** Term */
+            term: string;
+            /** Definition */
+            definition: string;
+            /** Category */
+            category: string;
+            /**
+             * Related Terms
+             * @default []
+             */
+            related_terms: string[];
+            /** Display Order */
+            display_order: number;
+            /** Updated At */
+            updated_at?: string | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -2841,6 +3024,28 @@ export interface components {
             name: string;
             /** Display Order */
             display_order: number;
+        };
+        /** MethodologyListResponse */
+        MethodologyListResponse: {
+            /** Items */
+            items: components["schemas"]["MethodologySection"][];
+        };
+        /** MethodologySection */
+        MethodologySection: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Body */
+            body: string;
+            /** Section Type */
+            section_type: string;
+            /** Display Order */
+            display_order: number;
+            /** Updated At */
+            updated_at?: string | null;
         };
         /** OnboardingFinding */
         OnboardingFinding: {
@@ -3839,6 +4044,73 @@ export interface components {
          * @enum {string}
          */
         TranslationStatus: "source" | "translated" | "fallback" | "missing";
+        /** TrustComponentBreakdown */
+        TrustComponentBreakdown: {
+            /** Source Quality Score */
+            source_quality_score?: number | null;
+            /** Evidence Depth Score */
+            evidence_depth_score?: number | null;
+            /** Freshness Score */
+            freshness_score?: number | null;
+            /** Review Coverage Score */
+            review_coverage_score?: number | null;
+            /** Contradiction Component */
+            contradiction_component?: number | null;
+        };
+        /** TrustRecomputeCountryResult */
+        TrustRecomputeCountryResult: {
+            /** Country Slug */
+            country_slug: string;
+            /** Feature Enabled */
+            feature_enabled: boolean;
+            /** Country Not Found */
+            country_not_found: boolean;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Computed */
+            computed: boolean;
+            /** Stored */
+            stored: boolean;
+            /** Trust Label */
+            trust_label?: string | null;
+            /** Trust Score */
+            trust_score?: number | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Freshness Status */
+            freshness_status?: string | null;
+            /** Error */
+            error?: string | null;
+        };
+        /** TrustRecomputeRequest */
+        TrustRecomputeRequest: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /**
+             * Dry Run
+             * @default false
+             */
+            dry_run: boolean;
+        };
+        /** TrustRecomputeSummary */
+        TrustRecomputeSummary: {
+            /** Feature Enabled */
+            feature_enabled: boolean;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Countries Processed */
+            countries_processed: number;
+            /** Countries Computed */
+            countries_computed: number;
+            /** Countries Stored */
+            countries_stored: number;
+            /** Countries Failed */
+            countries_failed: number;
+            /** Errors */
+            errors?: {
+                [key: string]: unknown;
+            }[];
+        };
         /** UserStory */
         UserStory: {
             /**
@@ -4100,6 +4372,199 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    get_country_trust_api_v1_countries__country_slug__trust_get: {
+        parameters: {
+            query?: {
+                locale?: string | null;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryTrustResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_methodology_sections_api_v1_methodology_get: {
+        parameters: {
+            query?: {
+                locale?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MethodologyListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_methodology_section_api_v1_methodology__section_slug__get: {
+        parameters: {
+            query?: {
+                locale?: string | null;
+            };
+            header?: never;
+            path: {
+                section_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MethodologySection"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_glossary_terms_api_v1_glossary_get: {
+        parameters: {
+            query?: {
+                locale?: string | null;
+                category?: string | null;
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlossaryListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_glossary_term_api_v1_glossary__term_slug__get: {
+        parameters: {
+            query?: {
+                locale?: string | null;
+            };
+            header?: never;
+            path: {
+                term_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlossaryTerm"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
             };
         };
     };
@@ -5833,6 +6298,92 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    admin_recompute_all_trust_api_v1_admin_trust_recompute_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrustRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrustRecomputeSummary"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_recompute_country_trust_api_v1_admin_trust_recompute__country_slug__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrustRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrustRecomputeCountryResult"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
             };
         };
     };

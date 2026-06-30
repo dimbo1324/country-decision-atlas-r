@@ -1,0 +1,1 @@
+export { TrustSurfaceBlock } from "./TrustSurfaceBlock";

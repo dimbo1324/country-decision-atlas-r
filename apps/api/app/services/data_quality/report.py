@@ -7,6 +7,7 @@ from app.schemas.data_quality import (
 from app.services.data_quality._issues import _check, _issue
 from app.services.data_quality.persona_checks import _append_persona_layer_checks
 from app.services.data_quality.platform_checks import _append_platform_runtime_checks
+from app.services.data_quality.trust_checks import _append_trust_surface_checks
 from psycopg import Connection
 from typing import Any
 
@@ -902,6 +903,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     )
     _append_persona_layer_checks(connection, issues, checks)
     _append_platform_runtime_checks(connection, issues, checks)
+    _append_trust_surface_checks(connection, issues, checks)
     from app.services import data_quality as data_quality_facade
 
     translation_checks, translation_issues = (

@@ -1,4 +1,4 @@
-﻿{
+{
   "schema_version": 2,
   "compacted": true,
   "compacted_at": "2026-06-29",
@@ -12,9 +12,16 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/ai-translation-provider-v1"],
-      "branches": ["feat/ai-translation-provider-v1"],
-      "events": ["task_started", "task_completed"],
+      "tasks": [
+        "feat/ai-translation-provider-v1"
+      ],
+      "branches": [
+        "feat/ai-translation-provider-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
       "summary": "AI translation provider complete: TranslationInput/TranslationResult models extended, AITranslationProvider via httpx (OpenAI API), FakeTranslationProvider updated, provider factory, TranslationValidation (empty/identical/length/AI-noise/number-preservation), dry-run mode, cost/usage metadata in job results, config extended with 7 new env vars, 32 new tests, all 161 passed.",
       "checks": [],
       "deferred_items": [],
@@ -28,10 +35,17 @@
         "first": "2026-06-29",
         "last": "2026-06-29"
       },
-      "tasks": ["fix/audit-closeout-v1"],
-      "branches": ["fix/audit-closeout-v1"],
-      "events": ["task_completed", "task_started"],
-      "summary": "Resolved every finding from the read-only audit. CI: backend OpenAPI drift fixed by pinning schema-affecting deps (fastapi==0.137.1, pydantic==2.13.4 which transitively pins pydantic-core==2.46.4) so CI reproduces the committed contract deterministically; bounded httpx2 (\u003e=2.0,\u003c3.0); bumped Node20-deprecated first-party actions to node24 majors (checkout@v5, setup-python@v6, setup-node@v5, setup-go@v6, upload-artifact@v5; pnpm/action-setup kept at v4 to avoid regressing green jobs). Flaky Argentina E2E test rewritten from non-retrying isVisible()+catch to auto-waiting web-first assertions on the always-rendered cii-section. Notifier reliability: delivery moved from at-most-once to at-leas...",
+      "tasks": [
+        "fix/audit-closeout-v1"
+      ],
+      "branches": [
+        "fix/audit-closeout-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
+      "summary": "Resolved every finding from the read-only audit. CI: backend OpenAPI drift fixed by pinning schema-affecting deps (fastapi==0.137.1, pydantic==2.13.4 which transitively pins pydantic-core==2.46.4) so CI reproduces the committed contract deterministically; bounded httpx2 (>=2.0,<3.0); bumped Node20-deprecated first-party actions to node24 majors (checkout@v5, setup-python@v6, setup-node@v5, setup-go@v6, upload-artifact@v5; pnpm/action-setup kept at v4 to avoid regressing green jobs). Flaky Argentina E2E test rewritten from non-retrying isVisible()+catch to auto-waiting web-first assertions on the always-rendered cii-section. Notifier reliability: delivery moved from at-most-once to at-leas...",
       "checks": [
         "go_build: ok",
         "go_test: all packages passed",
@@ -53,9 +67,16 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["fix/audit-findings-v1"],
-      "branches": ["fix/audit-findings-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "fix/audit-findings-v1"
+      ],
+      "branches": [
+        "fix/audit-findings-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Applied all 25 audit findings. C-1: migration 028 re-migrates legal_signals rows missed by migration 026. C-2: per-process rate limiter limitation documented via startup warning. C-3: draftв†’archived transition disallowed. H-1: dead create_audit_event function deleted. H-2: magic *10 locale placeholder count replaced by self-documenting _LOCALE_PLACEHOLDER_COUNT. H-3: count_routes_by_country dead function removed. H-4: get_country_slug_by_id extra DB query eliminated via RETURNING correlated subquery. H-5: migration 028 adds routes updated_at trigger. M-1: ru locale now returns TranslationStatus.fallback. M-2: ensure_allowed_transition error message fixed to human-readable text. M-3: moot...",
       "checks": [
         "pytest: 744 passed, 23 skipped",
@@ -76,9 +97,18 @@
         "first": "2026-06-22",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/audit-fixes-v1", "chore/audit-fixes-v1"],
-      "branches": ["feat/audit-fixes-v1", "chore/audit-fixes-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/audit-fixes-v1",
+        "chore/audit-fixes-v1"
+      ],
+      "branches": [
+        "feat/audit-fixes-v1",
+        "chore/audit-fixes-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "All audit findings resolved: (1) missing connection.commit() in process_next/process_batch/retry_failed; (2) removed dead _default_provider global and ai_translation_dry_run config field; (3) rate limiter reads api_rate_limit_per_minute from settings, evicts empty IP entries; (4) shared config app_debug default в†’ False; (5) Unicode escapes replaced with actual Cyrillic in decision_engine.py; (6) _STATUS_PRIORITY renamed to _STATUS_DEGRADATION_RANK; (7) duplicate ORDER BY CASE WHEN extracted to _VARIANT_PRIORITY_ORDER constant; (8) get_country_profile_for_admin added; service uses it for before-read instead of abusing patch_country_profile; (9) target_locale validated as Literal[en,ru] in...",
       "checks": [],
       "deferred_items": [],
@@ -92,9 +122,15 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["fix/audit-remediation-v1"],
-      "branches": ["fix/audit-remediation-v1"],
-      "events": ["task_completed"],
+      "tasks": [
+        "fix/audit-remediation-v1"
+      ],
+      "branches": [
+        "fix/audit-remediation-v1"
+      ],
+      "events": [
+        "task_completed"
+      ],
       "summary": "Remediated all 22 findings from the backend/database/frontend security and quality audit. Backend: added catch-all and psycopg exception handlers with structured logging, restricted CORS methods/headers, added security headers and in-memory rate limiting middleware, removed environment field from health endpoint, changed app_debug default to false, added startup warning for missing admin token, replaced f-string table/column interpolation in _patch_entity with psycopg.sql.Identifier. Database: migration 012 adds missing FK indexes (translation_jobs, translation_glossary, watchlists, legal_signal_evidence), composite indexes (sources/legal_signals country+status), and changes country_score...",
       "checks": [
         "python -m pytest: 89 passed, 23 skipped",
@@ -115,9 +151,16 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["feat/cii-country-card-slice-v1"],
-      "branches": ["feat/cii-country-card-slice-v1"],
-      "events": ["task_started", "task_completed"],
+      "tasks": [
+        "feat/cii-country-card-slice-v1"
+      ],
+      "branches": [
+        "feat/cii-country-card-slice-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
       "summary": "CII slice complete. DB: cii_metric_definitions, country_metric_values, scenario_metric_weights, country_cii_scores. Seed: 6 metrics + Russia + Uruguay values + v1.0 weights. API: cii embedded in /card response (CountryReadModelCii optional field) + dedicated GET /api/v1/countries/{slug}/cii. OpenAPI updated, TypeScript contracts regenerated. Frontend: CountryCiiBlock with SVG spider chart, bar breakdown, confidence badge, drift badge, empty state. 184 tests pass, mypy/ruff/sqlfluff clean, TS typecheck+build pass.",
       "checks": [],
       "deferred_items": [],
@@ -131,10 +174,17 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["chore/cii-methodology-hardening-v1"],
-      "branches": ["chore/cii-methodology-hardening-v1"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Created CIIScoreAggregator service (apps/api/app/services/cii.py) with geometric aggregation formula: exp(sum(weight * ln(protected_score)) / sum(weight)) where protected_score = max(effective_value, 1.0).\u0027, \u0027Added polarity handling: effective_value = normalized_value if positive, 100 - normalized_value if negative.\u0027, \u0027Added confidence computation based on metric reliability and coverage.\u0027, \u0027Created migration 017_cii_methodology_hardening_v1.sql: adds formula_version and aggregation_method columns, recalculates existing CII scores geometrically.\u0027, \u0027Updated Pydantic schema CountryReadModelCii to include formula_version, aggregation_method, quality_warnings fields.\u0027, \u0027Updated repository c...",
+      "tasks": [
+        "chore/cii-methodology-hardening-v1"
+      ],
+      "branches": [
+        "chore/cii-methodology-hardening-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Created CIIScoreAggregator service (apps/api/app/services/cii.py) with geometric aggregation formula: exp(sum(weight * ln(protected_score)) / sum(weight)) where protected_score = max(effective_value, 1.0).', 'Added polarity handling: effective_value = normalized_value if positive, 100 - normalized_value if negative.', 'Added confidence computation based on metric reliability and coverage.', 'Created migration 017_cii_methodology_hardening_v1.sql: adds formula_version and aggregation_method columns, recalculates existing CII scores geometrically.', 'Updated Pydantic schema CountryReadModelCii to include formula_version, aggregation_method, quality_warnings fields.', 'Updated repository c...",
       "checks": [
         "python -m ruff check . --fix: passed",
         "python -m ruff format .: 4 files reformatted, all checks passed",
@@ -156,10 +206,17 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["feat/cii-runtime-gate-and-decision-visual-v1"],
-      "branches": ["feat/cii-runtime-gate-and-decision-visual-v1"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Phase A (runtime gate): Verified clean DB migration chain, Docker runtime, /health, /countries/russia/cii, /countries/uruguay/cii. Fixed pre-existing httpx failures by running pip install -e \".[dev]\". Achieved 221 passed, 23 skipped, 0 failed.\u0027, \u0027Phase B (decision visual comparison): Added GET /api/v1/countries/compare endpoint registered before dynamic /{slug} routes.\u0027, \u0027Created Pydantic schemas: CiiCountryComparisonResponse, ComparedCountry, ComparedMetric, ComparedMetricValue, ComparedScenario (apps/api/app/schemas/cii_comparison.py).\u0027, \u0027Added 4 repository functions: get_cii_for_countries (LEFT JOIN, graceful missing), get_active_cii_metric_definitions, get_cii_metric_values_for_coun...",
+      "tasks": [
+        "feat/cii-runtime-gate-and-decision-visual-v1"
+      ],
+      "branches": [
+        "feat/cii-runtime-gate-and-decision-visual-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Phase A (runtime gate): Verified clean DB migration chain, Docker runtime, /health, /countries/russia/cii, /countries/uruguay/cii. Fixed pre-existing httpx failures by running pip install -e \".[dev]\". Achieved 221 passed, 23 skipped, 0 failed.', 'Phase B (decision visual comparison): Added GET /api/v1/countries/compare endpoint registered before dynamic /{slug} routes.', 'Created Pydantic schemas: CiiCountryComparisonResponse, ComparedCountry, ComparedMetric, ComparedMetricValue, ComparedScenario (apps/api/app/schemas/cii_comparison.py).', 'Added 4 repository functions: get_cii_for_countries (LEFT JOIN, graceful missing), get_active_cii_metric_definitions, get_cii_metric_values_for_coun...",
       "checks": [
         "python -m pytest: 239 passed, 23 skipped, 0 failed",
         "python -m mypy .: Success, no issues found in 98 source files",
@@ -181,10 +238,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["refactor/codebase-maintainability-hardening"],
-      "branches": ["refactor/codebase-maintainability-hardening"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Centralized repository sort/order clause resolution behind a whitelist-preserving helper.\u0027, \u0027Centralized the frontend app route API request wrapper while preserving ApiResult behavior.\u0027, \u0027Centralized the default decision-ready scenario slug in the existing decision-ready scenario module.\u0027, \u0027Made pnpm build-script approval explicit for ignored optional native dependencies and hardened Prettier cache ignores.\u0027]",
+      "tasks": [
+        "refactor/codebase-maintainability-hardening"
+      ],
+      "branches": [
+        "refactor/codebase-maintainability-hardening"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Centralized repository sort/order clause resolution behind a whitelist-preserving helper.', 'Centralized the frontend app route API request wrapper while preserving ApiResult behavior.', 'Centralized the default decision-ready scenario slug in the existing decision-ready scenario module.', 'Made pnpm build-script approval explicit for ignored optional native dependencies and hardened Prettier cache ignores.']",
       "checks": [
         "python -m ruff check . --fix",
         "python -m ruff format .",
@@ -206,10 +270,17 @@
         "first": "2026-06-18",
         "last": "2026-06-18"
       },
-      "tasks": ["chore/codebase-quality-security-hardening"],
-      "branches": ["chore/codebase-quality-security-hardening"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Reviewed backend routes, services, repositories, schemas, frontend typed API boundary, OpenAPI contract, tests, and tooling.\u0027, \u0027Hardened admin token verification to use constant-time comparison (secrets.compare_digest) to remove a timing side-channel.\u0027, \u0027Extended the admin token regression test to cover prefix and longer-token rejection.\u0027, \u0027Confirmed SQL access is parameterized with whitelisted sort columns and validated locales, public endpoints restrict status to published/archived, and no runtime/cache/build artifacts are tracked.\u0027]",
+      "tasks": [
+        "chore/codebase-quality-security-hardening"
+      ],
+      "branches": [
+        "chore/codebase-quality-security-hardening"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Reviewed backend routes, services, repositories, schemas, frontend typed API boundary, OpenAPI contract, tests, and tooling.', 'Hardened admin token verification to use constant-time comparison (secrets.compare_digest) to remove a timing side-channel.', 'Extended the admin token regression test to cover prefix and longer-token rejection.', 'Confirmed SQL access is parameterized with whitelisted sort columns and validated locales, public endpoints restrict status to published/archived, and no runtime/cache/build artifacts are tracked.']",
       "checks": [
         "python -m ruff check . --fix",
         "python -m ruff format .",
@@ -231,9 +302,16 @@
         "first": "2026-06-20",
         "last": "2026-06-20"
       },
-      "tasks": ["feat/content-localization-foundation-v1"],
-      "branches": ["feat/content-localization-foundation-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/content-localization-foundation-v1"
+      ],
+      "branches": [
+        "feat/content-localization-foundation-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Added a non-breaking content-localization foundation with translation units, variants, SHA-256 source hashing, RU-original and EN-legacy backfill, repository and service layers, stale detection, data-quality integration, and regression coverage.",
       "checks": [
         "python scripts/apply_migrations.py: passed after local workaround for pre-existing 008/010 fresh-database constraint conflict",
@@ -256,9 +334,16 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["chore/country-onboarding-standard-v1"],
-      "branches": ["chore/country-onboarding-standard-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "chore/country-onboarding-standard-v1"
+      ],
+      "branches": [
+        "chore/country-onboarding-standard-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Machine-checkable country onboarding standard: repository + service + schemas + DQ integration + admin endpoint + 63 tests. Discovered Uruguay evidence gap (14/15) вЂ” fixed via migration 021. Russia and Uruguay both mvp_ready=true. OpenAPI contract updated.",
       "checks": [],
       "deferred_items": [],
@@ -272,10 +357,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["fix/decision-ready-scenario-filter"],
-      "branches": ["fix/decision-ready-scenario-filter"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Created decision-ready-scenarios.ts with DECISION_READY_SCENARIO_SLUGS constant and isDecisionReadyScenario() helper.\u0027, \u0027Updated DecisionRunForm.tsx to filter scenario list to only the 5 MVP-ready slugs: relocation_residence, permanent_residence_citizenship, low_budget_living, business_self_employment, safety_political_risk.\u0027, \u0027Added empty state when no decision-ready scenarios are available.\u0027, \"Added data-testid=\u0027decision-scenario-select\u0027 to the scenario select element.\", \u0027Improved decision_score_not_found error message to guide the user to MVP scenarios.\u0027, \u0027Added tests/e2e/web-mvp-decision-ready-scenarios.spec.ts with 4 tests covering filtering, locale=ru, default run, and button stat...",
+      "tasks": [
+        "fix/decision-ready-scenario-filter"
+      ],
+      "branches": [
+        "fix/decision-ready-scenario-filter"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Created decision-ready-scenarios.ts with DECISION_READY_SCENARIO_SLUGS constant and isDecisionReadyScenario() helper.', 'Updated DecisionRunForm.tsx to filter scenario list to only the 5 MVP-ready slugs: relocation_residence, permanent_residence_citizenship, low_budget_living, business_self_employment, safety_political_risk.', 'Added empty state when no decision-ready scenarios are available.', \"Added data-testid='decision-scenario-select' to the scenario select element.\", 'Improved decision_score_not_found error message to guide the user to MVP scenarios.', 'Added tests/e2e/web-mvp-decision-ready-scenarios.spec.ts with 4 tests covering filtering, locale=ru, default run, and button stat...",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -288,10 +380,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["test/e2e-decision-nav-selector-hardening"],
-      "branches": ["test/e2e-decision-nav-selector-hardening"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\"Fixed strict mode violation in web-mvp-main-flow.spec.ts: getByRole(\u0027link\u0027, { name: \u0027Decision\u0027 }) matched 5 elements.\", \"Replaced with getByRole(\u0027navigation\u0027).getByRole(\u0027link\u0027, { name: \u0027Decision\u0027, exact: true }) to scope to nav only.\", \u0027All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass.\u0027]",
+      "tasks": [
+        "test/e2e-decision-nav-selector-hardening"
+      ],
+      "branches": [
+        "test/e2e-decision-nav-selector-hardening"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "[\"Fixed strict mode violation in web-mvp-main-flow.spec.ts: getByRole('link', { name: 'Decision' }) matched 5 elements.\", \"Replaced with getByRole('navigation').getByRole('link', { name: 'Decision', exact: true }) to scope to nav only.\", 'All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass.']",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -304,10 +403,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["test/e2e-selector-hardening"],
-      "branches": ["test/e2e-selector-hardening"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\"Added data-testid=\u0027locale-status\u0027 to the Translation status section in /countries/[slug]/page.tsx.\", \"Updated web-mvp-locale.spec.ts to use getByTestId(\u0027locale-status\u0027) instead of brittle getByText(/translation status/i).\", \"Updated web-mvp-main-flow.spec.ts to scope Countries nav click to getByRole(\u0027navigation\u0027) with exact:true.\", \u0027All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass.\u0027]",
+      "tasks": [
+        "test/e2e-selector-hardening"
+      ],
+      "branches": [
+        "test/e2e-selector-hardening"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "[\"Added data-testid='locale-status' to the Translation status section in /countries/[slug]/page.tsx.\", \"Updated web-mvp-locale.spec.ts to use getByTestId('locale-status') instead of brittle getByText(/translation status/i).\", \"Updated web-mvp-main-flow.spec.ts to scope Countries nav click to getByRole('navigation') with exact:true.\", 'All 34 Playwright tests pass. TypeScript, ESLint, Next.js build, ruff all pass.']",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -320,9 +426,16 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["fix/e2e-sources-filter-test-v1"],
-      "branches": ["fix/e2e-sources-filter-test-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "fix/e2e-sources-filter-test-v1"
+      ],
+      "branches": [
+        "fix/e2e-sources-filter-test-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Fixed flaky E2E test: sources page filter test was checking .sourceList and empty state text immediately via .isVisible() (no timeout), creating a race condition where the sources API call had not yet completed. Changed to waitFor({ timeout: 10_000 }) so the test waits up to 10s for .sourceList before falling back to checking the empty state.",
       "checks": [],
       "deferred_items": [],
@@ -336,9 +449,15 @@
         "first": "2026-06-24",
         "last": "2026-06-24"
       },
-      "tasks": ["feat/editorial-publication-foundation-v1"],
-      "branches": ["feat/editorial-publication-foundation-v1"],
-      "events": ["task_started"],
+      "tasks": [
+        "feat/editorial-publication-foundation-v1"
+      ],
+      "branches": [
+        "feat/editorial-publication-foundation-v1"
+      ],
+      "events": [
+        "task_started"
+      ],
       "summary": "Start editorial publication foundation with lifecycle, legal_status split, audit/outbox foundation, and data-quality guardrails.",
       "checks": [],
       "deferred_items": [],
@@ -352,9 +471,16 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/evidence-traceability-ui-v1"],
-      "branches": ["feat/evidence-traceability-ui-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/evidence-traceability-ui-v1"
+      ],
+      "branches": [
+        "feat/evidence-traceability-ui-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Implemented evidence traceability UI: EvidenceCard component, expandable evidence panels on legal-signals and sources pages (lazy load), score breakdown with supporting sources, CountryEvidenceSummary cross-links, API client extensions for evidence endpoints.",
       "checks": [
         "typecheck: pass",
@@ -375,9 +501,16 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/frontend-localization-badges-v1"],
-      "branches": ["feat/frontend-localization-badges-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/frontend-localization-badges-v1"
+      ],
+      "branches": [
+        "feat/frontend-localization-badges-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Frontend localization badge layer complete. Created localization-labels.ts helper, LocalizationBadge component with 8 variant classes, added badges to CountryHeader, CountryProfileSections, CountryScores, CountryLegalSignals, CountrySources, EvidenceCard, LegalSignalsView, SourcesView, DecisionResultCard, DecisionSources. 6 E2E badge tests added. pnpm typecheck/lint/build/web:mvp:check/format:check all pass. pytest 98 passed, mypy/ruff clean.",
       "checks": [],
       "deferred_items": [],
@@ -392,9 +525,11 @@
         "last": "2026-06-18"
       },
       "tasks": [],
-      "branches": ["chore/frontend-readiness-hardening"],
+      "branches": [
+        "chore/frontend-readiness-hardening"
+      ],
       "events": [],
-      "summary": "[\u0027Finalizes frontend-facing API contract readiness before minimal frontend work.\u0027, \u0027Adds or hardens runtime smoke tests, typed frontend API boundary checks, diagnostics, and generated contract verification.\u0027, \u0027Starts the machine-readable project changelog.\u0027]",
+      "summary": "['Finalizes frontend-facing API contract readiness before minimal frontend work.', 'Adds or hardens runtime smoke tests, typed frontend API boundary checks, diagnostics, and generated contract verification.', 'Starts the machine-readable project changelog.']",
       "checks": [],
       "deferred_items": [],
       "final_status": null,
@@ -407,9 +542,16 @@
         "first": "2026-06-24",
         "last": "2026-06-24"
       },
-      "tasks": ["chore/global-project-operating-standard-v0"],
-      "branches": ["chore/global-project-operating-standard-v0"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "chore/global-project-operating-standard-v0"
+      ],
+      "branches": [
+        "chore/global-project-operating-standard-v0"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Episode 0 ratified as the binding development regulation for all subsequent episodes (editorial, routes, persona, alerts, drift, search, AI), to be applied starting with feat/editorial-publication-foundation-v1. Per the accepted conclusion, Episode 0 is a regulation rather than a code block: no product code, repositories, services, schemas, routers, migrations, contracts, frontend, or docs were changed. The episode records the standard in the append-only CHANGELOG and proves the full green baseline gate on current main before the seven feature episodes begin.",
       "checks": [],
       "deferred_items": [],
@@ -423,9 +565,15 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["chore/infographic-foundation-closeout-v1"],
-      "branches": ["chore/infographic-foundation-closeout-v1"],
-      "events": ["task_completed"],
+      "tasks": [
+        "chore/infographic-foundation-closeout-v1"
+      ],
+      "branches": [
+        "chore/infographic-foundation-closeout-v1"
+      ],
+      "events": [
+        "task_completed"
+      ],
       "summary": "Infographic foundation episode closed. Phase A: fixed 9 critical data-quality errors (migration 020 links Russia long_term_status_score to 3 real sources; SQL fix extends synthetic-user-story check to Russian keywords); added 4 new CII visual-readiness guardrail checks (mvp_scenarios_active, cii_scores_use_geometric_aggregation, cii_metric_definitions_have_polarity, legal_timeline_has_events_per_country); extended runtime diagnostics script with 5 new visual endpoints (russia/uruguay CII, compare, matrix, legal timeline, home overview) and moved output to local-artifacts/runtime-diagnostics/; added test_data_quality_closeout_guardrails.py (15 new tests). Phase B: migration chain 001-020 a...",
       "checks": [],
       "deferred_items": [],
@@ -439,9 +587,15 @@
         "first": "2026-06-20",
         "last": "2026-06-20"
       },
-      "tasks": ["fix/localization-clean-chain-and-read-models"],
-      "branches": ["fix/localization-clean-chain-and-read-models"],
-      "events": ["task_started"],
+      "tasks": [
+        "fix/localization-clean-chain-and-read-models"
+      ],
+      "branches": [
+        "fix/localization-clean-chain-and-read-models"
+      ],
+      "events": [
+        "task_started"
+      ],
       "summary": "Started clean database migration chain stabilization and read-model adoption of LocalizationService.",
       "checks": [],
       "deferred_items": [],
@@ -455,9 +609,15 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/localization-metadata-api-v1"],
-      "branches": ["feat/localization-metadata-api-v1"],
-      "events": ["task_completed"],
+      "tasks": [
+        "feat/localization-metadata-api-v1"
+      ],
+      "branches": [
+        "feat/localization-metadata-api-v1"
+      ],
+      "events": [
+        "task_completed"
+      ],
       "summary": "Exposed localization metadata in API responses. Added TranslationFieldMeta and LocalizationMeta schemas. Extended overlay_localized_fields to set item[localization]. Expanded list_best_translation_variants SQL. Added localization field to 10 response schemas. Sources and evidence-items endpoints now run overlay. Contracts regenerated. 10 new tests pass.",
       "checks": [],
       "deferred_items": [],
@@ -471,9 +631,16 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/multilingual-foundation-closeout-v1"],
-      "branches": ["feat/multilingual-foundation-closeout-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/multilingual-foundation-closeout-v1"
+      ],
+      "branches": [
+        "feat/multilingual-foundation-closeout-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Multilingual MVP/Foundation block closed. Phase 1 (translation-jobs-worker-foundation-v1): migration 013 (jobs schema, SKIP LOCKED, unique active job index), migration 014 (nullable legacy columns), repository/service/provider/validation layers, fake provider pipeline, worker CLI, admin endpoints (5), OpenAPI+TS contracts updated, 161 tests pass. Phase 2 (baseline-freeze): clean DB chain 14 migrations apply/idempotent, /health+/countries+/card+localization-metadata verified, admin translation-jobs smoke (create=5/process=3 completed), all checks green: pytest 161/0, mypy 90 files clean, ruff check+format clean, pnpm typecheck+lint+build+mvp:check 44/44, format:check clean, sqlfluff clean,...",
       "checks": [],
       "deferred_items": [],
@@ -487,9 +654,16 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["chore/multilingual-operational-guardrails-v1"],
-      "branches": ["chore/multilingual-operational-guardrails-v1"],
-      "events": ["task_started", "task_completed"],
+      "tasks": [
+        "chore/multilingual-operational-guardrails-v1"
+      ],
+      "branches": [
+        "chore/multilingual-operational-guardrails-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
       "summary": "Operational guardrails added: 12 new tests covering E2E pipeline smoke (create-missingв†’process-batchв†’variant), TRANSLATION_PROVIDER default=fake, AI key not required in default mode, original variant protection (SQL WHERE is_original=FALSE), diagnostic script scripts/translation_pipeline_status.py. All 173 tests pass, mypy/ruff/pre-commit clean.",
       "checks": [],
       "deferred_items": [],
@@ -503,9 +677,16 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["feat/persona-layer-v1"],
-      "branches": ["feat/persona-layer-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/persona-layer-v1"
+      ],
+      "branches": [
+        "feat/persona-layer-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Persona Layer v1 backend/data foundation complete. Block 1: migration 029_persona_layer_v1.sql вЂ” personas table + persona_metric_modifiers table + 7 seeded active personas (digital_nomad, family, student, entrepreneur, low_budget_migrant, investor, skilled_worker) + 42 modifiers (7 personas Г— 6 active CII metrics). Migration idempotent and sqlfluff-clean. Block 2: apps/api/app/repositories/personas.py вЂ” list_personas (locale CASE SQL, positional params), get_persona_by_slug, list_persona_modifiers (active metrics only), list_active_persona_slugs, list_active_cii_metrics, list_base_scenario_weights, list_persona_weight_inputs (LEFT JOIN for missing modifier detection). Block 3: apps/api/ap...",
       "checks": [
         "pytest_focused: 40 passed",
@@ -528,11 +709,20 @@
         "first": "2026-06-28",
         "last": "2026-06-28"
       },
-      "tasks": ["chore/plan-and-docs-refresh-v1"],
-      "branches": ["main"],
-      "events": ["task_completed"],
-      "summary": "Documentation-only refresh authorized by owner, committed directly to main. Added docs/_arch_/09_РџР»Р°РЅ_СЂРµР°Р»РёР·Р°С†РёРё_РїСЂРѕРµРєС‚Р°.md: canonical execution plan from Episode 4 to full MVP (Episodes 4-13) and growth horizon (14-16), with per-episode goals/sub-blocks/acceptance/dependencies, brainstorm features mapped (unique self-computed metrics, Trust Score, methodology+glossary, drift+alerts, weight sliders+wizard, CBLC+Decision Passport+route checklists+what-changed, search, fake-AI grounded Q\u0026A, community king-of-the-hill, auth/RBAC, migration board), dependency map, MVP line, and plan invariant registry. Updated 00_Р­РїРёР·РѕРґ_0 episode order and invariants (fake-provider seam, derived metrics never...",
-      "checks": ["docs_only: True", "code_migrations_schema_contracts_changed: none"],
+      "tasks": [
+        "chore/plan-and-docs-refresh-v1"
+      ],
+      "branches": [
+        "main"
+      ],
+      "events": [
+        "task_completed"
+      ],
+      "summary": "Documentation-only refresh authorized by owner, committed directly to main. Added docs/_arch_/09_РџР»Р°РЅ_СЂРµР°Р»РёР·Р°С†РёРё_РїСЂРѕРµРєС‚Р°.md: canonical execution plan from Episode 4 to full MVP (Episodes 4-13) and growth horizon (14-16), with per-episode goals/sub-blocks/acceptance/dependencies, brainstorm features mapped (unique self-computed metrics, Trust Score, methodology+glossary, drift+alerts, weight sliders+wizard, CBLC+Decision Passport+route checklists+what-changed, search, fake-AI grounded Q&A, community king-of-the-hill, auth/RBAC, migration board), dependency map, MVP line, and plan invariant registry. Updated 00_Р­РїРёР·РѕРґ_0 episode order and invariants (fake-provider seam, derived metrics never...",
+      "checks": [
+        "docs_only: True",
+        "code_migrations_schema_contracts_changed: none"
+      ],
       "deferred_items": [],
       "final_status": "completed",
       "preserved_from_entries": 1
@@ -544,9 +734,15 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/read-models-localization-service-v1"],
-      "branches": ["fix/localization-clean-chain-and-read-models"],
-      "events": ["task_completed"],
+      "tasks": [
+        "feat/read-models-localization-service-v1"
+      ],
+      "branches": [
+        "fix/localization-clean-chain-and-read-models"
+      ],
+      "events": [
+        "task_completed"
+      ],
       "summary": "Switched all public read-model paths (country_read_model, decision_engine, legal_signals) to resolve localized text via LocalizationService.overlay_localized_fields() batch resolver. Repo functions now return raw bilingual fields; service layer applies a single batch SQL lookup per entity type. Legacy fallback columns (title_ru/title_en, etc.) are preserved as safety fallback. Migration chain 001-011 verified clean from empty database. Phase A (migration chain idempotency) and Phase B (read-model overlay) both complete.",
       "checks": [
         "python -m pytest: 88 passed, 23 skipped",
@@ -564,9 +760,15 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["chore/route-explorer-quality-closeout-v1"],
-      "branches": ["chore/route-explorer-quality-closeout-v1"],
-      "events": ["task_completed"],
+      "tasks": [
+        "chore/route-explorer-quality-closeout-v1"
+      ],
+      "branches": [
+        "chore/route-explorer-quality-closeout-v1"
+      ],
+      "events": [
+        "task_completed"
+      ],
       "summary": "Route Explorer v1 quality closeout complete. Added 8 route DQ repository checks (published_routes_without_sources, missing_required_text, all_eligibility_unknown, without_documents, source_country_mismatches, evidence_country_mismatches, missing_legal_status, unknown_legal_status) and 6 DQ service check blocks with critical/warning severity policy. Created tests/test_routes_data_quality.py (20 tests). Updated DQ fakes in test_data_quality_validation.py and test_data_quality_closeout_guardrails.py. Added data-testid attributes to RouteFilters, CountryRoutesBlock, and RouteDetailView. Expanded web-mvp-routes.spec.ts to 4 describe blocks covering country routes block, route detail page, and...",
       "checks": [
         "pytest: 744 passed, 23 skipped",
@@ -589,9 +791,15 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["chore/route-explorer-quality-closeout-v1"],
-      "branches": ["chore/route-explorer-quality-closeout-v1"],
-      "events": ["task_started"],
+      "tasks": [
+        "chore/route-explorer-quality-closeout-v1"
+      ],
+      "branches": [
+        "chore/route-explorer-quality-closeout-v1"
+      ],
+      "events": [
+        "task_started"
+      ],
       "summary": "Start Route Explorer v1 quality closeout with route data-quality checks, backend regression tests, E2E route hardening, clean DB chain, and full quality gate.",
       "checks": [],
       "deferred_items": [],
@@ -605,9 +813,16 @@
         "first": "2026-06-20",
         "last": "2026-06-20"
       },
-      "tasks": ["refactor/russian-translation-full"],
-      "branches": ["refactor/russian-translation-full"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "refactor/russian-translation-full"
+      ],
+      "branches": [
+        "refactor/russian-translation-full"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Completed full Russian translation of all remaining English text across frontend and database. Translated StatusBadge labels, LocaleStatusBadge fallback text, API error messages, compare/scenarios page UI strings. Created migration 010 for live-DB translation of country_profiles, sources (titles and notes), evidence_items, user_stories, country_scores, and user_story_documents. Updated existing migrations 002, 004, 005, 009 with Russian content for fresh installs.",
       "checks": [],
       "deferred_items": [],
@@ -621,9 +836,16 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["feat/signal-alerts-foundation-v1"],
-      "branches": ["feat/signal-alerts-foundation-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/signal-alerts-foundation-v1"
+      ],
+      "branches": [
+        "feat/signal-alerts-foundation-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Signal Alerts Foundation v1 complete. Block 1: Docker alerts profile вЂ” Redpanda (Kafka-compatible, no Zookeeper), MongoDB (mongo:7), Go notifier service under profiles.alerts; default compose unchanged. .env.example extended with KAFKA_BROKERS/KAFKA_TOPIC/KAFKA_CONSUMER_GROUP/MONGO_URL/MONGO_DATABASE/TELEGRAM_BOT_TOKEN/TELEGRAM_MODE/NOTIFY_AFTER/NOTIFIER_HTTP_ADDR. Go notifier skeleton: apps/notifier with go.mod (kafka-go + mongo-driver), Dockerfile (multi-stage alpine), config (env defaults), /health endpoint. Block 2: scripts/outbox_relay.py вЂ” EventPublisher protocol, FakePublisher, KafkaPublisher (lazy confluent-kafka import), lock_pending_notifiable_domain_events (FOR UPDATE SKIP LOCK...",
       "checks": [
         "go_test: 23 tests passed (config:4, health:3, events:7, notifier:9)",
@@ -646,9 +868,16 @@
         "first": "2026-06-29",
         "last": "2026-06-29"
       },
-      "tasks": ["feat/signal-alerts-telegram-grpc-closeout-v1"],
-      "branches": ["feat/signal-alerts-telegram-grpc-closeout-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/signal-alerts-telegram-grpc-closeout-v1"
+      ],
+      "branches": [
+        "feat/signal-alerts-telegram-grpc-closeout-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Signal Alerts Episode 4 closed at MVP quality level. Block B (Telegram subscriptions): added TelegramUpdate/Message/Chat/User models, command parser (/subscribe /unsubscribe /list /help), NOTIFIER_ALLOWED_COUNTRIES config with static allowed-country validation, UpsertTelegramIdentity repo, CreateOrReactivate/Deactivate/ListActive/Get subscription operations, SubscriptionManager interface (Mongo + InMemory), subscriptions.Service (shared between Telegram bot and gRPC), telegram/bot.Handler (disclaimer in all relevant replies, controlled messages for missing/invalid country). Block C (gRPC SubscriptionService): proto/subscriptions.proto (proto3, SubscriptionService with CreateSubscription/D...",
       "checks": [
         "go_test: all packages passed (config, events, grpcserver, health, notifier, subscriptions, telegram/bot, telegram/commands)",
@@ -671,10 +900,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/source-backed-content-depth-v1"],
-      "branches": ["feat/source-backed-content-depth-v1"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Added idempotent source-backed content depth migration for Russia and Uruguay.\u0027, \u0027Reached 20 published sources per country, 25/26 published evidence items, and 10 published legal signals per country.\u0027, \u0027Updated Russia and Uruguay country cards, 10 country score explanations, and 70 score breakdown explanations/source_ids without changing score math.\u0027, \u0027Strengthened data-quality checks for MVP country content depth, real source URLs, evidence/legal signal traceability, breakdown source_ids, and country card source summaries.\u0027, \u0027Verified backend, frontend, data-quality report, migrations, sqlfluff, pre-commit, and 38/38 Playwright E2E tests.\u0027]",
+      "tasks": [
+        "feat/source-backed-content-depth-v1"
+      ],
+      "branches": [
+        "feat/source-backed-content-depth-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Added idempotent source-backed content depth migration for Russia and Uruguay.', 'Reached 20 published sources per country, 25/26 published evidence items, and 10 published legal signals per country.', 'Updated Russia and Uruguay country cards, 10 country score explanations, and 70 score breakdown explanations/source_ids without changing score math.', 'Strengthened data-quality checks for MVP country content depth, real source URLs, evidence/legal signal traceability, breakdown source_ids, and country card source summaries.', 'Verified backend, frontend, data-quality report, migrations, sqlfluff, pre-commit, and 38/38 Playwright E2E tests.']",
       "checks": [
         "scripts/apply_migrations.py",
         "python -m pytest: 79 passed, 23 skipped",
@@ -696,9 +932,16 @@
         "first": "2026-06-22",
         "last": "2026-06-22"
       },
-      "tasks": ["chore/testclient-httpx2-compatibility-v1"],
-      "branches": ["chore/testclient-httpx2-compatibility-v1"],
-      "events": ["task_started", "task_completed"],
+      "tasks": [
+        "chore/testclient-httpx2-compatibility-v1"
+      ],
+      "branches": [
+        "chore/testclient-httpx2-compatibility-v1"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
       "summary": "Removed StarletteDeprecationWarning by adding httpx2 to dev dependencies. httpx retained as runtime dependency.",
       "checks": [
         "pytest: 360 passed, 23 skipped, 0 warnings",
@@ -721,9 +964,16 @@
         "first": "2026-06-21",
         "last": "2026-06-21"
       },
-      "tasks": ["feat/translation-jobs-worker-foundation-v1"],
-      "branches": ["feat/translation-jobs-worker-foundation-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/translation-jobs-worker-foundation-v1"
+      ],
+      "branches": [
+        "feat/translation-jobs-worker-foundation-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Translation jobs worker foundation complete. Migration 013 adds max_attempts/provider_model/locked_at/locked_by/metadata/failed_at + duplicate-active-job index. Repository: find_missing, find_stale, create_job, lock_next (FOR UPDATE SKIP LOCKED), mark_completed/failed, save_variant. Service: discover_missing/stale, process_next_job, process_batch, retry_failed. FakeTranslationProvider. Worker CLI: python apps/worker/main.py translation-jobs --limit N. Admin endpoints: GET/POST /api/v1/admin/translation-jobs/* (list, create-missing, create-stale, process-next, process-batch). OpenAPI regenerated, TS contracts regenerated. 31 new tests. pytest 129 passed, mypy clean, ruff clean, pnpm typech...",
       "checks": [],
       "deferred_items": [],
@@ -737,10 +987,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/web-analytical-pages-and-mvp-regression"],
-      "branches": ["feat/web-analytical-pages-and-mvp-regression"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Rewrote LegalSignalsView with URL filter init from query params, summary cards, active filter chips, and country card cross-links.\u0027, \u0027Rewrote SourcesView with URL filter init, summary cards, semantic badges, external links with rel=noreferrer, and country card cross-links.\u0027, \u0027Rewrote DataQualityReportView with summary cards, checks list, issues list, status badges, and SectionHeader.\u0027, \u0027Added country card cross-links from /legal-signals and /sources back to country page.\u0027, \u0027Added DecisionResultCard country card link via locale-aware route.\u0027, \u0027Added StatusBadge, SectionHeader, SummaryCard shared components.\u0027, \u0027Added analyticalSummaryRow, summaryCard, sectionHeaderBlock, activeFilters, in...",
+      "tasks": [
+        "feat/web-analytical-pages-and-mvp-regression"
+      ],
+      "branches": [
+        "feat/web-analytical-pages-and-mvp-regression"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Rewrote LegalSignalsView with URL filter init from query params, summary cards, active filter chips, and country card cross-links.', 'Rewrote SourcesView with URL filter init, summary cards, semantic badges, external links with rel=noreferrer, and country card cross-links.', 'Rewrote DataQualityReportView with summary cards, checks list, issues list, status badges, and SectionHeader.', 'Added country card cross-links from /legal-signals and /sources back to country page.', 'Added DecisionResultCard country card link via locale-aware route.', 'Added StatusBadge, SectionHeader, SummaryCard shared components.', 'Added analyticalSummaryRow, summaryCard, sectionHeaderBlock, activeFilters, in...",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -753,9 +1010,16 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/web-compact-dark-archive-ui-v1"],
-      "branches": ["feat/web-compact-dark-archive-ui-v1"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "feat/web-compact-dark-archive-ui-v1"
+      ],
+      "branches": [
+        "feat/web-compact-dark-archive-ui-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Completed compact dark archive UI: full CSS variable palette, dark theme, decisionLayout two-column, countryCardLayout two-column, scroll utilities. 38/38 E2E passed.",
       "checks": [],
       "deferred_items": [],
@@ -769,10 +1033,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/web-country-card-and-decision-flow"],
-      "branches": ["feat/web-country-card-and-decision-flow"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Rewrote /countries/[slug]/page.tsx using CountryReadModelResponse read-model; removed all stale card.data.item usage.\u0027, \u0027Created features/country-card/ with 9 typed components: CountryHeader, CountryProfileSections, CountryScores, ScoreBreakdown, CountryLegalSignals, CountrySources, CountryEvidenceSummary, CountryUserStoriesSummary, LocaleStatusBadge.\u0027, \u0027Rewrote /decision/page.tsx as client component; created features/decision-run/ with DecisionRunForm, DecisionResults, DecisionResultCard, DecisionBreakdown, DecisionSources, DecisionWarnings.\u0027, \u0027DecisionRunForm loads countries/scenarios via API, runs POST /api/v1/decision/run, renders ranked explainable results with strengths, weaknesse...",
+      "tasks": [
+        "feat/web-country-card-and-decision-flow"
+      ],
+      "branches": [
+        "feat/web-country-card-and-decision-flow"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Rewrote /countries/[slug]/page.tsx using CountryReadModelResponse read-model; removed all stale card.data.item usage.', 'Created features/country-card/ with 9 typed components: CountryHeader, CountryProfileSections, CountryScores, ScoreBreakdown, CountryLegalSignals, CountrySources, CountryEvidenceSummary, CountryUserStoriesSummary, LocaleStatusBadge.', 'Rewrote /decision/page.tsx as client component; created features/decision-run/ with DecisionRunForm, DecisionResults, DecisionResultCard, DecisionBreakdown, DecisionSources, DecisionWarnings.', 'DecisionRunForm loads countries/scenarios via API, runs POST /api/v1/decision/run, renders ranked explainable results with strengths, weaknesse...",
       "checks": [
         "pnpm typecheck",
         "pnpm lint",
@@ -793,10 +1064,17 @@
         "first": "2026-06-18",
         "last": "2026-06-18"
       },
-      "tasks": ["feat/web-foundation-shell"],
-      "branches": ["feat/web-foundation-shell"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Added app shell (AppShell, AppHeader, AppNavigation, LocaleSwitcher) as server and client components.\u0027, \u0027Wrapped LocaleSwitcher in Suspense in AppHeader to satisfy Next.js 15 useSearchParams boundary requirement.\u0027, \u0027Added shared config (env.ts), locale helpers (locale.ts), route constants (routes.ts).\u0027, \u0027Added shared UI states: LoadingState, EmptyState, ErrorState.\u0027, \u0027Created route placeholder pages for /decision, /sources, /internal/data-quality.\u0027, \u0027Centralized API_BASE_URL in shared/config/env.ts; removed duplicate hardcoded constants from http.ts and lib/api.ts.\u0027, \u0027Upgraded /countries page to use shared typed API client and locale from searchParams.\u0027, \u0027Rewrote layout.tsx to use AppSh...",
+      "tasks": [
+        "feat/web-foundation-shell"
+      ],
+      "branches": [
+        "feat/web-foundation-shell"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Added app shell (AppShell, AppHeader, AppNavigation, LocaleSwitcher) as server and client components.', 'Wrapped LocaleSwitcher in Suspense in AppHeader to satisfy Next.js 15 useSearchParams boundary requirement.', 'Added shared config (env.ts), locale helpers (locale.ts), route constants (routes.ts).', 'Added shared UI states: LoadingState, EmptyState, ErrorState.', 'Created route placeholder pages for /decision, /sources, /internal/data-quality.', 'Centralized API_BASE_URL in shared/config/env.ts; removed duplicate hardcoded constants from http.ts and lib/api.ts.', 'Upgraded /countries page to use shared typed API client and locale from searchParams.', 'Rewrote layout.tsx to use AppSh...",
       "checks": [
         "pnpm typecheck",
         "pnpm lint",
@@ -817,10 +1095,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/web-legal-signals-sources-quality-pages"],
-      "branches": ["feat/web-legal-signals-sources-quality-pages"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Created features/legal-signals/LegalSignalsView.tsx: client component with Suspense boundary, filter state (country/signal_type/impact_direction/impact_level), locale-aware API calls via legalSignalsApi, loading/error/empty states, signal cards with all fields.\u0027, \u0027Created features/sources/SourcesView.tsx: client component with Suspense boundary, filter state (country/source_type/confidence), sourcesApi calls, loading/error/empty states, source cards with external link, publisher, dates.\u0027, \u0027Created features/data-quality/DataQualityReportView.tsx: pure presentational server component rendering DataQualityReport summary (overall_status, critical_issues_count, warnings_count, checked_at) an...",
+      "tasks": [
+        "feat/web-legal-signals-sources-quality-pages"
+      ],
+      "branches": [
+        "feat/web-legal-signals-sources-quality-pages"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Created features/legal-signals/LegalSignalsView.tsx: client component with Suspense boundary, filter state (country/signal_type/impact_direction/impact_level), locale-aware API calls via legalSignalsApi, loading/error/empty states, signal cards with all fields.', 'Created features/sources/SourcesView.tsx: client component with Suspense boundary, filter state (country/source_type/confidence), sourcesApi calls, loading/error/empty states, source cards with external link, publisher, dates.', 'Created features/data-quality/DataQualityReportView.tsx: pure presentational server component rendering DataQualityReport summary (overall_status, critical_issues_count, warnings_count, checked_at) an...",
       "checks": [
         "pnpm typecheck",
         "pnpm lint",
@@ -841,10 +1126,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["test/web-mvp-automated-runtime-acceptance"],
-      "branches": ["test/web-mvp-automated-runtime-acceptance"],
-      "events": ["task_started", "task_completed"],
-      "summary": "[\u0027Added playwright.config.ts with Chromium, webServer (next dev), retain-on-failure artifacts to local-artifacts/.\u0027, \u0027Added tests/e2e/helpers/env.ts, assertions.ts, routes.ts helper utilities.\u0027, \u0027Added web-mvp-pages.spec.ts: 12 tests covering all 11 MVP pages + responsive smoke.\u0027, \u0027Added web-mvp-main-flow.spec.ts: full user flow homeв†’countriesв†’Russiaв†’Uruguayв†’decisionв†’resultв†’country card.\u0027, \u0027Added web-mvp-locale.spec.ts: locale preservation, ru country card, ru decision, fallback banner.\u0027, \u0027Added web-mvp-analytical-pages.spec.ts: legal signals filters, sources filters, external link safety, data quality, accessibility semantics, API health.\u0027, \u0027Added data-testid attributes: decision-results...",
+      "tasks": [
+        "test/web-mvp-automated-runtime-acceptance"
+      ],
+      "branches": [
+        "test/web-mvp-automated-runtime-acceptance"
+      ],
+      "events": [
+        "task_started",
+        "task_completed"
+      ],
+      "summary": "['Added playwright.config.ts with Chromium, webServer (next dev), retain-on-failure artifacts to local-artifacts/.', 'Added tests/e2e/helpers/env.ts, assertions.ts, routes.ts helper utilities.', 'Added web-mvp-pages.spec.ts: 12 tests covering all 11 MVP pages + responsive smoke.', 'Added web-mvp-main-flow.spec.ts: full user flow homeв†’countriesв†’Russiaв†’Uruguayв†’decisionв†’resultв†’country card.', 'Added web-mvp-locale.spec.ts: locale preservation, ru country card, ru decision, fallback banner.', 'Added web-mvp-analytical-pages.spec.ts: legal signals filters, sources filters, external link safety, data quality, accessibility semantics, API health.', 'Added data-testid attributes: decision-results...",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -857,10 +1149,17 @@
         "first": "2026-06-19",
         "last": "2026-06-19"
       },
-      "tasks": ["feat/web-mvp-ux-polish-v1"],
-      "branches": ["feat/web-mvp-ux-polish-v1"],
-      "events": ["task_completed", "task_started"],
-      "summary": "[\u0027Rewrote home page with product explanation, primary CTAs, Russia vs Uruguay block, analysis list, and source-backed trust section.\u0027, \u0027Improved /countries page with structured country preview cards, primary/secondary action links, locale preserved.\u0027, \u0027Improved /countries/[slug] page: added breadcrumbs, fallback banner, executive summary section at top, quick action links on CountryHeader, reordered sections.\u0027, \u0027Improved /decision page with explanation text; DecisionResults now shows winner/top-ranked block prominently.\u0027, \u0027Added semantic badge components: Badge, ImpactBadge (direction + level), ConfidenceBadge.\u0027, \u0027Added Skeleton component for loading states.\u0027, \u0027Added loading.tsx files for...",
+      "tasks": [
+        "feat/web-mvp-ux-polish-v1"
+      ],
+      "branches": [
+        "feat/web-mvp-ux-polish-v1"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
+      "summary": "['Rewrote home page with product explanation, primary CTAs, Russia vs Uruguay block, analysis list, and source-backed trust section.', 'Improved /countries page with structured country preview cards, primary/secondary action links, locale preserved.', 'Improved /countries/[slug] page: added breadcrumbs, fallback banner, executive summary section at top, quick action links on CountryHeader, reordered sections.', 'Improved /decision page with explanation text; DecisionResults now shows winner/top-ranked block prominently.', 'Added semantic badge components: Badge, ImpactBadge (direction + level), ConfidenceBadge.', 'Added Skeleton component for loading states.', 'Added loading.tsx files for...",
       "checks": [
         "pnpm typecheck",
         "pnpm lint",
@@ -881,9 +1180,16 @@
         "first": "2026-06-20",
         "last": "2026-06-20"
       },
-      "tasks": ["refactor/web-style-reset-russian-ui"],
-      "branches": ["refactor/web-style-reset-russian-ui"],
-      "events": ["task_completed", "task_started"],
+      "tasks": [
+        "refactor/web-style-reset-russian-ui"
+      ],
+      "branches": [
+        "refactor/web-style-reset-russian-ui"
+      ],
+      "events": [
+        "task_completed",
+        "task_started"
+      ],
       "summary": "Completed frontend visual reset and Russian-only UI conversion. Removed dark theme, CSS variables, animations, transitions, and box-shadows. Replaced all visible English UI text with Russian. Removed locale switcher from header. Updated all E2E tests to match Russian text patterns. All 38 E2E tests pass.",
       "checks": [
         "typecheck: pass",
@@ -934,7 +1240,7 @@
       "summary": [
         "Fixed CI ruff format failure: ran python -m ruff format on tests/test_cii_country_comparison.py (trailing comma and line-length reformatting).",
         "Fixed E2E admin token stability: data quality report test now gracefully handles admin_token_not_configured (HTTP 500) returned when ADMIN_TOKEN env var is not set in local Docker, without weakening endpoint security.",
-        "Logic: if status==500 and error.code==\"admin_token_not_configured\" =\u003e skip body assertions (env not configured); otherwise full 200 + body property assertions apply.",
+        "Logic: if status==500 and error.code==\"admin_token_not_configured\" => skip body assertions (env not configured); otherwise full 200 + body property assertions apply.",
         "Admin endpoint security unchanged: wrong token still returns 401, no token still returns 401, missing server config returns 500.",
         "pnpm web:mvp:check: 50 passed, 0 failed (after running DB migrations)."
       ],
@@ -1114,7 +1420,7 @@
       "scope": "argentina-legal-timeline-evidence-v1",
       "task": "feat/argentina-legal-timeline-evidence-v1",
       "branch": "feat/argentina-legal-timeline-evidence-v1",
-      "summary": "Adding Argentina legal signals (\u003e=5), timeline events (\u003e=5), evidence depth (\u003e=15), sources (\u003e=10), and onboarding readiness for legal/timeline/evidence sections.",
+      "summary": "Adding Argentina legal signals (>=5), timeline events (>=5), evidence depth (>=15), sources (>=10), and onboarding readiness for legal/timeline/evidence sections.",
       "status": "in_progress"
     },
     {
@@ -1687,6 +1993,80 @@
       ],
       "status": "completed",
       "risk": "Self-computed metrics (LVI, SSRS, Contradiction Score) are stored in country_platform_metrics and exposed via a feature-flag-gated API. They do not affect CII, scenario weights, decision scoring, or decision ranking. The feature flag defaults to enabled/public. Admin recompute endpoints require ADMIN_TOKEN."
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_started",
+      "type": "feat",
+      "scope": "trust-transparency",
+      "task": "trust_transparency_surface_v1",
+      "branch": "feat/trust-transparency-surface-v1",
+      "summary": "Episode 7: Trust and Transparency Surface — country_trust_scores, methodology_sections, glossary_terms, trust computation, /trust /methodology /glossary endpoints, DQ checks, E2E tests.",
+      "changes": [],
+      "checks": [],
+      "status": "in_progress",
+      "risk": ""
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_completed",
+      "type": "feat",
+      "scope": "trust-transparency",
+      "task": "trust_transparency_surface_v1",
+      "branch": "feat/trust-transparency-surface-v1",
+      "summary": "Episode 7 complete: migration 034 (country_trust_scores, methodology_sections, glossary_terms, feature flag enabled/public), repositories (trust, methodology, glossary), services (trust_score pure computation with downside cap, trust_runtime orchestration with feature flag), schemas, API routers (/countries/{slug}/trust, /methodology, /glossary, admin recompute), DQ checks (trust values, stale scores, missing methodology/glossary), TrustBadge/FreshnessBadge/DisclaimerNotice/LastVerifiedAt UI, TrustSurfaceBlock feature, /methodology page, recompute script, OpenAPI regenerated, TypeScript contracts updated, 72 new tests passed.",
+      "changes": [
+        "database/migrations/034_trust_transparency_surface_v1.sql",
+        "apps/api/app/repositories/trust.py",
+        "apps/api/app/repositories/methodology.py",
+        "apps/api/app/repositories/glossary.py",
+        "apps/api/app/repositories/data_quality/trust.py",
+        "apps/api/app/repositories/data_quality/__init__.py",
+        "apps/api/app/services/trust_score.py",
+        "apps/api/app/services/trust_runtime.py",
+        "apps/api/app/services/data_quality/trust_checks.py",
+        "apps/api/app/services/data_quality/report.py",
+        "apps/api/app/schemas/trust.py",
+        "apps/api/app/schemas/methodology.py",
+        "apps/api/app/schemas/glossary.py",
+        "apps/api/app/api/v1/trust.py",
+        "apps/api/app/api/v1/methodology.py",
+        "apps/api/app/api/v1/glossary.py",
+        "apps/api/app/bootstrap/app_factory.py",
+        "contracts/openapi.yaml",
+        "packages/contracts/generated/types.ts",
+        "apps/web/src/shared/api/trust.ts",
+        "apps/web/src/shared/api/methodology.ts",
+        "apps/web/src/shared/api/glossary.ts",
+        "apps/web/src/shared/api/index.ts",
+        "apps/web/src/shared/api/contracts-check.ts",
+        "apps/web/src/shared/ui/TrustBadge.tsx",
+        "apps/web/src/shared/ui/FreshnessBadge.tsx",
+        "apps/web/src/shared/ui/DisclaimerNotice.tsx",
+        "apps/web/src/shared/ui/LastVerifiedAt.tsx",
+        "apps/web/src/features/trust-surface/TrustSurfaceBlock.tsx",
+        "apps/web/src/features/trust-surface/index.ts",
+        "apps/web/src/app/countries/[slug]/page.tsx",
+        "apps/web/src/app/methodology/page.tsx",
+        "scripts/recompute_trust_scores.py",
+        "apps/api/tests/test_trust_score.py",
+        "tests/test_trust_data_quality.py",
+        "tests/test_data_quality_validation.py",
+        "tests/e2e/web-mvp-trust-transparency.spec.ts"
+      ],
+      "checks": [
+        "ruff check: 0 errors",
+        "ruff format: clean",
+        "mypy: 0 errors (15 files)",
+        "sqlfluff: migration 034 clean",
+        "pytest apps/api/tests: 49 passed",
+        "pytest tests (unit): all passed",
+        "pnpm typecheck: clean",
+        "pnpm lint: clean",
+        "openapi contract: 4 passed"
+      ],
+      "status": "completed",
+      "risk": ""
     }
   ]
 }
