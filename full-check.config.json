@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "description": "Baseline tool versions for full-check.ps1. These are recommendations, not hard requirements: an older or newer installed version only produces a WARN with an upgrade hint, it never aborts the script. Edit this file to update baselines without touching full-check.ps1.",
+  "tools": [
+    {
+      "name": "Git",
+      "command": "git",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "2.40.0",
+      "severity": "required",
+      "installHint": "Install or upgrade Git: https://git-scm.com/downloads (winget install --id Git.Git -e)"
+    },
+    {
+      "name": "Docker Engine",
+      "command": "docker",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "24.0.0",
+      "severity": "required",
+      "installHint": "Install Docker Desktop: https://www.docker.com/products/docker-desktop/"
+    },
+    {
+      "name": "Docker Compose",
+      "command": "docker",
+      "versionArgs": ["compose", "version"],
+      "versionPattern": "v?(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "2.20.0",
+      "severity": "required",
+      "installHint": "Docker Compose ships with Docker Desktop. Standalone install: https://docs.docker.com/compose/install/"
+    },
+    {
+      "name": "Node.js",
+      "command": "node",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "20.0.0",
+      "severity": "required",
+      "installHint": "Install Node.js LTS: https://nodejs.org/en/download (winget install --id OpenJS.NodeJS.LTS -e)"
+    },
+    {
+      "name": "Corepack",
+      "command": "corepack",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "0.20.0",
+      "severity": "optional",
+      "installHint": "Corepack ships with Node.js 16.9+. If missing: npm install -g corepack && corepack enable"
+    },
+    {
+      "name": "protoc",
+      "command": "protoc",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+)",
+      "recommendedMinVersion": "25.0",
+      "severity": "required",
+      "installHint": "Install protoc: https://github.com/protocolbuffers/protobuf/releases (winget install --id Google.Protobuf -e, or choco install protoc)"
+    },
+    {
+      "name": "protoc-gen-go",
+      "command": "protoc-gen-go",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "1.31.0",
+      "severity": "required",
+      "installHint": "Install: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest (then ensure %GOPATH%\\bin is on PATH)"
+    },
+    {
+      "name": "protoc-gen-go-grpc",
+      "command": "protoc-gen-go-grpc",
+      "versionArgs": ["--version"],
+      "versionPattern": "(\\d+\\.\\d+\\.\\d+)",
+      "recommendedMinVersion": "1.3.0",
+      "severity": "required",
+      "installHint": "Install: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest (then ensure %GOPATH%\\bin is on PATH)"
+    }
+  ],
+  "networkChecks": [
+    { "name": "npm registry", "host": "registry.npmjs.org", "port": 443 },
+    { "name": "PyPI", "host": "pypi.org", "port": 443 },
+    { "name": "Docker Hub", "host": "registry-1.docker.io", "port": 443 },
+    { "name": "GitHub", "host": "github.com", "port": 443 }
+  ],
+  "minFreeDiskSpaceGb": 5
+}
