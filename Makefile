@@ -1,4 +1,4 @@
-.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test smoke-api diagnostics diagnostics-smoke frontend-handoff-check clean-runtime typecheck quality web-mvp-e2e web-mvp-check
+.PHONY: help install install-hooks dev api worker migrate contracts infra-up infra-down lint format test smoke-api diagnostics diagnostics-smoke frontend-handoff-check clean-runtime typecheck quality web-mvp-e2e web-mvp-check notifier-proto notifier-test
 
 help:
 	@echo "Country Decision Atlas"
@@ -111,3 +111,9 @@ web-mvp-check:
 	pnpm build
 	python -m pytest
 	pnpm web:mvp:e2e
+
+notifier-proto:
+	cd apps/notifier && protoc -I . --go_out=. --go_opt=module=github.com/country-decision-atlas/notifier --go-grpc_out=. --go-grpc_opt=module=github.com/country-decision-atlas/notifier proto/subscriptions.proto
+
+notifier-test: notifier-proto
+	cd apps/notifier && go test ./...

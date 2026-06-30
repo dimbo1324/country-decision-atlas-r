@@ -125,6 +125,8 @@ def _register_middleware(
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
+        if settings.app_env != "production":
+            return await call_next(request)
         if request.url.path in {"/health", "/ready"}:
             return await call_next(request)
         client = rate_limit_client(request)

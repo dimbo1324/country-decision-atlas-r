@@ -307,4 +307,3 @@ mongo-data/
 redpanda-data/
 apps/notifier/notifier
 apps/notifier/bin/
-apps/notifier/internal/grpc/pb/*.pb.go
