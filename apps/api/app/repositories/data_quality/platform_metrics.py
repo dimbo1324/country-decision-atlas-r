@@ -32,7 +32,7 @@ def list_mvp_countries_missing_global_platform_metrics(
           )
         ORDER BY c.slug
         """,
-        (MVP_COUNTRY_SLUGS,),
+        (list(MVP_COUNTRY_SLUGS),),
     )
 
 
@@ -58,7 +58,7 @@ def list_mvp_countries_missing_scenario_risk_metrics(
           )
         ORDER BY c.slug, s.slug
         """,
-        (MVP_COUNTRY_SLUGS, MVP_SCENARIO_SLUGS),
+        (list(MVP_COUNTRY_SLUGS), list(MVP_SCENARIO_SLUGS)),
     )
 
 

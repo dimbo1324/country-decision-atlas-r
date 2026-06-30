@@ -102,19 +102,49 @@ def _seven_computations() -> list[PlatformMetricComputation]:
 
 
 def _install_feature_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(ff_repo, "get_feature_flag", lambda *_a: {"status": "enabled", "access_tier": "public", "default_enabled": True})
-    monkeypatch.setattr(ff_repo, "list_feature_access_rules", lambda *_a: [{"access_tier": "public", "is_enabled": True}])
+    monkeypatch.setattr(
+        ff_repo,
+        "get_feature_flag",
+        lambda *_a: {
+            "status": "enabled",
+            "access_tier": "public",
+            "default_enabled": True,
+        },
+    )
+    monkeypatch.setattr(
+        ff_repo,
+        "list_feature_access_rules",
+        lambda *_a: [{"access_tier": "public", "is_enabled": True}],
+    )
 
 
 def _install_feature_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(ff_repo, "get_feature_flag", lambda *_a: {"status": "disabled", "access_tier": "public", "default_enabled": False})
-    monkeypatch.setattr(ff_repo, "list_feature_access_rules", lambda *_a: [{"access_tier": "public", "is_enabled": False}])
+    monkeypatch.setattr(
+        ff_repo,
+        "get_feature_flag",
+        lambda *_a: {
+            "status": "disabled",
+            "access_tier": "public",
+            "default_enabled": False,
+        },
+    )
+    monkeypatch.setattr(
+        ff_repo,
+        "list_feature_access_rules",
+        lambda *_a: [{"access_tier": "public", "is_enabled": False}],
+    )
 
 
-def test_compute_country_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_compute_country_writes_expected_metrics(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: _seven_computations())
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: _seven_computations(),
+    )
     stored: list[dict[str, Any]] = []
 
     def fake_upsert(*args: Any, **_kwargs: Any) -> dict[str, Any]:
@@ -134,9 +164,19 @@ def test_compute_country_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch
 def test_compute_all_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "list_active_countries", lambda *_a: COUNTRIES)
-    monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda _conn, slug: next(c for c in COUNTRIES if c["slug"] == slug))
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: _seven_computations())
-    monkeypatch.setattr(pm_repo, "upsert_country_platform_metric", lambda *_a, **_kw: {})
+    monkeypatch.setattr(
+        pm_repo,
+        "get_country_by_slug",
+        lambda _conn, slug: next(c for c in COUNTRIES if c["slug"] == slug),
+    )
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: _seven_computations(),
+    )
+    monkeypatch.setattr(
+        pm_repo, "upsert_country_platform_metric", lambda *_a, **_kw: {}
+    )
     conn = MagicMock()
     result = compute_platform_metrics_for_all_countries(conn)
     assert result.feature_enabled is True
@@ -150,7 +190,11 @@ def test_compute_all_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch) ->
 def test_repeated_recompute_does_not_duplicate(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: [COMPUTATION_LVI])
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: [COMPUTATION_LVI],
+    )
     call_count = [0]
 
     def fake_upsert(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
@@ -167,7 +211,11 @@ def test_repeated_recompute_does_not_duplicate(monkeypatch: pytest.MonkeyPatch) 
 def test_dry_run_does_not_write(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: _seven_computations())
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: _seven_computations(),
+    )
     upsert_called = [False]
 
     def fake_upsert(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
@@ -201,11 +249,15 @@ def test_invalid_metric_key_returns_error(monkeypatch: pytest.MonkeyPatch) -> No
 def test_invalid_scenario_slug_returns_error(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
     conn = MagicMock()
-    result = compute_platform_metrics_for_country(conn, "russia", scenario_slug="bad_scenario")
+    result = compute_platform_metrics_for_country(
+        conn, "russia", scenario_slug="bad_scenario"
+    )
     assert "platform_metric_invalid_scenario: bad_scenario" in result.errors
 
 
-def test_feature_disabled_returns_disabled_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_feature_disabled_returns_disabled_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_disabled(monkeypatch)
     conn = MagicMock()
     result = compute_platform_metrics_for_country(conn, "russia")
@@ -217,7 +269,11 @@ def test_one_failed_country_in_summary(monkeypatch: pytest.MonkeyPatch) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "list_active_countries", lambda *_a: [COUNTRY])
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: _seven_computations())
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: _seven_computations(),
+    )
 
     call_count = [0]
 
@@ -232,15 +288,32 @@ def test_one_failed_country_in_summary(monkeypatch: pytest.MonkeyPatch) -> None:
     assert len(summary.errors) > 0
 
 
-def test_all_persisted_metrics_have_methodology_version(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_all_persisted_metrics_have_methodology_version(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: _seven_computations())
+    monkeypatch.setattr(
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: _seven_computations(),
+    )
     written: list[str] = []
 
-    def capture_upsert(_conn: Any, _country_id: Any, _metric_key: Any, _scenario_slug: Any,
-                       _value: Any, _label: Any, _confidence: Any, _freshness: Any,
-                       _window_days: Any, methodology_version: Any, *_args: Any, **_kwargs: Any) -> dict[str, Any]:
+    def capture_upsert(
+        _conn: Any,
+        _country_id: Any,
+        _metric_key: Any,
+        _scenario_slug: Any,
+        _value: Any,
+        _label: Any,
+        _confidence: Any,
+        _freshness: Any,
+        _window_days: Any,
+        methodology_version: Any,
+        *_args: Any,
+        **_kwargs: Any,
+    ) -> dict[str, Any]:
         written.append(methodology_version)
         return {}
 
@@ -255,10 +328,14 @@ def test_compute_one_metric_filters_correctly(monkeypatch: pytest.MonkeyPatch) -
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
     computations = _seven_computations()
-    monkeypatch.setattr(pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: computations)
+    monkeypatch.setattr(
+        pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: computations
+    )
     written: list[str] = []
 
-    def capture_upsert(_conn: Any, _country_id: Any, metric_key: Any, *_args: Any, **_kwargs: Any) -> dict[str, Any]:
+    def capture_upsert(
+        _conn: Any, _country_id: Any, metric_key: Any, *_args: Any, **_kwargs: Any
+    ) -> dict[str, Any]:
         written.append(metric_key)
         return {}
 

@@ -31,33 +31,35 @@ def main() -> int:
 
     settings = get_settings()
     try:
-        with psycopg.connect(settings.database_url, row_factory=psycopg.rows.dict_row) as conn:
+        with psycopg.connect(
+            settings.database_url, row_factory=psycopg.rows.dict_row
+        ) as conn:
             if args.all:
-                result = compute_platform_metrics_for_all_countries(
+                summary = compute_platform_metrics_for_all_countries(
                     conn,
                     dry_run=args.dry_run,
                     metric_key=args.metric_key,
                     scenario_slug=args.scenario_slug,
                 )
-                print(json.dumps(result.model_dump(), default=str))
-                if not result.feature_enabled:
+                print(json.dumps(summary.model_dump(), default=str))
+                if not summary.feature_enabled:
                     return 1
-                if result.metrics_failed > 0:
+                if summary.metrics_failed > 0:
                     return 1
             else:
-                result = compute_platform_metrics_for_country(
+                country_result = compute_platform_metrics_for_country(
                     conn,
                     args.country,
                     dry_run=args.dry_run,
                     metric_key=args.metric_key,
                     scenario_slug=args.scenario_slug,
                 )
-                print(json.dumps(result.model_dump(), default=str))
-                if not result.feature_enabled:
+                print(json.dumps(country_result.model_dump(), default=str))
+                if not country_result.feature_enabled:
                     return 1
-                if result.errors and result.metrics_computed == 0:
+                if country_result.errors and country_result.metrics_computed == 0:
                     return 1
-                if result.metrics_failed > 0:
+                if country_result.metrics_failed > 0:
                     return 1
     except Exception as exc:
         print(json.dumps({"error": str(exc)}), file=sys.stderr)
