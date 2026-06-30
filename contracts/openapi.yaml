@@ -31,6 +31,192 @@ paths:
                 $ref: '#/components/schemas/ReadinessResponse'
         '503':
           description: Database unavailable
+  /api/v1/countries/{country_slug}/trust:
+    get:
+      tags:
+      - trust
+      summary: Get Country Trust
+      operationId: get_country_trust_api_v1_countries__country_slug__trust_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryTrustResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/methodology:
+    get:
+      tags:
+      - methodology
+      summary: List Methodology Sections
+      operationId: list_methodology_sections_api_v1_methodology_get
+      parameters:
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MethodologyListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/methodology/{section_slug}:
+    get:
+      tags:
+      - methodology
+      summary: Get Methodology Section
+      operationId: get_methodology_section_api_v1_methodology__section_slug__get
+      parameters:
+      - name: section_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MethodologySection'
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/glossary:
+    get:
+      tags:
+      - glossary
+      summary: List Glossary Terms
+      operationId: list_glossary_terms_api_v1_glossary_get
+      parameters:
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/glossary/{term_slug}:
+    get:
+      tags:
+      - glossary
+      summary: Get Glossary Term
+      operationId: get_glossary_term_api_v1_glossary__term_slug__get
+      parameters:
+      - name: term_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Term Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTerm'
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_slug}/platform-metrics:
     get:
       tags:
@@ -2363,6 +2549,79 @@ paths:
           description: Not found
         '422':
           description: Unprocessable Entity
+  /api/v1/admin/trust/recompute:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute All Trust
+      operationId: admin_recompute_all_trust_api_v1_admin_trust_recompute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRecomputeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRecomputeSummary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/trust/recompute/{country_slug}:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute Country Trust
+      operationId: admin_recompute_country_trust_api_v1_admin_trust_recompute__country_slug__post
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRecomputeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRecomputeCountryResult'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/admin/translation-jobs:
     get:
       tags:
@@ -4355,6 +4614,87 @@ components:
       - pagination
       - locale
       title: CountryScoreListResponse
+    CountryTrustResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        trust_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Trust Score
+        trust_label:
+          type: string
+          title: Trust Label
+        confidence:
+          type: string
+          title: Confidence
+        freshness_status:
+          type: string
+          title: Freshness Status
+        source_count:
+          type: integer
+          title: Source Count
+        evidence_count:
+          type: integer
+          title: Evidence Count
+        legal_signal_count:
+          type: integer
+          title: Legal Signal Count
+        route_count:
+          type: integer
+          title: Route Count
+        platform_metric_count:
+          type: integer
+          title: Platform Metric Count
+        contradiction_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Contradiction Score
+        components:
+          $ref: '#/components/schemas/TrustComponentBreakdown'
+        last_verified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Verified At
+        computed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Computed At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        methodology_version:
+          type: string
+          title: Methodology Version
+        disclaimer:
+          type: string
+          title: Disclaimer
+          default: This is a data quality indicator, not a recommendation. Not legal
+            advice.
+      type: object
+      required:
+      - country_slug
+      - trust_label
+      - confidence
+      - freshness_status
+      - source_count
+      - evidence_count
+      - legal_signal_count
+      - route_count
+      - platform_metric_count
+      - components
+      - methodology_version
+      title: CountryTrustResponse
     DataJournalEntry:
       properties:
         id:
@@ -5432,6 +5772,54 @@ components:
       - internal
       - deprecated
       title: FeatureFlagStatus
+    GlossaryListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/GlossaryTerm'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: GlossaryListResponse
+    GlossaryTerm:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        term:
+          type: string
+          title: Term
+        definition:
+          type: string
+          title: Definition
+        category:
+          type: string
+          title: Category
+        related_terms:
+          items:
+            type: string
+          type: array
+          title: Related Terms
+          default: []
+        display_order:
+          type: integer
+          title: Display Order
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - slug
+      - term
+      - definition
+      - category
+      - display_order
+      title: GlossaryTerm
     HTTPValidationError:
       properties:
         detail:
@@ -6389,6 +6777,52 @@ components:
       - name
       - display_order
       title: MatrixScenario
+    MethodologyListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MethodologySection'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: MethodologyListResponse
+    MethodologySection:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        body:
+          type: string
+          title: Body
+        section_type:
+          type: string
+          title: Section Type
+        display_order:
+          type: integer
+          title: Display Order
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - slug
+      - title
+      - summary
+      - body
+      - section_type
+      - display_order
+      title: MethodologySection
     OnboardingFinding:
       properties:
         code:
@@ -8242,6 +8676,137 @@ components:
       - fallback
       - missing
       title: TranslationStatus
+    TrustComponentBreakdown:
+      properties:
+        source_quality_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Source Quality Score
+        evidence_depth_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Evidence Depth Score
+        freshness_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Freshness Score
+        review_coverage_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Review Coverage Score
+        contradiction_component:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Contradiction Component
+      type: object
+      title: TrustComponentBreakdown
+    TrustRecomputeCountryResult:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        feature_enabled:
+          type: boolean
+          title: Feature Enabled
+        country_not_found:
+          type: boolean
+          title: Country Not Found
+        dry_run:
+          type: boolean
+          title: Dry Run
+        computed:
+          type: boolean
+          title: Computed
+        stored:
+          type: boolean
+          title: Stored
+        trust_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trust Label
+        trust_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Trust Score
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        freshness_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Freshness Status
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - country_slug
+      - feature_enabled
+      - country_not_found
+      - dry_run
+      - computed
+      - stored
+      title: TrustRecomputeCountryResult
+    TrustRecomputeRequest:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        dry_run:
+          type: boolean
+          title: Dry Run
+          default: false
+      type: object
+      title: TrustRecomputeRequest
+    TrustRecomputeSummary:
+      properties:
+        feature_enabled:
+          type: boolean
+          title: Feature Enabled
+        dry_run:
+          type: boolean
+          title: Dry Run
+        countries_processed:
+          type: integer
+          title: Countries Processed
+        countries_computed:
+          type: integer
+          title: Countries Computed
+        countries_stored:
+          type: integer
+          title: Countries Stored
+        countries_failed:
+          type: integer
+          title: Countries Failed
+        errors:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Errors
+      type: object
+      required:
+      - feature_enabled
+      - dry_run
+      - countries_processed
+      - countries_computed
+      - countries_stored
+      - countries_failed
+      title: TrustRecomputeSummary
     UserStory:
       properties:
         id:

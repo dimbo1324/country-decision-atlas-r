@@ -97,3 +97,11 @@ from app.repositories.data_quality.routes import (
     list_route_evidence_country_mismatches as list_route_evidence_country_mismatches,
     list_route_source_country_mismatches as list_route_source_country_mismatches,
 )
+from app.repositories.data_quality.trust import (
+    list_active_countries_missing_trust_scores as list_active_countries_missing_trust_scores,
+    list_inconsistent_trust_insufficient_data as list_inconsistent_trust_insufficient_data,
+    list_invalid_trust_score_values as list_invalid_trust_score_values,
+    list_missing_required_glossary_terms as list_missing_required_glossary_terms,
+    list_missing_required_methodology_sections as list_missing_required_methodology_sections,
+    list_stale_trust_scores as list_stale_trust_scores,
+)

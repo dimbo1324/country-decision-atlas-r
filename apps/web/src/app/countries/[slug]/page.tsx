@@ -18,6 +18,7 @@ import {
 import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
+import { TrustSurfaceBlock } from "../../../features/trust-surface";
 
 export const dynamic = "force-dynamic";
 
@@ -104,6 +105,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection" data-testid="platform-intelligence-section">
           <h2 className="cardSectionTitle">Платформенный интеллект</h2>
           <PlatformIntelligenceBlock countrySlug={card.country.slug} locale={locale} />
+        </section>
+
+        <section className="cardSection" data-testid="trust-surface-section">
+          <h2 className="cardSectionTitle">Качество данных</h2>
+          <TrustSurfaceBlock countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">

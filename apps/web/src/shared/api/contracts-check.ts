@@ -41,6 +41,11 @@ type PlatformMetric = components["schemas"]["PlatformMetric"];
 type PlatformMetricListResponse = components["schemas"]["PlatformMetricListResponse"];
 type PlatformMetricsRecomputeSummary =
   components["schemas"]["PlatformMetricsRecomputeSummary"];
+type CountryTrustResponse = components["schemas"]["CountryTrustResponse"];
+type MethodologySection = components["schemas"]["MethodologySection"];
+type MethodologyListResponse = components["schemas"]["MethodologyListResponse"];
+type GlossaryTerm = components["schemas"]["GlossaryTerm"];
+type GlossaryListResponse = components["schemas"]["GlossaryListResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -80,4 +85,9 @@ export type FrontendCriticalContracts = {
   platformMetric: PlatformMetric;
   platformMetricListResponse: PlatformMetricListResponse;
   platformMetricsRecomputeSummary: PlatformMetricsRecomputeSummary;
+  countryTrust: CountryTrustResponse;
+  methodologySection: MethodologySection;
+  methodologyList: MethodologyListResponse;
+  glossaryTerm: GlossaryTerm;
+  glossaryList: GlossaryListResponse;
 };
