@@ -1,7 +1,12 @@
 from app.api.v1 import trust as trust_api
+from app.core import admin_auth as admin_auth_module
+from app.core.config import Settings
+from app.core.database import get_connection
 from app.repositories import trust as trust_repo
 from app.schemas.trust import TrustRecomputeRequest
 from datetime import UTC, datetime
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from psycopg import Connection
 import pytest
 from typing import Any, cast
@@ -53,15 +58,20 @@ def test_get_country_trust_returns_response(monkeypatch: pytest.MonkeyPatch) -> 
     assert result.trust_score == pytest.approx(72.5)
 
 
-def test_get_country_trust_returns_404_when_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_country_trust_returns_404_when_not_found(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: None)
     from fastapi import HTTPException
+
     with pytest.raises(HTTPException) as exc:
         trust_api.get_country_trust("nonexistent", CONNECTION)
     assert exc.value.status_code == 404
 
 
-def test_get_country_trust_components_populated(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_country_trust_components_populated(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW)
     result = trust_api.get_country_trust("russia", CONNECTION)
     assert result.components is not None
@@ -92,7 +102,9 @@ def test_admin_recompute_all_returns_summary(monkeypatch: pytest.MonkeyPatch) ->
     assert result.feature_enabled is True
 
 
-def test_admin_recompute_country_returns_result(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_recompute_country_returns_result(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     country_result = {
         "country_slug": "russia",
         "feature_enabled": True,
@@ -123,4 +135,62 @@ def test_admin_recompute_country_returns_result(monkeypatch: pytest.MonkeyPatch)
 def test_get_country_trust_disclaimer_present(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW)
     result = trust_api.get_country_trust("russia", CONNECTION)
-    assert "data quality" in result.disclaimer.lower() or "not" in result.disclaimer.lower()
+    assert (
+        "data quality" in result.disclaimer.lower()
+        or "not" in result.disclaimer.lower()
+    )
+
+
+def _admin_client(monkeypatch: Any, token: str = "secret-token") -> TestClient:
+    from app.api.v1.trust import admin_router
+
+    app = FastAPI()
+    app.include_router(admin_router, prefix="/api/v1")
+    conn = MagicMock()
+    app.dependency_overrides[get_connection] = lambda: conn
+    monkeypatch.setattr(
+        admin_auth_module,
+        "get_settings",
+        lambda: Settings(app_env="local", admin_token=token),
+    )
+    summary = {
+        "feature_enabled": True,
+        "dry_run": False,
+        "countries_processed": 0,
+        "countries_computed": 0,
+        "countries_stored": 0,
+        "countries_failed": 0,
+        "errors": [],
+    }
+    monkeypatch.setattr(
+        trust_api,
+        "compute_and_store_trust_for_all_countries",
+        lambda *_a, **_kw: summary,
+    )
+    return TestClient(app, raise_server_exceptions=False)
+
+
+def test_admin_recompute_without_token_returns_401(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch)
+    response = client.post("/api/v1/admin/trust/recompute", json={"dry_run": False})
+    assert response.status_code == 401
+
+
+def test_admin_recompute_with_wrong_token_returns_401(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, token="secret-token")
+    response = client.post(
+        "/api/v1/admin/trust/recompute",
+        json={"dry_run": False},
+        headers={"X-Admin-Token": "wrong-token"},
+    )
+    assert response.status_code == 401
+
+
+def test_admin_recompute_with_correct_token_returns_200(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, token="secret-token")
+    response = client.post(
+        "/api/v1/admin/trust/recompute",
+        json={"dry_run": False},
+        headers={"X-Admin-Token": "secret-token"},
+    )
+    assert response.status_code == 200

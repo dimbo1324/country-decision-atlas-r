@@ -10,7 +10,7 @@ def list_glossary_terms(
     query: str | None = None,
 ) -> list[dict[str, Any]]:
     use_ru = locale == "ru"
-    params: list[Any] = [use_ru, use_ru, use_ru]
+    params: list[Any] = [use_ru, use_ru]
     filters = ["status = 'published'"]
     if category:
         filters.append("category = %s")

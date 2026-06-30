@@ -67,7 +67,11 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
         >
           <h2 className="pageSubheader">Глоссарий терминов</h2>
           {glossaryItems.map((term) => (
-            <article className="methodologySection" key={term.slug} data-term-slug={term.slug}>
+            <article
+              className="methodologySection"
+              key={term.slug}
+              data-term-slug={term.slug}
+            >
               <h3 className="methodologySectionTitle">{term.term}</h3>
               <p>{term.definition}</p>
               {term.related_terms.length > 0 && (

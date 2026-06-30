@@ -21,9 +21,7 @@ export function getGlossaryTerm(
   slug: string,
   locale: LocaleCode = DEFAULT_LOCALE,
 ): Promise<GlossaryTerm> {
-  return apiGet<GlossaryTerm>(
-    `/api/v1/glossary/${slug}${queryString({ locale })}`,
-  );
+  return apiGet<GlossaryTerm>(`/api/v1/glossary/${slug}${queryString({ locale })}`);
 }
 
 export const glossaryApi = { listGlossaryTerms, getGlossaryTerm };

@@ -50,6 +50,15 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
     );
   }
 
+  const contradictionLabel = (() => {
+    const score = data.components?.contradiction_component;
+    if (score === null || score === undefined) return "Неизвестно";
+    const raw = 100 - score;
+    if (raw < 30) return "Низкая";
+    if (raw < 60) return "Средняя";
+    return "Высокая";
+  })();
+
   return (
     <div data-testid="trust-surface-block">
       <div className="trustBadgeRow">
@@ -58,6 +67,9 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
         {data.confidence && <ConfidenceBadge confidence={data.confidence} />}
       </div>
       <LastVerifiedAt date={data.last_verified_at ?? undefined} />
+      <p className="infoNote" data-testid="contradiction-context">
+        Противоречивость данных: <span className="metaChip">{contradictionLabel}</span>
+      </p>
       <p className="infoNote">
         <Link href="/methodology" className="internalLink">
           О методологии →

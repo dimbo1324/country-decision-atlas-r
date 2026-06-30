@@ -4,8 +4,7 @@ import { DEFAULT_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
-export type CountryTrustResponse =
-  components["schemas"]["CountryTrustResponse"];
+export type CountryTrustResponse = components["schemas"]["CountryTrustResponse"];
 
 export function getCountryTrust(
   countrySlug: string,

@@ -5,8 +5,7 @@ import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
 export type MethodologySection = components["schemas"]["MethodologySection"];
-export type MethodologyListResponse =
-  components["schemas"]["MethodologyListResponse"];
+export type MethodologyListResponse = components["schemas"]["MethodologyListResponse"];
 
 export function listMethodologySections(
   locale: LocaleCode = DEFAULT_LOCALE,

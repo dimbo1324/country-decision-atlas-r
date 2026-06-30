@@ -7,18 +7,39 @@ from typing import Any
 
 REQUIRED_METHODOLOGY_SLUGS = [
     "what_is_cii",
+    "what_is_decision_score",
+    "what_is_persona",
+    "what_is_route",
+    "what_is_legal_velocity",
+    "what_is_scenario_risk",
+    "what_is_contradiction_score",
     "what_is_trust_score",
     "what_is_confidence",
     "what_is_freshness",
+    "source_backed_methodology",
     "legal_disclaimer",
 ]
 
 REQUIRED_GLOSSARY_SLUGS = [
-    "trust_score",
+    "residence",
+    "permanent_residence",
+    "citizenship",
+    "legal_signal",
+    "evidence",
+    "source",
+    "source_backed",
     "confidence",
     "freshness",
+    "contradiction",
+    "trust_score",
     "cii",
-    "source",
+    "scenario",
+    "persona",
+    "route",
+    "platform_metric",
+    "legal_velocity_index",
+    "scenario_specific_risk_score",
+    "decision_score",
 ]
 
 
