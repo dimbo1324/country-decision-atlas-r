@@ -182,6 +182,7 @@ playwright-report/
 playwright/.cache/
 test-results/
 local-artifacts/
+full-check-reports/
 screenshots/
 html_snapshots/
 raw_pages/

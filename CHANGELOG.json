@@ -1,9 +1,9 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "compacted": true,
-  "compacted_at": "2026-06-29",
-  "previous_schema_version": 1,
-  "original_entry_count": 121,
+  "compacted_at": "2026-06-30",
+  "previous_schema_version": 2,
+  "original_entry_count": 175,
   "history_summaries": [
     {
       "event": "history_summary",
@@ -16,6 +16,63 @@
       "branches": ["feat/ai-translation-provider-v1"],
       "events": ["task_started", "task_completed"],
       "summary": "AI translation provider complete: TranslationInput/TranslationResult models extended, AITranslationProvider via httpx (OpenAI API), FakeTranslationProvider updated, provider factory, TranslationValidation (empty/identical/length/AI-noise/number-preservation), dry-run mode, cost/usage metadata in job results, config extended with 7 new env vars, 32 new tests, all 161 passed.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "argentina-cii-integration-v1",
+      "date_range": {
+        "first": "2026-06-23",
+        "last": "2026-06-23"
+      },
+      "tasks": ["feat/argentina-cii-integration-v1"],
+      "branches": ["feat/argentina-cii-integration-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Adding Argentina CII metric values (6/6), scenario-specific CII scores (5/5), connecting Argentina to the matrix/compare endpoints. Argentina becomes a full participant in the numerical analytics layer while remaining onboarding (not MVP-ready) for legal/timeline sections. | Argentina CII integration: 6/6 metric values (WB WGI, Heritage, GPI, TI CPI, Freedom House), 6/6 CII scores (overall 43.81 + 5 scenario scores via geometric formula). Argentina added to MVP_COUNTRIES: matrix shows 3x5=15 cells. Compare works for argentina/uruguay and argentina/russia pairs. Home overview includes Argentina. Russia/Uruguay remain mvp_ready=true. Migration 023 idempotent. 476 tests pass.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "argentina-core-country-slice-v1",
+      "date_range": {
+        "first": "2026-06-23",
+        "last": "2026-06-23"
+      },
+      "tasks": ["feat/argentina-core-country-slice-v1"],
+      "branches": ["feat/argentina-core-country-slice-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Adding Argentina as the first real third-country core slice: country row, RU+EN country cards, initial sources and evidence, ONBOARDING_COUNTRY_SLUGS architecture, onboarding report extended with onboarding_countries field. | Argentina added as first onboarding country: is_active=true, RU+EN country cards (published), translation_units+variants, 6 sources, 6 evidence items. ONBOARDING_COUNTRY_SLUGS=(argentina,) added to data_quality repo. AllCountriesOnboardingResult extended with onboarding_countries field. Argentina appears in /countries, opens without crash, renders empty states for CII and legal signals. Onboarding report shows russia/uruguay mvp_ready=true, argentina mvp_ready=false. DQ issues for onboarding countries are severity=warning and use onboarding_ prefixed codes so they do not fail MVP check codes. Main flow E2E test hardened to navigate to Russia/Uruguay by slug (not by list order) after Argentina changed list ordering.",
+      "checks": [
+        "python -m pytest: 448 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pre-commit run --all-files: passed (prettier auto-formatted E2E test)",
+        "clean database migrations 001-022 and idempotent migration rerun: passed",
+        "Playwright: 84 passed, 0 failed"
+      ],
+      "deferred_items": [],
+      "final_status": "done",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "argentina-legal-timeline-evidence-v1",
+      "date_range": {
+        "first": "2026-06-23",
+        "last": "2026-06-23"
+      },
+      "tasks": ["feat/argentina-legal-timeline-evidence-v1"],
+      "branches": ["feat/argentina-legal-timeline-evidence-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Adding Argentina legal signals (>=5), timeline events (>=5), evidence depth (>=15), sources (>=10), and onboarding readiness for legal/timeline/evidence sections. | Migration 024: Argentina gets 10 sources (+4), 15 evidence items (+9), 6 legal signals (residence/citizenship/tax/banking/business/political_risk), 6 timeline events (100% traceability). Argentina onboarding: legal_ready=true, timeline_ready=true, evidence_ready=true, mvp_ready=true. Russia/Uruguay remain mvp_ready=true, all_mvp_ready=true. 53 new tests, 529 total. APIs /legal-signals, /legal-signals/timeline, /sources all return Argentina data.",
       "checks": [],
       "deferred_items": [],
       "final_status": "completed",
@@ -176,6 +233,39 @@
     },
     {
       "event": "history_summary",
+      "scope": "codebase-decomposition-and-changelog-compaction-v1",
+      "date_range": {
+        "first": "2026-06-29",
+        "last": "2026-06-30"
+      },
+      "tasks": ["chore/codebase-decomposition-and-changelog-compaction-v1"],
+      "branches": ["chore/codebase-decomposition-and-changelog-compaction-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start maintainability closeout: inventory oversized production files, decompose safe targets, thin entrypoints, compact machine-readable changelog history, and prove no product behaviour drift through the full quality gate. | Closed the maintainability block by decomposing oversized production modules, thinning executable entrypoints, compacting historical changelog data into schema v2, and re-running the backend, frontend, runtime, notifier, and pre-commit gates without product behavior changes.",
+      "checks": [
+        "line-count inventory: no production source file remains above 1000 lines; only generated/config/lock/migration artifacts remain above the threshold",
+        "entrypoint inventory: apps/api/app/main.py 77 lines, apps/notifier/cmd/notifier/main.go 5 lines, scripts/apply_migrations.py 47 lines, scripts/outbox_relay.py 64 lines",
+        "python -m json.tool CHANGELOG.json passed",
+        "python -m pytest: 880 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests passed",
+        "python -m ruff check . passed",
+        "python -m ruff format --check . passed",
+        "python -m sqlfluff lint database --dialect postgres passed",
+        "pnpm install --frozen-lockfile passed",
+        "pnpm contracts:generate passed with no generated contract diff",
+        "pnpm typecheck, pnpm lint, pnpm build, pnpm quality, and pnpm format:check passed",
+        "clean Docker migration chain 001-031 applied, second apply_migrations.py run skipped all applied migrations",
+        "RUN_RUNTIME_SMOKE_TESTS=1 python -m pytest tests/smoke/ -v: 23 passed",
+        "pnpm web:mvp:check passed with 167 Playwright tests after setting the same ADMIN_TOKEN in the local test runner and API container",
+        "notifier Linux container gate passed: protobuf generation, gofmt, go test ./..., go vet ./...",
+        "python -m pre_commit run --all-files passed"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "codebase-maintainability-hardening",
       "date_range": {
         "first": "2026-06-19",
@@ -226,6 +316,22 @@
     },
     {
       "event": "history_summary",
+      "scope": "compare-matrix-v1",
+      "date_range": {
+        "first": "2026-06-22",
+        "last": "2026-06-22"
+      },
+      "tasks": ["feat/compare-matrix-v1"],
+      "branches": ["feat/compare-matrix-v1", "main"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started scenario-specific CII compare matrix for the /compare page. | Delivered /compare matrix page: GET /api/v1/countries/matrix endpoint, CompareMatrixResponse schema, CountryScenarioMatrix table, heatmap CSS, legend, summary, and 30+ unit tests. No new libraries added.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "done",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "content-localization-foundation-v1",
       "date_range": {
         "first": "2026-06-20",
@@ -247,6 +353,22 @@
       ],
       "deferred_items": [],
       "final_status": "in_progress",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "country-expansion-closeout-v1",
+      "date_range": {
+        "first": "2026-06-23",
+        "last": "2026-06-23"
+      },
+      "tasks": ["chore/country-expansion-closeout-v1"],
+      "branches": ["chore/country-expansion-closeout-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Closeout of the Country Expansion Pipeline episode: promote Argentina from onboarding to MVP, verify all three countries are mvp_ready, full quality gate. | Argentina promoted from ONBOARDING_COUNTRY_SLUGS to MVP_COUNTRY_SLUGS. All 3 countries mvp_ready=True, all_mvp_ready=True, onboarding_countries=[]. Matrix 3x5=15 cells. Clean DB chain 001-024 verified. 33 new closeout tests. 563 total tests. All gates green: ruff, mypy, sqlfluff, pnpm build, pnpm typecheck, pnpm lint, web:mvp:check. Episode Country Expansion Pipeline closed.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
       "preserved_from_entries": 2
     },
     {
@@ -334,16 +456,52 @@
       "scope": "editorial-publication-foundation-v1",
       "date_range": {
         "first": "2026-06-24",
-        "last": "2026-06-24"
+        "last": "2026-06-26"
       },
-      "tasks": ["feat/editorial-publication-foundation-v1"],
-      "branches": ["feat/editorial-publication-foundation-v1"],
-      "events": ["task_started"],
-      "summary": "Start editorial publication foundation with lifecycle, legal_status split, audit/outbox foundation, and data-quality guardrails.",
-      "checks": [],
+      "tasks": [
+        "chore/editorial-publication-foundation-closeout-v1",
+        "feat/editorial-publication-foundation-v1",
+        "feat/editorial-publication-foundation-v1-admin-integration"
+      ],
+      "branches": [
+        "chore/editorial-publication-foundation-closeout-v1",
+        "feat/editorial-publication-foundation-v1",
+        "feat/editorial-publication-foundation-v1-admin-integration"
+      ],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start editorial publication foundation with lifecycle, legal_status split, audit/outbox foundation, and data-quality guardrails. || Start admin content integration for publication lifecycle, audit events, legal signal domain events, legal_status contracts, and editorial data-quality checks. | Integrated editorial publication foundation into admin content flow: transactional audit for create/patch/status changes, publication transition validation, legal_signal.published domain event emission, legal_status API/OpenAPI/TypeScript contracts, and editorial data-quality guardrails. Verified clean Docker migration chain, idempotent migration rerun, domain_events count 0 after clean migration, runtime publish smoke with rollback, pytest/mypy/ruff/sqlfluff/pnpm quality/web:mvp/pre-commit green. | Start final closeout for editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration. | Closed editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration. Updated pre-commit to use the project pnpm format gate instead of the crashing Windows prettier mirror hook, and tightened Python dependency floors for pydantic-settings and pytest.",
+      "checks": [
+        "python -m pytest: 671 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check . --fix: passed",
+        "python -m ruff format .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "pnpm web:mvp:check: 125 passed",
+        "python -m pre_commit run --all-files: passed",
+        "docker compose clean migration chain: passed",
+        "domain_events count after clean migration: 0",
+        "docker compose up --build -d api: passed after transient Docker Hub EOF retry",
+        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 applied",
+        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 skipped on idempotency rerun",
+        "legal_signals legal_status null count: 0",
+        "legal_signals.status values: published only, within editorial lifecycle",
+        "health: ok",
+        "ready: ok",
+        "public API smoke: countries=3, cards=3, cii=3, matrix=3x5/15 cells, home overview=3 countries/5 winners/15 preview cells, legal signals=26 with legal_status, timeline groups=6, sources=50",
+        "python -m pytest tests/test_admin_content_publication_flow.py tests/test_domain_events_outbox.py tests/test_publication_lifecycle.py tests/test_legal_signal_legal_status_contract.py tests/test_data_quality_editorial_foundation.py: 74 passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "pnpm contracts:generate: passed, no OpenAPI or generated TypeScript diff",
+        "pnpm audit --prod: no known vulnerabilities found",
+        "python -m pip_audit: remaining sqlfluff 3.5.0 dev-tool vulnerability; sqlfluff 4.x requires separate PG01 historical migration policy work",
+        "git diff --check: passed",
+        "runtime diagnostics: wrote ignored local-artifacts/runtime-diagnostics output"
+      ],
       "deferred_items": [],
-      "final_status": "in_progress",
-      "preserved_from_entries": 1
+      "final_status": "completed",
+      "preserved_from_entries": 5
     },
     {
       "event": "history_summary",
@@ -402,6 +560,22 @@
     },
     {
       "event": "history_summary",
+      "scope": "full-audit-stabilization-v1",
+      "date_range": {
+        "first": "2026-06-23",
+        "last": "2026-06-23"
+      },
+      "tasks": ["chore/full-audit-stabilization-v1"],
+      "branches": ["chore/full-audit-stabilization-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started full audit stabilization across decision flow, data-quality, OpenAPI/runtime contracts, security/config, CI/E2E, migrations, locale, and dependency hygiene. | Full audit stabilization complete across 8 phases. Phase 1: CHANGELOG formatting fixed, stale E2E fixed, Playwright E2E job added to GitHub Actions with migration idempotency check and artifact upload. Phase 2: Argentina country_scores + breakdowns added (migration 025), onboarding/data-quality thresholds unified via mvp_requirements.py single source of truth. Phase 3: user-stories validates origin/destination/scenario (422 not 500), rate limiter uses request.client.host by default (X-Forwarded-For not trusted), trusted_proxy_headers config added, /health and /ready excluded from rate limiter, old rate-limit windows cleaned, app_env defaults to production (fail-closed). Phase 4: translation jobs dry_run fully read-only (no status/attempts/lock mutation), stale processing lock recovery added, batch size limited via Pydantic/config. Phase 5: /ready endpoint added with DB connectivity check, /health returns environment field, OpenAPI updated and TypeScript contracts regenerated. Phase 6: Docker DATABASE_URL env-driven, migration runner adds SHA-256 checksum + advisory lock, score labels unified (score_labels.py), postcss vulnerability resolved. Phase 7: default locale normalized to ru across API/frontend, locale preserved in navigation, LocaleSwitcher connected, E2E locale tests added. Phase 8 (async safety): time.sleep removed from async flows, translation batch limits validated. 592 tests pass (0 failures). mypy/ruff/sqlfluff/pnpm quality/format:check/typecheck/lint/build all green. pre-commit clean. pnpm audit --prod no vulnerabilities.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "global-project-operating-standard-v0",
       "date_range": {
         "first": "2026-06-24",
@@ -418,6 +592,31 @@
     },
     {
       "event": "history_summary",
+      "scope": "home-visual-overview-v1",
+      "date_range": {
+        "first": "2026-06-22",
+        "last": "2026-06-22"
+      },
+      "tasks": ["feat/home-visual-overview-v1"],
+      "branches": ["feat/home-visual-overview-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started homepage visual overview using existing CII matrix, scenario winners, country summaries, legal timeline events, and key insights. | Delivered a localized homepage overview API and UI with country summaries, scenario winners, CII matrix preview, latest source-backed legal events, deterministic insights, generated OpenAPI and TypeScript contracts, responsive browser coverage, and clean database verification.",
+      "checks": [
+        "python -m pytest: 345 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "python -m pre_commit run --all-files: passed",
+        "clean database migrations 001-019 and idempotent migration rerun: passed",
+        "Playwright: 77 passed, 0 failed"
+      ],
+      "deferred_items": [],
+      "final_status": "done",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "infographic-foundation-closeout-v1",
       "date_range": {
         "first": "2026-06-22",
@@ -425,12 +624,37 @@
       },
       "tasks": ["chore/infographic-foundation-closeout-v1"],
       "branches": ["chore/infographic-foundation-closeout-v1"],
-      "events": ["task_completed"],
-      "summary": "Infographic foundation episode closed. Phase A: fixed 9 critical data-quality errors (migration 020 links Russia long_term_status_score to 3 real sources; SQL fix extends synthetic-user-story check to Russian keywords); added 4 new CII visual-readiness guardrail checks (mvp_scenarios_active, cii_scores_use_geometric_aggregation, cii_metric_definitions_have_polarity, legal_timeline_has_events_per_country); extended runtime diagnostics script with 5 new visual endpoints (russia/uruguay CII, compare, matrix, legal timeline, home overview) and moved output to local-artifacts/runtime-diagnostics/; added test_data_quality_closeout_guardrails.py (15 new tests). Phase B: migration chain 001-020 a...",
+      "events": ["task_completed", "task_started"],
+      "summary": "Infographic foundation episode closed. Phase A: fixed 9 critical data-quality errors (migration 020 links Russia long_term_status_score to 3 real sources; SQL fix extends synthetic-user-story check to Russian keywords); added 4 new CII visual-readiness guardrail checks (mvp_scenarios_active, cii_scores_use_geometric_aggregation, cii_metric_definitions_have_polarity, legal_timeline_has_events_per_country); extended runtime diagnostics script with 5 new visual endpoints (russia/uruguay CII, compare, matrix, legal timeline, home overview) and moved output to local-artifacts/runtime-diagnostics/; added test_data_quality_closeout_guardrails.py (15 new tests). Phase B: migration chain 001-020 a... || Started infographic foundation closeout with extended quality guardrails, data-quality debt classification, runtime verification, and episode closeout.",
       "checks": [],
       "deferred_items": [],
-      "final_status": "completed",
-      "preserved_from_entries": 1
+      "final_status": "in_progress",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "legal-signals-timeline-v1",
+      "date_range": {
+        "first": "2026-06-22",
+        "last": "2026-06-22"
+      },
+      "tasks": ["feat/legal-signals-timeline-v1"],
+      "branches": ["feat/legal-signals-timeline-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started Legal Signals Timeline to show country legal and policy changes over time. | Delivered migration 019 with 20 source-backed legal signal events, grouped timeline API with filters and localization metadata, generated OpenAPI and TypeScript contracts, minimal /legal-signals timeline UI, timeline data-quality checks, backend tests, clean database verification, and 73 passing Playwright tests.",
+      "checks": [
+        "python -m pytest: 335 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check and format: passed",
+        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed after formatting",
+        "python -m pre_commit run --all-files: passed after formatting",
+        "clean database migrations 001-019 and direct repeat of migration 019: passed",
+        "Playwright: 73 passed, 0 failed"
+      ],
+      "deferred_items": [],
+      "final_status": "done",
+      "preserved_from_entries": 2
     },
     {
       "event": "history_summary",
@@ -498,15 +722,48 @@
     },
     {
       "event": "history_summary",
+      "scope": "persona-layer-api-decision-integration-v1",
+      "date_range": {
+        "first": "2026-06-26",
+        "last": "2026-06-26"
+      },
+      "tasks": ["feat/persona-layer-api-decision-integration-v1"],
+      "branches": ["feat/persona-layer-api-decision-integration-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start Persona API and runtime integration with CII, country comparison, and decision flows without changing persisted base weights or scores. | Added public Persona API, OpenAPI/TypeScript contracts, runtime persona-adjusted CII and comparison scoring, and persona-adjusted decision ranking while preserving base persisted scores and no-persona behaviour.",
+      "checks": [
+        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py: 49 passed",
+        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py tests/test_frontend_contract.py tests/test_openapi_contract.py tests/test_decision_run.py tests/test_cii_country_comparison.py tests/test_cii_scenario_weights.py: 128 passed",
+        "python -m pytest: 793 passed, 23 skipped",
+        "python -m ruff format .: passed",
+        "python -m ruff check .: passed",
+        "python -m mypy .: passed",
+        "python -m sqlfluff lint database/migrations --dialect postgres: passed",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "docker compose clean migration chain: migrations 001-029 applied",
+        "docker compose migration idempotency: migrations 001-029 skipped",
+        "runtime persona API smoke: health ok, ready ok, personas=7, weights sum=1.0, CII persona applied, compare persona applied, decision ranking_mode=persona_adjusted",
+        "pnpm web:mvp:check: 153 passed after Docker API was running on localhost:8000"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "persona-layer-v1",
       "date_range": {
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["feat/persona-layer-v1"],
-      "branches": ["feat/persona-layer-v1"],
+      "tasks": ["feat/persona-layer-dq-frontend-closeout-v1", "feat/persona-layer-v1"],
+      "branches": [
+        "feat/persona-layer-dq-frontend-closeout-v1",
+        "feat/persona-layer-v1"
+      ],
       "events": ["task_completed", "task_started"],
-      "summary": "Persona Layer v1 backend/data foundation complete. Block 1: migration 029_persona_layer_v1.sql вЂ” personas table + persona_metric_modifiers table + 7 seeded active personas (digital_nomad, family, student, entrepreneur, low_budget_migrant, investor, skilled_worker) + 42 modifiers (7 personas Г— 6 active CII metrics). Migration idempotent and sqlfluff-clean. Block 2: apps/api/app/repositories/personas.py вЂ” list_personas (locale CASE SQL, positional params), get_persona_by_slug, list_persona_modifiers (active metrics only), list_active_persona_slugs, list_active_cii_metrics, list_base_scenario_weights, list_persona_weight_inputs (LEFT JOIN for missing modifier detection). Block 3: apps/api/ap...",
+      "summary": "Persona Layer v1 backend/data foundation complete. Block 1: migration 029_persona_layer_v1.sql вЂ” personas table + persona_metric_modifiers table + 7 seeded active personas (digital_nomad, family, student, entrepreneur, low_budget_migrant, investor, skilled_worker) + 42 modifiers (7 personas Г— 6 active CII metrics). Migration idempotent and sqlfluff-clean. Block 2: apps/api/app/repositories/personas.py вЂ” list_personas (locale CASE SQL, positional params), get_persona_by_slug, list_persona_modifiers (active metrics only), list_active_persona_slugs, list_active_cii_metrics, list_base_scenario_weights, list_persona_weight_inputs (LEFT JOIN for missing modifier detection). Block 3: apps/api/ap... || Start Persona Layer closeout with data-quality guardrails, decision UI persona selector, E2E coverage, clean DB chain, and full quality gate. | Closed Persona Layer v1 with SQL-backed data quality guardrails, decision UI persona selector, persona-aware CII comparison visuals, regression E2E coverage, and clean database validation.",
       "checks": [
         "pytest_focused: 40 passed",
         "pytest_full: 784 passed, 23 skipped",
@@ -515,11 +772,27 @@
         "ruff_format: 149 files already formatted",
         "sqlfluff: All Finished",
         "docker_migration: 029_persona_layer_v1.sql applied clean",
-        "docker_idempotency: second apply skipped 029"
+        "docker_idempotency: second apply skipped 029",
+        "pnpm contracts:generate: passed",
+        "python -m pytest: 804 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "pnpm quality: passed",
+        "pnpm format:check: passed",
+        "pnpm exec playwright test tests/e2e/web-mvp-personas.spec.ts --reporter=line: 7 passed",
+        "ADMIN_TOKEN=ci-local-admin pnpm web:mvp:check: 160 passed",
+        "docker compose clean migration chain: migrations 001-029 applied",
+        "docker compose migration idempotency: migrations 001-029 skipped",
+        "clean database seed counts: active personas=7, persona_metric_modifiers v1.0=42",
+        "runtime smoke: personas list ok, family relocation_residence weight_sum=1.0, country CII persona applied, country compare persona applied, decision ranking_mode=persona_adjusted",
+        "data quality smoke: overall_status=valid, critical_issues_count=0, persona_critical_count=0, persona checks passed",
+        "python -m pre_commit run --all-files: passed"
       ],
       "deferred_items": [],
-      "final_status": "in_progress",
-      "preserved_from_entries": 2
+      "final_status": "completed",
+      "preserved_from_entries": 4
     },
     {
       "event": "history_summary",
@@ -536,6 +809,69 @@
       "deferred_items": [],
       "final_status": "completed",
       "preserved_from_entries": 1
+    },
+    {
+      "event": "history_summary",
+      "scope": "platform-foundations-closeout-v1",
+      "date_range": {
+        "first": "2026-06-29",
+        "last": "2026-06-29"
+      },
+      "tasks": ["chore/platform-foundations-closeout-v1"],
+      "branches": ["chore/platform-foundations-closeout-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start Platform Foundations closeout with clean DB chain, runtime diagnostics, cache mode smoke, Redis failure safety, regression flows, full gate, and final merge/push. | Closed Platform Foundations with clean migration chain 001-031, idempotent migrations, runtime diagnostics for analytics/features/data-journal endpoints, CACHE_MODE null and redis smoke, Redis failure fallback, public-safe data journal checks, feature-flag visibility smoke, legacy countries/routes/persona/notifier flows, and full quality gate.",
+      "checks": [
+        "clean DB chain 001-031: 31 migrations applied through 031_platform_runtime_foundations_v1.sql",
+        "apply_migrations.py idempotency: second run skipped 001-031",
+        "runtime diagnostics captured for analytics events, platform features, data_journal_enabled, and Russia/Uruguay/Argentina data journals",
+        "CACHE_MODE=null runtime smoke passed",
+        "CACHE_MODE=redis runtime smoke passed",
+        "Redis stopped while CACHE_MODE=redis: health/countries/country card/features/data journal stayed available",
+        "data journal responses checked for no changed_by/raw_diff/internal_metadata",
+        "data_journal_enabled feature detail and E2E visibility verified",
+        "legacy flows verified: countries, routes, persona decision, analytics, frontend MVP flows",
+        "backend quality: ruff, ruff format check, mypy, pytest 880 passed / 23 skipped, sqlfluff",
+        "runtime smoke: 23 passed",
+        "notifier quality: protobuf generation, gofmt, go vet, go test passed in Linux Go container",
+        "frontend quality: contracts generated with no diff, prettier check, lint, typecheck, build passed",
+        "Playwright E2E: 167 passed"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "platform-foundations-v1",
+      "date_range": {
+        "first": "2026-06-29",
+        "last": "2026-06-29"
+      },
+      "tasks": ["feat/platform-foundations-v1"],
+      "branches": ["feat/platform-foundations-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start Platform Foundations v1 with baseline inspection, migration 030 platform tables, anonymous analytics API, OpenAPI contracts, and minimal frontend analytics helper. | Started Episode 5 Platform Foundations v1 with migration 030 platform tables, privacy-safe anonymous analytics ingestion, HMAC session hashing, PII metadata rejection, OpenAPI/TypeScript contract updates, minimal frontend analytics helper, decision/persona instrumentation, and analytics E2E smoke. Feature flag tables were created as database foundation only; no feature flag runtime/admin/API/UI was added.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "platform-runtime-foundations-v1",
+      "date_range": {
+        "first": "2026-06-29",
+        "last": "2026-06-29"
+      },
+      "tasks": ["feat/platform-runtime-foundations-v1"],
+      "branches": ["feat/platform-runtime-foundations-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start Platform Runtime Foundations with feature flags runtime, Redis cache foundation, public country data journal, OpenAPI contracts, minimal frontend integration, DQ checks, and full quality gate. | Completed Platform Runtime Foundations v1: feature flags runtime and public API, optional Redis cache foundation with best-effort invalidation, public country data journal derived from public-safe source-backed data, minimal country page integration, OpenAPI/TypeScript contracts, runtime DQ checks, Docker migration smoke, and full quality gate.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
     },
     {
       "event": "history_summary",
@@ -589,14 +925,49 @@
         "first": "2026-06-26",
         "last": "2026-06-26"
       },
-      "tasks": ["chore/route-explorer-quality-closeout-v1"],
-      "branches": ["chore/route-explorer-quality-closeout-v1"],
-      "events": ["task_started"],
-      "summary": "Start Route Explorer v1 quality closeout with route data-quality checks, backend regression tests, E2E route hardening, clean DB chain, and full quality gate.",
-      "checks": [],
+      "tasks": [
+        "chore/route-explorer-quality-closeout-v1",
+        "feat/route-explorer-service-api-ui-v1",
+        "feat/route-explorer-v1"
+      ],
+      "branches": [
+        "chore/route-explorer-quality-closeout-v1",
+        "feat/route-explorer-service-api-ui-v1",
+        "feat/route-explorer-v1"
+      ],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start Route Explorer v1 quality closeout with route data-quality checks, backend regression tests, E2E route hardening, clean DB chain, and full quality gate. || Start Route Explorer v1 foundation with route schema, source-backed seed data, and repository SQL layer. | Added Route Explorer v1 data foundation with migration 027 routes, route_documents, route_sources, route_evidence, source-backed seed routes for Russia, Uruguay and Argentina, and SQL-only routes repository functions. Kept API, services, schemas, OpenAPI, frontend, DQ, E2E and route.published outbox integration deferred. | Start Route Explorer service, API, OpenAPI contracts, and minimal frontend route browsing package. | Added Route Explorer service, lifecycle/outbox foundation, public route schemas and API endpoints, regenerated OpenAPI and TypeScript contracts, integrated a minimal country-page routes block, route detail page, and focused route smoke E2E coverage.",
+      "checks": [
+        "python -m pytest tests/test_routes_repository.py: 22 passed",
+        "python -m pytest: 693 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests: passed",
+        "python -m ruff check .: passed",
+        "python -m ruff format --check .: passed",
+        "python -m sqlfluff lint database --dialect postgres: passed",
+        "docker compose clean migration chain: migrations 001-027 applied",
+        "docker compose migration idempotency: migrations 001-027 skipped",
+        "routes count: 9",
+        "route_documents count: 18",
+        "route_sources count: 13",
+        "route_evidence count: 9",
+        "domain_events route.published count: 0",
+        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py: 53 passed",
+        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py tests/test_openapi_contract.py: 57 passed",
+        "python -m pytest: 724 passed, 23 skipped",
+        "pnpm contracts:generate: passed",
+        "pnpm quality: passed",
+        "pnpm build: passed",
+        "npx playwright test tests/e2e/web-mvp-routes.spec.ts: 2 passed",
+        "pnpm web:mvp:check: 127 passed",
+        "runtime route API smoke: russia=3, uruguay=3, argentina=3, filters ok, detail returned documents/sources/evidence, unknown country=404, unknown route=404, invalid filter=422",
+        "domain_events route.published count after clean seed: 0",
+        "python -m pre_commit run --all-files: passed after line-ending auto-fix rerun",
+        "pnpm audit --prod: no known vulnerabilities found",
+        "git diff --check: passed"
+      ],
       "deferred_items": [],
-      "final_status": "in_progress",
-      "preserved_from_entries": 1
+      "final_status": "completed",
+      "preserved_from_entries": 5
     },
     {
       "event": "history_summary",
@@ -613,6 +984,65 @@
       "deferred_items": [],
       "final_status": "in_progress",
       "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "scenario-specific-cii-weights-v1",
+      "date_range": {
+        "first": "2026-06-22",
+        "last": "2026-06-22"
+      },
+      "tasks": ["feat/scenario-specific-cii-weights-v1"],
+      "branches": ["feat/scenario-specific-cii-weights-v1", "main"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started scenario-specific CII weights so CII scores vary by MVP decision scenario. | Make CII genuinely scenario-specific: migration 018 adds scenario_slug to scenario_metric_weights and country_cii_scores, seeds 5x6=30 scenario weights and 5x2=10 scenario scores for Russia/Uruguay, backend passes scenario_slug through repository layer to return scenario-specific CII scores and metric weights in API responses, OpenAPI updated, TypeScript contracts regenerated, frontend shows per-metric weight%, data quality checks extended with 5 new scenario weight/score validators, 50 new unit tests (all passing), E2E tests added.",
+      "checks": [],
+      "deferred_items": [],
+      "final_status": "done",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "self-computed-intelligence-v1",
+      "date_range": {
+        "first": "2026-06-30",
+        "last": "2026-06-30"
+      },
+      "tasks": [
+        "feat/self-computed-intelligence-surface-v1",
+        "feat/self-computed-intelligence-v1"
+      ],
+      "branches": [
+        "feat/self-computed-intelligence-surface-v1",
+        "feat/self-computed-intelligence-v1"
+      ],
+      "events": ["task_completed", "task_started"],
+      "summary": "Start self-computed intelligence foundation with platform metrics table, SQL-only repositories, and deterministic calculation services for LVI, SSRS, and contradiction score. | Completed the self-computed intelligence foundation by adding the country_platform_metrics persistence layer, SQL-only metric repositories, deterministic LVI/SSRS/contradiction services, and focused regression coverage without exposing new API or frontend surface. | Start self-computed intelligence surface with feature flag, recompute runtime, admin/public API, OpenAPI contracts, Data Quality, minimal frontend integration, E2E, and full Episode 6 closeout. | Completed the self-computed intelligence surface layer: feature flag, recompute runtime, admin and public API, OpenAPI/TypeScript contracts, 8 Data Quality checks, and thin frontend integration.",
+      "checks": [
+        "branch started from main after git pull --ff-only origin main",
+        "baseline checks passed before implementation: python -m pytest tests/test_frontend_contract.py, python -m ruff check ., git diff --check",
+        "clean Docker migration chain 001-032 applied from an empty database; second scripts/apply_migrations.py run skipped all applied migrations",
+        "country_platform_metrics remained empty after migrations as required",
+        "python -m pytest tests/test_platform_metrics_repository.py tests/test_legal_velocity.py tests/test_scenario_risk.py tests/test_contradiction_score.py tests/test_platform_metrics_service.py: 73 passed",
+        "python -m pytest: 953 passed, 23 skipped",
+        "python -m mypy apps packages scripts tests passed",
+        "python -m ruff check . --fix passed",
+        "python -m ruff format . left 209 files unchanged",
+        "python -m sqlfluff lint database --dialect postgres passed",
+        "pnpm typecheck, pnpm lint, pnpm build, pnpm quality, pnpm format:check, and pnpm format passed with pnpm 9.12.0",
+        "pnpm web:mvp:check passed with 167 Playwright tests",
+        "notifier Linux Go 1.25 container gate passed after local protobuf generation: go test ./..., go vet ./..., gofmt clean",
+        "forbidden-scope check passed: no docs, README, markdown/txt, frontend, OpenAPI/generated contract, pnpm-lock, CII, DQ, decision, or auth changes",
+        "new-file inventory passed: no new file exceeds 1000 lines and no comments/docstrings were added to the new backend/test files",
+        "git diff --check passed",
+        "python -m ruff check apps/api/app/ tests/ scripts/: All checks passed",
+        "python -m mypy apps/api/app --ignore-missing-imports: Success, no issues found in 129 source files",
+        "python -m sqlfluff lint database/migrations/033_self_computed_intelligence_feature_flag_v1.sql --dialect postgres: All Finished",
+        "python -m pytest tests/test_platform_metrics_runtime.py tests/test_platform_metrics_api.py tests/test_platform_metrics_data_quality.py tests/test_data_quality_validation.py: 56 passed"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 4
     },
     {
       "event": "history_summary",
@@ -729,6 +1159,32 @@
       "deferred_items": [],
       "final_status": "in_progress",
       "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
+      "scope": "trust-transparency",
+      "date_range": {
+        "first": "2026-06-30",
+        "last": "2026-06-30"
+      },
+      "tasks": ["trust_transparency_surface_v1", "trust_transparency_surface_v1_gaps"],
+      "branches": ["feat/trust-transparency-surface-v1", "main"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Episode 7: Trust and Transparency Surface — country_trust_scores, methodology_sections, glossary_terms, trust computation, /trust /methodology /glossary endpoints, DQ checks, E2E tests. | Episode 7 complete: migration 034 (country_trust_scores, methodology_sections, glossary_terms, feature flag enabled/public), repositories (trust, methodology, glossary), services (trust_score pure computation with downside cap, trust_runtime orchestration with feature flag), schemas, API routers (/countries/{slug}/trust, /methodology, /glossary, admin recompute), DQ checks (trust values, stale scores, missing methodology/glossary), TrustBadge/FreshnessBadge/DisclaimerNotice/LastVerifiedAt UI, TrustSurfaceBlock feature, /methodology page, recompute script, OpenAPI regenerated, TypeScript contracts updated, 72 new tests passed. | Episode 7 gap fixes: (1) script bug fixed - recompute_trust_scores.py exit code now uses countries_failed key; (2) DQ check added for active countries missing trust scores (critical); (3) count_missing_country_trust_scores added to trust repo; (4) Glossary section added to /methodology page fetched from API; (5) Decision page now shows per-country trust label and freshness via DecisionCountryTrustBadge; (6) DisclaimerNotice added to decision results, route detail, and legal signals pages; (7) ConfidenceBadge now reused in TrustSurfaceBlock; (8) LastVerifiedAt shows explicit unknown state text; (9) Link to /methodology added in TrustSurfaceBlock; (10) E2E tests extended with glossary, disclaimer, locale, and legal-signals coverage.",
+      "checks": [
+        "ruff check: 0 errors",
+        "ruff format: clean",
+        "mypy: 0 errors (15 files)",
+        "sqlfluff: migration 034 clean",
+        "pytest apps/api/tests: 49 passed",
+        "pytest tests (unit): all passed",
+        "pnpm typecheck: clean",
+        "pnpm lint: clean",
+        "openapi contract: 4 passed"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 3
     },
     {
       "event": "history_summary",
@@ -852,6 +1308,28 @@
     },
     {
       "event": "history_summary",
+      "scope": "web-mvp-e2e-admin-token-stability-v1",
+      "date_range": {
+        "first": "2026-06-22",
+        "last": "2026-06-22"
+      },
+      "tasks": ["fix/web-mvp-e2e-admin-token-stability-v1"],
+      "branches": ["fix/web-mvp-e2e-admin-token-stability-v1"],
+      "events": ["task_completed", "task_started"],
+      "summary": "Started E2E admin token stability fix and CI ruff format fix. | Fixed CI ruff format failure: ran python -m ruff format on tests/test_cii_country_comparison.py (trailing comma and line-length reformatting). Fixed E2E admin token stability: data quality report test now gracefully handles admin_token_not_configured (HTTP 500) returned when ADMIN_TOKEN env var is not set in local Docker, without weakening endpoint security. Logic: if status==500 and error.code==\"admin_token_not_configured\" => skip body assertions (env not configured); otherwise full 200 + body property assertions apply. Admin endpoint security unchanged: wrong token still returns 401, no token still returns 401, missing server config returns 500. pnpm web:mvp:check: 50 passed, 0 failed (after running DB migrations).",
+      "checks": [
+        "python -m ruff check .: All checks passed",
+        "python -m ruff format --check .: 101 files already formatted",
+        "python -m mypy .: Success, no issues found in 99 source files",
+        "python -m pytest: 239 passed, 23 skipped, 0 failed",
+        "pnpm web:mvp:check: 50 passed, 0 failed"
+      ],
+      "deferred_items": [],
+      "final_status": "completed",
+      "preserved_from_entries": 2
+    },
+    {
+      "event": "history_summary",
       "scope": "web-mvp-ux-polish-v1",
       "date_range": {
         "first": "2026-06-19",
@@ -902,906 +1380,17 @@
   ],
   "entries": [
     {
-      "date": "2026-06-29",
+      "date": "2026-06-30",
       "event": "history_compacted",
       "type": "chore",
-      "scope": "codebase-decomposition-and-changelog-compaction-v1",
-      "task": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "branch": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "summary": "Older changelog entries were summarized to reduce file size while preserving essential machine-readable project history.",
+      "scope": "changelog-compaction-round-2-v1",
+      "task": "chore/changelog-compaction-round-2-v1",
+      "branch": "main",
+      "summary": "Second compaction round: folded Episode 5-7 implementation entries (platform foundations, self-computed intelligence, trust & transparency surface) into history_summaries, kept the latest episode-8 preflight and notifier/E2E gate fix entries in full, and appended the previously un-logged notifier-protobuf-and-e2e-gate-stability-v1 fix entry.",
       "preservation_policy": "Recent entries kept in full; older implementation records summarized by scope/task/outcome/checks/deferred items.",
-      "preserved_full_entries": 40,
-      "summarized_entries": 81,
-      "history_summary_count": 45
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "fix",
-      "scope": "web-mvp-e2e-admin-token-stability-v1",
-      "task": "fix/web-mvp-e2e-admin-token-stability-v1",
-      "branch": "fix/web-mvp-e2e-admin-token-stability-v1",
-      "summary": "Started E2E admin token stability fix and CI ruff format fix.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_completed",
-      "type": "fix",
-      "scope": "web-mvp-e2e-admin-token-stability-v1",
-      "task": "fix/web-mvp-e2e-admin-token-stability-v1",
-      "branch": "fix/web-mvp-e2e-admin-token-stability-v1",
-      "summary": [
-        "Fixed CI ruff format failure: ran python -m ruff format on tests/test_cii_country_comparison.py (trailing comma and line-length reformatting).",
-        "Fixed E2E admin token stability: data quality report test now gracefully handles admin_token_not_configured (HTTP 500) returned when ADMIN_TOKEN env var is not set in local Docker, without weakening endpoint security.",
-        "Logic: if status==500 and error.code==\"admin_token_not_configured\" => skip body assertions (env not configured); otherwise full 200 + body property assertions apply.",
-        "Admin endpoint security unchanged: wrong token still returns 401, no token still returns 401, missing server config returns 500.",
-        "pnpm web:mvp:check: 50 passed, 0 failed (after running DB migrations)."
-      ],
-      "status": "completed",
-      "checks": [
-        "python -m ruff check .: All checks passed",
-        "python -m ruff format --check .: 101 files already formatted",
-        "python -m mypy .: Success, no issues found in 99 source files",
-        "python -m pytest: 239 passed, 23 skipped, 0 failed",
-        "pnpm web:mvp:check: 50 passed, 0 failed"
-      ]
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "scenario-specific-cii-weights-v1",
-      "task": "feat/scenario-specific-cii-weights-v1",
-      "branch": "feat/scenario-specific-cii-weights-v1",
-      "summary": "Started scenario-specific CII weights so CII scores vary by MVP decision scenario.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "scenario-specific-cii-weights-v1",
-      "task": "feat/scenario-specific-cii-weights-v1",
-      "branch": "main",
-      "summary": "Make CII genuinely scenario-specific: migration 018 adds scenario_slug to scenario_metric_weights and country_cii_scores, seeds 5x6=30 scenario weights and 5x2=10 scenario scores for Russia/Uruguay, backend passes scenario_slug through repository layer to return scenario-specific CII scores and metric weights in API responses, OpenAPI updated, TypeScript contracts regenerated, frontend shows per-metric weight%, data quality checks extended with 5 new scenario weight/score validators, 50 new unit tests (all passing), E2E tests added.",
-      "status": "done"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "compare-matrix-v1",
-      "task": "feat/compare-matrix-v1",
-      "branch": "feat/compare-matrix-v1",
-      "summary": "Started scenario-specific CII compare matrix for the /compare page.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "compare-matrix-v1",
-      "task": "feat/compare-matrix-v1",
-      "branch": "main",
-      "summary": "Delivered /compare matrix page: GET /api/v1/countries/matrix endpoint, CompareMatrixResponse schema, CountryScenarioMatrix table, heatmap CSS, legend, summary, and 30+ unit tests. No new libraries added.",
-      "status": "done"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "legal-signals-timeline-v1",
-      "task": "feat/legal-signals-timeline-v1",
-      "branch": "feat/legal-signals-timeline-v1",
-      "summary": "Started Legal Signals Timeline to show country legal and policy changes over time.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "legal-signals-timeline-v1",
-      "task": "feat/legal-signals-timeline-v1",
-      "branch": "feat/legal-signals-timeline-v1",
-      "summary": "Delivered migration 019 with 20 source-backed legal signal events, grouped timeline API with filters and localization metadata, generated OpenAPI and TypeScript contracts, minimal /legal-signals timeline UI, timeline data-quality checks, backend tests, clean database verification, and 73 passing Playwright tests.",
-      "status": "done",
-      "checks": [
-        "python -m pytest: 335 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check and format: passed",
-        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed after formatting",
-        "python -m pre_commit run --all-files: passed after formatting",
-        "clean database migrations 001-019 and direct repeat of migration 019: passed",
-        "Playwright: 73 passed, 0 failed"
-      ]
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "home-visual-overview-v1",
-      "task": "feat/home-visual-overview-v1",
-      "branch": "feat/home-visual-overview-v1",
-      "summary": "Started homepage visual overview using existing CII matrix, scenario winners, country summaries, legal timeline events, and key insights.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "home-visual-overview-v1",
-      "task": "feat/home-visual-overview-v1",
-      "branch": "feat/home-visual-overview-v1",
-      "summary": "Delivered a localized homepage overview API and UI with country summaries, scenario winners, CII matrix preview, latest source-backed legal events, deterministic insights, generated OpenAPI and TypeScript contracts, responsive browser coverage, and clean database verification.",
-      "status": "done",
-      "checks": [
-        "python -m pytest: 345 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check and format: passed",
-        "pnpm contracts:generate, typecheck, lint, build, format:check: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "python -m pre_commit run --all-files: passed",
-        "clean database migrations 001-019 and idempotent migration rerun: passed",
-        "Playwright: 77 passed, 0 failed"
-      ]
-    },
-    {
-      "date": "2026-06-22",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "infographic-foundation-closeout-v1",
-      "task": "chore/infographic-foundation-closeout-v1",
-      "branch": "chore/infographic-foundation-closeout-v1",
-      "summary": "Started infographic foundation closeout with extended quality guardrails, data-quality debt classification, runtime verification, and episode closeout.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "argentina-core-country-slice-v1",
-      "task": "feat/argentina-core-country-slice-v1",
-      "branch": "feat/argentina-core-country-slice-v1",
-      "summary": "Adding Argentina as the first real third-country core slice: country row, RU+EN country cards, initial sources and evidence, ONBOARDING_COUNTRY_SLUGS architecture, onboarding report extended with onboarding_countries field.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "argentina-core-country-slice-v1",
-      "task": "feat/argentina-core-country-slice-v1",
-      "branch": "feat/argentina-core-country-slice-v1",
-      "summary": "Argentina added as first onboarding country: is_active=true, RU+EN country cards (published), translation_units+variants, 6 sources, 6 evidence items. ONBOARDING_COUNTRY_SLUGS=(argentina,) added to data_quality repo. AllCountriesOnboardingResult extended with onboarding_countries field. Argentina appears in /countries, opens without crash, renders empty states for CII and legal signals. Onboarding report shows russia/uruguay mvp_ready=true, argentina mvp_ready=false. DQ issues for onboarding countries are severity=warning and use onboarding_ prefixed codes so they do not fail MVP check codes. Main flow E2E test hardened to navigate to Russia/Uruguay by slug (not by list order) after Argentina changed list ordering.",
-      "status": "done",
-      "checks": [
-        "python -m pytest: 448 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check and format: passed",
-        "pnpm contracts:generate, typecheck, lint, build: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "pre-commit run --all-files: passed (prettier auto-formatted E2E test)",
-        "clean database migrations 001-022 and idempotent migration rerun: passed",
-        "Playwright: 84 passed, 0 failed"
-      ]
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "argentina-cii-integration-v1",
-      "task": "feat/argentina-cii-integration-v1",
-      "branch": "feat/argentina-cii-integration-v1",
-      "summary": "Adding Argentina CII metric values (6/6), scenario-specific CII scores (5/5), connecting Argentina to the matrix/compare endpoints. Argentina becomes a full participant in the numerical analytics layer while remaining onboarding (not MVP-ready) for legal/timeline sections.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "argentina-cii-integration-v1",
-      "task": "feat/argentina-cii-integration-v1",
-      "branch": "feat/argentina-cii-integration-v1",
-      "summary": "Argentina CII integration: 6/6 metric values (WB WGI, Heritage, GPI, TI CPI, Freedom House), 6/6 CII scores (overall 43.81 + 5 scenario scores via geometric formula). Argentina added to MVP_COUNTRIES: matrix shows 3x5=15 cells. Compare works for argentina/uruguay and argentina/russia pairs. Home overview includes Argentina. Russia/Uruguay remain mvp_ready=true. Migration 023 idempotent. 476 tests pass.",
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "argentina-legal-timeline-evidence-v1",
-      "task": "feat/argentina-legal-timeline-evidence-v1",
-      "branch": "feat/argentina-legal-timeline-evidence-v1",
-      "summary": "Adding Argentina legal signals (>=5), timeline events (>=5), evidence depth (>=15), sources (>=10), and onboarding readiness for legal/timeline/evidence sections.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "argentina-legal-timeline-evidence-v1",
-      "task": "feat/argentina-legal-timeline-evidence-v1",
-      "branch": "feat/argentina-legal-timeline-evidence-v1",
-      "summary": "Migration 024: Argentina gets 10 sources (+4), 15 evidence items (+9), 6 legal signals (residence/citizenship/tax/banking/business/political_risk), 6 timeline events (100% traceability). Argentina onboarding: legal_ready=true, timeline_ready=true, evidence_ready=true, mvp_ready=true. Russia/Uruguay remain mvp_ready=true, all_mvp_ready=true. 53 new tests, 529 total. APIs /legal-signals, /legal-signals/timeline, /sources all return Argentina data.",
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "country-expansion-closeout-v1",
-      "task": "chore/country-expansion-closeout-v1",
-      "branch": "chore/country-expansion-closeout-v1",
-      "summary": "Closeout of the Country Expansion Pipeline episode: promote Argentina from onboarding to MVP, verify all three countries are mvp_ready, full quality gate.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_completed",
-      "type": "chore",
-      "scope": "country-expansion-closeout-v1",
-      "task": "chore/country-expansion-closeout-v1",
-      "branch": "chore/country-expansion-closeout-v1",
-      "summary": "Argentina promoted from ONBOARDING_COUNTRY_SLUGS to MVP_COUNTRY_SLUGS. All 3 countries mvp_ready=True, all_mvp_ready=True, onboarding_countries=[]. Matrix 3x5=15 cells. Clean DB chain 001-024 verified. 33 new closeout tests. 563 total tests. All gates green: ruff, mypy, sqlfluff, pnpm build, pnpm typecheck, pnpm lint, web:mvp:check. Episode Country Expansion Pipeline closed.",
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "full-audit-stabilization-v1",
-      "task": "chore/full-audit-stabilization-v1",
-      "branch": "chore/full-audit-stabilization-v1",
-      "summary": "Started full audit stabilization across decision flow, data-quality, OpenAPI/runtime contracts, security/config, CI/E2E, migrations, locale, and dependency hygiene.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-23",
-      "event": "task_completed",
-      "type": "chore",
-      "scope": "full-audit-stabilization-v1",
-      "task": "chore/full-audit-stabilization-v1",
-      "branch": "chore/full-audit-stabilization-v1",
-      "summary": "Full audit stabilization complete across 8 phases. Phase 1: CHANGELOG formatting fixed, stale E2E fixed, Playwright E2E job added to GitHub Actions with migration idempotency check and artifact upload. Phase 2: Argentina country_scores + breakdowns added (migration 025), onboarding/data-quality thresholds unified via mvp_requirements.py single source of truth. Phase 3: user-stories validates origin/destination/scenario (422 not 500), rate limiter uses request.client.host by default (X-Forwarded-For not trusted), trusted_proxy_headers config added, /health and /ready excluded from rate limiter, old rate-limit windows cleaned, app_env defaults to production (fail-closed). Phase 4: translation jobs dry_run fully read-only (no status/attempts/lock mutation), stale processing lock recovery added, batch size limited via Pydantic/config. Phase 5: /ready endpoint added with DB connectivity check, /health returns environment field, OpenAPI updated and TypeScript contracts regenerated. Phase 6: Docker DATABASE_URL env-driven, migration runner adds SHA-256 checksum + advisory lock, score labels unified (score_labels.py), postcss vulnerability resolved. Phase 7: default locale normalized to ru across API/frontend, locale preserved in navigation, LocaleSwitcher connected, E2E locale tests added. Phase 8 (async safety): time.sleep removed from async flows, translation batch limits validated. 592 tests pass (0 failures). mypy/ruff/sqlfluff/pnpm quality/format:check/typecheck/lint/build all green. pre-commit clean. pnpm audit --prod no vulnerabilities.",
-      "phases_completed": [
-        "Phase 1 вЂ” Restore gates",
-        "Phase 2 вЂ” Business consistency",
-        "Phase 3 вЂ” Public API safety",
-        "Phase 4 вЂ” Translation job safety",
-        "Phase 5 вЂ” Runtime contracts",
-        "Phase 6 вЂ” Platform integrity",
-        "Phase 7 вЂ” Locale contract normalization",
-        "Phase 8 вЂ” Async/sync blocking safety"
-      ],
-      "tests_added": 29,
-      "total_tests": 592,
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-25",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "editorial-publication-foundation-v1",
-      "task": "feat/editorial-publication-foundation-v1-admin-integration",
-      "branch": "feat/editorial-publication-foundation-v1-admin-integration",
-      "summary": "Start admin content integration for publication lifecycle, audit events, legal signal domain events, legal_status contracts, and editorial data-quality checks.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-25",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "editorial-publication-foundation-v1",
-      "task": "feat/editorial-publication-foundation-v1-admin-integration",
-      "branch": "feat/editorial-publication-foundation-v1-admin-integration",
-      "summary": "Integrated editorial publication foundation into admin content flow: transactional audit for create/patch/status changes, publication transition validation, legal_signal.published domain event emission, legal_status API/OpenAPI/TypeScript contracts, and editorial data-quality guardrails. Verified clean Docker migration chain, idempotent migration rerun, domain_events count 0 after clean migration, runtime publish smoke with rollback, pytest/mypy/ruff/sqlfluff/pnpm quality/web:mvp/pre-commit green.",
-      "tests_added": 24,
-      "checks": [
-        "python -m pytest: 671 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check . --fix: passed",
-        "python -m ruff format .: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "pnpm contracts:generate: passed",
-        "pnpm quality: passed",
-        "pnpm web:mvp:check: 125 passed",
-        "python -m pre_commit run --all-files: passed",
-        "docker compose clean migration chain: passed",
-        "domain_events count after clean migration: 0"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "editorial-publication-foundation-v1",
-      "task": "chore/editorial-publication-foundation-closeout-v1",
-      "branch": "chore/editorial-publication-foundation-closeout-v1",
-      "summary": "Start final closeout for editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_completed",
-      "type": "chore",
-      "scope": "editorial-publication-foundation-v1",
-      "task": "chore/editorial-publication-foundation-closeout-v1",
-      "branch": "chore/editorial-publication-foundation-closeout-v1",
-      "summary": "Closed editorial publication foundation with clean DB chain, runtime smoke, editorial publication smoke, regression E2E, full quality gate, and verified empty outbox after clean migration. Updated pre-commit to use the project pnpm format gate instead of the crashing Windows prettier mirror hook, and tightened Python dependency floors for pydantic-settings and pytest.",
-      "checks": [
-        "docker compose up --build -d api: passed after transient Docker Hub EOF retry",
-        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 applied",
-        "docker compose exec api python scripts/apply_migrations.py: migrations 001-026 skipped on idempotency rerun",
-        "domain_events count after clean migration: 0",
-        "legal_signals legal_status null count: 0",
-        "legal_signals.status values: published only, within editorial lifecycle",
-        "health: ok",
-        "ready: ok",
-        "public API smoke: countries=3, cards=3, cii=3, matrix=3x5/15 cells, home overview=3 countries/5 winners/15 preview cells, legal signals=26 with legal_status, timeline groups=6, sources=50",
-        "python -m pytest tests/test_admin_content_publication_flow.py tests/test_domain_events_outbox.py tests/test_publication_lifecycle.py tests/test_legal_signal_legal_status_contract.py tests/test_data_quality_editorial_foundation.py: 74 passed",
-        "python -m pytest: 671 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check .: passed",
-        "python -m ruff format --check .: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "pnpm contracts:generate: passed, no OpenAPI or generated TypeScript diff",
-        "pnpm quality: passed",
-        "pnpm web:mvp:check: 125 passed",
-        "python -m pre_commit run --all-files: passed",
-        "pnpm audit --prod: no known vulnerabilities found",
-        "python -m pip_audit: remaining sqlfluff 3.5.0 dev-tool vulnerability; sqlfluff 4.x requires separate PG01 historical migration policy work",
-        "git diff --check: passed",
-        "runtime diagnostics: wrote ignored local-artifacts/runtime-diagnostics output"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "route-explorer-v1",
-      "task": "feat/route-explorer-v1",
-      "branch": "feat/route-explorer-v1",
-      "summary": "Start Route Explorer v1 foundation with route schema, source-backed seed data, and repository SQL layer.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "route-explorer-v1",
-      "task": "feat/route-explorer-v1",
-      "branch": "feat/route-explorer-v1",
-      "summary": "Added Route Explorer v1 data foundation with migration 027 routes, route_documents, route_sources, route_evidence, source-backed seed routes for Russia, Uruguay and Argentina, and SQL-only routes repository functions. Kept API, services, schemas, OpenAPI, frontend, DQ, E2E and route.published outbox integration deferred.",
-      "checks": [
-        "python -m pytest tests/test_routes_repository.py: 22 passed",
-        "python -m pytest: 693 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check .: passed",
-        "python -m ruff format --check .: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "docker compose clean migration chain: migrations 001-027 applied",
-        "docker compose migration idempotency: migrations 001-027 skipped",
-        "routes count: 9",
-        "route_documents count: 18",
-        "route_sources count: 13",
-        "route_evidence count: 9",
-        "domain_events route.published count: 0"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "route-explorer-v1",
-      "task": "feat/route-explorer-service-api-ui-v1",
-      "branch": "feat/route-explorer-service-api-ui-v1",
-      "summary": "Start Route Explorer service, API, OpenAPI contracts, and minimal frontend route browsing package.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "route-explorer-v1",
-      "task": "feat/route-explorer-service-api-ui-v1",
-      "branch": "feat/route-explorer-service-api-ui-v1",
-      "summary": "Added Route Explorer service, lifecycle/outbox foundation, public route schemas and API endpoints, regenerated OpenAPI and TypeScript contracts, integrated a minimal country-page routes block, route detail page, and focused route smoke E2E coverage.",
-      "checks": [
-        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py: 53 passed",
-        "python -m pytest tests/test_routes_repository.py tests/test_routes_service.py tests/test_routes_api.py tests/test_openapi_contract.py: 57 passed",
-        "python -m pytest: 724 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check .: passed",
-        "python -m ruff format --check .: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "pnpm contracts:generate: passed",
-        "pnpm quality: passed",
-        "pnpm build: passed",
-        "npx playwright test tests/e2e/web-mvp-routes.spec.ts: 2 passed",
-        "pnpm web:mvp:check: 127 passed",
-        "docker compose clean migration chain: migrations 001-027 applied",
-        "docker compose migration idempotency: migrations 001-027 skipped",
-        "runtime route API smoke: russia=3, uruguay=3, argentina=3, filters ok, detail returned documents/sources/evidence, unknown country=404, unknown route=404, invalid filter=422",
-        "domain_events route.published count after clean seed: 0",
-        "python -m pre_commit run --all-files: passed after line-ending auto-fix rerun",
-        "pnpm audit --prod: no known vulnerabilities found",
-        "git diff --check: passed"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "persona-layer-api-decision-integration-v1",
-      "task": "feat/persona-layer-api-decision-integration-v1",
-      "branch": "feat/persona-layer-api-decision-integration-v1",
-      "summary": "Start Persona API and runtime integration with CII, country comparison, and decision flows without changing persisted base weights or scores.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "persona-layer-api-decision-integration-v1",
-      "task": "feat/persona-layer-api-decision-integration-v1",
-      "branch": "feat/persona-layer-api-decision-integration-v1",
-      "summary": "Added public Persona API, OpenAPI/TypeScript contracts, runtime persona-adjusted CII and comparison scoring, and persona-adjusted decision ranking while preserving base persisted scores and no-persona behaviour.",
-      "checks": [
-        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py: 49 passed",
-        "python -m pytest tests/test_personas_api.py tests/test_persona_weights.py tests/test_personas_repository.py tests/test_persona_cii_integration.py tests/test_persona_cii_comparison.py tests/test_persona_decision_integration.py tests/test_frontend_contract.py tests/test_openapi_contract.py tests/test_decision_run.py tests/test_cii_country_comparison.py tests/test_cii_scenario_weights.py: 128 passed",
-        "python -m pytest: 793 passed, 23 skipped",
-        "python -m ruff format .: passed",
-        "python -m ruff check .: passed",
-        "python -m mypy .: passed",
-        "python -m sqlfluff lint database/migrations --dialect postgres: passed",
-        "pnpm contracts:generate: passed",
-        "pnpm quality: passed",
-        "docker compose clean migration chain: migrations 001-029 applied",
-        "docker compose migration idempotency: migrations 001-029 skipped",
-        "runtime persona API smoke: health ok, ready ok, personas=7, weights sum=1.0, CII persona applied, compare persona applied, decision ranking_mode=persona_adjusted",
-        "pnpm web:mvp:check: 153 passed after Docker API was running on localhost:8000"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "persona-layer-v1",
-      "task": "feat/persona-layer-dq-frontend-closeout-v1",
-      "branch": "feat/persona-layer-dq-frontend-closeout-v1",
-      "summary": "Start Persona Layer closeout with data-quality guardrails, decision UI persona selector, E2E coverage, clean DB chain, and full quality gate.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-26",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "persona-layer-v1",
-      "task": "feat/persona-layer-dq-frontend-closeout-v1",
-      "branch": "feat/persona-layer-dq-frontend-closeout-v1",
-      "summary": "Closed Persona Layer v1 with SQL-backed data quality guardrails, decision UI persona selector, persona-aware CII comparison visuals, regression E2E coverage, and clean database validation.",
-      "checks": [
-        "pnpm contracts:generate: passed",
-        "python -m pytest: 804 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests: passed",
-        "python -m ruff check .: passed",
-        "python -m ruff format --check .: passed",
-        "python -m sqlfluff lint database --dialect postgres: passed",
-        "pnpm quality: passed",
-        "pnpm format:check: passed",
-        "pnpm exec playwright test tests/e2e/web-mvp-personas.spec.ts --reporter=line: 7 passed",
-        "ADMIN_TOKEN=ci-local-admin pnpm web:mvp:check: 160 passed",
-        "docker compose clean migration chain: migrations 001-029 applied",
-        "docker compose migration idempotency: migrations 001-029 skipped",
-        "clean database seed counts: active personas=7, persona_metric_modifiers v1.0=42",
-        "runtime smoke: personas list ok, family relocation_residence weight_sum=1.0, country CII persona applied, country compare persona applied, decision ranking_mode=persona_adjusted",
-        "data quality smoke: overall_status=valid, critical_issues_count=0, persona_critical_count=0, persona checks passed",
-        "python -m pre_commit run --all-files: passed"
-      ],
-      "status": "completed"
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "platform-foundations-v1",
-      "task": "feat/platform-foundations-v1",
-      "branch": "feat/platform-foundations-v1",
-      "summary": "Start Platform Foundations v1 with baseline inspection, migration 030 platform tables, anonymous analytics API, OpenAPI contracts, and minimal frontend analytics helper.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "platform-foundations-v1",
-      "task": "feat/platform-foundations-v1",
-      "branch": "feat/platform-foundations-v1",
-      "summary": "Started Episode 5 Platform Foundations v1 with migration 030 platform tables, privacy-safe anonymous analytics ingestion, HMAC session hashing, PII metadata rejection, OpenAPI/TypeScript contract updates, minimal frontend analytics helper, decision/persona instrumentation, and analytics E2E smoke. Feature flag tables were created as database foundation only; no feature flag runtime/admin/API/UI was added.",
-      "status": "completed",
-      "gate": {
-        "baseline_pytest": "823 passed, 23 skipped",
-        "baseline_ruff": "All checks passed",
-        "focused_pytest": "38 passed before full gate; analytics/platform tests included",
-        "pytest_full": "850 passed, 23 skipped",
-        "mypy": "no issues found in 163 source files",
-        "ruff_check": "All checks passed",
-        "ruff_format": "165 files already formatted",
-        "sqlfluff": "All Finished",
-        "contracts_generate": "passed via corepack pnpm@9.12.0 contracts:generate",
-        "pnpm_quality": "passed",
-        "pnpm_format_check": "passed",
-        "pnpm_web_mvp_check": "162 passed after recreating Docker API with ADMIN_TOKEN=ci-test-admin-token",
-        "pre_commit": "all hooks passed",
-        "docker_migration_clean": "001-030 applied",
-        "docker_migration_idempotency": "001-030 skipped on second run",
-        "runtime_smoke": "health ok; analytics valid event stored; PII email rejected; raw session not stored",
-        "docs_unchanged": "true",
-        "readme_md_txt_unchanged": "true",
-        "feature_flags_runtime_added": "false",
-        "redis_runtime_added": "false",
-        "product_math_changed": "false"
-      }
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "platform-runtime-foundations-v1",
-      "task": "feat/platform-runtime-foundations-v1",
-      "branch": "feat/platform-runtime-foundations-v1",
-      "summary": "Start Platform Runtime Foundations with feature flags runtime, Redis cache foundation, public country data journal, OpenAPI contracts, minimal frontend integration, DQ checks, and full quality gate.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "platform-runtime-foundations-v1",
-      "task": "feat/platform-runtime-foundations-v1",
-      "branch": "feat/platform-runtime-foundations-v1",
-      "summary": "Completed Platform Runtime Foundations v1: feature flags runtime and public API, optional Redis cache foundation with best-effort invalidation, public country data journal derived from public-safe source-backed data, minimal country page integration, OpenAPI/TypeScript contracts, runtime DQ checks, Docker migration smoke, and full quality gate.",
-      "status": "completed",
-      "gate": {
-        "baseline_pytest": "tests reached 100% but Windows temp cleanup raised PermissionError in system temp; rerun with local TMP passed later",
-        "baseline_ruff": "All checks passed",
-        "baseline_typecheck": "passed",
-        "focused_pytest": "42 passed",
-        "pytest_full": "880 passed, 23 skipped",
-        "mypy": "no issues found in 179 source files",
-        "ruff_check": "All checks passed",
-        "ruff_format": "181 files formatted/checked clean after format",
-        "sqlfluff": "All Finished",
-        "contracts_generate": "passed via corepack pnpm@9.12.0 contracts:generate",
-        "pnpm_quality": "passed",
-        "pnpm_format_check": "passed",
-        "pnpm_web_mvp_check": "167 passed",
-        "docker_migration_clean": "001-031 applied",
-        "docker_migration_idempotency": "001-031 skipped on second run",
-        "runtime_smoke": "health ok; platform features ok; data_journal_enabled enabled for public; Russia/Uruguay/Argentina journals ok",
-        "docs_unchanged": "true",
-        "readme_md_txt_unchanged": "true",
-        "migration_030_unchanged": "true",
-        "product_math_changed": "false",
-        "analytics_privacy_changed": "false"
-      }
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "platform-foundations-closeout-v1",
-      "task": "chore/platform-foundations-closeout-v1",
-      "branch": "chore/platform-foundations-closeout-v1",
-      "summary": "Start Platform Foundations closeout with clean DB chain, runtime diagnostics, cache mode smoke, Redis failure safety, regression flows, full gate, and final merge/push.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_completed",
-      "type": "chore",
-      "scope": "platform-foundations-closeout-v1",
-      "task": "chore/platform-foundations-closeout-v1",
-      "branch": "chore/platform-foundations-closeout-v1",
-      "summary": "Closed Platform Foundations with clean migration chain 001-031, idempotent migrations, runtime diagnostics for analytics/features/data-journal endpoints, CACHE_MODE null and redis smoke, Redis failure fallback, public-safe data journal checks, feature-flag visibility smoke, legacy countries/routes/persona/notifier flows, and full quality gate.",
-      "checks": [
-        "clean DB chain 001-031: 31 migrations applied through 031_platform_runtime_foundations_v1.sql",
-        "apply_migrations.py idempotency: second run skipped 001-031",
-        "runtime diagnostics captured for analytics events, platform features, data_journal_enabled, and Russia/Uruguay/Argentina data journals",
-        "CACHE_MODE=null runtime smoke passed",
-        "CACHE_MODE=redis runtime smoke passed",
-        "Redis stopped while CACHE_MODE=redis: health/countries/country card/features/data journal stayed available",
-        "data journal responses checked for no changed_by/raw_diff/internal_metadata",
-        "data_journal_enabled feature detail and E2E visibility verified",
-        "legacy flows verified: countries, routes, persona decision, analytics, frontend MVP flows",
-        "backend quality: ruff, ruff format check, mypy, pytest 880 passed / 23 skipped, sqlfluff",
-        "runtime smoke: 23 passed",
-        "notifier quality: protobuf generation, gofmt, go vet, go test passed in Linux Go container",
-        "frontend quality: contracts generated with no diff, prettier check, lint, typecheck, build passed",
-        "Playwright E2E: 167 passed"
-      ],
-      "status": "completed",
-      "risk": "No feature changes. Diagnostics only; runtime artifacts ignored. Local root frontend scripts required pinned pnpm direct invocation because bundled bare pnpm is newer than packageManager and mismatches lockfile overrides.",
-      "flags": {
-        "features_added": "false",
-        "admin_ui_added": "false",
-        "mutation_api_added": "false",
-        "redis_invalidation_expanded": "false",
-        "auth_rbac_changed": "false",
-        "trust_score_started": "false",
-        "drift_started": "false",
-        "ai_community_started": "false"
-      }
-    },
-    {
-      "date": "2026-06-29",
-      "event": "task_started",
-      "type": "chore",
-      "scope": "codebase-decomposition-and-changelog-compaction-v1",
-      "task": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "branch": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "summary": "Start maintainability closeout: inventory oversized production files, decompose safe targets, thin entrypoints, compact machine-readable changelog history, and prove no product behaviour drift through the full quality gate.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_completed",
-      "type": "chore",
-      "scope": "codebase-decomposition-and-changelog-compaction-v1",
-      "task": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "branch": "chore/codebase-decomposition-and-changelog-compaction-v1",
-      "summary": "Closed the maintainability block by decomposing oversized production modules, thinning executable entrypoints, compacting historical changelog data into schema v2, and re-running the backend, frontend, runtime, notifier, and pre-commit gates without product behavior changes.",
-      "changes": [
-        "split apps/api/app/repositories/data_quality.py into a repository package with focused content, CII, review, routes, personas, platform, and shared modules",
-        "split apps/api/app/services/data_quality.py into a service package with issue helpers, report orchestration, publication, persona checks, and platform checks",
-        "moved decision-engine user-story repository helpers into apps/api/app/repositories/decision_engine_user_stories.py while preserving old imports",
-        "moved FastAPI app assembly into apps/api/app/bootstrap/app_factory.py and kept apps/api/app/main.py as a thin compatibility entrypoint",
-        "moved migration and outbox relay runtime logic into scripts/migration_runner.py and scripts/outbox_relay_runner.py with thin script wrappers",
-        "moved notifier command runtime logic into apps/notifier/internal/app/app.go with a thin cmd/notifier main",
-        "compacted CHANGELOG.json from schema v1 history into schema v2 with history summaries and the latest full entries retained"
-      ],
-      "checks": [
-        "line-count inventory: no production source file remains above 1000 lines; only generated/config/lock/migration artifacts remain above the threshold",
-        "entrypoint inventory: apps/api/app/main.py 77 lines, apps/notifier/cmd/notifier/main.go 5 lines, scripts/apply_migrations.py 47 lines, scripts/outbox_relay.py 64 lines",
-        "python -m json.tool CHANGELOG.json passed",
-        "python -m pytest: 880 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests passed",
-        "python -m ruff check . passed",
-        "python -m ruff format --check . passed",
-        "python -m sqlfluff lint database --dialect postgres passed",
-        "pnpm install --frozen-lockfile passed",
-        "pnpm contracts:generate passed with no generated contract diff",
-        "pnpm typecheck, pnpm lint, pnpm build, pnpm quality, and pnpm format:check passed",
-        "clean Docker migration chain 001-031 applied, second apply_migrations.py run skipped all applied migrations",
-        "RUN_RUNTIME_SMOKE_TESTS=1 python -m pytest tests/smoke/ -v: 23 passed",
-        "pnpm web:mvp:check passed with 167 Playwright tests after setting the same ADMIN_TOKEN in the local test runner and API container",
-        "notifier Linux container gate passed: protobuf generation, gofmt, go test ./..., go vet ./...",
-        "python -m pre_commit run --all-files passed"
-      ],
-      "status": "completed",
-      "risk": "No product behavior changes were intended. Compatibility re-exports were kept for old imports and tests. Local web MVP gate requires ADMIN_TOKEN to match the API container token for the protected data-quality API smoke."
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "self-computed-intelligence-v1",
-      "task": "feat/self-computed-intelligence-v1",
-      "branch": "feat/self-computed-intelligence-v1",
-      "summary": "Start self-computed intelligence foundation with platform metrics table, SQL-only repositories, and deterministic calculation services for LVI, SSRS, and contradiction score.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "self-computed-intelligence-v1",
-      "task": "feat/self-computed-intelligence-v1",
-      "branch": "feat/self-computed-intelligence-v1",
-      "summary": "Completed the self-computed intelligence foundation by adding the country_platform_metrics persistence layer, SQL-only metric repositories, deterministic LVI/SSRS/contradiction services, and focused regression coverage without exposing new API or frontend surface.",
-      "changes": [
-        "added migration 032_self_computed_intelligence_v1.sql with country_platform_metrics, deterministic constraints, idempotent indexes, and no seed metric rows",
-        "added apps/api/app/repositories/platform_metrics.py as a SQL-only repository for active countries, legal inputs, scenario inputs, contradiction inputs, and metric upserts/reads",
-        "added deterministic metric services for legal_velocity_index, scenario_specific_risk_score, and contradiction_score with methodology metadata, confidence/freshness labels, and input summaries",
-        "added orchestration helpers for computing and storing one country or all active countries without changing public API, OpenAPI, frontend, contracts, CII, DQ, decision engine, auth, or docs",
-        "added focused repository, service, and orchestration tests covering constraints, idempotent upserts, sample guards, deterministic labels, scenario scoping, and no mutation of inputs"
-      ],
-      "checks": [
-        "branch started from main after git pull --ff-only origin main",
-        "baseline checks passed before implementation: python -m pytest tests/test_frontend_contract.py, python -m ruff check ., git diff --check",
-        "clean Docker migration chain 001-032 applied from an empty database; second scripts/apply_migrations.py run skipped all applied migrations",
-        "country_platform_metrics remained empty after migrations as required",
-        "python -m pytest tests/test_platform_metrics_repository.py tests/test_legal_velocity.py tests/test_scenario_risk.py tests/test_contradiction_score.py tests/test_platform_metrics_service.py: 73 passed",
-        "python -m pytest: 953 passed, 23 skipped",
-        "python -m mypy apps packages scripts tests passed",
-        "python -m ruff check . --fix passed",
-        "python -m ruff format . left 209 files unchanged",
-        "python -m sqlfluff lint database --dialect postgres passed",
-        "pnpm typecheck, pnpm lint, pnpm build, pnpm quality, pnpm format:check, and pnpm format passed with pnpm 9.12.0",
-        "pnpm web:mvp:check passed with 167 Playwright tests",
-        "notifier Linux Go 1.25 container gate passed after local protobuf generation: go test ./..., go vet ./..., gofmt clean",
-        "forbidden-scope check passed: no docs, README, markdown/txt, frontend, OpenAPI/generated contract, pnpm-lock, CII, DQ, decision, or auth changes",
-        "new-file inventory passed: no new file exceeds 1000 lines and no comments/docstrings were added to the new backend/test files",
-        "git diff --check passed"
-      ],
-      "status": "completed",
-      "risk": "Foundation-only change. Metrics are persisted and computed by internal services only; no public API, frontend, generated contract, CII, data-quality, decision-engine, auth/RBAC, Trust Score, Drift, AI, or community behavior was changed."
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "self-computed-intelligence-v1",
-      "task": "feat/self-computed-intelligence-surface-v1",
-      "branch": "feat/self-computed-intelligence-surface-v1",
-      "summary": "Start self-computed intelligence surface with feature flag, recompute runtime, admin/public API, OpenAPI contracts, Data Quality, minimal frontend integration, E2E, and full Episode 6 closeout.",
-      "status": "in_progress"
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "self-computed-intelligence-v1",
-      "task": "feat/self-computed-intelligence-surface-v1",
-      "branch": "feat/self-computed-intelligence-surface-v1",
-      "summary": "Completed the self-computed intelligence surface layer: feature flag, recompute runtime, admin and public API, OpenAPI/TypeScript contracts, 8 Data Quality checks, and thin frontend integration.",
-      "changes": [
-        "added migration 033_self_computed_intelligence_feature_flag_v1.sql: feature_flags row for self_computed_intelligence (enabled/public/default_enabled=TRUE) and one public access rule",
-        "added apps/api/app/services/platform_metrics_runtime.py: compute_platform_metrics_for_country, compute_platform_metrics_for_all_countries, compute_one_platform_metric with dry_run support and feature flag guard",
-        "added apps/api/app/api/v1/platform_metrics.py: list_country_platform_metrics (GET), get_country_platform_metric (GET), admin_recompute_all_platform_metrics (POST), admin_recompute_country_platform_metrics (POST) with feature flag guard and valid metric key/scenario validation",
-        "added apps/api/app/schemas/platform_metrics.py: PlatformMetricInputSummary, PlatformMetric, PlatformMetricListResponse, PlatformMetricDetailResponse, PlatformMetricsRecomputeRequest, PlatformMetricsRecomputeResult, PlatformMetricsRecomputeSummary",
-        "registered platform_metrics router before countries router in apps/api/app/bootstrap/app_factory.py to avoid slug capture",
-        "regenerated contracts/openapi.yaml from FastAPI runtime and re-ran pnpm contracts:generate to update packages/contracts/generated/types.ts",
-        "added 3 new contract types to apps/web/src/shared/api/contracts-check.ts: PlatformMetric, PlatformMetricListResponse, PlatformMetricsRecomputeSummary",
-        "added apps/web/src/shared/api/platform-metrics.ts: getCountryPlatformMetrics, getCountryPlatformMetric, platformMetricsApi",
-        "added apps/web/src/features/platform-intelligence/: PlatformMetricLabelBadge, PlatformMetricEmptyState, PlatformMetricCard, PlatformIntelligenceBlock, DecisionRiskContext, index.ts",
-        "extended apps/web/src/app/countries/[slug]/page.tsx with platform-intelligence-section",
-        "extended apps/web/src/features/decision-run/DecisionRunForm.tsx with DecisionRiskContext after decision result",
-        "added scripts/recompute_platform_metrics.py: CLI for --all/--country recompute with dry-run and metric/scenario filter options",
-        "added 8 DQ checks in apps/api/app/services/data_quality/platform_metrics_checks.py: value_invalid (critical), insufficient_data_inconsistent (critical), methodology_missing (critical), computed_at_missing (critical), stale (warning), high_confidence_low_sample (warning), global_missing (warning), scenario_missing (warning)",
-        "wired _append_platform_metrics_checks into apps/api/app/services/data_quality/platform_checks.py",
-        "added 8 DQ repository functions in apps/api/app/repositories/data_quality/platform_metrics.py",
-        "added tests/e2e/web-mvp-platform-intelligence.spec.ts with 9 E2E tests"
-      ],
-      "checks": [
-        "python -m ruff check apps/api/app/ tests/ scripts/: All checks passed",
-        "python -m mypy apps/api/app --ignore-missing-imports: Success, no issues found in 129 source files",
-        "python -m sqlfluff lint database/migrations/033_self_computed_intelligence_feature_flag_v1.sql --dialect postgres: All Finished",
-        "python -m pytest tests/test_platform_metrics_runtime.py tests/test_platform_metrics_api.py tests/test_platform_metrics_data_quality.py tests/test_data_quality_validation.py: 56 passed",
-        "python -m pytest tests/ -p no:tmpdir: 0 FAILED (3 pre-existing tmp_path errors unrelated to this branch)",
-        "pnpm format:check: All matched files use Prettier code style",
-        "pnpm lint: passed",
-        "pnpm typecheck: passed",
-        "pnpm build: passed",
-        "pnpm web:mvp:check: static/no-server E2E tests pass; DB-dependent tests require running backend (pre-existing infrastructure constraint)",
-        "pre-commit run --all-files: all hooks passed (trim-whitespace, fix-end-of-files, check-yaml, check-json, check-toml, check-for-large-files, mixed-line-ending, ruff-check, ruff-format, prettier, sqlfluff-fix)",
-        "go test (notifier testable packages): internal/health, internal/metrics, internal/mongo, internal/notifier, internal/subscriptions, internal/telegram/bot, internal/telegram/commands: all passed (cached)",
-        "forbidden-scope check passed: CII, decision scoring, decision ranking, Persona semantics, Route semantics, Signal Alerts semantics, Platform Foundations semantics, analytics privacy rules, scenario_metric_weights, country_cii_scores, country_scores, migration 032 not modified"
-      ],
-      "status": "completed",
-      "risk": "Self-computed metrics (LVI, SSRS, Contradiction Score) are stored in country_platform_metrics and exposed via a feature-flag-gated API. They do not affect CII, scenario weights, decision scoring, or decision ranking. The feature flag defaults to enabled/public. Admin recompute endpoints require ADMIN_TOKEN."
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_started",
-      "type": "feat",
-      "scope": "trust-transparency",
-      "task": "trust_transparency_surface_v1",
-      "branch": "feat/trust-transparency-surface-v1",
-      "summary": "Episode 7: Trust and Transparency Surface — country_trust_scores, methodology_sections, glossary_terms, trust computation, /trust /methodology /glossary endpoints, DQ checks, E2E tests.",
-      "changes": [],
-      "checks": [],
-      "status": "in_progress",
-      "risk": ""
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_completed",
-      "type": "feat",
-      "scope": "trust-transparency",
-      "task": "trust_transparency_surface_v1",
-      "branch": "feat/trust-transparency-surface-v1",
-      "summary": "Episode 7 complete: migration 034 (country_trust_scores, methodology_sections, glossary_terms, feature flag enabled/public), repositories (trust, methodology, glossary), services (trust_score pure computation with downside cap, trust_runtime orchestration with feature flag), schemas, API routers (/countries/{slug}/trust, /methodology, /glossary, admin recompute), DQ checks (trust values, stale scores, missing methodology/glossary), TrustBadge/FreshnessBadge/DisclaimerNotice/LastVerifiedAt UI, TrustSurfaceBlock feature, /methodology page, recompute script, OpenAPI regenerated, TypeScript contracts updated, 72 new tests passed.",
-      "changes": [
-        "database/migrations/034_trust_transparency_surface_v1.sql",
-        "apps/api/app/repositories/trust.py",
-        "apps/api/app/repositories/methodology.py",
-        "apps/api/app/repositories/glossary.py",
-        "apps/api/app/repositories/data_quality/trust.py",
-        "apps/api/app/repositories/data_quality/__init__.py",
-        "apps/api/app/services/trust_score.py",
-        "apps/api/app/services/trust_runtime.py",
-        "apps/api/app/services/data_quality/trust_checks.py",
-        "apps/api/app/services/data_quality/report.py",
-        "apps/api/app/schemas/trust.py",
-        "apps/api/app/schemas/methodology.py",
-        "apps/api/app/schemas/glossary.py",
-        "apps/api/app/api/v1/trust.py",
-        "apps/api/app/api/v1/methodology.py",
-        "apps/api/app/api/v1/glossary.py",
-        "apps/api/app/bootstrap/app_factory.py",
-        "contracts/openapi.yaml",
-        "packages/contracts/generated/types.ts",
-        "apps/web/src/shared/api/trust.ts",
-        "apps/web/src/shared/api/methodology.ts",
-        "apps/web/src/shared/api/glossary.ts",
-        "apps/web/src/shared/api/index.ts",
-        "apps/web/src/shared/api/contracts-check.ts",
-        "apps/web/src/shared/ui/TrustBadge.tsx",
-        "apps/web/src/shared/ui/FreshnessBadge.tsx",
-        "apps/web/src/shared/ui/DisclaimerNotice.tsx",
-        "apps/web/src/shared/ui/LastVerifiedAt.tsx",
-        "apps/web/src/features/trust-surface/TrustSurfaceBlock.tsx",
-        "apps/web/src/features/trust-surface/index.ts",
-        "apps/web/src/app/countries/[slug]/page.tsx",
-        "apps/web/src/app/methodology/page.tsx",
-        "scripts/recompute_trust_scores.py",
-        "apps/api/tests/test_trust_score.py",
-        "tests/test_trust_data_quality.py",
-        "tests/test_data_quality_validation.py",
-        "tests/e2e/web-mvp-trust-transparency.spec.ts"
-      ],
-      "checks": [
-        "ruff check: 0 errors",
-        "ruff format: clean",
-        "mypy: 0 errors (15 files)",
-        "sqlfluff: migration 034 clean",
-        "pytest apps/api/tests: 49 passed",
-        "pytest tests (unit): all passed",
-        "pnpm typecheck: clean",
-        "pnpm lint: clean",
-        "openapi contract: 4 passed"
-      ],
-      "status": "completed",
-      "risk": ""
-    },
-    {
-      "date": "2026-06-30",
-      "event": "task_completed",
-      "type": "fix",
-      "scope": "trust-transparency",
-      "task": "trust_transparency_surface_v1_gaps",
-      "branch": "main",
-      "summary": "Episode 7 gap fixes: (1) script bug fixed - recompute_trust_scores.py exit code now uses countries_failed key; (2) DQ check added for active countries missing trust scores (critical); (3) count_missing_country_trust_scores added to trust repo; (4) Glossary section added to /methodology page fetched from API; (5) Decision page now shows per-country trust label and freshness via DecisionCountryTrustBadge; (6) DisclaimerNotice added to decision results, route detail, and legal signals pages; (7) ConfidenceBadge now reused in TrustSurfaceBlock; (8) LastVerifiedAt shows explicit unknown state text; (9) Link to /methodology added in TrustSurfaceBlock; (10) E2E tests extended with glossary, disclaimer, locale, and legal-signals coverage.",
-      "quality_gate": {
-        "mypy": "pass - 0 issues in 236 files",
-        "ruff": "pass - all checks passed",
-        "pytest_root": "pass - 55 passed",
-        "pytest_api": "pass - 49 passed",
-        "pnpm_typecheck": "pass",
-        "pnpm_lint": "pass"
-      },
-      "changed_files": [
-        "scripts/recompute_trust_scores.py",
-        "apps/api/app/repositories/trust.py",
-        "apps/api/app/services/data_quality/trust_checks.py",
-        "tests/test_data_quality_validation.py",
-        "tests/test_trust_data_quality.py",
-        "apps/web/src/shared/ui/LastVerifiedAt.tsx",
-        "apps/web/src/features/trust-surface/TrustSurfaceBlock.tsx",
-        "apps/web/src/features/decision-run/DecisionCountryTrustBadge.tsx",
-        "apps/web/src/features/decision-run/DecisionResultCard.tsx",
-        "apps/web/src/features/decision-run/DecisionResults.tsx",
-        "apps/web/src/app/methodology/page.tsx",
-        "apps/web/src/app/routes/[id]/page.tsx",
-        "apps/web/src/app/legal-signals/page.tsx",
-        "tests/e2e/web-mvp-trust-transparency.spec.ts"
-      ]
-    },
-    {
-      "event": "task_started",
-      "episode": 7,
-      "task": "trust-transparency-runtime-closeout-v1",
-      "branch": "chore/trust-transparency-runtime-closeout-v1",
-      "date": "2026-06-30",
-      "description": "Runtime gate for Episode 7: clean DB chain, full DQ slug coverage, admin auth tests, contradiction context UI, E2E hardening"
+      "preserved_full_entries": 6,
+      "summarized_entries": 48,
+      "history_summary_count": 62
     },
     {
       "event": "task_completed",
@@ -1837,16 +1426,6 @@
       }
     },
     {
-      "event": "task_started",
-      "type": "chore",
-      "scope": "runtime-gate-and-error-surface-hardening-v1",
-      "task": "chore/runtime-gate-and-error-surface-hardening-v1",
-      "branch": "chore/runtime-gate-and-error-surface-hardening-v1",
-      "date": "2026-06-30",
-      "summary": "Start Episode 8 preflight hardening: bootstrap runtime read models before runtime/E2E gates, expose API failures distinctly from empty read-model states, pin pre-commit pnpm invocation, and add notifier HTTP timeouts.",
-      "status": "in_progress"
-    },
-    {
       "event": "task_completed",
       "type": "chore",
       "scope": "runtime-gate-and-error-surface-hardening-v1",
@@ -1875,6 +1454,47 @@
       ],
       "status": "completed",
       "risk": "No scoring, CII math, scenario weights, auth/RBAC, Drift, Trust Score semantics, production deployment flow, or new product feature scope was changed. Contract diffs are limited to generated schema/default metadata after replacing mutable list defaults."
+    },
+    {
+      "date": "2026-06-30",
+      "event": "task_completed",
+      "type": "fix",
+      "scope": "notifier-protobuf-and-e2e-gate-stability-v1",
+      "task": "fix/notifier-protobuf-and-e2e-gate-stability-v1",
+      "branch": "main",
+      "summary": "Fixed two defects blocking a clean-checkout gate. (1) Go notifier failed to build: the generated gRPC package internal/grpc/pb was gitignored and never committed; un-ignored and committed the generated files, added `make notifier-proto` (codegen) and `make notifier-test` (codegen + go test) so the package is reproducible. (2) E2E failed non-deterministically (~10-13 moving timeouts): the API rate limiter (per client-host, 600/min) throttled the Next.js SSR server, since all SSR fetches share one host bucket exhausted by 10 parallel Playwright workers, returning 429 and rendering empty pages; skip rate limiting when app_env != production (production unchanged).",
+      "checks": [
+        "playwright: 204 passed",
+        "pytest: 1036 passed",
+        "notifier go test ./...: all packages passed",
+        "go vet: clean",
+        "gofmt: clean",
+        "mypy: no issues found in 238 source files",
+        "ruff check: All checks passed",
+        "ruff format --check: 240 files already formatted",
+        "sqlfluff: All Finished",
+        "pnpm format:check / lint / typecheck / build: passed",
+        "pre-commit run --all-files: all hooks passed"
+      ],
+      "status": "completed"
+    },
+    {
+      "event": "task_started",
+      "episode": 7,
+      "task": "trust-transparency-runtime-closeout-v1",
+      "branch": "chore/trust-transparency-runtime-closeout-v1",
+      "date": "2026-06-30",
+      "description": "Runtime gate for Episode 7: clean DB chain, full DQ slug coverage, admin auth tests, contradiction context UI, E2E hardening"
+    },
+    {
+      "event": "task_started",
+      "type": "chore",
+      "scope": "runtime-gate-and-error-surface-hardening-v1",
+      "task": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "branch": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "date": "2026-06-30",
+      "summary": "Start Episode 8 preflight hardening: bootstrap runtime read models before runtime/E2E gates, expose API failures distinctly from empty read-model states, pin pre-commit pnpm invocation, and add notifier HTTP timeouts.",
+      "status": "in_progress"
     }
   ]
 }
