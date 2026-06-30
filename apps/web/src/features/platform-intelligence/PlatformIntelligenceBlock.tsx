@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import { isApiError } from "../../shared/api";
 import type { PlatformMetricListResponse } from "../../shared/api/platform-metrics";
 import type { LocaleCode } from "../../shared/api/countries";
 import { getCountryPlatformMetrics } from "../../shared/api/platform-metrics";
+import { ErrorState } from "../../shared/ui/ErrorState";
 import { PlatformMetricCard } from "./PlatformMetricCard";
 import { PlatformMetricEmptyState } from "./PlatformMetricEmptyState";
 
@@ -18,20 +20,23 @@ export function PlatformIntelligenceBlock({
   locale,
 }: PlatformIntelligenceBlockProps) {
   const [data, setData] = useState<PlatformMetricListResponse | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setError(null);
     getCountryPlatformMetrics(countrySlug, locale)
       .then((res) => {
         if (isMounted) {
           setData(res);
         }
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (isMounted) {
           setData(null);
+          setError(err);
         }
       })
       .finally(() => {
@@ -46,6 +51,14 @@ export function PlatformIntelligenceBlock({
 
   if (isLoading) {
     return <div className="notice">Загрузка данных платформенного интеллекта...</div>;
+  }
+
+  if (error !== null) {
+    return (
+      <div data-testid="platform-intelligence-error">
+        <ErrorState error={isApiError(error) ? error : undefined} />
+      </div>
+    );
   }
 
   const items = data?.items ?? [];

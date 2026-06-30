@@ -3,10 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import type { CountryTrustResponse, LocaleCode } from "../../shared/api";
+import {
+  isApiError,
+  type CountryTrustResponse,
+  type LocaleCode,
+} from "../../shared/api";
 import { getCountryTrust } from "../../shared/api/trust";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
+import { ErrorState } from "../../shared/ui/ErrorState";
 import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
 import { TrustBadge } from "../../shared/ui/TrustBadge";
@@ -18,17 +23,30 @@ type TrustSurfaceBlockProps = {
 
 export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProps) {
   const [data, setData] = useState<CountryTrustResponse | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
+  const [isNotComputed, setIsNotComputed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setError(null);
+    setIsNotComputed(false);
     getCountryTrust(countrySlug, locale)
       .then((res) => {
-        if (isMounted) setData(res);
+        if (isMounted) {
+          setData(res);
+        }
       })
-      .catch(() => {
-        if (isMounted) setData(null);
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setData(null);
+          if (isApiError(err) && err.error?.code === "trust_not_found") {
+            setIsNotComputed(true);
+          } else {
+            setError(err);
+          }
+        }
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -42,7 +60,15 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
     return <div className="notice">Загрузка индикатора доверия...</div>;
   }
 
-  if (!data) {
+  if (error !== null) {
+    return (
+      <div data-testid="trust-surface-error">
+        <ErrorState error={isApiError(error) ? error : undefined} />
+      </div>
+    );
+  }
+
+  if (!data || isNotComputed) {
     return (
       <div className="notice" data-testid="trust-surface-empty">
         Данные о доверии к источникам ещё не вычислены для этой страны.

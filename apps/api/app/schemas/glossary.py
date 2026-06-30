@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class GlossaryTerm(BaseModel):
@@ -7,7 +7,7 @@ class GlossaryTerm(BaseModel):
     term: str
     definition: str
     category: str
-    related_terms: list[str] = []
+    related_terms: list[str] = Field(default_factory=list)
     display_order: int
     updated_at: datetime | None = None
 

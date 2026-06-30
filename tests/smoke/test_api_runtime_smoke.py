@@ -15,6 +15,7 @@ SCENARIOS = [
     "business_self_employment",
     "safety_political_risk",
 ]
+COUNTRIES = ["russia", "uruguay", "argentina"]
 
 pytestmark = pytest.mark.skipif(
     os.getenv("RUN_RUNTIME_SMOKE_TESTS") != "1",
@@ -141,6 +142,28 @@ def test_data_quality_report_smoke() -> None:
         headers={"X-Admin-Token": ADMIN_TOKEN},
     )
     assert {"valid", "issues"}.issubset(body)
+
+
+@pytest.mark.parametrize("country_slug", COUNTRIES)
+def test_trust_scores_bootstrapped_smoke(country_slug: str) -> None:
+    body = get_json(f"/api/v1/countries/{country_slug}/trust")
+    assert body["country_slug"] == country_slug
+    assert body["trust_label"] in {
+        "very_high",
+        "high",
+        "medium",
+        "low",
+        "very_low",
+        "insufficient_data",
+    }
+    assert "components" in body
+
+
+@pytest.mark.parametrize("country_slug", COUNTRIES)
+def test_platform_metrics_bootstrapped_smoke(country_slug: str) -> None:
+    body = get_json(f"/api/v1/countries/{country_slug}/platform-metrics")
+    assert body["country_slug"] == country_slug
+    assert len(body["items"]) >= 7
 
 
 def test_unsupported_locale_smoke() -> None:

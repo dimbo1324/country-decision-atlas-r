@@ -68,7 +68,14 @@ func Run() {
 	consumer := kafkaconsumer.NewKafkaConsumer(cfg.KafkaBrokers, cfg.KafkaTopic, cfg.KafkaConsumerGroup)
 	defer func() { _ = consumer.Close() }()
 
-	httpSrv := &http.Server{Addr: cfg.NotifierHTTPAddr, Handler: health.Handler(metricsCollector)}
+	httpSrv := &http.Server{
+		Addr:              cfg.NotifierHTTPAddr,
+		Handler:           health.Handler(metricsCollector),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
 	go func() {
 		if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("health server error: %v", err)

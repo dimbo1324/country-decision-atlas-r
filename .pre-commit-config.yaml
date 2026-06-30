@@ -29,7 +29,7 @@ repos:
     hooks:
       - id: prettier-format-check
         name: prettier
-        entry: pnpm format:check
+        entry: corepack pnpm@9.12.0 format:check
         language: system
         pass_filenames: false
 

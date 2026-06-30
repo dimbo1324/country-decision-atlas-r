@@ -46,6 +46,34 @@ test("platform intelligence block shows empty state when no metrics computed", a
   await expectNoAppCrash(page);
 });
 
+test("platform intelligence shows API error when metrics endpoint fails", async ({
+  page,
+}) => {
+  await page.route(
+    `${API_BASE_URL}/api/v1/countries/russia/platform-metrics**`,
+    async (route) => {
+      await route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: {
+            code: "forced_platform_metrics_failure",
+            message: "Forced platform metrics failure",
+          },
+        }),
+      });
+    },
+  );
+
+  await page.goto(e2eRoutes.country("russia", "ru"));
+  await expectPageReady(page);
+  await expect(page.getByTestId("platform-intelligence-error")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByTestId("platform-intelligence-empty")).not.toBeVisible();
+  await expectNoAppCrash(page);
+});
+
 test("platform intelligence handles insufficient_data metrics gracefully", async ({
   page,
 }) => {

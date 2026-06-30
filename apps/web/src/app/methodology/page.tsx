@@ -74,7 +74,7 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
             >
               <h3 className="methodologySectionTitle">{term.term}</h3>
               <p>{term.definition}</p>
-              {term.related_terms.length > 0 && (
+              {term.related_terms && term.related_terms.length > 0 && (
                 <p className="relatedTerms">
                   Связанные термины: {term.related_terms.join(", ")}
                 </p>

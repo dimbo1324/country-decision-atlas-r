@@ -1,6 +1,6 @@
 from app.schemas.common import LocaleResolution, Pagination
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 
 
@@ -23,7 +23,7 @@ class Scenario(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
-    criteria: list[ScenarioCriterion] = []
+    criteria: list[ScenarioCriterion] = Field(default_factory=list)
 
 
 class ScenarioListResponse(BaseModel):

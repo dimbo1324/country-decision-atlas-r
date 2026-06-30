@@ -5120,7 +5120,6 @@ components:
             $ref: '#/components/schemas/Source'
           type: array
           title: Source References
-          default: []
       type: object
       required:
       - id
@@ -5802,7 +5801,6 @@ components:
             type: string
           type: array
           title: Related Terms
-          default: []
         display_order:
           type: integer
           title: Display Order
@@ -6661,19 +6659,16 @@ components:
             type: string
           type: array
           title: Missing Fields
-          default: []
         stale_fields:
           items:
             type: string
           type: array
           title: Stale Fields
-          default: []
         fields:
           items:
             $ref: '#/components/schemas/TranslationFieldMeta'
           type: array
           title: Fields
-          default: []
       type: object
       required:
       - requested_locale
@@ -7579,7 +7574,6 @@ components:
             $ref: '#/components/schemas/ScenarioCriterion'
           type: array
           title: Criteria
-          default: []
       type: object
       required:
       - id

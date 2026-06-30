@@ -37,6 +37,32 @@ test("country page shows public-safe data journal block when enabled", async ({
   await expectNoAppCrash(page);
 });
 
+test("data journal shows API error when journal endpoint fails", async ({ page }) => {
+  await page.route(
+    `${API_BASE_URL}/api/v1/countries/russia/data-journal**`,
+    async (route) => {
+      await route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: {
+            code: "forced_data_journal_failure",
+            message: "Forced data journal failure",
+          },
+        }),
+      });
+    },
+  );
+
+  await page.goto(e2eRoutes.country("russia", "ru"));
+  await expectPageReady(page);
+  await expect(page.getByTestId("data-journal-error")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByTestId("data-journal-empty")).not.toBeVisible();
+  await expectNoAppCrash(page);
+});
+
 test("old decision flow and persona selector still work", async ({ page }) => {
   await page.goto(e2eRoutes.decision());
   await expectPageReady(page);

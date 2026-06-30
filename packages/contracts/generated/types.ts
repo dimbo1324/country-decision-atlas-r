@@ -2179,11 +2179,8 @@ export interface components {
             translation_status: components["schemas"]["TranslationStatus"];
             /** Breakdowns */
             breakdowns: components["schemas"]["CountryScoreBreakdown"][];
-            /**
-             * Source References
-             * @default []
-             */
-            source_references: components["schemas"]["Source"][];
+            /** Source References */
+            source_references?: components["schemas"]["Source"][];
         };
         /** DecisionCountryScoreListResponse */
         DecisionCountryScoreListResponse: {
@@ -2517,11 +2514,8 @@ export interface components {
             definition: string;
             /** Category */
             category: string;
-            /**
-             * Related Terms
-             * @default []
-             */
-            related_terms: string[];
+            /** Related Terms */
+            related_terms?: string[];
             /** Display Order */
             display_order: number;
             /** Updated At */
@@ -2966,21 +2960,12 @@ export interface components {
             has_human_review: boolean;
             /** Has Stale Fields */
             has_stale_fields: boolean;
-            /**
-             * Missing Fields
-             * @default []
-             */
-            missing_fields: string[];
-            /**
-             * Stale Fields
-             * @default []
-             */
-            stale_fields: string[];
-            /**
-             * Fields
-             * @default []
-             */
-            fields: components["schemas"]["TranslationFieldMeta"][];
+            /** Missing Fields */
+            missing_fields?: string[];
+            /** Stale Fields */
+            stale_fields?: string[];
+            /** Fields */
+            fields?: components["schemas"]["TranslationFieldMeta"][];
         };
         /** MatrixCell */
         MatrixCell: {
@@ -3440,11 +3425,8 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
-            /**
-             * Criteria
-             * @default []
-             */
-            criteria: components["schemas"]["ScenarioCriterion"][];
+            /** Criteria */
+            criteria?: components["schemas"]["ScenarioCriterion"][];
         };
         /** ScenarioCriterion */
         ScenarioCriterion: {

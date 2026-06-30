@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TranslationMeta(BaseModel):
@@ -41,6 +41,6 @@ class LocalizationMeta(BaseModel):
     has_machine_translation: bool
     has_human_review: bool
     has_stale_fields: bool
-    missing_fields: list[str] = []
-    stale_fields: list[str] = []
-    fields: list[TranslationFieldMeta] = []
+    missing_fields: list[str] = Field(default_factory=list)
+    stale_fields: list[str] = Field(default_factory=list)
+    fields: list[TranslationFieldMeta] = Field(default_factory=list)

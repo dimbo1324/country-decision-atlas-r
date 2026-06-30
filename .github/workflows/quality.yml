@@ -128,6 +128,11 @@ jobs:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
         run: python scripts/apply_migrations.py
 
+      - name: Bootstrap runtime read models
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/bootstrap_runtime_read_models.py
+
       - name: Start API
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
@@ -263,6 +268,7 @@ jobs:
 
       - name: Run frontend regression gate
         env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
           API_BASE_URL: http://127.0.0.1:8000
           NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
           ADMIN_TOKEN: ci-test-admin-token

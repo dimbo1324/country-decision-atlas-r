@@ -127,6 +127,29 @@ test("trust surface block shows contradiction context", async ({ page }) => {
   await expectNoAppCrash(page);
 });
 
+test("trust surface shows API error when trust endpoint fails", async ({ page }) => {
+  await page.route(`${API_BASE_URL}/api/v1/countries/russia/trust**`, async (route) => {
+    await route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: {
+          code: "forced_trust_failure",
+          message: "Forced trust failure",
+        },
+      }),
+    });
+  });
+
+  await page.goto(e2eRoutes.country("russia", "ru"));
+  await expectPageReady(page);
+  await expect(page.getByTestId("trust-surface-error")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByTestId("trust-surface-empty")).not.toBeVisible();
+  await expectNoAppCrash(page);
+});
+
 test("uruguay country page trust surface loads or shows empty state", async ({
   page,
 }) => {

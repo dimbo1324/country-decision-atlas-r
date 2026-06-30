@@ -1835,6 +1835,46 @@
         "pnpm_lint": true,
         "python_tests_passed": true
       }
+    },
+    {
+      "event": "task_started",
+      "type": "chore",
+      "scope": "runtime-gate-and-error-surface-hardening-v1",
+      "task": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "branch": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "date": "2026-06-30",
+      "summary": "Start Episode 8 preflight hardening: bootstrap runtime read models before runtime/E2E gates, expose API failures distinctly from empty read-model states, pin pre-commit pnpm invocation, and add notifier HTTP timeouts.",
+      "status": "in_progress"
+    },
+    {
+      "event": "task_completed",
+      "type": "chore",
+      "scope": "runtime-gate-and-error-surface-hardening-v1",
+      "task": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "branch": "chore/runtime-gate-and-error-surface-hardening-v1",
+      "date": "2026-06-30",
+      "summary": "Completed Episode 8 preflight hardening: added the runtime read-model bootstrap gate, wired CI and web MVP checks to recompute platform metrics before trust scores, made frontend read-model errors visible instead of empty, pinned pre-commit pnpm, added notifier HTTP timeouts, refreshed contracts after schema default_factory cleanup, and verified clean Docker runtime paths.",
+      "checks": [
+        "clean Docker DB migration chain 001-034 applied successfully",
+        "second scripts/apply_migrations.py run skipped all applied migrations",
+        "scripts/bootstrap_runtime_read_models.py wrote 21 platform metrics and 3 trust scores with zero failures",
+        "runtime diagnostics passed for analytics events, platform feature flags, data journal endpoints, countries, trust, and platform metrics",
+        "RUN_RUNTIME_SMOKE_TESTS=1 python -m pytest tests/smoke/ -v passed in CACHE_MODE=redis: 29 passed",
+        "Redis stopped during CACHE_MODE=redis and public countries/trust APIs still returned HTTP 200",
+        "RUN_RUNTIME_SMOKE_TESTS=1 python -m pytest tests/smoke/ -v passed after CACHE_MODE=null restart: 29 passed",
+        "python -m pytest --basetemp=.tmp/pytest: 1036 passed, 29 skipped",
+        "python -m mypy apps packages scripts tests: no issues in 238 source files",
+        "python -m ruff check apps packages scripts tests: all checks passed",
+        "python -m ruff format --check apps packages scripts tests: 240 files already formatted",
+        "python -m sqlfluff lint database --dialect postgres: All Finished",
+        "pnpm format:check, pnpm lint, pnpm typecheck, and pnpm build passed with pnpm 9.12.0",
+        "pnpm web:mvp:check passed with 204 Playwright tests",
+        "Go notifier gate passed: protobuf generation, gofmt clean, go vet ./..., go test ./...",
+        "python -m pre_commit run --all-files passed",
+        "git diff --check passed"
+      ],
+      "status": "completed",
+      "risk": "No scoring, CII math, scenario weights, auth/RBAC, Drift, Trust Score semantics, production deployment flow, or new product feature scope was changed. Contract diffs are limited to generated schema/default metadata after replacing mutable list defaults."
     }
   ]
 }

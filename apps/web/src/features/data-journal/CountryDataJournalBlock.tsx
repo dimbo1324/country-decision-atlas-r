@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 
+import { isApiError } from "../../shared/api";
 import { getCountryDataJournal } from "../../shared/api/data-journal";
 import type { CountryDataJournalResponse } from "../../shared/api/data-journal";
 import type { LocaleCode } from "../../shared/api/countries";
 import { getFeatures } from "../../shared/api/feature-flags";
 import { isFeatureEnabled } from "../../shared/lib/features";
+import { ErrorState } from "../../shared/ui/ErrorState";
 import { DataJournalEmptyState } from "./DataJournalEmptyState";
 import { DataJournalEntryCard } from "./DataJournalEntryCard";
 
@@ -20,12 +22,14 @@ export function CountryDataJournalBlock({
   locale,
 }: CountryDataJournalBlockProps) {
   const [data, setData] = useState<CountryDataJournalResponse | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setError(null);
     Promise.all([
       getFeatures("public"),
       getCountryDataJournal(countrySlug, locale, 10, 0),
@@ -36,10 +40,10 @@ export function CountryDataJournalBlock({
           setData(journal);
         }
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (isMounted) {
-          setIsEnabled(false);
           setData(null);
+          setError(err);
         }
       })
       .finally(() => {
@@ -54,6 +58,14 @@ export function CountryDataJournalBlock({
 
   if (isLoading) {
     return <div className="notice">Загрузка обновлений данных...</div>;
+  }
+
+  if (error !== null) {
+    return (
+      <div data-testid="data-journal-error">
+        <ErrorState error={isApiError(error) ? error : undefined} />
+      </div>
+    );
   }
 
   if (!isEnabled) {

@@ -71,7 +71,7 @@ class DecisionCountryScore(BaseModel):
     calculated_at: datetime
     translation_status: TranslationStatus
     breakdowns: list[CountryScoreBreakdown]
-    source_references: list[Source] = []
+    source_references: list[Source] = Field(default_factory=list)
 
 
 class DecisionScenario(BaseModel):
