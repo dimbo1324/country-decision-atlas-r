@@ -7,6 +7,7 @@ from app.schemas.common import (
     SortMeta,
     TranslationStatus,
 )
+from app.schemas.decision_personalization import DecisionPersonalizationResponse
 from app.schemas.localization import LocalizationMeta
 from app.schemas.personas import Persona, PersonaWeightProfile
 from app.schemas.sources import EvidenceItem, Source
@@ -132,6 +133,7 @@ class DecisionRunRequest(BaseModel):
         json_schema_extra={"enum": list(SUPPORTED_LOCALES)},
     )
     persona: str | None = None
+    custom_weights: dict[str, Decimal] | None = None
 
 
 DecisionRunInput = DecisionRunRequest
@@ -222,6 +224,7 @@ class DecisionRunResponse(BaseModel):
     applied_persona: Persona | None = None
     persona_weight_profile: PersonaWeightProfile | None = None
     ranking_mode: Literal["base", "persona_adjusted"] = "base"
+    personalization: DecisionPersonalizationResponse
 
 
 class DecisionRunCountry(BaseModel):

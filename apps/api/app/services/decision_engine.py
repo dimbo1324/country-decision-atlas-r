@@ -1,6 +1,6 @@
 from app.core.errors import api_error
 from app.core.locales import SOURCE_LOCALE, validate_locale
-from app.repositories import decision_engine as repository
+from app.repositories import decision_engine as repository, feature_flags as ff_repo
 from app.repositories.cii import (
     get_active_cii_metric_definitions,
     get_cii_metric_values_for_countries,
@@ -36,6 +36,10 @@ from app.schemas.decision_engine import (
     UserStoryListResponse,
     UserStoryResponse,
 )
+from app.schemas.decision_personalization import (
+    DecisionPersonalizationResponse,
+    DecisionWeightItem,
+)
 from app.schemas.sources import EvidenceItemListResponse
 from app.services.decision_labels import (
     criterion_label,
@@ -43,13 +47,20 @@ from app.services.decision_labels import (
     strength_message,
     weakness_message,
 )
+from app.services.decision_personalization import (
+    apply_effective_weights_to_breakdown,
+    build_personalization_summary,
+    normalize_custom_weights,
+)
 from app.services.decision_warnings import build_risk_warnings
+from app.services.feature_flags import can_access, default_access_context
 from app.services.localization import overlay_localized_fields
 from app.services.persona_runtime import aggregate_persona_cii_score
 from app.services.persona_weights import build_persona_weight_profile
 from app.services.score_labels import score_label
 from collections.abc import Iterable
 from datetime import UTC, datetime
+from decimal import Decimal
 from psycopg import Connection
 from typing import Any, Literal, cast
 
@@ -66,6 +77,21 @@ CAVEAT_RU = (
     "инвестиционной или консультацией по безопасности. Используйте его как "
     "структурированный список вопросов и проверяйте каждый вывод с экспертами."
 )
+
+
+DECISION_PERSONALIZATION_FEATURE_KEY = "decision_personalization_enabled"
+
+
+def _is_decision_personalization_enabled(connection: Connection[Any]) -> bool:
+    feature = ff_repo.get_feature_flag(connection, DECISION_PERSONALIZATION_FEATURE_KEY)
+    rules = ff_repo.list_feature_access_rules(
+        connection, DECISION_PERSONALIZATION_FEATURE_KEY
+    )
+    from app.core.config import get_settings
+
+    ctx = default_access_context(get_settings())
+    decision = can_access(ctx, feature, rules, DECISION_PERSONALIZATION_FEATURE_KEY)
+    return decision.is_enabled
 
 
 def _locale(rows: list[dict[str, Any]], requested_locale: str) -> LocaleResolution:
@@ -453,6 +479,25 @@ def run_decision(
     )
     source_ids = _collect_source_ids(breakdown_rows, legal_signal_rows)
     source_rows = repository.list_decision_sources_by_ids(connection, source_ids)
+    base_weights_map: dict[str, Decimal] = {
+        str(item["criterion"]): Decimal(str(item["weight"])) for item in breakdown_rows
+    }
+    allowed_criteria = sorted(base_weights_map)
+    effective_weights: dict[str, Decimal] | None = None
+    if payload.custom_weights is not None:
+        if not _is_decision_personalization_enabled(connection):
+            raise api_error(
+                422,
+                "decision_personalization_disabled",
+                "Decision personalization is currently disabled.",
+            )
+        effective_weights = normalize_custom_weights(
+            payload.custom_weights, allowed_criteria
+        )
+    if effective_weights is not None:
+        breakdown_rows = apply_effective_weights_to_breakdown(
+            breakdown_rows, effective_weights
+        )
     breakdowns_by_score = _group_by(breakdown_rows, "country_score_id")
     signals_by_country = _group_by(legal_signal_rows, "country_slug")
     sources_by_id = {row["id"]: row for row in source_rows}
@@ -476,6 +521,16 @@ def run_decision(
             scenario_slug=payload.scenario_slug,
             scenario_title=scenario_row["title"],
             locale=locale,
+            override_score=(
+                sum(
+                    float(item["weighted_score"])
+                    for item in breakdowns_by_score.get(
+                        scores_by_country[slug]["id"], []
+                    )
+                )
+                if effective_weights is not None
+                else None
+            ),
         )
         for slug in candidate_slugs
     ]
@@ -497,6 +552,25 @@ def run_decision(
         *breakdown_rows,
         *legal_signal_rows,
     ]
+    personalization_summary = build_personalization_summary(
+        persona_slug=payload.persona,
+        custom_weights_applied=effective_weights is not None,
+        base_weights=base_weights_map,
+        effective_weights=effective_weights or base_weights_map,
+    )
+    personalization = DecisionPersonalizationResponse(
+        weight_mode=personalization_summary["weight_mode"],
+        persona_slug=personalization_summary["persona_slug"],
+        custom_weights_applied=personalization_summary["custom_weights_applied"],
+        base_weights=[
+            DecisionWeightItem(**item)
+            for item in personalization_summary["base_weights"]
+        ],
+        effective_weights=[
+            DecisionWeightItem(**item)
+            for item in personalization_summary["effective_weights"]
+        ],
+    )
     return DecisionRunResponse(
         scenario=DecisionScenarioRef(
             slug=scenario_row["slug"],
@@ -513,6 +587,7 @@ def run_decision(
         applied_persona=persona_profile["persona"] if persona_profile else None,
         persona_weight_profile=persona_profile,
         ranking_mode="persona_adjusted" if persona_profile else "base",
+        personalization=personalization,
     )
 
 
@@ -548,6 +623,7 @@ def _build_country_result(
     scenario_slug: str,
     scenario_title: str,
     locale: str,
+    override_score: float | None = None,
 ) -> DecisionCountryResult:
     used_source_ids = _collect_source_ids(breakdowns, legal_signals)
     result_sources = [
@@ -555,14 +631,17 @@ def _build_country_result(
         for source_id in used_source_ids
         if source_id in sources_by_id
     ]
-    score_label = get_score_label(float(score["score"]))
+    final_score = (
+        override_score if override_score is not None else float(score["score"])
+    )
+    score_label = get_score_label(final_score)
     return DecisionCountryResult(
         rank=0,
         country=_country_ref(country),
-        score=score["score"],
+        score=final_score,
         score_label=score_label,
         summary=_build_summary(
-            country["name"], score["score"], score_label, scenario_title, locale
+            country["name"], final_score, score_label, scenario_title, locale
         ),
         strengths=_build_strengths(breakdowns, locale),
         weaknesses=_build_weaknesses(breakdowns, locale),

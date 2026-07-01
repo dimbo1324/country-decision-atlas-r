@@ -2395,6 +2395,22 @@ export interface components {
             items: components["schemas"]["DecisionCountryScore"][];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** DecisionPersonalizationResponse */
+        DecisionPersonalizationResponse: {
+            /**
+             * Weight Mode
+             * @enum {string}
+             */
+            weight_mode: "base" | "persona" | "custom" | "persona_custom";
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Custom Weights Applied */
+            custom_weights_applied: boolean;
+            /** Base Weights */
+            base_weights?: components["schemas"]["DecisionWeightItem"][];
+            /** Effective Weights */
+            effective_weights?: components["schemas"]["DecisionWeightItem"][];
+        };
         /** DecisionPoint */
         DecisionPoint: {
             /** Code */
@@ -2450,6 +2466,10 @@ export interface components {
             locale: "en" | "ru";
             /** Persona */
             persona?: string | null;
+            /** Custom Weights */
+            custom_weights?: {
+                [key: string]: number | string;
+            } | null;
         };
         /** DecisionRunResponse */
         DecisionRunResponse: {
@@ -2467,6 +2487,7 @@ export interface components {
              * @enum {string}
              */
             ranking_mode: "base" | "persona_adjusted";
+            personalization: components["schemas"]["DecisionPersonalizationResponse"];
         };
         /** DecisionScenario */
         DecisionScenario: {
@@ -2514,6 +2535,13 @@ export interface components {
             /** Confidence */
             confidence?: ("high" | "medium" | "low") | null;
             localization?: components["schemas"]["LocalizationMeta"] | null;
+        };
+        /** DecisionWeightItem */
+        DecisionWeightItem: {
+            /** Criterion */
+            criterion: string;
+            /** Weight */
+            weight: number;
         };
         /**
          * EligibilityFlag

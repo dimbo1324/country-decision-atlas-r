@@ -21,6 +21,7 @@ from app.schemas.decision_engine import (
     DecisionRunResponse,
     DecisionScenarioRef,
 )
+from app.schemas.decision_personalization import DecisionPersonalizationResponse
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -171,6 +172,10 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         ],
         meta=DecisionRunMeta(candidate_count=2, generated_at=NOW),
         locale=locale_resolution("en", "en", "source"),
+        personalization=DecisionPersonalizationResponse(
+            weight_mode="base",
+            custom_weights_applied=False,
+        ),
     )
     monkeypatch.setattr(
         "app.api.v1.decision.decision_engine.run_decision", lambda *_: response
@@ -195,6 +200,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         "applied_persona",
         "persona_weight_profile",
         "ranking_mode",
+        "personalization",
     } == set(body)
     assert {
         "rank",
