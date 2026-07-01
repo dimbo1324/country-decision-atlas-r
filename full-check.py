@@ -400,6 +400,7 @@ class FullCheck:
         self.docker_retry_delay_step = args.docker_retry_delay_step
         self.admin_token = args.admin_token
         self.config_path = args.config
+        self.regen_proto = args.regen_proto
 
         self.run_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         self.report_dir = REPO_ROOT / "full-check-reports" / self.run_timestamp
@@ -1064,22 +1065,51 @@ class FullCheck:
         notifier_dir = REPO_ROOT / "apps" / "notifier"
         protoc_exe = shutil.which("protoc")
         go_exe = shutil.which("go")
-        self.run_gate_step(
-            "protoc generate",
-            [
-                protoc_exe,
-                "-I",
-                ".",
-                "--go_out=.",
-                "--go_opt=module=github.com/country-decision-atlas/notifier",
-                "--go-grpc_out=.",
-                "--go-grpc_opt=module=github.com/country-decision-atlas/notifier",
-                "proto/subscriptions.proto",
-            ]
-            if protoc_exe
-            else None,
-            cwd=notifier_dir,
-        )
+
+        if self.regen_proto:
+            self.run_gate_step(
+                "protoc generate",
+                [
+                    protoc_exe,
+                    "-I",
+                    ".",
+                    "--go_out=.",
+                    "--go_opt=module=github.com/country-decision-atlas/notifier",
+                    "--go-grpc_out=.",
+                    "--go-grpc_opt=module=github.com/country-decision-atlas/notifier",
+                    "proto/subscriptions.proto",
+                ]
+                if protoc_exe
+                else None,
+                cwd=notifier_dir,
+            )
+            git_exe = shutil.which("git")
+            if git_exe:
+                pb_dir = notifier_dir / "internal" / "grpc" / "pb"
+                diff_exit = self.run_streaming(
+                    [git_exe, "diff", "--quiet", "--", str(pb_dir)]
+                )
+                if diff_exit != 0:
+                    self.add_stage_result(
+                        "protoc generate produced a diff",
+                        "WARN",
+                        "regenerated .pb.go differs from the committed version (often just a "
+                        "protoc/protoc-gen-go version header); revert with 'git checkout -- "
+                        f"{pb_dir}' unless proto/subscriptions.proto actually changed",
+                    )
+                    self.add_recommendation(
+                        "protoc generate",
+                        "regenerated .pb.go differs from committed version",
+                        f"If proto/subscriptions.proto did not change, run: git checkout -- {pb_dir}",
+                    )
+        else:
+            self.add_stage_result(
+                "protoc generate",
+                "SKIP",
+                "pass --regen-proto to regenerate; committed .pb.go files are used as-is "
+                "(Docker build has no codegen step and requires them to be tracked)",
+            )
+
         self.run_gate_step(
             "go vet", [go_exe, "vet", "./..."] if go_exe else None, cwd=notifier_dir
         )
@@ -1399,6 +1429,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--docker-retry-delay-step", type=int, default=2)
     parser.add_argument("--admin-token", default="")
     parser.add_argument("--config", default="")
+    parser.add_argument("--regen-proto", action="store_true", default=False)
     return parser.parse_args(argv)
 
 
