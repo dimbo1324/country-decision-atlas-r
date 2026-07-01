@@ -374,6 +374,7 @@ def compute_and_store_country_drift(
         result.country_not_found = True
         return result
     except Exception as exc:
+        conn.rollback()
         result.error = str(exc)
         return result
 
@@ -421,6 +422,7 @@ def compute_and_store_country_drift(
             emitted_row = _emit_drift_changed(conn, draft)
             result.event_emitted = emitted_row is not None
     except Exception as exc:
+        conn.rollback()
         result.error = str(exc)
 
     return result

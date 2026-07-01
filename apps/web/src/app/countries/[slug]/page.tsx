@@ -15,6 +15,7 @@ import {
   CountryUserStoriesSummary,
   LocaleStatusBadge,
 } from "../../../features/country-card";
+import { CountryDriftBlock } from "../../../features/country-drift";
 import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
@@ -110,6 +111,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection" data-testid="trust-surface-section">
           <h2 className="cardSectionTitle">Качество данных</h2>
           <TrustSurfaceBlock countrySlug={card.country.slug} locale={locale} />
+        </section>
+
+        <section className="cardSection" data-testid="country-drift-section">
+          <h2 className="cardSectionTitle">Направление изменений</h2>
+          <CountryDriftBlock countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">

@@ -73,6 +73,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/drift:
+    get:
+      tags:
+      - country-drift
+      summary: Get Country Drift
+      operationId: get_country_drift_api_v1_countries__country_slug__drift_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 12
+          title: Limit
+      - name: locale
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDriftResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/methodology:
     get:
       tags:
@@ -2622,6 +2673,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-drift/recompute:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute All Country Drift
+      operationId: admin_recompute_all_country_drift_api_v1_admin_country_drift_recompute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryDriftRecomputeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDriftBatchRecomputeResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/country-drift/recompute/{country_slug}:
+    post:
+      tags:
+      - admin
+      summary: Admin Recompute Country Drift
+      operationId: admin_recompute_country_drift_api_v1_admin_country_drift_recompute__country_slug__post
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryDriftRecomputeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDriftRecomputeResult'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/admin/translation-jobs:
     get:
       tags:
@@ -3729,6 +3853,272 @@ components:
       - limit
       - offset
       title: CountryDataJournalResponse
+    CountryDriftBatchRecomputeResult:
+      properties:
+        countries_processed:
+          type: integer
+          title: Countries Processed
+        snapshots_written:
+          type: integer
+          title: Snapshots Written
+        events_emitted:
+          type: integer
+          title: Events Emitted
+        insufficient_data_count:
+          type: integer
+          title: Insufficient Data Count
+        errors:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Errors
+      type: object
+      required:
+      - countries_processed
+      - snapshots_written
+      - events_emitted
+      - insufficient_data_count
+      title: CountryDriftBatchRecomputeResult
+    CountryDriftHistoryItem:
+      properties:
+        period_start:
+          type: string
+          format: date
+          title: Period Start
+        period_end:
+          type: string
+          format: date
+          title: Period End
+        label:
+          type: string
+          title: Label
+        confidence:
+          type: string
+          title: Confidence
+        net_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Net Score
+        event_count:
+          type: integer
+          title: Event Count
+        computed_at:
+          type: string
+          format: date-time
+          title: Computed At
+      type: object
+      required:
+      - period_start
+      - period_end
+      - label
+      - confidence
+      - event_count
+      - computed_at
+      title: CountryDriftHistoryItem
+    CountryDriftRecomputeRequest:
+      properties:
+        dry_run:
+          type: boolean
+          title: Dry Run
+          default: false
+        emit_events:
+          type: boolean
+          title: Emit Events
+          default: true
+      type: object
+      title: CountryDriftRecomputeRequest
+    CountryDriftRecomputeResult:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        country_not_found:
+          type: boolean
+          title: Country Not Found
+        dry_run:
+          type: boolean
+          title: Dry Run
+        computed:
+          type: boolean
+          title: Computed
+        stored:
+          type: boolean
+          title: Stored
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        previous_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Label
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        net_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Net Score
+        event_count:
+          type: integer
+          title: Event Count
+        event_emitted:
+          type: boolean
+          title: Event Emitted
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - country_slug
+      - country_not_found
+      - dry_run
+      - computed
+      - stored
+      - event_count
+      - event_emitted
+      title: CountryDriftRecomputeResult
+    CountryDriftResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        latest_snapshot:
+          anyOf:
+          - $ref: '#/components/schemas/CountryDriftSnapshot'
+          - type: 'null'
+        history:
+          items:
+            $ref: '#/components/schemas/CountryDriftHistoryItem'
+          type: array
+          title: History
+        disclaimer:
+          type: string
+          title: Disclaimer
+          default: This is a contextual trend indicator based on legal signal events,
+            not legal advice or a prediction.
+      type: object
+      required:
+      - country_slug
+      title: CountryDriftResponse
+    CountryDriftSnapshot:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        period_start:
+          type: string
+          format: date
+          title: Period Start
+        period_end:
+          type: string
+          format: date
+          title: Period End
+        window_days:
+          type: integer
+          title: Window Days
+        label:
+          type: string
+          title: Label
+        previous_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Label
+        confidence:
+          type: string
+          title: Confidence
+        net_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Net Score
+        positive_weight:
+          type: number
+          title: Positive Weight
+        negative_weight:
+          type: number
+          title: Negative Weight
+        neutral_weight:
+          type: number
+          title: Neutral Weight
+        mixed_weight:
+          type: number
+          title: Mixed Weight
+        uncertain_weight:
+          type: number
+          title: Uncertain Weight
+        total_weight:
+          type: number
+          title: Total Weight
+        event_count:
+          type: integer
+          title: Event Count
+        positive_count:
+          type: integer
+          title: Positive Count
+        negative_count:
+          type: integer
+          title: Negative Count
+        neutral_count:
+          type: integer
+          title: Neutral Count
+        mixed_count:
+          type: integer
+          title: Mixed Count
+        uncertain_count:
+          type: integer
+          title: Uncertain Count
+        methodology_version:
+          type: string
+          title: Methodology Version
+        input_summary:
+          additionalProperties: true
+          type: object
+          title: Input Summary
+        computed_at:
+          type: string
+          format: date-time
+          title: Computed At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - country_slug
+      - period_start
+      - period_end
+      - window_days
+      - label
+      - confidence
+      - positive_weight
+      - negative_weight
+      - neutral_weight
+      - mixed_weight
+      - uncertain_weight
+      - total_weight
+      - event_count
+      - positive_count
+      - negative_count
+      - neutral_count
+      - mixed_count
+      - uncertain_count
+      - methodology_version
+      - input_summary
+      - computed_at
+      title: CountryDriftSnapshot
     CountryListResponse:
       properties:
         items:

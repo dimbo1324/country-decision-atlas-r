@@ -100,7 +100,7 @@ def list_drift_input_events(
         LEFT JOIN LATERAL (
             SELECT
                 COUNT(*) AS evidence_count,
-                MIN(ei.id)::text AS sample_evidence_item_id
+                MIN(ei.id::text) AS sample_evidence_item_id
             FROM evidence_items ei
             WHERE ei.legal_signal_id = ls.id
         ) evidence_summary ON TRUE
@@ -190,7 +190,7 @@ def upsert_drift_snapshot(
     return execute_one(
         connection,
         f"""
-        INSERT INTO country_drift_snapshots (
+        INSERT INTO country_drift_snapshots AS cds (
             country_id,
             period_start,
             period_end,

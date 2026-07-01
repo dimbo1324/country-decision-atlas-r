@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/countries/{country_slug}/drift": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Country Drift */
+        get: operations["get_country_drift_api_v1_countries__country_slug__drift_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/methodology": {
         parameters: {
             query?: never;
@@ -939,6 +956,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/country-drift/recompute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute All Country Drift */
+        post: operations["admin_recompute_all_country_drift_api_v1_admin_country_drift_recompute_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-drift/recompute/{country_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Recompute Country Drift */
+        post: operations["admin_recompute_country_drift_api_v1_admin_country_drift_recompute__country_slug__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/translation-jobs": {
         parameters: {
             query?: never;
@@ -1476,6 +1527,162 @@ export interface components {
              * Format: date-time
              */
             generated_at?: string;
+        };
+        /** CountryDriftBatchRecomputeResult */
+        CountryDriftBatchRecomputeResult: {
+            /** Countries Processed */
+            countries_processed: number;
+            /** Snapshots Written */
+            snapshots_written: number;
+            /** Events Emitted */
+            events_emitted: number;
+            /** Insufficient Data Count */
+            insufficient_data_count: number;
+            /** Errors */
+            errors?: {
+                [key: string]: unknown;
+            }[];
+        };
+        /** CountryDriftHistoryItem */
+        CountryDriftHistoryItem: {
+            /**
+             * Period Start
+             * Format: date
+             */
+            period_start: string;
+            /**
+             * Period End
+             * Format: date
+             */
+            period_end: string;
+            /** Label */
+            label: string;
+            /** Confidence */
+            confidence: string;
+            /** Net Score */
+            net_score?: number | null;
+            /** Event Count */
+            event_count: number;
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+        };
+        /** CountryDriftRecomputeRequest */
+        CountryDriftRecomputeRequest: {
+            /**
+             * Dry Run
+             * @default false
+             */
+            dry_run: boolean;
+            /**
+             * Emit Events
+             * @default true
+             */
+            emit_events: boolean;
+        };
+        /** CountryDriftRecomputeResult */
+        CountryDriftRecomputeResult: {
+            /** Country Slug */
+            country_slug: string;
+            /** Country Not Found */
+            country_not_found: boolean;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Computed */
+            computed: boolean;
+            /** Stored */
+            stored: boolean;
+            /** Label */
+            label?: string | null;
+            /** Previous Label */
+            previous_label?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Net Score */
+            net_score?: number | null;
+            /** Event Count */
+            event_count: number;
+            /** Event Emitted */
+            event_emitted: boolean;
+            /** Error */
+            error?: string | null;
+        };
+        /** CountryDriftResponse */
+        CountryDriftResponse: {
+            /** Country Slug */
+            country_slug: string;
+            latest_snapshot?: components["schemas"]["CountryDriftSnapshot"] | null;
+            /** History */
+            history?: components["schemas"]["CountryDriftHistoryItem"][];
+            /**
+             * Disclaimer
+             * @default This is a contextual trend indicator based on legal signal events, not legal advice or a prediction.
+             */
+            disclaimer: string;
+        };
+        /** CountryDriftSnapshot */
+        CountryDriftSnapshot: {
+            /** Country Slug */
+            country_slug: string;
+            /**
+             * Period Start
+             * Format: date
+             */
+            period_start: string;
+            /**
+             * Period End
+             * Format: date
+             */
+            period_end: string;
+            /** Window Days */
+            window_days: number;
+            /** Label */
+            label: string;
+            /** Previous Label */
+            previous_label?: string | null;
+            /** Confidence */
+            confidence: string;
+            /** Net Score */
+            net_score?: number | null;
+            /** Positive Weight */
+            positive_weight: number;
+            /** Negative Weight */
+            negative_weight: number;
+            /** Neutral Weight */
+            neutral_weight: number;
+            /** Mixed Weight */
+            mixed_weight: number;
+            /** Uncertain Weight */
+            uncertain_weight: number;
+            /** Total Weight */
+            total_weight: number;
+            /** Event Count */
+            event_count: number;
+            /** Positive Count */
+            positive_count: number;
+            /** Negative Count */
+            negative_count: number;
+            /** Neutral Count */
+            neutral_count: number;
+            /** Mixed Count */
+            mixed_count: number;
+            /** Uncertain Count */
+            uncertain_count: number;
+            /** Methodology Version */
+            methodology_version: string;
+            /** Input Summary */
+            input_summary: {
+                [key: string]: unknown;
+            };
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Expires At */
+            expires_at?: string | null;
         };
         /** CountryListResponse */
         CountryListResponse: {
@@ -4406,6 +4613,56 @@ export interface operations {
             };
         };
     };
+    get_country_drift_api_v1_countries__country_slug__drift_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                locale?: string | null;
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryDriftResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_methodology_sections_api_v1_methodology_get: {
         parameters: {
             query?: {
@@ -6347,6 +6604,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TrustRecomputeCountryResult"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_recompute_all_country_drift_api_v1_admin_country_drift_recompute_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryDriftRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryDriftBatchRecomputeResult"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_recompute_country_drift_api_v1_admin_country_drift_recompute__country_slug__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryDriftRecomputeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryDriftRecomputeResult"];
                 };
             };
             /** @description Unauthorized */

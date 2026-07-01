@@ -175,6 +175,42 @@ class TestComputeAndStoreCountryDrift:
         assert result.computed is False
         assert result.stored is False
 
+    def test_rollback_called_on_upsert_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _install_country_and_events(monkeypatch, _positive_events(5), None)
+
+        def failing_upsert(_conn: Any, **_kwargs: Any) -> dict[str, Any]:
+            raise RuntimeError("boom")
+
+        monkeypatch.setattr(country_drift_repo, "upsert_drift_snapshot", failing_upsert)
+        conn = MagicMock()
+        result = compute_and_store_country_drift(
+            conn, country_slug="argentina", period_end=date(2026, 7, 1)
+        )
+        assert result.error == "boom"
+        conn.rollback.assert_called_once()
+
+    def test_rollback_called_on_compute_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(
+            country_drift_repo, "get_country_for_drift", lambda *_: COUNTRY
+        )
+
+        def failing_events(*_args: Any) -> list[dict[str, Any]]:
+            raise RuntimeError("query failed")
+
+        monkeypatch.setattr(
+            country_drift_repo, "list_drift_input_events", failing_events
+        )
+        conn = MagicMock()
+        result = compute_and_store_country_drift(
+            conn, country_slug="argentina", period_end=date(2026, 7, 1)
+        )
+        assert result.error == "query failed"
+        conn.rollback.assert_called_once()
+
 
 class TestDriftChangedEmission:
     def test_first_snapshot_does_not_emit(

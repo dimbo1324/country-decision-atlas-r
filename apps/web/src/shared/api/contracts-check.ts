@@ -46,6 +46,14 @@ type MethodologySection = components["schemas"]["MethodologySection"];
 type MethodologyListResponse = components["schemas"]["MethodologyListResponse"];
 type GlossaryTerm = components["schemas"]["GlossaryTerm"];
 type GlossaryListResponse = components["schemas"]["GlossaryListResponse"];
+type CountryDriftResponse = components["schemas"]["CountryDriftResponse"];
+type CountryDriftSnapshot = components["schemas"]["CountryDriftSnapshot"];
+type CountryDriftHistoryItem = components["schemas"]["CountryDriftHistoryItem"];
+type CountryDriftRecomputeRequest =
+  components["schemas"]["CountryDriftRecomputeRequest"];
+type CountryDriftRecomputeResult = components["schemas"]["CountryDriftRecomputeResult"];
+type CountryDriftBatchRecomputeResult =
+  components["schemas"]["CountryDriftBatchRecomputeResult"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -90,4 +98,10 @@ export type FrontendCriticalContracts = {
   methodologyList: MethodologyListResponse;
   glossaryTerm: GlossaryTerm;
   glossaryList: GlossaryListResponse;
+  countryDrift: CountryDriftResponse;
+  countryDriftSnapshot: CountryDriftSnapshot;
+  countryDriftHistoryItem: CountryDriftHistoryItem;
+  countryDriftRecomputeRequest: CountryDriftRecomputeRequest;
+  countryDriftRecomputeResult: CountryDriftRecomputeResult;
+  countryDriftBatchRecomputeResult: CountryDriftBatchRecomputeResult;
 };

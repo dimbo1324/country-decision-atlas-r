@@ -3,6 +3,7 @@ from app.api.v1 import (
     admin_translation_jobs,
     analytics,
     countries,
+    country_drift,
     data_journal,
     decision,
     feature_flags,
@@ -189,6 +190,7 @@ def _register_system_routes(
 
 def _register_api_routes(app: FastAPI) -> None:
     app.include_router(trust.router, prefix="/api/v1")
+    app.include_router(country_drift.router, prefix="/api/v1")
     app.include_router(methodology.router, prefix="/api/v1")
     app.include_router(glossary.router, prefix="/api/v1")
     app.include_router(platform_metrics.router, prefix="/api/v1")
@@ -204,6 +206,7 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(admin.router, prefix="/api/v1")
     app.include_router(platform_metrics.admin_router, prefix="/api/v1")
     app.include_router(trust.admin_router, prefix="/api/v1")
+    app.include_router(country_drift.admin_router, prefix="/api/v1")
     app.include_router(admin_translation_jobs.router, prefix="/api/v1")
     app.include_router(analytics.router, prefix="/api/v1")
     app.include_router(feature_flags.router, prefix="/api/v1")

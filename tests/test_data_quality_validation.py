@@ -108,6 +108,15 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_stale_trust_scores",
         "list_missing_required_methodology_sections",
         "list_missing_required_glossary_terms",
+        "list_active_countries_missing_drift_snapshots",
+        "list_invalid_drift_snapshot_values",
+        "list_drift_snapshots_insufficient_data_inconsistent",
+        "list_drift_snapshots_insufficient_data_with_high_confidence",
+        "list_drift_snapshots_missing_methodology_version",
+        "list_drift_snapshots_missing_computed_at",
+        "list_drift_snapshots_with_non_object_input_summary",
+        "list_duplicate_drift_changed_event_keys",
+        "list_drift_changed_events_missing_payload_fields",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 
