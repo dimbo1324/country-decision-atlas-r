@@ -45,6 +45,7 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/user-stories/{story_id}",
         "/api/v1/decision/compare",
         "/api/v1/decision/run",
+        "/api/v1/decision/wizard/resolve",
         "/api/v1/admin/legal-signals",
         "/api/v1/admin/data-quality/report",
         "/api/v1/admin/translations/jobs",
@@ -79,6 +80,8 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "DecisionCompareResult",
         "DecisionRunRequest",
         "DecisionRunResponse",
+        "DecisionWizardAnswers",
+        "DecisionWizardRecommendation",
         "DecisionCountryResult",
         "DecisionRiskWarning",
         "DecisionBreakdownItem",
@@ -125,6 +128,14 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     assert analytics_path["responses"]["200"]["content"]["application/json"][
         "schema"
     ] == {"$ref": "#/components/schemas/AnalyticsEventCreateResponse"}
+
+    wizard_path = contract["paths"]["/api/v1/decision/wizard/resolve"]["post"]
+    assert wizard_path["requestBody"]["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/DecisionWizardAnswers"
+    }
+    assert wizard_path["responses"]["200"]["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/DecisionWizardRecommendation"
+    }
 
 
 def test_openapi_contract_has_admin_token_security() -> None:

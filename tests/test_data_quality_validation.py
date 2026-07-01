@@ -117,6 +117,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_drift_snapshots_with_non_object_input_summary",
         "list_duplicate_drift_changed_event_keys",
         "list_drift_changed_events_missing_payload_fields",
+        "list_decision_personalization_feature_flag_mismatches",
+        "list_decision_scores_missing_required_criteria",
+        "list_decision_wizard_rule_mismatches",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
 

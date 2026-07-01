@@ -11,8 +11,8 @@ from app.schemas.decision_wizard import (
     DecisionWizardRecommendation,
 )
 from app.services import decision_analytics
+from app.services.decision_criteria import DECISION_CRITERIA
 from app.services.decision_personalization import (
-    DECISION_CRITERIA,
     normalize_custom_weights,
 )
 from app.services.feature_flags import can_access, default_access_context

@@ -26,6 +26,7 @@ import {
   DecisionWeightSliders,
   type DecisionCriterion,
 } from "../decision-personalization";
+import { DecisionWizard } from "../decision-wizard";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -141,6 +142,20 @@ function DecisionFormInner() {
     setPersonalizationTouched(false);
   }
 
+  function handleWizardApply(payload: {
+    scenarioSlug: string;
+    personaSlug: string;
+    candidateCountrySlugs: string[];
+    customWeights: Record<DecisionCriterion, number>;
+  }) {
+    setScenarioSlug(payload.scenarioSlug);
+    setSelectedPersonaSlug(payload.personaSlug);
+    setCandidateCountrySlugs(payload.candidateCountrySlugs);
+    setCustomWeights(payload.customWeights);
+    setPersonalizationTouched(true);
+    setRunError(null);
+  }
+
   const customWeightsSum = DECISION_CRITERIA_ORDER.reduce(
     (total, criterion) => total + customWeights[criterion],
     0,
@@ -215,6 +230,13 @@ function DecisionFormInner() {
   return (
     <div className="decisionLayout">
       <div className="decisionForm">
+        <DecisionWizard
+          locale={locale}
+          countries={countries}
+          originCountrySlug={originCountrySlug}
+          onApply={handleWizardApply}
+        />
+
         <div className="formGroup">
           <label className="formLabel" htmlFor="origin-select">
             Страна отправления

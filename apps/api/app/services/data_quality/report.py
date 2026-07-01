@@ -8,6 +8,9 @@ from app.services.data_quality._issues import _check, _issue
 from app.services.data_quality.country_drift_checks import (
     _append_country_drift_checks,
 )
+from app.services.data_quality.decision_personalization_checks import (
+    _append_decision_personalization_checks,
+)
 from app.services.data_quality.persona_checks import _append_persona_layer_checks
 from app.services.data_quality.platform_checks import _append_platform_runtime_checks
 from app.services.data_quality.trust_checks import _append_trust_surface_checks
@@ -908,6 +911,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_platform_runtime_checks(connection, issues, checks)
     _append_trust_surface_checks(connection, issues, checks)
     _append_country_drift_checks(connection, issues, checks)
+    _append_decision_personalization_checks(connection, issues, checks)
     from app.services import data_quality as data_quality_facade
 
     translation_checks, translation_issues = (
