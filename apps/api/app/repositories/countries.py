@@ -75,6 +75,14 @@ def count_countries(connection: Connection[Any]) -> int:
     return int(row["total"]) if row else 0
 
 
+def list_active_country_slugs(connection: Connection[Any]) -> list[str]:
+    rows = fetch_all(
+        connection,
+        "SELECT slug FROM countries WHERE is_active = TRUE ORDER BY slug",
+    )
+    return [str(row["slug"]) for row in rows]
+
+
 def get_country(
     connection: Connection[Any],
     country_id: str,

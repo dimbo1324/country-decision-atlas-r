@@ -8,6 +8,16 @@ NORMALIZED_WEIGHT_PRECISION = Decimal("0.000001")
 MIN_CUSTOM_WEIGHT_VALUE = Decimal("0")
 MAX_CUSTOM_WEIGHT_VALUE = Decimal("100")
 
+DECISION_CRITERIA = (
+    "legalization_score",
+    "long_term_status_score",
+    "cost_of_living_score",
+    "safety_score",
+    "business_score",
+    "legal_stability_score",
+    "source_quality_score",
+)
+
 WEIGHT_MODE_BASE = "base"
 WEIGHT_MODE_PERSONA = "persona"
 WEIGHT_MODE_CUSTOM = "custom"

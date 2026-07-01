@@ -10,6 +10,10 @@ type DecisionRunRequest = components["schemas"]["DecisionRunRequest"];
 type DecisionRunResponse = components["schemas"]["DecisionRunResponse"];
 type DecisionPersonalizationResponse =
   components["schemas"]["DecisionPersonalizationResponse"];
+type DecisionWeightItem = components["schemas"]["DecisionWeightItem"];
+type DecisionWizardAnswers = components["schemas"]["DecisionWizardAnswers"];
+type DecisionWizardRecommendation =
+  components["schemas"]["DecisionWizardRecommendation"];
 type LegalSignalListResponse = components["schemas"]["LegalSignalDetailListResponse"];
 type LegalSignalTimelineResponse = components["schemas"]["LegalSignalTimelineResponse"];
 type HomeOverviewResponse = components["schemas"]["HomeOverviewResponse"];
@@ -66,6 +70,9 @@ export type FrontendCriticalContracts = {
   decisionRunRequest: DecisionRunRequest;
   decisionRunResponse: DecisionRunResponse;
   decisionPersonalizationResponse: DecisionPersonalizationResponse;
+  decisionWeightItem: DecisionWeightItem;
+  decisionWizardAnswers: DecisionWizardAnswers;
+  decisionWizardRecommendation: DecisionWizardRecommendation;
   legalSignals: LegalSignalListResponse;
   legalSignalTimeline: LegalSignalTimelineResponse;
   homeOverview: HomeOverviewResponse;

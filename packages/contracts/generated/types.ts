@@ -1212,6 +1212,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/decision/wizard/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve Wizard */
+        post: operations["resolve_wizard_api_v1_decision_wizard_resolve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -2542,6 +2559,80 @@ export interface components {
             criterion: string;
             /** Weight */
             weight: number;
+        };
+        /** DecisionWizardAnswers */
+        DecisionWizardAnswers: {
+            /**
+             * Primary Goal
+             * @enum {string}
+             */
+            primary_goal: "residence" | "citizenship" | "low_budget" | "business" | "safety" | "remote_work" | "study";
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /**
+             * Budget Level
+             * @default unknown
+             * @enum {string}
+             */
+            budget_level: "low" | "medium" | "high" | "unknown";
+            /**
+             * Family Status
+             * @default unknown
+             * @enum {string}
+             */
+            family_status: "solo" | "couple" | "family_with_children" | "unknown";
+            /**
+             * Work Priority
+             * @default medium
+             * @enum {string}
+             */
+            work_priority: "high" | "medium" | "low";
+            /**
+             * Safety Priority
+             * @default medium
+             * @enum {string}
+             */
+            safety_priority: "high" | "medium" | "low";
+            /**
+             * Citizenship Priority
+             * @default medium
+             * @enum {string}
+             */
+            citizenship_priority: "high" | "medium" | "low";
+            /**
+             * Business Priority
+             * @default medium
+             * @enum {string}
+             */
+            business_priority: "high" | "medium" | "low";
+            /**
+             * Timeframe
+             * @default unknown
+             * @enum {string}
+             */
+            timeframe: "fast" | "medium" | "long" | "unknown";
+        };
+        /** DecisionWizardRecommendation */
+        DecisionWizardRecommendation: {
+            /** Recommended Scenario Slug */
+            recommended_scenario_slug: string;
+            /** Recommended Persona Slug */
+            recommended_persona_slug: string | null;
+            /** Initial Custom Weights */
+            initial_custom_weights: {
+                [key: string]: number;
+            };
+            /** Candidate Country Slugs */
+            candidate_country_slugs: string[];
+            /** Explanation */
+            explanation: string[];
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
         };
         /**
          * EligibilityFlag
@@ -7176,7 +7267,9 @@ export interface operations {
     run_decision_api_v1_decision_run_post: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-CDA-Session"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7193,6 +7286,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DecisionRunResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_wizard_api_v1_decision_wizard_resolve_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-CDA-Session"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionWizardAnswers"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionWizardRecommendation"];
                 };
             };
             /** @description Validation Error */

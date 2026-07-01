@@ -3210,12 +3210,21 @@ paths:
       - decision
       summary: Run Decision
       operationId: run_decision_api_v1_decision_run_post
+      parameters:
+      - name: X-CDA-Session
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Cda-Session
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/DecisionRunRequest'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -3223,6 +3232,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DecisionRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/decision/wizard/resolve:
+    post:
+      tags:
+      - decision
+      summary: Resolve Wizard
+      operationId: resolve_wizard_api_v1_decision_wizard_resolve_post
+      parameters:
+      - name: X-CDA-Session
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Cda-Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionWizardAnswers'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionWizardRecommendation'
         '422':
           description: Validation Error
           content:
@@ -5834,6 +5877,134 @@ components:
       - criterion
       - weight
       title: DecisionWeightItem
+    DecisionWizardAnswers:
+      properties:
+        primary_goal:
+          type: string
+          enum:
+          - residence
+          - citizenship
+          - low_budget
+          - business
+          - safety
+          - remote_work
+          - study
+          title: Primary Goal
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        budget_level:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - unknown
+          title: Budget Level
+          default: unknown
+        family_status:
+          type: string
+          enum:
+          - solo
+          - couple
+          - family_with_children
+          - unknown
+          title: Family Status
+          default: unknown
+        work_priority:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Work Priority
+          default: medium
+        safety_priority:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Safety Priority
+          default: medium
+        citizenship_priority:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Citizenship Priority
+          default: medium
+        business_priority:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Business Priority
+          default: medium
+        timeframe:
+          type: string
+          enum:
+          - fast
+          - medium
+          - long
+          - unknown
+          title: Timeframe
+          default: unknown
+      type: object
+      required:
+      - primary_goal
+      title: DecisionWizardAnswers
+    DecisionWizardRecommendation:
+      properties:
+        recommended_scenario_slug:
+          type: string
+          title: Recommended Scenario Slug
+        recommended_persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommended Persona Slug
+        initial_custom_weights:
+          additionalProperties:
+            type: number
+          type: object
+          title: Initial Custom Weights
+        candidate_country_slugs:
+          items:
+            type: string
+          type: array
+          title: Candidate Country Slugs
+        explanation:
+          items:
+            type: string
+          type: array
+          title: Explanation
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+      type: object
+      required:
+      - recommended_scenario_slug
+      - recommended_persona_slug
+      - initial_custom_weights
+      - candidate_country_slugs
+      - explanation
+      - warnings
+      - confidence
+      title: DecisionWizardRecommendation
     EligibilityFlag:
       type: string
       enum:

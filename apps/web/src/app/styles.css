@@ -954,6 +954,47 @@ ol {
   border: 1px solid currentColor;
 }
 
+.decisionPersonalizationPanel {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid currentColor;
+}
+
+.decisionWeightSlider {
+  display: grid;
+  gap: 4px;
+}
+
+.decisionWeightSliderHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.decisionWeightSummary {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.decisionWeightWarning {
+  color: #b91c1c;
+  font-size: 12px;
+  margin: 0;
+}
+
+.decisionPersonalizationResult {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid currentColor;
+}
+
+.decisionEffectiveWeights {
+  font-size: 13px;
+}
+
 .resultMetaRow {
   display: flex;
   gap: 6px;

@@ -41,6 +41,7 @@ from app.schemas.decision_personalization import (
     DecisionWeightItem,
 )
 from app.schemas.sources import EvidenceItemListResponse
+from app.services import decision_analytics
 from app.services.decision_labels import (
     criterion_label,
     score_label_text,
@@ -51,6 +52,7 @@ from app.services.decision_personalization import (
     apply_effective_weights_to_breakdown,
     build_personalization_summary,
     normalize_custom_weights,
+    resolve_weight_mode,
 )
 from app.services.decision_warnings import build_risk_warnings
 from app.services.feature_flags import can_access, default_access_context
@@ -387,7 +389,9 @@ def compare_countries(
 
 
 def run_decision(
-    connection: Connection[Any], payload: DecisionRunRequest | DecisionRunInput
+    connection: Connection[Any],
+    payload: DecisionRunRequest | DecisionRunInput,
+    session_id: str | None = None,
 ) -> DecisionRunResponse:
     locale = validate_locale(str(payload.locale))
     scenario_row = repository.get_decision_scenario(
@@ -497,6 +501,15 @@ def run_decision(
     if effective_weights is not None:
         breakdown_rows = apply_effective_weights_to_breakdown(
             breakdown_rows, effective_weights
+        )
+        decision_analytics.record_custom_weights_used(
+            connection,
+            session_id=session_id,
+            scenario_slug=payload.scenario_slug,
+            persona_slug=payload.persona,
+            candidate_count=len(candidate_slugs),
+            criteria_count=len(allowed_criteria),
+            weight_mode=resolve_weight_mode(payload.persona, effective_weights),
         )
     breakdowns_by_score = _group_by(breakdown_rows, "country_score_id")
     signals_by_country = _group_by(legal_signal_rows, "country_slug")

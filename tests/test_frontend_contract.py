@@ -178,7 +178,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         ),
     )
     monkeypatch.setattr(
-        "app.api.v1.decision.decision_engine.run_decision", lambda *_: response
+        "app.api.v1.decision.decision_engine.run_decision", lambda *_a, **_kw: response
     )
 
     result = decision_route.run_decision(

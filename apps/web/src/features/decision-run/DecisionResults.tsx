@@ -4,6 +4,7 @@ import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { formatScore } from "../../shared/lib/format";
 import { DecisionResultCard } from "./DecisionResultCard";
+import { DecisionPersonalizationSummary } from "../decision-personalization";
 
 type DecisionResultsProps = {
   response: DecisionRunResponse;
@@ -18,6 +19,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
     locale,
     applied_persona,
     ranking_mode,
+    personalization,
   } = response;
 
   const winner = results[0] ?? null;
@@ -62,6 +64,8 @@ export function DecisionResults({ response }: DecisionResultsProps) {
           </div>
         </div>
       )}
+
+      <DecisionPersonalizationSummary personalization={personalization} />
 
       {winner && (
         <div className="decisionWinnerBlock">

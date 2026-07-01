@@ -20,8 +20,23 @@ import {
 } from "./decision-ready-scenarios";
 import { DecisionCiiComparison } from "../decision-visual-comparison";
 import { DecisionRiskContext } from "../platform-intelligence";
+import {
+  DECISION_CRITERIA_ORDER,
+  DEFAULT_DECISION_WEIGHTS,
+  DecisionWeightSliders,
+  type DecisionCriterion,
+} from "../decision-personalization";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
+
+const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
+  unknown_custom_weight_criterion: "Проверьте значения приоритетов.",
+  custom_weights_incomplete: "Проверьте значения приоритетов.",
+  custom_weight_out_of_range: "Проверьте значения приоритетов.",
+  custom_weight_invalid: "Проверьте значения приоритетов.",
+  custom_weights_sum_zero: "Сумма приоритетов должна быть больше нуля.",
+  decision_personalization_disabled: "Настройка приоритетов временно недоступна.",
+};
 
 function DecisionFormInner() {
   const searchParams = useSearchParams();
@@ -41,6 +56,13 @@ function DecisionFormInner() {
     DEFAULT_DECISION_READY_SCENARIO_SLUG,
   );
   const [selectedPersonaSlug, setSelectedPersonaSlug] = useState("");
+
+  const [customWeights, setCustomWeights] = useState<Record<DecisionCriterion, number>>(
+    {
+      ...DEFAULT_DECISION_WEIGHTS,
+    },
+  );
+  const [personalizationTouched, setPersonalizationTouched] = useState(false);
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -109,8 +131,25 @@ function DecisionFormInner() {
     );
   }
 
+  function handleWeightChange(criterion: DecisionCriterion, value: number) {
+    setCustomWeights((prev) => ({ ...prev, [criterion]: value }));
+    setPersonalizationTouched(true);
+  }
+
+  function handleWeightReset() {
+    setCustomWeights({ ...DEFAULT_DECISION_WEIGHTS });
+    setPersonalizationTouched(false);
+  }
+
+  const customWeightsSum = DECISION_CRITERIA_ORDER.reduce(
+    (total, criterion) => total + customWeights[criterion],
+    0,
+  );
+  const customWeightsBlocked = personalizationTouched && customWeightsSum === 0;
+
   async function handleRun() {
     if (candidateCountrySlugs.length === 0) return;
+    if (customWeightsBlocked) return;
     void trackEvent({
       event_type: "decision_started",
       source: "web",
@@ -132,6 +171,7 @@ function DecisionFormInner() {
         scenario_slug: scenarioSlug,
         locale,
         ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
+        ...(personalizationTouched ? { custom_weights: customWeights } : {}),
       });
       setResult(res);
     } catch (err: unknown) {
@@ -160,13 +200,17 @@ function DecisionFormInner() {
 
   const noScenariosAvailable = decisionReadyScenarios.length === 0;
 
+  const runErrorCode =
+    runError !== null && typeof runError === "object"
+      ? (runError as { error?: { code?: string } }).error?.code
+      : undefined;
+
   const resolvedRunError =
-    runError !== null &&
-    typeof runError === "object" &&
-    (runError as { error?: { code?: string } }).error?.code ===
-      "decision_score_not_found"
+    runErrorCode === "decision_score_not_found"
       ? "Этот сценарий пока недоступен для выбранных стран. Пожалуйста, выберите один из MVP-сценариев подбора."
-      : runError;
+      : runErrorCode && runErrorCode in DECISION_PERSONALIZATION_ERROR_MESSAGES
+        ? DECISION_PERSONALIZATION_ERROR_MESSAGES[runErrorCode]
+        : runError;
 
   return (
     <div className="decisionLayout">
@@ -268,11 +312,20 @@ function DecisionFormInner() {
           <p className="formHint">Рейтинг будет адаптирован под выбранный профиль.</p>
         </div>
 
+        <DecisionWeightSliders
+          weights={customWeights}
+          onChange={handleWeightChange}
+          onReset={handleWeightReset}
+        />
+
         <button
           className="runButton"
           onClick={handleRun}
           disabled={
-            isRunning || candidateCountrySlugs.length === 0 || noScenariosAvailable
+            isRunning ||
+            candidateCountrySlugs.length === 0 ||
+            noScenariosAvailable ||
+            customWeightsBlocked
           }
           aria-busy={isRunning}
           data-testid="decision-run-button"
