@@ -1010,6 +1010,21 @@ ol {
   font-weight: 700;
 }
 
+.decisionWizardToggle {
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  background: none;
+  flex-shrink: 0;
+}
+
+.decisionWizardPanel {
+  display: grid;
+  gap: 10px;
+}
+
 .decisionWizardGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -1021,13 +1036,23 @@ ol {
 }
 
 .decisionWizardResult {
+  display: grid;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid currentColor;
+  font-size: 12px;
+}
+
+.decisionWizardResultTop {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  padding-top: 6px;
-  border-top: 1px solid currentColor;
-  font-size: 12px;
+}
+
+.decisionWizardSummaryBlock {
+  display: grid;
+  gap: 4px;
 }
 
 .decisionEffectiveWeights {

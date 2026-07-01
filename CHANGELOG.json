@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "task": "chore/episode-9-checklist-closeout",
+      "status": "task_started",
+      "timestamp": "2026-07-01T14:43:34.4928054+03:00",
+      "branch": "codex/episode-9-checklist-closeout",
+      "notes": [
+        "Audit Episode 9 decision personalization checklist.",
+        "Close remaining verification gaps without adding product features."
+      ]
+    },
+    {
+      "task": "chore/episode-9-checklist-closeout",
+      "status": "task_completed",
+      "timestamp": "2026-07-01T14:57:43.4212714+03:00",
+      "branch": "codex/episode-9-checklist-closeout",
+      "notes": [
+        "Decision wizard checklist gaps closed with panel structure, open/close smoke, recommendation summary, and started analytics event.",
+        "Decision criteria registry metadata and data-quality guard added.",
+        "Full backend, frontend, migration, runtime smoke, and E2E gates passed."
+      ]
+    }
+  ]
+}

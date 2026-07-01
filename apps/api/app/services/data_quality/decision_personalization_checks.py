@@ -1,5 +1,6 @@
 from app.repositories import data_quality as repository
 from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
+from app.services import decision_criteria
 from app.services.data_quality._issues import _check, _issue
 from psycopg import Connection
 from typing import Any
@@ -64,5 +65,23 @@ def _append_decision_personalization_checks(
             "decision_wizard_rules_have_active_dependencies",
             issues,
             ["decision_wizard_dependency_missing"],
+        )
+    )
+    for row in decision_criteria.list_decision_criterion_metadata_issues():
+        issues.append(
+            _issue(
+                "decision_criterion_metadata_invalid",
+                "critical",
+                "decision_criterion",
+                row.get("criterion"),
+                "Decision criterion definition is missing required metadata.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "decision_criteria_registry_complete",
+            issues,
+            ["decision_criterion_metadata_invalid"],
         )
     )
