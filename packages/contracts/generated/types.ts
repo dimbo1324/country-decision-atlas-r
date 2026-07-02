@@ -1263,6 +1263,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/decision/passports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Decision Passport */
+        post: operations["create_decision_passport_api_v1_decision_passports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/passports/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Decision Passport */
+        get: operations["read_decision_passport_api_v1_decision_passports__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/countries/{country_slug}/what-changed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country What Changed */
+        get: operations["read_country_what_changed_api_v1_countries__country_slug__what_changed_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -2593,6 +2644,120 @@ export interface components {
             /** Items */
             items: components["schemas"]["DecisionCountryScore"][];
             locale: components["schemas"]["LocaleResolution"];
+        };
+        /** DecisionPassportCreateRequest */
+        DecisionPassportCreateRequest: {
+            decision_request: components["schemas"]["DecisionRunRequest"];
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "en" | "ru";
+            /** Expires In Days */
+            expires_in_days?: number | null;
+        };
+        /** DecisionPassportCreateResponse */
+        DecisionPassportCreateResponse: {
+            /** Passport Id */
+            passport_id: string;
+            /** Token */
+            token: string;
+            /** Path */
+            path: string;
+            /** Expires At */
+            expires_at?: string | null;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+        };
+        /** DecisionPassportMethodologySnapshot */
+        DecisionPassportMethodologySnapshot: {
+            /** Decision Engine Version */
+            decision_engine_version: string;
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Custom Weights Applied */
+            custom_weights_applied: boolean;
+            /** Weight Mode */
+            weight_mode: string;
+            /** Ranking Policy */
+            ranking_policy: string;
+            /** Disclaimer */
+            disclaimer: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+        };
+        /** DecisionPassportResponse */
+        DecisionPassportResponse: {
+            /** Id */
+            id: string;
+            /**
+             * Locale
+             * @enum {string}
+             */
+            locale: "en" | "ru";
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Candidate Country Slugs */
+            candidate_country_slugs: string[];
+            /** Selected Country Slug */
+            selected_country_slug?: string | null;
+            decision_result: components["schemas"]["DecisionRunResponse"];
+            methodology_snapshot: components["schemas"]["DecisionPassportMethodologySnapshot"];
+            /** Source Ids */
+            source_ids?: string[];
+            /** Route Ids */
+            route_ids?: string[];
+            /** Source Refs */
+            source_refs?: components["schemas"]["DecisionPassportSourceRef"][];
+            /** Route Refs */
+            route_refs?: components["schemas"]["DecisionPassportRouteRef"][];
+            /** Disclaimer */
+            disclaimer: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Expires At */
+            expires_at?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired" | "revoked";
+        };
+        /** DecisionPassportRouteRef */
+        DecisionPassportRouteRef: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Country Slug */
+            country_slug?: string | null;
+        };
+        /** DecisionPassportSourceRef */
+        DecisionPassportSourceRef: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
         };
         /** DecisionPersonalizationResponse */
         DecisionPersonalizationResponse: {
@@ -4844,6 +5009,86 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** WhatChangedItem */
+        WhatChangedItem: {
+            /** Id */
+            id: string;
+            /**
+             * Event Type
+             * @enum {string}
+             */
+            event_type: "legal_signal_published" | "route_published" | "route_updated" | "drift_changed" | "source_added" | "evidence_added" | "trust_updated" | "platform_metric_updated";
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Path */
+            path: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /**
+             * Importance
+             * @enum {string}
+             */
+            importance: "low" | "medium" | "high" | "critical";
+            /** Source */
+            source: string;
+        };
+        /** WhatChangedResponse */
+        WhatChangedResponse: {
+            /** Country Slug */
+            country_slug: string;
+            /**
+             * Since
+             * Format: date-time
+             */
+            since: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            summary: components["schemas"]["WhatChangedSummary"];
+            /** Items */
+            items?: components["schemas"]["WhatChangedItem"][];
+        };
+        /** WhatChangedSummary */
+        WhatChangedSummary: {
+            /**
+             * Total
+             * @default 0
+             */
+            total: number;
+            /**
+             * Legal Signals
+             * @default 0
+             */
+            legal_signals: number;
+            /**
+             * Routes
+             * @default 0
+             */
+            routes: number;
+            /**
+             * Drift
+             * @default 0
+             */
+            drift: number;
+            /**
+             * Sources
+             * @default 0
+             */
+            sources: number;
         };
     };
     responses: never;
@@ -7606,6 +7851,106 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DecisionWizardRecommendation"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_decision_passport_api_v1_decision_passports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionPassportCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionPassportCreateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_decision_passport_api_v1_decision_passports__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionPassportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_country_what_changed_api_v1_countries__country_slug__what_changed_get: {
+        parameters: {
+            query?: {
+                since?: string | null;
+                days?: number;
+                limit?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WhatChangedResponse"];
                 };
             };
             /** @description Validation Error */

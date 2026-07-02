@@ -1,8 +1,10 @@
 export * from "./countries";
 export * from "./country-drift";
+export * from "./country-pairs";
 export * from "./data-quality";
 export * from "./data-journal";
 export * from "./decision";
+export * from "./decision-passports";
 export * from "./feature-flags";
 export * from "./evidence";
 export * from "./glossary";
@@ -16,3 +18,4 @@ export * from "./scenarios";
 export * from "./sources";
 export * from "./trust";
 export * from "./user-stories";
+export * from "./what-changed";

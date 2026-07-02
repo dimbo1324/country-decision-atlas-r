@@ -26,6 +26,23 @@ const COMPATIBILITY_LABELS: Record<string, string> = {
   unknown: "Неизвестно",
 };
 
+const FRESHNESS_LABELS: Record<string, string> = {
+  fresh: "свежие",
+  current: "актуальные",
+  stale: "устаревшие",
+  unknown: "неизвестно",
+};
+
+const NOTE_TYPE_LABELS: Record<string, string> = {
+  visa: "Виза",
+  banking: "Банки",
+  tax: "Налоги",
+  flight_logistics: "Логистика перелётов",
+  timezone: "Часовой пояс",
+  language: "Язык",
+  migration_restriction: "Миграционные ограничения",
+};
+
 export function DecisionResultCard({
   result,
   locale,
@@ -86,40 +103,54 @@ export function DecisionResultCard({
         </div>
       )}
 
-      {originContextStatus && originContextStatus !== "not_requested" && (
-        <div className="resultSection" data-testid="origin-aware-context">
-          <h4 className="resultSectionTitle">Контекст маршрута</h4>
-          {result.country_pair_context ? (
-            <div className="originPairContext" data-testid="origin-pair-context">
-              <div className="metaRow">
-                <span className="metaChip">
-                  {COMPATIBILITY_LABELS[
-                    result.country_pair_context.compatibility_label
-                  ] ?? result.country_pair_context.compatibility_label}
-                </span>
-                <ConfidenceBadge confidence={result.country_pair_context.confidence} />
-              </div>
-              {result.country_pair_context.practical_summary && (
-                <p className="resultSummary">
-                  {result.country_pair_context.practical_summary}
-                </p>
-              )}
-              {(result.country_pair_context.key_notes ?? []).length > 0 && (
-                <ul className="pointsList">
-                  {(result.country_pair_context.key_notes ?? []).map((note) => (
-                    <li key={note.type}>{note.message}</li>
-                  ))}
-                </ul>
-              )}
-              <p className="formHint">Практическая совместимость</p>
+      <div className="resultSection" data-testid="origin-aware-context">
+        <h4 className="resultSectionTitle">Контекст маршрута</h4>
+        {!originContextStatus || originContextStatus === "not_requested" ? (
+          <p className="formHint" data-testid="origin-context-not-requested">
+            Укажите страну отправления, чтобы увидеть контекст маршрута.
+          </p>
+        ) : result.country_pair_context ? (
+          <div className="originPairContext" data-testid="origin-pair-context">
+            <div className="metaRow">
+              <span className="metaChip">
+                {COMPATIBILITY_LABELS[
+                  result.country_pair_context.compatibility_label
+                ] ?? result.country_pair_context.compatibility_label}
+              </span>
+              <ConfidenceBadge confidence={result.country_pair_context.confidence} />
+              <span className="metaChip">
+                Данные:{" "}
+                {FRESHNESS_LABELS[result.country_pair_context.freshness_status] ??
+                  result.country_pair_context.freshness_status}
+              </span>
             </div>
-          ) : (
-            <p className="formHint" data-testid="origin-pair-context-empty">
-              Нет данных по маршруту происхождения
-            </p>
-          )}
-        </div>
-      )}
+            {result.country_pair_context.practical_summary && (
+              <p className="resultSummary">
+                {result.country_pair_context.practical_summary}
+              </p>
+            )}
+            {(result.country_pair_context.key_notes ?? []).length > 0 && (
+              <ul className="pointsList">
+                {(result.country_pair_context.key_notes ?? []).map((note) => (
+                  <li key={note.type}>
+                    <strong>{NOTE_TYPE_LABELS[note.type] ?? note.type}:</strong>{" "}
+                    {note.message}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {(result.country_pair_context.source_ids ?? []).length > 0 && (
+              <p className="formHint">
+                Источников: {(result.country_pair_context.source_ids ?? []).length}
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="formHint" data-testid="origin-pair-context-empty">
+            Пока нет данных по этому маршруту.
+          </p>
+        )}
+      </div>
 
       {result.breakdown.length > 0 && (
         <div className="resultSection">

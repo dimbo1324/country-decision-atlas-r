@@ -28,7 +28,9 @@ test.describe("Origin-aware decision context", () => {
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByTestId("origin-aware-context")).toHaveCount(0);
+    await expect(
+      page.getByTestId("origin-context-not-requested").first(),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 

@@ -3352,6 +3352,121 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/decision/passports:
+    post:
+      tags:
+      - decision-passports
+      summary: Create Decision Passport
+      operationId: create_decision_passport_api_v1_decision_passports_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionPassportCreateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionPassportCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/decision/passports/{token}:
+    get:
+      tags:
+      - decision-passports
+      summary: Read Decision Passport
+      operationId: read_decision_passport_api_v1_decision_passports__token__get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionPassportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/what-changed:
+    get:
+      tags:
+      - what-changed
+      summary: Read Country What Changed
+      operationId: read_country_what_changed_api_v1_countries__country_slug__what_changed_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      - name: since
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Since
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 365
+          minimum: 1
+          default: 30
+          title: Days
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatChangedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/home/overview:
     get:
       tags:
@@ -5986,6 +6101,225 @@ components:
       - items
       - locale
       title: DecisionCountryScoreListResponse
+    DecisionPassportCreateRequest:
+      properties:
+        decision_request:
+          $ref: '#/components/schemas/DecisionRunRequest'
+        locale:
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
+          default: ru
+        expires_in_days:
+          anyOf:
+          - type: integer
+            maximum: 365.0
+            minimum: 1.0
+          - type: 'null'
+          title: Expires In Days
+      type: object
+      required:
+      - decision_request
+      title: DecisionPassportCreateRequest
+    DecisionPassportCreateResponse:
+      properties:
+        passport_id:
+          type: string
+          title: Passport Id
+        token:
+          type: string
+          title: Token
+        path:
+          type: string
+          title: Path
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - passport_id
+      - token
+      - path
+      - generated_at
+      title: DecisionPassportCreateResponse
+    DecisionPassportMethodologySnapshot:
+      properties:
+        decision_engine_version:
+          type: string
+          title: Decision Engine Version
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        custom_weights_applied:
+          type: boolean
+          title: Custom Weights Applied
+        weight_mode:
+          type: string
+          title: Weight Mode
+        ranking_policy:
+          type: string
+          title: Ranking Policy
+        disclaimer:
+          type: string
+          title: Disclaimer
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - decision_engine_version
+      - scenario_slug
+      - custom_weights_applied
+      - weight_mode
+      - ranking_policy
+      - disclaimer
+      - generated_at
+      title: DecisionPassportMethodologySnapshot
+    DecisionPassportResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        locale:
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        candidate_country_slugs:
+          items:
+            type: string
+          type: array
+          title: Candidate Country Slugs
+        selected_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Country Slug
+        decision_result:
+          $ref: '#/components/schemas/DecisionRunResponse'
+        methodology_snapshot:
+          $ref: '#/components/schemas/DecisionPassportMethodologySnapshot'
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+        route_ids:
+          items:
+            type: string
+          type: array
+          title: Route Ids
+        source_refs:
+          items:
+            $ref: '#/components/schemas/DecisionPassportSourceRef'
+          type: array
+          title: Source Refs
+        route_refs:
+          items:
+            $ref: '#/components/schemas/DecisionPassportRouteRef'
+          type: array
+          title: Route Refs
+        disclaimer:
+          type: string
+          title: Disclaimer
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        status:
+          type: string
+          enum:
+          - active
+          - expired
+          - revoked
+          title: Status
+      type: object
+      required:
+      - id
+      - locale
+      - scenario_slug
+      - candidate_country_slugs
+      - decision_result
+      - methodology_snapshot
+      - disclaimer
+      - generated_at
+      - status
+      title: DecisionPassportResponse
+    DecisionPassportRouteRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      type: object
+      required:
+      - id
+      - title
+      title: DecisionPassportRouteRef
+    DecisionPassportSourceRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: DecisionPassportSourceRef
     DecisionPersonalizationResponse:
       properties:
         weight_mode:
@@ -10381,6 +10715,121 @@ components:
       - msg
       - type
       title: ValidationError
+    WhatChangedItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          enum:
+          - legal_signal_published
+          - route_published
+          - route_updated
+          - drift_changed
+          - source_added
+          - evidence_added
+          - trust_updated
+          - platform_metric_updated
+          title: Event Type
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        country_slug:
+          type: string
+          title: Country Slug
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        path:
+          type: string
+          title: Path
+        occurred_at:
+          type: string
+          format: date-time
+          title: Occurred At
+        importance:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - critical
+          title: Importance
+        source:
+          type: string
+          title: Source
+      type: object
+      required:
+      - id
+      - event_type
+      - entity_type
+      - entity_id
+      - country_slug
+      - title
+      - summary
+      - path
+      - occurred_at
+      - importance
+      - source
+      title: WhatChangedItem
+    WhatChangedResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        since:
+          type: string
+          format: date-time
+          title: Since
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        summary:
+          $ref: '#/components/schemas/WhatChangedSummary'
+        items:
+          items:
+            $ref: '#/components/schemas/WhatChangedItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - country_slug
+      - since
+      - generated_at
+      - summary
+      title: WhatChangedResponse
+    WhatChangedSummary:
+      properties:
+        total:
+          type: integer
+          title: Total
+          default: 0
+        legal_signals:
+          type: integer
+          title: Legal Signals
+          default: 0
+        routes:
+          type: integer
+          title: Routes
+          default: 0
+        drift:
+          type: integer
+          title: Drift
+          default: 0
+        sources:
+          type: integer
+          title: Sources
+          default: 0
+      type: object
+      title: WhatChangedSummary
   securitySchemes:
     AdminTokenAuth:
       type: apiKey

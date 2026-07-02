@@ -7,6 +7,7 @@ from app.api.v1 import (
     country_pairs,
     data_journal,
     decision,
+    decision_passports,
     feature_flags,
     glossary,
     home,
@@ -20,6 +21,7 @@ from app.api.v1 import (
     translations,
     trust,
     user_stories,
+    what_changed,
 )
 from app.core.database import close_database_pool, open_database_pool
 from app.schemas.system import HealthResponse, ReadinessResponse
@@ -214,6 +216,8 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(feature_flags.router, prefix="/api/v1")
     app.include_router(user_stories.router, prefix="/api/v1")
     app.include_router(decision.router, prefix="/api/v1")
+    app.include_router(decision_passports.router, prefix="/api/v1")
+    app.include_router(what_changed.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

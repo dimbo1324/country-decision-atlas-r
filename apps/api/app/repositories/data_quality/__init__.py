@@ -67,6 +67,15 @@ from app.repositories.data_quality.country_pairs import (
     list_published_pairs_without_sources as list_published_pairs_without_sources,
     list_stale_published_pairs as list_stale_published_pairs,
 )
+from app.repositories.data_quality.decision_passports import (
+    list_active_passports_missing_scenario_slug as list_active_passports_missing_scenario_slug,
+    list_active_passports_with_empty_candidates as list_active_passports_with_empty_candidates,
+    list_active_passports_with_empty_result_snapshot as list_active_passports_with_empty_result_snapshot,
+    list_active_passports_with_selected_country_not_in_candidates as list_active_passports_with_selected_country_not_in_candidates,
+    list_active_passports_without_sources as list_active_passports_without_sources,
+    list_old_active_passports_without_expires_at as list_old_active_passports_without_expires_at,
+    list_passports_with_inconsistent_expiry_status as list_passports_with_inconsistent_expiry_status,
+)
 from app.repositories.data_quality.decision_personalization import (
     list_decision_personalization_feature_flag_mismatches as list_decision_personalization_feature_flag_mismatches,
     list_decision_scores_missing_required_criteria as list_decision_scores_missing_required_criteria,
@@ -122,6 +131,9 @@ from app.repositories.data_quality.routes import (
     list_route_evidence_country_mismatches as list_route_evidence_country_mismatches,
     list_route_source_country_mismatches as list_route_source_country_mismatches,
 )
+from app.repositories.data_quality.search_documents import (
+    list_search_documents_referencing_non_published_content as list_search_documents_referencing_non_published_content,
+)
 from app.repositories.data_quality.trust import (
     list_active_countries_missing_trust_scores as list_active_countries_missing_trust_scores,
     list_inconsistent_trust_insufficient_data as list_inconsistent_trust_insufficient_data,
@@ -129,4 +141,8 @@ from app.repositories.data_quality.trust import (
     list_missing_required_glossary_terms as list_missing_required_glossary_terms,
     list_missing_required_methodology_sections as list_missing_required_methodology_sections,
     list_stale_trust_scores as list_stale_trust_scores,
+)
+from app.repositories.data_quality.what_changed import (
+    list_domain_events_referencing_non_published_content as list_domain_events_referencing_non_published_content,
+    list_domain_events_with_unknown_country as list_domain_events_with_unknown_country,
 )

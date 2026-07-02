@@ -9,6 +9,9 @@ from app.services.data_quality.country_drift_checks import (
     _append_country_drift_checks,
 )
 from app.services.data_quality.country_pair_checks import _append_country_pair_checks
+from app.services.data_quality.decision_passport_checks import (
+    _append_decision_passport_checks,
+)
 from app.services.data_quality.decision_personalization_checks import (
     _append_decision_personalization_checks,
 )
@@ -17,7 +20,11 @@ from app.services.data_quality.platform_checks import _append_platform_runtime_c
 from app.services.data_quality.route_checklist_checks import (
     _append_route_checklist_checks,
 )
+from app.services.data_quality.search_foundation_checks import (
+    _append_search_foundation_checks,
+)
 from app.services.data_quality.trust_checks import _append_trust_surface_checks
+from app.services.data_quality.what_changed_checks import _append_what_changed_checks
 from psycopg import Connection
 from typing import Any
 
@@ -916,8 +923,11 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_trust_surface_checks(connection, issues, checks)
     _append_country_drift_checks(connection, issues, checks)
     _append_decision_personalization_checks(connection, issues, checks)
+    _append_decision_passport_checks(connection, issues, checks)
     _append_country_pair_checks(connection, issues, checks)
     _append_route_checklist_checks(connection, issues, checks)
+    _append_what_changed_checks(connection, issues, checks)
+    _append_search_foundation_checks(connection, issues, checks)
     from app.services import data_quality as data_quality_facade
 
     translation_checks, translation_issues = (

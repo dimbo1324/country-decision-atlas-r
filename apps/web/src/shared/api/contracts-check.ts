@@ -26,6 +26,18 @@ type CountryPairCompatibilityListResponse =
   components["schemas"]["CountryPairCompatibilityListResponse"];
 type CountryPairCompatibilitySummary =
   components["schemas"]["CountryPairCompatibilitySummary"];
+type DecisionPassportCreateRequest =
+  components["schemas"]["DecisionPassportCreateRequest"];
+type DecisionPassportCreateResponse =
+  components["schemas"]["DecisionPassportCreateResponse"];
+type DecisionPassportResponse = components["schemas"]["DecisionPassportResponse"];
+type DecisionPassportMethodologySnapshot =
+  components["schemas"]["DecisionPassportMethodologySnapshot"];
+type DecisionPassportSourceRef = components["schemas"]["DecisionPassportSourceRef"];
+type DecisionPassportRouteRef = components["schemas"]["DecisionPassportRouteRef"];
+type WhatChangedItem = components["schemas"]["WhatChangedItem"];
+type WhatChangedSummary = components["schemas"]["WhatChangedSummary"];
+type WhatChangedResponse = components["schemas"]["WhatChangedResponse"];
 type SourceListResponse = components["schemas"]["SourceListResponse"];
 type EvidenceItemListResponse = components["schemas"]["EvidenceItemListResponse"];
 type ScenarioListResponse = components["schemas"]["ScenarioListResponse"];
@@ -89,6 +101,15 @@ export type FrontendCriticalContracts = {
   countryPairCompatibility: CountryPairCompatibilityResponse;
   countryPairCompatibilityList: CountryPairCompatibilityListResponse;
   countryPairCompatibilitySummary: CountryPairCompatibilitySummary;
+  decisionPassportCreateRequest: DecisionPassportCreateRequest;
+  decisionPassportCreateResponse: DecisionPassportCreateResponse;
+  decisionPassportResponse: DecisionPassportResponse;
+  decisionPassportMethodologySnapshot: DecisionPassportMethodologySnapshot;
+  decisionPassportSourceRef: DecisionPassportSourceRef;
+  decisionPassportRouteRef: DecisionPassportRouteRef;
+  whatChangedItem: WhatChangedItem;
+  whatChangedSummary: WhatChangedSummary;
+  whatChangedResponse: WhatChangedResponse;
   sources: SourceListResponse;
   evidenceItems: EvidenceItemListResponse;
   scenarios: ScenarioListResponse;

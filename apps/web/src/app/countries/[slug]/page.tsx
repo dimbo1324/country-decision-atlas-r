@@ -20,6 +20,7 @@ import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
 import { TrustSurfaceBlock } from "../../../features/trust-surface";
+import { CountryWhatChanged } from "../../../features/what-changed";
 
 export const dynamic = "force-dynamic";
 
@@ -131,6 +132,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection">
           <h2 className="cardSectionTitle">Профиль страны</h2>
           <CountryProfileSections profile={card.profile} skipExecutiveSummary />
+        </section>
+
+        <section className="cardSection" data-testid="what-changed-section">
+          <h2 className="cardSectionTitle">Что изменилось</h2>
+          <CountryWhatChanged countrySlug={card.country.slug} locale={locale} />
         </section>
 
         <section className="cardSection">

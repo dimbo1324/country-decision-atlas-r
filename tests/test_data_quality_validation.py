@@ -2,6 +2,7 @@ from app.api.v1 import admin as admin_route
 from app.repositories import (
     data_quality as data_quality_repository,
     route_checklists as route_checklists_repository,
+    search_index as search_index_repository,
 )
 from app.schemas.data_quality import DataQualityReport
 from app.services import data_quality
@@ -128,6 +129,16 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_stale_published_pairs",
         "list_published_checklist_items_missing_title",
         "list_duplicate_step_order_checklist_items",
+        "list_active_passports_missing_scenario_slug",
+        "list_active_passports_with_empty_candidates",
+        "list_active_passports_with_empty_result_snapshot",
+        "list_active_passports_with_selected_country_not_in_candidates",
+        "list_passports_with_inconsistent_expiry_status",
+        "list_active_passports_without_sources",
+        "list_old_active_passports_without_expires_at",
+        "list_domain_events_with_unknown_country",
+        "list_domain_events_referencing_non_published_content",
+        "list_search_documents_referencing_non_published_content",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     for name in [
@@ -135,6 +146,10 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_orphan_checklist_items",
     ]:
         monkeypatch.setattr(route_checklists_repository, name, lambda *_: [])
+    monkeypatch.setattr(
+        search_index_repository, "list_broken_search_documents", lambda *_: []
+    )
+    monkeypatch.setattr(search_index_repository, "count_search_documents", lambda *_: 1)
 
 
 def test_data_quality_migration_adds_required_constraints() -> None:

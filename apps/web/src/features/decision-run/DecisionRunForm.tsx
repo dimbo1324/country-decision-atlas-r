@@ -5,7 +5,10 @@ import { useSearchParams } from "next/navigation";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { ScenarioListResponse } from "../../shared/api/scenarios";
-import type { DecisionRunResponse } from "../../shared/api/decision";
+import type {
+  DecisionRunRequest,
+  DecisionRunResponse,
+} from "../../shared/api/decision";
 import type { PersonaListResponse } from "../../shared/api/personas";
 import { countriesApi, scenariosApi, decisionApi, personasApi } from "../../shared/api";
 import { trackEvent } from "../../shared/analytics/client";
@@ -13,6 +16,7 @@ import { normalizeLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
+import { DecisionPassportActions } from "../decision-passports";
 import { DecisionResults } from "./DecisionResults";
 import {
   DEFAULT_DECISION_READY_SCENARIO_SLUG,
@@ -66,6 +70,8 @@ function DecisionFormInner() {
   const [personalizationTouched, setPersonalizationTouched] = useState(false);
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
+  const [lastDecisionRequest, setLastDecisionRequest] =
+    useState<DecisionRunRequest | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [runError, setRunError] = useState<RunError>(null);
 
@@ -179,16 +185,18 @@ function DecisionFormInner() {
     setIsRunning(true);
     setRunError(null);
     setResult(null);
+    const decisionRequest: DecisionRunRequest = {
+      candidate_country_slugs: candidateCountrySlugs,
+      scenario_slug: scenarioSlug,
+      locale,
+      ...(originCountrySlug ? { origin_country_slug: originCountrySlug } : {}),
+      ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
+      ...(personalizationTouched ? { custom_weights: customWeights } : {}),
+    };
     try {
-      const res = await decisionApi.runDecision({
-        candidate_country_slugs: candidateCountrySlugs,
-        scenario_slug: scenarioSlug,
-        locale,
-        ...(originCountrySlug ? { origin_country_slug: originCountrySlug } : {}),
-        ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
-        ...(personalizationTouched ? { custom_weights: customWeights } : {}),
-      });
+      const res = await decisionApi.runDecision(decisionRequest);
       setResult(res);
+      setLastDecisionRequest(decisionRequest);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setRunError(err.message);
@@ -255,6 +263,9 @@ function DecisionFormInner() {
               </option>
             ))}
           </select>
+          <p className="formHint">
+            Страна отправления влияет только на контекст, не на базовый рейтинг
+          </p>
         </div>
 
         <div className="formGroup">
@@ -367,6 +378,12 @@ function DecisionFormInner() {
           <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
         )}
         {result !== null && <DecisionResults response={result} />}
+        {result !== null && lastDecisionRequest !== null && (
+          <DecisionPassportActions
+            decisionRequest={lastDecisionRequest}
+            locale={locale}
+          />
+        )}
         {result !== null && candidateCountrySlugs.length === 2 && (
           <DecisionCiiComparison
             countrySlugs={candidateCountrySlugs}
