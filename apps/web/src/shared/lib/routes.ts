@@ -6,6 +6,7 @@ export const routes = {
   compare: "/compare",
   legalSignals: "/legal-signals",
   sources: "/sources",
+  search: "/search",
   dataQuality: "/internal/data-quality",
   legalSignalsForCountry: (slug: string, locale: string) =>
     `/legal-signals?country_slug=${slug}&locale=${locale}`,

@@ -1314,6 +1314,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search */
+        get: operations["search_api_v1_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -4225,6 +4242,46 @@ export interface components {
             runner_up_score?: number | null;
             /** Delta */
             delta?: number | null;
+        };
+        /** SearchResponse */
+        SearchResponse: {
+            /** Query */
+            query: string;
+            /**
+             * Locale
+             * @enum {string}
+             */
+            locale: "en" | "ru";
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Items */
+            items?: components["schemas"]["SearchResultItem"][];
+        };
+        /** SearchResultItem */
+        SearchResultItem: {
+            /** Id */
+            id: string;
+            /**
+             * Entity Type
+             * @enum {string}
+             */
+            entity_type: "country" | "route" | "route_checklist_item" | "legal_signal" | "source" | "evidence_item" | "country_pair_compatibility" | "methodology" | "glossary_term";
+            /** Entity Id */
+            entity_id: string;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Title */
+            title: string;
+            /** Snippet */
+            snippet: string;
+            /** Path */
+            path: string;
+            /** Rank */
+            rank: number;
         };
         /** SortMeta */
         SortMeta: {
@@ -7951,6 +8008,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WhatChangedResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_api_v1_search_get: {
+        parameters: {
+            query: {
+                q: string;
+                types?: string | null;
+                country_slug?: string | null;
+                limit?: number;
+                offset?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResponse"];
                 };
             };
             /** @description Validation Error */

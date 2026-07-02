@@ -79,6 +79,8 @@ type CountryDriftRecomputeRequest =
 type CountryDriftRecomputeResult = components["schemas"]["CountryDriftRecomputeResult"];
 type CountryDriftBatchRecomputeResult =
   components["schemas"]["CountryDriftBatchRecomputeResult"];
+type SearchResultItem = components["schemas"]["SearchResultItem"];
+type SearchResponse = components["schemas"]["SearchResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -146,4 +148,6 @@ export type FrontendCriticalContracts = {
   countryDriftRecomputeRequest: CountryDriftRecomputeRequest;
   countryDriftRecomputeResult: CountryDriftRecomputeResult;
   countryDriftBatchRecomputeResult: CountryDriftBatchRecomputeResult;
+  searchResultItem: SearchResultItem;
+  searchResponse: SearchResponse;
 };

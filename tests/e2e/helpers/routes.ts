@@ -15,5 +15,9 @@ export const e2eRoutes = {
     const qs = params ? "?" + new URLSearchParams(params).toString() : "";
     return `/sources${qs}`;
   },
+  search: (params?: Record<string, string>) => {
+    const qs = params ? "?" + new URLSearchParams(params).toString() : "";
+    return `/search${qs}`;
+  },
   dataQuality: "/internal/data-quality",
 };

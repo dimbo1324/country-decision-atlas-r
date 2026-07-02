@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { SearchBox } from "../../features/search";
 import { normalizeLocale } from "../lib/locale";
 import { routes, withLocale } from "../lib/routes";
 import { AppNavigation } from "./AppNavigation";
@@ -17,6 +18,7 @@ export function AppHeader() {
           Country Decision Atlas
         </Link>
         <AppNavigation />
+        <SearchBox />
         <LocaleSwitcher />
       </div>
     </header>

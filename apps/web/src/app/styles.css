@@ -2678,6 +2678,91 @@ ol {
   text-decoration: none;
 }
 
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.searchBoxInput {
+  padding: 4px 8px;
+  font-size: 13px;
+  border: 1px solid currentColor;
+  min-width: 160px;
+}
+
+.searchBoxSubmit {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  background: none;
+}
+
+.searchPageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.searchPageForm {
+  display: flex;
+  gap: 6px;
+}
+
+.searchPageForm .searchBoxInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.searchTypeFilterList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.searchTypeFilterOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.searchResultList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.searchResultCard {
+  padding: 10px;
+  border: 1px solid currentColor;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.searchResultCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.searchResultTitle {
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.searchResultTitle:hover {
+  text-decoration: underline;
+}
+
+.searchResultSnippet {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
 @media (max-width: 760px) {
   .homeCountryCards,
   .homeOverviewGrid,

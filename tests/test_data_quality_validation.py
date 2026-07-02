@@ -139,6 +139,12 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_domain_events_with_unknown_country",
         "list_domain_events_referencing_non_published_content",
         "list_search_documents_referencing_non_published_content",
+        "list_active_countries_missing_from_index",
+        "list_published_routes_missing_from_index",
+        "list_published_legal_signals_missing_from_index",
+        "list_published_sources_missing_from_index",
+        "list_published_evidence_missing_from_index",
+        "list_search_documents_with_incomplete_locale_coverage",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     for name in [

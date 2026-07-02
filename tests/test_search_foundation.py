@@ -142,9 +142,7 @@ def test_upsert_search_document_source_is_sql_only() -> None:
     assert "ON CONFLICT (entity_type, entity_id, locale)" in source
 
 
-def test_dq_ignores_empty_index_as_non_critical(monkeypatch: Any) -> None:
-    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
-    monkeypatch.setattr(repository, "count_search_documents", lambda *_: 0)
+def _install_clean_coverage_fakes(monkeypatch: Any) -> Any:
     from app.repositories import data_quality as dq_repository
 
     monkeypatch.setattr(
@@ -152,6 +150,22 @@ def test_dq_ignores_empty_index_as_non_critical(monkeypatch: Any) -> None:
         "list_search_documents_referencing_non_published_content",
         lambda *_: [],
     )
+    for name in [
+        "list_active_countries_missing_from_index",
+        "list_published_routes_missing_from_index",
+        "list_published_legal_signals_missing_from_index",
+        "list_published_sources_missing_from_index",
+        "list_published_evidence_missing_from_index",
+        "list_search_documents_with_incomplete_locale_coverage",
+    ]:
+        monkeypatch.setattr(dq_repository, name, lambda *_: [])
+    return dq_repository
+
+
+def test_dq_ignores_empty_index_as_non_critical(monkeypatch: Any) -> None:
+    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+    monkeypatch.setattr(repository, "count_search_documents", lambda *_: 0)
+    _install_clean_coverage_fakes(monkeypatch)
 
     issues: list[Any] = []
     checks: list[Any] = []
@@ -168,13 +182,7 @@ def test_dq_detects_broken_document(monkeypatch: Any) -> None:
         lambda *_: [{"id": "doc-1", "path": ""}],
     )
     monkeypatch.setattr(repository, "count_search_documents", lambda *_: 1)
-    from app.repositories import data_quality as dq_repository
-
-    monkeypatch.setattr(
-        dq_repository,
-        "list_search_documents_referencing_non_published_content",
-        lambda *_: [],
-    )
+    _install_clean_coverage_fakes(monkeypatch)
 
     issues: list[Any] = []
     checks: list[Any] = []
@@ -182,3 +190,42 @@ def test_dq_detects_broken_document(monkeypatch: Any) -> None:
 
     critical = [i for i in issues if i.severity == "critical"]
     assert any(i.code == "search_document_invalid" for i in critical)
+
+
+def test_dq_detects_coverage_gap_when_index_populated(monkeypatch: Any) -> None:
+    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+    monkeypatch.setattr(repository, "count_search_documents", lambda *_: 1)
+    dq_repository = _install_clean_coverage_fakes(monkeypatch)
+    monkeypatch.setattr(
+        dq_repository,
+        "list_published_routes_missing_from_index",
+        lambda *_: [{"id": "route-1", "slug": "route-slug", "country_slug": "russia"}],
+    )
+
+    issues: list[Any] = []
+    checks: list[Any] = []
+    _append_search_foundation_checks(CONNECTION, issues, checks)
+
+    critical = [i for i in issues if i.severity == "critical"]
+    assert any(i.code == "search_coverage_gap_route" for i in critical)
+
+
+def test_dq_flags_incomplete_locale_coverage_as_warning(monkeypatch: Any) -> None:
+    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+    monkeypatch.setattr(repository, "count_search_documents", lambda *_: 1)
+    dq_repository = _install_clean_coverage_fakes(monkeypatch)
+    monkeypatch.setattr(
+        dq_repository,
+        "list_search_documents_with_incomplete_locale_coverage",
+        lambda *_: [
+            {"entity_type": "route", "entity_id": "route-1", "locale_count": 1}
+        ],
+    )
+
+    issues: list[Any] = []
+    checks: list[Any] = []
+    _append_search_foundation_checks(CONNECTION, issues, checks)
+
+    warnings = [i for i in issues if i.severity == "warning"]
+    assert any(i.code == "search_document_incomplete_locale_coverage" for i in warnings)
+    assert all(i.severity != "critical" for i in issues)

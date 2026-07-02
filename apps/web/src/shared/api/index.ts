@@ -15,6 +15,7 @@ export * from "./methodology";
 export * from "./personas";
 export * from "./routes";
 export * from "./scenarios";
+export * from "./search";
 export * from "./sources";
 export * from "./trust";
 export * from "./user-stories";

@@ -3467,6 +3467,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/search:
+    get:
+      tags:
+      - search
+      summary: Search
+      operationId: search_api_v1_search_get
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+          title: Q
+      - name: types
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Types
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/home/overview:
     get:
       tags:
@@ -4242,8 +4314,8 @@ components:
         disclaimer:
           type: string
           title: Disclaimer
-          default: This is a contextual trend indicator based on legal signal events, not legal advice
-            or a prediction.
+          default: This is a contextual trend indicator based on legal signal events,
+            not legal advice or a prediction.
       type: object
       required:
       - country_slug
@@ -5627,7 +5699,8 @@ components:
         disclaimer:
           type: string
           title: Disclaimer
-          default: This is a data quality indicator, not a recommendation. Not legal advice.
+          default: This is a data quality indicator, not a recommendation. Not legal
+            advice.
       type: object
       required:
       - country_slug
@@ -9182,6 +9255,91 @@ components:
       - scenario_slug
       - scenario_name
       title: ScenarioWinner
+    SearchResponse:
+      properties:
+        query:
+          type: string
+          title: Query
+        locale:
+          type: string
+          enum:
+          - en
+          - ru
+          title: Locale
+        total:
+          type: integer
+          minimum: 0.0
+          title: Total
+        limit:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: Limit
+        offset:
+          type: integer
+          minimum: 0.0
+          title: Offset
+        items:
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - query
+      - locale
+      - total
+      - limit
+      - offset
+      title: SearchResponse
+    SearchResultItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        entity_type:
+          type: string
+          enum:
+          - country
+          - route
+          - route_checklist_item
+          - legal_signal
+          - source
+          - evidence_item
+          - country_pair_compatibility
+          - methodology
+          - glossary_term
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        title:
+          type: string
+          title: Title
+        snippet:
+          type: string
+          title: Snippet
+        path:
+          type: string
+          title: Path
+        rank:
+          type: number
+          title: Rank
+      type: object
+      required:
+      - id
+      - entity_type
+      - entity_id
+      - title
+      - snippet
+      - path
+      - rank
+      title: SearchResultItem
     SortMeta:
       properties:
         sort:

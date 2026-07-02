@@ -132,7 +132,13 @@ from app.repositories.data_quality.routes import (
     list_route_source_country_mismatches as list_route_source_country_mismatches,
 )
 from app.repositories.data_quality.search_documents import (
+    list_active_countries_missing_from_index as list_active_countries_missing_from_index,
+    list_published_evidence_missing_from_index as list_published_evidence_missing_from_index,
+    list_published_legal_signals_missing_from_index as list_published_legal_signals_missing_from_index,
+    list_published_routes_missing_from_index as list_published_routes_missing_from_index,
+    list_published_sources_missing_from_index as list_published_sources_missing_from_index,
     list_search_documents_referencing_non_published_content as list_search_documents_referencing_non_published_content,
+    list_search_documents_with_incomplete_locale_coverage as list_search_documents_with_incomplete_locale_coverage,
 )
 from app.repositories.data_quality.trust import (
     list_active_countries_missing_trust_scores as list_active_countries_missing_trust_scores,

@@ -107,6 +107,31 @@ def count_search_documents(connection: Connection[Any]) -> int:
     return int(row["total"]) if row else 0
 
 
+def list_indexed_entity_ids(
+    connection: Connection[Any], entity_type: str
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT entity_id::text AS entity_id, locale
+        FROM search_documents
+        WHERE entity_type = %s
+        """,
+        (entity_type,),
+    )
+
+
+def delete_search_documents_by_ids(
+    connection: Connection[Any], entity_type: str, stale: list[tuple[str, str]]
+) -> int:
+    if not stale:
+        return 0
+    deleted = 0
+    for entity_id, locale in stale:
+        deleted += delete_search_document(connection, entity_type, entity_id, locale)
+    return deleted
+
+
 def list_broken_search_documents(connection: Connection[Any]) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
