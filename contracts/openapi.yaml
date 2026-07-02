@@ -3539,6 +3539,81 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/ai/ask:
+    post:
+      tags:
+      - ai
+      summary: Ask Ai
+      operationId: ask_ai_api_v1_ai_ask_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIAskRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIAskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/ai/explain-number:
+    post:
+      tags:
+      - ai
+      summary: Explain Number
+      operationId: explain_number_api_v1_ai_explain_number_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIExplainNumberRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIExplainNumberResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/ai/decision-intent:
+    post:
+      tags:
+      - ai
+      summary: Decision Intent
+      operationId: decision_intent_api_v1_ai_decision_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIDecisionIntentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIDecisionIntentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/home/overview:
     get:
       tags:
@@ -3572,6 +3647,503 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    AIAskRequest:
+      properties:
+        question:
+          type: string
+          maxLength: 1000
+          minLength: 1
+          title: Question
+        locale:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Locale
+          default: ru
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Id
+        route_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Slug
+        scenario_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Persona Slug
+        types:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Types
+      type: object
+      required:
+      - question
+      title: AIAskRequest
+    AIAskResponse:
+      properties:
+        answer:
+          type: string
+          title: Answer
+        refused:
+          type: boolean
+          title: Refused
+        citations:
+          items:
+            $ref: '#/components/schemas/AICitation'
+          type: array
+          title: Citations
+        context_items_count:
+          type: integer
+          minimum: 0.0
+          title: Context Items Count
+        warnings:
+          items:
+            $ref: '#/components/schemas/AIWarning'
+          type: array
+          title: Warnings
+        disclaimer:
+          type: string
+          title: Disclaimer
+        provider:
+          type: string
+          title: Provider
+        model:
+          type: string
+          title: Model
+        mode:
+          type: string
+          enum:
+          - fake
+          - real
+          - 'off'
+          title: Mode
+        grounded:
+          type: boolean
+          title: Grounded
+          default: true
+        provider_meta:
+          anyOf:
+          - $ref: '#/components/schemas/AIProviderMeta'
+          - type: 'null'
+        refusal:
+          anyOf:
+          - $ref: '#/components/schemas/AIRefusal'
+          - type: 'null'
+      type: object
+      required:
+      - answer
+      - refused
+      - context_items_count
+      - disclaimer
+      - provider
+      - model
+      - mode
+      title: AIAskResponse
+    AICitation:
+      properties:
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        title:
+          type: string
+          title: Title
+        url_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url Path
+        source_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Id
+        evidence_item_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Item Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        freshness_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Freshness Status
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - title
+      title: AICitation
+    AIDecisionIntentRequest:
+      properties:
+        text:
+          type: string
+          maxLength: 1000
+          minLength: 1
+          title: Text
+        locale:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Locale
+          default: ru
+      type: object
+      required:
+      - text
+      title: AIDecisionIntentRequest
+    AIDecisionIntentResponse:
+      properties:
+        result:
+          $ref: '#/components/schemas/AIDecisionIntentResult'
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        candidate_country_slugs:
+          items:
+            type: string
+          type: array
+          title: Candidate Country Slugs
+        route_filters:
+          additionalProperties: true
+          type: object
+          title: Route Filters
+        weight_hints:
+          additionalProperties:
+            type: number
+          type: object
+          title: Weight Hints
+        clarifying_questions:
+          items:
+            type: string
+          type: array
+          title: Clarifying Questions
+        confidence:
+          type: string
+          title: Confidence
+          default: low
+        citations:
+          items:
+            $ref: '#/components/schemas/AICitation'
+          type: array
+          title: Citations
+        disclaimer:
+          type: string
+          title: Disclaimer
+        provider:
+          type: string
+          title: Provider
+        model:
+          type: string
+          title: Model
+        mode:
+          type: string
+          enum:
+          - fake
+          - real
+          - 'off'
+          title: Mode
+        grounded:
+          type: boolean
+          title: Grounded
+          default: true
+        provider_meta:
+          anyOf:
+          - $ref: '#/components/schemas/AIProviderMeta'
+          - type: 'null'
+        refused:
+          type: boolean
+          title: Refused
+        warnings:
+          items:
+            $ref: '#/components/schemas/AIWarning'
+          type: array
+          title: Warnings
+        context_items_count:
+          type: integer
+          minimum: 0.0
+          title: Context Items Count
+        refusal:
+          anyOf:
+          - $ref: '#/components/schemas/AIRefusal'
+          - type: 'null'
+      type: object
+      required:
+      - result
+      - disclaimer
+      - provider
+      - model
+      - mode
+      - refused
+      - context_items_count
+      title: AIDecisionIntentResponse
+    AIDecisionIntentResult:
+      properties:
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        candidate_country_slugs:
+          items:
+            type: string
+          type: array
+          title: Candidate Country Slugs
+        route_filters:
+          additionalProperties: true
+          type: object
+          title: Route Filters
+        weight_hints:
+          additionalProperties:
+            type: number
+          type: object
+          title: Weight Hints
+        clarifying_questions:
+          items:
+            type: string
+          type: array
+          title: Clarifying Questions
+        confidence:
+          type: string
+          title: Confidence
+          default: low
+      type: object
+      title: AIDecisionIntentResult
+    AIExplainNumberRequest:
+      properties:
+        number_type:
+          type: string
+          enum:
+          - cii_score
+          - decision_score
+          - trust_score
+          - country_drift
+          - legal_velocity_index
+          - scenario_specific_risk_score
+          - contradiction_score
+          - platform_metric
+          title: Number Type
+        country_slug:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Country Slug
+        scenario_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Persona Slug
+        metric_key:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Metric Key
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+        locale:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Locale
+          default: ru
+      type: object
+      required:
+      - number_type
+      - country_slug
+      title: AIExplainNumberRequest
+    AIExplainNumberResponse:
+      properties:
+        explanation:
+          type: string
+          title: Explanation
+        what_it_means:
+          type: string
+          title: What It Means
+        what_it_does_not_mean:
+          type: string
+          title: What It Does Not Mean
+        citations:
+          items:
+            $ref: '#/components/schemas/AICitation'
+          type: array
+          title: Citations
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        freshness_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Freshness Status
+        disclaimer:
+          type: string
+          title: Disclaimer
+        provider:
+          type: string
+          title: Provider
+        model:
+          type: string
+          title: Model
+        mode:
+          type: string
+          enum:
+          - fake
+          - real
+          - 'off'
+          title: Mode
+        grounded:
+          type: boolean
+          title: Grounded
+          default: true
+        provider_meta:
+          anyOf:
+          - $ref: '#/components/schemas/AIProviderMeta'
+          - type: 'null'
+        refused:
+          type: boolean
+          title: Refused
+        warnings:
+          items:
+            $ref: '#/components/schemas/AIWarning'
+          type: array
+          title: Warnings
+        context_items_count:
+          type: integer
+          minimum: 0.0
+          title: Context Items Count
+        refusal:
+          anyOf:
+          - $ref: '#/components/schemas/AIRefusal'
+          - type: 'null'
+      type: object
+      required:
+      - explanation
+      - what_it_means
+      - what_it_does_not_mean
+      - disclaimer
+      - provider
+      - model
+      - mode
+      - refused
+      - context_items_count
+      title: AIExplainNumberResponse
+    AIProviderMeta:
+      properties:
+        provider:
+          type: string
+          title: Provider
+          default: fake
+        model:
+          type: string
+          title: Model
+          default: fake-grounded-v1
+        mode:
+          type: string
+          enum:
+          - fake
+          - real
+          - 'off'
+          title: Mode
+          default: fake
+        grounded:
+          type: boolean
+          title: Grounded
+          default: true
+      type: object
+      title: AIProviderMeta
+    AIRefusal:
+      properties:
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - reason
+      title: AIRefusal
+    AIWarning:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: AIWarning
     AdminCountryProfileResponse:
       properties:
         item:

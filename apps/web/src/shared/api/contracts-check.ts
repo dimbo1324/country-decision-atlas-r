@@ -81,6 +81,14 @@ type CountryDriftBatchRecomputeResult =
   components["schemas"]["CountryDriftBatchRecomputeResult"];
 type SearchResultItem = components["schemas"]["SearchResultItem"];
 type SearchResponse = components["schemas"]["SearchResponse"];
+type AIAskRequest = components["schemas"]["AIAskRequest"];
+type AIAskResponse = components["schemas"]["AIAskResponse"];
+type AIExplainNumberRequest = components["schemas"]["AIExplainNumberRequest"];
+type AIExplainNumberResponse = components["schemas"]["AIExplainNumberResponse"];
+type AIDecisionIntentRequest = components["schemas"]["AIDecisionIntentRequest"];
+type AIDecisionIntentResponse = components["schemas"]["AIDecisionIntentResponse"];
+type AICitation = components["schemas"]["AICitation"];
+type AIProviderMeta = components["schemas"]["AIProviderMeta"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -150,4 +158,12 @@ export type FrontendCriticalContracts = {
   countryDriftBatchRecomputeResult: CountryDriftBatchRecomputeResult;
   searchResultItem: SearchResultItem;
   searchResponse: SearchResponse;
+  aiAskRequest: AIAskRequest;
+  aiAskResponse: AIAskResponse;
+  aiExplainNumberRequest: AIExplainNumberRequest;
+  aiExplainNumberResponse: AIExplainNumberResponse;
+  aiDecisionIntentRequest: AIDecisionIntentRequest;
+  aiDecisionIntentResponse: AIDecisionIntentResponse;
+  aiCitation: AICitation;
+  aiProviderMeta: AIProviderMeta;
 };

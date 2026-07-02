@@ -50,6 +50,9 @@ def test_openapi_contract_has_required_paths() -> None:
         "/api/v1/admin/data-quality/report",
         "/api/v1/admin/translations/jobs",
         "/api/v1/analytics/events",
+        "/api/v1/ai/ask",
+        "/api/v1/ai/explain-number",
+        "/api/v1/ai/decision-intent",
     }
     assert expected_paths.issubset(set(contract["paths"]))
 
@@ -110,6 +113,14 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
         "FeatureFlagDetailResponse",
         "DataJournalEntry",
         "CountryDataJournalResponse",
+        "AIAskRequest",
+        "AIAskResponse",
+        "AIExplainNumberRequest",
+        "AIExplainNumberResponse",
+        "AIDecisionIntentRequest",
+        "AIDecisionIntentResponse",
+        "AICitation",
+        "AIProviderMeta",
     ]:
         assert schema_name in schemas
 

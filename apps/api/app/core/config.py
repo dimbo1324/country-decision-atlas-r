@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Literal
 
 
 class Settings(BaseSettings):
@@ -34,6 +35,12 @@ class Settings(BaseSettings):
     ai_translation_max_retries: int = 2
     translation_job_lock_timeout_seconds: int = 900
     translation_job_max_batch_size: int = 100
+    ai_mode: Literal["fake", "real", "off"] = "fake"
+    ai_provider: str = "fake"
+    ai_model: str = "fake-grounded-v1"
+    ai_max_context_items: int = 8
+    ai_max_context_chars: int = 12000
+    ai_log_interactions: bool = True
 
     @property
     def cors_origins(self) -> list[str]:

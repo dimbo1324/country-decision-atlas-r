@@ -1,6 +1,7 @@
 export const routes = {
   home: "/",
   countries: "/countries",
+  assistant: "/assistant",
   country: (slug: string) => `/countries/${slug}`,
   decision: "/decision",
   compare: "/compare",

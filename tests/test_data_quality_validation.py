@@ -145,6 +145,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_published_sources_missing_from_index",
         "list_published_evidence_missing_from_index",
         "list_search_documents_with_incomplete_locale_coverage",
+        "list_missing_ai_feature_flags",
+        "list_ai_feature_flags_without_public_access_rules",
+        "list_ai_logs_with_forbidden_metadata_keys",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     for name in [

@@ -1331,6 +1331,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/ai/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ask Ai */
+        post: operations["ask_ai_api_v1_ai_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ai/explain-number": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Explain Number */
+        post: operations["explain_number_api_v1_ai_explain_number_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ai/decision-intent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decision Intent */
+        post: operations["decision_intent_api_v1_ai_decision_intent_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -1352,6 +1403,270 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AIAskRequest */
+        AIAskRequest: {
+            /** Question */
+            question: string;
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "ru" | "en";
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Route Slug */
+            route_slug?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Types */
+            types?: string[] | null;
+        };
+        /** AIAskResponse */
+        AIAskResponse: {
+            /** Answer */
+            answer: string;
+            /** Refused */
+            refused: boolean;
+            /** Citations */
+            citations?: components["schemas"]["AICitation"][];
+            /** Context Items Count */
+            context_items_count: number;
+            /** Warnings */
+            warnings?: components["schemas"]["AIWarning"][];
+            /** Disclaimer */
+            disclaimer: string;
+            /** Provider */
+            provider: string;
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "fake" | "real" | "off";
+            /**
+             * Grounded
+             * @default true
+             */
+            grounded: boolean;
+            provider_meta?: components["schemas"]["AIProviderMeta"] | null;
+            refusal?: components["schemas"]["AIRefusal"] | null;
+        };
+        /** AICitation */
+        AICitation: {
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id: string;
+            /** Title */
+            title: string;
+            /** Url Path */
+            url_path?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Evidence Item Id */
+            evidence_item_id?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Freshness Status */
+            freshness_status?: string | null;
+        };
+        /** AIDecisionIntentRequest */
+        AIDecisionIntentRequest: {
+            /** Text */
+            text: string;
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "ru" | "en";
+        };
+        /** AIDecisionIntentResponse */
+        AIDecisionIntentResponse: {
+            result: components["schemas"]["AIDecisionIntentResult"];
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Candidate Country Slugs */
+            candidate_country_slugs?: string[];
+            /** Route Filters */
+            route_filters?: {
+                [key: string]: unknown;
+            };
+            /** Weight Hints */
+            weight_hints?: {
+                [key: string]: number;
+            };
+            /** Clarifying Questions */
+            clarifying_questions?: string[];
+            /**
+             * Confidence
+             * @default low
+             */
+            confidence: string;
+            /** Citations */
+            citations?: components["schemas"]["AICitation"][];
+            /** Disclaimer */
+            disclaimer: string;
+            /** Provider */
+            provider: string;
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "fake" | "real" | "off";
+            /**
+             * Grounded
+             * @default true
+             */
+            grounded: boolean;
+            provider_meta?: components["schemas"]["AIProviderMeta"] | null;
+            /** Refused */
+            refused: boolean;
+            /** Warnings */
+            warnings?: components["schemas"]["AIWarning"][];
+            /** Context Items Count */
+            context_items_count: number;
+            refusal?: components["schemas"]["AIRefusal"] | null;
+        };
+        /** AIDecisionIntentResult */
+        AIDecisionIntentResult: {
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Candidate Country Slugs */
+            candidate_country_slugs?: string[];
+            /** Route Filters */
+            route_filters?: {
+                [key: string]: unknown;
+            };
+            /** Weight Hints */
+            weight_hints?: {
+                [key: string]: number;
+            };
+            /** Clarifying Questions */
+            clarifying_questions?: string[];
+            /**
+             * Confidence
+             * @default low
+             */
+            confidence: string;
+        };
+        /** AIExplainNumberRequest */
+        AIExplainNumberRequest: {
+            /**
+             * Number Type
+             * @enum {string}
+             */
+            number_type: "cii_score" | "decision_score" | "trust_score" | "country_drift" | "legal_velocity_index" | "scenario_specific_risk_score" | "contradiction_score" | "platform_metric";
+            /** Country Slug */
+            country_slug: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Metric Key */
+            metric_key?: string | null;
+            /** Value */
+            value?: number | null;
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "ru" | "en";
+        };
+        /** AIExplainNumberResponse */
+        AIExplainNumberResponse: {
+            /** Explanation */
+            explanation: string;
+            /** What It Means */
+            what_it_means: string;
+            /** What It Does Not Mean */
+            what_it_does_not_mean: string;
+            /** Citations */
+            citations?: components["schemas"]["AICitation"][];
+            /** Confidence */
+            confidence?: string | null;
+            /** Freshness Status */
+            freshness_status?: string | null;
+            /** Disclaimer */
+            disclaimer: string;
+            /** Provider */
+            provider: string;
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "fake" | "real" | "off";
+            /**
+             * Grounded
+             * @default true
+             */
+            grounded: boolean;
+            provider_meta?: components["schemas"]["AIProviderMeta"] | null;
+            /** Refused */
+            refused: boolean;
+            /** Warnings */
+            warnings?: components["schemas"]["AIWarning"][];
+            /** Context Items Count */
+            context_items_count: number;
+            refusal?: components["schemas"]["AIRefusal"] | null;
+        };
+        /** AIProviderMeta */
+        AIProviderMeta: {
+            /**
+             * Provider
+             * @default fake
+             */
+            provider: string;
+            /**
+             * Model
+             * @default fake-grounded-v1
+             */
+            model: string;
+            /**
+             * Mode
+             * @default fake
+             * @enum {string}
+             */
+            mode: "fake" | "real" | "off";
+            /**
+             * Grounded
+             * @default true
+             */
+            grounded: boolean;
+        };
+        /** AIRefusal */
+        AIRefusal: {
+            /** Reason */
+            reason: string;
+        };
+        /** AIWarning */
+        AIWarning: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+        };
         /** AdminCountryProfileResponse */
         AdminCountryProfileResponse: {
             /** Item */
@@ -8044,6 +8359,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    ask_ai_api_v1_ai_ask_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIAskRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIAskResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explain_number_api_v1_ai_explain_number_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIExplainNumberRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIExplainNumberResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decision_intent_api_v1_ai_decision_intent_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIDecisionIntentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIDecisionIntentResponse"];
                 };
             };
             /** @description Validation Error */

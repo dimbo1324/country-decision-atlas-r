@@ -16,6 +16,9 @@ __pycache__/
 .pytest_cache
 .pytest_cache/
 **/.pytest_cache/**
+.tmp
+.tmp/
+**/.tmp/**
 docs/
 README*
 *.md

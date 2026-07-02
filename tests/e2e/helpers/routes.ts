@@ -1,5 +1,7 @@
 export const e2eRoutes = {
   home: "/",
+  assistant: (locale?: string) =>
+    locale ? `/assistant?locale=${locale}` : "/assistant",
   countries: "/countries",
   country: (slug: string, locale?: string) =>
     locale ? `/countries/${slug}?locale=${locale}` : `/countries/${slug}`,

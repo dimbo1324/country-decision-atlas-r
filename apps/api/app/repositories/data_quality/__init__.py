@@ -7,6 +7,11 @@ from app.repositories.data_quality._shared import (
     TARGET_PUBLISHED_SOURCES_PER_MVP_COUNTRY as TARGET_PUBLISHED_SOURCES_PER_MVP_COUNTRY,
     fetch_all as fetch_all,
 )
+from app.repositories.data_quality.ai import (
+    list_ai_feature_flags_without_public_access_rules as list_ai_feature_flags_without_public_access_rules,
+    list_ai_logs_with_forbidden_metadata_keys as list_ai_logs_with_forbidden_metadata_keys,
+    list_missing_ai_feature_flags as list_missing_ai_feature_flags,
+)
 from app.repositories.data_quality.cii import (
     list_cii_metric_definitions_without_polarity as list_cii_metric_definitions_without_polarity,
     list_cii_metric_weights_with_invalid_sum as list_cii_metric_weights_with_invalid_sum,

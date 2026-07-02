@@ -1,12 +1,16 @@
 import type { CountryReadModelResponse } from "../../shared/api/countries";
+import type { SupportedLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { AIExplainNumberButton } from "../ai-assistant";
 
 type CiiData = NonNullable<CountryReadModelResponse["cii"]>;
 type CiiMetric = NonNullable<CiiData["metrics"]>[number];
 
 type CountryCiiBlockProps = {
   cii: CiiData | null | undefined;
+  countrySlug: string;
+  locale: SupportedLocale;
 };
 
 const METRIC_LABEL_RU: Record<string, string> = {
@@ -142,7 +146,7 @@ function SpiderChart({ metrics }: { metrics: CiiMetric[] }) {
   );
 }
 
-export function CountryCiiBlock({ cii }: CountryCiiBlockProps) {
+export function CountryCiiBlock({ cii, countrySlug, locale }: CountryCiiBlockProps) {
   if (!cii) {
     return <EmptyState message="CII-данные для этой страны ещё не рассчитаны." />;
   }
@@ -175,6 +179,12 @@ export function CountryCiiBlock({ cii }: CountryCiiBlockProps) {
             <span className="ciiMethodBadge">{cii.aggregation_method}</span>
           )}
         </div>
+        <AIExplainNumberButton
+          numberType="cii_score"
+          countrySlug={countrySlug}
+          value={cii.overall_score}
+          locale={locale}
+        />
       </div>
 
       <div className="ciiChartRow">

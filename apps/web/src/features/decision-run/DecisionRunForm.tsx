@@ -31,6 +31,8 @@ import {
   type DecisionCriterion,
 } from "../decision-personalization";
 import { DecisionWizard } from "../decision-wizard";
+import { AIDecisionIntentHelper } from "../ai-assistant";
+import type { AIDecisionIntentResponse } from "../../shared/api/ai";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
@@ -162,6 +164,41 @@ function DecisionFormInner() {
     setRunError(null);
   }
 
+  function handleAiDecisionApply(payload: AIDecisionIntentResponse) {
+    if (payload.scenario_slug && isDecisionReadyScenario(payload.scenario_slug)) {
+      setScenarioSlug(payload.scenario_slug);
+    }
+    if (payload.persona_slug) {
+      setSelectedPersonaSlug(payload.persona_slug);
+    }
+    if (payload.origin_country_slug) {
+      setOriginCountrySlug(payload.origin_country_slug);
+    }
+    const candidateHints = payload.candidate_country_slugs ?? [];
+    if (candidateHints.length > 0) {
+      const knownSlugs = new Set(countries?.items.map((country) => country.slug) ?? []);
+      const next = candidateHints.filter((slug) => knownSlugs.has(slug));
+      if (next.length > 0) {
+        setCandidateCountrySlugs(next);
+      }
+    }
+    const nextWeights = { ...customWeights };
+    let changed = false;
+    const weightHints = payload.weight_hints ?? {};
+    for (const criterion of DECISION_CRITERIA_ORDER) {
+      const value = weightHints[criterion];
+      if (typeof value === "number" && Number.isFinite(value)) {
+        nextWeights[criterion] = Math.max(0, Math.min(100, Math.round(value)));
+        changed = true;
+      }
+    }
+    if (changed) {
+      setCustomWeights(nextWeights);
+      setPersonalizationTouched(true);
+    }
+    setRunError(null);
+  }
+
   const customWeightsSum = DECISION_CRITERIA_ORDER.reduce(
     (total, criterion) => total + customWeights[criterion],
     0,
@@ -244,6 +281,8 @@ function DecisionFormInner() {
           originCountrySlug={originCountrySlug}
           onApply={handleWizardApply}
         />
+
+        <AIDecisionIntentHelper locale={locale} onApply={handleAiDecisionApply} />
 
         <div className="formGroup">
           <label className="formLabel" htmlFor="origin-select">
