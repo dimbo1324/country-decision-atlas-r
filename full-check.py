@@ -6,6 +6,8 @@ import contextlib
 import ctypes
 from dataclasses import asdict, dataclass
 from datetime import datetime
+import getpass
+import importlib
 import json
 import os
 from pathlib import Path
@@ -113,6 +115,7 @@ DEFAULT_NETWORK_CHECKS: list[dict[str, Any]] = [
 ]
 
 DEFAULT_MIN_FREE_DISK_GB = 5
+PROFILE_CHOICES = ("quick", "backend", "frontend", "docker", "full", "ci")
 
 SMOKE_URLS = [
     "http://localhost:8000/health",
@@ -125,6 +128,28 @@ SMOKE_URLS = [
 ]
 
 STALE_CACHE_DIRS = [".pytest_cache", ".mypy_cache", ".ruff_cache"]
+CACHE_DIRS_SAFE_TO_FIX = [*STALE_CACHE_DIRS, ".tmp/pytest", ".tmp/full-check"]
+
+SECRET_KEY_PATTERNS = (
+    "ADMIN_TOKEN",
+    "DATABASE_URL",
+    "REDIS_URL",
+    "TELEGRAM_BOT_TOKEN",
+    "JWT_SECRET",
+    "GRPC_AUTH_TOKEN",
+    "API_KEY",
+    "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "PASSWORD",
+    "SECRET",
+    "TOKEN",
+)
+
+SECRET_ASSIGNMENT_RE = re.compile(
+    rf"(?i)\b({'|'.join(re.escape(k) for k in SECRET_KEY_PATTERNS)})"
+    r"\s*[:=]\s*([^\s,;]+)"
+)
+URL_CREDENTIAL_RE = re.compile(r"([a-z][a-z0-9+.-]*://[^:/\s]+:)([^@\s]+)(@)")
 
 
 @dataclass
@@ -140,6 +165,11 @@ class Recommendation:
     tool: str
     issue: str
     hint: str = ""
+    severity: str = "medium"
+    probable_cause: str = ""
+    suggested_commands: tuple[str, ...] = ()
+    safe_to_auto_fix: bool = False
+    internal_note: str = ""
 
 
 @dataclass
@@ -150,18 +180,26 @@ class NetworkResult:
     reachable: bool
 
 
+def sanitize_log_line(line: str) -> str:
+    sanitized = SECRET_ASSIGNMENT_RE.sub(r"\1=<redacted>", line)
+    sanitized = URL_CREDENTIAL_RE.sub(r"\1<redacted>\3", sanitized)
+    return sanitized
+
+
 class DualWriter:
     def __init__(self, transcript_path: Path) -> None:
         self.console = sys.stdout
         self.file = transcript_path.open("a", encoding="utf-8")
 
     def write_line(self, plain_text: str, console_text: str | None = None) -> None:
-        self.console.write(
-            (console_text if console_text is not None else plain_text) + "\n"
+        safe_plain_text = sanitize_log_line(plain_text)
+        safe_console_text = sanitize_log_line(
+            console_text if console_text is not None else plain_text
         )
+        self.console.write(safe_console_text + "\n")
         self.console.flush()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.file.write(f"[{timestamp}] {plain_text}\n")
+        self.file.write(f"[{timestamp}] {safe_plain_text}\n")
         self.file.flush()
 
     def close(self) -> None:
@@ -229,33 +267,139 @@ def windows_memory_gb() -> tuple[float | None, float | None]:
         return None, None
 
 
+def unix_memory_gb() -> tuple[float | None, float | None]:
+    try:
+        if not hasattr(os, "sysconf"):
+            return None, None
+        sysconf = os.sysconf
+        page_size = sysconf("SC_PAGE_SIZE")
+        physical_pages = sysconf("SC_PHYS_PAGES")
+        available_pages = sysconf("SC_AVPHYS_PAGES")
+        total_gb = round((page_size * physical_pages) / 1_073_741_824, 1)
+        free_gb = round((page_size * available_pages) / 1_073_741_824, 1)
+        return total_gb, free_gb
+    except (AttributeError, OSError, ValueError):
+        return None, None
+
+
+def psutil_memory_gb() -> tuple[float | None, float | None]:
+    try:
+        psutil = importlib.import_module("psutil")
+
+        mem = psutil.virtual_memory()
+        return round(mem.total / 1_073_741_824, 1), round(
+            mem.available / 1_073_741_824, 1
+        )
+    except Exception:
+        return None, None
+
+
+def psutil_cpu_counts() -> tuple[int | None, int | None]:
+    try:
+        psutil = importlib.import_module("psutil")
+
+        return psutil.cpu_count(logical=False), psutil.cpu_count(logical=True)
+    except Exception:
+        return None, os.cpu_count()
+
+
+def detect_wsl() -> bool:
+    if platform.system() != "Linux":
+        return False
+    try:
+        release = Path("/proc/sys/kernel/osrelease").read_text(encoding="utf-8")
+        return "microsoft" in release.lower() or "wsl" in release.lower()
+    except OSError:
+        return False
+
+
+def directory_size_gb(path: Path, max_files: int = 50_000) -> float | None:
+    if not path.exists():
+        return None
+    total = 0
+    seen = 0
+    try:
+        for item in path.rglob("*"):
+            seen += 1
+            if seen > max_files:
+                break
+            with contextlib.suppress(OSError):
+                if item.is_file():
+                    total += item.stat().st_size
+    except OSError:
+        return None
+    return round(total / 1_000_000_000, 2)
+
+
 def get_system_diagnostics() -> dict[str, Any]:
+    physical_cores, logical_cores = psutil_cpu_counts()
+    total_gb, free_gb = psutil_memory_gb()
+    if total_gb is None and platform.system() == "Windows":
+        total_gb, free_gb = windows_memory_gb()
+    if total_gb is None:
+        total_gb, free_gb = unix_memory_gb()
+
     diag: dict[str, Any] = {
         "hostname": "unknown",
+        "current_user": "unknown",
+        "shell": os.environ.get("SHELL") or os.environ.get("COMSPEC") or "",
         "os_caption": "unknown",
+        "os_name": platform.system(),
+        "os_version": platform.version(),
+        "kernel_version": platform.release(),
         "os_architecture": "unknown",
-        "processor_count": os.cpu_count() or 0,
-        "total_memory_gb": None,
-        "free_memory_gb": None,
+        "cpu_model": platform.processor() or "unknown",
+        "physical_cores": physical_cores,
+        "logical_cores": logical_cores,
+        "processor_count": logical_cores or os.cpu_count() or 0,
+        "total_memory_gb": total_gb,
+        "free_memory_gb": free_gb,
+        "repo_drive_total_gb": None,
         "repo_drive_free_gb": None,
+        "repo_drive_filesystem": "unknown",
         "python_version": platform.python_version(),
+        "python_executable": sys.executable,
+        "virtualenv": os.environ.get("VIRTUAL_ENV", ""),
+        "timezone": datetime.now().astimezone().tzname(),
+        "is_wsl": detect_wsl(),
+        "proxy_env_present": any(
+            os.environ.get(k)
+            for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy")
+        ),
     }
     with contextlib.suppress(OSError):
         diag["hostname"] = socket.gethostname()
+    with contextlib.suppress(Exception):
+        diag["current_user"] = getpass.getuser()
     try:
         diag["os_caption"] = platform.platform()
         diag["os_architecture"] = platform.machine()
     except Exception:
         pass
-    if platform.system() == "Windows":
-        total_gb, free_gb = windows_memory_gb()
-        diag["total_memory_gb"] = total_gb
-        diag["free_memory_gb"] = free_gb
     try:
         usage = shutil.disk_usage(REPO_ROOT)
+        diag["repo_drive_total_gb"] = round(usage.total / 1_000_000_000, 1)
         diag["repo_drive_free_gb"] = round(usage.free / 1_000_000_000, 1)
     except OSError:
         pass
+    if platform.system() == "Windows":
+        try:
+            drive = REPO_ROOT.drive.rstrip(":")
+            result = subprocess.run(
+                [
+                    "powershell",
+                    "-NoProfile",
+                    "-Command",
+                    f"(Get-Volume -DriveLetter {drive}).FileSystem",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                diag["repo_drive_filesystem"] = result.stdout.strip()
+        except Exception:
+            pass
     return diag
 
 
@@ -265,6 +409,7 @@ def get_git_context() -> dict[str, Any]:
         "commit": "unknown",
         "dirty_file_count": None,
         "ahead_behind": "unknown",
+        "upstream": "unknown",
     }
     try:
         r = subprocess.run(
@@ -304,22 +449,202 @@ def get_git_context() -> dict[str, Any]:
         r = subprocess.run(
             [
                 "git",
-                "rev-list",
-                "--left-right",
-                "--count",
-                f"origin/{ctx['branch']}...{ctx['branch']}",
+                "rev-parse",
+                "--abbrev-ref",
+                "--symbolic-full-name",
+                "@{u}",
             ],
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
         )
         if r.returncode == 0 and r.stdout.strip():
-            parts = r.stdout.strip().split()
-            if len(parts) == 2:
-                ctx["ahead_behind"] = f"behind={parts[0]} ahead={parts[1]}"
+            ctx["upstream"] = r.stdout.strip()
     except OSError:
         pass
+    if ctx["upstream"] != "unknown":
+        try:
+            r = subprocess.run(
+                [
+                    "git",
+                    "rev-list",
+                    "--left-right",
+                    "--count",
+                    f"{ctx['upstream']}...HEAD",
+                ],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+            )
+            if r.returncode == 0 and r.stdout.strip():
+                parts = r.stdout.strip().split()
+                if len(parts) == 2:
+                    ctx["ahead_behind"] = f"behind={parts[0]} ahead={parts[1]}"
+        except OSError:
+            pass
     return ctx
+
+
+def get_repo_diagnostics() -> dict[str, Any]:
+    package_json = get_package_json()
+    migrations_dir = REPO_ROOT / "database" / "migrations"
+    env_files = [".env", "apps/api/.env", "apps/web/.env.local"]
+    diag: dict[str, Any] = {
+        "package_manager": (package_json or {}).get("packageManager", "unknown"),
+        "migration_count": len(list(migrations_dir.glob("*.sql")))
+        if migrations_dir.exists()
+        else 0,
+        "missing_env_files": [p for p in env_files if not (REPO_ROOT / p).exists()],
+        "node_modules_size_gb": directory_size_gb(REPO_ROOT / "node_modules"),
+        "venv_size_gb": directory_size_gb(REPO_ROOT / ".venv"),
+        "next_cache_size_gb": directory_size_gb(REPO_ROOT / "apps" / "web" / ".next"),
+        "report_dir_count": len(list((REPO_ROOT / "full-check-reports").glob("*")))
+        if (REPO_ROOT / "full-check-reports").exists()
+        else 0,
+    }
+    return diag
+
+
+def run_capture(args: list[str], timeout: int = 20) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout,
+    )
+
+
+def get_docker_diagnostics() -> dict[str, Any]:
+    docker_exe = shutil.which("docker")
+    diag: dict[str, Any] = {
+        "available": bool(docker_exe),
+        "daemon_reachable": False,
+        "context": "unknown",
+        "server_version": "unknown",
+        "root_dir": "unknown",
+        "storage_driver": "unknown",
+        "docker_cpus": None,
+        "docker_memory_gb": None,
+        "running_containers": None,
+        "compose_services": [],
+    }
+    if not docker_exe:
+        return diag
+    try:
+        context_result = run_capture([docker_exe, "context", "show"])
+        if context_result.returncode == 0:
+            diag["context"] = context_result.stdout.strip()
+    except Exception:
+        pass
+    try:
+        info_result = run_capture([docker_exe, "info", "--format", "{{json .}}"])
+        if info_result.returncode == 0 and info_result.stdout.strip():
+            info = json.loads(info_result.stdout)
+            diag.update(
+                {
+                    "daemon_reachable": True,
+                    "server_version": info.get("ServerVersion", "unknown"),
+                    "root_dir": info.get("DockerRootDir", "unknown"),
+                    "storage_driver": info.get("Driver", "unknown"),
+                    "docker_cpus": info.get("NCPU"),
+                    "docker_memory_gb": round(
+                        float(info.get("MemTotal", 0)) / 1_073_741_824, 1
+                    )
+                    if info.get("MemTotal")
+                    else None,
+                    "running_containers": info.get("ContainersRunning"),
+                }
+            )
+    except Exception:
+        return diag
+    try:
+        compose_result = run_capture(
+            [docker_exe, "compose", "ps", "--format", "json"], timeout=30
+        )
+        if compose_result.returncode == 0 and compose_result.stdout.strip():
+            services = []
+            for line in compose_result.stdout.splitlines():
+                with contextlib.suppress(json.JSONDecodeError):
+                    item = json.loads(line)
+                    services.append(
+                        {
+                            "service": item.get("Service"),
+                            "state": item.get("State"),
+                            "health": item.get("Health"),
+                        }
+                    )
+            diag["compose_services"] = services
+    except Exception:
+        pass
+    return diag
+
+
+def http_json(url: str, timeout: int = 10) -> tuple[int | None, Any, str]:
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as resp:
+            body = resp.read().decode("utf-8", errors="replace")
+            try:
+                return resp.status, json.loads(body), ""
+            except json.JSONDecodeError as exc:
+                return resp.status, None, f"invalid JSON: {exc}"
+    except Exception as exc:
+        return None, None, str(exc)
+
+
+def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
+    if name == "health":
+        return isinstance(data, dict) and data.get("status") == "ok", "status=ok"
+    if name == "ready":
+        return isinstance(data, dict) and data.get("status") == "ready", "status=ready"
+    if name == "countries":
+        if isinstance(data, dict) and isinstance(data.get("items"), list):
+            count = len(data["items"])
+        else:
+            count = len(data) if isinstance(data, list) else 0
+        return count >= 3, f"countries={count}"
+    if name == "trust":
+        required = {"trust_label", "confidence", "freshness_status"}
+        ok = isinstance(data, dict) and required.issubset(data)
+        return ok, f"required={','.join(sorted(required))}"
+    if name == "search":
+        ok = isinstance(data, dict) and isinstance(data.get("items"), list)
+        count = len(data.get("items", [])) if isinstance(data, dict) else 0
+        return ok, f"items={count}"
+    if name == "openapi":
+        ok = isinstance(data, dict) and "openapi" in data and "paths" in data
+        return ok, "contains openapi+paths"
+    return True, "no validator"
+
+
+def get_package_json() -> dict[str, Any] | None:
+    try:
+        data = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def get_project_pnpm_command() -> list[str] | None:
+    package_json = get_package_json()
+    package_manager = (package_json or {}).get("packageManager", "")
+    if isinstance(package_manager, str) and package_manager.startswith("pnpm@"):
+        corepack_exe = shutil.which("corepack")
+        if corepack_exe:
+            return [corepack_exe, package_manager]
+    pnpm_exe = shutil.which("pnpm")
+    return [pnpm_exe] if pnpm_exe else None
+
+
+def pnpm_safe_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.setdefault("CI", "true")
+    env.setdefault("npm_config_confirmModulesPurge", "false")
+    env.setdefault("pnpm_config_confirmModulesPurge", "false")
+    env.setdefault("pnpm_config_verify_deps_before_run", "false")
+    return env
 
 
 def get_pyproject_exact_pin(package_name: str) -> str | None:
@@ -343,14 +668,6 @@ def get_requires_python_min_version() -> str:
     except OSError:
         pass
     return "3.12.0"
-
-
-def get_package_json() -> dict[str, Any] | None:
-    try:
-        data = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return data if isinstance(data, dict) else None
 
 
 def get_go_mod_min_version() -> str:
@@ -392,6 +709,9 @@ def test_port_reachable(host: str, port: int, timeout: float = 3.0) -> bool:
 
 class FullCheck:
     def __init__(self, args: argparse.Namespace) -> None:
+        self.profile = "quick" if args.doctor else args.profile
+        self.doctor = args.doctor
+        self.fix = args.fix
         self.skip_docker = args.skip_docker
         self.skip_e2e = args.skip_e2e
         self.skip_precommit = args.skip_precommit
@@ -410,6 +730,7 @@ class FullCheck:
         self.summary_path = self.report_dir / "summary.txt"
         self.report_json_path = self.report_dir / "report.json"
         self.recommendations_path = self.report_dir / "recommendations.txt"
+        self.temp_root = REPO_ROOT / ".tmp" / "full-check" / self.run_timestamp
 
         self.out = DualWriter(self.transcript_path)
         self.color_enabled = sys.stdout.isatty() and enable_windows_ansi()
@@ -420,8 +741,11 @@ class FullCheck:
         self.started_at = datetime.now()
         self.system_info: dict[str, Any] = {}
         self.git_context: dict[str, Any] = {}
+        self.repo_info: dict[str, Any] = {}
+        self.docker_info: dict[str, Any] = {}
         self.go_tooling_present = False
         self.python312: list[str] | None = None
+        self.pnpm_command: list[str] | None = None
 
     def colorize(self, text: str, color: str | None) -> str:
         if not color or not self.color_enabled:
@@ -467,8 +791,30 @@ class FullCheck:
         )
         self.log(f"  [{status}] {stage} {detail}{duration_text}", level)
 
-    def add_recommendation(self, tool: str, issue: str, hint: str = "") -> None:
-        self.recommendations.append(Recommendation(tool, issue, hint))
+    def add_recommendation(
+        self,
+        tool: str,
+        issue: str,
+        hint: str = "",
+        *,
+        severity: str = "medium",
+        probable_cause: str = "",
+        suggested_commands: tuple[str, ...] = (),
+        safe_to_auto_fix: bool = False,
+        internal_note: str = "",
+    ) -> None:
+        self.recommendations.append(
+            Recommendation(
+                tool=tool,
+                issue=issue,
+                hint=hint,
+                severity=severity,
+                probable_cause=probable_cause,
+                suggested_commands=suggested_commands,
+                safe_to_auto_fix=safe_to_auto_fix,
+                internal_note=internal_note,
+            )
+        )
 
     def run_streaming(
         self,
@@ -498,13 +844,17 @@ class FullCheck:
         return process.returncode
 
     def run_gate_step(
-        self, name: str, exe_args: list[str] | None, cwd: Path | None = None
+        self,
+        name: str,
+        exe_args: list[str] | None,
+        cwd: Path | None = None,
+        env: dict[str, str] | None = None,
     ) -> int:
         if exe_args is None:
             self.add_stage_result(name, "SKIP", "required executable not found")
             return -1
         start = time.monotonic()
-        exit_code = self.run_streaming(exe_args, cwd=cwd)
+        exit_code = self.run_streaming(exe_args, cwd=cwd, env=env)
         duration = time.monotonic() - start
         self.add_stage_result(
             name, "OK" if exit_code == 0 else "FAIL", duration_seconds=duration
@@ -683,32 +1033,138 @@ class FullCheck:
                 return [exe]
         return None
 
+    def pnpm_args(self, *parts: str) -> list[str] | None:
+        return [*self.pnpm_command, *parts] if self.pnpm_command else None
+
+    def should_run_phase(self, phase: str) -> bool:
+        if self.doctor:
+            return phase in {"diagnostics", "toolchain", "git_status"}
+        profile_phases = {
+            "quick": {
+                "diagnostics",
+                "toolchain",
+                "pinned_versions",
+                "static_quality",
+                "git_status",
+            },
+            "backend": {
+                "diagnostics",
+                "toolchain",
+                "dependencies",
+                "pinned_versions",
+                "static_quality",
+                "go_notifier",
+                "docker",
+                "git_status",
+            },
+            "frontend": {
+                "diagnostics",
+                "toolchain",
+                "dependencies",
+                "pinned_versions",
+                "static_quality",
+                "docker",
+                "git_status",
+            },
+            "docker": {"diagnostics", "toolchain", "docker", "git_status"},
+            "full": {
+                "diagnostics",
+                "toolchain",
+                "dependencies",
+                "pinned_versions",
+                "static_quality",
+                "go_notifier",
+                "docker",
+                "precommit",
+                "git_status",
+            },
+            "ci": {
+                "diagnostics",
+                "toolchain",
+                "dependencies",
+                "pinned_versions",
+                "static_quality",
+                "go_notifier",
+                "docker",
+                "precommit",
+                "git_status",
+            },
+        }
+        return phase in profile_phases[self.profile]
+
     def phase_diagnostics(self, config: dict[str, Any]) -> None:
         self.section("Phase -1 — Diagnostics (system, git, network)")
 
         self.system_info = get_system_diagnostics()
         self.log(
-            "  host={} os={} ({}) cpu={} ram={}GB free-ram={}GB free-disk={}GB python={}".format(
+            "  host={} user={} os={} ({}) kernel={} cpu={} cores={}/{} ram={}GB free-ram={}GB "
+            "disk={}/{}GB fs={} python={} shell={} tz={} wsl={}".format(
                 self.system_info["hostname"],
+                self.system_info["current_user"],
                 self.system_info["os_caption"],
                 self.system_info["os_architecture"],
+                self.system_info["kernel_version"],
+                self.system_info["cpu_model"],
+                self.system_info["physical_cores"],
                 self.system_info["processor_count"],
                 self.system_info["total_memory_gb"],
                 self.system_info["free_memory_gb"],
+                self.system_info["repo_drive_total_gb"],
                 self.system_info["repo_drive_free_gb"],
+                self.system_info["repo_drive_filesystem"],
                 self.system_info["python_version"],
+                self.system_info["shell"],
+                self.system_info["timezone"],
+                self.system_info["is_wsl"],
             )
         )
+        self.log(f"  python executable={self.system_info['python_executable']}")
 
         self.git_context = get_git_context()
         self.log(
-            "  git branch={} commit={} dirty-files={} {}".format(
+            "  git branch={} commit={} upstream={} dirty-files={} {}".format(
                 self.git_context["branch"],
                 self.git_context["commit"],
+                self.git_context["upstream"],
                 self.git_context["dirty_file_count"],
                 self.git_context["ahead_behind"],
             )
         )
+
+        self.repo_info = get_repo_diagnostics()
+        self.log(
+            "  repo package-manager={} migrations={} missing-env={} node_modules={}GB .venv={}GB .next={}GB".format(
+                self.repo_info["package_manager"],
+                self.repo_info["migration_count"],
+                ",".join(self.repo_info["missing_env_files"]) or "none",
+                self.repo_info["node_modules_size_gb"],
+                self.repo_info["venv_size_gb"],
+                self.repo_info["next_cache_size_gb"],
+            )
+        )
+
+        self.docker_info = get_docker_diagnostics()
+        if self.docker_info["available"]:
+            self.log(
+                "  docker context={} reachable={} server={} root={} storage={} cpus={} memory={}GB running={}".format(
+                    self.docker_info["context"],
+                    self.docker_info["daemon_reachable"],
+                    self.docker_info["server_version"],
+                    self.docker_info["root_dir"],
+                    self.docker_info["storage_driver"],
+                    self.docker_info["docker_cpus"],
+                    self.docker_info["docker_memory_gb"],
+                    self.docker_info["running_containers"],
+                )
+            )
+            if self.docker_info["compose_services"]:
+                services = ", ".join(
+                    f"{item['service']}:{item['state']}:{item['health'] or '-'}"
+                    for item in self.docker_info["compose_services"]
+                )
+                self.log(f"  docker compose services={services}")
+        else:
+            self.log("  docker command is not available", "warn")
 
         min_free_gb = config["min_free_disk_space_gb"]
         free_gb = self.system_info["repo_drive_free_gb"]
@@ -752,26 +1208,41 @@ class FullCheck:
                     "need this host may fail or need more retries.",
                 )
 
-        for stale_dir in STALE_CACHE_DIRS:
+        for stale_dir in CACHE_DIRS_SAFE_TO_FIX:
             stale_path = REPO_ROOT / stale_dir
             if stale_path.exists():
-                shutil.rmtree(stale_path, ignore_errors=True)
-                if stale_path.exists():
+                if self.fix:
+                    shutil.rmtree(stale_path, ignore_errors=True)
+                    status = "OK" if not stale_path.exists() else "WARN"
+                    detail = (
+                        "removed by --fix"
+                        if status == "OK"
+                        else "exists and could not be removed; likely locked"
+                    )
+                    self.add_stage_result(f"Stale cache: {stale_dir}", status, detail)
+                else:
                     self.add_stage_result(
                         f"Stale cache: {stale_dir}",
                         "WARN",
-                        "exists and could not be removed (likely locked by another process); may cause "
-                        "unrelated-looking prettier/pytest failures later",
+                        "exists; pass --fix to remove safe local cache directories",
                     )
+                if stale_path.exists():
                     self.add_recommendation(
                         stale_dir,
-                        "directory is locked and could not be cleaned",
-                        f"Close any IDE, antivirus scan, or leftover process that may be holding '{stale_dir}' "
-                        "open, then re-run this script.",
+                        "directory is locked or stale",
+                        f"Close any IDE, antivirus scan, or leftover process that may be holding '{stale_dir}' open.",
+                        severity="low",
+                        probable_cause="A previous local run or Windows process still owns the cache directory.",
+                        suggested_commands=(
+                            f"Remove-Item -Recurse -Force {stale_dir}",
+                        ),
+                        safe_to_auto_fix=True,
                     )
 
     def phase_toolchain(self, config: dict[str, Any]) -> None:
         self.section("Phase 0 — System toolchain verification")
+        self.python312 = self.resolve_python312()
+        self.pnpm_command = get_project_pnpm_command()
 
         package_json = get_package_json()
         pnpm_required = playwright_required = prettier_required = (
@@ -805,26 +1276,51 @@ class FullCheck:
         self.prettier_required = prettier_required
         self.openapi_ts_required = openapi_ts_required
 
-        self.check_tool_version(
-            "Python 3.12",
-            "py",
-            ["-3.12", "--version"],
-            r"(\d+\.\d+\.\d+)",
-            recommended=python_required,
-            mode="min",
-            severity="required",
-            install_hint="https://www.python.org/downloads/ (winget install --id Python.Python.3.12 -e)",
-        )
-        self.check_tool_version(
-            "pnpm",
-            "pnpm",
-            ["--version"],
-            r"(\d+\.\d+\.\d+)",
-            recommended=pnpm_required or "",
-            mode="min",
-            severity="required",
-            install_hint="corepack enable && corepack prepare pnpm@latest --activate (https://pnpm.io/installation)",
-        )
+        if self.python312:
+            self.check_tool_version(
+                "Python 3.12",
+                self.python312[0],
+                [*self.python312[1:], "--version"],
+                r"(\d+\.\d+\.\d+)",
+                recommended=python_required,
+                mode="min",
+                severity="required",
+                install_hint="https://www.python.org/downloads/ (winget install --id Python.Python.3.12 -e)",
+            )
+        else:
+            self.add_stage_result("Python 3.12", "FAIL", "no usable interpreter found")
+        if self.pnpm_command:
+            pnpm_version = self.get_tool_version_string(
+                [*self.pnpm_command, "--version"], r"(\d+\.\d+\.\d+)"
+            )
+            if pnpm_version and (not pnpm_required or pnpm_version == pnpm_required):
+                self.add_stage_result(
+                    "pnpm",
+                    "OK",
+                    f"version={pnpm_version}, command={' '.join(self.pnpm_command)}",
+                )
+            elif pnpm_version:
+                self.add_stage_result(
+                    "pnpm",
+                    "WARN",
+                    f"version={pnpm_version}, packageManager pins {pnpm_required}",
+                )
+            else:
+                self.add_stage_result(
+                    "pnpm", "WARN", "command found but version could not be parsed"
+                )
+        else:
+            self.add_stage_result("pnpm", "FAIL", "pnpm/corepack command not found")
+            self.add_recommendation(
+                "pnpm",
+                "not installed",
+                "Run: corepack enable && corepack prepare pnpm@latest --activate",
+                severity="high",
+                suggested_commands=(
+                    "corepack enable",
+                    "corepack prepare pnpm@latest --activate",
+                ),
+            )
         self.check_tool_version(
             "Go",
             "go",
@@ -860,10 +1356,9 @@ class FullCheck:
             self.admin_token = "local-gate-" + secrets.token_hex(8)
         os.environ["ADMIN_TOKEN"] = self.admin_token
         self.log(
-            f"Using ADMIN_TOKEN={self.admin_token[:16]}... for this run (API container and test runner share it)."
+            "Using ADMIN_TOKEN=<generated> for this run (API container and test runner share it)."
         )
 
-        self.python312 = self.resolve_python312()
         python312 = self.python312
         if not python312:
             self.add_stage_result(
@@ -897,10 +1392,17 @@ class FullCheck:
                     "virtualenv, or a Python version mismatch (project requires >= 3.12).",
                 )
 
-        pnpm_exe = shutil.which("pnpm")
+        pnpm_command = self.pnpm_command
         pnpm_result = self.run_with_retry(
             "pnpm install",
-            lambda: self.run_streaming([pnpm_exe, "install"]) if pnpm_exe else -1,
+            lambda: (
+                self.run_streaming(
+                    [*pnpm_command, "install", "--frozen-lockfile"],
+                    env=pnpm_safe_env(),
+                )
+                if pnpm_command
+                else -1
+            ),
             max_attempts=3,
             initial_delay=5,
             delay_step=5,
@@ -912,15 +1414,22 @@ class FullCheck:
                 "install failed",
                 "Check the transcript above. Common causes: no internet/registry access, or a stale "
                 "pnpm-lock.yaml conflict (try 'pnpm install --no-frozen-lockfile').",
+                severity="high",
+                probable_cause="The package manager could not complete dependency installation.",
+                suggested_commands=(
+                    "corepack enable",
+                    "corepack pnpm@9.12.0 install --frozen-lockfile",
+                ),
             )
 
         playwright_result = self.run_with_retry(
             "pnpm exec playwright install chromium",
             lambda: (
                 self.run_streaming(
-                    [pnpm_exe, "exec", "playwright", "install", "chromium"]
+                    [*pnpm_command, "exec", "playwright", "install", "chromium"],
+                    env=pnpm_safe_env(),
                 )
-                if pnpm_exe
+                if pnpm_command
                 else -1
             ),
             max_attempts=3,
@@ -962,50 +1471,48 @@ class FullCheck:
                 severity="optional",
             )
 
-        pnpm_exe = shutil.which("pnpm")
-        if pnpm_exe:
-            self.check_tool_version(
-                "Next.js",
-                pnpm_exe,
-                [
-                    "--filter",
-                    "@country-decision-atlas/web",
-                    "exec",
-                    "next",
-                    "--version",
-                ],
-                r"(\d+\.\d+\.\d+)",
-                recommended="15.0.0",
-                mode="min",
-                severity="optional",
-            )
-            self.check_tool_version(
-                "Playwright",
-                pnpm_exe,
-                ["exec", "playwright", "--version"],
-                r"(\d+\.\d+\.\d+)",
-                recommended=self.playwright_required or "",
-                mode="min",
-                severity="optional",
-            )
-            self.check_tool_version(
-                "Prettier",
-                pnpm_exe,
-                ["exec", "prettier", "--version"],
-                r"(\d+\.\d+\.\d+)",
-                recommended=self.prettier_required or "",
-                mode="min",
-                severity="optional",
-            )
-            self.check_tool_version(
-                "openapi-typescript",
-                pnpm_exe,
-                ["exec", "openapi-typescript", "--version"],
-                r"(\d+\.\d+\.\d+)",
-                recommended=self.openapi_ts_required or "",
-                mode="min",
-                severity="optional",
-            )
+        if self.pnpm_command:
+            for name, args, recommended in (
+                (
+                    "Next.js",
+                    [
+                        "--filter",
+                        "@country-decision-atlas/web",
+                        "exec",
+                        "next",
+                        "--version",
+                    ],
+                    "15.0.0",
+                ),
+                (
+                    "Playwright",
+                    ["exec", "playwright", "--version"],
+                    self.playwright_required or "",
+                ),
+                (
+                    "Prettier",
+                    ["exec", "prettier", "--version"],
+                    self.prettier_required or "",
+                ),
+                (
+                    "openapi-typescript",
+                    ["exec", "openapi-typescript", "--version"],
+                    self.openapi_ts_required or "",
+                ),
+            ):
+                version = self.get_tool_version_string(
+                    [*self.pnpm_command, *args], r"(\d+\.\d+\.\d+)"
+                )
+                if not version:
+                    self.add_stage_result(name, "WARN", "could not parse version")
+                elif not recommended or compare_semver(version, recommended) >= 0:
+                    self.add_stage_result(name, "OK", f"version={version}")
+                else:
+                    self.add_stage_result(
+                        name,
+                        "WARN",
+                        f"version={version} is older than {recommended}",
+                    )
 
     def phase_static_quality(self) -> None:
         self.section("Phase 3 — Static quality gate")
@@ -1014,44 +1521,82 @@ class FullCheck:
         def py_args(*parts: str) -> list[str] | None:
             return [*py312, *parts] if py312 else None
 
+        if self.fix:
+            self.run_gate_step(
+                "ruff check --fix",
+                py_args(
+                    "-m",
+                    "ruff",
+                    "check",
+                    "apps",
+                    "packages",
+                    "scripts",
+                    "tests",
+                    "--fix",
+                ),
+            )
+            self.run_gate_step(
+                "ruff format",
+                py_args("-m", "ruff", "format", "apps", "packages", "scripts", "tests"),
+            )
+
         self.run_gate_step(
             "ruff check",
             py_args("-m", "ruff", "check", "apps", "packages", "scripts", "tests"),
         )
         self.run_gate_step(
-            "ruff format --check",
-            py_args(
-                "-m",
-                "ruff",
-                "format",
-                "--check",
-                "apps",
-                "packages",
-                "scripts",
-                "tests",
-            ),
-        )
-        self.run_gate_step(
             "mypy", py_args("-m", "mypy", "apps", "packages", "scripts", "tests")
         )
-        self.run_gate_step(
-            "sqlfluff lint",
-            py_args("-m", "sqlfluff", "lint", "database", "--dialect", "postgres"),
-        )
 
-        (REPO_ROOT / ".tmp" / "pytest").mkdir(parents=True, exist_ok=True)
+        if self.profile in {"backend", "full", "ci"}:
+            self.run_gate_step(
+                "ruff format --check",
+                py_args(
+                    "-m",
+                    "ruff",
+                    "format",
+                    "--check",
+                    "apps",
+                    "packages",
+                    "scripts",
+                    "tests",
+                ),
+            )
+            self.run_gate_step(
+                "sqlfluff lint",
+                py_args("-m", "sqlfluff", "lint", "database", "--dialect", "postgres"),
+            )
+
+        pytest_temp = self.temp_root / "pytest"
+        pytest_temp.mkdir(parents=True, exist_ok=True)
         self.run_gate_step(
             "pytest",
-            py_args("-m", "pytest", "-p", "no:cacheprovider", "--basetemp=.tmp/pytest"),
+            py_args(
+                "-m",
+                "pytest",
+                "-p",
+                "no:cacheprovider",
+                f"--basetemp={pytest_temp}",
+            ),
         )
 
-        pnpm_exe = shutil.which("pnpm")
+        if self.profile == "quick":
+            self.run_gate_step(
+                "pnpm typecheck",
+                self.pnpm_args("typecheck"),
+                env=pnpm_safe_env(),
+            )
+            return
 
-        def pnpm_args(*parts: str) -> list[str] | None:
-            return [pnpm_exe, *parts] if pnpm_exe else None
-
-        self.run_gate_step("pnpm contracts:generate", pnpm_args("contracts:generate"))
-        self.run_gate_step("pnpm quality", pnpm_args("quality"))
+        if self.profile in {"frontend", "full", "ci"}:
+            self.run_gate_step(
+                "pnpm contracts:generate",
+                self.pnpm_args("contracts:generate"),
+                env=pnpm_safe_env(),
+            )
+            self.run_gate_step(
+                "pnpm quality", self.pnpm_args("quality"), env=pnpm_safe_env()
+            )
 
     def phase_go_notifier(self) -> None:
         self.section("Phase 4 — Go notifier gate")
@@ -1128,6 +1673,9 @@ class FullCheck:
             return
 
         self.section("Phase 5 — Docker stack, migrations, runtime smoke")
+        if not self.admin_token:
+            self.admin_token = "local-gate-" + secrets.token_hex(8)
+        os.environ["ADMIN_TOKEN"] = self.admin_token
         docker_exe = shutil.which("docker")
         if not docker_exe:
             self.add_stage_result(
@@ -1147,24 +1695,49 @@ class FullCheck:
             return
         self.add_stage_result("docker daemon reachable", "OK")
 
+        if self.docker_info:
+            memory = self.docker_info.get("docker_memory_gb")
+            cpus = self.docker_info.get("docker_cpus")
+            if memory is not None and memory < 4:
+                self.add_stage_result(
+                    "Docker memory",
+                    "WARN",
+                    f"{memory} GB available to Docker; recommended >= 4 GB",
+                )
+            else:
+                self.add_stage_result(
+                    "Docker resources",
+                    "OK",
+                    f"cpus={cpus} memory={memory}GB",
+                )
+
         docker_up_exit = self.run_with_retry(
-            "docker compose up --build -d api",
+            "docker compose up --build -d api redis",
             lambda: self.run_streaming(
-                [docker_exe, "compose", "up", "--build", "-d", "api"]
+                [docker_exe, "compose", "up", "--build", "-d", "api", "redis"]
             ),
             max_attempts=self.docker_max_attempts,
             initial_delay=self.docker_retry_initial_delay,
             delay_step=self.docker_retry_delay_step,
         )
         self.add_stage_result(
-            "docker compose up --build -d api", "OK" if docker_up_exit == 0 else "FAIL"
+            "docker compose up --build -d api redis",
+            "OK" if docker_up_exit == 0 else "FAIL",
         )
         if docker_up_exit != 0:
             self.add_recommendation(
                 "Docker build",
                 f"docker compose up --build failed after {self.docker_max_attempts} attempts",
-                "Check Docker Desktop is running with enough resources (Settings > Resources), check disk "
-                "space, and inspect the transcript for the underlying build error.",
+                "Check Docker Desktop is running with enough resources, disk space, and network access.",
+                severity="high",
+                probable_cause="Docker Desktop is stopped, low on resources, cannot reach Docker Hub, or the image build failed.",
+                suggested_commands=(
+                    "docker compose down --remove-orphans",
+                    "docker system df",
+                    "docker compose up --build -d api redis",
+                ),
+                safe_to_auto_fix=False,
+                internal_note="Do not run docker system prune automatically; it can delete useful local images and caches.",
             )
             self.add_stage_result(
                 "migrations / bootstrap / smoke / E2E",
@@ -1186,6 +1759,29 @@ class FullCheck:
                 "API never became healthy",
             )
             return
+
+        postgres_ready = self.run_streaming(
+            [
+                docker_exe,
+                "compose",
+                "exec",
+                "-T",
+                "postgres",
+                "pg_isready",
+                "-U",
+                "country_atlas",
+                "-d",
+                "country_atlas",
+            ]
+        )
+        self.add_stage_result(
+            "Postgres readiness", "OK" if postgres_ready == 0 else "FAIL"
+        )
+
+        redis_ready = self.run_streaming(
+            [docker_exe, "compose", "exec", "-T", "redis", "redis-cli", "ping"]
+        )
+        self.add_stage_result("Redis readiness", "OK" if redis_ready == 0 else "FAIL")
 
         mig1 = self.run_streaming(
             [
@@ -1258,6 +1854,52 @@ class FullCheck:
             except Exception as exc:
                 self.add_stage_result(f"smoke: {url}", "FAIL", str(exc))
 
+        semantic_checks = [
+            ("health", "http://localhost:8000/health"),
+            ("ready", "http://localhost:8000/ready"),
+            ("countries", "http://localhost:8000/api/v1/countries?locale=ru"),
+            (
+                "trust",
+                "http://localhost:8000/api/v1/countries/russia/trust?locale=ru",
+            ),
+            ("search", "http://localhost:8000/api/v1/search?q=residence&locale=ru"),
+            ("openapi", "http://localhost:8000/api/openapi.json"),
+        ]
+        for name, url in semantic_checks:
+            status, payload, error = http_json(url)
+            if status != 200:
+                self.add_stage_result(
+                    f"semantic smoke: {name}",
+                    "FAIL",
+                    error or f"HTTP {status}",
+                )
+                continue
+            ok, detail = validate_semantic_response(name, payload)
+            self.add_stage_result(
+                f"semantic smoke: {name}", "OK" if ok else "FAIL", detail
+            )
+
+        migration_count_exit = self.run_streaming(
+            [
+                docker_exe,
+                "compose",
+                "exec",
+                "-T",
+                "postgres",
+                "psql",
+                "-U",
+                "country_atlas",
+                "-d",
+                "country_atlas",
+                "-tAc",
+                "SELECT COUNT(*) FROM schema_migrations;",
+            ]
+        )
+        self.add_stage_result(
+            "migration version count query",
+            "OK" if migration_count_exit == 0 else "FAIL",
+        )
+
         if self.skip_e2e:
             self.add_stage_result(
                 "pnpm web:mvp:check (Playwright E2E)", "SKIP", "--skip-e2e was set"
@@ -1267,10 +1909,10 @@ class FullCheck:
         if platform.system() == "Windows":
             subprocess.run(["taskkill", "/F", "/IM", "node.exe"], capture_output=True)
 
-        pnpm_exe = shutil.which("pnpm")
         self.run_gate_step(
             "pnpm web:mvp:check (Playwright E2E)",
-            [pnpm_exe, "web:mvp:check"] if pnpm_exe else None,
+            self.pnpm_args("web:mvp:check"),
+            env=pnpm_safe_env(),
         )
 
     def phase_precommit(self) -> None:
@@ -1291,7 +1933,10 @@ class FullCheck:
         self.section("Phase 7 — git status")
         git_exe = shutil.which("git")
         if git_exe:
-            self.run_streaming([git_exe, "diff", "--check"])
+            diff_check = self.run_streaming([git_exe, "diff", "--check"])
+            self.add_stage_result(
+                "git diff --check", "OK" if diff_check == 0 else "FAIL"
+            )
             self.run_streaming([git_exe, "status", "--short"])
 
     def write_reports(self, finished_at: datetime) -> int:
@@ -1328,13 +1973,31 @@ class FullCheck:
                 "",
             ]
             for rec in self.recommendations:
-                line = f"- {rec.tool}: {rec.issue}"
+                line = f"- [{rec.severity}] {rec.tool}: {rec.issue}"
                 self.log(line, "warn")
                 rec_lines.append(line)
+                if rec.probable_cause:
+                    cause_line = f"    probable cause: {rec.probable_cause}"
+                    self.log(cause_line, "warn")
+                    rec_lines.append(cause_line)
                 if rec.hint:
                     hint_line = f"    -> {rec.hint}"
                     self.log(hint_line, "warn")
                     rec_lines.append(hint_line)
+                if rec.suggested_commands:
+                    rec_lines.append("    suggested commands:")
+                    self.log("    suggested commands:", "warn")
+                    for command in rec.suggested_commands:
+                        command_line = f"      - {command}"
+                        self.log(command_line, "warn")
+                        rec_lines.append(command_line)
+                safe_line = f"    safe to auto-fix: {rec.safe_to_auto_fix}"
+                self.log(safe_line, "warn")
+                rec_lines.append(safe_line)
+                if rec.internal_note:
+                    note_line = f"    note: {rec.internal_note}"
+                    self.log(note_line, "warn")
+                    rec_lines.append(note_line)
             try:
                 self.recommendations_path.write_text(
                     "\n".join(rec_lines) + "\n", encoding="utf-8"
@@ -1347,6 +2010,7 @@ class FullCheck:
             f"Started:  {self.started_at.isoformat()}",
             f"Finished: {finished_at.isoformat()}",
             f"Duration: {duration_minutes} minutes",
+            f"Profile:  {self.profile}{' doctor' if self.doctor else ''}{' fix' if self.fix else ''}",
             f"OK={ok_count} WARN={warn_count} FAIL={fail_count} SKIP={skip_count}",
             f"git: branch={self.git_context.get('branch')} commit={self.git_context.get('commit')} "
             f"dirty={self.git_context.get('dirty_file_count')} {self.git_context.get('ahead_behind')}",
@@ -1374,6 +2038,9 @@ class FullCheck:
                 "started_at": self.started_at.isoformat(),
                 "finished_at": finished_at.isoformat(),
                 "duration_minutes": duration_minutes,
+                "profile": self.profile,
+                "doctor": self.doctor,
+                "fix": self.fix,
                 "counts": {
                     "ok": ok_count,
                     "warn": warn_count,
@@ -1382,6 +2049,8 @@ class FullCheck:
                 },
                 "git": self.git_context,
                 "system": self.system_info,
+                "repo": self.repo_info,
+                "docker": self.docker_info,
                 "network": [asdict(n) for n in self.network_results],
                 "stages": [asdict(s) for s in self.stage_results],
                 "recommendations": [asdict(r) for r in self.recommendations],
@@ -1399,26 +2068,61 @@ class FullCheck:
         if self.recommendations:
             self.log(f"Recommendations:  {self.recommendations_path}")
 
+        failed = [r for r in self.stage_results if r.status == "FAIL"]
+        warnings = [r for r in self.stage_results if r.status == "WARN"]
+        if failed:
+            self.log("")
+            self.log("Result: FAIL", "error")
+            self.log(f"Main blocker: {failed[0].stage} — {failed[0].detail}", "error")
+            if warnings:
+                self.log("Secondary warnings:", "warn")
+                for item in warnings[:5]:
+                    self.log(f"- {item.stage}: {item.detail}", "warn")
+            if self.recommendations:
+                self.log("Next action:", "warn")
+                first = self.recommendations[0]
+                if first.suggested_commands:
+                    self.log(f"1. {first.suggested_commands[0]}", "warn")
+                elif first.hint:
+                    self.log(f"1. {first.hint}", "warn")
+        else:
+            self.log("")
+            self.log("Result: OK", "ok")
+
         return fail_count
 
     def run(self) -> int:
         self.section("Country Decision Atlas — full local check")
         self.log(f"Report folder: {self.report_dir}")
         self.log(f"Started at:    {self.started_at}")
+        self.log(f"Profile:       {self.profile}")
+        if self.doctor:
+            self.log("Mode:          doctor (read-only diagnostics)")
+        if self.fix:
+            self.log("Mode:          fix (safe local cache/format fixes enabled)")
 
         config = self.load_config()
 
         fail_count = 0
         try:
-            self.phase_diagnostics(config)
-            self.phase_toolchain(config)
-            self.phase_dependencies()
-            self.phase_pinned_versions()
-            self.phase_static_quality()
-            self.phase_go_notifier()
-            self.phase_docker()
-            self.phase_precommit()
-            self.phase_git_status()
+            if self.should_run_phase("diagnostics"):
+                self.phase_diagnostics(config)
+            if self.should_run_phase("toolchain"):
+                self.phase_toolchain(config)
+            if self.should_run_phase("dependencies"):
+                self.phase_dependencies()
+            if self.should_run_phase("pinned_versions"):
+                self.phase_pinned_versions()
+            if self.should_run_phase("static_quality"):
+                self.phase_static_quality()
+            if self.should_run_phase("go_notifier"):
+                self.phase_go_notifier()
+            if self.should_run_phase("docker"):
+                self.phase_docker()
+            if self.should_run_phase("precommit"):
+                self.phase_precommit()
+            if self.should_run_phase("git_status"):
+                self.phase_git_status()
         except Exception as exc:
             self.add_stage_result("UNEXPECTED SCRIPT ERROR", "FAIL", str(exc))
             self.log("")
@@ -1436,6 +2140,22 @@ class FullCheck:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Country Decision Atlas — full local check"
+    )
+    parser.add_argument(
+        "--profile",
+        choices=PROFILE_CHOICES,
+        default="full",
+        help="Run a focused gate: quick, backend, frontend, docker, full, or ci.",
+    )
+    parser.add_argument(
+        "--doctor",
+        action="store_true",
+        help="Collect read-only diagnostics only; does not install, clean, build, or start services.",
+    )
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Apply safe local fixes: clean known caches and run format/fix tools in selected profiles.",
     )
     parser.add_argument("--skip-docker", action="store_true")
     parser.add_argument("--skip-e2e", action="store_true")
