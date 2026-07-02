@@ -1,6 +1,9 @@
 from app.api.v1 import decision as decision_route
 from app.core.locales import validate_locale
-from app.repositories import decision_engine as decision_repository
+from app.repositories import (
+    country_pairs as country_pairs_repository,
+    decision_engine as decision_repository,
+)
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
 from datetime import UTC, datetime
@@ -164,6 +167,11 @@ def install_repository_fakes(monkeypatch: Any) -> None:
                 "confidence": "high",
             }
         ],
+    )
+    monkeypatch.setattr(
+        country_pairs_repository,
+        "list_destination_compatibility",
+        lambda *_: [],
     )
 
 

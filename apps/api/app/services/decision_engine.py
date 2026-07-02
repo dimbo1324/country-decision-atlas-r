@@ -13,6 +13,7 @@ from app.schemas.common import (
     SortMeta,
     source_locale_resolution,
 )
+from app.schemas.country_pairs import CountryPairCompatibilitySummary
 from app.schemas.decision_engine import (
     CountryCardResponse,
     DecisionBreakdownItem,
@@ -41,7 +42,7 @@ from app.schemas.decision_personalization import (
     DecisionWeightItem,
 )
 from app.schemas.sources import EvidenceItemListResponse
-from app.services import decision_analytics
+from app.services import decision_analytics, decision_origin_context
 from app.services.decision_labels import (
     criterion_label,
     score_label_text,
@@ -412,14 +413,15 @@ def run_decision(
             "Candidate countries must be unique.",
             {"candidate_country_slugs": candidate_slugs},
         )
-    country_slugs = sorted({payload.origin_country_slug, *candidate_slugs})
+    origin_slug = payload.origin_country_slug
+    country_slugs = sorted({*candidate_slugs, *([origin_slug] if origin_slug else [])})
     country_rows = repository.list_decision_countries(connection, country_slugs, locale)
     countries_by_slug = {row["slug"]: row for row in country_rows}
     missing_slugs = [slug for slug in country_slugs if slug not in countries_by_slug]
     if missing_slugs:
         details_key = (
             "country_slug"
-            if missing_slugs == [payload.origin_country_slug]
+            if missing_slugs == [origin_slug]
             else "missing_country_slugs"
         )
         raise api_error(
@@ -524,6 +526,13 @@ def run_decision(
             payload.persona,
             locale,
         )
+    pair_contexts = (
+        decision_origin_context.build_country_pair_contexts(
+            connection, origin_slug, candidate_slugs
+        )
+        if origin_slug is not None
+        else {}
+    )
     results = [
         _build_country_result(
             country=countries_by_slug[slug],
@@ -544,6 +553,7 @@ def run_decision(
                 if effective_weights is not None
                 else None
             ),
+            country_pair_context=pair_contexts.get(slug),
         )
         for slug in candidate_slugs
     ]
@@ -559,7 +569,7 @@ def run_decision(
         ranked_results = _rank_results(results)
     locale_rows = [
         scenario_row,
-        countries_by_slug[payload.origin_country_slug],
+        *([countries_by_slug[origin_slug]] if origin_slug is not None else []),
         *[countries_by_slug[slug] for slug in candidate_slugs],
         *score_rows,
         *breakdown_rows,
@@ -590,7 +600,14 @@ def run_decision(
             title=scenario_row["title"],
             description=scenario_row["description"],
         ),
-        origin_country=_country_ref(countries_by_slug[payload.origin_country_slug]),
+        origin_country=(
+            _country_ref(countries_by_slug[origin_slug])
+            if origin_slug is not None
+            else None
+        ),
+        origin_context_status=decision_origin_context.resolve_origin_context_status(
+            origin_slug, candidate_slugs, pair_contexts
+        ),
         results=ranked_results,
         meta=DecisionRunMeta(
             candidate_count=len(candidate_slugs),
@@ -637,6 +654,7 @@ def _build_country_result(
     scenario_title: str,
     locale: str,
     override_score: float | None = None,
+    country_pair_context: CountryPairCompatibilitySummary | None = None,
 ) -> DecisionCountryResult:
     used_source_ids = _collect_source_ids(breakdowns, legal_signals)
     result_sources = [
@@ -681,6 +699,7 @@ def _build_country_result(
             for item in breakdowns
         ],
         sources=result_sources,
+        country_pair_context=country_pair_context,
     )
 
 

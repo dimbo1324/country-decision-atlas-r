@@ -19,6 +19,7 @@ ROUTE_ID = "11111111-1111-1111-1111-111111111111"
 SOURCE_ID = "33333333-3333-3333-3333-333333333333"
 EVIDENCE_ID = "44444444-4444-4444-4444-444444444444"
 DOCUMENT_ID = "55555555-5555-5555-5555-555555555555"
+CHECKLIST_ITEM_ID = "66666666-6666-6666-6666-666666666666"
 CONNECTION = object()
 NOW = datetime(2026, 6, 26, tzinfo=UTC)
 
@@ -107,6 +108,21 @@ def route_detail_response(country_slug: str = "russia") -> RouteDetailResponse:
                 "source_url": "https://example.test",
                 "confidence": "high",
                 "country_slug": country_slug,
+            }
+        ],
+        checklist=[
+            {
+                "id": CHECKLIST_ITEM_ID,
+                "step_order": 1,
+                "title": "Confirm the procedure",
+                "description": None,
+                "document_note": None,
+                "cost_note": None,
+                "timing_note": None,
+                "official_requirement_note": None,
+                "is_required": True,
+                "source_id": SOURCE_ID,
+                "evidence_item_id": None,
             }
         ],
         locale=locale_resolution("ru", "ru", TranslationStatus.translated),

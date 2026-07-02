@@ -194,6 +194,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
     assert {
         "scenario",
         "origin_country",
+        "origin_context_status",
         "results",
         "meta",
         "locale",
@@ -218,6 +219,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         "breakdown",
         "sources",
         "localization",
+        "country_pair_context",
     } == set(body["results"][0])
 
 

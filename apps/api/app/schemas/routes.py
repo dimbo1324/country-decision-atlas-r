@@ -4,6 +4,7 @@ from app.schemas.common import (
     Pagination,
     PublicationStatus,
 )
+from app.schemas.route_checklists import RouteChecklistItem
 from datetime import datetime
 from enum import StrEnum
 from pydantic import BaseModel
@@ -108,4 +109,5 @@ class RouteDetailResponse(BaseModel):
     documents: list[RouteDocument]
     sources: list[RouteSourceRef]
     evidence: list[RouteEvidenceRef]
+    checklist: list[RouteChecklistItem]
     locale: LocaleResolution

@@ -1,6 +1,7 @@
 from app.core.errors import api_error
 from app.repositories import (
     countries as countries_repository,
+    route_checklists as route_checklists_repository,
     routes as routes_repository,
 )
 from app.repositories.audit import insert_audit_event
@@ -196,11 +197,15 @@ def _route_detail_response(
     documents = routes_repository.list_route_documents(connection, route_id, locale)
     sources = routes_repository.list_route_sources(connection, route_id)
     evidence = routes_repository.list_route_evidence(connection, route_id)
+    checklist = route_checklists_repository.list_route_checklist_items(
+        connection, route_id, locale
+    )
     return RouteDetailResponse(
         **_with_eligibility(row),
         documents=documents,
         sources=sources,
         evidence=evidence,
+        checklist=checklist,
         locale=_route_locale(locale),
     )
 

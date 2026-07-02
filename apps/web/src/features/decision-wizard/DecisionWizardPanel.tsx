@@ -52,11 +52,12 @@ export function DecisionWizardPanel({
   onApply,
 }: DecisionWizardPanelProps) {
   const labels = DECISION_WIZARD_LABELS[locale];
+  const effectiveOriginSlug = originCountrySlug || countries.items[0]?.slug || "";
   const [isOpen, setIsOpen] = useState(false);
   const [hasTrackedOpen, setHasTrackedOpen] = useState(false);
   const [answers, setAnswers] = useState<DecisionWizardAnswers>({
     primary_goal: "residence",
-    origin_country_slug: originCountrySlug,
+    origin_country_slug: effectiveOriginSlug,
     budget_level: "unknown",
     family_status: "unknown",
     work_priority: "medium",
@@ -98,7 +99,7 @@ export function DecisionWizardPanel({
     try {
       const res = await decisionApi.resolveWizard({
         ...answers,
-        origin_country_slug: originCountrySlug,
+        origin_country_slug: effectiveOriginSlug,
       });
       const availableCountrySlugs = new Set(
         countries.items.map((country) => country.slug),
@@ -109,7 +110,8 @@ export function DecisionWizardPanel({
       onApply({
         scenarioSlug: res.recommended_scenario_slug,
         personaSlug: res.recommended_persona_slug ?? "",
-        candidateCountrySlugs: candidates.length > 0 ? candidates : [originCountrySlug],
+        candidateCountrySlugs:
+          candidates.length > 0 ? candidates : [effectiveOriginSlug],
         customWeights: normalizeWeights(res),
       });
       setRecommendation(res);

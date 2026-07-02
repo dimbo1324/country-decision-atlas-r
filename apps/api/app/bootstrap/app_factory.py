@@ -4,6 +4,7 @@ from app.api.v1 import (
     analytics,
     countries,
     country_drift,
+    country_pairs,
     data_journal,
     decision,
     feature_flags,
@@ -197,6 +198,7 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(countries.router, prefix="/api/v1")
     app.include_router(data_journal.router, prefix="/api/v1")
     app.include_router(routes.router, prefix="/api/v1")
+    app.include_router(country_pairs.router, prefix="/api/v1")
     app.include_router(legal_signals.router, prefix="/api/v1")
     app.include_router(legal_signals.top_level_router, prefix="/api/v1")
     app.include_router(scenarios.router, prefix="/api/v1")

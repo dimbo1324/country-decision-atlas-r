@@ -14,6 +14,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
   const {
     scenario,
     origin_country,
+    origin_context_status,
     results,
     meta,
     locale,
@@ -40,7 +41,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         </div>
         <div className="resultMetaRow">
           <span>Отправление:</span>
-          <strong>{origin_country.name}</strong>
+          <strong>{origin_country ? origin_country.name : "Не указано"}</strong>
         </div>
         <div className="resultMetaRow">
           <span>Создано:</span>
@@ -94,6 +95,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
               key={result.country.id}
               result={result}
               locale={locale.resolved_locale}
+              originContextStatus={origin_context_status}
             />
           ))}
         </div>

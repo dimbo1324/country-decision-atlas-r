@@ -1093,6 +1093,86 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/country-pairs/{origin_slug}/{destination_slug}:
+    get:
+      tags:
+      - country-pairs
+      summary: Read Country Pair
+      operationId: read_country_pair_api_v1_country_pairs__origin_slug___destination_slug__get
+      parameters:
+      - name: origin_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Origin Slug
+      - name: destination_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Destination Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryPairCompatibilityResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{origin_slug}/destination-compatibility:
+    get:
+      tags:
+      - country-pairs
+      summary: Read Destination Compatibility
+      operationId: read_destination_compatibility_api_v1_countries__origin_slug__destination_compatibility_get
+      parameters:
+      - name: origin_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Origin Slug
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryPairCompatibilityListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/countries/{country_id}/legal-signals:
     get:
       tags:
@@ -4047,8 +4127,8 @@ components:
         disclaimer:
           type: string
           title: Disclaimer
-          default: This is a contextual trend indicator based on legal signal events,
-            not legal advice or a prediction.
+          default: This is a contextual trend indicator based on legal signal events, not legal advice
+            or a prediction.
       type: object
       required:
       - country_slug
@@ -4260,6 +4340,326 @@ components:
       - slug
       - name
       title: CountryOverviewCard
+    CountryPairCompatibility:
+      properties:
+        label:
+          type: string
+          enum:
+          - favourable
+          - mixed
+          - restrictive
+          - unknown
+          title: Label
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+        freshness_status:
+          type: string
+          enum:
+          - fresh
+          - current
+          - stale
+          - unknown
+          title: Freshness Status
+        visa_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Visa Note
+        tax_treaty_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tax Treaty Note
+        banking_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Banking Note
+        flight_logistics_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flight Logistics Note
+        timezone_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timezone Note
+        language_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language Note
+        migration_restriction_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Migration Restriction Note
+        practical_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Practical Summary
+        last_verified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Verified At
+      type: object
+      required:
+      - label
+      - confidence
+      - freshness_status
+      title: CountryPairCompatibility
+    CountryPairCompatibilityListItem:
+      properties:
+        destination_country:
+          $ref: '#/components/schemas/CountryPairCountry'
+        compatibility:
+          $ref: '#/components/schemas/CountryPairCompatibility'
+        sources:
+          items:
+            $ref: '#/components/schemas/CountryPairSourceRef'
+          type: array
+          title: Sources
+        evidence:
+          items:
+            $ref: '#/components/schemas/CountryPairEvidenceRef'
+          type: array
+          title: Evidence
+      type: object
+      required:
+      - destination_country
+      - compatibility
+      - sources
+      - evidence
+      title: CountryPairCompatibilityListItem
+    CountryPairCompatibilityListResponse:
+      properties:
+        origin_country:
+          $ref: '#/components/schemas/CountryPairCountry'
+        items:
+          items:
+            $ref: '#/components/schemas/CountryPairCompatibilityListItem'
+          type: array
+          title: Items
+        disclaimer:
+          type: string
+          title: Disclaimer
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - origin_country
+      - items
+      - disclaimer
+      - locale
+      title: CountryPairCompatibilityListResponse
+    CountryPairCompatibilityResponse:
+      properties:
+        origin_country:
+          $ref: '#/components/schemas/CountryPairCountry'
+        destination_country:
+          $ref: '#/components/schemas/CountryPairCountry'
+        compatibility:
+          $ref: '#/components/schemas/CountryPairCompatibility'
+        sources:
+          items:
+            $ref: '#/components/schemas/CountryPairSourceRef'
+          type: array
+          title: Sources
+        evidence:
+          items:
+            $ref: '#/components/schemas/CountryPairEvidenceRef'
+          type: array
+          title: Evidence
+        disclaimer:
+          type: string
+          title: Disclaimer
+        locale:
+          $ref: '#/components/schemas/LocaleResolution'
+      type: object
+      required:
+      - origin_country
+      - destination_country
+      - compatibility
+      - sources
+      - evidence
+      - disclaimer
+      - locale
+      title: CountryPairCompatibilityResponse
+    CountryPairCompatibilitySummary:
+      properties:
+        origin_slug:
+          type: string
+          title: Origin Slug
+        destination_slug:
+          type: string
+          title: Destination Slug
+        compatibility_label:
+          type: string
+          enum:
+          - favourable
+          - mixed
+          - restrictive
+          - unknown
+          title: Compatibility Label
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+        freshness_status:
+          type: string
+          enum:
+          - fresh
+          - current
+          - stale
+          - unknown
+          title: Freshness Status
+        practical_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Practical Summary
+        key_notes:
+          items:
+            $ref: '#/components/schemas/CountryPairNote'
+          type: array
+          title: Key Notes
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+      type: object
+      required:
+      - origin_slug
+      - destination_slug
+      - compatibility_label
+      - confidence
+      - freshness_status
+      title: CountryPairCompatibilitySummary
+    CountryPairCountry:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+      type: object
+      required:
+      - slug
+      - name
+      title: CountryPairCountry
+    CountryPairEvidenceRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        source_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Id
+        source_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Title
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      type: object
+      required:
+      - id
+      title: CountryPairEvidenceRef
+    CountryPairNote:
+      properties:
+        type:
+          type: string
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: CountryPairNote
+    CountryPairSourceRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      type: object
+      required:
+      - id
+      - title
+      - url
+      title: CountryPairSourceRef
     CountryProfile:
       properties:
         id:
@@ -5112,8 +5512,7 @@ components:
         disclaimer:
           type: string
           title: Disclaimer
-          default: This is a data quality indicator, not a recommendation. Not legal
-            advice.
+          default: This is a data quality indicator, not a recommendation. Not legal advice.
       type: object
       required:
       - country_slug
@@ -5484,6 +5883,10 @@ components:
           anyOf:
           - $ref: '#/components/schemas/LocalizationMeta'
           - type: 'null'
+        country_pair_context:
+          anyOf:
+          - $ref: '#/components/schemas/CountryPairCompatibilitySummary'
+          - type: 'null'
       type: object
       required:
       - rank
@@ -5686,7 +6089,9 @@ components:
     DecisionRunRequest:
       properties:
         origin_country_slug:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Origin Country Slug
         candidate_country_slugs:
           items:
@@ -5723,7 +6128,6 @@ components:
           title: Custom Weights
       type: object
       required:
-      - origin_country_slug
       - candidate_country_slugs
       - scenario_slug
       title: DecisionRunRequest
@@ -5732,7 +6136,18 @@ components:
         scenario:
           $ref: '#/components/schemas/DecisionScenarioRef'
         origin_country:
-          $ref: '#/components/schemas/DecisionCountryRef'
+          anyOf:
+          - $ref: '#/components/schemas/DecisionCountryRef'
+          - type: 'null'
+        origin_context_status:
+          type: string
+          enum:
+          - not_requested
+          - available
+          - partial
+          - not_available
+          title: Origin Context Status
+          default: not_requested
         results:
           items:
             $ref: '#/components/schemas/DecisionCountryResult'
@@ -7841,6 +8256,65 @@ components:
       - environment
       - database
       title: ReadinessResponse
+    RouteChecklistItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        step_order:
+          type: integer
+          title: Step Order
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        document_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Document Note
+        cost_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cost Note
+        timing_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timing Note
+        official_requirement_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Official Requirement Note
+        is_required:
+          type: boolean
+          title: Is Required
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        evidence_item_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Evidence Item Id
+      type: object
+      required:
+      - id
+      - step_order
+      - title
+      - is_required
+      title: RouteChecklistItem
     RouteDetailResponse:
       properties:
         id:
@@ -7928,6 +8402,11 @@ components:
             $ref: '#/components/schemas/RouteEvidenceRef'
           type: array
           title: Evidence
+        checklist:
+          items:
+            $ref: '#/components/schemas/RouteChecklistItem'
+          type: array
+          title: Checklist
         locale:
           $ref: '#/components/schemas/LocaleResolution'
       type: object
@@ -7944,6 +8423,7 @@ components:
       - documents
       - sources
       - evidence
+      - checklist
       - locale
       title: RouteDetailResponse
     RouteDocument:

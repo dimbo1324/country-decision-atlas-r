@@ -1,5 +1,8 @@
 from app.core.locales import validate_locale
-from app.repositories import decision_engine as decision_repository
+from app.repositories import (
+    country_pairs as country_pairs_repository,
+    decision_engine as decision_repository,
+)
 from app.schemas.common import locale_resolution, source_locale_resolution
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
@@ -323,6 +326,9 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
                 "country_slug": "uruguay",
             }
         ],
+    )
+    monkeypatch.setattr(
+        country_pairs_repository, "list_destination_compatibility", lambda *_: []
     )
 
     result = decision_engine.run_decision(

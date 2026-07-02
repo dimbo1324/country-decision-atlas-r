@@ -395,6 +395,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/country-pairs/{origin_slug}/{destination_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Country Pair */
+        get: operations["read_country_pair_api_v1_country_pairs__origin_slug___destination_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/countries/{origin_slug}/destination-compatibility": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Destination Compatibility */
+        get: operations["read_destination_compatibility_api_v1_countries__origin_slug__destination_compatibility_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/countries/{country_id}/legal-signals": {
         parameters: {
             query?: never;
@@ -1746,6 +1780,153 @@ export interface components {
             /** Confidence */
             confidence?: string | null;
         };
+        /** CountryPairCompatibility */
+        CountryPairCompatibility: {
+            /**
+             * Label
+             * @enum {string}
+             */
+            label: "favourable" | "mixed" | "restrictive" | "unknown";
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /**
+             * Freshness Status
+             * @enum {string}
+             */
+            freshness_status: "fresh" | "current" | "stale" | "unknown";
+            /** Visa Note */
+            visa_note?: string | null;
+            /** Tax Treaty Note */
+            tax_treaty_note?: string | null;
+            /** Banking Note */
+            banking_note?: string | null;
+            /** Flight Logistics Note */
+            flight_logistics_note?: string | null;
+            /** Timezone Note */
+            timezone_note?: string | null;
+            /** Language Note */
+            language_note?: string | null;
+            /** Migration Restriction Note */
+            migration_restriction_note?: string | null;
+            /** Practical Summary */
+            practical_summary?: string | null;
+            /** Last Verified At */
+            last_verified_at?: string | null;
+        };
+        /** CountryPairCompatibilityListItem */
+        CountryPairCompatibilityListItem: {
+            destination_country: components["schemas"]["CountryPairCountry"];
+            compatibility: components["schemas"]["CountryPairCompatibility"];
+            /** Sources */
+            sources: components["schemas"]["CountryPairSourceRef"][];
+            /** Evidence */
+            evidence: components["schemas"]["CountryPairEvidenceRef"][];
+        };
+        /** CountryPairCompatibilityListResponse */
+        CountryPairCompatibilityListResponse: {
+            origin_country: components["schemas"]["CountryPairCountry"];
+            /** Items */
+            items: components["schemas"]["CountryPairCompatibilityListItem"][];
+            /** Disclaimer */
+            disclaimer: string;
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryPairCompatibilityResponse */
+        CountryPairCompatibilityResponse: {
+            origin_country: components["schemas"]["CountryPairCountry"];
+            destination_country: components["schemas"]["CountryPairCountry"];
+            compatibility: components["schemas"]["CountryPairCompatibility"];
+            /** Sources */
+            sources: components["schemas"]["CountryPairSourceRef"][];
+            /** Evidence */
+            evidence: components["schemas"]["CountryPairEvidenceRef"][];
+            /** Disclaimer */
+            disclaimer: string;
+            locale: components["schemas"]["LocaleResolution"];
+        };
+        /** CountryPairCompatibilitySummary */
+        CountryPairCompatibilitySummary: {
+            /** Origin Slug */
+            origin_slug: string;
+            /** Destination Slug */
+            destination_slug: string;
+            /**
+             * Compatibility Label
+             * @enum {string}
+             */
+            compatibility_label: "favourable" | "mixed" | "restrictive" | "unknown";
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /**
+             * Freshness Status
+             * @enum {string}
+             */
+            freshness_status: "fresh" | "current" | "stale" | "unknown";
+            /** Practical Summary */
+            practical_summary?: string | null;
+            /** Key Notes */
+            key_notes?: components["schemas"]["CountryPairNote"][];
+            /** Source Ids */
+            source_ids?: string[];
+        };
+        /** CountryPairCountry */
+        CountryPairCountry: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+        };
+        /** CountryPairEvidenceRef */
+        CountryPairEvidenceRef: {
+            /** Id */
+            id: string;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Source Title */
+            source_title?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+        };
+        /** CountryPairNote */
+        CountryPairNote: {
+            /** Type */
+            type: string;
+            /** Message */
+            message: string;
+        };
+        /** CountryPairSourceRef */
+        CountryPairSourceRef: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+        };
         /** CountryProfile */
         CountryProfile: {
             /**
@@ -2360,6 +2541,7 @@ export interface components {
             /** Sources */
             sources: components["schemas"]["DecisionSourceRef"][];
             localization?: components["schemas"]["LocalizationMeta"] | null;
+            country_pair_context?: components["schemas"]["CountryPairCompatibilitySummary"] | null;
         };
         /** DecisionCountryScore */
         DecisionCountryScore: {
@@ -2470,7 +2652,7 @@ export interface components {
         /** DecisionRunRequest */
         DecisionRunRequest: {
             /** Origin Country Slug */
-            origin_country_slug: string;
+            origin_country_slug?: string | null;
             /** Candidate Country Slugs */
             candidate_country_slugs: string[];
             /** Scenario Slug */
@@ -2491,7 +2673,13 @@ export interface components {
         /** DecisionRunResponse */
         DecisionRunResponse: {
             scenario: components["schemas"]["DecisionScenarioRef"];
-            origin_country: components["schemas"]["DecisionCountryRef"];
+            origin_country: components["schemas"]["DecisionCountryRef"] | null;
+            /**
+             * Origin Context Status
+             * @default not_requested
+             * @enum {string}
+             */
+            origin_context_status: "not_requested" | "available" | "partial" | "not_available";
             /** Results */
             results: components["schemas"]["DecisionCountryResult"][];
             meta: components["schemas"]["DecisionRunMeta"];
@@ -3571,6 +3759,34 @@ export interface components {
              */
             database: "ok";
         };
+        /** RouteChecklistItem */
+        RouteChecklistItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Step Order */
+            step_order: number;
+            /** Title */
+            title: string;
+            /** Description */
+            description?: string | null;
+            /** Document Note */
+            document_note?: string | null;
+            /** Cost Note */
+            cost_note?: string | null;
+            /** Timing Note */
+            timing_note?: string | null;
+            /** Official Requirement Note */
+            official_requirement_note?: string | null;
+            /** Is Required */
+            is_required: boolean;
+            /** Source Id */
+            source_id?: string | null;
+            /** Evidence Item Id */
+            evidence_item_id?: string | null;
+        };
         /** RouteDetailResponse */
         RouteDetailResponse: {
             /**
@@ -3617,6 +3833,8 @@ export interface components {
             sources: components["schemas"]["RouteSourceRef"][];
             /** Evidence */
             evidence: components["schemas"]["RouteEvidenceRef"][];
+            /** Checklist */
+            checklist: components["schemas"]["RouteChecklistItem"][];
             locale: components["schemas"]["LocaleResolution"];
         };
         /** RouteDocument */
@@ -5466,6 +5684,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RouteDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_country_pair_api_v1_country_pairs__origin_slug___destination_slug__get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                origin_slug: string;
+                destination_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryPairCompatibilityResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_destination_compatibility_api_v1_countries__origin_slug__destination_compatibility_get: {
+        parameters: {
+            query?: {
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                origin_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryPairCompatibilityListResponse"];
                 };
             };
             /** @description Validation Error */

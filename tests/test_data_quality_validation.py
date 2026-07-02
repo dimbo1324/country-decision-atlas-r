@@ -1,5 +1,8 @@
 from app.api.v1 import admin as admin_route
-from app.repositories import data_quality as data_quality_repository
+from app.repositories import (
+    data_quality as data_quality_repository,
+    route_checklists as route_checklists_repository,
+)
 from app.schemas.data_quality import DataQualityReport
 from app.services import data_quality
 from fastapi import HTTPException
@@ -120,8 +123,18 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_decision_personalization_feature_flag_mismatches",
         "list_decision_scores_missing_required_criteria",
         "list_decision_wizard_rule_mismatches",
+        "list_published_pairs_without_sources",
+        "list_published_pairs_missing_last_verified_at",
+        "list_stale_published_pairs",
+        "list_published_checklist_items_missing_title",
+        "list_duplicate_step_order_checklist_items",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
+    for name in [
+        "list_published_checklist_items_without_traceability",
+        "list_orphan_checklist_items",
+    ]:
+        monkeypatch.setattr(route_checklists_repository, name, lambda *_: [])
 
 
 def test_data_quality_migration_adds_required_constraints() -> None:

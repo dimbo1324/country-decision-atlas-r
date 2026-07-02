@@ -2,7 +2,9 @@ import Link from "next/link";
 
 import type { LocaleCode } from "../../shared/api/countries";
 import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
+import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { routes } from "../../shared/lib/routes";
+import { RouteChecklistList } from "./RouteChecklistList";
 import { RouteDocumentsList } from "./RouteDocumentsList";
 import { RouteEligibilityBadges } from "./RouteEligibilityBadges";
 import { RouteEvidenceList } from "./RouteEvidenceList";
@@ -120,6 +122,18 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
           </div>
         </section>
       )}
+
+      <section className="cardSection" data-testid="route-checklist-section">
+        <h2 className="cardSectionTitle">Практический чек-лист</h2>
+        <RouteChecklistList
+          checklist={route.checklist}
+          sources={route.sources}
+          evidence={route.evidence}
+        />
+        {route.checklist.length > 0 && (
+          <DisclaimerNotice text="Чек-лист носит справочный характер и не заменяет консультацию специалиста." />
+        )}
+      </section>
 
       <section className="cardSection" data-testid="route-documents-section">
         <h2 className="cardSectionTitle">Документы</h2>

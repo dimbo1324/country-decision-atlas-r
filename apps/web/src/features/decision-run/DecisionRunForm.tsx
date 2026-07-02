@@ -48,7 +48,7 @@ function DecisionFormInner() {
   const [personas, setPersonas] = useState<PersonaListResponse | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [originCountrySlug, setOriginCountrySlug] = useState("russia");
+  const [originCountrySlug, setOriginCountrySlug] = useState("");
   const [candidateCountrySlugs, setCandidateCountrySlugs] = useState<string[]>([
     "russia",
     "uruguay",
@@ -181,10 +181,10 @@ function DecisionFormInner() {
     setResult(null);
     try {
       const res = await decisionApi.runDecision({
-        origin_country_slug: originCountrySlug,
         candidate_country_slugs: candidateCountrySlugs,
         scenario_slug: scenarioSlug,
         locale,
+        ...(originCountrySlug ? { origin_country_slug: originCountrySlug } : {}),
         ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
         ...(personalizationTouched ? { custom_weights: customWeights } : {}),
       });
@@ -246,7 +246,9 @@ function DecisionFormInner() {
             className="formSelect"
             value={originCountrySlug}
             onChange={(e) => setOriginCountrySlug(e.target.value)}
+            data-testid="origin-select"
           >
+            <option value="">Не указано</option>
             {countries.items.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.name}

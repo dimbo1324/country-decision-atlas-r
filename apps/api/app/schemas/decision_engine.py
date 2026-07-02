@@ -7,6 +7,7 @@ from app.schemas.common import (
     SortMeta,
     TranslationStatus,
 )
+from app.schemas.country_pairs import CountryPairCompatibilitySummary
 from app.schemas.decision_personalization import DecisionPersonalizationResponse
 from app.schemas.localization import LocalizationMeta
 from app.schemas.personas import Persona, PersonaWeightProfile
@@ -116,8 +117,9 @@ class DecisionCompareResult(BaseModel):
 class DecisionRunRequest(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    origin_country_slug: str = Field(
-        validation_alias=AliasChoices("origin_country_slug", "origin_country")
+    origin_country_slug: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("origin_country_slug", "origin_country"),
     )
     candidate_country_slugs: list[str] = Field(
         min_length=1,
@@ -207,6 +209,7 @@ class DecisionCountryResult(BaseModel):
     breakdown: list[DecisionBreakdownItem]
     sources: list[DecisionSourceRef]
     localization: LocalizationMeta | None = None
+    country_pair_context: CountryPairCompatibilitySummary | None = None
 
 
 class DecisionRunMeta(BaseModel):
@@ -215,9 +218,13 @@ class DecisionRunMeta(BaseModel):
     model_version: str = "scenario-decision-engine-v1"
 
 
+OriginContextStatus = Literal["not_requested", "available", "partial", "not_available"]
+
+
 class DecisionRunResponse(BaseModel):
     scenario: DecisionScenarioRef
-    origin_country: DecisionCountryRef
+    origin_country: DecisionCountryRef | None
+    origin_context_status: OriginContextStatus = "not_requested"
     results: list[DecisionCountryResult]
     meta: DecisionRunMeta
     locale: LocaleResolution

@@ -67,6 +67,7 @@ fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "apps/api/app/services/decision_engine.py" = ["RUF001"]
+"apps/api/app/services/country_pairs.py" = ["RUF001"]
 "scripts/apply_migrations.py" = ["E402"]
 "scripts/outbox_relay.py" = ["E402"]
 

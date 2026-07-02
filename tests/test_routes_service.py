@@ -1,5 +1,6 @@
 from app.repositories import (
     countries as countries_repository,
+    route_checklists as route_checklists_repository,
     routes as routes_repository,
 )
 from app.services import routes as service
@@ -129,6 +130,11 @@ def patch_detail_children(monkeypatch: pytest.MonkeyPatch) -> None:
                 "source_url": "https://example.test",
             }
         ],
+    )
+    monkeypatch.setattr(
+        route_checklists_repository,
+        "list_route_checklist_items",
+        lambda *_: [],
     )
 
 

@@ -1,5 +1,6 @@
 export * from "./CountryRoutesBlock";
 export * from "./RouteCard";
+export * from "./RouteChecklistList";
 export * from "./RouteDetailView";
 export * from "./RouteDocumentsList";
 export * from "./RouteEligibilityBadges";
