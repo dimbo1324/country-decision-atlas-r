@@ -121,6 +121,7 @@ SMOKE_URLS = [
     "http://localhost:8000/api/v1/countries/russia/trust?locale=ru",
     "http://localhost:8000/api/v1/countries/uruguay/trust?locale=ru",
     "http://localhost:8000/api/v1/countries/argentina/trust?locale=ru",
+    "http://localhost:8000/api/v1/search?q=residence&locale=ru",
 ]
 
 STALE_CACHE_DIRS = [".pytest_cache", ".mypy_cache", ".ruff_cache"]
@@ -1229,6 +1230,22 @@ class FullCheck:
         )
         self.add_stage_result(
             "bootstrap_runtime_read_models.py", "OK" if bootstrap_exit == 0 else "FAIL"
+        )
+
+        search_index_exit = self.run_streaming(
+            [
+                docker_exe,
+                "compose",
+                "exec",
+                "-T",
+                "api",
+                "python",
+                "scripts/rebuild_search_index.py",
+                "--all",
+            ]
+        )
+        self.add_stage_result(
+            "rebuild_search_index.py --all", "OK" if search_index_exit == 0 else "FAIL"
         )
 
         for url in SMOKE_URLS:
