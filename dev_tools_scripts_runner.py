@@ -107,7 +107,7 @@ def main(argv: list[str]) -> int:
 
     # The first argument isn't a registered script key/name — treat the whole
     # argv as flags for the default script, so existing invocations like
-    # `python full-check.py --profile full --fix` keep working unchanged.
+    # `python dev_tools_scripts_runner.py --profile full --fix` keep working unchanged.
     return run_script(default_script(), argv)
 
 
