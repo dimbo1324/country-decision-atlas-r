@@ -1,3 +1,5 @@
+"""Password hashing: roundtrip verification, PBKDF2 format, and per-call salting."""
+
 from app.services import auth as service
 
 

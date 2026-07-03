@@ -1,3 +1,5 @@
+"""Session-id hashing and metadata sanitization for analytics events."""
+
 from app.api.v1.analytics import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection

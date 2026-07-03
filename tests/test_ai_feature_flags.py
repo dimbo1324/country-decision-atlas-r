@@ -1,9 +1,11 @@
+"""AI feature flags are public and enabled by default."""
+
 from pathlib import Path
 
 
-MIGRATION_SQL = Path(
-    "database/migrations/041_ai_assistant.sql"
-).read_text(encoding="utf-8")
+MIGRATION_SQL = Path("database/migrations/041_ai_assistant.sql").read_text(
+    encoding="utf-8"
+)
 
 
 def test_ai_feature_flags_are_public_enabled_by_default() -> None:

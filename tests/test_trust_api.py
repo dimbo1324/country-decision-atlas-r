@@ -1,3 +1,5 @@
+"""Country trust API: response shape, not-found handling, and admin batch recompute."""
+
 from app.api.v1 import trust as trust_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

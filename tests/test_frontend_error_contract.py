@@ -1,3 +1,5 @@
+"""Error-response shapes for unsupported locale/unknown entity match the frontend error contract."""
+
 from app.api.v1 import countries as countries_route
 from app.core.locales import get_locale
 from app.repositories import decision_engine as decision_repository

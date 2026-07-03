@@ -1,3 +1,5 @@
+"""Country content contract paths exist."""
+
 from tests.test_openapi_contract import load_contract
 
 

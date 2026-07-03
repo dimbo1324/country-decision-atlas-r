@@ -1,3 +1,5 @@
+"""Editorial publication lifecycle status transitions: allowed and forbidden moves."""
+
 from app.services.publication import (
     PUBLICATION_STATUSES,
     allowed_transition,

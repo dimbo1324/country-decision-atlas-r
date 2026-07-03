@@ -1,3 +1,5 @@
+"""Domain events outbox: row creation, JSON-compatible payloads, and duplicate-key idempotency."""
+
 from app.repositories import domain_events as repo
 from psycopg import Connection
 from typing import Any, cast

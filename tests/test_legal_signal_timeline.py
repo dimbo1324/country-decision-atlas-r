@@ -1,3 +1,5 @@
+"""Legal signal timeline: events grouped by year, source/evidence exposure, and missing-data resilience."""
+
 from app.services.legal_signal_timeline import build_timeline_response
 from datetime import date
 from pathlib import Path

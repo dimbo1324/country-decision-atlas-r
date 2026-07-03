@@ -1,3 +1,5 @@
+"""Decision runs with custom criterion weights: effective-weight recalculation without touching persisted scores."""
+
 from app.repositories import (
     decision_engine as decision_repository,
     feature_flags as ff_repo,

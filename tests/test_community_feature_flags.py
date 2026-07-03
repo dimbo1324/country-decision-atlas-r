@@ -1,3 +1,5 @@
+"""Feature-flag gating for community and Q&A endpoints."""
+
 from app.core.config import Settings
 from app.repositories import (
     community as repository,

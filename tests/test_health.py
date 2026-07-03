@@ -1,3 +1,5 @@
+"""Basic healthcheck endpoint payload."""
+
 from app.main import health
 import asyncio
 

@@ -1,3 +1,5 @@
+"""Data-quality checks for scenario-specific CII weight configuration."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

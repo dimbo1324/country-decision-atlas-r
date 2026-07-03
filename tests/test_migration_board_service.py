@@ -1,3 +1,5 @@
+"""Migration Board service: privacy-safe public responses, PII rejection, and self-contact/blocked-relation rules."""
+
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as migration_board_repository
 from app.services import migration_board as service

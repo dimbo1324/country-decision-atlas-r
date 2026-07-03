@@ -1,3 +1,5 @@
+"""Translation provider interface, fake implementation, and provider factory selection."""
+
 from __future__ import annotations
 
 import os

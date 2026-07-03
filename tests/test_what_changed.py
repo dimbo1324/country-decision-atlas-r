@@ -1,3 +1,5 @@
+"""'What changed' feed: default/override time windows and unknown-country handling."""
+
 from app.repositories import (
     countries as countries_repository,
     what_changed as repository,

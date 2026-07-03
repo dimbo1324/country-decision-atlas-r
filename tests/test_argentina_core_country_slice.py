@@ -1,3 +1,5 @@
+"""Argentina exists, is active, and has a complete country card."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

@@ -1,3 +1,5 @@
+"""Health endpoint response matches its documented contract."""
+
 from country_decision_atlas_contracts import HealthResponse
 
 

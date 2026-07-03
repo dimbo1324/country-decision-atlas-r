@@ -1,3 +1,5 @@
+"""Legal velocity scoring: insufficient-data thresholds and event-count-driven value bands."""
+
 from app.services.legal_velocity import compute_legal_velocity_index
 from copy import deepcopy
 from datetime import date, timedelta

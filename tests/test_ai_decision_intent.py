@@ -1,3 +1,5 @@
+"""AI decision-intent endpoint returns scenario hints without actually running the decision engine."""
+
 from app.api.v1.ai import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection

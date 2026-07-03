@@ -1,3 +1,5 @@
+"""Audit log and domain-event side effects of moving legal signals through the editorial publication lifecycle."""
+
 from app.repositories import admin_content as admin_repository
 from app.schemas.admin_content import (
     CountryProfilePatch,

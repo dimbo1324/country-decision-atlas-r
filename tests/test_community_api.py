@@ -1,3 +1,5 @@
+"""Public community Q&A submission and listing endpoints."""
+
 from app.api.v1.community import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection

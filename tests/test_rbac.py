@@ -1,3 +1,5 @@
+"""Role-based access control primitives: role matching and required-role enforcement."""
+
 from app.core.auth import CurrentUser
 from app.core.rbac import (
     ADMIN,

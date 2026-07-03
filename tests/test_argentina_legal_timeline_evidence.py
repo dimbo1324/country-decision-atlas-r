@@ -1,3 +1,5 @@
+"""Argentina's legal signals and timeline evidence are present and MVP-ready."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

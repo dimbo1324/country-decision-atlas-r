@@ -1,3 +1,5 @@
+"""Required decision scenarios are seeded."""
+
 from tests.test_seed_data import SEED_SQL
 
 

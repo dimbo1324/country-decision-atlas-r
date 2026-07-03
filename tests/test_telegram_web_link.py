@@ -1,3 +1,5 @@
+"""Telegram account linking/unlinking, including gRPC error mapping."""
+
 from app.repositories import auth as repository
 from app.services import telegram_web_link as service
 from datetime import UTC, datetime

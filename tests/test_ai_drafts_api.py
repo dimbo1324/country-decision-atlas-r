@@ -1,3 +1,5 @@
+"""Admin API for generating and listing AI-authored content drafts."""
+
 from app.api.v1.admin_ai import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.config import Settings, get_settings

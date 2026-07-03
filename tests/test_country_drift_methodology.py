@@ -1,3 +1,5 @@
+"""Country drift methodology: impact weighting, net score computation, and label/confidence derivation."""
+
 from app.services.country_drift_methodology import (
     METHODOLOGY_VERSION,
     build_drift_input_summary,

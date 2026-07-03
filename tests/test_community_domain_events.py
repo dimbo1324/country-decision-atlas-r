@@ -1,3 +1,5 @@
+"""Community domain events (question/answer/report submitted) are marked non-notifiable."""
+
 from app.core.config import Settings
 from app.repositories import (
     community as repository,

@@ -1,3 +1,5 @@
+"""Per-country routes API returns paginated, locale-aware results."""
+
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.main import app

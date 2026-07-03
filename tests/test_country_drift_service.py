@@ -1,3 +1,5 @@
+"""Country drift service: period building, snapshot computation, storage, and change-event emission."""
+
 from app.repositories import (
     country_drift as country_drift_repo,
     domain_events as domain_events_repo,

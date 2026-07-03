@@ -1,3 +1,5 @@
+"""Platform metrics API: listing, pre-recompute empty state, feature-disabled and unknown-country errors."""
+
 from app.api.v1 import platform_metrics as pm_api
 from app.core.auth import CurrentUser
 from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo

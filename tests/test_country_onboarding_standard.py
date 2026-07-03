@@ -1,3 +1,5 @@
+"""Shared onboarding-standard checks applied to each MVP country (Russia, Uruguay)."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

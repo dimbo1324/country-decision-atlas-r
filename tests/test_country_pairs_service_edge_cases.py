@@ -1,3 +1,5 @@
+"""Edge cases for country-pair service helpers: key notes, summaries, disclaimers, empty-result fallback."""
+
 from app.repositories import (
     countries as countries_repository,
     country_pairs as repository,

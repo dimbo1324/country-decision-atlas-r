@@ -1,3 +1,5 @@
+"""Persona-adjusted CII comparisons reweight the overall score without changing per-metric winners."""
+
 from app.services import cii_comparison
 from psycopg import Connection
 import pytest

@@ -1,3 +1,5 @@
+"""Scenario-specific CII weight sums and their effect on comparisons/aggregation."""
+
 import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch

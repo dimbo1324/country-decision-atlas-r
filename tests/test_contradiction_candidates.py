@@ -1,3 +1,5 @@
+"""Detection and status updates for AI contradiction candidates."""
+
 from app.api.v1.admin_ai import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.config import Settings, get_settings

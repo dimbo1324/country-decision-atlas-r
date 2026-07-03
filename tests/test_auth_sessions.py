@@ -1,3 +1,5 @@
+"""Registration feature gating and input validation (email/password strength)."""
+
 from app.core.config import Settings
 from app.repositories import auth as repository
 from app.services import auth as service

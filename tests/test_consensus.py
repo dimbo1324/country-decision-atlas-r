@@ -1,3 +1,5 @@
+"""Community-answer consensus scoring: weighted formula, source-backed bonus, controversy detection."""
+
 from app.services.consensus import (
     AnswerVoteInput,
     build_consensus_summaries,

@@ -1,3 +1,5 @@
+"""Community service: question/answer submission rules and feature-disabled handling."""
+
 from app.core.config import Settings
 from app.repositories import (
     community as repository,

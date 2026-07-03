@@ -1,3 +1,5 @@
+"""Localization metadata: original-locale marking, English fallback, and staleness detection."""
+
 import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch

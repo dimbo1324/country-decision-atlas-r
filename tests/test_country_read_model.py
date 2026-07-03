@@ -1,3 +1,5 @@
+"""Country read-model route: locale defaults, supported slugs/locales, and unknown-country handling."""
+
 from app.api.v1 import countries as countries_route
 from app.core.locales import get_locale
 from app.schemas.common import locale_resolution

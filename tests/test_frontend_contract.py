@@ -1,3 +1,5 @@
+"""Response shapes for key endpoints match what the frontend contract expects."""
+
 from app.api.v1 import (
     admin as admin_route,
     countries as countries_route,

@@ -1,3 +1,5 @@
+"""Decision runs with and without a persona: base vs. runtime-adjusted CII ranking."""
+
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
 from psycopg import Connection

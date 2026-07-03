@@ -1,3 +1,5 @@
+"""Smoke test hitting a running API instance end to end."""
+
 import json
 import os
 import pytest

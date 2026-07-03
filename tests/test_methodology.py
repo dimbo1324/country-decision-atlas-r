@@ -1,3 +1,5 @@
+"""Methodology section listing: locale handling, empty results, and lookup by slug."""
+
 from app.repositories import methodology as methodology_repo
 from typing import Any
 from unittest.mock import MagicMock

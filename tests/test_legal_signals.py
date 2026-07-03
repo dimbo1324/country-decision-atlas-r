@@ -1,3 +1,5 @@
+"""Legal signal content paths exist and are source-backed."""
+
 from tests.test_openapi_contract import load_contract
 from tests.test_seed_data import SEED_SQL, SOURCE_DEPTH_SQL
 

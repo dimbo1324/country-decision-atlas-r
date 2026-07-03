@@ -1,3 +1,5 @@
+"""Outbox relay: event selection, filtering, failure handling, and outgoing payload shape."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

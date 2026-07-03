@@ -1,3 +1,5 @@
+"""CLI recompute script for country drift: batch/single-country flags and error handling."""
+
 from app.services.country_drift import (
     CountryDriftBatchResult,
     CountryDriftStoredResult,

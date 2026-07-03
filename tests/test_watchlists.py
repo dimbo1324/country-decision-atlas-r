@@ -1,3 +1,5 @@
+"""Personal watchlist: feature gating, listing, and adding countries."""
+
 from app.api.v1 import watchlists as watchlists_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

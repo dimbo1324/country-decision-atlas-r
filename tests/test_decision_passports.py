@@ -1,3 +1,5 @@
+"""Schema assertions for the decision-passports migration, including idempotency and token hashing."""
+
 from app.repositories import (
     decision_engine as decision_repository,
     decision_passports as passport_repository,

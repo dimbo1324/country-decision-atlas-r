@@ -1,3 +1,5 @@
+"""End-to-end decision runs across locales and core scenarios return ranked, explainable results."""
+
 from app.api.v1 import decision as decision_route
 from app.core.locales import validate_locale
 from app.repositories import (

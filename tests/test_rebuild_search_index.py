@@ -1,3 +1,5 @@
+"""Search-index rebuild script: per-entity-type processing and locale-partitioned vs. dual-locale routes."""
+
 from app.repositories import search_index as search_index_repository
 from psycopg import Connection
 import pytest

@@ -1,3 +1,5 @@
+"""Internal data journal endpoint: pagination bounds and unknown-country handling."""
+
 from app.api.v1.data_journal import router
 from app.core.database import get_connection
 from app.repositories import (

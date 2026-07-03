@@ -1,3 +1,5 @@
+"""Country drift calculation: insufficient data, label outcomes, direction accumulation, confidence downgrade."""
+
 from app.services.country_drift import calculate_country_drift
 from decimal import Decimal
 import pytest

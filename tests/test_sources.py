@@ -1,3 +1,5 @@
+"""Sources and evidence are seeded and routed to the countries/routes that cite them."""
+
 from tests.test_openapi_contract import load_contract
 from tests.test_seed_data import SEED_SQL, SOURCE_DEPTH_SQL
 

@@ -1,3 +1,5 @@
+"""Schema assertions for the search foundation migration: documents table, GIN index, and vector-build function."""
+
 from app.repositories import search_index as repository
 from app.services.data_quality.search_foundation_checks import (
     _append_search_foundation_checks,

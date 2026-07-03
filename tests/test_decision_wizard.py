@@ -1,3 +1,5 @@
+"""Decision wizard goal-to-scenario mapping."""
+
 from app.repositories import (
     countries as countries_repository,
     decision_engine as decision_repository,

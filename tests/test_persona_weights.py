@@ -1,3 +1,5 @@
+"""Persona weight-profile algorithm: adjusted-weight building, modifier coverage validation, and normalization."""
+
 from app.repositories import personas as personas_repository
 from decimal import Decimal
 from fastapi import HTTPException

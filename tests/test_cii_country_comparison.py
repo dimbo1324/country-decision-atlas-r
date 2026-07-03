@@ -1,3 +1,5 @@
+"""Building CII comparisons across countries."""
+
 import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch

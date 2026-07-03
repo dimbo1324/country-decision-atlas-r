@@ -1,3 +1,5 @@
+"""Migration Board public/authenticated API: listing, post creation, and role-gated moderation actions."""
+
 from app.api.v1 import admin_migration_board, migration_board
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

@@ -1,3 +1,5 @@
+"""Migration Board service edge cases: visibility matrix, contact eligibility, PII detection, and enum/tag validation."""
+
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as repository
 from app.schemas.migration_board import (

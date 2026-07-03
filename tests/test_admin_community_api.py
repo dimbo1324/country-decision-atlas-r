@@ -1,3 +1,5 @@
+"""Admin auth/authorization and status-transition behavior for the community Q&A moderation endpoints."""
+
 from app.api.v1.admin_community import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

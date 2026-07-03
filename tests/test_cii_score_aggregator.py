@@ -1,3 +1,5 @@
+"""CII score aggregation: geometric mean, polarity, protected scores, and confidence."""
+
 import math
 import pytest
 from typing import Any

@@ -1,3 +1,5 @@
+"""Persona listing and detail API, including the normalized weight-profile endpoint."""
+
 from app.api.v1 import personas as personas_route
 from app.repositories import personas as personas_repository
 from fastapi import HTTPException

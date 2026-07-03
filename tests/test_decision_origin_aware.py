@@ -1,3 +1,5 @@
+"""Decision runs with an origin country: ranking is preserved and pair context is attached when available."""
+
 from app.repositories import (
     country_pairs as country_pairs_repository,
     feature_flags as ff_repo,

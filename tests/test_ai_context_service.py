@@ -1,3 +1,5 @@
+"""Service-level assembly of AI context: item/character limits, deduplication, and no-context refusal."""
+
 from app.core.config import Settings
 from app.repositories import ai_context as repository
 from app.services import ai_context as service

@@ -1,3 +1,5 @@
+"""Platform metrics runtime computation: per-country and batch recompute, idempotency, and dry-run mode."""
+
 from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo
 from app.services import platform_metrics as pm_service
 from app.services.platform_metric_types import (

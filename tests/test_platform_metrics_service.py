@@ -1,3 +1,5 @@
+"""Platform metrics service: building LVI/contradiction/SSRS metrics across global and scenario scopes."""
+
 from app.repositories import platform_metrics as repository
 from app.services import platform_metrics
 from datetime import date, timedelta

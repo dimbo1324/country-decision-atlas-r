@@ -1,3 +1,5 @@
+"""Schema assertions for the data-quality-validation migration and the aggregate report it powers."""
+
 from app.api.v1 import admin as admin_route
 from app.core.auth import CurrentUser
 from app.repositories import (
@@ -22,9 +24,9 @@ ADMIN_USER = CurrentUser(
     role="admin",
     status="active",
 )
-MIGRATION_SQL = Path(
-    "database/migrations/008_data_quality.sql"
-).read_text(encoding="utf-8")
+MIGRATION_SQL = Path("database/migrations/008_data_quality.sql").read_text(
+    encoding="utf-8"
+)
 
 
 def install_clean_report_fakes(monkeypatch: Any) -> None:

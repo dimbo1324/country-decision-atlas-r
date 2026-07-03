@@ -1,3 +1,5 @@
+"""Edge cases for decision ranking: confidence aggregation, tie-breaking, score-label and strength/weakness boundaries."""
+
 from app.schemas.decision_engine import DecisionCountryRef, DecisionCountryResult
 from app.services import decision_engine as service
 from typing import Any

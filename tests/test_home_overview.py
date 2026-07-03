@@ -1,3 +1,5 @@
+"""Home overview aggregation: MVP countries, scenario winners, and comparison matrix shape."""
+
 from app.core.database import get_connection
 from app.main import app
 from app.schemas.cii_matrix import (

@@ -1,3 +1,5 @@
+"""Country-pair compatibility API: success paths and unknown-origin/destination errors."""
+
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.main import app

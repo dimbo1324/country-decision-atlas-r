@@ -1,3 +1,5 @@
+"""Generated OpenAPI contract includes required paths, schemas, and bearer-auth security."""
+
 from pathlib import Path
 from typing import Any, cast
 import yaml

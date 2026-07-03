@@ -1,3 +1,5 @@
+"""CII score building, repository access, and schema shape for the country card."""
+
 from datetime import UTC, datetime
 import pytest
 from typing import Any

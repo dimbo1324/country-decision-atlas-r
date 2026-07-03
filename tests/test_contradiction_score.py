@@ -1,3 +1,5 @@
+"""Contradiction scoring: insufficient-data thresholds and same/opposite-direction signal handling."""
+
 from app.services.contradiction_score import compute_contradiction_score
 from copy import deepcopy
 

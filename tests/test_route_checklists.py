@@ -1,3 +1,5 @@
+"""Route checklist listing: published-only filtering and step ordering."""
+
 from app.repositories import route_checklists as repository
 from app.services import route_checklists as service, routes as routes_service
 from datetime import UTC, datetime

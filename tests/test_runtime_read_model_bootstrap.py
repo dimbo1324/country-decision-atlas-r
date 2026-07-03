@@ -1,3 +1,5 @@
+"""Runtime read-model bootstrap script: ordered platform-then-trust execution and failure propagation."""
+
 from app.schemas.platform_metrics import PlatformMetricsRecomputeSummary
 import scripts.bootstrap_runtime_read_models as bootstrap
 from typing import Any

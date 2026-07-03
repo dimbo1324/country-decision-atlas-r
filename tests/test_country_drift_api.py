@@ -1,3 +1,5 @@
+"""Public country drift API: latest snapshot, history, and not-found/empty responses."""
+
 from app.api.v1 import country_drift as country_drift_api
 from app.repositories import country_drift as country_drift_repo
 from datetime import UTC, date, datetime

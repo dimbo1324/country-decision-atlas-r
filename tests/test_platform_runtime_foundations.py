@@ -1,3 +1,5 @@
+"""Schema assertions for the platform runtime foundations migration and its public data-journal flag."""
+
 from pathlib import Path
 
 

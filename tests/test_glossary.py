@@ -1,3 +1,5 @@
+"""Glossary term listing: locale handling, empty results, and category filtering."""
+
 from app.repositories import glossary as glossary_repo
 from typing import Any
 from unittest.mock import MagicMock

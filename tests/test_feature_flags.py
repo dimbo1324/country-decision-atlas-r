@@ -1,3 +1,5 @@
+"""Feature-flag listing and access-tier enforcement (public/internal)."""
+
 from app.api.v1.feature_flags import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection

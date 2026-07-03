@@ -1,3 +1,5 @@
+"""Locale resolution status values and fallback behavior across country card/scenario/legal-signal endpoints."""
+
 from app.core.locales import validate_locale
 from app.repositories import (
     country_pairs as country_pairs_repository,

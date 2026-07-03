@@ -1,3 +1,5 @@
+"""Search API: input validation and filtering by entity type."""
+
 from app.repositories import search as repository
 from app.services import search as service
 from fastapi import HTTPException

@@ -1,3 +1,5 @@
+"""Custom-weight validation, normalization, and effective-weight application for decision personalization."""
+
 from app.services.decision_personalization import (
     apply_effective_weights_to_breakdown,
     build_personalization_summary,

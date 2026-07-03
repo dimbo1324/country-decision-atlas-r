@@ -1,3 +1,5 @@
+"""Legal-status field is present on public/detail/country legal-signal schemas and accepted by the admin API."""
+
 from app.schemas.admin_content import LegalSignalCreate, LegalSignalPatch
 from app.schemas.common import LegalStatus
 from app.schemas.country_read_model import CountryReadModelLegalSignal

@@ -1,3 +1,5 @@
+"""Admin endpoints for recomputing country drift, including auth/role enforcement."""
+
 from app.api.v1 import country_drift as country_drift_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

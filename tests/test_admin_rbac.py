@@ -1,3 +1,5 @@
+"""Role-based access rules for admin user management: who can promote/demote which roles."""
+
 from app.api.v1 import admin_users as admin_users_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection

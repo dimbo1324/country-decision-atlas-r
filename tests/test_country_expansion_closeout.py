@@ -1,3 +1,5 @@
+"""Closeout checks that all MVP countries (including Argentina) are fully onboarded."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

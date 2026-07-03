@@ -1,3 +1,5 @@
+"""Registration, login, and current-user auth API endpoints."""
+
 from app.api.v1 import auth as auth_api
 from app.core.auth import (
     CurrentSessionContext,

@@ -1,3 +1,5 @@
+"""Scenario risk scoring: insufficient-data thresholds and positive/negative signal impact."""
+
 from app.services.scenario_risk import (
     SCENARIO_RELEVANCE,
     compute_scenario_specific_risk_score,

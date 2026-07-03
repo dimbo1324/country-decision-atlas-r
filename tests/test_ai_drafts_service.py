@@ -1,3 +1,5 @@
+"""AI draft generation service: refusal without context, draft creation, and status updates."""
+
 from app.core.config import Settings
 from app.repositories import ai_drafts as repository
 from app.schemas.ai import AICitation, AIContextItem

@@ -1,3 +1,5 @@
+"""Trust score runtime computation: feature-disabled and country-not-found handling, dry-run mode."""
+
 from app.repositories import feature_flags as ff_repo, trust as trust_repo
 from app.services.trust_runtime import (
     compute_and_store_trust_for_all_countries,

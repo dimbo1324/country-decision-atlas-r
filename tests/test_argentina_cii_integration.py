@@ -1,3 +1,5 @@
+"""Argentina's CII onboarding, MVP-readiness, and comparison-matrix integration."""
+
 import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch

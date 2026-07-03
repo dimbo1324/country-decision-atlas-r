@@ -1,3 +1,5 @@
+"""Route service: response shaping, unknown-country errors, and route-detail assembly with documents/sources/evidence."""
+
 from app.repositories import (
     countries as countries_repository,
     route_checklists as route_checklists_repository,

@@ -1,3 +1,5 @@
+"""End-to-end translation pipeline smoke test and protection of original-locale content variants."""
+
 from __future__ import annotations
 
 import os

@@ -1,3 +1,5 @@
+"""Guardrail checks ensuring the comparison matrix and CII visuals don't mask critical data-quality issues."""
+
 from typing import Any
 from unittest.mock import MagicMock, patch
 

@@ -1,3 +1,5 @@
+"""Seed migrations contain the required countries, scenarios, criteria, and decision-engine schema."""
+
 from pathlib import Path
 
 
@@ -5,12 +7,12 @@ SEED_SQL = "\n".join(
     path.read_text(encoding="utf-8")
     for path in sorted(Path("database/migrations").glob("*seed*.sql"))
 )
-CONTENT_SQL = Path(
-    "database/migrations/005_decision_logic.sql"
-).read_text(encoding="utf-8")
-SOURCE_DEPTH_SQL = Path(
-    "database/migrations/009_content_depth.sql"
-).read_text(encoding="utf-8")
+CONTENT_SQL = Path("database/migrations/005_decision_logic.sql").read_text(
+    encoding="utf-8"
+)
+SOURCE_DEPTH_SQL = Path("database/migrations/009_content_depth.sql").read_text(
+    encoding="utf-8"
+)
 SCHEMA_SQL = Path("database/migrations/003_decision_engine.sql").read_text(
     encoding="utf-8"
 )

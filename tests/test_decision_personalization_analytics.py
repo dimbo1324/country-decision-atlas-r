@@ -1,3 +1,5 @@
+"""Analytics events emitted for custom-weight decision requests, and failure isolation."""
+
 from app.repositories import (
     analytics as analytics_repository,
     countries as countries_repository,

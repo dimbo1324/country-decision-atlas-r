@@ -1,3 +1,5 @@
+"""Country comparison matrix: defaults, cell values, score labels, and missing-cell handling."""
+
 import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch
