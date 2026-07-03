@@ -11,7 +11,7 @@ from typing import Any
 
 
 def load_full_check_module() -> ModuleType:
-    path = Path(__file__).resolve().parents[1] / "full-check.py"
+    path = Path(__file__).resolve().parents[1] / "scripts" / "dev_tools" / "full_check.py"
     spec = importlib.util.spec_from_file_location("full_check_script", path)
     assert spec is not None
     module = importlib.util.module_from_spec(spec)
