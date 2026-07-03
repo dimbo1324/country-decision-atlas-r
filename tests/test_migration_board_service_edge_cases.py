@@ -6,7 +6,10 @@ from app.schemas.migration_board import (
     CreateMigrationBoardPostRequest,
     UpdateMigrationBoardPostRequest,
 )
-from app.services import migration_board as service
+from app.services import (
+    feature_flags as feature_flags_service,
+    migration_board as service,
+)
 from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
@@ -85,7 +88,7 @@ def _post(**overrides: Any) -> dict[str, Any]:
 
 def _enable_features(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        migration_board_helpers, "is_feature_enabled_by_key", lambda *_: True
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_: True
     )
 
 
@@ -1007,7 +1010,7 @@ class TestFeatureFlagGating:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(
-            migration_board_helpers, "is_feature_enabled_by_key", lambda *_: False
+            feature_flags_service, "is_feature_enabled_by_key", lambda *_: False
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -1022,7 +1025,7 @@ class TestFeatureFlagGating:
             return key != service.MATCHING_FEATURE_KEY
 
         monkeypatch.setattr(
-            migration_board_helpers, "is_feature_enabled_by_key", flag_side_effect
+            feature_flags_service, "is_feature_enabled_by_key", flag_side_effect
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -1202,7 +1205,7 @@ class TestReadOnlyWrappers:
             return key != service.MODERATION_FEATURE_KEY
 
         monkeypatch.setattr(
-            migration_board_helpers, "is_feature_enabled_by_key", flag_side_effect
+            feature_flags_service, "is_feature_enabled_by_key", flag_side_effect
         )
 
         with pytest.raises(HTTPException) as exc_info:

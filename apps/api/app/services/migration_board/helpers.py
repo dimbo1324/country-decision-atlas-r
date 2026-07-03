@@ -2,9 +2,7 @@ from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories.analytics import insert_analytics_event
 from app.repositories.audit import insert_audit_event
-from app.services.feature_flags import (
-    is_feature_enabled_by_key as is_feature_enabled_by_key,
-)
+from app.services.feature_flags import ensure_feature_enabled as _ensure_feature_enabled
 from psycopg import Connection
 import re
 from typing import Any
@@ -81,13 +79,11 @@ PII_PATTERNS = (
 
 
 def ensure_feature_enabled(connection: Connection[Any], feature_key: str) -> None:
-    if not is_feature_enabled_by_key(connection, feature_key):
-        raise api_error(
-            403,
-            "feature_disabled",
-            "This migration board feature is currently disabled.",
-            {"feature_key": feature_key},
-        )
+    _ensure_feature_enabled(
+        connection,
+        feature_key,
+        "This migration board feature is currently disabled.",
+    )
 
 
 def _reject_public_pii(title: str, summary: str) -> None:

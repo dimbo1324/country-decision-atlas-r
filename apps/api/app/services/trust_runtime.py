@@ -1,5 +1,5 @@
-from app.repositories import feature_flags as ff_repo, trust as trust_repo
-from app.services.feature_flags import can_access, default_access_context
+from app.repositories import trust as trust_repo
+from app.services.feature_flags import is_feature_enabled_by_key
 from app.services.trust_score import compute_trust_score_from_inputs
 from datetime import UTC, datetime
 from psycopg import Connection
@@ -15,13 +15,7 @@ def _now() -> datetime:
 
 
 def _is_feature_enabled(connection: Connection[Any]) -> bool:
-    feature = ff_repo.get_feature_flag(connection, FEATURE_KEY)
-    rules = ff_repo.list_feature_access_rules(connection, FEATURE_KEY)
-    from app.core.config import get_settings
-
-    ctx = default_access_context(get_settings())
-    decision = can_access(ctx, feature, rules, FEATURE_KEY)
-    return decision.is_enabled
+    return is_feature_enabled_by_key(connection, FEATURE_KEY)
 
 
 def _jsonb_payload(payload: dict[str, Any]) -> dict[str, Any]:

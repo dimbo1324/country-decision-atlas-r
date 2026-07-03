@@ -23,7 +23,7 @@ from app.schemas.auth import (
     UserSessionListResponse,
 )
 from app.services import auth as service, telegram_web_link as telegram_link_service
-from app.services.feature_flags import is_feature_enabled_by_key
+from app.services.feature_flags import ensure_feature_enabled
 from fastapi import APIRouter, Depends
 from psycopg import Connection
 from typing import Annotated, Any
@@ -33,10 +33,11 @@ TELEGRAM_WEB_LINK_FEATURE_KEY = "telegram_web_link_enabled"
 
 
 def _require_telegram_web_link_enabled(connection: Connection[Any]) -> None:
-    if not is_feature_enabled_by_key(connection, TELEGRAM_WEB_LINK_FEATURE_KEY):
-        raise api_error(
-            403, "feature_disabled", "Telegram web linking is currently disabled.", {}
-        )
+    ensure_feature_enabled(
+        connection,
+        TELEGRAM_WEB_LINK_FEATURE_KEY,
+        "Telegram web linking is currently disabled.",
+    )
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])

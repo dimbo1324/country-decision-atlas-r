@@ -1,6 +1,6 @@
 from app.core.errors import api_error
 from app.repositories import countries as countries_repository, watchlists as repository
-from app.services.feature_flags import is_feature_enabled_by_key
+from app.services.feature_flags import ensure_feature_enabled
 from psycopg import Connection
 from typing import Any
 
@@ -10,10 +10,11 @@ NOTES_MAX_LENGTH = 2000
 
 
 def require_watchlist_enabled(connection: Connection[Any]) -> None:
-    if not is_feature_enabled_by_key(connection, WATCHLIST_FEATURE_KEY):
-        raise api_error(
-            403, "feature_disabled", "The watchlist feature is currently disabled.", {}
-        )
+    ensure_feature_enabled(
+        connection,
+        WATCHLIST_FEATURE_KEY,
+        "The watchlist feature is currently disabled.",
+    )
 
 
 def _get_country_or_404(

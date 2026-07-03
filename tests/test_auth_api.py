@@ -9,7 +9,11 @@ from app.core.auth import (
 )
 from app.core.database import get_connection
 from app.repositories import auth as repository
-from app.services import auth as service, telegram_web_link as telegram_link_service
+from app.services import (
+    auth as service,
+    feature_flags as feature_flags_service,
+    telegram_web_link as telegram_link_service,
+)
 from datetime import UTC, datetime
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -191,11 +195,15 @@ def test_revoke_all_sessions_returns_count(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def _enable_telegram_feature(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(auth_api, "is_feature_enabled_by_key", lambda *_a, **_kw: True)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+    )
 
 
 def _disable_telegram_feature(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(auth_api, "is_feature_enabled_by_key", lambda *_a, **_kw: False)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+    )
 
 
 def test_telegram_link_feature_disabled_returns_403(

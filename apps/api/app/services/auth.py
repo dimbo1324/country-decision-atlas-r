@@ -1,7 +1,7 @@
 from app.core.config import Settings, get_settings
 from app.core.errors import api_error
 from app.repositories import auth as repository
-from app.services.feature_flags import is_feature_enabled_by_key
+from app.services.feature_flags import ensure_feature_enabled
 from datetime import UTC, datetime, timedelta
 import hashlib
 import hmac
@@ -60,13 +60,9 @@ def hash_session_token(token: str) -> str:
 
 
 def _require_auth_feature_enabled(connection: Connection[Any]) -> None:
-    if not is_feature_enabled_by_key(connection, "auth_enabled"):
-        raise api_error(
-            403,
-            "feature_disabled",
-            "Authentication is currently disabled.",
-            {},
-        )
+    ensure_feature_enabled(
+        connection, "auth_enabled", "Authentication is currently disabled."
+    )
 
 
 def register_user(

@@ -2,7 +2,10 @@
 
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as migration_board_repository
-from app.services import migration_board as service
+from app.services import (
+    feature_flags as feature_flags_service,
+    migration_board as service,
+)
 from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
@@ -72,7 +75,7 @@ def _post(**overrides: Any) -> dict[str, Any]:
 
 def _enable_features(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        migration_board_helpers, "is_feature_enabled_by_key", lambda *_: True
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_: True
     )
 
 

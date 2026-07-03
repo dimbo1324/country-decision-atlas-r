@@ -2,7 +2,7 @@
 
 from app.core.config import Settings
 from app.repositories import auth as repository
-from app.services import auth as service
+from app.services import auth as service, feature_flags as feature_flags_service
 from datetime import UTC, datetime, timedelta
 from fastapi import HTTPException
 import pytest
@@ -21,12 +21,16 @@ _SETTINGS = Settings(
 
 
 def _enable_auth(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_a, **_kw: True)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+    )
     monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
 
 
 def _disable_auth(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_a, **_kw: False)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+    )
     monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
 
 
@@ -76,7 +80,9 @@ def test_register_user_disabled_feature_returns_403(
 def test_register_user_registration_disabled_returns_403(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_a, **_kw: True)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+    )
     monkeypatch.setattr(
         service,
         "get_settings",

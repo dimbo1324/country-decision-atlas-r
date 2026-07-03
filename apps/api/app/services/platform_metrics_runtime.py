@@ -1,11 +1,11 @@
-from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo
+from app.repositories import platform_metrics as pm_repo
 from app.schemas.platform_metrics import (
     PlatformMetricCountryResult,
     PlatformMetricsRecomputeResult,
     PlatformMetricsRecomputeSummary,
 )
 from app.services import platform_metrics as pm_service
-from app.services.feature_flags import can_access, default_access_context
+from app.services.feature_flags import is_feature_enabled_by_key
 from app.services.platform_metric_types import METHODOLOGY_VERSION
 from psycopg import Connection
 from typing import Any
@@ -29,13 +29,7 @@ MVP_SCENARIO_SLUGS = [
 
 
 def is_feature_enabled(connection: Connection[Any]) -> bool:
-    feature = ff_repo.get_feature_flag(connection, FEATURE_KEY)
-    rules = ff_repo.list_feature_access_rules(connection, FEATURE_KEY)
-    from app.core.config import get_settings
-
-    ctx = default_access_context(get_settings())
-    decision = can_access(ctx, feature, rules, FEATURE_KEY)
-    return decision.is_enabled
+    return is_feature_enabled_by_key(connection, FEATURE_KEY)
 
 
 def compute_platform_metrics_for_country(

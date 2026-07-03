@@ -33,7 +33,6 @@ from app.services.migration_board.helpers import (
     _require_submit_ready as _require_submit_ready,
     _total as _total,
     ensure_feature_enabled as ensure_feature_enabled,
-    is_feature_enabled_by_key as is_feature_enabled_by_key,
 )
 from app.services.migration_board.moderation import (
     approve_post as approve_post,

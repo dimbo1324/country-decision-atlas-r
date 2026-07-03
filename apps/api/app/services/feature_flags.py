@@ -1,4 +1,5 @@
 from app.core.config import Settings, get_settings
+from app.core.errors import api_error
 from app.repositories import feature_flags as ff_repo
 from app.schemas.feature_flags import (
     FeatureAccessContext,
@@ -114,6 +115,13 @@ def is_feature_enabled_by_key(connection: Connection[Any], feature_key: str) -> 
     context = default_access_context(get_settings())
     decision = can_access(context, feature, rules, feature_key)
     return decision.is_enabled
+
+
+def ensure_feature_enabled(
+    connection: Connection[Any], feature_key: str, message: str
+) -> None:
+    if not is_feature_enabled_by_key(connection, feature_key):
+        raise api_error(403, "feature_disabled", message, {"feature_key": feature_key})
 
 
 def _tier_allowed(requested: FeatureAccessTier, required: FeatureAccessTier) -> bool:

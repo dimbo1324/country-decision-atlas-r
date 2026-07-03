@@ -4,7 +4,7 @@ from app.api.v1 import watchlists as watchlists_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.repositories import countries as countries_repository, watchlists as repository
-from app.services import watchlists as service
+from app.services import feature_flags as feature_flags_service, watchlists as service
 from datetime import UTC, datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
@@ -47,11 +47,15 @@ def _watchlist_row(**overrides: Any) -> dict[str, Any]:
 
 
 def _enable_feature(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_a, **_kw: True)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+    )
 
 
 def _disable_feature(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_a, **_kw: False)
+    monkeypatch.setattr(
+        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+    )
 
 
 def test_list_user_watchlist_disabled_feature_returns_403(
