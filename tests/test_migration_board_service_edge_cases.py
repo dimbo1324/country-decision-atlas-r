@@ -7,6 +7,7 @@ from app.schemas.migration_board import (
     UpdateMigrationBoardPostRequest,
 )
 from app.services import migration_board as service
+from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
 import pytest
@@ -83,7 +84,9 @@ def _post(**overrides: Any) -> dict[str, Any]:
 
 
 def _enable_features(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_: True)
+    monkeypatch.setattr(
+        migration_board_helpers, "is_feature_enabled_by_key", lambda *_: True
+    )
 
 
 def _create_payload(**overrides: Any) -> CreateMigrationBoardPostRequest:
@@ -306,8 +309,10 @@ class TestCreatePost:
             lambda *_a, **_kw: {"id": "44444444-4444-4444-4444-444444444444"},
         )
         monkeypatch.setattr(repository, "create_post", lambda *_a, **_kw: _post())
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
-        monkeypatch.setattr(service, "_track_event", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_track_event", lambda *_a, **_kw: None
+        )
 
         result = service.create_user_post(
             CONNECTION, current_user=USER, payload=_create_payload()
@@ -350,7 +355,7 @@ class TestUpdatePost:
             return _post(status="review")
 
         monkeypatch.setattr(repository, "update_post", fake_update)
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
 
         service.update_user_post(
             CONNECTION,
@@ -374,7 +379,7 @@ class TestUpdatePost:
             return _post()
 
         monkeypatch.setattr(repository, "update_post", fake_update)
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
 
         service.update_user_post(
             CONNECTION,
@@ -661,7 +666,7 @@ class TestContactRequestLifecycle:
                 "response_note": None,
             },
         )
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
 
         result = service.accept_contact_request(
             CONNECTION, current_user=USER, request_id="req-1", response_note=None
@@ -822,7 +827,7 @@ class TestReports:
         monkeypatch.setattr(
             repository, "hide_post", lambda *_a, **kwargs: hidden.update(kwargs)
         )
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
 
         service.resolve_report(
             CONNECTION,
@@ -862,7 +867,7 @@ class TestReports:
             hide_called = True
 
         monkeypatch.setattr(repository, "hide_post", fake_hide)
-        monkeypatch.setattr(service, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
 
         service.dismiss_report(
             CONNECTION, current_user=USER, report_id="report-1", resolution_note=None
@@ -1001,7 +1006,9 @@ class TestFeatureFlagGating:
     def test_ensure_feature_enabled_raises_403_when_disabled(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_: False)
+        monkeypatch.setattr(
+            migration_board_helpers, "is_feature_enabled_by_key", lambda *_: False
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.ensure_feature_enabled(CONNECTION, service.BOARD_FEATURE_KEY)
@@ -1014,7 +1021,9 @@ class TestFeatureFlagGating:
         def flag_side_effect(_conn: Any, key: str) -> bool:
             return key != service.MATCHING_FEATURE_KEY
 
-        monkeypatch.setattr(service, "is_feature_enabled_by_key", flag_side_effect)
+        monkeypatch.setattr(
+            migration_board_helpers, "is_feature_enabled_by_key", flag_side_effect
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.list_companion_matches(
@@ -1036,7 +1045,9 @@ class TestReadOnlyWrappers:
             return [_post(), _post(id="other-id")]
 
         monkeypatch.setattr(repository, "list_public_posts", fake_list)
-        monkeypatch.setattr(service, "_track_event", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_track_event", lambda *_a, **_kw: None
+        )
 
         result = service.list_public_posts(
             CONNECTION,
@@ -1061,7 +1072,9 @@ class TestReadOnlyWrappers:
             return []
 
         monkeypatch.setattr(repository, "list_public_posts", fake_list)
-        monkeypatch.setattr(service, "_track_event", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_track_event", lambda *_a, **_kw: None
+        )
 
         service.list_public_posts(
             CONNECTION, current_user=USER, filters={}, limit=20, offset=0
@@ -1072,7 +1085,9 @@ class TestReadOnlyWrappers:
     def test_get_public_post_success(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _enable_features(monkeypatch)
         monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
-        monkeypatch.setattr(service, "_track_event", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_track_event", lambda *_a, **_kw: None
+        )
 
         result = service.get_public_post(
             CONNECTION,
@@ -1171,7 +1186,9 @@ class TestReadOnlyWrappers:
         _enable_features(monkeypatch)
         monkeypatch.setattr(repository, "unblock_user", lambda *_a, **_kw: None)
         audit_calls: list[tuple[Any, ...]] = []
-        monkeypatch.setattr(service, "_audit", lambda *args: audit_calls.append(args))
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *args: audit_calls.append(args)
+        )
 
         service.unblock_user(CONNECTION, current_user=USER, blocked_user_id=OTHER_ID)
 
@@ -1184,7 +1201,9 @@ class TestReadOnlyWrappers:
         def flag_side_effect(_conn: Any, key: str) -> bool:
             return key != service.MODERATION_FEATURE_KEY
 
-        monkeypatch.setattr(service, "is_feature_enabled_by_key", flag_side_effect)
+        monkeypatch.setattr(
+            migration_board_helpers, "is_feature_enabled_by_key", flag_side_effect
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.list_posts_for_moderation(

@@ -3,6 +3,7 @@
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as migration_board_repository
 from app.services import migration_board as service
+from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
 import pytest
@@ -70,7 +71,9 @@ def _post(**overrides: Any) -> dict[str, Any]:
 
 
 def _enable_features(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "is_feature_enabled_by_key", lambda *_: True)
+    monkeypatch.setattr(
+        migration_board_helpers, "is_feature_enabled_by_key", lambda *_: True
+    )
 
 
 def test_public_post_response_does_not_expose_private_identity() -> None:
@@ -159,7 +162,9 @@ def test_matching_returns_reasons_without_numeric_score(
         "list_potential_companion_posts",
         lambda *_a, **_kw: [candidate],
     )
-    monkeypatch.setattr(service, "_track_event", lambda *_a, **_kw: None)
+    monkeypatch.setattr(
+        migration_board_helpers, "_track_event", lambda *_a, **_kw: None
+    )
 
     result = service.list_companion_matches(
         CONNECTION,
