@@ -125,10 +125,20 @@ ol {
   font-size: 14px;
   text-decoration: none;
   border: 1px solid transparent;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
 .navLink[data-active="true"] {
   border-color: currentColor;
+}
+
+.authNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .appMain {
@@ -895,6 +905,79 @@ ol {
   padding: 5px 8px;
   font-size: 13px;
   border: 1px solid currentColor;
+}
+
+.formInput {
+  padding: 5px 8px;
+  font-size: 13px;
+  border: 1px solid currentColor;
+  width: 100%;
+  max-width: 320px;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 360px;
+}
+
+.authFormFooter {
+  font-size: 13px;
+}
+
+.accountSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid currentColor;
+}
+
+.accountSectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.accountField {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.accountFieldLabel {
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.sessionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid currentColor;
+}
+
+.watchlistCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid currentColor;
+}
+
+.watchlistCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.watchlistToggleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .checkboxList {

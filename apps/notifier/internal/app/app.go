@@ -52,6 +52,7 @@ func Run() {
 
 	subRepo := mongostore.NewSubscriptionRepository(store)
 	identityRepo := mongostore.NewTelegramIdentityRepository(store)
+	linkCodeRepo := mongostore.NewTelegramLinkCodeRepository(store)
 	dl := mongostore.NewDeliveryLogRepository(store)
 	dedup := mongostore.NewDedupRepository(store)
 	deadLetters := mongostore.NewDeadLetterRepository(store)
@@ -63,7 +64,7 @@ func Run() {
 	registry.Register(channels.NewTelegramChannel(tgClient))
 	h := notifier.NewHandler(dedup, subRepo, dl, deadLetters, registry, metricsCollector)
 
-	grpcSrv := grpcserver.NewWithMetrics(svc, dl, metricsCollector)
+	grpcSrv := grpcserver.NewWithMetrics(svc, dl, identityRepo, linkCodeRepo, metricsCollector)
 
 	consumer := kafkaconsumer.NewKafkaConsumer(cfg.KafkaBrokers, cfg.KafkaTopic, cfg.KafkaConsumerGroup)
 	defer func() { _ = consumer.Close() }()

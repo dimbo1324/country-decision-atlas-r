@@ -21,15 +21,34 @@ type Server struct {
 	pb.UnimplementedSubscriptionServiceServer
 	svc         *subscriptions.Service
 	deliveryLog mongostore.DeliveryLogRepository
+	identities  mongostore.TelegramIdentityRepository
+	linkCodes   mongostore.TelegramLinkCodeRepository
 	metrics     *metrics.Metrics
 }
 
-func New(svc *subscriptions.Service, deliveryLog mongostore.DeliveryLogRepository) *Server {
-	return NewWithMetrics(svc, deliveryLog, nil)
+func New(
+	svc *subscriptions.Service,
+	deliveryLog mongostore.DeliveryLogRepository,
+	identities mongostore.TelegramIdentityRepository,
+	linkCodes mongostore.TelegramLinkCodeRepository,
+) *Server {
+	return NewWithMetrics(svc, deliveryLog, identities, linkCodes, nil)
 }
 
-func NewWithMetrics(svc *subscriptions.Service, deliveryLog mongostore.DeliveryLogRepository, metricsCollector *metrics.Metrics) *Server {
-	return &Server{svc: svc, deliveryLog: deliveryLog, metrics: metricsCollector}
+func NewWithMetrics(
+	svc *subscriptions.Service,
+	deliveryLog mongostore.DeliveryLogRepository,
+	identities mongostore.TelegramIdentityRepository,
+	linkCodes mongostore.TelegramLinkCodeRepository,
+	metricsCollector *metrics.Metrics,
+) *Server {
+	return &Server{
+		svc:         svc,
+		deliveryLog: deliveryLog,
+		identities:  identities,
+		linkCodes:   linkCodes,
+		metrics:     metricsCollector,
+	}
 }
 
 func (s *Server) CreateSubscription(ctx context.Context, req *pb.CreateSubscriptionRequest) (*pb.SubscriptionResponse, error) {
@@ -100,6 +119,42 @@ func (s *Server) GetDeliveryStatus(ctx context.Context, req *pb.GetDeliveryStatu
 		pbEntries[i] = ds
 	}
 	return &pb.GetDeliveryStatusResponse{Entries: pbEntries}, nil
+}
+
+func (s *Server) ConsumeTelegramWebLinkCode(ctx context.Context, req *pb.ConsumeTelegramWebLinkCodeRequest) (*pb.ConsumeTelegramWebLinkCodeResponse, error) {
+	codeHash := mongostore.HashLinkCode(req.Code)
+	telegramUserID, err := s.linkCodes.Consume(ctx, codeHash)
+	if err != nil {
+		switch {
+		case errors.Is(err, mongostore.ErrLinkCodeNotFound):
+			return &pb.ConsumeTelegramWebLinkCodeResponse{Ok: false, Error: "invalid_code"}, nil
+		case errors.Is(err, mongostore.ErrLinkCodeExpired):
+			return &pb.ConsumeTelegramWebLinkCodeResponse{Ok: false, Error: "expired_code"}, nil
+		case errors.Is(err, mongostore.ErrLinkCodeConsumed):
+			return &pb.ConsumeTelegramWebLinkCodeResponse{Ok: false, Error: "already_used"}, nil
+		default:
+			return nil, status.Error(codes.Internal, "internal error")
+		}
+	}
+	if err := s.identities.SetWebUserID(ctx, telegramUserID, req.WebUserId); err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &pb.ConsumeTelegramWebLinkCodeResponse{Ok: true, TelegramUserId: telegramUserID}, nil
+}
+
+func (s *Server) GetTelegramIdentityLinkStatus(ctx context.Context, req *pb.GetTelegramIdentityLinkStatusRequest) (*pb.GetTelegramIdentityLinkStatusResponse, error) {
+	linked, webUserID, err := s.identities.GetLinkStatus(ctx, req.TelegramUserId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &pb.GetTelegramIdentityLinkStatusResponse{Linked: linked, WebUserId: webUserID}, nil
+}
+
+func (s *Server) UnlinkTelegramWebUser(ctx context.Context, req *pb.UnlinkTelegramWebUserRequest) (*pb.UnlinkTelegramWebUserResponse, error) {
+	if err := s.identities.ClearWebUserID(ctx, req.TelegramUserId); err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &pb.UnlinkTelegramWebUserResponse{Ok: true}, nil
 }
 
 func toProtoSub(sub *mongostore.Subscription) *pb.Subscription {

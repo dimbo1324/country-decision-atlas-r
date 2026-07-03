@@ -1,6 +1,7 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
+from app.core.rbac import require_editor
 from app.schemas.ai_drafts import (
     AIDraft,
     AIDraftGenerateSummaryRequest,
@@ -37,7 +38,7 @@ def generate_summary_draft(
     payload: AIDraftGenerateSummaryRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = ai_drafts_service.generate_summary_draft(
         connection,
@@ -62,7 +63,7 @@ def detect_contradiction(
     payload: ContradictionCandidateGenerateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = contradiction_service.detect_contradiction_candidate(
         connection,
@@ -84,7 +85,7 @@ def detect_contradiction(
 )
 def list_ai_drafts(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
     status: str | None = Query(None),
     draft_type: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
@@ -103,7 +104,7 @@ def list_ai_drafts(
 def get_ai_draft(
     draft_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     return ai_drafts_service.get_ai_draft_for_admin(connection, draft_id)
 
@@ -117,7 +118,7 @@ def update_ai_draft_status(
     draft_id: str,
     payload: AIDraftStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = ai_drafts_service.update_ai_draft_status(
         connection, draft_id, payload.status, payload.reviewed_by
@@ -133,7 +134,7 @@ def update_ai_draft_status(
 )
 def list_contradiction_candidates(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
     status: str | None = Query(None),
     severity: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
@@ -152,7 +153,7 @@ def list_contradiction_candidates(
 def get_contradiction_candidate(
     candidate_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     return contradiction_service.get_contradiction_candidate_for_admin(
         connection, candidate_id
@@ -168,7 +169,7 @@ def update_contradiction_candidate_status(
     candidate_id: str,
     payload: ContradictionCandidateStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = contradiction_service.update_contradiction_candidate_status(
         connection, candidate_id, payload.status, payload.reviewed_by

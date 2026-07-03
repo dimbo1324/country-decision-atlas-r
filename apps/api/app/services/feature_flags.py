@@ -1,4 +1,5 @@
-from app.core.config import Settings
+from app.core.config import Settings, get_settings
+from app.repositories import feature_flags as ff_repo
 from app.schemas.feature_flags import (
     FeatureAccessContext,
     FeatureAccessDecision,
@@ -6,6 +7,7 @@ from app.schemas.feature_flags import (
     FeatureFlag,
     FeatureFlagStatus,
 )
+from psycopg import Connection
 from typing import Any
 
 
@@ -104,6 +106,14 @@ def feature_response(
         is_enabled_for_context=decision.is_enabled,
         decision_reason=decision.reason,
     )
+
+
+def is_feature_enabled_by_key(connection: Connection[Any], feature_key: str) -> bool:
+    feature = ff_repo.get_feature_flag(connection, feature_key)
+    rules = ff_repo.list_feature_access_rules(connection, feature_key)
+    context = default_access_context(get_settings())
+    decision = can_access(context, feature, rules, feature_key)
+    return decision.is_enabled
 
 
 def _tier_allowed(requested: FeatureAccessTier, required: FeatureAccessTier) -> bool:

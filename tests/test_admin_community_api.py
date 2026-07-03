@@ -1,6 +1,5 @@
 from app.api.v1.admin_community import router
-from app.core.admin_auth import require_admin_token
-from app.core.config import get_settings
+from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.repositories import community as repository
 from fastapi import FastAPI
@@ -12,13 +11,21 @@ from unittest.mock import MagicMock
 
 CONNECTION = MagicMock()
 
+MODERATOR_USER = CurrentUser(
+    id="moderator-id",
+    email="moderator@example.local",
+    display_name="Moderator",
+    role="moderator",
+    status="active",
+)
+
 
 def _client(*, with_admin: bool = True) -> TestClient:
     app = FastAPI()
     app.include_router(router, prefix="/api/v1")
     app.dependency_overrides[get_connection] = lambda: CONNECTION
     if with_admin:
-        app.dependency_overrides[require_admin_token] = lambda: "admin"
+        app.dependency_overrides[get_current_active_user] = lambda: MODERATOR_USER
     return TestClient(app)
 
 
@@ -41,16 +48,10 @@ def _question_row(status: str = "pending") -> dict[str, Any]:
     }
 
 
-def test_admin_list_questions_requires_admin_auth(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    get_settings.cache_clear()
-    monkeypatch.setenv("ADMIN_TOKEN", "valid-token")
-
+def test_admin_list_questions_requires_admin_auth() -> None:
     response = _client(with_admin=False).get("/api/v1/admin/community/questions")
 
     assert response.status_code == 401
-    get_settings.cache_clear()
 
 
 def test_admin_can_list_pending_questions(monkeypatch: pytest.MonkeyPatch) -> None:

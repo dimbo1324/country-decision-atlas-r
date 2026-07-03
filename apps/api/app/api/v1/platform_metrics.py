@@ -1,6 +1,7 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.database import get_connection
 from app.core.errors import api_error
+from app.core.rbac import require_admin
 from app.repositories import platform_metrics as pm_repo
 from app.schemas.common import ErrorResponse
 from app.schemas.platform_metrics import (
@@ -187,7 +188,7 @@ admin_router = APIRouter(tags=["admin"])
 def admin_recompute_all_platform_metrics(
     payload: PlatformMetricsRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> PlatformMetricsRecomputeSummary:
     if not is_feature_enabled(connection):
         raise api_error(
@@ -215,7 +216,7 @@ def admin_recompute_country_platform_metrics(
     country_slug: str,
     payload: PlatformMetricsRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> PlatformMetricsRecomputeResult:
     if not is_feature_enabled(connection):
         raise api_error(

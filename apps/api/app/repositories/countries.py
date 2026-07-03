@@ -42,6 +42,20 @@ LEFT JOIN translations t_name
 """
 
 
+def get_active_country_by_slug(
+    connection: Connection[Any], country_slug: str
+) -> dict[str, Any] | None:
+    return fetch_one(
+        connection,
+        """
+        SELECT id::text AS id, slug, name
+        FROM countries
+        WHERE slug = %s AND is_active = TRUE
+        """,
+        (country_slug,),
+    )
+
+
 def list_countries(
     connection: Connection[Any],
     locale: str,

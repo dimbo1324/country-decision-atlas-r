@@ -1,5 +1,6 @@
 export * from "./countries";
 export * from "./ai";
+export * from "./auth";
 export * from "./community";
 export * from "./country-drift";
 export * from "./country-pairs";
@@ -21,4 +22,5 @@ export * from "./search";
 export * from "./sources";
 export * from "./trust";
 export * from "./user-stories";
+export * from "./watchlists";
 export * from "./what-changed";

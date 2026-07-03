@@ -6,6 +6,7 @@ import { SearchBox } from "../../features/search";
 import { normalizeLocale } from "../lib/locale";
 import { routes, withLocale } from "../lib/routes";
 import { AppNavigation } from "./AppNavigation";
+import { AuthNav } from "./AuthNav";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function AppHeader() {
@@ -19,6 +20,7 @@ export function AppHeader() {
         </Link>
         <AppNavigation />
         <SearchBox />
+        <AuthNav />
         <LocaleSwitcher />
       </div>
     </header>

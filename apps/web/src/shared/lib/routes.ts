@@ -9,6 +9,10 @@ export const routes = {
   sources: "/sources",
   search: "/search",
   dataQuality: "/internal/data-quality",
+  login: "/login",
+  register: "/register",
+  account: "/account",
+  watchlist: "/watchlist",
   legalSignalsForCountry: (slug: string, locale: string) =>
     `/legal-signals?country_slug=${slug}&locale=${locale}`,
   sourcesForCountry: (slug: string, locale: string) =>

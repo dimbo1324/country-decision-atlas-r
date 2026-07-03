@@ -11,6 +11,7 @@ const (
 	CmdUnsubscribe CommandType = "unsubscribe"
 	CmdList        CommandType = "list"
 	CmdHelp        CommandType = "help"
+	CmdWebLink     CommandType = "web_link"
 	CmdUnknown     CommandType = "unknown"
 )
 
@@ -42,6 +43,8 @@ func Parse(text string) ParsedCommand {
 		return ParsedCommand{Type: CmdList}
 	case "/help":
 		return ParsedCommand{Type: CmdHelp}
+	case "/web_link":
+		return ParsedCommand{Type: CmdWebLink}
 	default:
 		return ParsedCommand{Type: CmdUnknown}
 	}

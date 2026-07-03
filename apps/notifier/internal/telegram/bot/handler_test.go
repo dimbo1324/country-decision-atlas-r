@@ -2,8 +2,10 @@ package bot
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"testing"
+	"time"
 
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/subscriptions"
@@ -11,12 +13,18 @@ import (
 )
 
 func makeHandler() (*Handler, *telegram.FakeClient) {
+	h, tg, _ := makeHandlerWithLinkCodes()
+	return h, tg
+}
+
+func makeHandlerWithLinkCodes() (*Handler, *telegram.FakeClient, *mongostore.InMemoryTelegramLinkCodeRepository) {
 	subsRepo := mongostore.NewInMemorySubscriptionRepository(nil)
 	identities := mongostore.NewInMemoryTelegramIdentityRepository()
 	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
 	tg := &telegram.FakeClient{}
-	h := New(svc, tg)
-	return h, tg
+	linkCodes := mongostore.NewInMemoryTelegramLinkCodeRepository()
+	h := New(svc, tg, linkCodes, 10*time.Minute)
+	return h, tg, linkCodes
 }
 
 func makeUpdate(text string, userID int64, username string) *telegram.TelegramUpdate {
@@ -177,5 +185,76 @@ func TestDisclaimerInSubscribeReply(t *testing.T) {
 	_ = h.Handle(context.Background(), makeUpdate("/subscribe argentina", 100, "dima"))
 	if !strings.Contains(tg.Sent[0].Text, "Это не юридическая консультация.") {
 		t.Error("exact disclaimer missing from subscribe reply")
+	}
+}
+
+func extractLinkCode(t *testing.T, reply string) string {
+	t.Helper()
+	for _, word := range strings.Fields(reply) {
+		if len(word) == 6 {
+			allDigits := true
+			for _, r := range word {
+				if r < '0' || r > '9' {
+					allDigits = false
+					break
+				}
+			}
+			if allDigits {
+				return word
+			}
+		}
+	}
+	t.Fatalf("no 6-digit code found in reply: %s", reply)
+	return ""
+}
+
+func TestHandleWebLinkRepliesWithSixDigitCode(t *testing.T) {
+	h, tg := makeHandler()
+	_ = h.Handle(context.Background(), makeUpdate("/web_link", 100, "dima"))
+	if len(tg.Sent) != 1 {
+		t.Fatalf("want 1 message got %d", len(tg.Sent))
+	}
+	code := extractLinkCode(t, tg.Sent[0].Text)
+	if len(code) != 6 {
+		t.Errorf("want 6-digit code got %q", code)
+	}
+	if !strings.Contains(tg.Sent[0].Text, disclaimer) {
+		t.Error("expected disclaimer in web_link reply")
+	}
+}
+
+func TestHandleWebLinkGeneratesConsumableCode(t *testing.T) {
+	h, tg, linkCodes := makeHandlerWithLinkCodes()
+	_ = h.Handle(context.Background(), makeUpdate("/web_link", 200, "dima"))
+	code := extractLinkCode(t, tg.Sent[0].Text)
+
+	telegramUserID, err := linkCodes.Consume(context.Background(), mongostore.HashLinkCode(code))
+	if err != nil {
+		t.Fatalf("unexpected error consuming generated code: %v", err)
+	}
+	if telegramUserID != "200" {
+		t.Errorf("want telegram user id 200 got %s", telegramUserID)
+	}
+}
+
+func TestHandleWebLinkCodeConsumedOnceOnly(t *testing.T) {
+	h, tg, linkCodes := makeHandlerWithLinkCodes()
+	_ = h.Handle(context.Background(), makeUpdate("/web_link", 300, "dima"))
+	code := extractLinkCode(t, tg.Sent[0].Text)
+	hash := mongostore.HashLinkCode(code)
+
+	if _, err := linkCodes.Consume(context.Background(), hash); err != nil {
+		t.Fatalf("first consume: %v", err)
+	}
+	if _, err := linkCodes.Consume(context.Background(), hash); !errors.Is(err, mongostore.ErrLinkCodeConsumed) {
+		t.Errorf("want ErrLinkCodeConsumed on second consume got %v", err)
+	}
+}
+
+func TestHandleWebLinkMentionsExpiryMinutes(t *testing.T) {
+	h, tg := makeHandler()
+	_ = h.Handle(context.Background(), makeUpdate("/web_link", 100, "dima"))
+	if !strings.Contains(tg.Sent[0].Text, "10 минут") {
+		t.Errorf("expected reply to mention 10 minute expiry, got: %s", tg.Sent[0].Text)
 	}
 }

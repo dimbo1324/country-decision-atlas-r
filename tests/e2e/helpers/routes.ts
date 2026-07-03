@@ -22,4 +22,8 @@ export const e2eRoutes = {
     return `/search${qs}`;
   },
   dataQuality: "/internal/data-quality",
+  login: "/login",
+  register: "/register",
+  account: "/account",
+  watchlist: "/watchlist",
 };

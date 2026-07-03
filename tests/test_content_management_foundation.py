@@ -1,5 +1,3 @@
-from app.core.admin_auth import require_admin_token
-from app.core.config import get_settings
 from app.repositories import sources as source_repository
 from app.repositories.sorting import resolve_sort_clause
 from app.schemas.admin_content import EvidenceItemCreate, SourceCreate
@@ -45,10 +43,9 @@ def test_openapi_has_admin_security_and_content_schemas() -> None:
     ]:
         assert path in paths
 
-    assert contract["components"]["securitySchemes"]["AdminTokenAuth"] == {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-Admin-Token",
+    assert contract["components"]["securitySchemes"]["BearerAuth"] == {
+        "type": "http",
+        "scheme": "bearer",
     }
     for schema in [
         "PublicationStatus",
@@ -125,33 +122,6 @@ def test_public_read_openapi_exposes_filters_pagination_and_sort() -> None:
             param["name"] for param in contract["paths"][path]["get"]["parameters"]
         }
         assert expected_params.issubset(params)
-
-
-def test_admin_token_dependency(monkeypatch: pytest.MonkeyPatch) -> None:
-    get_settings.cache_clear()
-    monkeypatch.setenv("ADMIN_TOKEN", "valid-token")
-
-    assert require_admin_token("valid-token") == "admin"
-
-    with pytest.raises(HTTPException) as missing:
-        require_admin_token(None)
-    assert missing.value.status_code == 401
-    missing_detail = cast(dict[str, Any], missing.value.detail)
-    assert missing_detail["error"]["code"] == "admin_unauthorized"
-
-    with pytest.raises(HTTPException) as wrong:
-        require_admin_token("wrong-token")
-    assert wrong.value.status_code == 401
-
-    with pytest.raises(HTTPException) as prefix:
-        require_admin_token("valid")
-    assert prefix.value.status_code == 401
-
-    with pytest.raises(HTTPException) as longer:
-        require_admin_token("valid-token-extra")
-    assert longer.value.status_code == 401
-
-    get_settings.cache_clear()
 
 
 def test_publish_source_validation_blocks_missing_required_fields() -> None:

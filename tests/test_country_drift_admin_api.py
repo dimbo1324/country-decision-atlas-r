@@ -1,6 +1,5 @@
 from app.api.v1 import country_drift as country_drift_api
-from app.core import admin_auth as admin_auth_module
-from app.core.config import Settings
+from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.schemas.country_drift import CountryDriftRecomputeRequest
 from app.services.country_drift import (
@@ -12,6 +11,22 @@ from fastapi.testclient import TestClient
 import pytest
 from typing import Any
 from unittest.mock import MagicMock
+
+
+ADMIN_USER = CurrentUser(
+    id="admin-id",
+    email="admin@example.local",
+    display_name="Admin",
+    role="admin",
+    status="active",
+)
+REGULAR_USER = CurrentUser(
+    id="user-id",
+    email="user@example.local",
+    display_name="User",
+    role="user",
+    status="active",
+)
 
 
 def test_admin_recompute_all_returns_batch_summary(
@@ -31,7 +46,7 @@ def test_admin_recompute_all_returns_batch_summary(
     )
     conn = MagicMock()
     result = country_drift_api.admin_recompute_all_country_drift(
-        CountryDriftRecomputeRequest(dry_run=False), conn, "admin-token"
+        CountryDriftRecomputeRequest(dry_run=False), conn, ADMIN_USER
     )
     assert result.countries_processed == 3
     assert result.snapshots_written == 3
@@ -63,7 +78,7 @@ def test_admin_recompute_country_returns_result(
     )
     conn = MagicMock()
     result = country_drift_api.admin_recompute_country_drift(
-        "argentina", CountryDriftRecomputeRequest(dry_run=False), conn, "admin-token"
+        "argentina", CountryDriftRecomputeRequest(dry_run=False), conn, ADMIN_USER
     )
     assert result.computed is True
     assert result.stored is True
@@ -71,18 +86,17 @@ def test_admin_recompute_country_returns_result(
     assert result.event_emitted is True
 
 
-def _admin_client(monkeypatch: Any, token: str = "secret-token") -> TestClient:
+def _admin_client(
+    monkeypatch: Any, current_user: CurrentUser | None = None
+) -> TestClient:
     from app.api.v1.country_drift import admin_router
 
     app = FastAPI()
     app.include_router(admin_router, prefix="/api/v1")
     conn = MagicMock()
     app.dependency_overrides[get_connection] = lambda: conn
-    monkeypatch.setattr(
-        admin_auth_module,
-        "get_settings",
-        lambda: Settings(app_env="local", admin_token=token),
-    )
+    if current_user is not None:
+        app.dependency_overrides[get_current_active_user] = lambda: current_user
     batch = CountryDriftBatchResult(
         countries_processed=0,
         snapshots_written=0,
@@ -106,22 +120,22 @@ def test_admin_recompute_without_token_returns_401(monkeypatch: Any) -> None:
     assert response.status_code == 401
 
 
-def test_admin_recompute_with_wrong_token_returns_401(monkeypatch: Any) -> None:
-    client = _admin_client(monkeypatch, token="secret-token")
+def test_admin_recompute_with_user_role_returns_403(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, current_user=REGULAR_USER)
     response = client.post(
         "/api/v1/admin/country-drift/recompute",
         json={"dry_run": False},
-        headers={"X-Admin-Token": "wrong-token"},
+        headers={"Authorization": "Bearer user-session-token"},
     )
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
-def test_admin_recompute_with_correct_token_returns_200(monkeypatch: Any) -> None:
-    client = _admin_client(monkeypatch, token="secret-token")
+def test_admin_recompute_with_admin_role_returns_200(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, current_user=ADMIN_USER)
     response = client.post(
         "/api/v1/admin/country-drift/recompute",
         json={"dry_run": False},
-        headers={"X-Admin-Token": "secret-token"},
+        headers={"Authorization": "Bearer admin-session-token"},
     )
     assert response.status_code == 200
 
@@ -141,7 +155,7 @@ def test_dry_run_does_not_commit_call(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     conn = MagicMock()
     country_drift_api.admin_recompute_all_country_drift(
-        CountryDriftRecomputeRequest(dry_run=True), conn, "admin-token"
+        CountryDriftRecomputeRequest(dry_run=True), conn, ADMIN_USER
     )
     conn.commit.assert_not_called()
 
@@ -173,7 +187,7 @@ def test_emit_events_false_still_writes_snapshot(
         "argentina",
         CountryDriftRecomputeRequest(dry_run=False, emit_events=False),
         conn,
-        "admin-token",
+        ADMIN_USER,
     )
     assert result.stored is True
     assert result.event_emitted is False

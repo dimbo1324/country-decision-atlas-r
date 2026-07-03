@@ -3,8 +3,10 @@ from app.api.v1 import (
     admin_ai,
     admin_community,
     admin_translation_jobs,
+    admin_users,
     ai,
     analytics,
+    auth,
     community,
     countries,
     country_drift,
@@ -26,6 +28,7 @@ from app.api.v1 import (
     translations,
     trust,
     user_stories,
+    watchlists,
     what_changed,
 )
 from app.core.database import close_database_pool, open_database_pool
@@ -61,7 +64,7 @@ def create_app(
         docs_url="/api/docs",
         redoc_url="/api/redoc",
         openapi_url="/api/openapi.json",
-        lifespan=_lifespan(settings),
+        lifespan=_lifespan(),
     )
     app.add_middleware(
         CORSMiddleware,
@@ -80,13 +83,9 @@ def create_app(
     return app
 
 
-def _lifespan(settings: Any) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
+def _lifespan() -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-        if not settings.admin_token:
-            logger.warning(
-                "Admin token is not configured - admin endpoints are disabled."
-            )
         logger.warning(
             "Rate limiting is per-process (in-memory). "
             "In multi-worker deployments the effective limit scales with worker count. "
@@ -228,6 +227,9 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(admin_ai.router, prefix="/api/v1")
     app.include_router(community.router, prefix="/api/v1")
     app.include_router(admin_community.router, prefix="/api/v1")
+    app.include_router(auth.router, prefix="/api/v1")
+    app.include_router(admin_users.router, prefix="/api/v1")
+    app.include_router(watchlists.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

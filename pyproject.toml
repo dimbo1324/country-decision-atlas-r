@@ -18,6 +18,8 @@ dependencies = [
   "psycopg[binary,pool]>=3.2.0,<4.0.0",
   "redis>=5,<6",
   "uvicorn[standard]>=0.30.0,<1.0.0",
+  "grpcio>=1.60.0,<2.0.0",
+  "protobuf>=6.33.0,<7.0.0",
 ]
 
 [project.optional-dependencies]
@@ -30,6 +32,7 @@ dev = [
   "ruff>=0.12.0,<1.0.0",
   "sqlfluff>=3.4.0,<4.0.0",
   "httpx2>=2.0.0,<3.0.0",
+  "grpcio-tools>=1.60.0,<2.0.0",
 ]
 alerts = [
   "confluent-kafka>=2.0,<3.0",
@@ -48,6 +51,7 @@ include = ["country_decision_atlas_*"]
 target-version = "py312"
 line-length = 88
 src = ["apps/api", "apps/worker"]
+exclude = ["apps/api/app/integrations/notifier_grpc/generated"]
 
 [tool.ruff.lint]
 select = [
@@ -102,6 +106,7 @@ mypy_path = [
 exclude = [
   "^apps/api/main\\.py$",
   "^apps/worker/main\\.py$",
+  "^apps/api/app/integrations/notifier_grpc/generated/",
 ]
 [[tool.mypy.overrides]]
 module = ["yaml"]
@@ -114,6 +119,14 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["redis"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["grpc", "grpc.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["app.integrations.notifier_grpc.generated.*"]
+ignore_errors = true
 
 [tool.pytest.ini_options]
 addopts = "-q --strict-markers --strict-config"

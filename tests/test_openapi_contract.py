@@ -149,14 +149,13 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     }
 
 
-def test_openapi_contract_has_admin_token_security() -> None:
+def test_openapi_contract_has_bearer_auth_security() -> None:
     contract = load_contract()
     security_schemes = contract["components"]["securitySchemes"]
     report_path = contract["paths"]["/api/v1/admin/data-quality/report"]["get"]
 
-    assert security_schemes["AdminTokenAuth"] == {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-Admin-Token",
+    assert security_schemes["BearerAuth"] == {
+        "type": "http",
+        "scheme": "bearer",
     }
-    assert report_path["security"] == [{"AdminTokenAuth": []}]
+    assert report_path["security"] == [{"BearerAuth": []}]

@@ -1,6 +1,5 @@
 from app.api.v1 import trust as trust_api
-from app.core import admin_auth as admin_auth_module
-from app.core.config import Settings
+from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.repositories import trust as trust_repo
 from app.schemas.trust import TrustRecomputeRequest
@@ -16,6 +15,21 @@ from unittest.mock import MagicMock
 CONNECTION = cast(Connection[Any], object())
 
 _NOW = datetime(2025, 6, 1, tzinfo=UTC)
+
+ADMIN_USER = CurrentUser(
+    id="admin-id",
+    email="admin@example.local",
+    display_name="Admin",
+    role="admin",
+    status="active",
+)
+REGULAR_USER = CurrentUser(
+    id="user-id",
+    email="user@example.local",
+    display_name="User",
+    role="user",
+    status="active",
+)
 
 _TRUST_ROW = {
     "country_slug": "russia",
@@ -96,7 +110,7 @@ def test_admin_recompute_all_returns_summary(monkeypatch: pytest.MonkeyPatch) ->
     )
     conn = MagicMock()
     result = trust_api.admin_recompute_all_trust(
-        TrustRecomputeRequest(dry_run=False), conn, "admin-token"
+        TrustRecomputeRequest(dry_run=False), conn, ADMIN_USER
     )
     assert result.countries_processed == 3
     assert result.feature_enabled is True
@@ -125,7 +139,7 @@ def test_admin_recompute_country_returns_result(
     )
     conn = MagicMock()
     result = trust_api.admin_recompute_country_trust(
-        "russia", TrustRecomputeRequest(dry_run=False), conn, "admin-token"
+        "russia", TrustRecomputeRequest(dry_run=False), conn, ADMIN_USER
     )
     assert result.computed is True
     assert result.stored is True
@@ -141,18 +155,17 @@ def test_get_country_trust_disclaimer_present(monkeypatch: pytest.MonkeyPatch) -
     )
 
 
-def _admin_client(monkeypatch: Any, token: str = "secret-token") -> TestClient:
+def _admin_client(
+    monkeypatch: Any, current_user: CurrentUser | None = None
+) -> TestClient:
     from app.api.v1.trust import admin_router
 
     app = FastAPI()
     app.include_router(admin_router, prefix="/api/v1")
     conn = MagicMock()
     app.dependency_overrides[get_connection] = lambda: conn
-    monkeypatch.setattr(
-        admin_auth_module,
-        "get_settings",
-        lambda: Settings(app_env="local", admin_token=token),
-    )
+    if current_user is not None:
+        app.dependency_overrides[get_current_active_user] = lambda: current_user
     summary = {
         "feature_enabled": True,
         "dry_run": False,
@@ -176,21 +189,21 @@ def test_admin_recompute_without_token_returns_401(monkeypatch: Any) -> None:
     assert response.status_code == 401
 
 
-def test_admin_recompute_with_wrong_token_returns_401(monkeypatch: Any) -> None:
-    client = _admin_client(monkeypatch, token="secret-token")
+def test_admin_recompute_with_user_role_returns_403(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, current_user=REGULAR_USER)
     response = client.post(
         "/api/v1/admin/trust/recompute",
         json={"dry_run": False},
-        headers={"X-Admin-Token": "wrong-token"},
+        headers={"Authorization": "Bearer user-session-token"},
     )
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
-def test_admin_recompute_with_correct_token_returns_200(monkeypatch: Any) -> None:
-    client = _admin_client(monkeypatch, token="secret-token")
+def test_admin_recompute_with_admin_role_returns_200(monkeypatch: Any) -> None:
+    client = _admin_client(monkeypatch, current_user=ADMIN_USER)
     response = client.post(
         "/api/v1/admin/trust/recompute",
         json={"dry_run": False},
-        headers={"X-Admin-Token": "secret-token"},
+        headers={"Authorization": "Bearer admin-session-token"},
     )
     assert response.status_code == 200

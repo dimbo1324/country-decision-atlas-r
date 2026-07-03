@@ -21,6 +21,7 @@ import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
 import { TrustSurfaceBlock } from "../../../features/trust-surface";
+import { WatchlistButton } from "../../../features/watchlist";
 import { CountryWhatChanged } from "../../../features/what-changed";
 
 export const dynamic = "force-dynamic";
@@ -89,6 +90,10 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
       )}
 
       <CountryHeader country={card.country} locale={locale} />
+
+      <div data-testid="watchlist-button-container">
+        <WatchlistButton countrySlug={card.country.slug} />
+      </div>
 
       <div className="cardSections" data-testid="country-card">
         {card.profile?.executive_summary && (

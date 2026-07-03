@@ -1,5 +1,6 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.database import get_connection
+from app.core.rbac import require_moderator, require_roles
 from app.schemas.common import ErrorResponse
 from app.schemas.community import (
     CommunityAnswer,
@@ -28,11 +29,13 @@ router = APIRouter(prefix="/admin/community", tags=["admin-community"])
 
 _RESPONSES: dict[int | str, dict[str, Any]] = {401: {"model": ErrorResponse}}
 
+require_moderator_or_editor = require_roles("moderator", "editor", "admin", "owner")
+
 
 @router.get("/questions", response_model=list[CommunityQuestion], responses=_RESPONSES)
 def list_questions_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
     status: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> list[dict[str, Any]]:
@@ -50,7 +53,7 @@ def update_question_status(
     question_id: str,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_question_status(
         connection, question_id, payload.status, payload.moderated_by
@@ -62,7 +65,7 @@ def update_question_status(
 @router.get("/answers", response_model=list[CommunityAnswer], responses=_RESPONSES)
 def list_answers_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
     status: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> list[dict[str, Any]]:
@@ -80,7 +83,7 @@ def update_answer_status(
     answer_id: str,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_answer_status(
         connection, answer_id, payload.status, payload.moderated_by
@@ -96,7 +99,7 @@ def update_answer_status(
 )
 def list_data_error_reports_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator_or_editor)],
     status: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> list[dict[str, Any]]:
@@ -114,7 +117,7 @@ def update_data_error_report_status(
     report_id: str,
     payload: DataErrorReportStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator_or_editor)],
 ) -> dict[str, Any]:
     row = data_error_reports_service.update_data_error_report_status(
         connection,
@@ -134,7 +137,7 @@ def update_data_error_report_status(
 )
 def list_user_story_ratings_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
     status: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> list[dict[str, Any]]:
@@ -152,7 +155,7 @@ def update_user_story_rating_status(
     rating_id: str,
     payload: UserStoryRatingStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = user_story_ratings_service.update_user_story_rating_status(
         connection, rating_id, payload.status, payload.reviewed_by

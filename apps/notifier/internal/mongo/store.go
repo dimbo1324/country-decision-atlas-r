@@ -50,3 +50,7 @@ func (s *Store) TelegramIdentities() *mongo.Collection {
 func (s *Store) DeadLetters() *mongo.Collection {
 	return s.db.Collection("dead_letters")
 }
+
+func (s *Store) TelegramLinkCodes() *mongo.Collection {
+	return s.db.Collection("telegram_link_codes")
+}

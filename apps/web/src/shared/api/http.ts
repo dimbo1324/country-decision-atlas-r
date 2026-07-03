@@ -30,6 +30,9 @@ export function isApiError(e: unknown): e is ApiErrorResponse {
 
 async function parseJsonSafe<T>(response: Response): Promise<T> {
   const text = await response.text();
+  if (text === "") {
+    return undefined as T;
+  }
   try {
     return JSON.parse(text) as T;
   } catch {
@@ -69,6 +72,49 @@ export async function apiPost<TResponse, TBody>(
       ...options.headers,
     },
     body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw await parseJsonSafe<ApiErrorResponse>(response);
+  }
+
+  return parseJsonSafe<TResponse>(response);
+}
+
+export async function apiPatch<TResponse, TBody>(
+  path: string,
+  body: TBody,
+  options: RequestOptions = {},
+): Promise<TResponse> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw await parseJsonSafe<ApiErrorResponse>(response);
+  }
+
+  return parseJsonSafe<TResponse>(response);
+}
+
+export async function apiDelete<TResponse>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<TResponse> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      ...options.headers,
+    },
     cache: "no-store",
   });
 

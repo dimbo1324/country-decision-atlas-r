@@ -24,6 +24,9 @@ func EnsureIndexes(ctx context.Context, store *Store) error {
 	if err := ensureDeadLetterIndexes(ctx, store); err != nil {
 		return err
 	}
+	if err := ensureTelegramLinkCodeIndexes(ctx, store); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -66,6 +69,18 @@ func ensureTelegramIdentityIndexes(ctx context.Context, store *Store) error {
 	_, err := store.TelegramIdentities().Indexes().CreateOne(ctx, mongodriver.IndexModel{
 		Keys:    bson.D{{Key: "telegram_user_id", Value: 1}},
 		Options: options.Index().SetUnique(true),
+	})
+	return err
+}
+
+func ensureTelegramLinkCodeIndexes(ctx context.Context, store *Store) error {
+	coll := store.TelegramLinkCodes()
+	_, err := coll.Indexes().CreateMany(ctx, []mongodriver.IndexModel{
+		{Keys: bson.D{{Key: "code_hash", Value: 1}}},
+		{
+			Keys:    bson.D{{Key: "expires_at", Value: 1}},
+			Options: options.Index().SetExpireAfterSeconds(0),
+		},
 	})
 	return err
 }

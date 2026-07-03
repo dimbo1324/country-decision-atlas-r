@@ -2236,7 +2236,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/sources/{source_id}:
     patch:
       tags:
@@ -2244,7 +2244,7 @@ paths:
       summary: Admin Patch Source
       operationId: admin_patch_source_api_v1_admin_sources__source_id__patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: source_id
         in: path
@@ -2309,7 +2309,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/evidence-items/{evidence_item_id}:
     patch:
       tags:
@@ -2317,7 +2317,7 @@ paths:
       summary: Admin Patch Evidence Item
       operationId: admin_patch_evidence_item_api_v1_admin_evidence_items__evidence_item_id__patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: evidence_item_id
         in: path
@@ -2382,7 +2382,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/legal-signals/{signal_id}:
     patch:
       tags:
@@ -2390,7 +2390,7 @@ paths:
       summary: Admin Patch Legal Signal
       operationId: admin_patch_legal_signal_api_v1_admin_legal_signals__signal_id__patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: signal_id
         in: path
@@ -2430,7 +2430,7 @@ paths:
       summary: Admin Patch Country Profile
       operationId: admin_patch_country_profile_api_v1_admin_countries__country_slug__profile_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: country_slug
         in: path
@@ -2495,7 +2495,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/user-stories/{story_id}:
     patch:
       tags:
@@ -2503,7 +2503,7 @@ paths:
       summary: Admin Patch User Story
       operationId: admin_patch_user_story_api_v1_admin_user_stories__story_id__patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: story_id
         in: path
@@ -2568,7 +2568,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContentValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/data-quality/report:
     get:
       tags:
@@ -2589,7 +2589,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/country-onboarding/report:
     get:
       tags:
@@ -2610,7 +2610,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/platform-metrics/recompute:
     post:
       tags:
@@ -2641,7 +2641,7 @@ paths:
         '422':
           description: Unprocessable Entity
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/platform-metrics/recompute/{country_slug}:
     post:
       tags:
@@ -2649,7 +2649,7 @@ paths:
       summary: Admin Recompute Country Platform Metrics
       operationId: admin_recompute_country_platform_metrics_api_v1_admin_platform_metrics_recompute__country_slug__post
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: country_slug
         in: path
@@ -2712,7 +2712,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/trust/recompute/{country_slug}:
     post:
       tags:
@@ -2720,7 +2720,7 @@ paths:
       summary: Admin Recompute Country Trust
       operationId: admin_recompute_country_trust_api_v1_admin_trust_recompute__country_slug__post
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: country_slug
         in: path
@@ -2785,7 +2785,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/country-drift/recompute/{country_slug}:
     post:
       tags:
@@ -2793,7 +2793,7 @@ paths:
       summary: Admin Recompute Country Drift
       operationId: admin_recompute_country_drift_api_v1_admin_country_drift_recompute__country_slug__post
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: country_slug
         in: path
@@ -2833,7 +2833,7 @@ paths:
       summary: List Jobs
       operationId: list_jobs_api_v1_admin_translation_jobs_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -2909,7 +2909,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/translation-jobs/create-stale:
     post:
       tags:
@@ -2936,7 +2936,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/translation-jobs/process-next:
     post:
       tags:
@@ -2963,7 +2963,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/translation-jobs/process-batch:
     post:
       tags:
@@ -2990,7 +2990,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/translation-jobs/retry-failed:
     post:
       tags:
@@ -3017,7 +3017,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/analytics/events:
     post:
       tags:
@@ -3646,7 +3646,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/ai/drafts/detect-contradiction:
     post:
       tags:
@@ -3679,7 +3679,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
   /api/v1/admin/ai/drafts:
     get:
       tags:
@@ -3687,7 +3687,7 @@ paths:
       summary: List Ai Drafts
       operationId: list_ai_drafts_api_v1_admin_ai_drafts_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -3740,7 +3740,7 @@ paths:
       summary: Get Ai Draft
       operationId: get_ai_draft_api_v1_admin_ai_drafts__draft_id__get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: draft_id
         in: path
@@ -3776,7 +3776,7 @@ paths:
       summary: Update Ai Draft Status
       operationId: update_ai_draft_status_api_v1_admin_ai_drafts__draft_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: draft_id
         in: path
@@ -3818,7 +3818,7 @@ paths:
       summary: List Contradiction Candidates
       operationId: list_contradiction_candidates_api_v1_admin_contradiction_candidates_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -3871,7 +3871,7 @@ paths:
       summary: Get Contradiction Candidate
       operationId: get_contradiction_candidate_api_v1_admin_contradiction_candidates__candidate_id__get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: candidate_id
         in: path
@@ -3907,7 +3907,7 @@ paths:
       summary: Update Contradiction Candidate Status
       operationId: update_contradiction_candidate_status_api_v1_admin_contradiction_candidates__candidate_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: candidate_id
         in: path
@@ -4193,7 +4193,7 @@ paths:
       summary: List Questions For Admin
       operationId: list_questions_for_admin_api_v1_admin_community_questions_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -4242,7 +4242,7 @@ paths:
       summary: Update Question Status
       operationId: update_question_status_api_v1_admin_community_questions__question_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: question_id
         in: path
@@ -4284,7 +4284,7 @@ paths:
       summary: List Answers For Admin
       operationId: list_answers_for_admin_api_v1_admin_community_answers_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -4333,7 +4333,7 @@ paths:
       summary: Update Answer Status
       operationId: update_answer_status_api_v1_admin_community_answers__answer_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: answer_id
         in: path
@@ -4375,7 +4375,7 @@ paths:
       summary: List Data Error Reports For Admin
       operationId: list_data_error_reports_for_admin_api_v1_admin_community_data_error_reports_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -4424,7 +4424,7 @@ paths:
       summary: Update Data Error Report Status
       operationId: update_data_error_report_status_api_v1_admin_community_data_error_reports__report_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: report_id
         in: path
@@ -4466,7 +4466,7 @@ paths:
       summary: List User Story Ratings For Admin
       operationId: list_user_story_ratings_for_admin_api_v1_admin_community_user_story_ratings_get
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: status
         in: query
@@ -4515,7 +4515,7 @@ paths:
       summary: Update User Story Rating Status
       operationId: update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch
       security:
-      - AdminTokenAuth: []
+      - BearerAuth: []
       parameters:
       - name: rating_id
         in: path
@@ -4544,6 +4544,517 @@ paths:
           description: Unauthorized
         '404':
           description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/register:
+    post:
+      tags:
+      - auth
+      summary: Register
+      operationId: register_api_v1_auth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/login:
+    post:
+      tags:
+      - auth
+      summary: Login
+      operationId: login_api_v1_auth_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/logout:
+    post:
+      tags:
+      - auth
+      summary: Logout
+      operationId: logout_api_v1_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/auth/me:
+    get:
+      tags:
+      - auth
+      summary: Me
+      operationId: me_api_v1_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/auth/sessions:
+    get:
+      tags:
+      - auth
+      summary: List Sessions
+      operationId: list_sessions_api_v1_auth_sessions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSessionListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/auth/sessions/{session_id}:
+    delete:
+      tags:
+      - auth
+      summary: Revoke Session
+      operationId: revoke_session_api_v1_auth_sessions__session_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/sessions/revoke-all:
+    post:
+      tags:
+      - auth
+      summary: Revoke All Sessions
+      operationId: revoke_all_sessions_api_v1_auth_sessions_revoke_all_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeAllSessionsResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/auth/telegram/link:
+    get:
+      tags:
+      - auth
+      summary: Get Telegram Link Status
+      operationId: get_telegram_link_status_api_v1_auth_telegram_link_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramLinkStatusResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - auth
+      summary: Link Telegram
+      operationId: link_telegram_api_v1_auth_telegram_link_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramLinkRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramLinkResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - auth
+      summary: Unlink Telegram
+      operationId: unlink_telegram_api_v1_auth_telegram_link_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramUnlinkResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/admin/users:
+    get:
+      tags:
+      - admin-users
+      summary: List Users
+      operationId: list_users_api_v1_admin_users_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/users/{user_id}:
+    get:
+      tags:
+      - admin-users
+      summary: Get User
+      operationId: get_user_api_v1_admin_users__user_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/users/{user_id}/role:
+    patch:
+      tags:
+      - admin-users
+      summary: Update User Role
+      operationId: update_user_role_api_v1_admin_users__user_id__role_patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/users/{user_id}/status:
+    patch:
+      tags:
+      - admin-users
+      summary: Update User Status
+      operationId: update_user_status_api_v1_admin_users__user_id__status_patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/users/{user_id}/sessions:
+    get:
+      tags:
+      - admin-users
+      summary: List User Sessions
+      operationId: list_user_sessions_api_v1_admin_users__user_id__sessions_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSessionListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/users/{user_id}/sessions/revoke-all:
+    post:
+      tags:
+      - admin-users
+      summary: Revoke All User Sessions
+      operationId: revoke_all_user_sessions_api_v1_admin_users__user_id__sessions_revoke_all_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeAllSessionsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/watchlist:
+    get:
+      tags:
+      - watchlists
+      summary: Get My Watchlist
+      operationId: get_my_watchlist_api_v1_me_watchlist_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/me/watchlist/countries/{country_slug}:
+    post:
+      tags:
+      - watchlists
+      summary: Add Country To Watchlist
+      operationId: add_country_to_watchlist_api_v1_me_watchlist_countries__country_slug__post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistItem'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - watchlists
+      summary: Remove Country From Watchlist
+      operationId: remove_country_from_watchlist_api_v1_me_watchlist_countries__country_slug__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - watchlists
+      summary: Update Watchlist Preferences
+      operationId: update_watchlist_preferences_api_v1_me_watchlist_countries__country_slug__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistPreferencesUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistItem'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/watchlist-status:
+    get:
+      tags:
+      - watchlists
+      summary: Get Country Watchlist Status
+      operationId: get_country_watchlist_status_api_v1_countries__country_slug__watchlist_status_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistStatusResponse'
         '422':
           description: Validation Error
           content:
@@ -5340,6 +5851,75 @@ components:
       required:
       - item
       title: AdminSourceResponse
+    AdminUser:
+      properties:
+        id:
+          type: string
+          title: Id
+        email:
+          type: string
+          title: Email
+        display_name:
+          type: string
+          title: Display Name
+        role:
+          type: string
+          enum:
+          - user
+          - editor
+          - moderator
+          - admin
+          - owner
+          title: Role
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - deleted
+          title: Status
+        last_login_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Login At
+        last_seen_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Seen At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - email
+      - display_name
+      - role
+      - status
+      - last_login_at
+      - last_seen_at
+      - created_at
+      title: AdminUser
+    AdminUserListResponse:
+      properties:
+        total:
+          type: integer
+          minimum: 0.0
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/AdminUser'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      title: AdminUserListResponse
     AdminUserStoryResponse:
       properties:
         item:
@@ -5537,6 +6117,96 @@ components:
       - changed_at
       - changes
       title: AuditEvent
+    AuthSession:
+      properties:
+        id:
+          type: string
+          title: Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        last_seen_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Seen At
+        revoked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Revoked At
+      type: object
+      required:
+      - id
+      - created_at
+      - expires_at
+      - last_seen_at
+      - revoked_at
+      title: AuthSession
+    AuthTokenResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        user:
+          $ref: '#/components/schemas/AuthUser'
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+      type: object
+      required:
+      - token
+      - user
+      - expires_at
+      title: AuthTokenResponse
+    AuthUser:
+      properties:
+        id:
+          type: string
+          title: Id
+        email:
+          type: string
+          title: Email
+        display_name:
+          type: string
+          title: Display Name
+        role:
+          type: string
+          enum:
+          - user
+          - editor
+          - moderator
+          - admin
+          - owner
+          title: Role
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - deleted
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - email
+      - display_name
+      - role
+      - status
+      - created_at
+      title: AuthUser
     CiiCountryComparisonResponse:
       properties:
         scenario:
@@ -7953,6 +8623,14 @@ components:
       - components
       - methodology_version
       title: CountryTrustResponse
+    CurrentUserResponse:
+      properties:
+        user:
+          $ref: '#/components/schemas/AuthUser'
+      type: object
+      required:
+      - user
+      title: CurrentUserResponse
     DataErrorReport:
       properties:
         id:
@@ -10535,6 +11213,28 @@ components:
       - has_human_review
       - has_stale_fields
       title: LocalizationMeta
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    LogoutResponse:
+      properties:
+        ok:
+          type: boolean
+          title: Ok
+      type: object
+      required:
+      - ok
+      title: LogoutResponse
     MatrixCell:
       properties:
         country_slug:
@@ -11077,6 +11777,50 @@ components:
       - environment
       - database
       title: ReadinessResponse
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+      type: object
+      required:
+      - email
+      - password
+      - display_name
+      title: RegisterRequest
+    RevokeAllSessionsResponse:
+      properties:
+        revoked_count:
+          type: integer
+          minimum: 0.0
+          title: Revoked Count
+      type: object
+      required:
+      - revoked_count
+      title: RevokeAllSessionsResponse
+    RoleUpdateRequest:
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - editor
+          - moderator
+          - admin
+          - owner
+          title: Role
+      type: object
+      required:
+      - role
+      title: RoleUpdateRequest
     RouteChecklistItem:
       properties:
         id:
@@ -12031,6 +12775,64 @@ components:
       - item
       - locale
       title: SourceResponse
+    TelegramLinkRequest:
+      properties:
+        code:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Code
+      type: object
+      required:
+      - code
+      title: TelegramLinkRequest
+    TelegramLinkResponse:
+      properties:
+        linked:
+          type: boolean
+          title: Linked
+        telegram_user_id:
+          type: string
+          title: Telegram User Id
+        linked_at:
+          type: string
+          format: date-time
+          title: Linked At
+      type: object
+      required:
+      - linked
+      - telegram_user_id
+      - linked_at
+      title: TelegramLinkResponse
+    TelegramLinkStatusResponse:
+      properties:
+        linked:
+          type: boolean
+          title: Linked
+        telegram_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Telegram User Id
+        linked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Linked At
+      type: object
+      required:
+      - linked
+      title: TelegramLinkStatusResponse
+    TelegramUnlinkResponse:
+      properties:
+        ok:
+          type: boolean
+          title: Ok
+      type: object
+      required:
+      - ok
+      title: TelegramUnlinkResponse
     TimelineEvidenceRef:
       properties:
         id:
@@ -12807,6 +13609,28 @@ components:
       - countries_stored
       - countries_failed
       title: TrustRecomputeSummary
+    UserSessionListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AuthSession'
+          type: array
+          title: Items
+      type: object
+      title: UserSessionListResponse
+    UserStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - deleted
+          title: Status
+      type: object
+      required:
+      - status
+      title: UserStatusUpdateRequest
     UserStory:
       properties:
         id:
@@ -13515,6 +14339,118 @@ components:
           default: 0
       type: object
       title: VoteSummary
+    WatchlistItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        country_slug:
+          type: string
+          title: Country Slug
+        country_name:
+          type: string
+          title: Country Name
+        status:
+          type: string
+          enum:
+          - active
+          - archived
+          title: Status
+        notify_legal_signals:
+          type: boolean
+          title: Notify Legal Signals
+        notify_drift_changes:
+          type: boolean
+          title: Notify Drift Changes
+        notify_route_updates:
+          type: boolean
+          title: Notify Route Updates
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        created_source:
+          type: string
+          enum:
+          - web
+          - telegram_linked
+          - imported
+          - admin
+          title: Created Source
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - country_slug
+      - country_name
+      - status
+      - notify_legal_signals
+      - notify_drift_changes
+      - notify_route_updates
+      - created_source
+      - created_at
+      - updated_at
+      title: WatchlistItem
+    WatchlistPreferencesUpdateRequest:
+      properties:
+        notify_legal_signals:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Notify Legal Signals
+        notify_drift_changes:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Notify Drift Changes
+        notify_route_updates:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Notify Route Updates
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      title: WatchlistPreferencesUpdateRequest
+    WatchlistResponse:
+      properties:
+        total:
+          type: integer
+          minimum: 0.0
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/WatchlistItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      title: WatchlistResponse
+    WatchlistStatusResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        saved:
+          type: boolean
+          title: Saved
+      type: object
+      required:
+      - country_slug
+      - saved
+      title: WatchlistStatusResponse
     WhatChangedItem:
       properties:
         id:
@@ -13631,7 +14567,6 @@ components:
       type: object
       title: WhatChangedSummary
   securitySchemes:
-    AdminTokenAuth:
-      type: apiKey
-      in: header
-      name: X-Admin-Token
+    BearerAuth:
+      type: http
+      scheme: bearer

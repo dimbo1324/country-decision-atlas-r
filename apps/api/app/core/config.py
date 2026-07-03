@@ -18,7 +18,6 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     default_locale: str = "ru"
     supported_locales: str = "en,ru"
-    admin_token: str | None = None
     api_rate_limit_per_minute: int = 120
     api_rate_limit_max_clients: int = 10000
     trusted_proxy_headers: bool = False
@@ -42,6 +41,11 @@ class Settings(BaseSettings):
     ai_max_context_items: int = 8
     ai_max_context_chars: int = 12000
     ai_log_interactions: bool = True
+    auth_session_ttl_hours: int = 168
+    auth_password_min_length: int = 12
+    auth_registration_enabled: bool = True
+    notifier_internal_auth_token: str | None = None
+    notifier_grpc_addr: str = "localhost:9090"
 
     @property
     def cors_origins(self) -> list[str]:

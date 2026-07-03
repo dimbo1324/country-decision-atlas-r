@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthProvider } from "../shared/auth/AuthProvider";
 import { AppShell } from "../shared/ui/AppShell";
 import "./styles.css";
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <AppShell>{children}</AppShell>
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );

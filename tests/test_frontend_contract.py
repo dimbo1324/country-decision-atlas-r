@@ -5,6 +5,7 @@ from app.api.v1 import (
     legal_signals as legal_signals_route,
     sources as sources_route,
 )
+from app.core.auth import CurrentUser
 from app.core.locales import get_locale
 from app.schemas.common import (
     Pagination,
@@ -32,6 +33,13 @@ from typing import Any, cast
 
 CONNECTION = cast(Connection[Any], object())
 NOW = datetime.now(UTC)
+ADMIN_USER = CurrentUser(
+    id="admin-id",
+    email="admin@example.local",
+    display_name="Admin",
+    role="admin",
+    status="active",
+)
 
 
 def test_countries_list_frontend_contract(monkeypatch: Any) -> None:
@@ -291,7 +299,7 @@ def test_data_quality_report_frontend_contract(monkeypatch: Any) -> None:
         lambda *_: DataQualityReport(valid=True),
     )
 
-    result = admin_route.admin_read_data_quality_report(CONNECTION, "admin")
+    result = admin_route.admin_read_data_quality_report(CONNECTION, ADMIN_USER)
     body = result.model_dump(mode="json")
 
     assert {
@@ -370,4 +378,4 @@ def test_openapi_contains_frontend_critical_contract() -> None:
         assert schema in schemas
 
     report_path = paths["/api/v1/admin/data-quality/report"]["get"]
-    assert report_path["security"] == [{"AdminTokenAuth": []}]
+    assert report_path["security"] == [{"BearerAuth": []}]

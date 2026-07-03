@@ -15,14 +15,21 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func startTestServer(t *testing.T) (pb.SubscriptionServiceClient, *mongostore.InMemorySubscriptionRepository, *mongostore.InMemoryDeliveryLogRepository) {
+func startTestServer(t *testing.T) (
+	pb.SubscriptionServiceClient,
+	*mongostore.InMemorySubscriptionRepository,
+	*mongostore.InMemoryDeliveryLogRepository,
+	*mongostore.InMemoryTelegramIdentityRepository,
+	*mongostore.InMemoryTelegramLinkCodeRepository,
+) {
 	t.Helper()
 	subsRepo := mongostore.NewInMemorySubscriptionRepository(nil)
 	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	linkCodes := mongostore.NewInMemoryTelegramLinkCodeRepository()
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
 
-	srv := New(svc, dl)
+	srv := New(svc, dl, identities, linkCodes)
 
 	lis, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -40,18 +47,18 @@ func startTestServer(t *testing.T) (pb.SubscriptionServiceClient, *mongostore.In
 	}
 	t.Cleanup(func() { _ = conn.Close() })
 
-	return pb.NewSubscriptionServiceClient(conn), subsRepo, dl
+	return pb.NewSubscriptionServiceClient(conn), subsRepo, dl, identities, linkCodes
 }
 
 func TestGRPCServerStarts(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	if client == nil {
 		t.Fatal("expected non-nil client")
 	}
 }
 
 func TestGRPCCreateSubscription(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	resp, err := client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1",
@@ -76,7 +83,7 @@ func TestGRPCCreateSubscription(t *testing.T) {
 }
 
 func TestGRPCCreateSubscriptionReactivates(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	_, _ = client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1", Username: "dima", CountrySlug: "argentina",
@@ -96,7 +103,7 @@ func TestGRPCCreateSubscriptionReactivates(t *testing.T) {
 }
 
 func TestGRPCDeleteSubscription(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	_, _ = client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1", Username: "dima", CountrySlug: "argentina",
@@ -113,7 +120,7 @@ func TestGRPCDeleteSubscription(t *testing.T) {
 }
 
 func TestGRPCDeleteSubscriptionIdempotent(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	resp, err := client.DeleteSubscription(ctx, &pb.DeleteSubscriptionRequest{
 		TelegramUserId: "user1", CountrySlug: "argentina",
@@ -127,7 +134,7 @@ func TestGRPCDeleteSubscriptionIdempotent(t *testing.T) {
 }
 
 func TestGRPCListSubscriptionsActiveOnly(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	_, _ = client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1", Username: "dima", CountrySlug: "argentina",
@@ -149,7 +156,7 @@ func TestGRPCListSubscriptionsActiveOnly(t *testing.T) {
 }
 
 func TestGRPCGetDeliveryStatus(t *testing.T) {
-	client, _, dl := startTestServer(t)
+	client, _, dl, _, _ := startTestServer(t)
 	ctx := context.Background()
 	errStr := "test error"
 	_ = dl.Insert(ctx, &mongostore.DeliveryLogEntry{
@@ -181,7 +188,7 @@ func TestGRPCGetDeliveryStatus(t *testing.T) {
 }
 
 func TestGRPCGetDeliveryStatusFilterByEventKey(t *testing.T) {
-	client, _, dl := startTestServer(t)
+	client, _, dl, _, _ := startTestServer(t)
 	ctx := context.Background()
 	_ = dl.Insert(ctx, &mongostore.DeliveryLogEntry{
 		EventKey: "key-1", TelegramUserID: "user1", CountrySlug: "argentina", Status: "sent", SentAt: time.Now().UTC(),
@@ -204,7 +211,7 @@ func TestGRPCGetDeliveryStatusFilterByEventKey(t *testing.T) {
 }
 
 func TestGRPCGetDeliveryStatusFilterByCountry(t *testing.T) {
-	client, _, dl := startTestServer(t)
+	client, _, dl, _, _ := startTestServer(t)
 	ctx := context.Background()
 	_ = dl.Insert(ctx, &mongostore.DeliveryLogEntry{
 		EventKey: "key-1", TelegramUserID: "user1", CountrySlug: "argentina", Status: "sent", SentAt: time.Now().UTC(),
@@ -227,7 +234,7 @@ func TestGRPCGetDeliveryStatusFilterByCountry(t *testing.T) {
 }
 
 func TestGRPCGetDeliveryStatusAppliesLimit(t *testing.T) {
-	client, _, dl := startTestServer(t)
+	client, _, dl, _, _ := startTestServer(t)
 	ctx := context.Background()
 	for i := 0; i < 5; i++ {
 		_ = dl.Insert(ctx, &mongostore.DeliveryLogEntry{
@@ -248,7 +255,7 @@ func TestGRPCGetDeliveryStatusAppliesLimit(t *testing.T) {
 }
 
 func TestGRPCInvalidCountryRejected(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	resp, err := client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1", Username: "dima", CountrySlug: "germany",
@@ -262,12 +269,168 @@ func TestGRPCInvalidCountryRejected(t *testing.T) {
 }
 
 func TestGRPCWebUserIDRemainsNull(t *testing.T) {
-	client, _, _ := startTestServer(t)
+	client, _, _, _, _ := startTestServer(t)
 	resp, _ := client.CreateSubscription(context.Background(), &pb.CreateSubscriptionRequest{
 		TelegramUserId: "user1", Username: "dima", CountrySlug: "argentina",
 	})
 	if resp.Subscription.WebUserId != "" {
 		t.Errorf("want empty WebUserId got %s", resp.Subscription.WebUserId)
+	}
+}
+
+func TestGRPCConsumeTelegramWebLinkCodeSuccess(t *testing.T) {
+	client, _, _, identities, linkCodes := startTestServer(t)
+	ctx := context.Background()
+	if err := linkCodes.Create(ctx, "telegram-user-1", mongostore.HashLinkCode("123456"), 10*time.Minute); err != nil {
+		t.Fatalf("seed link code: %v", err)
+	}
+
+	resp, err := client.ConsumeTelegramWebLinkCode(ctx, &pb.ConsumeTelegramWebLinkCodeRequest{
+		Code:      "123456",
+		WebUserId: "web-user-1",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !resp.Ok {
+		t.Fatalf("want ok=true got error=%s", resp.Error)
+	}
+	if resp.TelegramUserId != "telegram-user-1" {
+		t.Errorf("want telegram-user-1 got %s", resp.TelegramUserId)
+	}
+
+	linked, webUserID, err := identities.GetLinkStatus(ctx, "telegram-user-1")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !linked {
+		t.Error("want identity linked after consume")
+	}
+	if webUserID != "web-user-1" {
+		t.Errorf("want web-user-1 got %s", webUserID)
+	}
+}
+
+func TestGRPCConsumeTelegramWebLinkCodeInvalidCode(t *testing.T) {
+	client, _, _, _, _ := startTestServer(t)
+	resp, err := client.ConsumeTelegramWebLinkCode(context.Background(), &pb.ConsumeTelegramWebLinkCodeRequest{
+		Code:      "000000",
+		WebUserId: "web-user-1",
+	})
+	if err != nil {
+		t.Fatalf("unexpected transport error: %v", err)
+	}
+	if resp.Ok {
+		t.Fatal("want ok=false for unknown code")
+	}
+	if resp.Error != "invalid_code" {
+		t.Errorf("want invalid_code got %s", resp.Error)
+	}
+}
+
+func TestGRPCConsumeTelegramWebLinkCodeExpired(t *testing.T) {
+	client, _, _, _, linkCodes := startTestServer(t)
+	ctx := context.Background()
+	if err := linkCodes.Create(ctx, "telegram-user-2", mongostore.HashLinkCode("222222"), -1*time.Minute); err != nil {
+		t.Fatalf("seed link code: %v", err)
+	}
+
+	resp, err := client.ConsumeTelegramWebLinkCode(ctx, &pb.ConsumeTelegramWebLinkCodeRequest{
+		Code:      "222222",
+		WebUserId: "web-user-2",
+	})
+	if err != nil {
+		t.Fatalf("unexpected transport error: %v", err)
+	}
+	if resp.Ok {
+		t.Fatal("want ok=false for expired code")
+	}
+	if resp.Error != "expired_code" {
+		t.Errorf("want expired_code got %s", resp.Error)
+	}
+}
+
+func TestGRPCConsumeTelegramWebLinkCodeAlreadyUsed(t *testing.T) {
+	client, _, _, _, linkCodes := startTestServer(t)
+	ctx := context.Background()
+	if err := linkCodes.Create(ctx, "telegram-user-3", mongostore.HashLinkCode("333333"), 10*time.Minute); err != nil {
+		t.Fatalf("seed link code: %v", err)
+	}
+
+	req := &pb.ConsumeTelegramWebLinkCodeRequest{Code: "333333", WebUserId: "web-user-3"}
+	if _, err := client.ConsumeTelegramWebLinkCode(ctx, req); err != nil {
+		t.Fatalf("first consume: %v", err)
+	}
+
+	resp, err := client.ConsumeTelegramWebLinkCode(ctx, req)
+	if err != nil {
+		t.Fatalf("unexpected transport error: %v", err)
+	}
+	if resp.Ok {
+		t.Fatal("want ok=false for already-used code")
+	}
+	if resp.Error != "already_used" {
+		t.Errorf("want already_used got %s", resp.Error)
+	}
+}
+
+func TestGRPCGetTelegramIdentityLinkStatusLinked(t *testing.T) {
+	client, _, _, identities, _ := startTestServer(t)
+	ctx := context.Background()
+	if err := identities.SetWebUserID(ctx, "telegram-user-4", "web-user-4"); err != nil {
+		t.Fatalf("seed identity: %v", err)
+	}
+
+	resp, err := client.GetTelegramIdentityLinkStatus(ctx, &pb.GetTelegramIdentityLinkStatusRequest{
+		TelegramUserId: "telegram-user-4",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !resp.Linked {
+		t.Fatal("want linked=true")
+	}
+	if resp.WebUserId != "web-user-4" {
+		t.Errorf("want web-user-4 got %s", resp.WebUserId)
+	}
+}
+
+func TestGRPCGetTelegramIdentityLinkStatusNotLinked(t *testing.T) {
+	client, _, _, _, _ := startTestServer(t)
+	resp, err := client.GetTelegramIdentityLinkStatus(context.Background(), &pb.GetTelegramIdentityLinkStatusRequest{
+		TelegramUserId: "never-linked",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.Linked {
+		t.Error("want linked=false for unknown telegram user")
+	}
+}
+
+func TestGRPCUnlinkTelegramWebUserClearsWebUserID(t *testing.T) {
+	client, _, _, identities, _ := startTestServer(t)
+	ctx := context.Background()
+	if err := identities.SetWebUserID(ctx, "telegram-user-5", "web-user-5"); err != nil {
+		t.Fatalf("seed identity: %v", err)
+	}
+
+	resp, err := client.UnlinkTelegramWebUser(ctx, &pb.UnlinkTelegramWebUserRequest{
+		TelegramUserId: "telegram-user-5",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !resp.Ok {
+		t.Fatal("want ok=true")
+	}
+
+	linked, _, err := identities.GetLinkStatus(ctx, "telegram-user-5")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if linked {
+		t.Error("want unlinked after UnlinkTelegramWebUser")
 	}
 }
 

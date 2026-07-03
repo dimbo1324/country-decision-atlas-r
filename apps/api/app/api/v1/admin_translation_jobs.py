@@ -1,5 +1,6 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.database import get_connection
+from app.core.rbac import require_editor
 from app.schemas.common import Pagination
 from app.schemas.translation_jobs import (
     TranslationJobBatchResult,
@@ -27,7 +28,7 @@ router = APIRouter(prefix="/admin/translation-jobs", tags=["admin-translation-jo
 @router.get("", response_model=TranslationJobListResponse)
 def list_jobs(
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
     status: Annotated[
         str | None,
         Query(
@@ -52,7 +53,7 @@ def list_jobs(
 def create_missing(
     payload: TranslationJobCreateMissingRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobCreateResponse:
     jobs = svc.discover_missing_jobs(
         connection, payload.target_locale, payload.limit, payload.priority
@@ -67,7 +68,7 @@ def create_missing(
 def create_stale(
     payload: TranslationJobCreateStaleRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobCreateResponse:
     jobs = svc.discover_stale_jobs(
         connection, payload.target_locale, payload.limit, payload.priority
@@ -80,7 +81,7 @@ def create_stale(
 def process_next(
     payload: TranslationJobProcessNextRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobProcessResult:
     provider = get_translation_provider()
     result = svc.process_next_job(
@@ -99,7 +100,7 @@ def process_next(
 def process_batch(
     payload: TranslationJobProcessBatchRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobBatchResult:
     provider = get_translation_provider()
     result = svc.process_batch(
@@ -127,7 +128,7 @@ def process_batch(
 def retry_failed(
     payload: TranslationJobRetryFailedRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobRetryFailedResponse:
     jobs = svc.retry_failed_jobs(connection, payload.target_locale, payload.limit)
     connection.commit()

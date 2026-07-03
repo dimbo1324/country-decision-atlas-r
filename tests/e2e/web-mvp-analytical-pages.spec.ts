@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectHasMainHeading } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-import { API_BASE_URL, ADMIN_TOKEN } from "./helpers/env";
+import { API_BASE_URL } from "./helpers/env";
 
 test.describe("legal signals page", () => {
   test("/legal-signals?country_slug=russia&locale=ru applies filter", async ({
@@ -142,7 +142,7 @@ test.describe("data quality page", () => {
     await expectNoAppCrash(page);
   });
 
-  test("/internal/data-quality shows report or token-required state", async ({
+  test("/internal/data-quality shows unauthenticated or report state", async ({
     page,
   }) => {
     await page.goto(e2eRoutes.dataQuality);
@@ -152,12 +152,16 @@ test.describe("data quality page", () => {
       .locator("[data-testid='data-quality-report']")
       .isVisible()
       .catch(() => false);
-    const hasTokenError = await page
-      .getByText(/ADMIN_TOKEN/i)
+    const hasUnauthenticated = await page
+      .locator("[data-testid='data-quality-unauthenticated']")
+      .isVisible()
+      .catch(() => false);
+    const hasForbidden = await page
+      .locator("[data-testid='data-quality-forbidden']")
       .isVisible()
       .catch(() => false);
 
-    expect(hasReport || hasTokenError).toBe(true);
+    expect(hasReport || hasUnauthenticated || hasForbidden).toBe(true);
     await expectNoAppCrash(page);
   });
 
@@ -168,23 +172,13 @@ test.describe("data quality page", () => {
     expect(body.status).toBe("ok");
   });
 
-  test("data quality report accessible via API", async ({ request }) => {
+  test("data quality report requires bearer auth via API", async ({ request }) => {
     const response = await request.get(
       `${API_BASE_URL}/api/v1/admin/data-quality/report`,
-      {
-        headers: { "X-Admin-Token": ADMIN_TOKEN },
-      },
     );
-    const status = response.status();
+    expect(response.status()).toBe(401);
     const body = await response.json();
-
-    if (status === 500 && body?.error?.code === "admin_token_not_configured") {
-      return;
-    }
-
-    expect(status).toBe(200);
-    expect(body).toHaveProperty("valid");
-    expect(body).toHaveProperty("overall_status");
+    expect(body.error.code).toBe("auth_required");
   });
 });
 

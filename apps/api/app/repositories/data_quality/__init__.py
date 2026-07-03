@@ -29,6 +29,16 @@ from app.repositories.data_quality.ai import (
     list_stale_pending_data_error_reports as list_stale_pending_data_error_reports,
     list_user_story_ratings_with_invalid_scores as list_user_story_ratings_with_invalid_scores,
 )
+from app.repositories.data_quality.auth import (
+    count_active_owners as count_active_owners,
+    list_active_users_missing_password_credential as list_active_users_missing_password_credential,
+    list_expired_sessions_not_revoked as list_expired_sessions_not_revoked,
+    list_password_credentials_with_invalid_hash_format as list_password_credentials_with_invalid_hash_format,
+    list_sessions_with_empty_token_hash as list_sessions_with_empty_token_hash,
+    list_suspended_or_deleted_users_with_active_sessions as list_suspended_or_deleted_users_with_active_sessions,
+    list_users_with_invalid_role as list_users_with_invalid_role,
+    list_users_with_invalid_status as list_users_with_invalid_status,
+)
 from app.repositories.data_quality.cii import (
     list_cii_metric_definitions_without_polarity as list_cii_metric_definitions_without_polarity,
     list_cii_metric_weights_with_invalid_sum as list_cii_metric_weights_with_invalid_sum,
@@ -162,6 +172,13 @@ from app.repositories.data_quality.search_documents import (
     list_search_documents_referencing_non_published_content as list_search_documents_referencing_non_published_content,
     list_search_documents_with_incomplete_locale_coverage as list_search_documents_with_incomplete_locale_coverage,
 )
+from app.repositories.data_quality.telegram_links import (
+    list_duplicate_active_telegram_links as list_duplicate_active_telegram_links,
+    list_linked_telegram_links_missing_linked_at as list_linked_telegram_links_missing_linked_at,
+    list_telegram_links_referencing_missing_users as list_telegram_links_referencing_missing_users,
+    list_telegram_links_with_invalid_status as list_telegram_links_with_invalid_status,
+    list_unlinked_telegram_links_missing_unlinked_at as list_unlinked_telegram_links_missing_unlinked_at,
+)
 from app.repositories.data_quality.trust import (
     list_active_countries_missing_trust_scores as list_active_countries_missing_trust_scores,
     list_inconsistent_trust_insufficient_data as list_inconsistent_trust_insufficient_data,
@@ -169,6 +186,14 @@ from app.repositories.data_quality.trust import (
     list_missing_required_glossary_terms as list_missing_required_glossary_terms,
     list_missing_required_methodology_sections as list_missing_required_methodology_sections,
     list_stale_trust_scores as list_stale_trust_scores,
+)
+from app.repositories.data_quality.watchlists import (
+    list_archived_watchlists_missing_archived_at as list_archived_watchlists_missing_archived_at,
+    list_duplicate_active_watchlist_entries as list_duplicate_active_watchlist_entries,
+    list_watchlists_referencing_missing_countries as list_watchlists_referencing_missing_countries,
+    list_watchlists_referencing_missing_users as list_watchlists_referencing_missing_users,
+    list_watchlists_with_invalid_status as list_watchlists_with_invalid_status,
+    list_watchlists_with_null_notification_flags as list_watchlists_with_null_notification_flags,
 )
 from app.repositories.data_quality.what_changed import (
     list_domain_events_referencing_non_published_content as list_domain_events_referencing_non_published_content,

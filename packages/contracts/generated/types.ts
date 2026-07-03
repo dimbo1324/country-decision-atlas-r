@@ -1758,6 +1758,299 @@ export interface paths {
         patch: operations["update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch"];
         trace?: never;
     };
+    "/api/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register */
+        post: operations["register_api_v1_auth_register_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["login_api_v1_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout */
+        post: operations["logout_api_v1_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Me */
+        get: operations["me_api_v1_auth_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Sessions */
+        get: operations["list_sessions_api_v1_auth_sessions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Session */
+        delete: operations["revoke_session_api_v1_auth_sessions__session_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/sessions/revoke-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke All Sessions */
+        post: operations["revoke_all_sessions_api_v1_auth_sessions_revoke_all_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/telegram/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Telegram Link Status */
+        get: operations["get_telegram_link_status_api_v1_auth_telegram_link_get"];
+        put?: never;
+        /** Link Telegram */
+        post: operations["link_telegram_api_v1_auth_telegram_link_post"];
+        /** Unlink Telegram */
+        delete: operations["unlink_telegram_api_v1_auth_telegram_link_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Users */
+        get: operations["list_users_api_v1_admin_users_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get User */
+        get: operations["get_user_api_v1_admin_users__user_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update User Role */
+        patch: operations["update_user_role_api_v1_admin_users__user_id__role_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update User Status */
+        patch: operations["update_user_status_api_v1_admin_users__user_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List User Sessions */
+        get: operations["list_user_sessions_api_v1_admin_users__user_id__sessions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/sessions/revoke-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke All User Sessions */
+        post: operations["revoke_all_user_sessions_api_v1_admin_users__user_id__sessions_revoke_all_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/watchlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Watchlist */
+        get: operations["get_my_watchlist_api_v1_me_watchlist_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/watchlist/countries/{country_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Country To Watchlist */
+        post: operations["add_country_to_watchlist_api_v1_me_watchlist_countries__country_slug__post"];
+        /** Remove Country From Watchlist */
+        delete: operations["remove_country_from_watchlist_api_v1_me_watchlist_countries__country_slug__delete"];
+        options?: never;
+        head?: never;
+        /** Update Watchlist Preferences */
+        patch: operations["update_watchlist_preferences_api_v1_me_watchlist_countries__country_slug__patch"];
+        trace?: never;
+    };
+    "/api/v1/countries/{country_slug}/watchlist-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Country Watchlist Status */
+        get: operations["get_country_watchlist_status_api_v1_countries__country_slug__watchlist_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -2180,6 +2473,41 @@ export interface components {
             };
             audit?: components["schemas"]["AuditEvent"] | null;
         };
+        /** AdminUser */
+        AdminUser: {
+            /** Id */
+            id: string;
+            /** Email */
+            email: string;
+            /** Display Name */
+            display_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "editor" | "moderator" | "admin" | "owner";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended" | "deleted";
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Last Seen At */
+            last_seen_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** AdminUserListResponse */
+        AdminUserListResponse: {
+            /** Total */
+            total: number;
+            /** Items */
+            items?: components["schemas"]["AdminUser"][];
+        };
         /** AdminUserStoryResponse */
         AdminUserStoryResponse: {
             /** Item */
@@ -2280,6 +2608,60 @@ export interface components {
             changes: {
                 [key: string]: unknown;
             };
+        };
+        /** AuthSession */
+        AuthSession: {
+            /** Id */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Last Seen At */
+            last_seen_at: string | null;
+            /** Revoked At */
+            revoked_at: string | null;
+        };
+        /** AuthTokenResponse */
+        AuthTokenResponse: {
+            /** Token */
+            token: string;
+            user: components["schemas"]["AuthUser"];
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+        };
+        /** AuthUser */
+        AuthUser: {
+            /** Id */
+            id: string;
+            /** Email */
+            email: string;
+            /** Display Name */
+            display_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "editor" | "moderator" | "admin" | "owner";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended" | "deleted";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** CiiCountryComparisonResponse */
         CiiCountryComparisonResponse: {
@@ -3493,6 +3875,10 @@ export interface components {
              * @default This is a data quality indicator, not a recommendation. Not legal advice.
              */
             disclaimer: string;
+        };
+        /** CurrentUserResponse */
+        CurrentUserResponse: {
+            user: components["schemas"]["AuthUser"];
         };
         /** DataErrorReport */
         DataErrorReport: {
@@ -4818,6 +5204,18 @@ export interface components {
             /** Fields */
             fields?: components["schemas"]["TranslationFieldMeta"][];
         };
+        /** LoginRequest */
+        LoginRequest: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** LogoutResponse */
+        LogoutResponse: {
+            /** Ok */
+            ok: boolean;
+        };
         /** MatrixCell */
         MatrixCell: {
             /** Country Slug */
@@ -5095,6 +5493,28 @@ export interface components {
              * @constant
              */
             database: "ok";
+        };
+        /** RegisterRequest */
+        RegisterRequest: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+            /** Display Name */
+            display_name: string;
+        };
+        /** RevokeAllSessionsResponse */
+        RevokeAllSessionsResponse: {
+            /** Revoked Count */
+            revoked_count: number;
+        };
+        /** RoleUpdateRequest */
+        RoleUpdateRequest: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "editor" | "moderator" | "admin" | "owner";
         };
         /** RouteChecklistItem */
         RouteChecklistItem: {
@@ -5569,6 +5989,37 @@ export interface components {
             item: components["schemas"]["Source"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** TelegramLinkRequest */
+        TelegramLinkRequest: {
+            /** Code */
+            code: string;
+        };
+        /** TelegramLinkResponse */
+        TelegramLinkResponse: {
+            /** Linked */
+            linked: boolean;
+            /** Telegram User Id */
+            telegram_user_id: string;
+            /**
+             * Linked At
+             * Format: date-time
+             */
+            linked_at: string;
+        };
+        /** TelegramLinkStatusResponse */
+        TelegramLinkStatusResponse: {
+            /** Linked */
+            linked: boolean;
+            /** Telegram User Id */
+            telegram_user_id?: string | null;
+            /** Linked At */
+            linked_at?: string | null;
+        };
+        /** TelegramUnlinkResponse */
+        TelegramUnlinkResponse: {
+            /** Ok */
+            ok: boolean;
+        };
         /** TimelineEvidenceRef */
         TimelineEvidenceRef: {
             /**
@@ -6014,6 +6465,19 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        /** UserSessionListResponse */
+        UserSessionListResponse: {
+            /** Items */
+            items?: components["schemas"]["AuthSession"][];
+        };
+        /** UserStatusUpdateRequest */
+        UserStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended" | "deleted";
+        };
         /** UserStory */
         UserStory: {
             /**
@@ -6327,6 +6791,68 @@ export interface components {
              * @default 0
              */
             outdated_votes: number;
+        };
+        /** WatchlistItem */
+        WatchlistItem: {
+            /** Id */
+            id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Country Name */
+            country_name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "archived";
+            /** Notify Legal Signals */
+            notify_legal_signals: boolean;
+            /** Notify Drift Changes */
+            notify_drift_changes: boolean;
+            /** Notify Route Updates */
+            notify_route_updates: boolean;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Created Source
+             * @enum {string}
+             */
+            created_source: "web" | "telegram_linked" | "imported" | "admin";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** WatchlistPreferencesUpdateRequest */
+        WatchlistPreferencesUpdateRequest: {
+            /** Notify Legal Signals */
+            notify_legal_signals?: boolean | null;
+            /** Notify Drift Changes */
+            notify_drift_changes?: boolean | null;
+            /** Notify Route Updates */
+            notify_route_updates?: boolean | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** WatchlistResponse */
+        WatchlistResponse: {
+            /** Total */
+            total: number;
+            /** Items */
+            items?: components["schemas"]["WatchlistItem"][];
+        };
+        /** WatchlistStatusResponse */
+        WatchlistStatusResponse: {
+            /** Country Slug */
+            country_slug: string;
+            /** Saved */
+            saved: boolean;
         };
         /** WhatChangedItem */
         WhatChangedItem: {
@@ -10422,6 +10948,597 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_api_v1_auth_register_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_v1_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LogoutResponse"];
+                };
+            };
+        };
+    };
+    me_api_v1_auth_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+        };
+    };
+    list_sessions_api_v1_auth_sessions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserSessionListResponse"];
+                };
+            };
+        };
+    };
+    revoke_session_api_v1_auth_sessions__session_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LogoutResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_all_sessions_api_v1_auth_sessions_revoke_all_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevokeAllSessionsResponse"];
+                };
+            };
+        };
+    };
+    get_telegram_link_status_api_v1_auth_telegram_link_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TelegramLinkStatusResponse"];
+                };
+            };
+        };
+    };
+    link_telegram_api_v1_auth_telegram_link_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TelegramLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TelegramLinkResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unlink_telegram_api_v1_auth_telegram_link_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TelegramUnlinkResponse"];
+                };
+            };
+        };
+    };
+    list_users_api_v1_admin_users_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_api_v1_admin_users__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUser"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_user_role_api_v1_admin_users__user_id__role_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUser"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_user_status_api_v1_admin_users__user_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUser"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_user_sessions_api_v1_admin_users__user_id__sessions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserSessionListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_all_user_sessions_api_v1_admin_users__user_id__sessions_revoke_all_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevokeAllSessionsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_watchlist_api_v1_me_watchlist_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatchlistResponse"];
+                };
+            };
+        };
+    };
+    add_country_to_watchlist_api_v1_me_watchlist_countries__country_slug__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatchlistItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_country_from_watchlist_api_v1_me_watchlist_countries__country_slug__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_watchlist_preferences_api_v1_me_watchlist_countries__country_slug__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatchlistPreferencesUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatchlistItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_country_watchlist_status_api_v1_countries__country_slug__watchlist_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatchlistStatusResponse"];
+                };
             };
             /** @description Validation Error */
             422: {

@@ -1,6 +1,7 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.database import get_connection
 from app.core.errors import api_error
+from app.core.rbac import require_admin
 from app.repositories import trust as trust_repo
 from app.schemas.common import ErrorResponse
 from app.schemas.trust import (
@@ -88,7 +89,7 @@ def get_country_trust(
 def admin_recompute_all_trust(
     payload: TrustRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> TrustRecomputeSummary:
     result = compute_and_store_trust_for_all_countries(
         connection, dry_run=payload.dry_run
@@ -107,7 +108,7 @@ def admin_recompute_country_trust(
     country_slug: str,
     payload: TrustRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> TrustRecomputeCountryResult:
     result = compute_and_store_trust_for_country(
         connection, country_slug, dry_run=payload.dry_run

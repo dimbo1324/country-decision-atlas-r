@@ -1,4 +1,5 @@
 from app.api.v1 import platform_metrics as pm_api
+from app.core.auth import CurrentUser
 from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo
 from app.schemas.platform_metrics import (
     PlatformMetricsRecomputeResult,
@@ -16,6 +17,14 @@ import yaml
 
 
 CONNECTION = cast(Connection[Any], object())
+
+ADMIN_USER = CurrentUser(
+    id="admin-id",
+    email="admin@example.local",
+    display_name="Admin",
+    role="admin",
+    status="active",
+)
 
 COUNTRY_ROW = {"id": "country-1", "slug": "russia"}
 
@@ -316,7 +325,7 @@ def test_admin_recompute_all_writes_metrics(monkeypatch: pytest.MonkeyPatch) -> 
 
     conn = MagicMock()
     result = pm_api.admin_recompute_all_platform_metrics(
-        PlatformMetricsRecomputeRequest(), conn, "admin"
+        PlatformMetricsRecomputeRequest(), conn, ADMIN_USER
     )
     assert result.metrics_written == 21
 
@@ -343,7 +352,7 @@ def test_admin_recompute_dry_run_writes_nothing(
 
     conn = MagicMock()
     result = pm_api.admin_recompute_all_platform_metrics(
-        PlatformMetricsRecomputeRequest(dry_run=True), conn, "admin"
+        PlatformMetricsRecomputeRequest(dry_run=True), conn, ADMIN_USER
     )
     assert result.dry_run is True
     assert result.metrics_written == 0
@@ -368,7 +377,7 @@ def test_admin_recompute_one_country_works(monkeypatch: pytest.MonkeyPatch) -> N
 
     conn = MagicMock()
     result = pm_api.admin_recompute_country_platform_metrics(
-        "russia", PlatformMetricsRecomputeRequest(), conn, "admin"
+        "russia", PlatformMetricsRecomputeRequest(), conn, ADMIN_USER
     )
     assert result.metrics_written == 7
 
@@ -383,7 +392,7 @@ def test_admin_recompute_feature_disabled_raises(
     conn = MagicMock()
     with pytest.raises(HTTPException) as exc_info:
         pm_api.admin_recompute_all_platform_metrics(
-            PlatformMetricsRecomputeRequest(), conn, "admin"
+            PlatformMetricsRecomputeRequest(), conn, ADMIN_USER
         )
     assert exc_info.value.status_code == 403
 

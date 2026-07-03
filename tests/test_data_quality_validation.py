@@ -1,4 +1,5 @@
 from app.api.v1 import admin as admin_route
+from app.core.auth import CurrentUser
 from app.repositories import (
     data_quality as data_quality_repository,
     route_checklists as route_checklists_repository,
@@ -14,6 +15,13 @@ from typing import Any, cast
 
 
 CONNECTION = cast(Connection[Any], object())
+ADMIN_USER = CurrentUser(
+    id="admin-id",
+    email="admin@example.local",
+    display_name="Admin",
+    role="admin",
+    status="active",
+)
 MIGRATION_SQL = Path(
     "database/migrations/008_data_quality_validation_v1.sql"
 ).read_text(encoding="utf-8")
@@ -165,8 +173,27 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_stale_pending_data_error_reports",
         "list_published_user_story_ratings_without_moderation",
         "list_user_story_ratings_with_invalid_scores",
+        "list_users_with_invalid_role",
+        "list_users_with_invalid_status",
+        "list_active_users_missing_password_credential",
+        "list_password_credentials_with_invalid_hash_format",
+        "list_suspended_or_deleted_users_with_active_sessions",
+        "list_expired_sessions_not_revoked",
+        "list_sessions_with_empty_token_hash",
+        "list_telegram_links_with_invalid_status",
+        "list_linked_telegram_links_missing_linked_at",
+        "list_unlinked_telegram_links_missing_unlinked_at",
+        "list_telegram_links_referencing_missing_users",
+        "list_duplicate_active_telegram_links",
+        "list_watchlists_referencing_missing_users",
+        "list_watchlists_referencing_missing_countries",
+        "list_watchlists_with_invalid_status",
+        "list_duplicate_active_watchlist_entries",
+        "list_archived_watchlists_missing_archived_at",
+        "list_watchlists_with_null_notification_flags",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
+    monkeypatch.setattr(data_quality_repository, "count_active_owners", lambda *_: 1)
     for name in [
         "list_published_checklist_items_without_traceability",
         "list_orphan_checklist_items",
@@ -437,7 +464,7 @@ def test_admin_data_quality_report_route(monkeypatch: Any) -> None:
         lambda *_: DataQualityReport(valid=True),
     )
 
-    result = admin_route.admin_read_data_quality_report(CONNECTION, "admin")
+    result = admin_route.admin_read_data_quality_report(CONNECTION, ADMIN_USER)
 
     assert result.valid is True
     assert result.issues == []

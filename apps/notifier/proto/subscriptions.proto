@@ -9,6 +9,9 @@ service SubscriptionService {
   rpc DeleteSubscription(DeleteSubscriptionRequest) returns (SubscriptionResponse);
   rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
   rpc GetDeliveryStatus(GetDeliveryStatusRequest) returns (GetDeliveryStatusResponse);
+  rpc ConsumeTelegramWebLinkCode(ConsumeTelegramWebLinkCodeRequest) returns (ConsumeTelegramWebLinkCodeResponse);
+  rpc GetTelegramIdentityLinkStatus(GetTelegramIdentityLinkStatusRequest) returns (GetTelegramIdentityLinkStatusResponse);
+  rpc UnlinkTelegramWebUser(UnlinkTelegramWebUserRequest) returns (UnlinkTelegramWebUserResponse);
 }
 
 message Subscription {
@@ -60,4 +63,32 @@ message ListSubscriptionsResponse {
 
 message GetDeliveryStatusResponse {
   repeated DeliveryStatus entries = 1;
+}
+
+message ConsumeTelegramWebLinkCodeRequest {
+  string code = 1;
+  string web_user_id = 2;
+}
+
+message ConsumeTelegramWebLinkCodeResponse {
+  bool ok = 1;
+  string telegram_user_id = 2;
+  string error = 3;
+}
+
+message GetTelegramIdentityLinkStatusRequest {
+  string telegram_user_id = 1;
+}
+
+message GetTelegramIdentityLinkStatusResponse {
+  bool linked = 1;
+  string web_user_id = 2;
+}
+
+message UnlinkTelegramWebUserRequest {
+  string telegram_user_id = 1;
+}
+
+message UnlinkTelegramWebUserResponse {
+  bool ok = 1;
 }

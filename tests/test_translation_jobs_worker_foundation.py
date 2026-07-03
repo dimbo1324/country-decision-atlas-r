@@ -1,5 +1,3 @@
-import os
-import pytest
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -363,22 +361,6 @@ class TestOriginalNotOverwritten:
 
 
 class TestAdminTokenRequirement:
-    def test_require_admin_token_rejects_missing(self) -> None:
-        from app.core.admin_auth import require_admin_token
-        from app.core.config import get_settings
-        from fastapi import HTTPException
-
-        get_settings.cache_clear()
-        os.environ["ADMIN_TOKEN"] = "test-token"
-        get_settings.cache_clear()
-        try:
-            with pytest.raises(HTTPException) as exc:
-                require_admin_token(None)
-            assert exc.value.status_code == 401
-        finally:
-            os.environ.pop("ADMIN_TOKEN", None)
-            get_settings.cache_clear()
-
     def test_admin_translation_jobs_route_requires_token(self) -> None:
         from app.api.v1.admin_translation_jobs import list_jobs
         import inspect

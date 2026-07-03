@@ -1,5 +1,5 @@
 from app.api.v1.admin_ai import router
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser, get_current_active_user
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
 from app.repositories import contradiction_candidates as repository
@@ -16,6 +16,14 @@ from unittest.mock import MagicMock
 
 CONNECTION = MagicMock()
 
+EDITOR_USER = CurrentUser(
+    id="editor-id",
+    email="editor@example.local",
+    display_name="Editor",
+    role="editor",
+    status="active",
+)
+
 
 def _client(*, with_admin: bool = True) -> TestClient:
     app = FastAPI()
@@ -23,7 +31,7 @@ def _client(*, with_admin: bool = True) -> TestClient:
     app.dependency_overrides[get_connection] = lambda: CONNECTION
     app.dependency_overrides[get_settings] = lambda: Settings(app_env="local")
     if with_admin:
-        app.dependency_overrides[require_admin_token] = lambda: "admin"
+        app.dependency_overrides[get_current_active_user] = lambda: EDITOR_USER
     return TestClient(app)
 
 
@@ -175,9 +183,7 @@ def test_update_contradiction_candidate_status_requires_explicit_call(
     assert row["status"] == "confirmed"
 
 
-def test_admin_endpoints_require_admin_auth(monkeypatch: pytest.MonkeyPatch) -> None:
-    get_settings.cache_clear()
-    monkeypatch.setenv("ADMIN_TOKEN", "valid-token")
+def test_admin_endpoints_require_admin_auth() -> None:
     client = _client(with_admin=False)
 
     response = client.post(
@@ -186,7 +192,6 @@ def test_admin_endpoints_require_admin_auth(monkeypatch: pytest.MonkeyPatch) -> 
     )
 
     assert response.status_code == 401
-    get_settings.cache_clear()
 
 
 def test_admin_list_contradiction_candidates(monkeypatch: pytest.MonkeyPatch) -> None:

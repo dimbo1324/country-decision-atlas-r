@@ -1,6 +1,7 @@
-from app.core.admin_auth import require_admin_token
+from app.core.auth import CurrentUser
 from app.core.database import get_connection
 from app.core.errors import api_error
+from app.core.rbac import require_admin
 from app.repositories import country_drift as country_drift_repo
 from app.schemas.common import ErrorResponse
 from app.schemas.country_drift import (
@@ -109,7 +110,7 @@ def get_country_drift(
 def admin_recompute_all_country_drift(
     payload: CountryDriftRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> CountryDriftBatchRecomputeResult:
     result = compute_and_store_all_country_drifts(
         connection, dry_run=payload.dry_run, emit_events=payload.emit_events
@@ -134,7 +135,7 @@ def admin_recompute_country_drift(
     country_slug: str,
     payload: CountryDriftRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[str, Depends(require_admin_token)],
+    _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> CountryDriftRecomputeResult:
     result = compute_and_store_country_drift(
         connection,
