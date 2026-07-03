@@ -54,7 +54,7 @@ def generate_summary_draft(
         detected_issue=None,
         provider=settings.ai_provider,
         model_name=settings.ai_model,
-        model_version="v1",
+        model_version=settings.ai_model_version,
         input_context={"topic": topic, "locale": locale},
         citations=citations,
         confidence="medium" if len(citations) > 1 else "low",

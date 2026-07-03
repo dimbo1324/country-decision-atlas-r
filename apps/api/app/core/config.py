@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     ai_mode: Literal["fake", "real", "off"] = "fake"
     ai_provider: str = "fake"
     ai_model: str = "fake-grounded-v1"
+    ai_model_version: str = "v1"
     ai_max_context_items: int = 8
     ai_max_context_chars: int = 12000
     ai_log_interactions: bool = True

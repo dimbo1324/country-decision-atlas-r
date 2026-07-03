@@ -2166,6 +2166,87 @@ ol {
   color: #1f1f1f;
 }
 
+.communityBlock {
+  display: grid;
+  gap: 12px;
+}
+
+.communityGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+}
+
+.communityPanel {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid currentColor;
+}
+
+.communityPanel h4,
+.communityQuestion h5 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.communityQuestionList,
+.communityAnswerList,
+.communityForm,
+.communityInlineForm {
+  display: grid;
+  gap: 8px;
+}
+
+.communityQuestion,
+.communityAnswer {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid currentColor;
+}
+
+.communityQuestionHeader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.communityForm label {
+  display: grid;
+  gap: 4px;
+}
+
+.communityForm textarea,
+.communityInlineForm textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.communityForm button,
+.communityInlineForm button,
+.communityActions button {
+  width: fit-content;
+  padding: 5px 10px;
+  border: 1px solid currentColor;
+  background: none;
+  cursor: pointer;
+}
+
+.communityForm button:disabled,
+.communityInlineForm button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.communityActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .timelineEventMeta,
 .timelineEventEvidence {
   display: flex;
@@ -2767,6 +2848,7 @@ ol {
   .homeCountryCards,
   .homeOverviewGrid,
   .homeQuickLinks,
+  .communityGrid,
   .routeDetailGrid,
   .routeFilters {
     grid-template-columns: 1fr;

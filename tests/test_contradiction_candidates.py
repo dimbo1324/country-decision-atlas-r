@@ -145,7 +145,7 @@ def test_detect_contradiction_candidate_creates_needs_review_with_event(
 
     row = service.detect_contradiction_candidate(
         CONNECTION,
-        Settings(app_env="local"),
+        Settings(app_env="local", ai_model_version="test-v2"),
         country_slug="uruguay",
         topic="tax",
         entity_type=None,
@@ -154,6 +154,7 @@ def test_detect_contradiction_candidate_creates_needs_review_with_event(
     )
 
     assert row["status"] == "needs_review"
+    assert row["model_version"] == "test-v2"
     assert events["event_type"] == "contradiction_candidate.created"
     assert events["notifiable"] is False
 

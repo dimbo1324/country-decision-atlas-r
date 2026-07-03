@@ -210,3 +210,31 @@ def test_submit_vote_returns_consensus_summary(
 
     assert summary.answer_id == "a1"
     assert summary.source_backed is True
+
+
+def test_public_answers_include_source_backed_consensus(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    answer = {
+        "id": "a1",
+        "source_ids": ["source-1"],
+        "evidence_item_ids": [],
+        "created_at": None,
+    }
+    monkeypatch.setattr(repository, "get_question", lambda *_a, **_kw: _question_row())
+    monkeypatch.setattr(repository, "list_published_answers", lambda *_a: [answer])
+    monkeypatch.setattr(
+        repository,
+        "get_vote_summary",
+        lambda *_a, **_kw: {
+            "up_votes": 2,
+            "down_votes": 0,
+            "helpful_votes": 1,
+            "outdated_votes": 0,
+        },
+    )
+
+    rows = service.list_public_answers(CONNECTION, "q1")
+
+    assert rows[0]["source_backed"] is True
+    assert rows[0]["consensus"].answer_id == "a1"

@@ -118,6 +118,42 @@ def _append_ai_foundation_checks(
             ["ai_draft_status_invalid"],
         )
     )
+    for row in repository.list_ai_drafts_with_invalid_draft_type(connection):
+        issues.append(
+            _issue(
+                "ai_draft_type_invalid",
+                "critical",
+                "ai_draft",
+                row.get("id"),
+                "AI draft has a type outside the approved draft taxonomy.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "ai_draft_types_are_valid",
+            issues,
+            ["ai_draft_type_invalid"],
+        )
+    )
+    for row in repository.list_approved_ai_drafts_without_review(connection):
+        issues.append(
+            _issue(
+                "approved_ai_draft_review_metadata_missing",
+                "critical",
+                "ai_draft",
+                row.get("id"),
+                "Approved AI draft must include explicit review metadata.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "approved_ai_drafts_have_review_metadata",
+            issues,
+            ["approved_ai_draft_review_metadata_missing"],
+        )
+    )
     for row in repository.list_contradiction_candidates_without_traceability(
         connection
     ):
@@ -195,6 +231,24 @@ def _append_ai_foundation_checks(
             published_community_moderation_issue_codes,
         )
     )
+    for row in repository.list_published_qna_questions_without_content(connection):
+        issues.append(
+            _issue(
+                "published_qna_question_content_missing",
+                "critical",
+                "qna_question",
+                row.get("id"),
+                "Published Q&A question must have title and body text.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "published_qna_questions_have_content",
+            issues,
+            ["published_qna_question_content_missing"],
+        )
+    )
     for row in repository.list_published_qna_answers_without_body(connection):
         issues.append(
             _issue(
@@ -213,6 +267,62 @@ def _append_ai_foundation_checks(
             ["published_qna_answer_body_missing"],
         )
     )
+    for row in repository.list_published_qna_answers_with_invalid_traceability_refs(
+        connection
+    ):
+        issues.append(
+            _issue(
+                "published_qna_answer_traceability_refs_invalid",
+                "critical",
+                "qna_answer",
+                row.get("id"),
+                "Published Q&A answer traceability refs must be arrays.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "published_qna_answer_traceability_refs_are_valid",
+            issues,
+            ["published_qna_answer_traceability_refs_invalid"],
+        )
+    )
+    for row in repository.list_qna_votes_with_invalid_type(connection):
+        issues.append(
+            _issue(
+                "qna_vote_type_invalid",
+                "critical",
+                "qna_vote",
+                row.get("id"),
+                "Q&A vote type must stay within the approved taxonomy.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "qna_vote_types_are_valid",
+            issues,
+            ["qna_vote_type_invalid"],
+        )
+    )
+    for row in repository.list_duplicate_qna_votes(connection):
+        issues.append(
+            _issue(
+                "qna_vote_duplicate",
+                "critical",
+                "qna_vote",
+                row.get("answer_id"),
+                "Q&A answer has duplicate votes for the same identity and vote type.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "qna_votes_are_unique_per_identity",
+            issues,
+            ["qna_vote_duplicate"],
+        )
+    )
     for row in repository.list_stale_pending_data_error_reports(connection):
         issues.append(
             _issue(
@@ -229,6 +339,26 @@ def _append_ai_foundation_checks(
             "pending_data_error_reports_are_reviewed_timely",
             issues,
             ["data_error_report_pending_stale"],
+        )
+    )
+    for row in repository.list_published_user_story_ratings_without_moderation(
+        connection
+    ):
+        issues.append(
+            _issue(
+                "published_user_story_rating_moderation_missing",
+                "critical",
+                "user_story_rating",
+                row.get("id"),
+                "Published user story rating must include review metadata.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "published_user_story_ratings_are_moderated",
+            issues,
+            ["published_user_story_rating_moderation_missing"],
         )
     )
     for row in repository.list_user_story_ratings_with_invalid_scores(connection):

@@ -657,6 +657,38 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
     if name == "community-question-create":
         ok = isinstance(data, dict) and data.get("status") == "pending"
         return ok, f"status={data.get('status') if isinstance(data, dict) else None}"
+    if name == "ai-ask":
+        ok = (
+            isinstance(data, dict)
+            and "disclaimer" in data
+            and "provider_meta" in data
+            and "citations" in data
+            and "refused" in data
+        )
+        refused = data.get("refused") if isinstance(data, dict) else None
+        citations = len(data.get("citations", [])) if isinstance(data, dict) else 0
+        return ok, f"refused={refused} citations={citations}"
+    if name == "ai-explain-number":
+        ok = (
+            isinstance(data, dict)
+            and "what_it_means" in data
+            and "what_it_does_not_mean" in data
+            and "disclaimer" in data
+        )
+        refused = data.get("refused") if isinstance(data, dict) else None
+        return ok, f"refused={refused}"
+    if name == "ai-decision-intent":
+        ok = (
+            isinstance(data, dict)
+            and "result" in data
+            and "disclaimer" in data
+            and "provider_meta" in data
+        )
+        confidence = data.get("confidence") if isinstance(data, dict) else None
+        return ok, f"confidence={confidence}"
+    if name in {"community-data-error-report-create", "community-rating-create"}:
+        ok = isinstance(data, dict) and data.get("status") == "pending"
+        return ok, f"status={data.get('status') if isinstance(data, dict) else None}"
     return True, "no validator"
 
 
@@ -1923,6 +1955,39 @@ class FullCheck:
         admin_headers = {"X-Admin-Token": self.admin_token}
         episode_smoke_checks: list[dict[str, Any]] = [
             {
+                "name": "ai-ask",
+                "url": "http://localhost:8000/api/v1/ai/ask",
+                "method": "POST",
+                "expected_status": 200,
+                "data": {
+                    "question": "What published context exists for Uruguay residence?",
+                    "locale": "en",
+                    "country_slug": "uruguay",
+                },
+            },
+            {
+                "name": "ai-explain-number",
+                "url": "http://localhost:8000/api/v1/ai/explain-number",
+                "method": "POST",
+                "expected_status": 200,
+                "data": {
+                    "number_type": "cii_score",
+                    "country_slug": "uruguay",
+                    "value": 70,
+                    "locale": "en",
+                },
+            },
+            {
+                "name": "ai-decision-intent",
+                "url": "http://localhost:8000/api/v1/ai/decision-intent",
+                "method": "POST",
+                "expected_status": 200,
+                "data": {
+                    "text": "I am moving from Russia with family and care about safety.",
+                    "locale": "en",
+                },
+            },
+            {
                 "name": "admin-data-quality",
                 "url": "http://localhost:8000/api/v1/admin/data-quality/report",
                 "headers": admin_headers,
@@ -1955,6 +2020,38 @@ class FullCheck:
                     "topic": "runtime_smoke",
                     "title": f"Runtime smoke {self.run_timestamp}",
                     "body": "Runtime smoke question created by full-check.py.",
+                    "created_by_identity_type": "anonymous_session",
+                    "created_by_identity_id": f"full-check-{self.run_timestamp}",
+                },
+            },
+            {
+                "name": "community-data-error-report-create",
+                "url": "http://localhost:8000/api/v1/community/data-error-reports",
+                "method": "POST",
+                "expected_status": 201,
+                "data": {
+                    "entity_type": "country",
+                    "country_slug": "uruguay",
+                    "report_type": "outdated",
+                    "message": "Runtime smoke report created by full-check.py.",
+                    "created_by_identity_type": "anonymous_session",
+                    "created_by_identity_id": f"full-check-{self.run_timestamp}",
+                },
+            },
+            {
+                "name": "community-rating-create",
+                "url": "http://localhost:8000/api/v1/community/user-story-ratings",
+                "method": "POST",
+                "expected_status": 201,
+                "data": {
+                    "country_slug": "uruguay",
+                    "official_expectation_score": 50,
+                    "real_experience_score": 50,
+                    "bureaucracy_score": 50,
+                    "cost_surprise_score": 50,
+                    "banking_difficulty_score": 50,
+                    "safety_feeling_score": 50,
+                    "comment": "Runtime smoke rating created by full-check.py.",
                     "created_by_identity_type": "anonymous_session",
                     "created_by_identity_id": f"full-check-{self.run_timestamp}",
                 },

@@ -22,11 +22,18 @@ def test_ai_data_quality_checks_are_registered(monkeypatch: Any) -> None:
     assert "ai_drafts_have_citations" in check_codes
     assert "ai_drafts_have_model_metadata" in check_codes
     assert "ai_draft_statuses_are_valid" in check_codes
+    assert "ai_draft_types_are_valid" in check_codes
+    assert "approved_ai_drafts_have_review_metadata" in check_codes
     assert "contradiction_candidates_are_traceable" in check_codes
     assert "confirmed_contradictions_have_review_metadata" in check_codes
     assert "published_community_content_is_moderated" in check_codes
+    assert "published_qna_questions_have_content" in check_codes
     assert "published_qna_answers_have_body" in check_codes
+    assert "published_qna_answer_traceability_refs_are_valid" in check_codes
+    assert "qna_vote_types_are_valid" in check_codes
+    assert "qna_votes_are_unique_per_identity" in check_codes
     assert "pending_data_error_reports_are_reviewed_timely" in check_codes
+    assert "published_user_story_ratings_are_moderated" in check_codes
     assert "user_story_rating_scores_are_valid" in check_codes
 
 
@@ -97,6 +104,16 @@ def test_ai_data_quality_detects_lifecycle_and_review_violations(
     )
     monkeypatch.setattr(
         data_quality_repository,
+        "list_ai_drafts_with_invalid_draft_type",
+        lambda *_: [{"id": "draft-2", "draft_type": "trusted_article"}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_approved_ai_drafts_without_review",
+        lambda *_: [{"id": "draft-3", "status": "approved", "reviewed_by": None}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
         "list_confirmed_contradiction_candidates_without_review",
         lambda *_: [{"id": "candidate-1", "reviewed_at": None, "reviewed_by": None}],
     )
@@ -106,6 +123,8 @@ def test_ai_data_quality_detects_lifecycle_and_review_violations(
     assert report.valid is False
     assert {
         "ai_draft_status_invalid",
+        "ai_draft_type_invalid",
+        "approved_ai_draft_review_metadata_missing",
         "confirmed_contradiction_review_metadata_missing",
     }.issubset({issue.code for issue in report.issues})
 
@@ -129,6 +148,26 @@ def test_ai_data_quality_detects_unmoderated_published_community_content(
         "list_published_qna_answers_without_body",
         lambda *_: [{"id": "answer-2", "body": ""}],
     )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_qna_questions_without_content",
+        lambda *_: [{"id": "question-2", "title": "", "body": "body"}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_qna_answers_with_invalid_traceability_refs",
+        lambda *_: [{"id": "answer-3", "source_ids": None}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_qna_votes_with_invalid_type",
+        lambda *_: [{"id": "vote-1", "vote_type": "official"}],
+    )
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_duplicate_qna_votes",
+        lambda *_: [{"answer_id": "answer-1", "duplicate_count": 2}],
+    )
 
     report = data_quality.build_data_quality_report(CONNECTION)
 
@@ -136,7 +175,11 @@ def test_ai_data_quality_detects_unmoderated_published_community_content(
     assert {
         "published_community_question_moderation_missing",
         "published_community_answer_moderation_missing",
+        "published_qna_question_content_missing",
         "published_qna_answer_body_missing",
+        "published_qna_answer_traceability_refs_invalid",
+        "qna_vote_type_invalid",
+        "qna_vote_duplicate",
     }.issubset({issue.code for issue in report.issues})
 
 
@@ -176,4 +219,23 @@ def test_ai_data_quality_detects_invalid_user_story_rating_score(
     assert report.valid is False
     assert any(
         issue.code == "user_story_rating_score_invalid" for issue in report.issues
+    )
+
+
+def test_ai_data_quality_detects_published_user_story_rating_without_review(
+    monkeypatch: Any,
+) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_user_story_ratings_without_moderation",
+        lambda *_: [{"id": "rating-2", "status": "published", "reviewed_by": None}],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert any(
+        issue.code == "published_user_story_rating_moderation_missing"
+        for issue in report.issues
     )

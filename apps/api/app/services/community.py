@@ -93,7 +93,8 @@ def list_public_answers(
     connection: Connection[Any], question_id: str
 ) -> list[dict[str, Any]]:
     get_public_question(connection, question_id)
-    return repository.list_published_answers(connection, question_id)
+    answers = repository.list_published_answers(connection, question_id)
+    return [_with_consensus(connection, answer) for answer in answers]
 
 
 def submit_answer(
@@ -168,6 +169,17 @@ def get_answer_consensus(
         created_at=answer.get("created_at"),
     )
     return consensus_service.build_single_consensus_summary(item)
+
+
+def _with_consensus(
+    connection: Connection[Any], answer: dict[str, Any]
+) -> dict[str, Any]:
+    consensus = get_answer_consensus(connection, answer)
+    return {
+        **answer,
+        "source_backed": consensus.source_backed,
+        "consensus": consensus,
+    }
 
 
 def list_questions_for_admin(

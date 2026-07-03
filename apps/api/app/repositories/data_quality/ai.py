@@ -149,6 +149,56 @@ def list_ai_drafts_with_invalid_status(
     )
 
 
+def list_ai_drafts_with_invalid_draft_type(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            draft_type,
+            status,
+            country_slug
+        FROM ai_drafts
+        WHERE draft_type NOT IN (
+            'summary',
+            'contradiction_candidate',
+            'explanation',
+            'source_digest',
+            'evidence_digest'
+        )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_approved_ai_drafts_without_review(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            draft_type,
+            status,
+            country_slug,
+            reviewed_at,
+            reviewed_by
+        FROM ai_drafts
+        WHERE status = 'approved'
+          AND (
+              reviewed_at IS NULL
+              OR NULLIF(BTRIM(reviewed_by), '') IS NULL
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
 def list_contradiction_candidates_without_traceability(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
@@ -257,6 +307,32 @@ def list_published_community_answers_without_moderation(
     )
 
 
+def list_published_qna_questions_without_content(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            country_slug,
+            route_id::text,
+            topic,
+            title,
+            body,
+            status
+        FROM qna_questions
+        WHERE status = 'published'
+          AND (
+              NULLIF(BTRIM(title), '') IS NULL
+              OR NULLIF(BTRIM(body), '') IS NULL
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
 def list_published_qna_answers_without_body(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
@@ -272,6 +348,73 @@ def list_published_qna_answers_without_body(
         WHERE status = 'published'
           AND NULLIF(BTRIM(body), '') IS NULL
         ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_published_qna_answers_with_invalid_traceability_refs(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            question_id::text,
+            status,
+            source_ids,
+            evidence_item_ids
+        FROM qna_answers
+        WHERE status = 'published'
+          AND (
+              source_ids IS NULL
+              OR evidence_item_ids IS NULL
+              OR jsonb_typeof(source_ids) != 'array'
+              OR jsonb_typeof(evidence_item_ids) != 'array'
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_qna_votes_with_invalid_type(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            answer_id::text,
+            vote_type,
+            identity_type,
+            identity_id
+        FROM qna_votes
+        WHERE vote_type NOT IN ('up', 'down', 'helpful', 'outdated')
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_duplicate_qna_votes(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            answer_id::text,
+            vote_type,
+            identity_type,
+            identity_id,
+            COUNT(*) AS duplicate_count
+        FROM qna_votes
+        GROUP BY answer_id, vote_type, identity_type, identity_id
+        HAVING COUNT(*) > 1
+        ORDER BY duplicate_count DESC, answer_id
         LIMIT 100
         """,
     )
@@ -296,6 +439,32 @@ def list_stale_pending_data_error_reports(
         WHERE status = 'pending'
           AND created_at < NOW() - INTERVAL '30 days'
         ORDER BY created_at ASC
+        LIMIT 100
+        """,
+    )
+
+
+def list_published_user_story_ratings_without_moderation(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            user_story_id::text,
+            country_slug,
+            route_id::text,
+            status,
+            reviewed_at,
+            reviewed_by
+        FROM user_story_ratings
+        WHERE status = 'published'
+          AND (
+              reviewed_at IS NULL
+              OR NULLIF(BTRIM(reviewed_by), '') IS NULL
+          )
+        ORDER BY created_at DESC
         LIMIT 100
         """,
     )

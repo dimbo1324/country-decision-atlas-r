@@ -15,6 +15,7 @@ import {
   CountryUserStoriesSummary,
   LocaleStatusBadge,
 } from "../../../features/country-card";
+import { CommunityCountryBlock } from "../../../features/community";
 import { CountryDriftBlock } from "../../../features/country-drift";
 import { CountryDataJournalBlock } from "../../../features/data-journal";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
@@ -191,6 +192,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection">
           <h2 className="cardSectionTitle">Пользовательские истории</h2>
           <CountryUserStoriesSummary userStoriesSummary={card.user_stories_summary} />
+        </section>
+
+        <section className="cardSection" data-testid="community-section">
+          <h2 className="cardSectionTitle">Community</h2>
+          <CommunityCountryBlock countrySlug={card.country.slug} />
         </section>
 
         <section className="cardSection" data-testid="locale-status">

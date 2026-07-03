@@ -62,7 +62,7 @@ def detect_contradiction_candidate(
         detected_by="fake_ai",
         provider=settings.ai_provider,
         model_name=settings.ai_model,
-        model_version="v1",
+        model_version=settings.ai_model_version,
         confidence="low",
     )
     _emit_contradiction_candidate_created_event(connection, row)

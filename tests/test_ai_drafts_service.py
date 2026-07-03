@@ -110,7 +110,7 @@ def test_generate_summary_draft_creates_needs_review_draft_with_event(
 
     row = service.generate_summary_draft(
         CONNECTION,
-        Settings(app_env="local"),
+        Settings(app_env="local", ai_model_version="test-v2"),
         country_slug="uruguay",
         route_id=None,
         source_id=None,
@@ -121,6 +121,7 @@ def test_generate_summary_draft_creates_needs_review_draft_with_event(
 
     assert row["status"] == "needs_review"
     assert inserted["citations"]
+    assert inserted["model_version"] == "test-v2"
     assert events["event_type"] == "ai_draft.ready"
     assert events["notifiable"] is False
 
