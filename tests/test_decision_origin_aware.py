@@ -7,6 +7,7 @@ from app.repositories import (
 from app.schemas.decision_engine import DecisionRunRequest
 from app.schemas.decision_wizard import DecisionWizardAnswers
 from app.services import decision_engine, decision_wizard
+from app.services.decision_engine import helpers as decision_engine_helpers
 from fastapi import HTTPException
 from psycopg import Connection
 import pytest
@@ -173,15 +174,15 @@ def test_persona_plus_origin_works(monkeypatch: pytest.MonkeyPatch) -> None:
         "weight_sum": 1.0,
     }
     monkeypatch.setattr(
-        decision_engine, "build_persona_weight_profile", lambda *_: profile
+        decision_engine_helpers, "build_persona_weight_profile", lambda *_: profile
     )
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "get_active_cii_metric_definitions",
         lambda *_: [{"slug": "economic_freedom", "polarity": "positive"}],
     )
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "get_cii_metric_values_for_countries",
         lambda *_: [
             {

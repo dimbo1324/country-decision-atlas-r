@@ -8,6 +8,7 @@ from app.repositories import (
 )
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
+from app.services.decision_engine import helpers as decision_engine_helpers
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -153,7 +154,7 @@ def install_repository_fakes(monkeypatch: Any) -> None:
         decision_repository, "list_decision_legal_signals", fake_signals
     )
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "overlay_localized_fields",
         lambda _conn, items, *_args, **_kw: items,
     )

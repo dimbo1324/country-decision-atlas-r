@@ -8,6 +8,7 @@ from app.repositories import (
 from app.schemas.common import locale_resolution, source_locale_resolution
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
+from app.services.decision_engine import helpers as decision_engine_helpers
 from datetime import UTC, date, datetime
 from fastapi import HTTPException
 from psycopg import Connection
@@ -196,7 +197,7 @@ def test_score_and_breakdown_locale(monkeypatch: Any) -> None:
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "overlay_localized_fields",
         lambda _conn, items, *_args, **_kw: items,
     )
@@ -229,7 +230,7 @@ def test_score_breakdown_fallback(monkeypatch: Any) -> None:
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "overlay_localized_fields",
         lambda _conn, items, *_args, **_kw: items,
     )
@@ -259,7 +260,7 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
     breakdown["country_score_id"] = row["id"]
 
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "overlay_localized_fields",
         lambda _conn, items, *_args, **_kw: items,
     )

@@ -2,6 +2,7 @@
 
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
+from app.services.decision_engine import helpers as decision_engine_helpers
 from psycopg import Connection
 import pytest
 from tests.test_decision_run import install_repository_fakes
@@ -71,10 +72,10 @@ def test_decision_with_persona_ranks_by_runtime_adjusted_cii(
 ) -> None:
     install_repository_fakes(monkeypatch)
     monkeypatch.setattr(
-        decision_engine, "build_persona_weight_profile", lambda *_: PROFILE
+        decision_engine_helpers, "build_persona_weight_profile", lambda *_: PROFILE
     )
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "get_active_cii_metric_definitions",
         lambda *_: [
             {"slug": "economic_freedom", "polarity": "positive"},
@@ -82,7 +83,7 @@ def test_decision_with_persona_ranks_by_runtime_adjusted_cii(
         ],
     )
     monkeypatch.setattr(
-        decision_engine,
+        decision_engine_helpers,
         "get_cii_metric_values_for_countries",
         lambda *_: [
             {
