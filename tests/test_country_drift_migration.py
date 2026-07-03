@@ -3,7 +3,7 @@ import pytest
 from typing import Any
 
 
-MIGRATION = Path("database/migrations/035_country_direction_drift_v1.sql")
+MIGRATION = Path("database/migrations/035_country_drift.sql")
 
 
 def _sql() -> str:

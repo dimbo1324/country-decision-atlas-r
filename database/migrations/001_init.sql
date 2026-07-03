@@ -1,3 +1,4 @@
+-- Migration 001: Bootstraps the schema: pgcrypto extension, the updated_at trigger helper, and the core locales/countries/country_profiles/sources tables.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER AS $$

@@ -7,7 +7,7 @@ from psycopg import Connection
 from typing import Any, cast
 
 
-MIGRATION = Path("database/migrations/040_search_foundation_v1.sql")
+MIGRATION = Path("database/migrations/040_search_foundation.sql")
 CONNECTION = cast(Connection[Any], object())
 
 VALID_ENTITY_TYPES = {

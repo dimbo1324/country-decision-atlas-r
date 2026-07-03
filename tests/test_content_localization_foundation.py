@@ -9,7 +9,7 @@ from typing import Any, cast
 
 CONNECTION = cast(Connection[Any], object())
 MIGRATION_SQL = Path(
-    "database/migrations/011_content_localization_foundation_v1.sql"
+    "database/migrations/011_localization.sql"
 ).read_text(encoding="utf-8")
 
 

@@ -7,7 +7,7 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 
-MIGRATION_SQL = Path("database/migrations/019_legal_signals_timeline_v1.sql").read_text(
+MIGRATION_SQL = Path("database/migrations/019_legal_signals_timeline.sql").read_text(
     encoding="utf-8"
 )
 CONNECTION = MagicMock()

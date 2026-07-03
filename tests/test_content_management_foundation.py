@@ -11,7 +11,7 @@ from typing import Any, cast
 
 
 MIGRATION_SQL = Path(
-    "database/migrations/007_backend_content_management_foundation.sql"
+    "database/migrations/007_content_management.sql"
 ).read_text(encoding="utf-8")
 
 

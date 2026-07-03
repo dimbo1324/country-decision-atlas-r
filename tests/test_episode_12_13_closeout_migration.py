@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 MIGRATION_SQL = Path(
-    "database/migrations/043_episode_12_13_blocks_4_6_closeout_v1.sql"
+    "database/migrations/043_episode_12_13_closeout.sql"
 ).read_text(encoding="utf-8")
 
 

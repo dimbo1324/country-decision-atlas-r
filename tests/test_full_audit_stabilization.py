@@ -281,7 +281,7 @@ def test_mvp_thresholds_separate_readiness_from_future_depth() -> None:
 
 
 def test_argentina_decision_migration_has_all_scenarios_and_breakdowns() -> None:
-    sql = Path("database/migrations/025_full_audit_stabilization_v1.sql").read_text(
+    sql = Path("database/migrations/025_audit_stabilization.sql").read_text(
         encoding="utf-8"
     )
     for scenario in (

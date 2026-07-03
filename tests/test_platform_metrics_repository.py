@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 
 
 MIGRATION_SQL = Path(
-    "database/migrations/032_self_computed_intelligence_v1.sql"
+    "database/migrations/032_computed_intelligence.sql"
 ).read_text(encoding="utf-8")
 
 

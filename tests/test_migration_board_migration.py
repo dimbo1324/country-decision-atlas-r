@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 MIGRATION_SQL = Path(
-    "database/migrations/045_migration_board_companions_v1.sql"
+    "database/migrations/045_migration_board.sql"
 ).read_text(encoding="utf-8")
 
 

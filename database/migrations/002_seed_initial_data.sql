@@ -1,3 +1,4 @@
+-- Migration 002: Seeds initial reference data: locales, countries, country profiles, scenarios, scenario criteria, and sources.
 INSERT INTO locales (code, name, native_name)
 VALUES
     ('en', 'English', 'English'),

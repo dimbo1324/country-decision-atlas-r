@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-MIGRATION = Path("database/migrations/031_platform_runtime_foundations_v1.sql")
+MIGRATION = Path("database/migrations/031_platform_runtime.sql")
 
 
 def test_platform_runtime_migration_exists() -> None:

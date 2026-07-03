@@ -6,12 +6,12 @@ SEED_SQL = "\n".join(
     for path in sorted(Path("database/migrations").glob("*seed*.sql"))
 )
 CONTENT_SQL = Path(
-    "database/migrations/005_country_content_decision_logic_v0.sql"
+    "database/migrations/005_decision_logic.sql"
 ).read_text(encoding="utf-8")
 SOURCE_DEPTH_SQL = Path(
-    "database/migrations/009_source_backed_content_depth_v1.sql"
+    "database/migrations/009_content_depth.sql"
 ).read_text(encoding="utf-8")
-SCHEMA_SQL = Path("database/migrations/003_country_decision_engine.sql").read_text(
+SCHEMA_SQL = Path("database/migrations/003_decision_engine.sql").read_text(
     encoding="utf-8"
 )
 

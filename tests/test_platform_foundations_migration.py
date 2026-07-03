@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-MIGRATION = Path("database/migrations/030_platform_foundations_v1.sql")
+MIGRATION = Path("database/migrations/030_platform_foundations.sql")
 
 
 def _sql() -> str:

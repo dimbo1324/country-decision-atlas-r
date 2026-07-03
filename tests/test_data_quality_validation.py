@@ -23,7 +23,7 @@ ADMIN_USER = CurrentUser(
     status="active",
 )
 MIGRATION_SQL = Path(
-    "database/migrations/008_data_quality_validation_v1.sql"
+    "database/migrations/008_data_quality.sql"
 ).read_text(encoding="utf-8")
 
 

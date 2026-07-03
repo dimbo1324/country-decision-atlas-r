@@ -14,7 +14,7 @@ from typing import Any, cast
 from unittest.mock import MagicMock
 
 
-MIGRATION = Path("database/migrations/039_decision_passport_what_changed_v1.sql")
+MIGRATION = Path("database/migrations/039_decision_passport.sql")
 CONNECTION = cast(Any, MagicMock())
 
 

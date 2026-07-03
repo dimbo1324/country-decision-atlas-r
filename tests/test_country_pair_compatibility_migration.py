@@ -3,7 +3,7 @@ import pytest
 from typing import Any
 
 
-MIGRATION = Path("database/migrations/038_origin_aware_decisions_v1.sql")
+MIGRATION = Path("database/migrations/038_origin_aware_decisions.sql")
 
 VALID_STATUS = {"draft", "review", "published", "archived", "rejected"}
 VALID_LABEL = {"favourable", "mixed", "restrictive", "unknown"}
