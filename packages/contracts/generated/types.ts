@@ -1382,6 +1382,382 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/ai/drafts/generate-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generate Summary Draft */
+        post: operations["generate_summary_draft_api_v1_admin_ai_drafts_generate_summary_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ai/drafts/detect-contradiction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Detect Contradiction */
+        post: operations["detect_contradiction_api_v1_admin_ai_drafts_detect_contradiction_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ai/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Ai Drafts */
+        get: operations["list_ai_drafts_api_v1_admin_ai_drafts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ai/drafts/{draft_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ai Draft */
+        get: operations["get_ai_draft_api_v1_admin_ai_drafts__draft_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ai/drafts/{draft_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Ai Draft Status */
+        patch: operations["update_ai_draft_status_api_v1_admin_ai_drafts__draft_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/contradiction-candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Contradiction Candidates */
+        get: operations["list_contradiction_candidates_api_v1_admin_contradiction_candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contradiction-candidates/{candidate_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Contradiction Candidate */
+        get: operations["get_contradiction_candidate_api_v1_admin_contradiction_candidates__candidate_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contradiction-candidates/{candidate_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Contradiction Candidate Status */
+        patch: operations["update_contradiction_candidate_status_api_v1_admin_contradiction_candidates__candidate_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/community/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Questions */
+        get: operations["list_questions_api_v1_community_questions_get"];
+        put?: never;
+        /** Create Question */
+        post: operations["create_question_api_v1_community_questions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/questions/{question_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Question */
+        get: operations["get_question_api_v1_community_questions__question_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/questions/{question_id}/answers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Answers */
+        get: operations["list_answers_api_v1_community_questions__question_id__answers_get"];
+        put?: never;
+        /** Create Answer */
+        post: operations["create_answer_api_v1_community_questions__question_id__answers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/answers/{answer_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Vote */
+        post: operations["create_vote_api_v1_community_answers__answer_id__votes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/data-error-reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Data Error Report */
+        post: operations["create_data_error_report_api_v1_community_data_error_reports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/user-story-ratings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create User Story Rating */
+        post: operations["create_user_story_rating_api_v1_community_user_story_ratings_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/community/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Questions For Admin */
+        get: operations["list_questions_for_admin_api_v1_admin_community_questions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/community/questions/{question_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Question Status */
+        patch: operations["update_question_status_api_v1_admin_community_questions__question_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/community/answers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Answers For Admin */
+        get: operations["list_answers_for_admin_api_v1_admin_community_answers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/community/answers/{answer_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Answer Status */
+        patch: operations["update_answer_status_api_v1_admin_community_answers__answer_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/community/data-error-reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Data Error Reports For Admin */
+        get: operations["list_data_error_reports_for_admin_api_v1_admin_community_data_error_reports_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/community/data-error-reports/{report_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Data Error Report Status */
+        patch: operations["update_data_error_report_status_api_v1_admin_community_data_error_reports__report_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/community/user-story-ratings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List User Story Ratings For Admin */
+        get: operations["list_user_story_ratings_for_admin_api_v1_admin_community_user_story_ratings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/community/user-story-ratings/{rating_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update User Story Rating Status */
+        patch: operations["update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch"];
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -1567,6 +1943,111 @@ export interface components {
              * @default low
              */
             confidence: string;
+        };
+        /** AIDraft */
+        AIDraft: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Draft Type
+             * @enum {string}
+             */
+            draft_type: "summary" | "contradiction_candidate" | "explanation" | "source_digest" | "evidence_digest";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "needs_review" | "approved" | "rejected" | "archived";
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Evidence Item Id */
+            evidence_item_id?: string | null;
+            /** Title */
+            title: string;
+            /** Body */
+            body: string;
+            /** Summary */
+            summary?: string | null;
+            /** Detected Issue */
+            detected_issue?: string | null;
+            /** Provider */
+            provider: string;
+            /** Model Name */
+            model_name: string;
+            /** Model Version */
+            model_version: string;
+            /** Input Context */
+            input_context?: {
+                [key: string]: unknown;
+            };
+            /** Citations */
+            citations?: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** Reviewed By */
+            reviewed_by?: string | null;
+            /** Reviewed At */
+            reviewed_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** AIDraftGenerateSummaryRequest */
+        AIDraftGenerateSummaryRequest: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Evidence Item Id */
+            evidence_item_id?: string | null;
+            /** Topic */
+            topic: string;
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "ru" | "en";
+        };
+        /** AIDraftListResponse */
+        AIDraftListResponse: {
+            /** Items */
+            items: components["schemas"]["AIDraft"][];
+            /** Total */
+            total: number;
+        };
+        /** AIDraftStatusUpdateRequest */
+        AIDraftStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "needs_review" | "approved" | "rejected" | "archived";
+            /** Reviewed By */
+            reviewed_by?: string | null;
         };
         /** AIExplainNumberRequest */
         AIExplainNumberRequest: {
@@ -1819,6 +2300,173 @@ export interface components {
             applied_persona?: components["schemas"]["Persona"] | null;
             persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
         };
+        /** CommunityAnswer */
+        CommunityAnswer: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Question Id
+             * Format: uuid
+             */
+            question_id: string;
+            /** Body */
+            body: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "published" | "rejected" | "archived";
+            /** Source Ids */
+            source_ids?: string[];
+            /** Evidence Item Ids */
+            evidence_item_ids?: string[];
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Moderated At */
+            moderated_at?: string | null;
+            /** Moderated By */
+            moderated_by?: string | null;
+            /**
+             * Source Backed
+             * @default false
+             */
+            source_backed: boolean;
+            consensus?: components["schemas"]["ConsensusSummary"] | null;
+        };
+        /** CommunityAnswerCreate */
+        CommunityAnswerCreate: {
+            /** Body */
+            body: string;
+            /** Source Ids */
+            source_ids?: string[];
+            /** Evidence Item Ids */
+            evidence_item_ids?: string[];
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+        };
+        /** CommunityQuestion */
+        CommunityQuestion: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Topic */
+            topic: string;
+            /** Title */
+            title: string;
+            /** Body */
+            body: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "published" | "rejected" | "archived";
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Moderated At */
+            moderated_at?: string | null;
+            /** Moderated By */
+            moderated_by?: string | null;
+        };
+        /** CommunityQuestionCreate */
+        CommunityQuestionCreate: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Topic */
+            topic: string;
+            /** Title */
+            title: string;
+            /** Body */
+            body: string;
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+        };
+        /** CommunityQuestionListResponse */
+        CommunityQuestionListResponse: {
+            /** Items */
+            items: components["schemas"]["CommunityQuestion"][];
+            /** Total */
+            total: number;
+        };
+        /** CommunityStatusUpdateRequest */
+        CommunityStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "published" | "rejected" | "archived";
+            /** Moderated By */
+            moderated_by?: string | null;
+        };
+        /** CommunityVoteCreate */
+        CommunityVoteCreate: {
+            /**
+             * Vote Type
+             * @enum {string}
+             */
+            vote_type: "up" | "down" | "helpful" | "outdated";
+            /**
+             * Identity Type
+             * @enum {string}
+             */
+            identity_type: "telegram" | "anonymous_session" | "system";
+            /** Identity Id */
+            identity_id: string;
+        };
         /** CompareMatrixResponse */
         CompareMatrixResponse: {
             locale: components["schemas"]["LocaleResolution"];
@@ -1895,9 +2543,118 @@ export interface components {
             /** Title */
             title: string;
         };
+        /** ConsensusSummary */
+        ConsensusSummary: {
+            /** Answer Id */
+            answer_id: string;
+            /** Score */
+            score: number;
+            /** Source Backed */
+            source_backed: boolean;
+            /** Controversial */
+            controversial: boolean;
+            votes: components["schemas"]["VoteSummary"];
+        };
         /** ContentValidationError */
         ContentValidationError: {
             error: components["schemas"]["ApiError"];
+        };
+        /** ContradictionCandidate */
+        ContradictionCandidate: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Topic */
+            topic: string;
+            /** Entity Type */
+            entity_type?: string | null;
+            /** Entity Id */
+            entity_id?: string | null;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high" | "critical";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "needs_review" | "confirmed" | "dismissed" | "archived";
+            /** Summary */
+            summary: string;
+            /** Claim A */
+            claim_a: string;
+            /** Claim B */
+            claim_b: string;
+            /** Source Ids */
+            source_ids?: string[];
+            /** Evidence Item Ids */
+            evidence_item_ids?: string[];
+            /** Detected By */
+            detected_by: string;
+            /** Provider */
+            provider: string;
+            /** Model Name */
+            model_name: string;
+            /** Model Version */
+            model_version: string;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /** Reviewed At */
+            reviewed_at?: string | null;
+            /** Reviewed By */
+            reviewed_by?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** ContradictionCandidateGenerateRequest */
+        ContradictionCandidateGenerateRequest: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Topic */
+            topic: string;
+            /** Entity Type */
+            entity_type?: string | null;
+            /** Entity Id */
+            entity_id?: string | null;
+            /**
+             * Locale
+             * @default ru
+             * @enum {string}
+             */
+            locale: "ru" | "en";
+        };
+        /** ContradictionCandidateListResponse */
+        ContradictionCandidateListResponse: {
+            /** Items */
+            items: components["schemas"]["ContradictionCandidate"][];
+            /** Total */
+            total: number;
+        };
+        /** ContradictionCandidateStatusUpdateRequest */
+        ContradictionCandidateStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "needs_review" | "confirmed" | "dismissed" | "archived";
+            /** Reviewed By */
+            reviewed_by?: string | null;
         };
         /** Country */
         Country: {
@@ -2736,6 +3493,89 @@ export interface components {
              * @default This is a data quality indicator, not a recommendation. Not legal advice.
              */
             disclaimer: string;
+        };
+        /** DataErrorReport */
+        DataErrorReport: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /**
+             * Report Type
+             * @enum {string}
+             */
+            report_type: "outdated" | "wrong" | "missing_source" | "contradiction" | "translation_issue" | "other";
+            /** Message */
+            message: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "resolved" | "rejected" | "archived";
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Reviewed At */
+            reviewed_at?: string | null;
+            /** Reviewed By */
+            reviewed_by?: string | null;
+            /** Resolution Note */
+            resolution_note?: string | null;
+        };
+        /** DataErrorReportCreate */
+        DataErrorReportCreate: {
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /**
+             * Report Type
+             * @enum {string}
+             */
+            report_type: "outdated" | "wrong" | "missing_source" | "contradiction" | "translation_issue" | "other";
+            /** Message */
+            message: string;
+            /**
+             * Created By Identity Type
+             * @enum {string}
+             */
+            created_by_identity_type: "telegram" | "anonymous_session" | "system";
+            /** Created By Identity Id */
+            created_by_identity_id: string;
+        };
+        /** DataErrorReportStatusUpdateRequest */
+        DataErrorReportStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "resolved" | "rejected" | "archived";
+            /** Reviewed By */
+            reviewed_by?: string | null;
+            /** Resolution Note */
+            resolution_note?: string | null;
         };
         /** DataJournalEntry */
         DataJournalEntry: {
@@ -5365,6 +6205,89 @@ export interface components {
             /** Notes */
             notes?: string | null;
         };
+        /** UserStoryRating */
+        UserStoryRating: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** User Story Id */
+            user_story_id?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Official Expectation Score */
+            official_expectation_score?: number | null;
+            /** Real Experience Score */
+            real_experience_score?: number | null;
+            /** Bureaucracy Score */
+            bureaucracy_score?: number | null;
+            /** Cost Surprise Score */
+            cost_surprise_score?: number | null;
+            /** Banking Difficulty Score */
+            banking_difficulty_score?: number | null;
+            /** Safety Feeling Score */
+            safety_feeling_score?: number | null;
+            /** Comment */
+            comment?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "published" | "rejected" | "archived";
+            /** Created By Identity Type */
+            created_by_identity_type?: ("telegram" | "anonymous_session" | "system") | null;
+            /** Created By Identity Id */
+            created_by_identity_id?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Reviewed At */
+            reviewed_at?: string | null;
+            /** Reviewed By */
+            reviewed_by?: string | null;
+        };
+        /** UserStoryRatingCreate */
+        UserStoryRatingCreate: {
+            /** User Story Id */
+            user_story_id?: string | null;
+            /** Country Slug */
+            country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Official Expectation Score */
+            official_expectation_score?: number | null;
+            /** Real Experience Score */
+            real_experience_score?: number | null;
+            /** Bureaucracy Score */
+            bureaucracy_score?: number | null;
+            /** Cost Surprise Score */
+            cost_surprise_score?: number | null;
+            /** Banking Difficulty Score */
+            banking_difficulty_score?: number | null;
+            /** Safety Feeling Score */
+            safety_feeling_score?: number | null;
+            /** Comment */
+            comment?: string | null;
+            /** Created By Identity Type */
+            created_by_identity_type?: ("telegram" | "anonymous_session" | "system") | null;
+            /** Created By Identity Id */
+            created_by_identity_id?: string | null;
+        };
+        /** UserStoryRatingStatusUpdateRequest */
+        UserStoryRatingStatusUpdateRequest: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "review" | "published" | "rejected" | "archived";
+            /** Reviewed By */
+            reviewed_by?: string | null;
+        };
         /** UserStoryResponse */
         UserStoryResponse: {
             item: components["schemas"]["UserStory"];
@@ -5381,6 +6304,29 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** VoteSummary */
+        VoteSummary: {
+            /**
+             * Up Votes
+             * @default 0
+             */
+            up_votes: number;
+            /**
+             * Down Votes
+             * @default 0
+             */
+            down_votes: number;
+            /**
+             * Helpful Votes
+             * @default 0
+             */
+            helpful_votes: number;
+            /**
+             * Outdated Votes
+             * @default 0
+             */
+            outdated_votes: number;
         };
         /** WhatChangedItem */
         WhatChangedItem: {
@@ -8459,6 +9405,1023 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AIDecisionIntentResponse"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    generate_summary_draft_api_v1_admin_ai_drafts_generate_summary_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIDraftGenerateSummaryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIDraft"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detect_contradiction_api_v1_admin_ai_drafts_detect_contradiction_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContradictionCandidateGenerateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContradictionCandidate"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_ai_drafts_api_v1_admin_ai_drafts_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                draft_type?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIDraftListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_ai_draft_api_v1_admin_ai_drafts__draft_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draft_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIDraft"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_ai_draft_status_api_v1_admin_ai_drafts__draft_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draft_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AIDraftStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AIDraft"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_contradiction_candidates_api_v1_admin_contradiction_candidates_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                severity?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContradictionCandidateListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_contradiction_candidate_api_v1_admin_contradiction_candidates__candidate_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContradictionCandidate"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_contradiction_candidate_status_api_v1_admin_contradiction_candidates__candidate_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContradictionCandidateStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContradictionCandidate"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_questions_api_v1_community_questions_get: {
+        parameters: {
+            query?: {
+                country_slug?: string | null;
+                topic?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityQuestionListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_question_api_v1_community_questions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityQuestionCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityQuestion"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_question_api_v1_community_questions__question_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityQuestion"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_answers_api_v1_community_questions__question_id__answers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityAnswer"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_answer_api_v1_community_questions__question_id__answers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityAnswerCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityAnswer"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_vote_api_v1_community_answers__answer_id__votes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                answer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityVoteCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsensusSummary"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_data_error_report_api_v1_community_data_error_reports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataErrorReportCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataErrorReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_user_story_rating_api_v1_community_user_story_ratings_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStoryRatingCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryRating"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_questions_for_admin_api_v1_admin_community_questions_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityQuestion"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_question_status_api_v1_admin_community_questions__question_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityQuestion"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_answers_for_admin_api_v1_admin_community_answers_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityAnswer"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_answer_status_api_v1_admin_community_answers__answer_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                answer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityAnswer"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_data_error_reports_for_admin_api_v1_admin_community_data_error_reports_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataErrorReport"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_data_error_report_status_api_v1_admin_community_data_error_reports__report_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataErrorReportStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataErrorReport"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_user_story_ratings_for_admin_api_v1_admin_community_user_story_ratings_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryRating"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                rating_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserStoryRatingStatusUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStoryRating"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

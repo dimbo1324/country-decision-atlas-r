@@ -1,8 +1,11 @@
 from app.api.v1 import (
     admin,
+    admin_ai,
+    admin_community,
     admin_translation_jobs,
     ai,
     analytics,
+    community,
     countries,
     country_drift,
     country_pairs,
@@ -222,6 +225,9 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(what_changed.router, prefix="/api/v1")
     app.include_router(search.router, prefix="/api/v1")
     app.include_router(ai.router, prefix="/api/v1")
+    app.include_router(admin_ai.router, prefix="/api/v1")
+    app.include_router(community.router, prefix="/api/v1")
+    app.include_router(admin_community.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

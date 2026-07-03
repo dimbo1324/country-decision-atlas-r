@@ -89,6 +89,19 @@ type AIDecisionIntentRequest = components["schemas"]["AIDecisionIntentRequest"];
 type AIDecisionIntentResponse = components["schemas"]["AIDecisionIntentResponse"];
 type AICitation = components["schemas"]["AICitation"];
 type AIProviderMeta = components["schemas"]["AIProviderMeta"];
+type AIDraft = components["schemas"]["AIDraft"];
+type AIDraftListResponse = components["schemas"]["AIDraftListResponse"];
+type ContradictionCandidate = components["schemas"]["ContradictionCandidate"];
+type ContradictionCandidateListResponse =
+  components["schemas"]["ContradictionCandidateListResponse"];
+type CommunityQuestion = components["schemas"]["CommunityQuestion"];
+type CommunityQuestionListResponse =
+  components["schemas"]["CommunityQuestionListResponse"];
+type CommunityAnswer = components["schemas"]["CommunityAnswer"];
+type ConsensusSummary = components["schemas"]["ConsensusSummary"];
+type VoteSummary = components["schemas"]["VoteSummary"];
+type DataErrorReport = components["schemas"]["DataErrorReport"];
+type UserStoryRating = components["schemas"]["UserStoryRating"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -166,4 +179,15 @@ export type FrontendCriticalContracts = {
   aiDecisionIntentResponse: AIDecisionIntentResponse;
   aiCitation: AICitation;
   aiProviderMeta: AIProviderMeta;
+  aiDraft: AIDraft;
+  aiDraftListResponse: AIDraftListResponse;
+  contradictionCandidate: ContradictionCandidate;
+  contradictionCandidateListResponse: ContradictionCandidateListResponse;
+  communityQuestion: CommunityQuestion;
+  communityQuestionListResponse: CommunityQuestionListResponse;
+  communityAnswer: CommunityAnswer;
+  consensusSummary: ConsensusSummary;
+  voteSummary: VoteSummary;
+  dataErrorReport: DataErrorReport;
+  userStoryRating: UserStoryRating;
 };

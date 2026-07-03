@@ -3614,6 +3614,942 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/ai/drafts/generate-summary:
+    post:
+      tags:
+      - admin-ai
+      summary: Generate Summary Draft
+      operationId: generate_summary_draft_api_v1_admin_ai_drafts_generate_summary_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIDraftGenerateSummaryRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIDraft'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/ai/drafts/detect-contradiction:
+    post:
+      tags:
+      - admin-ai
+      summary: Detect Contradiction
+      operationId: detect_contradiction_api_v1_admin_ai_drafts_detect_contradiction_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContradictionCandidateGenerateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContradictionCandidate'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - AdminTokenAuth: []
+  /api/v1/admin/ai/drafts:
+    get:
+      tags:
+      - admin-ai
+      summary: List Ai Drafts
+      operationId: list_ai_drafts_api_v1_admin_ai_drafts_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: draft_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Draft Type
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIDraftListResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/ai/drafts/{draft_id}:
+    get:
+      tags:
+      - admin-ai
+      summary: Get Ai Draft
+      operationId: get_ai_draft_api_v1_admin_ai_drafts__draft_id__get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIDraft'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/ai/drafts/{draft_id}/status:
+    patch:
+      tags:
+      - admin-ai
+      summary: Update Ai Draft Status
+      operationId: update_ai_draft_status_api_v1_admin_ai_drafts__draft_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIDraftStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIDraft'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/contradiction-candidates:
+    get:
+      tags:
+      - admin-ai
+      summary: List Contradiction Candidates
+      operationId: list_contradiction_candidates_api_v1_admin_contradiction_candidates_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: severity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContradictionCandidateListResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/contradiction-candidates/{candidate_id}:
+    get:
+      tags:
+      - admin-ai
+      summary: Get Contradiction Candidate
+      operationId: get_contradiction_candidate_api_v1_admin_contradiction_candidates__candidate_id__get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: candidate_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Candidate Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContradictionCandidate'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/contradiction-candidates/{candidate_id}/status:
+    patch:
+      tags:
+      - admin-ai
+      summary: Update Contradiction Candidate Status
+      operationId: update_contradiction_candidate_status_api_v1_admin_contradiction_candidates__candidate_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: candidate_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Candidate Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContradictionCandidateStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContradictionCandidate'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/questions:
+    get:
+      tags:
+      - community
+      summary: List Questions
+      operationId: list_questions_api_v1_community_questions_get
+      parameters:
+      - name: country_slug
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+      - name: topic
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityQuestionListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - community
+      summary: Create Question
+      operationId: create_question_api_v1_community_questions_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityQuestionCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityQuestion'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/questions/{question_id}:
+    get:
+      tags:
+      - community
+      summary: Get Question
+      operationId: get_question_api_v1_community_questions__question_id__get
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Question Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityQuestion'
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/questions/{question_id}/answers:
+    get:
+      tags:
+      - community
+      summary: List Answers
+      operationId: list_answers_api_v1_community_questions__question_id__answers_get
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Question Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunityAnswer'
+                title: Response List Answers Api V1 Community Questions  Question
+                  Id  Answers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - community
+      summary: Create Answer
+      operationId: create_answer_api_v1_community_questions__question_id__answers_post
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Question Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityAnswerCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityAnswer'
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/answers/{answer_id}/votes:
+    post:
+      tags:
+      - community
+      summary: Create Vote
+      operationId: create_vote_api_v1_community_answers__answer_id__votes_post
+      parameters:
+      - name: answer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityVoteCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsensusSummary'
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/data-error-reports:
+    post:
+      tags:
+      - community
+      summary: Create Data Error Report
+      operationId: create_data_error_report_api_v1_community_data_error_reports_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataErrorReportCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorReport'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/community/user-story-ratings:
+    post:
+      tags:
+      - community
+      summary: Create User Story Rating
+      operationId: create_user_story_rating_api_v1_community_user_story_ratings_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStoryRatingCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStoryRating'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/questions:
+    get:
+      tags:
+      - admin-community
+      summary: List Questions For Admin
+      operationId: list_questions_for_admin_api_v1_admin_community_questions_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunityQuestion'
+                title: Response List Questions For Admin Api V1 Admin Community Questions
+                  Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/questions/{question_id}/status:
+    patch:
+      tags:
+      - admin-community
+      summary: Update Question Status
+      operationId: update_question_status_api_v1_admin_community_questions__question_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Question Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityQuestion'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/answers:
+    get:
+      tags:
+      - admin-community
+      summary: List Answers For Admin
+      operationId: list_answers_for_admin_api_v1_admin_community_answers_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunityAnswer'
+                title: Response List Answers For Admin Api V1 Admin Community Answers
+                  Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/answers/{answer_id}/status:
+    patch:
+      tags:
+      - admin-community
+      summary: Update Answer Status
+      operationId: update_answer_status_api_v1_admin_community_answers__answer_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: answer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityAnswer'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/data-error-reports:
+    get:
+      tags:
+      - admin-community
+      summary: List Data Error Reports For Admin
+      operationId: list_data_error_reports_for_admin_api_v1_admin_community_data_error_reports_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DataErrorReport'
+                title: Response List Data Error Reports For Admin Api V1 Admin Community
+                  Data Error Reports Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/data-error-reports/{report_id}/status:
+    patch:
+      tags:
+      - admin-community
+      summary: Update Data Error Report Status
+      operationId: update_data_error_report_status_api_v1_admin_community_data_error_reports__report_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Report Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataErrorReportStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorReport'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/user-story-ratings:
+    get:
+      tags:
+      - admin-community
+      summary: List User Story Ratings For Admin
+      operationId: list_user_story_ratings_for_admin_api_v1_admin_community_user_story_ratings_get
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserStoryRating'
+                title: Response List User Story Ratings For Admin Api V1 Admin Community
+                  User Story Ratings Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/community/user-story-ratings/{rating_id}/status:
+    patch:
+      tags:
+      - admin-community
+      summary: Update User Story Rating Status
+      operationId: update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch
+      security:
+      - AdminTokenAuth: []
+      parameters:
+      - name: rating_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Rating Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStoryRatingStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStoryRating'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/home/overview:
     get:
       tags:
@@ -3966,6 +4902,210 @@ components:
           default: low
       type: object
       title: AIDecisionIntentResult
+    AIDraft:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        draft_type:
+          type: string
+          enum:
+          - summary
+          - contradiction_candidate
+          - explanation
+          - source_digest
+          - evidence_digest
+          title: Draft Type
+        status:
+          type: string
+          enum:
+          - needs_review
+          - approved
+          - rejected
+          - archived
+          title: Status
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Route Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        evidence_item_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Evidence Item Id
+        title:
+          type: string
+          title: Title
+        body:
+          type: string
+          title: Body
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        detected_issue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Detected Issue
+        provider:
+          type: string
+          title: Provider
+        model_name:
+          type: string
+          title: Model Name
+        model_version:
+          type: string
+          title: Model Version
+        input_context:
+          additionalProperties: true
+          type: object
+          title: Input Context
+        citations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Citations
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+        reviewed_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reviewed By
+        reviewed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Reviewed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - draft_type
+      - status
+      - title
+      - body
+      - provider
+      - model_name
+      - model_version
+      - confidence
+      - created_at
+      - updated_at
+      title: AIDraft
+    AIDraftGenerateSummaryRequest:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Id
+        source_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Source Id
+        evidence_item_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Evidence Item Id
+        topic:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Topic
+        locale:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Locale
+          default: ru
+      type: object
+      required:
+      - topic
+      title: AIDraftGenerateSummaryRequest
+    AIDraftListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AIDraft'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: AIDraftListResponse
+    AIDraftStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - needs_review
+          - approved
+          - rejected
+          - archived
+          title: Status
+        reviewed_by:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Reviewed By
+      type: object
+      required:
+      - status
+      title: AIDraftStatusUpdateRequest
     AIExplainNumberRequest:
       properties:
         number_type:
@@ -4446,6 +5586,322 @@ components:
       - scenario
       - locale
       title: CiiCountryComparisonResponse
+    CommunityAnswer:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        question_id:
+          type: string
+          format: uuid
+          title: Question Id
+        body:
+          type: string
+          title: Body
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - published
+          - rejected
+          - archived
+          title: Status
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+        evidence_item_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Item Ids
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          title: Created By Identity Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        moderated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Moderated At
+        moderated_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderated By
+        source_backed:
+          type: boolean
+          title: Source Backed
+          default: false
+        consensus:
+          anyOf:
+          - $ref: '#/components/schemas/ConsensusSummary'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - question_id
+      - body
+      - status
+      - created_by_identity_type
+      - created_by_identity_id
+      - created_at
+      - updated_at
+      title: CommunityAnswer
+    CommunityAnswerCreate:
+      properties:
+        body:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Body
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+        evidence_item_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Item Ids
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Created By Identity Id
+      type: object
+      required:
+      - body
+      - created_by_identity_type
+      - created_by_identity_id
+      title: CommunityAnswerCreate
+    CommunityQuestion:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Route Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        topic:
+          type: string
+          title: Topic
+        title:
+          type: string
+          title: Title
+        body:
+          type: string
+          title: Body
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - published
+          - rejected
+          - archived
+          title: Status
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          title: Created By Identity Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        moderated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Moderated At
+        moderated_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderated By
+      type: object
+      required:
+      - id
+      - topic
+      - title
+      - body
+      - status
+      - created_by_identity_type
+      - created_by_identity_id
+      - created_at
+      - updated_at
+      title: CommunityQuestion
+    CommunityQuestionCreate:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Legal Signal Id
+        topic:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Topic
+        title:
+          type: string
+          maxLength: 300
+          minLength: 1
+          title: Title
+        body:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Body
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Created By Identity Id
+      type: object
+      required:
+      - topic
+      - title
+      - body
+      - created_by_identity_type
+      - created_by_identity_id
+      title: CommunityQuestionCreate
+    CommunityQuestionListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CommunityQuestion'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: CommunityQuestionListResponse
+    CommunityStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - published
+          - rejected
+          - archived
+          title: Status
+        moderated_by:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Moderated By
+      type: object
+      required:
+      - status
+      title: CommunityStatusUpdateRequest
+    CommunityVoteCreate:
+      properties:
+        vote_type:
+          type: string
+          enum:
+          - up
+          - down
+          - helpful
+          - outdated
+          title: Vote Type
+        identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Identity Type
+        identity_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Identity Id
+      type: object
+      required:
+      - vote_type
+      - identity_type
+      - identity_id
+      title: CommunityVoteCreate
     CompareMatrixResponse:
       properties:
         locale:
@@ -4615,6 +6071,30 @@ components:
       - slug
       - title
       title: ComparedScenario
+    ConsensusSummary:
+      properties:
+        answer_id:
+          type: string
+          title: Answer Id
+        score:
+          type: number
+          title: Score
+        source_backed:
+          type: boolean
+          title: Source Backed
+        controversial:
+          type: boolean
+          title: Controversial
+        votes:
+          $ref: '#/components/schemas/VoteSummary'
+      type: object
+      required:
+      - answer_id
+      - score
+      - source_backed
+      - controversial
+      - votes
+      title: ConsensusSummary
     ContentValidationError:
       properties:
         error:
@@ -4623,6 +6103,192 @@ components:
       required:
       - error
       title: ContentValidationError
+    ContradictionCandidate:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        topic:
+          type: string
+          title: Topic
+        entity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Entity Id
+        severity:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - critical
+          title: Severity
+        status:
+          type: string
+          enum:
+          - needs_review
+          - confirmed
+          - dismissed
+          - archived
+          title: Status
+        summary:
+          type: string
+          title: Summary
+        claim_a:
+          type: string
+          title: Claim A
+        claim_b:
+          type: string
+          title: Claim B
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+        evidence_item_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Item Ids
+        detected_by:
+          type: string
+          title: Detected By
+        provider:
+          type: string
+          title: Provider
+        model_name:
+          type: string
+          title: Model Name
+        model_version:
+          type: string
+          title: Model Version
+        confidence:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          title: Confidence
+        reviewed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Reviewed At
+        reviewed_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reviewed By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - topic
+      - severity
+      - status
+      - summary
+      - claim_a
+      - claim_b
+      - detected_by
+      - provider
+      - model_name
+      - model_version
+      - confidence
+      - created_at
+      - updated_at
+      title: ContradictionCandidate
+    ContradictionCandidateGenerateRequest:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        topic:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Topic
+        entity_type:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Entity Id
+        locale:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Locale
+          default: ru
+      type: object
+      required:
+      - topic
+      title: ContradictionCandidateGenerateRequest
+    ContradictionCandidateListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ContradictionCandidate'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: ContradictionCandidateListResponse
+    ContradictionCandidateStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - needs_review
+          - confirmed
+          - dismissed
+          - archived
+          title: Status
+        reviewed_by:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Reviewed By
+      type: object
+      required:
+      - status
+      title: ContradictionCandidateStatusUpdateRequest
     Country:
       properties:
         id:
@@ -6287,6 +7953,182 @@ components:
       - components
       - methodology_version
       title: CountryTrustResponse
+    DataErrorReport:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Entity Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Route Id
+        report_type:
+          type: string
+          enum:
+          - outdated
+          - wrong
+          - missing_source
+          - contradiction
+          - translation_issue
+          - other
+          title: Report Type
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - resolved
+          - rejected
+          - archived
+          title: Status
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          title: Created By Identity Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        reviewed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Reviewed At
+        reviewed_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reviewed By
+        resolution_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolution Note
+      type: object
+      required:
+      - id
+      - entity_type
+      - report_type
+      - message
+      - status
+      - created_by_identity_type
+      - created_by_identity_id
+      - created_at
+      title: DataErrorReport
+    DataErrorReportCreate:
+      properties:
+        entity_type:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Entity Id
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Id
+        report_type:
+          type: string
+          enum:
+          - outdated
+          - wrong
+          - missing_source
+          - contradiction
+          - translation_issue
+          - other
+          title: Report Type
+        message:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Message
+        created_by_identity_type:
+          type: string
+          enum:
+          - telegram
+          - anonymous_session
+          - system
+          title: Created By Identity Type
+        created_by_identity_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Created By Identity Id
+      type: object
+      required:
+      - entity_type
+      - report_type
+      - message
+      - created_by_identity_type
+      - created_by_identity_id
+      title: DataErrorReportCreate
+    DataErrorReportStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - resolved
+          - rejected
+          - archived
+          title: Status
+        reviewed_by:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Reviewed By
+        resolution_note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Resolution Note
+      type: object
+      required:
+      - status
+      title: DataErrorReportStatusUpdateRequest
     DataJournalEntry:
       properties:
         id:
@@ -11411,6 +13253,214 @@ components:
           title: Notes
       type: object
       title: UserStoryPatch
+    UserStoryRating:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        user_story_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Story Id
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Route Id
+        official_expectation_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Official Expectation Score
+        real_experience_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Real Experience Score
+        bureaucracy_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Bureaucracy Score
+        cost_surprise_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cost Surprise Score
+        banking_difficulty_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Banking Difficulty Score
+        safety_feeling_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Safety Feeling Score
+        comment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Comment
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - published
+          - rejected
+          - archived
+          title: Status
+        created_by_identity_type:
+          anyOf:
+          - type: string
+            enum:
+            - telegram
+            - anonymous_session
+            - system
+          - type: 'null'
+          title: Created By Identity Type
+        created_by_identity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Identity Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        reviewed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Reviewed At
+        reviewed_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reviewed By
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: UserStoryRating
+    UserStoryRatingCreate:
+      properties:
+        user_story_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: User Story Id
+        country_slug:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Country Slug
+        route_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Route Id
+        official_expectation_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Official Expectation Score
+        real_experience_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Real Experience Score
+        bureaucracy_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Bureaucracy Score
+        cost_surprise_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Cost Surprise Score
+        banking_difficulty_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Banking Difficulty Score
+        safety_feeling_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Safety Feeling Score
+        comment:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Comment
+        created_by_identity_type:
+          anyOf:
+          - type: string
+            enum:
+            - telegram
+            - anonymous_session
+            - system
+          - type: 'null'
+          title: Created By Identity Type
+        created_by_identity_id:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Created By Identity Id
+      type: object
+      title: UserStoryRatingCreate
+    UserStoryRatingStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - review
+          - published
+          - rejected
+          - archived
+          title: Status
+        reviewed_by:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Reviewed By
+      type: object
+      required:
+      - status
+      title: UserStoryRatingStatusUpdateRequest
     UserStoryResponse:
       properties:
         item:
@@ -11445,6 +13495,26 @@ components:
       - msg
       - type
       title: ValidationError
+    VoteSummary:
+      properties:
+        up_votes:
+          type: integer
+          title: Up Votes
+          default: 0
+        down_votes:
+          type: integer
+          title: Down Votes
+          default: 0
+        helpful_votes:
+          type: integer
+          title: Helpful Votes
+          default: 0
+        outdated_votes:
+          type: integer
+          title: Outdated Votes
+          default: 0
+      type: object
+      title: VoteSummary
     WhatChangedItem:
       properties:
         id:
