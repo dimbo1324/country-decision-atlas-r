@@ -17,14 +17,13 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     if (!getStoredToken()) {
-      setUser(null);
-      setIsLoading(false);
       return;
     }
+    setIsLoading(true);
     try {
       const response = await authApi.getMe();
       setUser(response.user);

@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "change-me-local-admin-token")
+AUTH_BEARER_TOKEN = os.getenv("AUTH_BEARER_TOKEN", "")
 SCENARIOS = [
     "relocation_residence",
     "permanent_residence_citizenship",
@@ -139,7 +139,7 @@ def test_user_stories_filter_smoke() -> None:
 def test_data_quality_report_smoke() -> None:
     body = get_json(
         "/api/v1/admin/data-quality/report",
-        headers={"X-Admin-Token": ADMIN_TOKEN},
+        headers={"Authorization": f"Bearer {AUTH_BEARER_TOKEN}"},
     )
     assert {"valid", "issues"}.issubset(body)
 

@@ -792,7 +792,7 @@ class FullCheck:
         self.docker_max_attempts = args.docker_max_attempts
         self.docker_retry_initial_delay = args.docker_retry_initial_delay
         self.docker_retry_delay_step = args.docker_retry_delay_step
-        self.admin_token = args.admin_token
+        self.admin_password = args.admin_token or "local-gate-" + secrets.token_hex(8)
         self.config_path = args.config
         self.regen_proto = args.regen_proto
 
@@ -1425,13 +1425,6 @@ class FullCheck:
     def phase_dependencies(self) -> None:
         self.section("Phase 1 — Dependency installation")
 
-        if not self.admin_token:
-            self.admin_token = "local-gate-" + secrets.token_hex(8)
-        os.environ["ADMIN_TOKEN"] = self.admin_token
-        self.log(
-            "Using ADMIN_TOKEN=<generated> for this run (API container and test runner share it)."
-        )
-
         python312 = self.python312
         if not python312:
             self.add_stage_result(
@@ -1746,9 +1739,6 @@ class FullCheck:
             return
 
         self.section("Phase 5 — Docker stack, migrations, runtime smoke")
-        if not self.admin_token:
-            self.admin_token = "local-gate-" + secrets.token_hex(8)
-        os.environ["ADMIN_TOKEN"] = self.admin_token
         docker_exe = shutil.which("docker")
         if not docker_exe:
             self.add_stage_result(
@@ -1952,7 +1942,50 @@ class FullCheck:
                 f"semantic smoke: {name}", "OK" if ok else "FAIL", detail
             )
 
-        admin_headers = {"X-Admin-Token": self.admin_token}
+        admin_email = f"full-check-owner-{self.run_timestamp}@example.local"
+        bootstrap_owner_exit = self.run_streaming(
+            [
+                docker_exe,
+                "compose",
+                "exec",
+                "-T",
+                "api",
+                "python",
+                "scripts/create_auth_user.py",
+                "--email",
+                admin_email,
+                "--password",
+                self.admin_password,
+                "--role",
+                "owner",
+                "--display-name",
+                "Full Check Owner",
+            ]
+        )
+        self.add_stage_result(
+            "create_auth_user.py (owner bootstrap)",
+            "OK" if bootstrap_owner_exit == 0 else "FAIL",
+        )
+
+        admin_headers: dict[str, str] = {}
+        if bootstrap_owner_exit == 0:
+            login_status, login_payload, login_error = http_json(
+                "http://localhost:8000/api/v1/auth/login",
+                method="POST",
+                data={"email": admin_email, "password": self.admin_password},
+            )
+            bearer_token = (
+                login_payload.get("token")
+                if login_status == 200 and isinstance(login_payload, dict)
+                else None
+            )
+            self.add_stage_result(
+                "auth/login (owner bootstrap)",
+                "OK" if bearer_token else "FAIL",
+                login_error or f"HTTP {login_status}",
+            )
+            if bearer_token:
+                admin_headers = {"Authorization": f"Bearer {bearer_token}"}
         episode_smoke_checks: list[dict[str, Any]] = [
             {
                 "name": "ai-ask",
@@ -2389,7 +2422,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--docker-max-attempts", type=int, default=5)
     parser.add_argument("--docker-retry-initial-delay", type=int, default=5)
     parser.add_argument("--docker-retry-delay-step", type=int, default=2)
-    parser.add_argument("--admin-token", default="")
+    parser.add_argument(
+        "--admin-token",
+        default="",
+        help="Password for the one-off owner account bootstrapped for admin smoke checks "
+        "(random if omitted).",
+    )
     parser.add_argument("--config", default="")
     parser.add_argument("--regen-proto", action="store_true", default=False)
     return parser.parse_args(argv)

@@ -71,7 +71,7 @@ def create_app(
         allow_origins=settings.cors_origins,
         allow_credentials=False,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-        allow_headers=["Content-Type", "Authorization", "X-Admin-Token"],
+        allow_headers=["Content-Type", "Authorization"],
     )
     _register_middleware(
         app, settings, rate_limit_client, cleanup_rate_windows, rate_windows

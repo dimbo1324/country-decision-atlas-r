@@ -97,7 +97,7 @@ test.describe("watchlist authenticated flow", () => {
       name: /Обновления маршрутов/,
     });
     await expect(routeUpdatesCheckbox).not.toBeChecked();
-    await routeUpdatesCheckbox.check();
+    await routeUpdatesCheckbox.click();
     await expect(routeUpdatesCheckbox).toBeChecked();
 
     await page.reload();

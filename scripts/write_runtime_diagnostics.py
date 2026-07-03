@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 ROOT_DIR = Path(__file__).resolve().parents[1]
 RUNTIME_DIR = ROOT_DIR / "local-artifacts" / "runtime-diagnostics"
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "change-me-local-admin-token")
+AUTH_BEARER_TOKEN = os.getenv("AUTH_BEARER_TOKEN", "")
 
 
 Check = tuple[str, str, str, dict[str, Any] | None, dict[str, str] | None]
@@ -166,14 +166,14 @@ def checks() -> list[Check]:
             "GET",
             "/api/v1/admin/data-quality/report",
             None,
-            {"X-Admin-Token": ADMIN_TOKEN},
+            {"Authorization": f"Bearer {AUTH_BEARER_TOKEN}"},
         ),
         (
             "country_onboarding_report.json",
             "GET",
             "/api/v1/admin/country-onboarding/report",
             None,
-            {"X-Admin-Token": ADMIN_TOKEN},
+            {"Authorization": f"Bearer {AUTH_BEARER_TOKEN}"},
         ),
     ]
 

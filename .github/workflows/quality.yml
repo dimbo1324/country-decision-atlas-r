@@ -137,17 +137,30 @@ jobs:
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
           REDIS_URL: redis://localhost:6379/0
-          ADMIN_TOKEN: ci-test-admin-token
           APP_ENV: local
         run: |
           python -m uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port 8000 &
           sleep 5
 
+      - name: Bootstrap owner account for admin smoke checks
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: |
+          python scripts/create_auth_user.py \
+            --email ci-owner@example.local \
+            --password ci-test-owner-password-123 \
+            --role owner \
+            --display-name "CI Owner"
+          TOKEN=$(curl --fail --silent -X POST http://localhost:8000/api/v1/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"ci-owner@example.local","password":"ci-test-owner-password-123"}' \
+            | python -c "import json,sys; print(json.load(sys.stdin)['token'])")
+          echo "AUTH_BEARER_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+
       - name: Runtime smoke tests
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
           API_BASE_URL: http://localhost:8000
-          ADMIN_TOKEN: ci-test-admin-token
           RUN_RUNTIME_SMOKE_TESTS: "1"
         run: python -m pytest tests/smoke/ -v
 
@@ -254,7 +267,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
           REDIS_URL: redis://localhost:6379/0
-          ADMIN_TOKEN: ci-test-admin-token
           APP_ENV: local
           API_RATE_LIMIT_PER_MINUTE: 5000
         run: |
@@ -271,7 +283,6 @@ jobs:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
           API_BASE_URL: http://127.0.0.1:8000
           NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
-          ADMIN_TOKEN: ci-test-admin-token
           APP_ENV: local
         run: pnpm web:mvp:check
 
