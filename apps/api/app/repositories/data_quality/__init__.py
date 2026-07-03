@@ -8,9 +8,19 @@ from app.repositories.data_quality._shared import (
     fetch_all as fetch_all,
 )
 from app.repositories.data_quality.ai import (
+    list_ai_drafts_missing_model_metadata as list_ai_drafts_missing_model_metadata,
+    list_ai_drafts_with_invalid_status as list_ai_drafts_with_invalid_status,
+    list_ai_drafts_without_citations as list_ai_drafts_without_citations,
     list_ai_feature_flags_without_public_access_rules as list_ai_feature_flags_without_public_access_rules,
     list_ai_logs_with_forbidden_metadata_keys as list_ai_logs_with_forbidden_metadata_keys,
+    list_confirmed_contradiction_candidates_without_review as list_confirmed_contradiction_candidates_without_review,
+    list_contradiction_candidates_without_traceability as list_contradiction_candidates_without_traceability,
     list_missing_ai_feature_flags as list_missing_ai_feature_flags,
+    list_published_community_answers_without_moderation as list_published_community_answers_without_moderation,
+    list_published_community_questions_without_moderation as list_published_community_questions_without_moderation,
+    list_published_qna_answers_without_body as list_published_qna_answers_without_body,
+    list_stale_pending_data_error_reports as list_stale_pending_data_error_reports,
+    list_user_story_ratings_with_invalid_scores as list_user_story_ratings_with_invalid_scores,
 )
 from app.repositories.data_quality.cii import (
     list_cii_metric_definitions_without_polarity as list_cii_metric_definitions_without_polarity,

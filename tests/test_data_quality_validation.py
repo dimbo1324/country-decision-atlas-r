@@ -148,6 +148,16 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_missing_ai_feature_flags",
         "list_ai_feature_flags_without_public_access_rules",
         "list_ai_logs_with_forbidden_metadata_keys",
+        "list_ai_drafts_without_citations",
+        "list_ai_drafts_missing_model_metadata",
+        "list_ai_drafts_with_invalid_status",
+        "list_contradiction_candidates_without_traceability",
+        "list_confirmed_contradiction_candidates_without_review",
+        "list_published_community_questions_without_moderation",
+        "list_published_community_answers_without_moderation",
+        "list_published_qna_answers_without_body",
+        "list_stale_pending_data_error_reports",
+        "list_user_story_ratings_with_invalid_scores",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     for name in [

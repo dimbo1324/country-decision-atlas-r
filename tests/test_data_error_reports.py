@@ -68,6 +68,21 @@ def test_repository_is_sql_only() -> None:
     assert "INSERT INTO data_error_reports" in source
 
 
+def test_repository_exposes_pending_report_counter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_count(_conn: Any, status: str | None = None) -> int:
+        captured["status"] = status
+        return 3
+
+    monkeypatch.setattr(repository, "count_data_error_reports", fake_count)
+
+    assert repository.count_pending_data_error_reports(CONNECTION) == 3
+    assert captured["status"] == "pending"
+
+
 def test_public_create_data_error_report_is_pending(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

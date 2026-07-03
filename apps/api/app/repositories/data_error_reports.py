@@ -132,3 +132,7 @@ def count_data_error_reports(conn: Connection[Any], status: str | None = None) -
         (status, status),
     )
     return int(row["total"]) if row else 0
+
+
+def count_pending_data_error_reports(conn: Connection[Any]) -> int:
+    return count_data_error_reports(conn, status="pending")

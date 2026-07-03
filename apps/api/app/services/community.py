@@ -104,7 +104,7 @@ def submit_answer(
 ) -> dict[str, Any]:
     ensure_feature_enabled(connection, settings, "community_enabled")
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
-    question = repository.get_question(connection, question_id, public_only=False)
+    question = repository.get_question(connection, question_id, public_only=True)
     if question is None:
         raise api_error(404, "question_not_found", f"Question not found: {question_id}")
     row = repository.insert_answer(

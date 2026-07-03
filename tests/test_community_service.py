@@ -130,6 +130,32 @@ def test_submit_answer_requires_existing_question(
     assert exc_info.value.status_code == 404
 
 
+def test_submit_answer_requires_public_question(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_feature(monkeypatch)
+    captured: dict[str, Any] = {}
+
+    def fake_get_question(_conn: Any, _question_id: str, **kwargs: Any) -> None:
+        captured.update(kwargs)
+        return None
+
+    monkeypatch.setattr(repository, "get_question", fake_get_question)
+
+    with pytest.raises(HTTPException):
+        service.submit_answer(
+            CONNECTION,
+            Settings(app_env="local"),
+            "pending-question",
+            CommunityAnswerCreate(
+                body="answer body",
+                created_by_identity_type="anonymous_session",
+                created_by_identity_id="session-1",
+            ),
+        )
+    assert captured["public_only"] is True
+
+
 def test_submit_vote_requires_published_answer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

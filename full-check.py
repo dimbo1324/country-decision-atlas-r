@@ -582,9 +582,27 @@ def get_docker_diagnostics() -> dict[str, Any]:
     return diag
 
 
-def http_json(url: str, timeout: int = 10) -> tuple[int | None, Any, str]:
+def http_json(
+    url: str,
+    timeout: int = 10,
+    *,
+    method: str = "GET",
+    headers: dict[str, str] | None = None,
+    data: dict[str, Any] | None = None,
+) -> tuple[int | None, Any, str]:
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as resp:
+        body_bytes = None
+        request_headers = dict(headers or {})
+        if data is not None:
+            body_bytes = json.dumps(data).encode("utf-8")
+            request_headers.setdefault("Content-Type", "application/json")
+        request = urllib.request.Request(
+            url,
+            data=body_bytes,
+            headers=request_headers,
+            method=method,
+        )
+        with urllib.request.urlopen(request, timeout=timeout) as resp:
             body = resp.read().decode("utf-8", errors="replace")
             try:
                 return resp.status, json.loads(body), ""
@@ -616,6 +634,29 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
     if name == "openapi":
         ok = isinstance(data, dict) and "openapi" in data and "paths" in data
         return ok, "contains openapi+paths"
+    if name == "admin-data-quality":
+        required = {"valid", "overall_status", "checks", "issues"}
+        ok = isinstance(data, dict) and required.issubset(data)
+        return ok, f"required={','.join(sorted(required))}"
+    if name in {
+        "admin-ai-drafts",
+        "admin-contradiction-candidates",
+        "community-questions",
+    }:
+        ok = isinstance(data, dict) and {"items", "total"}.issubset(data)
+        total = data.get("total") if isinstance(data, dict) else "unknown"
+        return ok, f"total={total}"
+    if name in {
+        "admin-community-questions",
+        "admin-community-answers",
+        "admin-data-error-reports",
+        "admin-user-story-ratings",
+    }:
+        count = len(data) if isinstance(data, list) else 0
+        return isinstance(data, list), f"items={count}"
+    if name == "community-question-create":
+        ok = isinstance(data, dict) and data.get("status") == "pending"
+        return ok, f"status={data.get('status') if isinstance(data, dict) else None}"
     return True, "no validator"
 
 
@@ -1877,6 +1918,93 @@ class FullCheck:
             ok, detail = validate_semantic_response(name, payload)
             self.add_stage_result(
                 f"semantic smoke: {name}", "OK" if ok else "FAIL", detail
+            )
+
+        admin_headers = {"X-Admin-Token": self.admin_token}
+        episode_smoke_checks: list[dict[str, Any]] = [
+            {
+                "name": "admin-data-quality",
+                "url": "http://localhost:8000/api/v1/admin/data-quality/report",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "admin-ai-drafts",
+                "url": "http://localhost:8000/api/v1/admin/ai/drafts",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "admin-contradiction-candidates",
+                "url": "http://localhost:8000/api/v1/admin/contradiction-candidates",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "community-questions",
+                "url": "http://localhost:8000/api/v1/community/questions",
+                "expected_status": 200,
+            },
+            {
+                "name": "community-question-create",
+                "url": "http://localhost:8000/api/v1/community/questions",
+                "method": "POST",
+                "expected_status": 201,
+                "data": {
+                    "country_slug": "uruguay",
+                    "topic": "runtime_smoke",
+                    "title": f"Runtime smoke {self.run_timestamp}",
+                    "body": "Runtime smoke question created by full-check.py.",
+                    "created_by_identity_type": "anonymous_session",
+                    "created_by_identity_id": f"full-check-{self.run_timestamp}",
+                },
+            },
+            {
+                "name": "admin-community-questions",
+                "url": "http://localhost:8000/api/v1/admin/community/questions",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "admin-community-answers",
+                "url": "http://localhost:8000/api/v1/admin/community/answers",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "admin-data-error-reports",
+                "url": "http://localhost:8000/api/v1/admin/community/data-error-reports",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+            {
+                "name": "admin-user-story-ratings",
+                "url": "http://localhost:8000/api/v1/admin/community/user-story-ratings",
+                "headers": admin_headers,
+                "expected_status": 200,
+            },
+        ]
+        for check in episode_smoke_checks:
+            name = str(check["name"])
+            status, payload, error = http_json(
+                str(check["url"]),
+                method=str(check.get("method", "GET")),
+                headers=check.get("headers"),
+                data=check.get("data"),
+            )
+            expected_status = int(check["expected_status"])
+            if status != expected_status:
+                self.add_stage_result(
+                    f"episode 12-13 smoke: {name}",
+                    "FAIL",
+                    error or f"HTTP {status}, expected {expected_status}",
+                )
+                continue
+            ok, detail = validate_semantic_response(name, payload)
+            self.add_stage_result(
+                f"episode 12-13 smoke: {name}",
+                "OK" if ok else "FAIL",
+                detail,
             )
 
         migration_count_exit = self.run_streaming(

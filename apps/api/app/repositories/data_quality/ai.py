@@ -79,3 +79,259 @@ def list_ai_logs_with_forbidden_metadata_keys(
         LIMIT 100
         """,
     )
+
+
+def list_ai_drafts_without_citations(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            draft_type,
+            status,
+            country_slug,
+            citations
+        FROM ai_drafts
+        WHERE status IN ('needs_review', 'approved')
+          AND (
+              citations IS NULL
+              OR jsonb_typeof(citations) != 'array'
+              OR jsonb_array_length(citations) = 0
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_ai_drafts_missing_model_metadata(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            draft_type,
+            status,
+            country_slug,
+            provider,
+            model_name,
+            model_version
+        FROM ai_drafts
+        WHERE NULLIF(BTRIM(provider), '') IS NULL
+           OR NULLIF(BTRIM(model_name), '') IS NULL
+           OR NULLIF(BTRIM(model_version), '') IS NULL
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_ai_drafts_with_invalid_status(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            draft_type,
+            status,
+            country_slug
+        FROM ai_drafts
+        WHERE status NOT IN ('needs_review', 'approved', 'rejected', 'archived')
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_contradiction_candidates_without_traceability(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            country_slug,
+            entity_type,
+            entity_id::text,
+            status,
+            source_ids,
+            evidence_item_ids
+        FROM contradiction_candidates
+        WHERE status IN ('needs_review', 'confirmed')
+          AND (
+              source_ids IS NULL
+              OR jsonb_typeof(source_ids) != 'array'
+              OR jsonb_array_length(source_ids) = 0
+          )
+          AND (
+              evidence_item_ids IS NULL
+              OR jsonb_typeof(evidence_item_ids) != 'array'
+              OR jsonb_array_length(evidence_item_ids) = 0
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_confirmed_contradiction_candidates_without_review(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            country_slug,
+            entity_type,
+            entity_id::text,
+            status,
+            reviewed_at,
+            reviewed_by
+        FROM contradiction_candidates
+        WHERE status = 'confirmed'
+          AND (
+              reviewed_at IS NULL
+              OR NULLIF(BTRIM(reviewed_by), '') IS NULL
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_published_community_questions_without_moderation(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            country_slug,
+            route_id::text,
+            topic,
+            status,
+            moderated_at,
+            moderated_by
+        FROM qna_questions
+        WHERE status = 'published'
+          AND (
+              moderated_at IS NULL
+              OR NULLIF(BTRIM(moderated_by), '') IS NULL
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_published_community_answers_without_moderation(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            question_id::text,
+            status,
+            moderated_at,
+            moderated_by
+        FROM qna_answers
+        WHERE status = 'published'
+          AND (
+              moderated_at IS NULL
+              OR NULLIF(BTRIM(moderated_by), '') IS NULL
+          )
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_published_qna_answers_without_body(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            question_id::text,
+            status,
+            body
+        FROM qna_answers
+        WHERE status = 'published'
+          AND NULLIF(BTRIM(body), '') IS NULL
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
+
+
+def list_stale_pending_data_error_reports(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            entity_type,
+            entity_id::text,
+            country_slug,
+            route_id::text,
+            report_type,
+            status,
+            created_at
+        FROM data_error_reports
+        WHERE status = 'pending'
+          AND created_at < NOW() - INTERVAL '30 days'
+        ORDER BY created_at ASC
+        LIMIT 100
+        """,
+    )
+
+
+def list_user_story_ratings_with_invalid_scores(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            id::text,
+            user_story_id::text,
+            official_expectation_score,
+            real_experience_score,
+            bureaucracy_score,
+            cost_surprise_score,
+            banking_difficulty_score,
+            safety_feeling_score,
+            status
+        FROM user_story_ratings
+        WHERE official_expectation_score < 0
+           OR official_expectation_score > 100
+           OR real_experience_score < 0
+           OR real_experience_score > 100
+           OR bureaucracy_score < 0
+           OR bureaucracy_score > 100
+           OR cost_surprise_score < 0
+           OR cost_surprise_score > 100
+           OR banking_difficulty_score < 0
+           OR banking_difficulty_score > 100
+           OR safety_feeling_score < 0
+           OR safety_feeling_score > 100
+           OR status NOT IN ('pending', 'review', 'published', 'rejected', 'archived')
+        ORDER BY created_at DESC
+        LIMIT 100
+        """,
+    )
