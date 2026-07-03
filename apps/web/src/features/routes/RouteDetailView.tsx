@@ -4,6 +4,7 @@ import type { LocaleCode } from "../../shared/api/countries";
 import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { routes } from "../../shared/lib/routes";
+import { RouteMigrationBoardBlock } from "../migration-board";
 import { RouteChecklistList } from "./RouteChecklistList";
 import { RouteDocumentsList } from "./RouteDocumentsList";
 import { RouteEligibilityBadges } from "./RouteEligibilityBadges";
@@ -138,6 +139,11 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
       <section className="cardSection" data-testid="route-documents-section">
         <h2 className="cardSectionTitle">Документы</h2>
         <RouteDocumentsList documents={route.documents} />
+      </section>
+
+      <section className="cardSection" data-testid="route-migration-board-section">
+        <h2 className="cardSectionTitle">Люди, рассматривающие этот маршрут</h2>
+        <RouteMigrationBoardBlock routeId={route.id} />
       </section>
 
       <section className="cardSection" data-testid="route-sources-section">

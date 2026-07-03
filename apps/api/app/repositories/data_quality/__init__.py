@@ -113,6 +113,16 @@ from app.repositories.data_quality.decision_personalization import (
     list_decision_scores_missing_required_criteria as list_decision_scores_missing_required_criteria,
     list_decision_wizard_rule_mismatches as list_decision_wizard_rule_mismatches,
 )
+from app.repositories.data_quality.migration_board import (
+    list_duplicate_pending_migration_board_contact_requests as list_duplicate_pending_migration_board_contact_requests,
+    list_invalid_migration_board_blocks as list_invalid_migration_board_blocks,
+    list_invalid_migration_board_contact_requests as list_invalid_migration_board_contact_requests,
+    list_invalid_migration_board_reports as list_invalid_migration_board_reports,
+    list_migration_board_posts_with_route_country_mismatch as list_migration_board_posts_with_route_country_mismatch,
+    list_migration_board_public_posts_with_pii as list_migration_board_public_posts_with_pii,
+    list_published_migration_board_posts_without_acknowledgements as list_published_migration_board_posts_without_acknowledgements,
+    list_published_migration_board_posts_without_approval as list_published_migration_board_posts_without_approval,
+)
 from app.repositories.data_quality.personas import (
     list_active_personas_missing_descriptions as list_active_personas_missing_descriptions,
     list_active_personas_missing_metric_modifiers as list_active_personas_missing_metric_modifiers,

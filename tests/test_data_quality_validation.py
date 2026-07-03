@@ -191,6 +191,14 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_duplicate_active_watchlist_entries",
         "list_archived_watchlists_missing_archived_at",
         "list_watchlists_with_null_notification_flags",
+        "list_published_migration_board_posts_without_approval",
+        "list_published_migration_board_posts_without_acknowledgements",
+        "list_migration_board_posts_with_route_country_mismatch",
+        "list_migration_board_public_posts_with_pii",
+        "list_invalid_migration_board_contact_requests",
+        "list_duplicate_pending_migration_board_contact_requests",
+        "list_invalid_migration_board_reports",
+        "list_invalid_migration_board_blocks",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     monkeypatch.setattr(data_quality_repository, "count_active_owners", lambda *_: 1)

@@ -4550,6 +4550,981 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/migration-board/posts:
+    get:
+      tags:
+      - migration-board
+      summary: List Board Posts
+      operationId: list_board_posts_api_v1_migration_board_posts_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: destination_country
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Country
+      - name: origin_country
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country
+      - name: route_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Id
+      - name: scenario
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario
+      - name: persona
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona
+      - name: timeline_window
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timeline Window
+      - name: migration_stage
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Migration Stage
+      - name: companion_goal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Companion Goal
+      - name: household_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Household Type
+      - name: preferred_language
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preferred Language
+      - name: tag
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tag
+      - name: visibility
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Visibility
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationBoardPostListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/migration-board/posts/{post_id}:
+    get:
+      tags:
+      - migration-board
+      summary: Get Board Post
+      operationId: get_board_post_api_v1_migration_board_posts__post_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationBoardPostDetail'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/posts:
+    get:
+      tags:
+      - migration-board
+      summary: List My Board Posts
+      operationId: list_my_board_posts_api_v1_me_migration_board_posts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyMigrationBoardPostListResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - migration-board
+      summary: Create My Board Post
+      operationId: create_my_board_post_api_v1_me_migration_board_posts_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMigrationBoardPostRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyMigrationBoardPost'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/migration-board/posts/{post_id}:
+    get:
+      tags:
+      - migration-board
+      summary: Get My Board Post
+      operationId: get_my_board_post_api_v1_me_migration_board_posts__post_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyMigrationBoardPost'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - migration-board
+      summary: Update My Board Post
+      operationId: update_my_board_post_api_v1_me_migration_board_posts__post_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMigrationBoardPostRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyMigrationBoardPost'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/posts/{post_id}/submit:
+    post:
+      tags:
+      - migration-board
+      summary: Submit My Board Post
+      operationId: submit_my_board_post_api_v1_me_migration_board_posts__post_id__submit_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitMigrationBoardPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/posts/{post_id}/archive:
+    post:
+      tags:
+      - migration-board
+      summary: Archive My Board Post
+      operationId: archive_my_board_post_api_v1_me_migration_board_posts__post_id__archive_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveMigrationBoardPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/matches:
+    get:
+      tags:
+      - migration-board
+      summary: List My Board Matches
+      operationId: list_my_board_matches_api_v1_me_migration_board_matches_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanionMatchesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/posts/{post_id}/matches:
+    get:
+      tags:
+      - migration-board
+      summary: List Post Board Matches
+      operationId: list_post_board_matches_api_v1_me_migration_board_posts__post_id__matches_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanionMatchesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/migration-board/posts/{post_id}/contact-requests:
+    post:
+      tags:
+      - migration-board
+      summary: Create Board Contact Request
+      operationId: create_board_contact_request_api_v1_migration_board_posts__post_id__contact_requests_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactRequestRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/contact-requests/incoming:
+    get:
+      tags:
+      - migration-board
+      summary: List Incoming Contact Requests
+      operationId: list_incoming_contact_requests_api_v1_me_migration_board_contact_requests_incoming_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/me/migration-board/contact-requests/outgoing:
+    get:
+      tags:
+      - migration-board
+      summary: List Outgoing Contact Requests
+      operationId: list_outgoing_contact_requests_api_v1_me_migration_board_contact_requests_outgoing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/me/migration-board/contact-requests/{request_id}/accept:
+    post:
+      tags:
+      - migration-board
+      summary: Accept Contact Request
+      operationId: accept_contact_request_api_v1_me_migration_board_contact_requests__request_id__accept_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequestActionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/contact-requests/{request_id}/decline:
+    post:
+      tags:
+      - migration-board
+      summary: Decline Contact Request
+      operationId: decline_contact_request_api_v1_me_migration_board_contact_requests__request_id__decline_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequestActionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/contact-requests/{request_id}/cancel:
+    post:
+      tags:
+      - migration-board
+      summary: Cancel Contact Request
+      operationId: cancel_contact_request_api_v1_me_migration_board_contact_requests__request_id__cancel_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactRequestActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/migration-board/posts/{post_id}/report:
+    post:
+      tags:
+      - migration-board
+      summary: Report Board Post
+      operationId: report_board_post_api_v1_migration_board_posts__post_id__report_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMigrationBoardReportRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationBoardReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/contact-requests/{request_id}/report:
+    post:
+      tags:
+      - migration-board
+      summary: Report Board Contact Request
+      operationId: report_board_contact_request_api_v1_me_migration_board_contact_requests__request_id__report_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMigrationBoardReportRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationBoardReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/blocks/{user_id}:
+    post:
+      tags:
+      - migration-board
+      summary: Block Board User
+      operationId: block_board_user_api_v1_me_migration_board_blocks__user_id__post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUserRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockedUserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - migration-board
+      summary: Unblock Board User
+      operationId: unblock_board_user_api_v1_me_migration_board_blocks__user_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/migration-board/blocks:
+    get:
+      tags:
+      - migration-board
+      summary: List Board Blocks
+      operationId: list_board_blocks_api_v1_me_migration_board_blocks_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockedUserListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/admin/migration-board/posts:
+    get:
+      tags:
+      - admin-migration-board
+      summary: List Migration Board Posts For Admin
+      operationId: list_migration_board_posts_for_admin_api_v1_admin_migration_board_posts_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMigrationBoardPostListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/posts/{post_id}:
+    get:
+      tags:
+      - admin-migration-board
+      summary: Get Migration Board Post For Admin
+      operationId: get_migration_board_post_for_admin_api_v1_admin_migration_board_posts__post_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMigrationBoardPost'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/posts/{post_id}/approve:
+    post:
+      tags:
+      - admin-migration-board
+      summary: Approve Migration Board Post
+      operationId: approve_migration_board_post_api_v1_admin_migration_board_posts__post_id__approve_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerateMigrationBoardPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/posts/{post_id}/reject:
+    post:
+      tags:
+      - admin-migration-board
+      summary: Reject Migration Board Post
+      operationId: reject_migration_board_post_api_v1_admin_migration_board_posts__post_id__reject_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerateMigrationBoardPostRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerateMigrationBoardPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/posts/{post_id}/hide:
+    post:
+      tags:
+      - admin-migration-board
+      summary: Hide Migration Board Post
+      operationId: hide_migration_board_post_api_v1_admin_migration_board_posts__post_id__hide_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Post Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerateMigrationBoardPostRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerateMigrationBoardPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/reports:
+    get:
+      tags:
+      - admin-migration-board
+      summary: List Migration Board Reports For Admin
+      operationId: list_migration_board_reports_for_admin_api_v1_admin_migration_board_reports_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationBoardReportListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/reports/{report_id}/resolve:
+    post:
+      tags:
+      - admin-migration-board
+      summary: Resolve Migration Board Report
+      operationId: resolve_migration_board_report_api_v1_admin_migration_board_reports__report_id__resolve_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Report Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewMigrationBoardReportRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewMigrationBoardReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/reports/{report_id}/dismiss:
+    post:
+      tags:
+      - admin-migration-board
+      summary: Dismiss Migration Board Report
+      operationId: dismiss_migration_board_report_api_v1_admin_migration_board_reports__report_id__dismiss_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Report Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewMigrationBoardReportRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewMigrationBoardReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/auth/register:
     post:
       tags:
@@ -5837,6 +6812,179 @@ components:
       required:
       - item
       title: AdminLegalSignalResponse
+    AdminMigrationBoardPost:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        destination_country:
+          $ref: '#/components/schemas/MigrationBoardCountryRef'
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardCountryRef'
+          - type: 'null'
+        route:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardRouteRef'
+          - type: 'null'
+        scenario:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardScenarioRef'
+          - type: 'null'
+        persona:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardPersonaRef'
+          - type: 'null'
+        target_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+        budget_range:
+          type: string
+          title: Budget Range
+        household_type:
+          type: string
+          title: Household Type
+        migration_stage:
+          type: string
+          title: Migration Stage
+        companion_goal:
+          type: string
+          title: Companion Goal
+        preferred_language:
+          type: string
+          title: Preferred Language
+        visibility:
+          type: string
+          title: Visibility
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        status:
+          type: string
+          title: Status
+        moderation_status:
+          type: string
+          title: Moderation Status
+        risk_acknowledged:
+          type: boolean
+          title: Risk Acknowledged
+        legal_disclaimer_acknowledged:
+          type: boolean
+          title: Legal Disclaimer Acknowledged
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        submitted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Submitted At
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        archived_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Archived At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        moderation_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderation Reason
+        user_id:
+          type: string
+          title: User Id
+        author_display_name:
+          type: string
+          title: Author Display Name
+        moderated_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderated By
+        moderated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Moderated At
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - destination_country
+      - timeline_window
+      - budget_range
+      - household_type
+      - migration_stage
+      - companion_goal
+      - preferred_language
+      - visibility
+      - contact_requests_enabled
+      - status
+      - moderation_status
+      - risk_acknowledged
+      - legal_disclaimer_acknowledged
+      - created_at
+      - updated_at
+      - user_id
+      - author_display_name
+      title: AdminMigrationBoardPost
+    AdminMigrationBoardPostListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AdminMigrationBoardPost'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: AdminMigrationBoardPostListResponse
     AdminSourceResponse:
       properties:
         item:
@@ -6080,6 +7228,14 @@ components:
       - code
       - message
       title: ApiError
+    ArchiveMigrationBoardPostResponse:
+      properties:
+        post:
+          $ref: '#/components/schemas/MyMigrationBoardPost'
+      type: object
+      required:
+      - post
+      title: ArchiveMigrationBoardPostResponse
     AuditEvent:
       properties:
         id:
@@ -6207,6 +7363,59 @@ components:
       - status
       - created_at
       title: AuthUser
+    BlockUserRequest:
+      properties:
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Reason
+      additionalProperties: false
+      type: object
+      title: BlockUserRequest
+    BlockedUserListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/BlockedUserResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: BlockedUserListResponse
+    BlockedUserResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        blocked_user_id:
+          type: string
+          title: Blocked User Id
+        blocked_user_display_name:
+          type: string
+          title: Blocked User Display Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+      type: object
+      required:
+      - id
+      - blocked_user_id
+      - blocked_user_display_name
+      - created_at
+      title: BlockedUserResponse
     CiiCountryComparisonResponse:
       properties:
         scenario:
@@ -6572,6 +7781,120 @@ components:
       - identity_type
       - identity_id
       title: CommunityVoteCreate
+    CompanionMatchPost:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        destination_country:
+          $ref: '#/components/schemas/MigrationBoardCountryRef'
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardCountryRef'
+          - type: 'null'
+        route:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardRouteRef'
+          - type: 'null'
+        scenario:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardScenarioRef'
+          - type: 'null'
+        persona:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardPersonaRef'
+          - type: 'null'
+        target_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+        budget_range:
+          type: string
+          title: Budget Range
+        household_type:
+          type: string
+          title: Household Type
+        migration_stage:
+          type: string
+          title: Migration Stage
+        companion_goal:
+          type: string
+          title: Companion Goal
+        preferred_language:
+          type: string
+          title: Preferred Language
+        visibility:
+          type: string
+          title: Visibility
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        author:
+          $ref: '#/components/schemas/MigrationBoardAuthorSafe'
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        match_reasons:
+          items:
+            type: string
+          type: array
+          title: Match Reasons
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - destination_country
+      - timeline_window
+      - budget_range
+      - household_type
+      - migration_stage
+      - companion_goal
+      - preferred_language
+      - visibility
+      - contact_requests_enabled
+      - author
+      - match_reasons
+      title: CompanionMatchPost
+    CompanionMatchesResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CompanionMatchPost'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: CompanionMatchesResponse
     CompareMatrixResponse:
       properties:
         locale:
@@ -6765,6 +8088,95 @@ components:
       - controversial
       - votes
       title: ConsensusSummary
+    ContactRequestActionRequest:
+      properties:
+        response_note:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Response Note
+      additionalProperties: false
+      type: object
+      title: ContactRequestActionRequest
+    ContactRequestActionResponse:
+      properties:
+        request:
+          $ref: '#/components/schemas/ContactRequestResponse'
+      type: object
+      required:
+      - request
+      title: ContactRequestActionResponse
+    ContactRequestListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ContactRequestResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: ContactRequestListResponse
+    ContactRequestResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        post_id:
+          type: string
+          title: Post Id
+        post_title:
+          type: string
+          title: Post Title
+        from_user_display_name:
+          type: string
+          title: From User Display Name
+        to_user_display_name:
+          type: string
+          title: To User Display Name
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        responded_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Responded At
+        cancelled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cancelled At
+        response_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Note
+      type: object
+      required:
+      - id
+      - post_id
+      - post_title
+      - from_user_display_name
+      - to_user_display_name
+      - message
+      - status
+      - created_at
+      title: ContactRequestResponse
     ContentValidationError:
       properties:
         error:
@@ -8623,6 +10035,135 @@ components:
       - components
       - methodology_version
       title: CountryTrustResponse
+    CreateContactRequestRequest:
+      properties:
+        message:
+          type: string
+          maxLength: 800
+          minLength: 20
+          title: Message
+      additionalProperties: false
+      type: object
+      required:
+      - message
+      title: CreateContactRequestRequest
+    CreateMigrationBoardPostRequest:
+      properties:
+        destination_country_slug:
+          type: string
+          title: Destination Country Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        route_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Id
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        title:
+          type: string
+          maxLength: 140
+          minLength: 6
+          title: Title
+        summary:
+          type: string
+          maxLength: 1200
+          minLength: 30
+          title: Summary
+        target_city:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+          default: unknown
+        budget_range:
+          type: string
+          title: Budget Range
+          default: undisclosed
+        household_type:
+          type: string
+          title: Household Type
+          default: undisclosed
+        migration_stage:
+          type: string
+          title: Migration Stage
+          default: researching
+        companion_goal:
+          type: string
+          title: Companion Goal
+          default: info_exchange
+        preferred_language:
+          type: string
+          maxLength: 24
+          title: Preferred Language
+          default: undisclosed
+        visibility:
+          type: string
+          title: Visibility
+          default: members_only
+        risk_acknowledged:
+          type: boolean
+          title: Risk Acknowledged
+          default: false
+        legal_disclaimer_acknowledged:
+          type: boolean
+          title: Legal Disclaimer Acknowledged
+          default: false
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+          default: true
+        tags:
+          items:
+            type: string
+          type: array
+          maxItems: 12
+          title: Tags
+      additionalProperties: false
+      type: object
+      required:
+      - destination_country_slug
+      - title
+      - summary
+      title: CreateMigrationBoardPostRequest
+    CreateMigrationBoardReportRequest:
+      properties:
+        reason:
+          type: string
+          title: Reason
+        details:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Details
+      additionalProperties: false
+      type: object
+      required:
+      - reason
+      title: CreateMigrationBoardReportRequest
     CurrentUserResponse:
       properties:
         user:
@@ -11374,6 +12915,524 @@ components:
       - section_type
       - display_order
       title: MethodologySection
+    MigrationBoardAuthorSafe:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+          default: Member
+      type: object
+      title: MigrationBoardAuthorSafe
+    MigrationBoardCountryRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - slug
+      - name
+      title: MigrationBoardCountryRef
+    MigrationBoardPersonaRef:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        label:
+          type: string
+          title: Label
+      type: object
+      required:
+      - slug
+      - label
+      title: MigrationBoardPersonaRef
+    MigrationBoardPostDetail:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        destination_country:
+          $ref: '#/components/schemas/MigrationBoardCountryRef'
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardCountryRef'
+          - type: 'null'
+        route:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardRouteRef'
+          - type: 'null'
+        scenario:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardScenarioRef'
+          - type: 'null'
+        persona:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardPersonaRef'
+          - type: 'null'
+        target_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+        budget_range:
+          type: string
+          title: Budget Range
+        household_type:
+          type: string
+          title: Household Type
+        migration_stage:
+          type: string
+          title: Migration Stage
+        companion_goal:
+          type: string
+          title: Companion Goal
+        preferred_language:
+          type: string
+          title: Preferred Language
+        visibility:
+          type: string
+          title: Visibility
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        author:
+          $ref: '#/components/schemas/MigrationBoardAuthorSafe'
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - destination_country
+      - timeline_window
+      - budget_range
+      - household_type
+      - migration_stage
+      - companion_goal
+      - preferred_language
+      - visibility
+      - contact_requests_enabled
+      - author
+      - created_at
+      title: MigrationBoardPostDetail
+    MigrationBoardPostListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MigrationBoardPostSummary'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - items
+      - total
+      - limit
+      - offset
+      title: MigrationBoardPostListResponse
+    MigrationBoardPostSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        destination_country:
+          $ref: '#/components/schemas/MigrationBoardCountryRef'
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardCountryRef'
+          - type: 'null'
+        route:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardRouteRef'
+          - type: 'null'
+        scenario:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardScenarioRef'
+          - type: 'null'
+        persona:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardPersonaRef'
+          - type: 'null'
+        target_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+        budget_range:
+          type: string
+          title: Budget Range
+        household_type:
+          type: string
+          title: Household Type
+        migration_stage:
+          type: string
+          title: Migration Stage
+        companion_goal:
+          type: string
+          title: Companion Goal
+        preferred_language:
+          type: string
+          title: Preferred Language
+        visibility:
+          type: string
+          title: Visibility
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        author:
+          $ref: '#/components/schemas/MigrationBoardAuthorSafe'
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - destination_country
+      - timeline_window
+      - budget_range
+      - household_type
+      - migration_stage
+      - companion_goal
+      - preferred_language
+      - visibility
+      - contact_requests_enabled
+      - author
+      title: MigrationBoardPostSummary
+    MigrationBoardReportListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MigrationBoardReportResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: MigrationBoardReportListResponse
+    MigrationBoardReportResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        contact_request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Contact Request Id
+        reason:
+          type: string
+          title: Reason
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        reviewed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Reviewed At
+        resolution_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolution Note
+      type: object
+      required:
+      - id
+      - reason
+      - status
+      - created_at
+      title: MigrationBoardReportResponse
+    MigrationBoardRouteRef:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+      type: object
+      required:
+      - id
+      - slug
+      - title
+      title: MigrationBoardRouteRef
+    MigrationBoardScenarioRef:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        label:
+          type: string
+          title: Label
+      type: object
+      required:
+      - slug
+      - label
+      title: MigrationBoardScenarioRef
+    ModerateMigrationBoardPostRequest:
+      properties:
+        moderation_reason:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Moderation Reason
+      additionalProperties: false
+      type: object
+      title: ModerateMigrationBoardPostRequest
+    ModerateMigrationBoardPostResponse:
+      properties:
+        post:
+          $ref: '#/components/schemas/AdminMigrationBoardPost'
+      type: object
+      required:
+      - post
+      title: ModerateMigrationBoardPostResponse
+    MyMigrationBoardPost:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        destination_country:
+          $ref: '#/components/schemas/MigrationBoardCountryRef'
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardCountryRef'
+          - type: 'null'
+        route:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardRouteRef'
+          - type: 'null'
+        scenario:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardScenarioRef'
+          - type: 'null'
+        persona:
+          anyOf:
+          - $ref: '#/components/schemas/MigrationBoardPersonaRef'
+          - type: 'null'
+        target_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          type: string
+          title: Timeline Window
+        budget_range:
+          type: string
+          title: Budget Range
+        household_type:
+          type: string
+          title: Household Type
+        migration_stage:
+          type: string
+          title: Migration Stage
+        companion_goal:
+          type: string
+          title: Companion Goal
+        preferred_language:
+          type: string
+          title: Preferred Language
+        visibility:
+          type: string
+          title: Visibility
+        contact_requests_enabled:
+          type: boolean
+          title: Contact Requests Enabled
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        status:
+          type: string
+          title: Status
+        moderation_status:
+          type: string
+          title: Moderation Status
+        risk_acknowledged:
+          type: boolean
+          title: Risk Acknowledged
+        legal_disclaimer_acknowledged:
+          type: boolean
+          title: Legal Disclaimer Acknowledged
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        submitted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Submitted At
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        archived_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Archived At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        moderation_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderation Reason
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - destination_country
+      - timeline_window
+      - budget_range
+      - household_type
+      - migration_stage
+      - companion_goal
+      - preferred_language
+      - visibility
+      - contact_requests_enabled
+      - status
+      - moderation_status
+      - risk_acknowledged
+      - legal_disclaimer_acknowledged
+      - created_at
+      - updated_at
+      title: MyMigrationBoardPost
+    MyMigrationBoardPostListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MyMigrationBoardPost'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: MyMigrationBoardPostListResponse
     OnboardingFinding:
       properties:
         code:
@@ -11796,6 +13855,29 @@ components:
       - password
       - display_name
       title: RegisterRequest
+    ReviewMigrationBoardReportRequest:
+      properties:
+        resolution_note:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Resolution Note
+        hide_post:
+          type: boolean
+          title: Hide Post
+          default: false
+      additionalProperties: false
+      type: object
+      title: ReviewMigrationBoardReportRequest
+    ReviewMigrationBoardReportResponse:
+      properties:
+        report:
+          $ref: '#/components/schemas/MigrationBoardReportResponse'
+      type: object
+      required:
+      - report
+      title: ReviewMigrationBoardReportResponse
     RevokeAllSessionsResponse:
       properties:
         revoked_count:
@@ -12775,6 +14857,14 @@ components:
       - item
       - locale
       title: SourceResponse
+    SubmitMigrationBoardPostResponse:
+      properties:
+        post:
+          $ref: '#/components/schemas/MyMigrationBoardPost'
+      type: object
+      required:
+      - post
+      title: SubmitMigrationBoardPostResponse
     TelegramLinkRequest:
       properties:
         code:
@@ -13609,6 +15699,121 @@ components:
       - countries_stored
       - countries_failed
       title: TrustRecomputeSummary
+    UpdateMigrationBoardPostRequest:
+      properties:
+        destination_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Country Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        route_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Id
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        persona_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Slug
+        title:
+          anyOf:
+          - type: string
+            maxLength: 140
+            minLength: 6
+          - type: 'null'
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+            maxLength: 1200
+            minLength: 30
+          - type: 'null'
+          title: Summary
+        target_city:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Target City
+        target_month:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Month
+        timeline_window:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timeline Window
+        budget_range:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Budget Range
+        household_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Household Type
+        migration_stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Migration Stage
+        companion_goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Companion Goal
+        preferred_language:
+          anyOf:
+          - type: string
+            maxLength: 24
+          - type: 'null'
+          title: Preferred Language
+        visibility:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Visibility
+        risk_acknowledged:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Risk Acknowledged
+        legal_disclaimer_acknowledged:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Legal Disclaimer Acknowledged
+        contact_requests_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Contact Requests Enabled
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 12
+          - type: 'null'
+          title: Tags
+      additionalProperties: false
+      type: object
+      title: UpdateMigrationBoardPostRequest
     UserSessionListResponse:
       properties:
         items:

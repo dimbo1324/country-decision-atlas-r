@@ -1758,6 +1758,451 @@ export interface paths {
         patch: operations["update_user_story_rating_status_api_v1_admin_community_user_story_ratings__rating_id__status_patch"];
         trace?: never;
     };
+    "/api/v1/migration-board/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Board Posts */
+        get: operations["list_board_posts_api_v1_migration_board_posts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/migration-board/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Board Post */
+        get: operations["get_board_post_api_v1_migration_board_posts__post_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Board Posts */
+        get: operations["list_my_board_posts_api_v1_me_migration_board_posts_get"];
+        put?: never;
+        /** Create My Board Post */
+        post: operations["create_my_board_post_api_v1_me_migration_board_posts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Board Post */
+        get: operations["get_my_board_post_api_v1_me_migration_board_posts__post_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update My Board Post */
+        patch: operations["update_my_board_post_api_v1_me_migration_board_posts__post_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/posts/{post_id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit My Board Post */
+        post: operations["submit_my_board_post_api_v1_me_migration_board_posts__post_id__submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/posts/{post_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive My Board Post */
+        post: operations["archive_my_board_post_api_v1_me_migration_board_posts__post_id__archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Board Matches */
+        get: operations["list_my_board_matches_api_v1_me_migration_board_matches_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/posts/{post_id}/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Post Board Matches */
+        get: operations["list_post_board_matches_api_v1_me_migration_board_posts__post_id__matches_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/migration-board/posts/{post_id}/contact-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Board Contact Request */
+        post: operations["create_board_contact_request_api_v1_migration_board_posts__post_id__contact_requests_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/incoming": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Incoming Contact Requests */
+        get: operations["list_incoming_contact_requests_api_v1_me_migration_board_contact_requests_incoming_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/outgoing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Outgoing Contact Requests */
+        get: operations["list_outgoing_contact_requests_api_v1_me_migration_board_contact_requests_outgoing_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/{request_id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept Contact Request */
+        post: operations["accept_contact_request_api_v1_me_migration_board_contact_requests__request_id__accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/{request_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline Contact Request */
+        post: operations["decline_contact_request_api_v1_me_migration_board_contact_requests__request_id__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/{request_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Contact Request */
+        post: operations["cancel_contact_request_api_v1_me_migration_board_contact_requests__request_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/migration-board/posts/{post_id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report Board Post */
+        post: operations["report_board_post_api_v1_migration_board_posts__post_id__report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/contact-requests/{request_id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report Board Contact Request */
+        post: operations["report_board_contact_request_api_v1_me_migration_board_contact_requests__request_id__report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/blocks/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Block Board User */
+        post: operations["block_board_user_api_v1_me_migration_board_blocks__user_id__post"];
+        /** Unblock Board User */
+        delete: operations["unblock_board_user_api_v1_me_migration_board_blocks__user_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/migration-board/blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Board Blocks */
+        get: operations["list_board_blocks_api_v1_me_migration_board_blocks_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Migration Board Posts For Admin */
+        get: operations["list_migration_board_posts_for_admin_api_v1_admin_migration_board_posts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Migration Board Post For Admin */
+        get: operations["get_migration_board_post_for_admin_api_v1_admin_migration_board_posts__post_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/posts/{post_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve Migration Board Post */
+        post: operations["approve_migration_board_post_api_v1_admin_migration_board_posts__post_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/posts/{post_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Migration Board Post */
+        post: operations["reject_migration_board_post_api_v1_admin_migration_board_posts__post_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/posts/{post_id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hide Migration Board Post */
+        post: operations["hide_migration_board_post_api_v1_admin_migration_board_posts__post_id__hide_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Migration Board Reports For Admin */
+        get: operations["list_migration_board_reports_for_admin_api_v1_admin_migration_board_reports_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/reports/{report_id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve Migration Board Report */
+        post: operations["resolve_migration_board_report_api_v1_admin_migration_board_reports__report_id__resolve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/reports/{report_id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dismiss Migration Board Report */
+        post: operations["dismiss_migration_board_report_api_v1_admin_migration_board_reports__report_id__dismiss_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/register": {
         parameters: {
             query?: never;
@@ -2465,6 +2910,85 @@ export interface components {
             };
             audit?: components["schemas"]["AuditEvent"] | null;
         };
+        /** AdminMigrationBoardPost */
+        AdminMigrationBoardPost: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            destination_country: components["schemas"]["MigrationBoardCountryRef"];
+            origin_country?: components["schemas"]["MigrationBoardCountryRef"] | null;
+            route?: components["schemas"]["MigrationBoardRouteRef"] | null;
+            scenario?: components["schemas"]["MigrationBoardScenarioRef"] | null;
+            persona?: components["schemas"]["MigrationBoardPersonaRef"] | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window: string;
+            /** Budget Range */
+            budget_range: string;
+            /** Household Type */
+            household_type: string;
+            /** Migration Stage */
+            migration_stage: string;
+            /** Companion Goal */
+            companion_goal: string;
+            /** Preferred Language */
+            preferred_language: string;
+            /** Visibility */
+            visibility: string;
+            /** Contact Requests Enabled */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+            /** Status */
+            status: string;
+            /** Moderation Status */
+            moderation_status: string;
+            /** Risk Acknowledged */
+            risk_acknowledged: boolean;
+            /** Legal Disclaimer Acknowledged */
+            legal_disclaimer_acknowledged: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Archived At */
+            archived_at?: string | null;
+            /** Rejected At */
+            rejected_at?: string | null;
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+            /** User Id */
+            user_id: string;
+            /** Author Display Name */
+            author_display_name: string;
+            /** Moderated By */
+            moderated_by?: string | null;
+            /** Moderated At */
+            moderated_at?: string | null;
+        };
+        /** AdminMigrationBoardPostListResponse */
+        AdminMigrationBoardPostListResponse: {
+            /** Items */
+            items: components["schemas"]["AdminMigrationBoardPost"][];
+            /** Total */
+            total: number;
+        };
         /** AdminSourceResponse */
         AdminSourceResponse: {
             /** Item */
@@ -2581,6 +3105,10 @@ export interface components {
                 [key: string]: unknown;
             } | unknown[] | null;
         };
+        /** ArchiveMigrationBoardPostResponse */
+        ArchiveMigrationBoardPostResponse: {
+            post: components["schemas"]["MyMigrationBoardPost"];
+        };
         /** AuditEvent */
         AuditEvent: {
             /**
@@ -2662,6 +3190,34 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+        };
+        /** BlockUserRequest */
+        BlockUserRequest: {
+            /** Reason */
+            reason?: string | null;
+        };
+        /** BlockedUserListResponse */
+        BlockedUserListResponse: {
+            /** Items */
+            items: components["schemas"]["BlockedUserResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** BlockedUserResponse */
+        BlockedUserResponse: {
+            /** Id */
+            id: string;
+            /** Blocked User Id */
+            blocked_user_id: string;
+            /** Blocked User Display Name */
+            blocked_user_display_name: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Reason */
+            reason?: string | null;
         };
         /** CiiCountryComparisonResponse */
         CiiCountryComparisonResponse: {
@@ -2849,6 +3405,54 @@ export interface components {
             /** Identity Id */
             identity_id: string;
         };
+        /** CompanionMatchPost */
+        CompanionMatchPost: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            destination_country: components["schemas"]["MigrationBoardCountryRef"];
+            origin_country?: components["schemas"]["MigrationBoardCountryRef"] | null;
+            route?: components["schemas"]["MigrationBoardRouteRef"] | null;
+            scenario?: components["schemas"]["MigrationBoardScenarioRef"] | null;
+            persona?: components["schemas"]["MigrationBoardPersonaRef"] | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window: string;
+            /** Budget Range */
+            budget_range: string;
+            /** Household Type */
+            household_type: string;
+            /** Migration Stage */
+            migration_stage: string;
+            /** Companion Goal */
+            companion_goal: string;
+            /** Preferred Language */
+            preferred_language: string;
+            /** Visibility */
+            visibility: string;
+            /** Contact Requests Enabled */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+            author: components["schemas"]["MigrationBoardAuthorSafe"];
+            /** Published At */
+            published_at?: string | null;
+            /** Match Reasons */
+            match_reasons: string[];
+        };
+        /** CompanionMatchesResponse */
+        CompanionMatchesResponse: {
+            /** Items */
+            items: components["schemas"]["CompanionMatchPost"][];
+            /** Total */
+            total: number;
+        };
         /** CompareMatrixResponse */
         CompareMatrixResponse: {
             locale: components["schemas"]["LocaleResolution"];
@@ -2936,6 +3540,50 @@ export interface components {
             /** Controversial */
             controversial: boolean;
             votes: components["schemas"]["VoteSummary"];
+        };
+        /** ContactRequestActionRequest */
+        ContactRequestActionRequest: {
+            /** Response Note */
+            response_note?: string | null;
+        };
+        /** ContactRequestActionResponse */
+        ContactRequestActionResponse: {
+            request: components["schemas"]["ContactRequestResponse"];
+        };
+        /** ContactRequestListResponse */
+        ContactRequestListResponse: {
+            /** Items */
+            items: components["schemas"]["ContactRequestResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** ContactRequestResponse */
+        ContactRequestResponse: {
+            /** Id */
+            id: string;
+            /** Post Id */
+            post_id: string;
+            /** Post Title */
+            post_title: string;
+            /** From User Display Name */
+            from_user_display_name: string;
+            /** To User Display Name */
+            to_user_display_name: string;
+            /** Message */
+            message: string;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Responded At */
+            responded_at?: string | null;
+            /** Cancelled At */
+            cancelled_at?: string | null;
+            /** Response Note */
+            response_note?: string | null;
         };
         /** ContentValidationError */
         ContentValidationError: {
@@ -3875,6 +4523,91 @@ export interface components {
              * @default This is a data quality indicator, not a recommendation. Not legal advice.
              */
             disclaimer: string;
+        };
+        /** CreateContactRequestRequest */
+        CreateContactRequestRequest: {
+            /** Message */
+            message: string;
+        };
+        /** CreateMigrationBoardPostRequest */
+        CreateMigrationBoardPostRequest: {
+            /** Destination Country Slug */
+            destination_country_slug: string;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /**
+             * Timeline Window
+             * @default unknown
+             */
+            timeline_window: string;
+            /**
+             * Budget Range
+             * @default undisclosed
+             */
+            budget_range: string;
+            /**
+             * Household Type
+             * @default undisclosed
+             */
+            household_type: string;
+            /**
+             * Migration Stage
+             * @default researching
+             */
+            migration_stage: string;
+            /**
+             * Companion Goal
+             * @default info_exchange
+             */
+            companion_goal: string;
+            /**
+             * Preferred Language
+             * @default undisclosed
+             */
+            preferred_language: string;
+            /**
+             * Visibility
+             * @default members_only
+             */
+            visibility: string;
+            /**
+             * Risk Acknowledged
+             * @default false
+             */
+            risk_acknowledged: boolean;
+            /**
+             * Legal Disclaimer Acknowledged
+             * @default false
+             */
+            legal_disclaimer_acknowledged: boolean;
+            /**
+             * Contact Requests Enabled
+             * @default true
+             */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+        };
+        /** CreateMigrationBoardReportRequest */
+        CreateMigrationBoardReportRequest: {
+            /** Reason */
+            reason: string;
+            /** Details */
+            details?: string | null;
         };
         /** CurrentUserResponse */
         CurrentUserResponse: {
@@ -5281,6 +6014,251 @@ export interface components {
             /** Updated At */
             updated_at?: string | null;
         };
+        /** MigrationBoardAuthorSafe */
+        MigrationBoardAuthorSafe: {
+            /**
+             * Display Name
+             * @default Member
+             */
+            display_name: string;
+        };
+        /** MigrationBoardCountryRef */
+        MigrationBoardCountryRef: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+        };
+        /** MigrationBoardPersonaRef */
+        MigrationBoardPersonaRef: {
+            /** Slug */
+            slug: string;
+            /** Label */
+            label: string;
+        };
+        /** MigrationBoardPostDetail */
+        MigrationBoardPostDetail: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            destination_country: components["schemas"]["MigrationBoardCountryRef"];
+            origin_country?: components["schemas"]["MigrationBoardCountryRef"] | null;
+            route?: components["schemas"]["MigrationBoardRouteRef"] | null;
+            scenario?: components["schemas"]["MigrationBoardScenarioRef"] | null;
+            persona?: components["schemas"]["MigrationBoardPersonaRef"] | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window: string;
+            /** Budget Range */
+            budget_range: string;
+            /** Household Type */
+            household_type: string;
+            /** Migration Stage */
+            migration_stage: string;
+            /** Companion Goal */
+            companion_goal: string;
+            /** Preferred Language */
+            preferred_language: string;
+            /** Visibility */
+            visibility: string;
+            /** Contact Requests Enabled */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+            author: components["schemas"]["MigrationBoardAuthorSafe"];
+            /** Published At */
+            published_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** MigrationBoardPostListResponse */
+        MigrationBoardPostListResponse: {
+            /** Items */
+            items: components["schemas"]["MigrationBoardPostSummary"][];
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+        };
+        /** MigrationBoardPostSummary */
+        MigrationBoardPostSummary: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            destination_country: components["schemas"]["MigrationBoardCountryRef"];
+            origin_country?: components["schemas"]["MigrationBoardCountryRef"] | null;
+            route?: components["schemas"]["MigrationBoardRouteRef"] | null;
+            scenario?: components["schemas"]["MigrationBoardScenarioRef"] | null;
+            persona?: components["schemas"]["MigrationBoardPersonaRef"] | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window: string;
+            /** Budget Range */
+            budget_range: string;
+            /** Household Type */
+            household_type: string;
+            /** Migration Stage */
+            migration_stage: string;
+            /** Companion Goal */
+            companion_goal: string;
+            /** Preferred Language */
+            preferred_language: string;
+            /** Visibility */
+            visibility: string;
+            /** Contact Requests Enabled */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+            author: components["schemas"]["MigrationBoardAuthorSafe"];
+            /** Published At */
+            published_at?: string | null;
+        };
+        /** MigrationBoardReportListResponse */
+        MigrationBoardReportListResponse: {
+            /** Items */
+            items: components["schemas"]["MigrationBoardReportResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** MigrationBoardReportResponse */
+        MigrationBoardReportResponse: {
+            /** Id */
+            id: string;
+            /** Post Id */
+            post_id?: string | null;
+            /** Contact Request Id */
+            contact_request_id?: string | null;
+            /** Reason */
+            reason: string;
+            /** Details */
+            details?: string | null;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Reviewed At */
+            reviewed_at?: string | null;
+            /** Resolution Note */
+            resolution_note?: string | null;
+        };
+        /** MigrationBoardRouteRef */
+        MigrationBoardRouteRef: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** MigrationBoardScenarioRef */
+        MigrationBoardScenarioRef: {
+            /** Slug */
+            slug: string;
+            /** Label */
+            label: string;
+        };
+        /** ModerateMigrationBoardPostRequest */
+        ModerateMigrationBoardPostRequest: {
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+        };
+        /** ModerateMigrationBoardPostResponse */
+        ModerateMigrationBoardPostResponse: {
+            post: components["schemas"]["AdminMigrationBoardPost"];
+        };
+        /** MyMigrationBoardPost */
+        MyMigrationBoardPost: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            destination_country: components["schemas"]["MigrationBoardCountryRef"];
+            origin_country?: components["schemas"]["MigrationBoardCountryRef"] | null;
+            route?: components["schemas"]["MigrationBoardRouteRef"] | null;
+            scenario?: components["schemas"]["MigrationBoardScenarioRef"] | null;
+            persona?: components["schemas"]["MigrationBoardPersonaRef"] | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window: string;
+            /** Budget Range */
+            budget_range: string;
+            /** Household Type */
+            household_type: string;
+            /** Migration Stage */
+            migration_stage: string;
+            /** Companion Goal */
+            companion_goal: string;
+            /** Preferred Language */
+            preferred_language: string;
+            /** Visibility */
+            visibility: string;
+            /** Contact Requests Enabled */
+            contact_requests_enabled: boolean;
+            /** Tags */
+            tags?: string[];
+            /** Status */
+            status: string;
+            /** Moderation Status */
+            moderation_status: string;
+            /** Risk Acknowledged */
+            risk_acknowledged: boolean;
+            /** Legal Disclaimer Acknowledged */
+            legal_disclaimer_acknowledged: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Archived At */
+            archived_at?: string | null;
+            /** Rejected At */
+            rejected_at?: string | null;
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+        };
+        /** MyMigrationBoardPostListResponse */
+        MyMigrationBoardPostListResponse: {
+            /** Items */
+            items: components["schemas"]["MyMigrationBoardPost"][];
+            /** Total */
+            total: number;
+        };
         /** OnboardingFinding */
         OnboardingFinding: {
             /** Code */
@@ -5502,6 +6480,20 @@ export interface components {
             password: string;
             /** Display Name */
             display_name: string;
+        };
+        /** ReviewMigrationBoardReportRequest */
+        ReviewMigrationBoardReportRequest: {
+            /** Resolution Note */
+            resolution_note?: string | null;
+            /**
+             * Hide Post
+             * @default false
+             */
+            hide_post: boolean;
+        };
+        /** ReviewMigrationBoardReportResponse */
+        ReviewMigrationBoardReportResponse: {
+            report: components["schemas"]["MigrationBoardReportResponse"];
         };
         /** RevokeAllSessionsResponse */
         RevokeAllSessionsResponse: {
@@ -5989,6 +6981,10 @@ export interface components {
             item: components["schemas"]["Source"];
             locale: components["schemas"]["LocaleResolution"];
         };
+        /** SubmitMigrationBoardPostResponse */
+        SubmitMigrationBoardPostResponse: {
+            post: components["schemas"]["MyMigrationBoardPost"];
+        };
         /** TelegramLinkRequest */
         TelegramLinkRequest: {
             /** Code */
@@ -6464,6 +7460,49 @@ export interface components {
             errors?: {
                 [key: string]: unknown;
             }[];
+        };
+        /** UpdateMigrationBoardPostRequest */
+        UpdateMigrationBoardPostRequest: {
+            /** Destination Country Slug */
+            destination_country_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Route Id */
+            route_id?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Persona Slug */
+            persona_slug?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Summary */
+            summary?: string | null;
+            /** Target City */
+            target_city?: string | null;
+            /** Target Month */
+            target_month?: string | null;
+            /** Timeline Window */
+            timeline_window?: string | null;
+            /** Budget Range */
+            budget_range?: string | null;
+            /** Household Type */
+            household_type?: string | null;
+            /** Migration Stage */
+            migration_stage?: string | null;
+            /** Companion Goal */
+            companion_goal?: string | null;
+            /** Preferred Language */
+            preferred_language?: string | null;
+            /** Visibility */
+            visibility?: string | null;
+            /** Risk Acknowledged */
+            risk_acknowledged?: boolean | null;
+            /** Legal Disclaimer Acknowledged */
+            legal_disclaimer_acknowledged?: boolean | null;
+            /** Contact Requests Enabled */
+            contact_requests_enabled?: boolean | null;
+            /** Tags */
+            tags?: string[] | null;
         };
         /** UserSessionListResponse */
         UserSessionListResponse: {
@@ -10948,6 +11987,924 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_board_posts_api_v1_migration_board_posts_get: {
+        parameters: {
+            query?: {
+                destination_country?: string | null;
+                origin_country?: string | null;
+                route_id?: string | null;
+                scenario?: string | null;
+                persona?: string | null;
+                timeline_window?: string | null;
+                migration_stage?: string | null;
+                companion_goal?: string | null;
+                household_type?: string | null;
+                preferred_language?: string | null;
+                tag?: string | null;
+                visibility?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MigrationBoardPostListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_board_post_api_v1_migration_board_posts__post_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MigrationBoardPostDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_board_posts_api_v1_me_migration_board_posts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMigrationBoardPostListResponse"];
+                };
+            };
+        };
+    };
+    create_my_board_post_api_v1_me_migration_board_posts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMigrationBoardPostRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMigrationBoardPost"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_board_post_api_v1_me_migration_board_posts__post_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMigrationBoardPost"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_board_post_api_v1_me_migration_board_posts__post_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMigrationBoardPostRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMigrationBoardPost"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_my_board_post_api_v1_me_migration_board_posts__post_id__submit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmitMigrationBoardPostResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_my_board_post_api_v1_me_migration_board_posts__post_id__archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArchiveMigrationBoardPostResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_board_matches_api_v1_me_migration_board_matches_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanionMatchesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_post_board_matches_api_v1_me_migration_board_posts__post_id__matches_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanionMatchesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_board_contact_request_api_v1_migration_board_posts__post_id__contact_requests_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateContactRequestRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_incoming_contact_requests_api_v1_me_migration_board_contact_requests_incoming_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestListResponse"];
+                };
+            };
+        };
+    };
+    list_outgoing_contact_requests_api_v1_me_migration_board_contact_requests_outgoing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestListResponse"];
+                };
+            };
+        };
+    };
+    accept_contact_request_api_v1_me_migration_board_contact_requests__request_id__accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactRequestActionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestActionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_contact_request_api_v1_me_migration_board_contact_requests__request_id__decline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactRequestActionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestActionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_contact_request_api_v1_me_migration_board_contact_requests__request_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestActionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_board_post_api_v1_migration_board_posts__post_id__report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMigrationBoardReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MigrationBoardReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_board_contact_request_api_v1_me_migration_board_contact_requests__request_id__report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMigrationBoardReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MigrationBoardReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    block_board_user_api_v1_me_migration_board_blocks__user_id__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BlockUserRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockedUserResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unblock_board_user_api_v1_me_migration_board_blocks__user_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_board_blocks_api_v1_me_migration_board_blocks_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockedUserListResponse"];
+                };
+            };
+        };
+    };
+    list_migration_board_posts_for_admin_api_v1_admin_migration_board_posts_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMigrationBoardPostListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_migration_board_post_for_admin_api_v1_admin_migration_board_posts__post_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMigrationBoardPost"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_migration_board_post_api_v1_admin_migration_board_posts__post_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerateMigrationBoardPostResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_migration_board_post_api_v1_admin_migration_board_posts__post_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerateMigrationBoardPostRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerateMigrationBoardPostResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    hide_migration_board_post_api_v1_admin_migration_board_posts__post_id__hide_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerateMigrationBoardPostRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerateMigrationBoardPostResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_migration_board_reports_for_admin_api_v1_admin_migration_board_reports_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MigrationBoardReportListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_migration_board_report_api_v1_admin_migration_board_reports__report_id__resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewMigrationBoardReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewMigrationBoardReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dismiss_migration_board_report_api_v1_admin_migration_board_reports__report_id__dismiss_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewMigrationBoardReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewMigrationBoardReportResponse"];
+                };
             };
             /** @description Validation Error */
             422: {

@@ -15,6 +15,7 @@ export * from "./http";
 export * from "./home";
 export * from "./legal-signals";
 export * from "./methodology";
+export * from "./migrationBoard";
 export * from "./personas";
 export * from "./routes";
 export * from "./scenarios";

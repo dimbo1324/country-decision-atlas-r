@@ -2,6 +2,7 @@ from app.api.v1 import (
     admin,
     admin_ai,
     admin_community,
+    admin_migration_board,
     admin_translation_jobs,
     admin_users,
     ai,
@@ -19,6 +20,7 @@ from app.api.v1 import (
     home,
     legal_signals,
     methodology,
+    migration_board,
     personas,
     platform_metrics,
     routes,
@@ -227,6 +229,8 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(admin_ai.router, prefix="/api/v1")
     app.include_router(community.router, prefix="/api/v1")
     app.include_router(admin_community.router, prefix="/api/v1")
+    app.include_router(migration_board.router, prefix="/api/v1")
+    app.include_router(admin_migration_board.router, prefix="/api/v1")
     app.include_router(auth.router, prefix="/api/v1")
     app.include_router(admin_users.router, prefix="/api/v1")
     app.include_router(watchlists.router, prefix="/api/v1")

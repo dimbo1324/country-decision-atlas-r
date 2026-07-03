@@ -17,6 +17,9 @@ from app.services.data_quality.decision_passport_checks import (
 from app.services.data_quality.decision_personalization_checks import (
     _append_decision_personalization_checks,
 )
+from app.services.data_quality.migration_board_checks import (
+    _append_migration_board_checks,
+)
 from app.services.data_quality.persona_checks import _append_persona_layer_checks
 from app.services.data_quality.platform_checks import _append_platform_runtime_checks
 from app.services.data_quality.route_checklist_checks import (
@@ -932,6 +935,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_search_foundation_checks(connection, issues, checks)
     _append_ai_foundation_checks(connection, issues, checks)
     _append_auth_watchlist_checks(connection, issues, checks)
+    _append_migration_board_checks(connection, issues, checks)
     from app.services import data_quality as data_quality_facade
 
     translation_checks, translation_issues = (

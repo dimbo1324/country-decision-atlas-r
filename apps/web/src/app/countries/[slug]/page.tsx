@@ -18,6 +18,7 @@ import {
 import { CommunityCountryBlock } from "../../../features/community";
 import { CountryDriftBlock } from "../../../features/country-drift";
 import { CountryDataJournalBlock } from "../../../features/data-journal";
+import { CountryMigrationBoardBlock } from "../../../features/migration-board";
 import { PlatformIntelligenceBlock } from "../../../features/platform-intelligence";
 import { CountryRoutesBlock } from "../../../features/routes";
 import { TrustSurfaceBlock } from "../../../features/trust-surface";
@@ -137,6 +138,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         <section className="cardSection">
           <h2 className="cardSectionTitle">Маршруты</h2>
           <CountryRoutesBlock countrySlug={card.country.slug} locale={locale} />
+        </section>
+
+        <section className="cardSection" data-testid="country-migration-board-section">
+          <h2 className="cardSectionTitle">Люди, планирующие это направление</h2>
+          <CountryMigrationBoardBlock countrySlug={card.country.slug} />
         </section>
 
         <section className="cardSection">

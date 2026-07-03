@@ -22,6 +22,10 @@ export const e2eRoutes = {
     return `/search${qs}`;
   },
   dataQuality: "/internal/data-quality",
+  migrationBoard: "/migration-board",
+  migrationBoardNew: "/migration-board/new",
+  accountMigrationBoard: "/account/migration-board",
+  migrationBoardModeration: "/internal/migration-board-moderation",
   login: "/login",
   register: "/register",
   account: "/account",

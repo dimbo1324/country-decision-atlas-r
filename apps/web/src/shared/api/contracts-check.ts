@@ -119,6 +119,23 @@ type AdminUser = components["schemas"]["AdminUser"];
 type AdminUserListResponse = components["schemas"]["AdminUserListResponse"];
 type RoleUpdateRequest = components["schemas"]["RoleUpdateRequest"];
 type UserStatusUpdateRequest = components["schemas"]["UserStatusUpdateRequest"];
+type MigrationBoardPostListResponse =
+  components["schemas"]["MigrationBoardPostListResponse"];
+type MigrationBoardPostDetail = components["schemas"]["MigrationBoardPostDetail"];
+type MyMigrationBoardPost = components["schemas"]["MyMigrationBoardPost"];
+type MyMigrationBoardPostListResponse =
+  components["schemas"]["MyMigrationBoardPostListResponse"];
+type CreateMigrationBoardPostRequest =
+  components["schemas"]["CreateMigrationBoardPostRequest"];
+type UpdateMigrationBoardPostRequest =
+  components["schemas"]["UpdateMigrationBoardPostRequest"];
+type ContactRequestResponse = components["schemas"]["ContactRequestResponse"];
+type ContactRequestListResponse = components["schemas"]["ContactRequestListResponse"];
+type CompanionMatchesResponse = components["schemas"]["CompanionMatchesResponse"];
+type MigrationBoardReportResponse =
+  components["schemas"]["MigrationBoardReportResponse"];
+type AdminMigrationBoardPostListResponse =
+  components["schemas"]["AdminMigrationBoardPostListResponse"];
 
 export type FrontendCriticalContracts = {
   ciiComparison: CiiCountryComparisonResponse;
@@ -224,4 +241,15 @@ export type FrontendCriticalContracts = {
   adminUserListResponse: AdminUserListResponse;
   roleUpdateRequest: RoleUpdateRequest;
   userStatusUpdateRequest: UserStatusUpdateRequest;
+  migrationBoardPostList: MigrationBoardPostListResponse;
+  migrationBoardPostDetail: MigrationBoardPostDetail;
+  myMigrationBoardPost: MyMigrationBoardPost;
+  myMigrationBoardPostList: MyMigrationBoardPostListResponse;
+  createMigrationBoardPostRequest: CreateMigrationBoardPostRequest;
+  updateMigrationBoardPostRequest: UpdateMigrationBoardPostRequest;
+  migrationBoardContactRequest: ContactRequestResponse;
+  migrationBoardContactRequestList: ContactRequestListResponse;
+  migrationBoardMatches: CompanionMatchesResponse;
+  migrationBoardReport: MigrationBoardReportResponse;
+  adminMigrationBoardPostList: AdminMigrationBoardPostListResponse;
 };
