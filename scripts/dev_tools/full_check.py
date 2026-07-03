@@ -24,6 +24,9 @@ import urllib.error
 import urllib.request
 
 
+# ____________________________________________________________________________________________________
+# 					Constants: Toolchain Baselines, Network Checks & Secret Redaction Patterns
+# ____________________________________________________________________________________________________
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 RED = "\033[31m"
@@ -152,6 +155,9 @@ SECRET_ASSIGNMENT_RE = re.compile(
 URL_CREDENTIAL_RE = re.compile(r"([a-z][a-z0-9+.-]*://[^:/\s]+:)([^@\s]+)(@)")
 
 
+# ____________________________________________________________________________________________________
+# 					Result & Recommendation Data Models
+# ____________________________________________________________________________________________________
 @dataclass
 class StageResult:
     stage: str
@@ -180,6 +186,9 @@ class NetworkResult:
     reachable: bool
 
 
+# ____________________________________________________________________________________________________
+# 					Log Sanitization & Console Output (DualWriter)
+# ____________________________________________________________________________________________________
 def sanitize_log_line(line: str) -> str:
     sanitized = SECRET_ASSIGNMENT_RE.sub(r"\1=<redacted>", line)
     sanitized = URL_CREDENTIAL_RE.sub(r"\1<redacted>\3", sanitized)
@@ -206,6 +215,9 @@ class DualWriter:
         self.file.close()
 
 
+# ____________________________________________________________________________________________________
+# 					Windows ANSI Support & Semantic Version Comparison
+# ____________________________________________________________________________________________________
 def enable_windows_ansi() -> bool:
     if platform.system() != "Windows":
         return True
@@ -239,6 +251,9 @@ def compare_semver(actual: str, required: str) -> int:
     return (a > r) - (a < r)
 
 
+# ____________________________________________________________________________________________________
+# 					System Resource Diagnostics (CPU, Memory, Disk, WSL)
+# ____________________________________________________________________________________________________
 class WindowsMemoryStatusEx(ctypes.Structure):
     _fields_ = [
         ("dwLength", ctypes.c_ulong),
@@ -403,6 +418,9 @@ def get_system_diagnostics() -> dict[str, Any]:
     return diag
 
 
+# ____________________________________________________________________________________________________
+# 					Git & Repository Diagnostics
+# ____________________________________________________________________________________________________
 def get_git_context() -> dict[str, Any]:
     ctx: dict[str, Any] = {
         "branch": "unknown",
@@ -505,6 +523,9 @@ def get_repo_diagnostics() -> dict[str, Any]:
     return diag
 
 
+# ____________________________________________________________________________________________________
+# 					Docker Diagnostics
+# ____________________________________________________________________________________________________
 def run_capture(args: list[str], timeout: int = 20) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         args,
@@ -582,6 +603,9 @@ def get_docker_diagnostics() -> dict[str, Any]:
     return diag
 
 
+# ____________________________________________________________________________________________________
+# 					HTTP Requests & Semantic Response Validation
+# ____________________________________________________________________________________________________
 def http_json(
     url: str,
     timeout: int = 10,
@@ -692,6 +716,9 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
     return True, "no validator"
 
 
+# ____________________________________________________________________________________________________
+# 					Package Manager & Toolchain Version Helpers
+# ____________________________________________________________________________________________________
 def get_package_json() -> dict[str, Any] | None:
     try:
         data = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
@@ -759,6 +786,9 @@ def get_go_mod_min_version() -> str:
     return "1.25.0"
 
 
+# ____________________________________________________________________________________________________
+# 					Network & Health-Check Wait Helpers
+# ____________________________________________________________________________________________________
 def wait_for_http_health(url: str, timeout_seconds: int = 90) -> bool:
     deadline = time.monotonic() + timeout_seconds
     while time.monotonic() < deadline:
@@ -780,6 +810,9 @@ def test_port_reachable(host: str, port: int, timeout: float = 3.0) -> bool:
         return False
 
 
+# ____________________________________________________________________________________________________
+# 					FullCheck Orchestrator — Initialization & Logging
+# ____________________________________________________________________________________________________
 class FullCheck:
     def __init__(self, args: argparse.Namespace) -> None:
         self.profile = "quick" if args.doctor else args.profile
@@ -889,6 +922,9 @@ class FullCheck:
             )
         )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Subprocess Execution Helpers
+    # ____________________________________________________________________________________________________
     def run_streaming(
         self,
         exe_args: list[str],
@@ -966,6 +1002,9 @@ class FullCheck:
             delay += delay_step
             attempt += 1
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Tool Version Checking
+    # ____________________________________________________________________________________________________
     def get_tool_version_string(self, exe_args: list[str], pattern: str) -> str | None:
         try:
             result = subprocess.run(
@@ -1049,6 +1088,9 @@ class FullCheck:
             )
         return True
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Configuration Loading & Environment Resolution
+    # ____________________________________________________________________________________________________
     def load_config(self) -> dict[str, Any]:
         defaults = {
             "tools": DEFAULT_TOOL_BASELINES,
@@ -1165,6 +1207,9 @@ class FullCheck:
         }
         return phase in profile_phases[self.profile]
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase -1: Diagnostics
+    # ____________________________________________________________________________________________________
     def phase_diagnostics(self, config: dict[str, Any]) -> None:
         self.section("Phase -1 — Diagnostics (system, git, network)")
 
@@ -1312,6 +1357,9 @@ class FullCheck:
                         safe_to_auto_fix=True,
                     )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 0: Toolchain Verification
+    # ____________________________________________________________________________________________________
     def phase_toolchain(self, config: dict[str, Any]) -> None:
         self.section("Phase 0 — System toolchain verification")
         self.python312 = self.resolve_python312()
@@ -1422,6 +1470,9 @@ class FullCheck:
             for cmd in ("go", "protoc", "protoc-gen-go", "protoc-gen-go-grpc")
         )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 1: Dependency Installation
+    # ____________________________________________________________________________________________________
     def phase_dependencies(self) -> None:
         self.section("Phase 1 — Dependency installation")
 
@@ -1506,6 +1557,9 @@ class FullCheck:
             "playwright install chromium", "OK" if playwright_result == 0 else "FAIL"
         )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 2: Pinned Version Verification
+    # ____________________________________________________________________________________________________
     def phase_pinned_versions(self) -> None:
         self.section("Phase 2 — Project-pinned version verification")
 
@@ -1580,6 +1634,9 @@ class FullCheck:
                         f"version={version} is older than {recommended}",
                     )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 3: Static Quality Gate
+    # ____________________________________________________________________________________________________
     def phase_static_quality(self) -> None:
         self.section("Phase 3 — Static quality gate")
         py312 = self.python312
@@ -1664,6 +1721,9 @@ class FullCheck:
                 "pnpm quality", self.pnpm_args("quality"), env=pnpm_safe_env()
             )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 4: Go Notifier Gate
+    # ____________________________________________________________________________________________________
     def phase_go_notifier(self) -> None:
         self.section("Phase 4 — Go notifier gate")
         if not self.go_tooling_present:
@@ -1729,6 +1789,9 @@ class FullCheck:
             "go test", [go_exe, "test", "./..."] if go_exe else None, cwd=notifier_dir
         )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 5: Docker Stack, Migrations & Runtime Smoke Tests
+    # ____________________________________________________________________________________________________
     def phase_docker(self) -> None:
         if self.skip_docker:
             self.add_stage_result(
@@ -2173,6 +2236,9 @@ class FullCheck:
             env=pnpm_safe_env(),
         )
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 6: Pre-commit
+    # ____________________________________________________________________________________________________
     def phase_precommit(self) -> None:
         if self.skip_precommit:
             self.add_stage_result(
@@ -2187,6 +2253,9 @@ class FullCheck:
         )
         self.run_gate_step("pre-commit run --all-files", args)
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Phase 7: Git Status
+    # ____________________________________________________________________________________________________
     def phase_git_status(self) -> None:
         self.section("Phase 7 — git status")
         git_exe = shutil.which("git")
@@ -2197,6 +2266,9 @@ class FullCheck:
             )
             self.run_streaming([git_exe, "status", "--short"])
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Report Writing & Summary Output
+    # ____________________________________________________________________________________________________
     def write_reports(self, finished_at: datetime) -> int:
         duration_minutes = round(
             (finished_at - self.started_at).total_seconds() / 60, 1
@@ -2349,6 +2421,9 @@ class FullCheck:
 
         return fail_count
 
+    # ____________________________________________________________________________________________________
+    # 					FullCheck — Top-Level Run Orchestration
+    # ____________________________________________________________________________________________________
     def run(self) -> int:
         self.section("Country Decision Atlas — full local check")
         self.log(f"Report folder: {self.report_dir}")
@@ -2395,6 +2470,9 @@ class FullCheck:
         return 1 if fail_count > 0 else 0
 
 
+# ____________________________________________________________________________________________________
+# 					CLI Argument Parsing & Script Entry Point
+# ____________________________________________________________________________________________________
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Country Decision Atlas — full local check"
