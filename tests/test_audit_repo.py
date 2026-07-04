@@ -65,7 +65,9 @@ def test_insert_audit_event_action_preserved(monkeypatch: Any) -> None:
     assert result["action"] == ACTION
 
 
-def test_insert_audit_event_entity_type_and_id_preserved(monkeypatch: Any) -> None:
+def test_insert_audit_event_entity_type_and_id_preserved(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(audit_repo, "execute_one", lambda *_: AUDIT_ROW)
     result = audit_repo.insert_audit_event(
         CONNECTION,

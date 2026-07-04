@@ -1,6 +1,6 @@
+import json
 from app.core.database import execute_one
 from collections.abc import Mapping
-import json
 from psycopg import Connection
 from typing import Any
 from uuid import UUID

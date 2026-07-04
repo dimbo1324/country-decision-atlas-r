@@ -16,6 +16,12 @@ def test_sources_and_evidence_are_seeded_and_routed() -> None:
 def test_source_depth_adds_country_source_coverage() -> None:
     assert SOURCE_DEPTH_SQL.count("('russia',") >= 10
     assert SOURCE_DEPTH_SQL.count("('uruguay',") >= 10
-    assert "https://www.consultant.ru/document/cons_doc_LAW_37868/" in SOURCE_DEPTH_SQL
-    assert "https://www.gub.uy/tramites/residencia-legal-temporaria" in SOURCE_DEPTH_SQL
+    assert (
+        "https://www.consultant.ru/document/cons_doc_LAW_37868/"
+        in SOURCE_DEPTH_SQL
+    )
+    assert (
+        "https://www.gub.uy/tramites/residencia-legal-temporaria"
+        in SOURCE_DEPTH_SQL
+    )
     assert "ON CONFLICT (url) DO UPDATE" in SOURCE_DEPTH_SQL

@@ -3,7 +3,9 @@ from psycopg import Connection
 from typing import Any
 
 
-def list_indexable_countries(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_indexable_countries(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """
@@ -77,7 +79,9 @@ def list_indexable_route_checklist_items(
     )
 
 
-def list_indexable_legal_signals(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_indexable_legal_signals(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """
@@ -114,7 +118,9 @@ def list_indexable_sources(connection: Connection[Any]) -> list[dict[str, Any]]:
     )
 
 
-def list_indexable_evidence_items(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_indexable_evidence_items(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """
@@ -131,7 +137,9 @@ def list_indexable_evidence_items(connection: Connection[Any]) -> list[dict[str,
     )
 
 
-def list_indexable_country_pairs(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_indexable_country_pairs(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """
@@ -169,7 +177,9 @@ def list_indexable_methodology_sections(
     )
 
 
-def list_indexable_glossary_terms(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_indexable_glossary_terms(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

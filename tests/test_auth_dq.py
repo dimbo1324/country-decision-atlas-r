@@ -27,7 +27,9 @@ def test_clean_auth_surface_produces_no_issues(monkeypatch: Any) -> None:
 
 def test_missing_active_owner_is_critical(monkeypatch: Any) -> None:
     install_clean_report_fakes(monkeypatch)
-    monkeypatch.setattr(data_quality_repository, "count_active_owners", lambda *_: 0)
+    monkeypatch.setattr(
+        data_quality_repository, "count_active_owners", lambda *_: 0
+    )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(i.code == "missing_active_owner" for i in report.issues)
     assert any(
@@ -62,7 +64,9 @@ def test_user_invalid_status_is_critical(monkeypatch: Any) -> None:
     assert report.valid is False
 
 
-def test_active_user_missing_password_credential_is_warning(monkeypatch: Any) -> None:
+def test_active_user_missing_password_credential_is_warning(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -71,14 +75,18 @@ def test_active_user_missing_password_credential_is_warning(monkeypatch: Any) ->
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     matching = [
-        i for i in report.issues if i.code == "active_user_missing_password_credential"
+        i
+        for i in report.issues
+        if i.code == "active_user_missing_password_credential"
     ]
     assert matching
     assert all(i.severity == "warning" for i in matching)
     assert report.valid is True
 
 
-def test_password_credential_invalid_hash_format_is_critical(monkeypatch: Any) -> None:
+def test_password_credential_invalid_hash_format_is_critical(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -87,12 +95,15 @@ def test_password_credential_invalid_hash_format_is_critical(monkeypatch: Any) -
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(
-        i.code == "password_credential_invalid_hash_format" for i in report.issues
+        i.code == "password_credential_invalid_hash_format"
+        for i in report.issues
     )
     assert report.valid is False
 
 
-def test_suspended_user_with_active_session_is_critical(monkeypatch: Any) -> None:
+def test_suspended_user_with_active_session_is_critical(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -101,7 +112,8 @@ def test_suspended_user_with_active_session_is_critical(monkeypatch: Any) -> Non
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(
-        i.code == "suspended_or_deleted_user_has_active_session" for i in report.issues
+        i.code == "suspended_or_deleted_user_has_active_session"
+        for i in report.issues
     )
     assert report.valid is False
 
@@ -114,7 +126,9 @@ def test_expired_session_not_revoked_is_warning(monkeypatch: Any) -> None:
         lambda *_: [{"id": "session-1"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    matching = [i for i in report.issues if i.code == "expired_session_not_revoked"]
+    matching = [
+        i for i in report.issues if i.code == "expired_session_not_revoked"
+    ]
     assert matching
     assert all(i.severity == "warning" for i in matching)
     assert report.valid is True
@@ -153,7 +167,9 @@ def test_telegram_link_missing_unlinked_at_is_warning(monkeypatch: Any) -> None:
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     matching = [
-        i for i in report.issues if i.code == "telegram_link_missing_unlinked_at"
+        i
+        for i in report.issues
+        if i.code == "telegram_link_missing_unlinked_at"
     ]
     assert matching
     assert all(i.severity == "warning" for i in matching)
@@ -168,11 +184,15 @@ def test_telegram_link_duplicate_active_is_critical(monkeypatch: Any) -> None:
         lambda *_: [{"telegram_user_id": "tg-1"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "telegram_link_duplicate_active" for i in report.issues)
+    assert any(
+        i.code == "telegram_link_duplicate_active" for i in report.issues
+    )
     assert report.valid is False
 
 
-def test_watchlist_references_missing_user_is_critical(monkeypatch: Any) -> None:
+def test_watchlist_references_missing_user_is_critical(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -180,7 +200,9 @@ def test_watchlist_references_missing_user_is_critical(monkeypatch: Any) -> None
         lambda *_: [{"id": "watchlist-1"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "watchlist_references_missing_user" for i in report.issues)
+    assert any(
+        i.code == "watchlist_references_missing_user" for i in report.issues
+    )
     assert report.valid is False
 
 
@@ -192,11 +214,15 @@ def test_watchlist_duplicate_active_entry_is_critical(monkeypatch: Any) -> None:
         lambda *_: [{"user_id": "user-1"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "watchlist_duplicate_active_entry" for i in report.issues)
+    assert any(
+        i.code == "watchlist_duplicate_active_entry" for i in report.issues
+    )
     assert report.valid is False
 
 
-def test_watchlist_archived_missing_archived_at_is_warning(monkeypatch: Any) -> None:
+def test_watchlist_archived_missing_archived_at_is_warning(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -205,7 +231,9 @@ def test_watchlist_archived_missing_archived_at_is_warning(monkeypatch: Any) -> 
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     matching = [
-        i for i in report.issues if i.code == "watchlist_archived_missing_archived_at"
+        i
+        for i in report.issues
+        if i.code == "watchlist_archived_missing_archived_at"
     ]
     assert matching
     assert all(i.severity == "warning" for i in matching)
@@ -220,5 +248,7 @@ def test_watchlist_null_notification_flag_is_critical(monkeypatch: Any) -> None:
         lambda *_: [{"id": "watchlist-1"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "watchlist_null_notification_flag" for i in report.issues)
+    assert any(
+        i.code == "watchlist_null_notification_flag" for i in report.issues
+    )
     assert report.valid is False

@@ -1,5 +1,6 @@
 """Edge cases for country-pair service helpers: key notes, summaries, disclaimers, empty-result fallback."""
 
+import pytest
 from app.repositories import (
     countries as countries_repository,
     country_pairs as repository,
@@ -7,7 +8,6 @@ from app.repositories import (
 from app.services import country_pairs as service
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -75,7 +75,9 @@ class TestKeyNotes:
 
 
 class TestBuildCountryPairSummary:
-    def test_summary_defaults_source_ids_to_empty_list_when_missing(self) -> None:
+    def test_summary_defaults_source_ids_to_empty_list_when_missing(
+        self,
+    ) -> None:
         summary = service.build_country_pair_summary(_row())
         assert summary.source_ids == []
 
@@ -84,7 +86,9 @@ class TestBuildCountryPairSummary:
         assert summary.source_ids == ["1", "2"]
 
     def test_summary_includes_key_notes(self) -> None:
-        summary = service.build_country_pair_summary(_row(visa_note="Visa-free"))
+        summary = service.build_country_pair_summary(
+            _row(visa_note="Visa-free")
+        )
         assert any(note.type == "visa" for note in summary.key_notes)
 
 
@@ -103,13 +107,19 @@ class TestListDestinationEmptyFallback:
         monkeypatch.setattr(
             countries_repository,
             "get_country",
-            lambda *_a, **_kw: {"slug": "russia", "name": "Russia", "iso2": "RU"},
+            lambda *_a, **_kw: {
+                "slug": "russia",
+                "name": "Russia",
+                "iso2": "RU",
+            },
         )
         monkeypatch.setattr(
             repository, "list_destination_compatibility", lambda *_a, **_kw: []
         )
 
-        result = service.list_destination_pair_contexts(CONNECTION, "russia", "en")
+        result = service.list_destination_pair_contexts(
+            CONNECTION, "russia", "en"
+        )
         assert result.origin_country.slug == "russia"
         assert result.items == []
 
@@ -124,7 +134,9 @@ class TestListDestinationEmptyFallback:
                 return {"slug": "atlantis", "name": "Atlantis"}
             return None
 
-        monkeypatch.setattr(countries_repository, "get_country", fake_get_country)
+        monkeypatch.setattr(
+            countries_repository, "get_country", fake_get_country
+        )
         monkeypatch.setattr(
             repository, "list_destination_compatibility", lambda *_a, **_kw: []
         )

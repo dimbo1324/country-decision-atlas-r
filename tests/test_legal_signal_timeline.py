@@ -1,17 +1,17 @@
 """Legal signal timeline: events grouped by year, source/evidence exposure, and missing-data resilience."""
 
+import pytest
 from app.services.legal_signal_timeline import build_timeline_response
 from datetime import date
 from pathlib import Path
-import pytest
 from tests.test_openapi_contract import load_contract
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 
-MIGRATION_SQL = Path("database/migrations/019_legal_signals_timeline.sql").read_text(
-    encoding="utf-8"
-)
+MIGRATION_SQL = Path(
+    "database/migrations/019_legal_signals_timeline.sql"
+).read_text(encoding="utf-8")
 CONNECTION = MagicMock()
 
 
@@ -122,7 +122,9 @@ def test_event_without_evidence_does_not_crash() -> None:
 
 def test_event_without_source_or_evidence_has_quality_warnings() -> None:
     event = (
-        build([event_row(source_ref_id=None, evidence_ref_id=None)]).groups[0].events[0]
+        build([event_row(source_ref_id=None, evidence_ref_id=None)])
+        .groups[0]
+        .events[0]
     )
 
     assert event.quality_warnings == ["source_missing", "evidence_missing"]
@@ -155,7 +157,17 @@ def test_unknown_country_returns_clean_not_found() -> None:
         pytest.raises(LookupError, match="Country not found"),
     ):
         build_timeline_response(
-            CONNECTION, "en", "unknown", None, None, None, None, None, None, 50, 0
+            CONNECTION,
+            "en",
+            "unknown",
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            50,
+            0,
         )
 
 
@@ -172,10 +184,14 @@ def test_localization_metadata_does_not_crash() -> None:
     assert result.locale.requested_locale == "ru"
 
 
-def test_repository_sql_uses_parameterized_filters_and_expected_sorting() -> None:
+def test_repository_sql_uses_parameterized_filters_and_expected_sorting() -> (
+    None
+):
     from app.repositories import legal_signal_events
 
-    with patch.object(legal_signal_events, "fetch_all", return_value=[]) as fetch:
+    with patch.object(
+        legal_signal_events, "fetch_all", return_value=[]
+    ) as fetch:
         legal_signal_events.list_timeline_events(
             CONNECTION,
             "russia",

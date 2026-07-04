@@ -1,8 +1,8 @@
 """Country drift calculation: insufficient data, label outcomes, direction accumulation, confidence downgrade."""
 
+import pytest
 from app.services.country_drift import calculate_country_drift
 from decimal import Decimal
-import pytest
 from typing import Any
 
 
@@ -148,7 +148,11 @@ class TestInputSummary:
             _event("neutral", "low", event_id="event-3"),
         ]
         result = calculate_country_drift(events)
-        assert result.input_summary["event_ids"] == ["event-1", "event-2", "event-3"]
+        assert result.input_summary["event_ids"] == [
+            "event-1",
+            "event-2",
+            "event-3",
+        ]
 
     def test_input_summary_contains_legal_signal_ids(self) -> None:
         events = [
@@ -157,7 +161,10 @@ class TestInputSummary:
             _event("neutral", "low", legal_signal_id=None),
         ]
         result = calculate_country_drift(events)
-        assert result.input_summary["legal_signal_ids"] == ["signal-1", "signal-2"]
+        assert result.input_summary["legal_signal_ids"] == [
+            "signal-1",
+            "signal-2",
+        ]
 
     def test_input_summary_contains_direction_counts(self) -> None:
         events = [

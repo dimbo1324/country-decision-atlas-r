@@ -3,19 +3,24 @@ import { API_BASE_URL } from "./helpers/env";
 import { expectNoAppCrash } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
-test("analytics event ingestion accepts anonymous event", async ({ request }) => {
-  const response = await request.post(`${API_BASE_URL}/api/v1/analytics/events`, {
-    data: {
-      event_type: "page_view",
-      session_id: "playwright-session-analytics",
-      source: "web",
-      path: "/",
-      locale: "ru",
-      metadata: {
-        surface: "e2e",
+test("analytics event ingestion accepts anonymous event", async ({
+  request,
+}) => {
+  const response = await request.post(
+    `${API_BASE_URL}/api/v1/analytics/events`,
+    {
+      data: {
+        event_type: "page_view",
+        session_id: "playwright-session-analytics",
+        source: "web",
+        path: "/",
+        locale: "ru",
+        metadata: {
+          surface: "e2e",
+        },
       },
     },
-  });
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(body.accepted).toBe(true);

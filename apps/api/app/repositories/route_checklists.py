@@ -80,7 +80,9 @@ def count_published_checklist_items(connection: Connection[Any]) -> int:
     return int(row["total"]) if row else 0
 
 
-def list_orphan_checklist_items(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_orphan_checklist_items(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

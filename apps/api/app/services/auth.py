@@ -1,13 +1,13 @@
+import hashlib
+import hmac
+import re
+import secrets
 from app.core.config import Settings, get_settings
 from app.core.errors import api_error
 from app.repositories import auth as repository
 from app.services.feature_flags import ensure_feature_enabled
 from datetime import UTC, datetime, timedelta
-import hashlib
-import hmac
 from psycopg import Connection
-import re
-import secrets
 from typing import Any, cast
 
 
@@ -19,7 +19,10 @@ EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 def hash_password(password: str) -> str:
     salt = secrets.token_hex(16)
     derived = hashlib.pbkdf2_hmac(
-        "sha256", password.encode("utf-8"), salt.encode("utf-8"), PBKDF2_ITERATIONS
+        "sha256",
+        password.encode("utf-8"),
+        salt.encode("utf-8"),
+        PBKDF2_ITERATIONS,
     )
     return f"{PBKDF2_ALGORITHM}${PBKDF2_ITERATIONS}${salt}${derived.hex()}"
 
@@ -84,7 +87,10 @@ def register_user(
     normalized_email = normalize_email(email)
     if not is_valid_email(normalized_email):
         raise api_error(
-            422, "invalid_email", "Email address is not valid.", {"email": email}
+            422,
+            "invalid_email",
+            "Email address is not valid.",
+            {"email": email},
         )
     if len(password) < settings.auth_password_min_length:
         raise api_error(
@@ -106,7 +112,9 @@ def register_user(
         display_name=display_name.strip() or normalized_email,
         role="user",
     )
-    repository.set_password_credential(connection, user["id"], hash_password(password))
+    repository.set_password_credential(
+        connection, user["id"], hash_password(password)
+    )
     return user
 
 
@@ -145,7 +153,9 @@ def login_user(
 ) -> tuple[str, dict[str, Any], dict[str, Any]]:
     _require_auth_feature_enabled(connection)
     normalized_email = normalize_email(email)
-    user = repository.get_user_by_email_with_credentials(connection, normalized_email)
+    user = repository.get_user_by_email_with_credentials(
+        connection, normalized_email
+    )
     if user is None or not verify_password(password, user.get("password_hash")):
         raise api_error(
             401,
@@ -156,7 +166,9 @@ def login_user(
     if user["status"] == "suspended":
         raise api_error(403, "user_suspended", "This account is suspended.", {})
     if user["status"] == "deleted":
-        raise api_error(403, "user_deleted", "This account no longer exists.", {})
+        raise api_error(
+            403, "user_deleted", "This account no longer exists.", {}
+        )
     repository.update_last_login(connection, user["id"])
     raw_token, session = create_login_session(
         connection,
@@ -179,19 +191,31 @@ def validate_session_token(
     connection: Connection[Any], raw_token: str
 ) -> dict[str, Any]:
     token_hash = hash_session_token(raw_token)
-    session = repository.get_active_session_by_token_hash(connection, token_hash)
+    session = repository.get_active_session_by_token_hash(
+        connection, token_hash
+    )
     if session is None:
-        maybe_expired = repository.get_session_by_token_hash(connection, token_hash)
+        maybe_expired = repository.get_session_by_token_hash(
+            connection, token_hash
+        )
         if maybe_expired is not None and maybe_expired["revoked_at"] is None:
-            raise api_error(401, "auth_session_expired", "Session has expired.", {})
-        raise api_error(401, "invalid_auth_token", "Session token is invalid.", {})
+            raise api_error(
+                401, "auth_session_expired", "Session has expired.", {}
+            )
+        raise api_error(
+            401, "invalid_auth_token", "Session token is invalid.", {}
+        )
     user = repository.get_user_by_id(connection, session["user_id"])
     if user is None:
-        raise api_error(401, "invalid_auth_token", "Session token is invalid.", {})
+        raise api_error(
+            401, "invalid_auth_token", "Session token is invalid.", {}
+        )
     if user["status"] == "suspended":
         raise api_error(403, "user_suspended", "This account is suspended.", {})
     if user["status"] == "deleted":
-        raise api_error(403, "user_deleted", "This account no longer exists.", {})
+        raise api_error(
+            403, "user_deleted", "This account no longer exists.", {}
+        )
     repository.touch_session(connection, session["id"])
     return {"user": user, "session": session}
 
@@ -199,4 +223,6 @@ def validate_session_token(
 def get_current_user_from_token(
     connection: Connection[Any], raw_token: str
 ) -> dict[str, Any]:
-    return cast(dict[str, Any], validate_session_token(connection, raw_token)["user"])
+    return cast(
+        dict[str, Any], validate_session_token(connection, raw_token)["user"]
+    )

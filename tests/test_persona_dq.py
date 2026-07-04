@@ -1,10 +1,10 @@
 """Data-quality checks for persona seed data and modifier coverage."""
 
+import pytest
 from app.repositories import data_quality as data_quality_repository
 from app.services import data_quality, persona_weights
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from tests.test_data_quality_validation import install_clean_report_fakes
 from typing import Any, cast
 
@@ -42,7 +42,9 @@ def _weight_rows(
 
 
 def _persona_issues(report: Any) -> list[Any]:
-    return [issue for issue in report.issues if issue.code.startswith("persona_")]
+    return [
+        issue for issue in report.issues if issue.code.startswith("persona_")
+    ]
 
 
 def test_persona_clean_seed_has_no_critical_issues(
@@ -58,7 +60,9 @@ def test_persona_clean_seed_has_no_critical_issues(
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert [
-        issue for issue in _persona_issues(report) if issue.severity == "critical"
+        issue
+        for issue in _persona_issues(report)
+        if issue.severity == "critical"
     ] == []
 
 
@@ -70,13 +74,19 @@ def test_missing_persona_modifier_is_critical(
         data_quality_repository,
         "list_active_personas_missing_metric_modifiers",
         lambda *_: [
-            {"persona_slug": "family", "metric_slug": "safety", "version": "v1.0"}
+            {
+                "persona_slug": "family",
+                "metric_slug": "safety",
+                "version": "v1.0",
+            }
         ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        issue for issue in report.issues if issue.code == "persona_modifier_coverage"
+        issue
+        for issue in report.issues
+        if issue.code == "persona_modifier_coverage"
     )
 
     assert issue.severity == "critical"
@@ -103,7 +113,9 @@ def test_modifier_out_of_range_is_critical(
 
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        issue for issue in report.issues if issue.code == "persona_modifier_range"
+        issue
+        for issue in report.issues
+        if issue.code == "persona_modifier_range"
     )
 
     assert issue.severity == "critical"
@@ -145,7 +157,9 @@ def test_missing_required_persona_field_is_critical(
 
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        issue for issue in report.issues if issue.code == "persona_required_fields"
+        issue
+        for issue in report.issues
+        if issue.code == "persona_required_fields"
     )
 
     assert issue.severity == "critical"
@@ -181,13 +195,19 @@ def test_inactive_persona_modifiers_is_warning(
         data_quality_repository,
         "list_inactive_personas_with_modifiers",
         lambda *_: [
-            {"persona_slug": "retired_profile", "modifier_count": 6, "version": "v1.0"}
+            {
+                "persona_slug": "retired_profile",
+                "modifier_count": 6,
+                "version": "v1.0",
+            }
         ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        issue for issue in report.issues if issue.code == "inactive_persona_modifiers"
+        issue
+        for issue in report.issues
+        if issue.code == "inactive_persona_modifiers"
     )
 
     assert issue.severity == "warning"
@@ -203,7 +223,9 @@ def test_dq_uses_persona_weight_engine(monkeypatch: pytest.MonkeyPatch) -> None:
         lambda *_: _weight_rows(),
     )
 
-    def fake_build_adjusted_weights(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def fake_build_adjusted_weights(
+        rows: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
         calls.append(rows)
         return [{**row, "adjusted_weight": 0.5} for row in rows]
 
@@ -233,7 +255,9 @@ def test_one_broken_persona_scenario_pair_does_not_abort_report(
         lambda *_: rows,
     )
 
-    def fake_build_adjusted_weights(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def fake_build_adjusted_weights(
+        rows: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
         if rows[0]["persona_slug"] == "family":
             raise HTTPException(
                 status_code=422,

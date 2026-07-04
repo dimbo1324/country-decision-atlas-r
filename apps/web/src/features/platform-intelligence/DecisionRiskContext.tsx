@@ -54,20 +54,30 @@ export function DecisionRiskContext({
     };
   }, [countrySlugs, scenarioSlug, locale]);
 
-  const hasAnyMetrics = Object.values(metricsMap).some((r) => r.items.length > 0);
+  const hasAnyMetrics = Object.values(metricsMap).some(
+    (r) => r.items.length > 0,
+  );
 
   if (isLoading || !hasAnyMetrics) {
     return null;
   }
 
   return (
-    <section className="cardSection" data-testid="decision-risk-context">
-      <h2 className="cardSectionTitle">Контекст рисков платформенного интеллекта</h2>
+    <section
+      className="cardSection"
+      data-testid="decision-risk-context"
+    >
+      <h2 className="cardSectionTitle">
+        Контекст рисков платформенного интеллекта
+      </h2>
       {countrySlugs.map((slug) => {
         const metrics = metricsMap[slug];
         if (!metrics || metrics.items.length === 0) return null;
         return (
-          <div key={slug} className="decisionRiskCountry">
+          <div
+            key={slug}
+            className="decisionRiskCountry"
+          >
             <h3 className="platformMetricGroupTitle">{slug}</h3>
             <div className="platformMetricGrid">
               {metrics.items.map((metric) => (

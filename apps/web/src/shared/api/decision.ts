@@ -7,11 +7,14 @@ export type DecisionRunResponse = components["schemas"]["DecisionRunResponse"];
 export type DecisionPersonalizationResponse =
   components["schemas"]["DecisionPersonalizationResponse"];
 export type DecisionWeightItem = components["schemas"]["DecisionWeightItem"];
-export type DecisionWizardAnswers = components["schemas"]["DecisionWizardAnswers"];
+export type DecisionWizardAnswers =
+  components["schemas"]["DecisionWizardAnswers"];
 export type DecisionWizardRecommendation =
   components["schemas"]["DecisionWizardRecommendation"];
 
-export function runDecision(payload: DecisionRunRequest): Promise<DecisionRunResponse> {
+export function runDecision(
+  payload: DecisionRunRequest,
+): Promise<DecisionRunResponse> {
   return apiPost<DecisionRunResponse, DecisionRunRequest>(
     "/api/v1/decision/run",
     payload,

@@ -88,7 +88,9 @@ def test_countries_list_frontend_contract(monkeypatch: Any) -> None:
     body = result.model_dump(mode="json")
 
     assert {"items", "pagination", "locale"} == set(body)
-    assert {"russia", "uruguay"}.issubset({item["slug"] for item in body["items"]})
+    assert {"russia", "uruguay"}.issubset(
+        {item["slug"] for item in body["items"]}
+    )
     assert body["pagination"]["total"] == 2
     assert body["locale"]["requested_locale"] == "en"
 
@@ -113,7 +115,9 @@ def test_country_detail_frontend_contract(monkeypatch: Any) -> None:
     }
     monkeypatch.setattr(countries_route, "get_country", lambda *_: row)
 
-    result = countries_route.read_country("uruguay", CONNECTION, get_locale("en"))
+    result = countries_route.read_country(
+        "uruguay", CONNECTION, get_locale("en")
+    )
     body = result.model_dump(mode="json")
 
     assert {"item", "locale"} == set(body)
@@ -128,7 +132,9 @@ def test_country_card_frontend_contract(monkeypatch: Any) -> None:
         lambda *_: sample_response("russia", "en"),
     )
 
-    result = countries_route.read_country_card("russia", CONNECTION, get_locale("en"))
+    result = countries_route.read_country_card(
+        "russia", CONNECTION, get_locale("en")
+    )
     body = result.model_dump(mode="json")
 
     assert {
@@ -188,7 +194,8 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         ),
     )
     monkeypatch.setattr(
-        "app.api.v1.decision.decision_engine.run_decision", lambda *_a, **_kw: response
+        "app.api.v1.decision.decision_engine.run_decision",
+        lambda *_a, **_kw: response,
     )
 
     result = decision_route.run_decision(
@@ -291,7 +298,9 @@ def test_list_endpoint_frontend_contracts(monkeypatch: Any) -> None:
     assert {"items", "pagination", "sort", "locale"} == set(legal_signals)
     assert {"items", "pagination", "sort", "locale"} == set(sources)
     assert {"items", "pagination", "sort", "locale"} == set(evidence)
-    assert sources["locale"] == source_locale_resolution("en").model_dump(mode="json")
+    assert sources["locale"] == source_locale_resolution("en").model_dump(
+        mode="json"
+    )
 
 
 def test_data_quality_report_frontend_contract(monkeypatch: Any) -> None:

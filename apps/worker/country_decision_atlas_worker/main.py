@@ -10,8 +10,8 @@ _api_path = os.path.join(_repo_root, "apps", "api")
 if _api_path not in sys.path:
     sys.path.insert(0, _api_path)
 
-from country_decision_atlas_shared.config import get_settings  # noqa: E402
 import psycopg  # noqa: E402
+from country_decision_atlas_shared.config import get_settings  # noqa: E402
 from psycopg.rows import dict_row  # noqa: E402
 
 

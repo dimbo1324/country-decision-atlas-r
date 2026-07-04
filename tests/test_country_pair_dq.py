@@ -2,7 +2,9 @@
 
 from app.repositories import data_quality as dq_repository
 from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
-from app.services.data_quality.country_pair_checks import _append_country_pair_checks
+from app.services.data_quality.country_pair_checks import (
+    _append_country_pair_checks,
+)
 from psycopg import Connection
 from typing import Any, cast
 
@@ -15,13 +17,21 @@ def test_detects_pair_without_sources(monkeypatch: Any) -> None:
         dq_repository,
         "list_published_pairs_without_sources",
         lambda *_: [
-            {"id": "pair-1", "origin_slug": "russia", "destination_slug": "uruguay"}
+            {
+                "id": "pair-1",
+                "origin_slug": "russia",
+                "destination_slug": "uruguay",
+            }
         ],
     )
     monkeypatch.setattr(
-        dq_repository, "list_published_pairs_missing_last_verified_at", lambda *_: []
+        dq_repository,
+        "list_published_pairs_missing_last_verified_at",
+        lambda *_: [],
     )
-    monkeypatch.setattr(dq_repository, "list_stale_published_pairs", lambda *_: [])
+    monkeypatch.setattr(
+        dq_repository, "list_stale_published_pairs", lambda *_: []
+    )
 
     issues: list[DataQualityIssue] = []
     checks: list[DataQualityCheck] = []
@@ -41,10 +51,16 @@ def test_detects_pair_missing_last_verified_at(monkeypatch: Any) -> None:
         dq_repository,
         "list_published_pairs_missing_last_verified_at",
         lambda *_: [
-            {"id": "pair-1", "origin_slug": "russia", "destination_slug": "uruguay"}
+            {
+                "id": "pair-1",
+                "origin_slug": "russia",
+                "destination_slug": "uruguay",
+            }
         ],
     )
-    monkeypatch.setattr(dq_repository, "list_stale_published_pairs", lambda *_: [])
+    monkeypatch.setattr(
+        dq_repository, "list_stale_published_pairs", lambda *_: []
+    )
 
     issues: list[DataQualityIssue] = []
     checks: list[DataQualityCheck] = []
@@ -59,7 +75,9 @@ def test_stale_pair_is_warning_not_critical(monkeypatch: Any) -> None:
         dq_repository, "list_published_pairs_without_sources", lambda *_: []
     )
     monkeypatch.setattr(
-        dq_repository, "list_published_pairs_missing_last_verified_at", lambda *_: []
+        dq_repository,
+        "list_published_pairs_missing_last_verified_at",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         dq_repository,
@@ -87,9 +105,13 @@ def test_passes_when_all_pairs_healthy(monkeypatch: Any) -> None:
         dq_repository, "list_published_pairs_without_sources", lambda *_: []
     )
     monkeypatch.setattr(
-        dq_repository, "list_published_pairs_missing_last_verified_at", lambda *_: []
+        dq_repository,
+        "list_published_pairs_missing_last_verified_at",
+        lambda *_: [],
     )
-    monkeypatch.setattr(dq_repository, "list_stale_published_pairs", lambda *_: [])
+    monkeypatch.setattr(
+        dq_repository, "list_stale_published_pairs", lambda *_: []
+    )
 
     issues: list[DataQualityIssue] = []
     checks: list[DataQualityCheck] = []

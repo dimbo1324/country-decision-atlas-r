@@ -30,12 +30,18 @@ export function SearchFilters({
   onCountryChange: (countrySlug: string) => void;
 }) {
   return (
-    <div className="filterBar searchFilters" data-testid="search-filters">
+    <div
+      className="filterBar searchFilters"
+      data-testid="search-filters"
+    >
       <div className="filterGroup">
         <span className="filterLabel">Тип результата</span>
         <div className="searchTypeFilterList">
           {ENTITY_TYPE_OPTIONS.map((option) => (
-            <label key={option.value} className="searchTypeFilterOption">
+            <label
+              key={option.value}
+              className="searchTypeFilterOption"
+            >
               <input
                 type="checkbox"
                 checked={selectedTypes.includes(option.value)}
@@ -57,7 +63,10 @@ export function SearchFilters({
         >
           <option value="">Все страны</option>
           {countries.map((country) => (
-            <option key={country.slug} value={country.slug}>
+            <option
+              key={country.slug}
+              value={country.slug}
+            >
               {country.name}
             </option>
           ))}

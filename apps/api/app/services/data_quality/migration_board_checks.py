@@ -52,7 +52,9 @@ def _append_migration_board_checks(
         )
     )
 
-    for row in repository.list_migration_board_posts_with_route_country_mismatch(
+    for (
+        row
+    ) in repository.list_migration_board_posts_with_route_country_mismatch(
         connection
     ):
         issues.append(
@@ -73,7 +75,9 @@ def _append_migration_board_checks(
         )
     )
 
-    for row in repository.list_migration_board_public_posts_with_pii(connection):
+    for row in repository.list_migration_board_public_posts_with_pii(
+        connection
+    ):
         issues.append(
             _issue(
                 "migration_board_public_text_contains_pii",
@@ -92,7 +96,9 @@ def _append_migration_board_checks(
         )
     )
 
-    for row in repository.list_invalid_migration_board_contact_requests(connection):
+    for row in repository.list_invalid_migration_board_contact_requests(
+        connection
+    ):
         issues.append(
             _issue(
                 "migration_board_contact_request_invalid",
@@ -103,7 +109,9 @@ def _append_migration_board_checks(
                 row,
             )
         )
-    for row in repository.list_duplicate_pending_migration_board_contact_requests(
+    for (
+        row
+    ) in repository.list_duplicate_pending_migration_board_contact_requests(
         connection
     ):
         issues.append(

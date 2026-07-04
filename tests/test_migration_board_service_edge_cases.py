@@ -1,5 +1,6 @@
 """Migration Board service edge cases: visibility matrix, contact eligibility, PII detection, and enum/tag validation."""
 
+import pytest
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as repository
 from app.schemas.migration_board import (
@@ -13,7 +14,6 @@ from app.services import (
 from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -150,7 +150,9 @@ class TestVisibilityMatrix:
 
 
 class TestContactEligibility:
-    def test_receivable_when_published_approved_public_and_enabled(self) -> None:
+    def test_receivable_when_published_approved_public_and_enabled(
+        self,
+    ) -> None:
         assert service._can_receive_contact_request(_post()) is True
 
     def test_not_receivable_when_contact_requests_disabled(self) -> None:
@@ -197,13 +199,17 @@ class TestPiiDetection:
         )
 
     def test_short_all_caps_word_is_not_flagged_as_handle(self) -> None:
-        service._reject_public_pii("Plan", "We are relocating IN JUNE next year.")
+        service._reject_public_pii(
+            "Plan", "We are relocating IN JUNE next year."
+        )
 
 
 class TestEnumAndTagValidation:
     def test_validate_enum_rejects_unknown_value(self) -> None:
         with pytest.raises(HTTPException) as exc_info:
-            service._validate_enum("not_a_real_value", service.ALLOWED_BUDGET_RANGES)
+            service._validate_enum(
+                "not_a_real_value", service.ALLOWED_BUDGET_RANGES
+            )
         _assert_error(exc_info, "invalid_enum_value")
 
     def test_validate_enum_allows_none(self) -> None:
@@ -243,9 +249,13 @@ class TestCreatePost:
         assert exc_info.value.status_code == 429
         _assert_error(exc_info, "active_post_limit_exceeded")
 
-    def test_rejects_pii_before_creating(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_rejects_pii_before_creating(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "count_user_active_posts", lambda *_a, **_kw: 0)
+        monkeypatch.setattr(
+            repository, "count_user_active_posts", lambda *_a, **_kw: 0
+        )
         monkeypatch.setattr(
             repository,
             "get_country_by_slug",
@@ -256,7 +266,9 @@ class TestCreatePost:
             service.create_user_post(
                 CONNECTION,
                 current_user=USER,
-                payload=_create_payload(summary="Email me at test@example.com now"),
+                payload=_create_payload(
+                    summary="Email me at test@example.com now"
+                ),
             )
         _assert_error(exc_info, "pii_not_allowed")
 
@@ -264,8 +276,12 @@ class TestCreatePost:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "count_user_active_posts", lambda *_a, **_kw: 0)
-        monkeypatch.setattr(repository, "get_country_by_slug", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "count_user_active_posts", lambda *_a, **_kw: 0
+        )
+        monkeypatch.setattr(
+            repository, "get_country_by_slug", lambda *_a, **_kw: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.create_user_post(
@@ -278,7 +294,9 @@ class TestCreatePost:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "count_user_active_posts", lambda *_a, **_kw: 0)
+        monkeypatch.setattr(
+            repository, "count_user_active_posts", lambda *_a, **_kw: 0
+        )
         monkeypatch.setattr(
             repository,
             "get_country_by_slug",
@@ -305,14 +323,20 @@ class TestCreatePost:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "count_user_active_posts", lambda *_a, **_kw: 0)
+        monkeypatch.setattr(
+            repository, "count_user_active_posts", lambda *_a, **_kw: 0
+        )
         monkeypatch.setattr(
             repository,
             "get_country_by_slug",
             lambda *_a, **_kw: {"id": "44444444-4444-4444-4444-444444444444"},
         )
-        monkeypatch.setattr(repository, "create_post", lambda *_a, **_kw: _post())
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "create_post", lambda *_a, **_kw: _post()
+        )
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
         monkeypatch.setattr(
             migration_board_helpers, "_track_event", lambda *_a, **_kw: None
         )
@@ -358,13 +382,17 @@ class TestUpdatePost:
             return _post(status="review")
 
         monkeypatch.setattr(repository, "update_post", fake_update)
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
 
         service.update_user_post(
             CONNECTION,
             current_user=USER,
             post_id="22222222-2222-2222-2222-222222222222",
-            payload=UpdateMigrationBoardPostRequest(title="A brand new title here"),
+            payload=UpdateMigrationBoardPostRequest(
+                title="A brand new title here"
+            ),
         )
         assert captured["reset_to_review"] is True
 
@@ -382,7 +410,9 @@ class TestUpdatePost:
             return _post()
 
         monkeypatch.setattr(repository, "update_post", fake_update)
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
 
         service.update_user_post(
             CONNECTION,
@@ -399,7 +429,9 @@ class TestUpdatePost:
     ) -> None:
         _enable_features(monkeypatch)
         monkeypatch.setattr(
-            repository, "get_post_for_owner", lambda *_a, **_kw: _post(status="draft")
+            repository,
+            "get_post_for_owner",
+            lambda *_a, **_kw: _post(status="draft"),
         )
         monkeypatch.setattr(repository, "update_post", lambda *_a, **_kw: None)
 
@@ -421,7 +453,9 @@ class TestSubmitAndAcknowledgements:
 
     def test_submit_requires_legal_disclaimer_acknowledged(self) -> None:
         with pytest.raises(HTTPException) as exc_info:
-            service._require_submit_ready(_post(legal_disclaimer_acknowledged=False))
+            service._require_submit_ready(
+                _post(legal_disclaimer_acknowledged=False)
+            )
         _assert_error(exc_info, "acknowledgements_required")
 
     def test_submit_ready_passes_with_both_acknowledgements(self) -> None:
@@ -439,9 +473,13 @@ class TestSubmitAndAcknowledgements:
     ) -> None:
         _enable_features(monkeypatch)
         monkeypatch.setattr(
-            repository, "get_post_for_owner", lambda *_a, **_kw: _post(status="draft")
+            repository,
+            "get_post_for_owner",
+            lambda *_a, **_kw: _post(status="draft"),
         )
-        monkeypatch.setattr(repository, "submit_post_for_review", lambda *_a: None)
+        monkeypatch.setattr(
+            repository, "submit_post_for_review", lambda *_a: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.submit_user_post(
@@ -495,17 +533,23 @@ class TestModeration:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
-            service.approve_post(CONNECTION, current_user=USER, post_id="missing")
+            service.approve_post(
+                CONNECTION, current_user=USER, post_id="missing"
+            )
         assert exc_info.value.status_code == 404
 
     def test_reject_invalid_transition_raises_409(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
         monkeypatch.setattr(repository, "reject_post", lambda *_a, **_kw: None)
 
         with pytest.raises(HTTPException) as exc_info:
@@ -521,7 +565,9 @@ class TestModeration:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.hide_post(
@@ -554,10 +600,16 @@ class TestContactRequestLifecycle:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
-        monkeypatch.setattr(repository, "is_user_blocked", lambda *_a, **_kw: False)
         monkeypatch.setattr(
-            repository, "pending_contact_request_exists", lambda *_a, **_kw: True
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+        monkeypatch.setattr(
+            repository, "is_user_blocked", lambda *_a, **_kw: False
+        )
+        monkeypatch.setattr(
+            repository,
+            "pending_contact_request_exists",
+            lambda *_a, **_kw: True,
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -574,10 +626,16 @@ class TestContactRequestLifecycle:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
-        monkeypatch.setattr(repository, "is_user_blocked", lambda *_a, **_kw: False)
         monkeypatch.setattr(
-            repository, "pending_contact_request_exists", lambda *_a, **_kw: False
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+        monkeypatch.setattr(
+            repository, "is_user_blocked", lambda *_a, **_kw: False
+        )
+        monkeypatch.setattr(
+            repository,
+            "pending_contact_request_exists",
+            lambda *_a, **_kw: False,
         )
         monkeypatch.setattr(
             repository,
@@ -669,10 +727,15 @@ class TestContactRequestLifecycle:
                 "response_note": None,
             },
         )
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
 
         result = service.accept_contact_request(
-            CONNECTION, current_user=USER, request_id="req-1", response_note=None
+            CONNECTION,
+            current_user=USER,
+            request_id="req-1",
+            response_note=None,
         )
         assert result["status"] == "accepted"
 
@@ -695,7 +758,10 @@ class TestContactRequestLifecycle:
 
         with pytest.raises(HTTPException) as exc_info:
             service.accept_contact_request(
-                CONNECTION, current_user=USER, request_id="req-1", response_note=None
+                CONNECTION,
+                current_user=USER,
+                request_id="req-1",
+                response_note=None,
             )
         assert exc_info.value.status_code == 409
 
@@ -718,7 +784,9 @@ class TestReports:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.report_post(
@@ -761,9 +829,13 @@ class TestReports:
             )
         assert exc_info.value.status_code == 404
 
-    def test_daily_report_limit_enforced(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_daily_report_limit_enforced(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
         monkeypatch.setattr(
             repository,
             "count_reports_created_today",
@@ -785,12 +857,16 @@ class TestReports:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
         monkeypatch.setattr(
             repository, "count_reports_created_today", lambda *_a, **_kw: 0
         )
         monkeypatch.setattr(
-            repository, "existing_pending_report_exists", lambda *_a, **_kw: True
+            repository,
+            "existing_pending_report_exists",
+            lambda *_a, **_kw: True,
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -830,7 +906,9 @@ class TestReports:
         monkeypatch.setattr(
             repository, "hide_post", lambda *_a, **kwargs: hidden.update(kwargs)
         )
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
 
         service.resolve_report(
             CONNECTION,
@@ -870,20 +948,30 @@ class TestReports:
             hide_called = True
 
         monkeypatch.setattr(repository, "hide_post", fake_hide)
-        monkeypatch.setattr(migration_board_helpers, "_audit", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
 
         service.dismiss_report(
-            CONNECTION, current_user=USER, report_id="report-1", resolution_note=None
+            CONNECTION,
+            current_user=USER,
+            report_id="report-1",
+            resolution_note=None,
         )
         assert hide_called is False
 
 
 class TestBlocking:
-    def test_self_block_not_allowed(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_self_block_not_allowed(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _enable_features(monkeypatch)
         with pytest.raises(HTTPException) as exc_info:
             service.block_user(
-                CONNECTION, current_user=USER, blocked_user_id=USER.id, reason=None
+                CONNECTION,
+                current_user=USER,
+                blocked_user_id=USER.id,
+                reason=None,
             )
         _assert_error(exc_info, "self_block_not_allowed")
 
@@ -895,7 +983,10 @@ class TestBlocking:
 
         with pytest.raises(HTTPException) as exc_info:
             service.block_user(
-                CONNECTION, current_user=USER, blocked_user_id=OTHER_ID, reason=None
+                CONNECTION,
+                current_user=USER,
+                blocked_user_id=OTHER_ID,
+                reason=None,
             )
         assert exc_info.value.status_code == 404
 
@@ -905,7 +996,9 @@ class TestCompanionMatching:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "list_user_posts", lambda *_a, **_kw: [])
+        monkeypatch.setattr(
+            repository, "list_user_posts", lambda *_a, **_kw: []
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.list_companion_matches(
@@ -929,7 +1022,9 @@ class TestCompanionMatching:
             )
         _assert_error(exc_info, "source_post_not_found")
 
-    def test_match_reasons_accumulate_for_multiple_shared_attributes(self) -> None:
+    def test_match_reasons_accumulate_for_multiple_shared_attributes(
+        self,
+    ) -> None:
         source = _post(
             route_id="route-1",
             timeline_window="0_3_months",
@@ -971,21 +1066,29 @@ class TestCompanionMatching:
 
 class TestMiscHelpers:
     def test_is_significant_edit_true_for_title_change(self) -> None:
-        payload = UpdateMigrationBoardPostRequest(title="A new significant title")
+        payload = UpdateMigrationBoardPostRequest(
+            title="A new significant title"
+        )
         assert service._is_significant_edit(payload) is True
 
     def test_is_significant_edit_false_for_visibility_only_toggle(self) -> None:
-        payload = UpdateMigrationBoardPostRequest(contact_requests_enabled=False)
+        payload = UpdateMigrationBoardPostRequest(
+            contact_requests_enabled=False
+        )
         assert service._is_significant_edit(payload) is False
 
     def test_is_significant_edit_false_for_empty_payload(self) -> None:
         payload = UpdateMigrationBoardPostRequest()
         assert service._is_significant_edit(payload) is False
 
-    def test_diff_for_update_reports_no_field_changes_as_updated_flag(self) -> None:
+    def test_diff_for_update_reports_no_field_changes_as_updated_flag(
+        self,
+    ) -> None:
         before = _post()
         after = _post()
-        assert service._diff_for_update(before, after) == {"updated": {"new": True}}
+        assert service._diff_for_update(before, after) == {
+            "updated": {"new": True}
+        }
 
     def test_diff_for_update_reports_status_change(self) -> None:
         before = _post(status="review")
@@ -1014,7 +1117,9 @@ class TestFeatureFlagGating:
         )
 
         with pytest.raises(HTTPException) as exc_info:
-            service.ensure_feature_enabled(CONNECTION, service.BOARD_FEATURE_KEY)
+            service.ensure_feature_enabled(
+                CONNECTION, service.BOARD_FEATURE_KEY
+            )
         assert exc_info.value.status_code == 403
         _assert_error(exc_info, "feature_disabled")
 
@@ -1033,7 +1138,10 @@ class TestFeatureFlagGating:
                 CONNECTION, current_user=USER, post_id=None, limit=10
             )
         detail = cast(dict[str, Any], exc_info.value.detail)
-        assert detail["error"]["details"]["feature_key"] == service.MATCHING_FEATURE_KEY
+        assert (
+            detail["error"]["details"]["feature_key"]
+            == service.MATCHING_FEATURE_KEY
+        )
 
 
 class TestReadOnlyWrappers:
@@ -1085,9 +1193,13 @@ class TestReadOnlyWrappers:
         assert captured["include_members_only"] is True
         assert captured["include_private_for_user_id"] == USER.id
 
-    def test_get_public_post_success(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_get_public_post_success(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: _post())
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
         monkeypatch.setattr(
             migration_board_helpers, "_track_event", lambda *_a, **_kw: None
         )
@@ -1104,7 +1216,9 @@ class TestReadOnlyWrappers:
     ) -> None:
         _enable_features(monkeypatch)
         monkeypatch.setattr(
-            repository, "get_post_by_id", lambda *_a, **_kw: _post(visibility="private")
+            repository,
+            "get_post_by_id",
+            lambda *_a, **_kw: _post(visibility="private"),
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -1190,10 +1304,14 @@ class TestReadOnlyWrappers:
         monkeypatch.setattr(repository, "unblock_user", lambda *_a, **_kw: None)
         audit_calls: list[tuple[Any, ...]] = []
         monkeypatch.setattr(
-            migration_board_helpers, "_audit", lambda *args: audit_calls.append(args)
+            migration_board_helpers,
+            "_audit",
+            lambda *args: audit_calls.append(args),
         )
 
-        service.unblock_user(CONNECTION, current_user=USER, blocked_user_id=OTHER_ID)
+        service.unblock_user(
+            CONNECTION, current_user=USER, blocked_user_id=OTHER_ID
+        )
 
         assert len(audit_calls) == 1
         assert audit_calls[0][2] == "user_unblocked"
@@ -1214,14 +1332,17 @@ class TestReadOnlyWrappers:
             )
         detail = cast(dict[str, Any], exc_info.value.detail)
         assert (
-            detail["error"]["details"]["feature_key"] == service.MODERATION_FEATURE_KEY
+            detail["error"]["details"]["feature_key"]
+            == service.MODERATION_FEATURE_KEY
         )
 
     def test_get_post_for_moderation_not_found(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _enable_features(monkeypatch)
-        monkeypatch.setattr(repository, "get_post_by_id", lambda *_a, **_kw: None)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: None
+        )
 
         with pytest.raises(HTTPException) as exc_info:
             service.get_post_for_moderation(CONNECTION, "missing")

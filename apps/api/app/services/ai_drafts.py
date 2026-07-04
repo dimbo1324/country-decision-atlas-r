@@ -37,7 +37,11 @@ def generate_summary_draft(
     body_lines = [
         item.excerpt[:400] for item in package.grounded_context if item.excerpt
     ]
-    body = "\n".join(body_lines) if body_lines else package.grounded_context[0].title
+    body = (
+        "\n".join(body_lines)
+        if body_lines
+        else package.grounded_context[0].title
+    )
     summary = f"[FAKE AI] Summary draft for '{topic}' based on {len(package.grounded_context)} published context items."
     citations = [citation.model_dump() for citation in package.citations]
     row = repository.insert_ai_draft(
@@ -82,7 +86,9 @@ def get_ai_draft_for_admin(
 ) -> dict[str, Any]:
     row = repository.get_ai_draft(connection, draft_id)
     if row is None:
-        raise api_error(404, "ai_draft_not_found", f"AI draft not found: {draft_id}")
+        raise api_error(
+            404, "ai_draft_not_found", f"AI draft not found: {draft_id}"
+        )
     return row
 
 
@@ -96,7 +102,9 @@ def update_ai_draft_status(
         connection, draft_id, status, reviewed_by=reviewed_by
     )
     if row is None:
-        raise api_error(404, "ai_draft_not_found", f"AI draft not found: {draft_id}")
+        raise api_error(
+            404, "ai_draft_not_found", f"AI draft not found: {draft_id}"
+        )
     return row
 
 

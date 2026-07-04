@@ -1,10 +1,10 @@
 """Search API: input validation and filtering by entity type."""
 
+import pytest
 from app.repositories import search as repository
 from app.services import search as service
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
 
@@ -14,7 +14,9 @@ CONNECTION = cast(Connection[Any], object())
 
 def install_empty_results(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(repository, "search_documents", lambda *_: [])
-    monkeypatch.setattr(repository, "count_search_documents_matching", lambda *_: 0)
+    monkeypatch.setattr(
+        repository, "count_search_documents_matching", lambda *_: 0
+    )
 
 
 def test_empty_query_returns_422() -> None:
@@ -28,7 +30,9 @@ def test_empty_query_returns_422() -> None:
     )
 
 
-def test_invalid_entity_type_returns_422(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_invalid_entity_type_returns_422(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_empty_results(monkeypatch)
 
     with pytest.raises(HTTPException) as exc_info:
@@ -58,9 +62,13 @@ def test_search_returns_route_result(monkeypatch: pytest.MonkeyPatch) -> None:
             }
         ],
     )
-    monkeypatch.setattr(repository, "count_search_documents_matching", lambda *_: 1)
+    monkeypatch.setattr(
+        repository, "count_search_documents_matching", lambda *_: 1
+    )
 
-    response = service.run_search(CONNECTION, "residence", "en", None, None, 20, 0)
+    response = service.run_search(
+        CONNECTION, "residence", "en", None, None, 20, 0
+    )
 
     assert response.total == 1
     assert response.items[0].entity_type == "route"
@@ -75,14 +83,20 @@ def test_search_filters_by_types(monkeypatch: pytest.MonkeyPatch) -> None:
         return []
 
     monkeypatch.setattr(repository, "search_documents", fake_search_documents)
-    monkeypatch.setattr(repository, "count_search_documents_matching", lambda *_: 0)
+    monkeypatch.setattr(
+        repository, "count_search_documents_matching", lambda *_: 0
+    )
 
-    service.run_search(CONNECTION, "visa", "en", "route,legal_signal", None, 20, 0)
+    service.run_search(
+        CONNECTION, "visa", "en", "route,legal_signal", None, 20, 0
+    )
 
     assert captured["entity_types"] == ["route", "legal_signal"]
 
 
-def test_search_filters_by_country_slug(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_search_filters_by_country_slug(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     captured: dict[str, Any] = {}
 
     def fake_search_documents(*args: Any) -> list[dict[str, Any]]:
@@ -90,7 +104,9 @@ def test_search_filters_by_country_slug(monkeypatch: pytest.MonkeyPatch) -> None
         return []
 
     monkeypatch.setattr(repository, "search_documents", fake_search_documents)
-    monkeypatch.setattr(repository, "count_search_documents_matching", lambda *_: 0)
+    monkeypatch.setattr(
+        repository, "count_search_documents_matching", lambda *_: 0
+    )
 
     service.run_search(CONNECTION, "visa", "en", None, "argentina", 20, 0)
 
@@ -108,7 +124,9 @@ def test_search_preserves_locale(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_search_query_is_stripped(monkeypatch: pytest.MonkeyPatch) -> None:
     install_empty_results(monkeypatch)
 
-    response = service.run_search(CONNECTION, "  visa  ", "en", None, None, 20, 0)
+    response = service.run_search(
+        CONNECTION, "  visa  ", "en", None, None, 20, 0
+    )
 
     assert response.query == "visa"
 

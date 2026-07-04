@@ -45,7 +45,9 @@ def list_published_pairs_missing_last_verified_at(
     )
 
 
-def list_stale_published_pairs(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_stale_published_pairs(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """

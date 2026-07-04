@@ -25,7 +25,10 @@ export function DecisionWizardStep<T extends string>({
         data-testid={testId}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+          >
             {option.label}
           </option>
         ))}

@@ -1,7 +1,7 @@
 """CII score building, repository access, and schema shape for the country card."""
 
-from datetime import UTC, datetime
 import pytest
+from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -182,8 +182,13 @@ class TestCiiInReadModel:
             ),
             patch(f"{_SVC}.get_country_read_model_profile", return_value=None),
             patch(f"{_SVC}.list_country_read_model_scores", return_value=[]),
-            patch(f"{_SVC}.list_country_read_model_score_breakdowns", return_value=[]),
-            patch(f"{_SVC}.list_country_read_model_legal_signals", return_value=[]),
+            patch(
+                f"{_SVC}.list_country_read_model_score_breakdowns",
+                return_value=[],
+            ),
+            patch(
+                f"{_SVC}.list_country_read_model_legal_signals", return_value=[]
+            ),
             patch(f"{_SVC}.list_country_read_model_sources", return_value=[]),
             patch(
                 f"{_SVC}.get_country_read_model_evidence_summary",
@@ -191,7 +196,9 @@ class TestCiiInReadModel:
             ),
             patch(
                 f"{_SVC}.get_country_read_model_user_stories_summary",
-                return_value=deps["get_country_read_model_user_stories_summary"],
+                return_value=deps[
+                    "get_country_read_model_user_stories_summary"
+                ],
             ),
             patch(f"{_SVC}.get_country_cii", return_value=_CII_ROW),
             patch(
@@ -217,8 +224,13 @@ class TestCiiInReadModel:
             ),
             patch(f"{_SVC}.get_country_read_model_profile", return_value=None),
             patch(f"{_SVC}.list_country_read_model_scores", return_value=[]),
-            patch(f"{_SVC}.list_country_read_model_score_breakdowns", return_value=[]),
-            patch(f"{_SVC}.list_country_read_model_legal_signals", return_value=[]),
+            patch(
+                f"{_SVC}.list_country_read_model_score_breakdowns",
+                return_value=[],
+            ),
+            patch(
+                f"{_SVC}.list_country_read_model_legal_signals", return_value=[]
+            ),
             patch(f"{_SVC}.list_country_read_model_sources", return_value=[]),
             patch(
                 f"{_SVC}.get_country_read_model_evidence_summary",
@@ -226,7 +238,9 @@ class TestCiiInReadModel:
             ),
             patch(
                 f"{_SVC}.get_country_read_model_user_stories_summary",
-                return_value=deps["get_country_read_model_user_stories_summary"],
+                return_value=deps[
+                    "get_country_read_model_user_stories_summary"
+                ],
             ),
             patch(f"{_SVC}.get_country_cii", return_value=None),
             patch(

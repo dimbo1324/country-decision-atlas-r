@@ -1,5 +1,6 @@
 """'What changed' feed: default/override time windows and unknown-country handling."""
 
+import pytest
 from app.repositories import (
     countries as countries_repository,
     what_changed as repository,
@@ -8,7 +9,6 @@ from app.services import what_changed as service
 from datetime import UTC, datetime, timedelta
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
 
@@ -24,10 +24,18 @@ def install_country_exists(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def install_empty_sources(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(repository, "list_country_domain_events_since", lambda *_: [])
-    monkeypatch.setattr(repository, "list_country_data_journal_since", lambda *_: [])
-    monkeypatch.setattr(repository, "list_country_drift_changes_since", lambda *_: [])
-    monkeypatch.setattr(repository, "list_country_route_changes_since", lambda *_: [])
+    monkeypatch.setattr(
+        repository, "list_country_domain_events_since", lambda *_: []
+    )
+    monkeypatch.setattr(
+        repository, "list_country_data_journal_since", lambda *_: []
+    )
+    monkeypatch.setattr(
+        repository, "list_country_drift_changes_since", lambda *_: []
+    )
+    monkeypatch.setattr(
+        repository, "list_country_route_changes_since", lambda *_: []
+    )
     monkeypatch.setattr(
         repository, "list_country_legal_signal_changes_since", lambda *_: []
     )
@@ -37,7 +45,9 @@ def test_default_30_day_window(monkeypatch: pytest.MonkeyPatch) -> None:
     install_country_exists(monkeypatch)
     install_empty_sources(monkeypatch)
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     delta = datetime.now(UTC) - response.since
     assert 29 <= delta.days <= 30
@@ -86,7 +96,9 @@ def test_route_change_appears(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     assert any(item.event_type == "route_published" for item in response.items)
     assert response.summary.routes == 1
@@ -110,9 +122,13 @@ def test_legal_signal_publish_appears(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
-    assert any(item.event_type == "legal_signal_published" for item in response.items)
+    assert any(
+        item.event_type == "legal_signal_published" for item in response.items
+    )
     assert response.summary.legal_signals == 1
     assert response.items[0].importance == "high"
 
@@ -135,7 +151,9 @@ def test_drift_change_appears(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     assert any(item.event_type == "drift_changed" for item in response.items)
     assert response.summary.drift == 1
@@ -146,7 +164,9 @@ def test_empty_state_works(monkeypatch: pytest.MonkeyPatch) -> None:
     install_country_exists(monkeypatch)
     install_empty_sources(monkeypatch)
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     assert response.items == []
     assert response.summary.total == 0
@@ -186,7 +206,9 @@ def test_items_sorted_newest_first(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     assert response.items[0].occurred_at >= response.items[1].occurred_at
 
@@ -210,7 +232,9 @@ def test_limit_works(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 3)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 3
+    )
 
     assert len(response.items) == 3
 
@@ -226,7 +250,9 @@ def test_draft_content_hidden_by_repository_filters() -> None:
         assert "status = 'published'" in source
 
 
-def test_dedup_collapses_overlapping_sources(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_dedup_collapses_overlapping_sources(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_country_exists(monkeypatch)
     install_empty_sources(monkeypatch)
     monkeypatch.setattr(
@@ -259,7 +285,9 @@ def test_dedup_collapses_overlapping_sources(monkeypatch: pytest.MonkeyPatch) ->
         ],
     )
 
-    response = service.build_what_changed(CONNECTION, "argentina", "en", None, 30, 20)
+    response = service.build_what_changed(
+        CONNECTION, "argentina", "en", None, 30, 20
+    )
 
     assert response.summary.total == 1
 
@@ -268,5 +296,9 @@ def test_openapi_contains_what_changed_endpoint() -> None:
     contract = load_contract()
 
     assert "/api/v1/countries/{country_slug}/what-changed" in contract["paths"]
-    for schema_name in ["WhatChangedItem", "WhatChangedSummary", "WhatChangedResponse"]:
+    for schema_name in [
+        "WhatChangedItem",
+        "WhatChangedSummary",
+        "WhatChangedResponse",
+    ]:
         assert schema_name in contract["components"]["schemas"]

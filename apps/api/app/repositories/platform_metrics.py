@@ -50,7 +50,9 @@ def get_country_by_slug(
     )
 
 
-def list_active_mvp_scenarios(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_active_mvp_scenarios(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

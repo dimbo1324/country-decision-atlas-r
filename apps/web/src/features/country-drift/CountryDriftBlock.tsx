@@ -18,7 +18,10 @@ type CountryDriftBlockProps = {
   locale: LocaleCode;
 };
 
-export function CountryDriftBlock({ countrySlug, locale }: CountryDriftBlockProps) {
+export function CountryDriftBlock({
+  countrySlug,
+  locale,
+}: CountryDriftBlockProps) {
   const [data, setData] = useState<CountryDriftResponse | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +66,10 @@ export function CountryDriftBlock({ countrySlug, locale }: CountryDriftBlockProp
 
   if (!snapshot) {
     return (
-      <div className="notice" data-testid="country-drift-empty">
+      <div
+        className="notice"
+        data-testid="country-drift-empty"
+      >
         Данные о направлении изменений ещё не вычислены для этой страны.
       </div>
     );
@@ -75,18 +81,25 @@ export function CountryDriftBlock({ countrySlug, locale }: CountryDriftBlockProp
         <CountryDriftBadge label={snapshot.label} />
         <ConfidenceBadge confidence={snapshot.confidence} />
       </div>
-      <p className="infoNote" data-testid="country-drift-metrics">
-        Событий за период: {snapshot.event_count} · Окно: {snapshot.window_days} дней
+      <p
+        className="infoNote"
+        data-testid="country-drift-metrics"
+      >
+        Событий за период: {snapshot.event_count} · Окно: {snapshot.window_days}{" "}
+        дней
         {snapshot.net_score != null && (
           <> · Net score: {snapshot.net_score.toFixed(1)}</>
         )}
       </p>
-      <p className="infoNote" data-testid="country-drift-computed-at">
+      <p
+        className="infoNote"
+        data-testid="country-drift-computed-at"
+      >
         Рассчитано: {new Date(snapshot.computed_at).toLocaleString("ru")}
       </p>
       <p className="infoNote">
-        Индикатор основан только на официальных правовых сигналах за выбранный период и
-        не является прогнозом.
+        Индикатор основан только на официальных правовых сигналах за выбранный
+        период и не является прогнозом.
       </p>
       <DriftHistoryMiniList items={data?.history ?? []} />
       <DisclaimerNotice text={data?.disclaimer} />

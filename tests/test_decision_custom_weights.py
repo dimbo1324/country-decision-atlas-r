@@ -1,5 +1,6 @@
 """Decision runs with custom criterion weights: effective-weight recalculation without touching persisted scores."""
 
+import pytest
 from app.repositories import (
     decision_engine as decision_repository,
     feature_flags as ff_repo,
@@ -7,7 +8,6 @@ from app.repositories import (
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
 from fastapi import HTTPException
-import pytest
 from tests.test_decision_run import install_repository_fakes, payload
 from typing import Any, cast
 
@@ -104,7 +104,9 @@ def test_custom_weights_recalculate_effective_weights(
 
     weights = dict.fromkeys(ALL_CRITERIA, 0.0)
     weights["safety_score"] = 100.0
-    result = decision_engine.run_decision(CONNECTION, _payload_with_weights(weights))
+    result = decision_engine.run_decision(
+        CONNECTION, _payload_with_weights(weights)
+    )
     body = result.model_dump(mode="json")
 
     assert body["personalization"]["custom_weights_applied"] is True
@@ -124,7 +126,9 @@ def test_custom_weights_change_runtime_score_without_touching_persisted_score(
 
     weights = dict.fromkeys(ALL_CRITERIA, 0.0)
     weights["safety_score"] = 100.0
-    result = decision_engine.run_decision(CONNECTION, _payload_with_weights(weights))
+    result = decision_engine.run_decision(
+        CONNECTION, _payload_with_weights(weights)
+    )
 
     uruguay_result = next(
         item for item in result.results if item.country.slug == "uruguay"
@@ -159,7 +163,9 @@ def test_custom_weights_do_not_mutate_persisted_breakdown_rows(
     assert [row["weight"] for row in replayed_breakdowns] == original_weights
 
 
-def test_incomplete_custom_weights_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_incomplete_custom_weights_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     _install_personalization_enabled(monkeypatch)
 
@@ -173,7 +179,9 @@ def test_incomplete_custom_weights_rejected(monkeypatch: pytest.MonkeyPatch) -> 
     assert detail["error"]["code"] == "custom_weights_incomplete"
 
 
-def test_all_zero_custom_weights_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_all_zero_custom_weights_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     _install_personalization_enabled(monkeypatch)
 
@@ -202,7 +210,9 @@ def test_unknown_criterion_in_custom_weights_rejected(
     assert detail["error"]["code"] == "unknown_custom_weight_criterion"
 
 
-def test_out_of_range_custom_weight_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_out_of_range_custom_weight_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     _install_personalization_enabled(monkeypatch)
 
@@ -249,7 +259,9 @@ def test_custom_weights_do_not_change_persona_layer(
 
     weights = dict.fromkeys(ALL_CRITERIA, 0.0)
     weights["cost_of_living_score"] = 100.0
-    result = decision_engine.run_decision(CONNECTION, _payload_with_weights(weights))
+    result = decision_engine.run_decision(
+        CONNECTION, _payload_with_weights(weights)
+    )
 
     assert result.applied_persona is None
     assert result.persona_weight_profile is None

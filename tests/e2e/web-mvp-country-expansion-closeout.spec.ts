@@ -61,16 +61,24 @@ test.describe("Country expansion closeout — three countries", () => {
 
   test("/compare shows all three country rows", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
-    await expect(page.locator('[data-testid="matrix-row-russia"]')).toBeVisible({
+    await expect(page.locator('[data-testid="matrix-row-russia"]')).toBeVisible(
+      {
+        timeout: 10_000,
+      },
+    );
+    await expect(
+      page.locator('[data-testid="matrix-row-uruguay"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator('[data-testid="matrix-row-uruguay"]')).toBeVisible({
-      timeout: 10_000,
-    });
-    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-argentina"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -78,7 +86,9 @@ test.describe("Country expansion closeout — three countries", () => {
 
   test("/compare Argentina row has numeric scores", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
     const row = page.locator('[data-testid="matrix-row-argentina"]');
@@ -105,34 +115,54 @@ test.describe("Country expansion closeout — three countries", () => {
     await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
   });
 
-  test("/legal-signals?country_slug=argentina shows timeline", async ({ page }) => {
+  test("/legal-signals?country_slug=argentina shows timeline", async ({
+    page,
+  }) => {
     await page.goto(
       e2eRoutes.legalSignals({ country_slug: "argentina", locale: "ru" }),
     );
-    await expect(page.locator('[data-testid="legal-signals-timeline"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="legal-signals-timeline"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
     await expectNoAppCrash(page);
   });
 
-  test("/legal-signals?country_slug=russia shows timeline", async ({ page }) => {
-    await page.goto(e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }));
-    await expect(page.locator('[data-testid="legal-signals-timeline"]')).toBeVisible({
+  test("/legal-signals?country_slug=russia shows timeline", async ({
+    page,
+  }) => {
+    await page.goto(
+      e2eRoutes.legalSignals({ country_slug: "russia", locale: "ru" }),
+    );
+    await expect(
+      page.locator('[data-testid="legal-signals-timeline"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
     await expectNoAppCrash(page);
   });
 
-  test("/legal-signals?country_slug=uruguay shows timeline", async ({ page }) => {
-    await page.goto(e2eRoutes.legalSignals({ country_slug: "uruguay", locale: "ru" }));
-    await expect(page.locator('[data-testid="legal-signals-timeline"]')).toBeVisible({
+  test("/legal-signals?country_slug=uruguay shows timeline", async ({
+    page,
+  }) => {
+    await page.goto(
+      e2eRoutes.legalSignals({ country_slug: "uruguay", locale: "ru" }),
+    );
+    await expect(
+      page.locator('[data-testid="legal-signals-timeline"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
     await expectNoAppCrash(page);
   });
 
-  test("/sources?country_slug=argentina opens without crash", async ({ page }) => {
-    await page.goto(e2eRoutes.sources({ country_slug: "argentina", locale: "ru" }));
+  test("/sources?country_slug=argentina opens without crash", async ({
+    page,
+  }) => {
+    await page.goto(
+      e2eRoutes.sources({ country_slug: "argentina", locale: "ru" }),
+    );
     await expectNoAppCrash(page);
     await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
   });
@@ -143,13 +173,19 @@ test.describe("Country expansion closeout — three countries", () => {
     await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
   });
 
-  test("responsive: /compare at 390x844 shows all three rows", async ({ page }) => {
+  test("responsive: /compare at 390x844 shows all three rows", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
-    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-argentina"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);

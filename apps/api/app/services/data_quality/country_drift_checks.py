@@ -10,7 +10,9 @@ def _append_country_drift_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_active_countries_missing_drift_snapshots(connection):
+    for row in repository.list_active_countries_missing_drift_snapshots(
+        connection
+    ):
         issues.append(
             _issue(
                 "drift_missing_for_active_country",
@@ -69,7 +71,9 @@ def _append_country_drift_checks(
         )
     )
 
-    for row in repository.list_drift_snapshots_insufficient_data_with_high_confidence(
+    for (
+        row
+    ) in repository.list_drift_snapshots_insufficient_data_with_high_confidence(
         connection
     ):
         issues.append(
@@ -90,7 +94,9 @@ def _append_country_drift_checks(
         )
     )
 
-    for row in repository.list_drift_snapshots_missing_methodology_version(connection):
+    for row in repository.list_drift_snapshots_missing_methodology_version(
+        connection
+    ):
         issues.append(
             _issue(
                 "drift_methodology_version_missing",
@@ -168,7 +174,9 @@ def _append_country_drift_checks(
         )
     )
 
-    for row in repository.list_drift_changed_events_missing_payload_fields(connection):
+    for row in repository.list_drift_changed_events_missing_payload_fields(
+        connection
+    ):
         issues.append(
             _issue(
                 "drift_changed_payload_incomplete",

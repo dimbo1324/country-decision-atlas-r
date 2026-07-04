@@ -14,7 +14,12 @@ type ListSourcesParams = {
   language?: string;
   confidence?: "low" | "medium" | "high";
   status?: "published" | "archived";
-  sort?: "title" | "created_at" | "published_at" | "last_checked_at" | "confidence";
+  sort?:
+    | "title"
+    | "created_at"
+    | "published_at"
+    | "last_checked_at"
+    | "confidence";
   order?: "asc" | "desc";
   limit?: number;
   offset?: number;

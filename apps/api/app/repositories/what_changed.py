@@ -4,7 +4,11 @@ from psycopg import Connection
 from typing import Any
 
 
-DOMAIN_EVENT_TYPES = ("legal_signal.published", "route.published", "drift.changed")
+DOMAIN_EVENT_TYPES = (
+    "legal_signal.published",
+    "route.published",
+    "drift.changed",
+)
 
 
 def list_country_domain_events_since(

@@ -27,7 +27,9 @@ def create_contact_request(
     if repository.is_user_blocked(
         connection, user_a_id=current_user.id, user_b_id=post["user_id"]
     ):
-        raise api_error(403, "contact_blocked", "Contact request is blocked.", {})
+        raise api_error(
+            403, "contact_blocked", "Contact request is blocked.", {}
+        )
     if repository.pending_contact_request_exists(
         connection, post_id=post_id, from_user_id=current_user.id
     ):
@@ -76,7 +78,9 @@ def list_incoming_requests(
     connection: Connection[Any], current_user: CurrentUser
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
-    rows = repository.list_incoming_contact_requests(connection, current_user.id)
+    rows = repository.list_incoming_contact_requests(
+        connection, current_user.id
+    )
     return {
         "items": [helpers._contact_request(row) for row in rows],
         "total": len(rows),
@@ -87,7 +91,9 @@ def list_outgoing_requests(
     connection: Connection[Any], current_user: CurrentUser
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
-    rows = repository.list_outgoing_contact_requests(connection, current_user.id)
+    rows = repository.list_outgoing_contact_requests(
+        connection, current_user.id
+    )
     return {
         "items": [helpers._contact_request(row) for row in rows],
         "total": len(rows),
@@ -153,7 +159,9 @@ def block_user(
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
     if blocked_user_id == current_user.id:
-        raise api_error(422, "self_block_not_allowed", "You cannot block yourself.", {})
+        raise api_error(
+            422, "self_block_not_allowed", "You cannot block yourself.", {}
+        )
     if not repository.user_exists(connection, blocked_user_id):
         raise api_error(404, "user_not_found", "User was not found.", {})
     row = repository.block_user(
@@ -173,11 +181,16 @@ def block_user(
 
 
 def unblock_user(
-    connection: Connection[Any], *, current_user: CurrentUser, blocked_user_id: str
+    connection: Connection[Any],
+    *,
+    current_user: CurrentUser,
+    blocked_user_id: str,
 ) -> None:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
     repository.unblock_user(
-        connection, blocker_user_id=current_user.id, blocked_user_id=blocked_user_id
+        connection,
+        blocker_user_id=current_user.id,
+        blocked_user_id=blocked_user_id,
     )
     helpers._audit(
         connection,
@@ -219,10 +232,16 @@ def _change_contact_request(
     request = repository.get_contact_request_by_id(connection, request_id)
     if request is None or request[expected_user_field] != current_user.id:
         raise api_error(
-            404, "contact_request_not_found", "Contact request was not found.", {}
+            404,
+            "contact_request_not_found",
+            "Contact request was not found.",
+            {},
         )
     updated = repository.update_contact_request_status(
-        connection, request_id=request_id, status=status, response_note=response_note
+        connection,
+        request_id=request_id,
+        status=status,
+        response_note=response_note,
     )
     if updated is None:
         raise api_error(

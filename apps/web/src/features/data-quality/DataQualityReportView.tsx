@@ -13,7 +13,10 @@ interface Props {
 
 export function DataQualityReportView({ report }: Props) {
   return (
-    <div className="dqWrap" data-testid="data-quality-report">
+    <div
+      className="dqWrap"
+      data-testid="data-quality-report"
+    >
       <div className="analyticalSummaryRow">
         <SummaryCard
           label="Статус"
@@ -24,9 +27,15 @@ export function DataQualityReportView({ report }: Props) {
           label="Критические проблемы"
           value={report.critical_issues_count}
         />
-        <SummaryCard label="Предупреждения" value={report.warnings_count} />
+        <SummaryCard
+          label="Предупреждения"
+          value={report.warnings_count}
+        />
         {report.checked_at && (
-          <SummaryCard label="Проверено" value={formatDate(report.checked_at)} />
+          <SummaryCard
+            label="Проверено"
+            value={formatDate(report.checked_at)}
+          />
         )}
       </div>
 
@@ -37,10 +46,16 @@ export function DataQualityReportView({ report }: Props) {
 
       {report.checks && report.checks.length > 0 && (
         <section className="cardSection">
-          <SectionHeader title="Проверки" eyebrow="Проверки качества" />
+          <SectionHeader
+            title="Проверки"
+            eyebrow="Проверки качества"
+          />
           <div className="checkList">
             {report.checks.map((check) => (
-              <div key={check.code} className="checkCard">
+              <div
+                key={check.code}
+                className="checkCard"
+              >
                 <span className="checkCode">{check.code}</span>
                 <StatusBadge status={check.status} />
               </div>
@@ -79,7 +94,10 @@ export function DataQualityReportView({ report }: Props) {
       </section>
 
       <div className="entityLinkRow">
-        <Link href={routes.countries} className="internalLink">
+        <Link
+          href={routes.countries}
+          className="internalLink"
+        >
           ← Назад к странам
         </Link>
       </div>

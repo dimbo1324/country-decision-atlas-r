@@ -13,7 +13,9 @@ def submit_user_story_rating(
     payload: UserStoryRatingCreate,
 ) -> dict[str, Any]:
     ensure_feature_enabled(connection, settings, "community_enabled")
-    ensure_feature_enabled(connection, settings, "community_story_ratings_enabled")
+    ensure_feature_enabled(
+        connection, settings, "community_story_ratings_enabled"
+    )
     return repository.insert_user_story_rating(
         connection,
         user_story_id=payload.user_story_id,

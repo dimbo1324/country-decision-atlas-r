@@ -19,7 +19,9 @@ test.describe("Persona decision flow", () => {
     const selector = page.getByTestId("persona-selector");
     await expect(selector).toBeVisible();
     await expect(selector).toHaveValue("");
-    await expect(selector.locator("option")).toContainText(["Без персонализации"]);
+    await expect(selector.locator("option")).toContainText([
+      "Без персонализации",
+    ]);
     await expectNoAppCrash(page);
   });
 
@@ -47,11 +49,15 @@ test.describe("Persona decision flow", () => {
     await page.getByTestId("persona-selector").selectOption("family");
     await runDecision(page);
 
-    await expect(page.getByTestId("decision-persona-meta")).toContainText("Семья");
+    await expect(page.getByTestId("decision-persona-meta")).toContainText(
+      "Семья",
+    );
     await expect(page.getByTestId("decision-persona-meta")).toContainText(
       "persona_adjusted",
     );
-    await expect(page.getByTestId("persona-adjusted-score").first()).toBeVisible();
+    await expect(
+      page.getByTestId("persona-adjusted-score").first(),
+    ).toBeVisible();
     await expect(page.getByTestId("cii-persona-note")).toContainText("Семья", {
       timeout: 15_000,
     });
@@ -67,11 +73,15 @@ test.describe("Persona decision flow", () => {
     await expect(page.getByTestId("decision-persona-meta")).toContainText(
       "Предприниматель",
     );
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 15_000,
+    });
     await expectNoAppCrash(page);
   });
 
-  test("mobile viewport does not crash with persona selector", async ({ page }) => {
+  test("mobile viewport does not crash with persona selector", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.decision("ru"));
 
@@ -81,7 +91,9 @@ test.describe("Persona decision flow", () => {
 
   test("compare and routes pages remain available", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 15_000,
     });
 

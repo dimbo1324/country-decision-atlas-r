@@ -20,7 +20,9 @@ def validate_modifier_coverage(
             "No weight rows provided.",
         )
     missing: list[str] = [
-        str(row.get("metric_slug", "")) for row in rows if row.get("modifier") is None
+        str(row.get("metric_slug", ""))
+        for row in rows
+        if row.get("modifier") is None
     ]
     if missing:
         raise api_error(
@@ -101,7 +103,9 @@ def build_persona_weight_profile(
     locale: str = "ru",
     version: str = DEFAULT_PERSONA_WEIGHTS_VERSION,
 ) -> dict[str, Any]:
-    persona = personas_repository.get_persona_by_slug(conn, persona_slug, locale)
+    persona = personas_repository.get_persona_by_slug(
+        conn, persona_slug, locale
+    )
     if persona is None:
         raise api_error(
             422,

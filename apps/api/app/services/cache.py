@@ -1,7 +1,7 @@
-from app.core.config import Settings, get_settings
-from collections.abc import Callable
 import json
 import logging
+from app.core.config import Settings, get_settings
+from collections.abc import Callable
 from typing import Any, Protocol
 
 

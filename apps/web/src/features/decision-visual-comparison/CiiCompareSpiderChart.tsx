@@ -34,7 +34,11 @@ function buildPolygon(
     .join(" ");
 }
 
-export function CiiCompareSpiderChart({ metrics, countries, size = 280 }: Props) {
+export function CiiCompareSpiderChart({
+  metrics,
+  countries,
+  size = 280,
+}: Props) {
   if (metrics.length === 0) return null;
 
   const cx = size / 2;
@@ -45,7 +49,9 @@ export function CiiCompareSpiderChart({ metrics, countries, size = 280 }: Props)
 
   const countryValues: number[][] = countries.map((_, ci) =>
     metrics.map((m) => {
-      const v = (m.values ?? []).find((mv) => mv.country_slug === countries[ci]?.slug);
+      const v = (m.values ?? []).find(
+        (mv) => mv.country_slug === countries[ci]?.slug,
+      );
       return v?.effective_value ?? 0;
     }),
   );
@@ -110,7 +116,8 @@ export function CiiCompareSpiderChart({ metrics, countries, size = 280 }: Props)
       {angles.map((angle, i) => {
         const labelR = radius + 20;
         const [x, y] = polarToXY(cx, cy, labelR, angle);
-        const anchor = Math.abs(x - cx) < 4 ? "middle" : x < cx ? "end" : "start";
+        const anchor =
+          Math.abs(x - cx) < 4 ? "middle" : x < cx ? "end" : "start";
         const label = metrics[i]?.metric_name ?? "";
         const words = label.split(" ");
         return (
@@ -127,10 +134,16 @@ export function CiiCompareSpiderChart({ metrics, countries, size = 280 }: Props)
               label
             ) : (
               <>
-                <tspan x={x} dy="-6">
+                <tspan
+                  x={x}
+                  dy="-6"
+                >
                   {words.slice(0, Math.ceil(words.length / 2)).join(" ")}
                 </tspan>
-                <tspan x={x} dy="11">
+                <tspan
+                  x={x}
+                  dy="11"
+                >
                   {words.slice(Math.ceil(words.length / 2)).join(" ")}
                 </tspan>
               </>

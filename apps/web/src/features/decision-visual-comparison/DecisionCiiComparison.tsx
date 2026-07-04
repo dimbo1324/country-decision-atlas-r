@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type CiiCountryComparisonResponse, ciiApi } from "../../shared/api/cii";
+import {
+  type CiiCountryComparisonResponse,
+  ciiApi,
+} from "../../shared/api/cii";
 import { CiiComparisonEmptyState } from "./CiiComparisonEmptyState";
 import { CiiComparisonSummary } from "./CiiComparisonSummary";
 import { CiiCompareSpiderChart } from "./CiiCompareSpiderChart";
@@ -92,15 +95,23 @@ export function DecisionCiiComparison({
   }
 
   return (
-    <section className="ciiCompareBlock" aria-label="CII сравнение стран">
+    <section
+      className="ciiCompareBlock"
+      aria-label="CII сравнение стран"
+    >
       <h3 className="ciiCompareTitle">
         Сценарные веса CII: {countries.map((c) => c.name).join(" vs ")}
       </h3>
       {data.scenario?.title && (
-        <p className="ciiCompareScenarioLabel">Сценарий: {data.scenario.title}</p>
+        <p className="ciiCompareScenarioLabel">
+          Сценарий: {data.scenario.title}
+        </p>
       )}
       {data.applied_persona && (
-        <p className="ciiCompareScenarioLabel" data-testid="cii-persona-note">
+        <p
+          className="ciiCompareScenarioLabel"
+          data-testid="cii-persona-note"
+        >
           Персона: {data.applied_persona.name}
         </p>
       )}
@@ -110,10 +121,19 @@ export function DecisionCiiComparison({
         aggregationMethod={aggregation_method}
       />
       <div className="ciiCompareChartArea">
-        <CiiCompareSpiderChart metrics={metrics} countries={countries} />
-        <CiiMetricCompareBars metrics={metrics} countries={countries} />
+        <CiiCompareSpiderChart
+          metrics={metrics}
+          countries={countries}
+        />
+        <CiiMetricCompareBars
+          metrics={metrics}
+          countries={countries}
+        />
       </div>
-      <CiiMetricWinnerList metrics={metrics} countries={countries} />
+      <CiiMetricWinnerList
+        metrics={metrics}
+        countries={countries}
+      />
     </section>
   );
 }

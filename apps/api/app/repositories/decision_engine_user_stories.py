@@ -1,7 +1,7 @@
+import json
 from app.core.database import execute_one, fetch_all, fetch_one
 from app.repositories.sorting import resolve_sort_clause
 from app.schemas.decision_engine import UserStoryCreate
-import json
 from psycopg import Connection
 from typing import Any
 
@@ -132,7 +132,9 @@ def _user_story_filters(
     return " AND ".join(filters), tuple(params)
 
 
-def get_user_story(connection: Connection[Any], story_id: str) -> dict[str, Any] | None:
+def get_user_story(
+    connection: Connection[Any], story_id: str
+) -> dict[str, Any] | None:
     return fetch_one(
         connection,
         """
@@ -258,7 +260,9 @@ def create_user_story(
     )
 
 
-def active_country_exists(connection: Connection[Any], country_slug: str) -> bool:
+def active_country_exists(
+    connection: Connection[Any], country_slug: str
+) -> bool:
     return (
         fetch_one(
             connection,
@@ -269,7 +273,9 @@ def active_country_exists(connection: Connection[Any], country_slug: str) -> boo
     )
 
 
-def active_scenario_exists(connection: Connection[Any], scenario_slug: str) -> bool:
+def active_scenario_exists(
+    connection: Connection[Any], scenario_slug: str
+) -> bool:
     return (
         fetch_one(
             connection,

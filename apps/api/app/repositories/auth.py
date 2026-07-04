@@ -53,7 +53,9 @@ def create_user(
     )
 
 
-def get_user_by_id(connection: Connection[Any], user_id: str) -> dict[str, Any] | None:
+def get_user_by_id(
+    connection: Connection[Any], user_id: str
+) -> dict[str, Any] | None:
     return fetch_one(
         connection,
         f"""
@@ -66,7 +68,9 @@ def get_user_by_id(connection: Connection[Any], user_id: str) -> dict[str, Any] 
     )
 
 
-def get_user_by_email(connection: Connection[Any], email: str) -> dict[str, Any] | None:
+def get_user_by_email(
+    connection: Connection[Any], email: str
+) -> dict[str, Any] | None:
     return fetch_one(
         connection,
         f"""

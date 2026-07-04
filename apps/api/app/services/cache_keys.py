@@ -1,6 +1,6 @@
-from collections.abc import Mapping
 import hashlib
 import json
+from collections.abc import Mapping
 from typing import Any
 
 
@@ -74,7 +74,9 @@ def legal_timeline_key(
     )
 
 
-def routes_key(country_slug: str, locale: str, filters: Mapping[str, Any]) -> str:
+def routes_key(
+    country_slug: str, locale: str, filters: Mapping[str, Any]
+) -> str:
     return cache_key(
         "v1",
         "routes",

@@ -46,10 +46,14 @@ def test_unknown_country_detail_error_contract(monkeypatch: Any) -> None:
 
 
 def test_unknown_country_card_error_contract(monkeypatch: Any) -> None:
-    monkeypatch.setattr(countries_route, "get_country_read_model", lambda *_: None)
+    monkeypatch.setattr(
+        countries_route, "get_country_read_model", lambda *_: None
+    )
 
     try:
-        countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
+        countries_route.read_country_card(
+            "unknown", CONNECTION, get_locale("en")
+        )
     except HTTPException as error:
         assert error.status_code == 404
         assert_error_shape(error, "country_not_found")
@@ -59,7 +63,9 @@ def test_unknown_country_card_error_contract(monkeypatch: Any) -> None:
 
 def test_unknown_decision_scenario_error_contract(monkeypatch: Any) -> None:
     install_repository_fakes(monkeypatch)
-    monkeypatch.setattr(decision_repository, "get_decision_scenario", lambda *_: None)
+    monkeypatch.setattr(
+        decision_repository, "get_decision_scenario", lambda *_: None
+    )
 
     try:
         decision_engine.run_decision(

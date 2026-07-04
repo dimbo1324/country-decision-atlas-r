@@ -164,7 +164,9 @@ def create_post(
     replace_post_tags(connection, post_id=str(row["id"]), tags=tags)
     post = get_post_by_id(connection, str(row["id"]))
     if post is None:
-        raise RuntimeError("Expected migration board post to exist after insert.")
+        raise RuntimeError(
+            "Expected migration board post to exist after insert."
+        )
     return post
 
 
@@ -276,7 +278,9 @@ def replace_post_tags(
         )
 
 
-def get_post_by_id(connection: Connection[Any], post_id: str) -> dict[str, Any] | None:
+def get_post_by_id(
+    connection: Connection[Any], post_id: str
+) -> dict[str, Any] | None:
     return fetch_one(
         connection,
         f"""
@@ -333,7 +337,9 @@ def list_public_posts(
     )
 
 
-def list_user_posts(connection: Connection[Any], user_id: str) -> list[dict[str, Any]]:
+def list_user_posts(
+    connection: Connection[Any], user_id: str
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         f"""
@@ -448,7 +454,9 @@ def reject_post(
     return get_post_by_id(connection, post_id) if row is not None else None
 
 
-def archive_post(connection: Connection[Any], post_id: str) -> dict[str, Any] | None:
+def archive_post(
+    connection: Connection[Any], post_id: str
+) -> dict[str, Any] | None:
     row = fetch_one(
         connection,
         """

@@ -1,5 +1,6 @@
 """Legal-status field is present on public/detail/country legal-signal schemas and accepted by the admin API."""
 
+import pytest
 from app.schemas.admin_content import LegalSignalCreate, LegalSignalPatch
 from app.schemas.common import LegalStatus
 from app.schemas.country_read_model import CountryReadModelLegalSignal
@@ -8,7 +9,6 @@ from app.schemas.legal_signals import LegalSignal
 from datetime import datetime
 from pathlib import Path
 from pydantic import ValidationError
-import pytest
 from tests.test_openapi_contract import load_contract
 from uuid import uuid4
 
@@ -68,7 +68,9 @@ def test_country_legal_signal_schema_contains_legal_status() -> None:
 
 
 def test_admin_create_and_patch_accept_valid_legal_status() -> None:
-    created = LegalSignalCreate(country_slug="argentina", legal_status="effective")
+    created = LegalSignalCreate(
+        country_slug="argentina", legal_status="effective"
+    )
     patched = LegalSignalPatch(legal_status="revoked")
 
     assert created.legal_status == LegalStatus.effective
@@ -86,7 +88,9 @@ def test_openapi_contains_legal_status() -> None:
     assert "LegalStatus" in schemas
     assert "legal_status" in schemas["LegalSignal"]["properties"]
     assert "legal_status" in schemas["LegalSignalDetail"]["properties"]
-    assert "legal_status" in schemas["CountryReadModelLegalSignal"]["properties"]
+    assert (
+        "legal_status" in schemas["CountryReadModelLegalSignal"]["properties"]
+    )
     assert "legal_status" in schemas["LegalSignalCreate"]["properties"]
     assert "legal_status" in schemas["LegalSignalPatch"]["properties"]
 

@@ -89,9 +89,13 @@ def get_country_drift(
     country = country_drift_repo.get_country_for_drift(connection, country_slug)
     if country is None:
         raise api_error(
-            404, "country_drift_country_not_found", f"Country not found: {country_slug}"
+            404,
+            "country_drift_country_not_found",
+            f"Country not found: {country_slug}",
         )
-    latest_row = country_drift_repo.get_latest_drift_snapshot(connection, country_slug)
+    latest_row = country_drift_repo.get_latest_drift_snapshot(
+        connection, country_slug
+    )
     history_rows = country_drift_repo.list_drift_snapshots(
         connection, country_slug, limit=limit
     )

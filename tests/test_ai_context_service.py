@@ -1,10 +1,10 @@
 """Service-level assembly of AI context: item/character limits, deduplication, and no-context refusal."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import ai_context as repository
 from app.services import ai_context as service
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 
 
@@ -27,7 +27,9 @@ def _row(entity_id: str = "country-1") -> dict[str, Any]:
     }
 
 
-def test_ask_context_uses_search_documents(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_ask_context_uses_search_documents(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     captured: dict[str, Any] = {}
 
     def fake_search(*_args: Any, **kwargs: Any) -> list[dict[str, Any]]:
@@ -52,9 +54,13 @@ def test_ask_context_uses_search_documents(monkeypatch: pytest.MonkeyPatch) -> N
     assert result.citations[0].country_slug == "uruguay"
 
 
-def test_context_limits_items_and_chars(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_context_limits_items_and_chars(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     rows = [{**_row(str(index)), "excerpt": "x" * 100} for index in range(10)]
-    monkeypatch.setattr(repository, "search_ai_context_items", lambda *_a, **_kw: rows)
+    monkeypatch.setattr(
+        repository, "search_ai_context_items", lambda *_a, **_kw: rows
+    )
     settings = Settings(
         app_env="local",
         ai_max_context_items=3,
@@ -73,13 +79,18 @@ def test_context_limits_items_and_chars(monkeypatch: pytest.MonkeyPatch) -> None
 
     assert len(result.grounded_context) <= 3
     assert (
-        sum(len(item.excerpt) + len(item.title) for item in result.grounded_context)
+        sum(
+            len(item.excerpt) + len(item.title)
+            for item in result.grounded_context
+        )
         <= 216
     )
 
 
 def test_no_context_returns_refusal(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(repository, "search_ai_context_items", lambda *_a, **_kw: [])
+    monkeypatch.setattr(
+        repository, "search_ai_context_items", lambda *_a, **_kw: []
+    )
     result = service.build_ask_context(
         CONNECTION,
         Settings(app_env="local"),

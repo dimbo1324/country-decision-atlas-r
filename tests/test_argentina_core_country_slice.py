@@ -210,7 +210,9 @@ class TestAllMvpCountriesWithArgentinaPromoted:
 
             def _eval(connection: Any, slug: str) -> Any:
                 defaults = slug_map.get(slug, _argentina_incomplete_defaults())
-                patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
+                patchers = {
+                    k: MagicMock(return_value=v) for k, v in defaults.items()
+                }
                 with patch.multiple(_REPO, **patchers):
                     return real_eval(connection, slug)
 
@@ -223,7 +225,8 @@ class TestAllMvpCountriesWithArgentinaPromoted:
         }
 
         with patch(
-            f"{_SVC}.evaluate_country_onboarding", side_effect=make_evaluate(slug_map)
+            f"{_SVC}.evaluate_country_onboarding",
+            side_effect=make_evaluate(slug_map),
         ):
             return evaluate_all_mvp_countries(conn)
 
@@ -293,12 +296,16 @@ class TestAllMvpCountriesWithArgentinaPromoted:
 
 
 class TestArgentinaDqIntegration:
-    def test_argentina_incomplete_produces_warning_not_critical_dq_issues(self) -> None:
+    def test_argentina_incomplete_produces_warning_not_critical_dq_issues(
+        self,
+    ) -> None:
         from app.schemas.country_onboarding import (
             CountryOnboardingResult,
             OnboardingFinding,
         )
-        from app.services.country_onboarding import build_country_onboarding_dq_results
+        from app.services.country_onboarding import (
+            build_country_onboarding_dq_results,
+        )
 
         mvp_result_ru = CountryOnboardingResult(
             country_slug="russia", mvp_ready=True, sections={}, findings=[]
@@ -327,8 +334,12 @@ class TestArgentinaDqIntegration:
             all_mvp_ready=True,
         )
 
-        with patch(f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result):
-            _checks, issues = build_country_onboarding_dq_results(_make_connection())
+        with patch(
+            f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result
+        ):
+            _checks, issues = build_country_onboarding_dq_results(
+                _make_connection()
+            )
 
         argentina_issues = [i for i in issues if i.entity_id == "argentina"]
         assert len(argentina_issues) > 0
@@ -343,7 +354,9 @@ class TestArgentinaDqIntegration:
             CountryOnboardingResult,
             OnboardingFinding,
         )
-        from app.services.country_onboarding import build_country_onboarding_dq_results
+        from app.services.country_onboarding import (
+            build_country_onboarding_dq_results,
+        )
 
         mvp_result_ru = CountryOnboardingResult(
             country_slug="russia", mvp_ready=True, sections={}, findings=[]
@@ -370,19 +383,29 @@ class TestArgentinaDqIntegration:
             all_mvp_ready=True,
         )
 
-        with patch(f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result):
-            checks, _issues = build_country_onboarding_dq_results(_make_connection())
+        with patch(
+            f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result
+        ):
+            checks, _issues = build_country_onboarding_dq_results(
+                _make_connection()
+            )
 
         check_map = {c.code: c.status for c in checks}
-        assert check_map.get("country_onboarding_cii_metrics_complete") == "passed"
+        assert (
+            check_map.get("country_onboarding_cii_metrics_complete") == "passed"
+        )
 
-    def test_argentina_dq_issue_codes_are_prefixed_with_onboarding(self) -> None:
+    def test_argentina_dq_issue_codes_are_prefixed_with_onboarding(
+        self,
+    ) -> None:
         from app.schemas.country_onboarding import (
             AllCountriesOnboardingResult,
             CountryOnboardingResult,
             OnboardingFinding,
         )
-        from app.services.country_onboarding import build_country_onboarding_dq_results
+        from app.services.country_onboarding import (
+            build_country_onboarding_dq_results,
+        )
 
         arg_result = CountryOnboardingResult(
             country_slug="argentina",
@@ -403,8 +426,12 @@ class TestArgentinaDqIntegration:
             all_mvp_ready=True,
         )
 
-        with patch(f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result):
-            _checks, issues = build_country_onboarding_dq_results(_make_connection())
+        with patch(
+            f"{_SVC}.evaluate_all_mvp_countries", return_value=full_result
+        ):
+            _checks, issues = build_country_onboarding_dq_results(
+                _make_connection()
+            )
 
         arg_issues = [i for i in issues if i.entity_id == "argentina"]
         for issue in arg_issues:

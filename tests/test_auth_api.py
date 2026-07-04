@@ -1,5 +1,6 @@
 """Registration, login, and current-user auth API endpoints."""
 
+import pytest
 from app.api.v1 import auth as auth_api
 from app.core.auth import (
     CurrentSessionContext,
@@ -17,7 +18,6 @@ from app.services import (
 from datetime import UTC, datetime
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -70,8 +70,12 @@ def _client(*, authenticated: bool = False) -> TestClient:
     return TestClient(app, raise_server_exceptions=False)
 
 
-def test_register_returns_token_and_user(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(service, "register_user", lambda *_a, **_kw: _user_row())
+def test_register_returns_token_and_user(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        service, "register_user", lambda *_a, **_kw: _user_row()
+    )
     monkeypatch.setattr(
         service,
         "create_login_session",
@@ -107,11 +111,15 @@ def test_login_returns_token_and_user(monkeypatch: pytest.MonkeyPatch) -> None:
     assert response.json()["token"] == "raw-token-value"
 
 
-def test_login_invalid_credentials_returns_401(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_login_invalid_credentials_returns_401(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     from app.core.errors import api_error
 
     def _raise(*_a: Any, **_kw: Any) -> Any:
-        raise api_error(401, "invalid_credentials", "Invalid email or password.", {})
+        raise api_error(
+            401, "invalid_credentials", "Invalid email or password.", {}
+        )
 
     monkeypatch.setattr(service, "login_user", _raise)
     client = _client()
@@ -148,7 +156,9 @@ def test_logout_without_token_returns_401() -> None:
 def test_logout_revokes_session(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_logout_session(_conn: Any, *, user_id: str, session_id: str) -> None:
+    def fake_logout_session(
+        _conn: Any, *, user_id: str, session_id: str
+    ) -> None:
         captured["user_id"] = user_id
         captured["session_id"] = session_id
 
@@ -163,17 +173,22 @@ def test_logout_revokes_session(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_list_sessions_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(repository, "list_user_sessions", lambda *_a: [_session_row()])
+    monkeypatch.setattr(
+        repository, "list_user_sessions", lambda *_a: [_session_row()]
+    )
     client = _client(authenticated=True)
     response = client.get(
-        "/api/v1/auth/sessions", headers={"Authorization": "Bearer session-token"}
+        "/api/v1/auth/sessions",
+        headers={"Authorization": "Bearer session-token"},
     )
     assert response.status_code == 200
     assert len(response.json()["items"]) == 1
 
 
 def test_revoke_session_returns_ok(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(repository, "revoke_session", lambda *_a: _session_row())
+    monkeypatch.setattr(
+        repository, "revoke_session", lambda *_a: _session_row()
+    )
     client = _client(authenticated=True)
     response = client.delete(
         "/api/v1/auth/sessions/session-1",
@@ -183,7 +198,9 @@ def test_revoke_session_returns_ok(monkeypatch: pytest.MonkeyPatch) -> None:
     assert response.json()["ok"] is True
 
 
-def test_revoke_all_sessions_returns_count(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_revoke_all_sessions_returns_count(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(repository, "revoke_all_user_sessions", lambda *_a: 3)
     client = _client(authenticated=True)
     response = client.post(
@@ -196,13 +213,17 @@ def test_revoke_all_sessions_returns_count(monkeypatch: pytest.MonkeyPatch) -> N
 
 def _enable_telegram_feature(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: True,
     )
 
 
 def _disable_telegram_feature(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: False,
     )
 
 
@@ -220,7 +241,9 @@ def test_telegram_link_feature_disabled_returns_403(
     assert response.json()["detail"]["error"]["code"] == "feature_disabled"
 
 
-def test_telegram_link_success_returns_linked(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_telegram_link_success_returns_linked(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_telegram_feature(monkeypatch)
     monkeypatch.setattr(
         telegram_link_service,
@@ -242,10 +265,14 @@ def test_telegram_link_success_returns_linked(monkeypatch: pytest.MonkeyPatch) -
     assert body["telegram_user_id"] == "tg-1"
 
 
-def test_telegram_unlink_success_returns_ok(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_telegram_unlink_success_returns_ok(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_telegram_feature(monkeypatch)
     monkeypatch.setattr(
-        telegram_link_service, "unlink_telegram_account", lambda *_a, **_kw: None
+        telegram_link_service,
+        "unlink_telegram_account",
+        lambda *_a, **_kw: None,
     )
     client = _client(authenticated=True)
     response = client.delete(
@@ -256,10 +283,14 @@ def test_telegram_unlink_success_returns_ok(monkeypatch: pytest.MonkeyPatch) -> 
     assert response.json()["ok"] is True
 
 
-def test_telegram_link_status_not_linked(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_telegram_link_status_not_linked(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_telegram_feature(monkeypatch)
     monkeypatch.setattr(
-        telegram_link_service, "get_telegram_link_status", lambda *_a, **_kw: None
+        telegram_link_service,
+        "get_telegram_link_status",
+        lambda *_a, **_kw: None,
     )
     client = _client(authenticated=True)
     response = client.get(

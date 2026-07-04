@@ -1,5 +1,6 @@
 """Audit log and domain-event side effects of moving legal signals through the editorial publication lifecycle."""
 
+import pytest
 from app.repositories import admin_content as admin_repository
 from app.schemas.admin_content import (
     CountryProfilePatch,
@@ -12,7 +13,6 @@ from app.schemas.admin_content import (
 from app.schemas.common import PublicationStatus
 from app.services import admin_content
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from uuid import uuid4
 
@@ -96,7 +96,9 @@ def evidence_row(status: str = "review", **overrides: Any) -> dict[str, Any]:
     return {**row, **overrides}
 
 
-def country_profile_row(status: str = "review", **overrides: Any) -> dict[str, Any]:
+def country_profile_row(
+    status: str = "review", **overrides: Any
+) -> dict[str, Any]:
     row: dict[str, Any] = {
         "id": str(uuid4()),
         "locale": "en",
@@ -121,18 +123,24 @@ def patch_audit(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
         events.append(kwargs)
         return kwargs
 
-    monkeypatch.setattr(admin_content, "insert_audit_event", fake_insert_audit_event)
+    monkeypatch.setattr(
+        admin_content, "insert_audit_event", fake_insert_audit_event
+    )
     return events
 
 
-def patch_domain_events(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
+def patch_domain_events(
+    monkeypatch: pytest.MonkeyPatch,
+) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
 
     def fake_insert_domain_event(_: Any, **kwargs: Any) -> dict[str, Any]:
         events.append(kwargs)
         return kwargs
 
-    monkeypatch.setattr(admin_content, "insert_domain_event", fake_insert_domain_event)
+    monkeypatch.setattr(
+        admin_content, "insert_domain_event", fake_insert_domain_event
+    )
     return events
 
 
@@ -167,7 +175,9 @@ def test_legal_signal_review_to_published_writes_audit_and_domain_event(
         lambda *_: "argentina",
     )
 
-    def fake_ensure_allowed_transition(old_status: str, new_status: str) -> None:
+    def fake_ensure_allowed_transition(
+        old_status: str, new_status: str
+    ) -> None:
         transition_calls.append((old_status, new_status))
 
     monkeypatch.setattr(
@@ -331,7 +341,9 @@ def test_legal_signal_published_to_archived_writes_audit_without_domain_event(
     assert domain_events == []
 
 
-def test_source_create_and_patch_write_audit(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_source_create_and_patch_write_audit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     audit_events = patch_audit(monkeypatch)
     created = source_row("draft")
     before = source_row("review")
@@ -379,15 +391,23 @@ def test_evidence_create_and_patch_write_audit(
         "get_country_id_by_slug",
         lambda *_: str(uuid4()),
     )
-    monkeypatch.setattr(admin_repository, "get_source_for_admin", lambda *_: None)
-    monkeypatch.setattr(admin_repository, "get_legal_signal_for_admin", lambda *_: None)
-    monkeypatch.setattr(admin_repository, "create_evidence_item", lambda *_: created)
+    monkeypatch.setattr(
+        admin_repository, "get_source_for_admin", lambda *_: None
+    )
+    monkeypatch.setattr(
+        admin_repository, "get_legal_signal_for_admin", lambda *_: None
+    )
+    monkeypatch.setattr(
+        admin_repository, "create_evidence_item", lambda *_: created
+    )
     monkeypatch.setattr(
         admin_repository,
         "get_evidence_item_for_admin",
         lambda *_: rows.pop(0),
     )
-    monkeypatch.setattr(admin_repository, "patch_evidence_item", lambda *_: after)
+    monkeypatch.setattr(
+        admin_repository, "patch_evidence_item", lambda *_: after
+    )
 
     admin_content.create_evidence_item(
         cast(Any, FakeConnection()),
@@ -405,7 +425,9 @@ def test_evidence_create_and_patch_write_audit(
     assert audit_events[1]["changes"]["claim"]["new"] == "Updated claim"
 
 
-def test_country_profile_patch_writes_audit(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_country_profile_patch_writes_audit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     before = country_profile_row("review")
     after = {**before, "executive_summary": "Updated summary"}
     rows = [before, after]
@@ -429,7 +451,10 @@ def test_country_profile_patch_writes_audit(monkeypatch: pytest.MonkeyPatch) -> 
     )
 
     assert audit_events[0]["entity_type"] == "country_profile"
-    assert audit_events[0]["changes"]["executive_summary"]["new"] == "Updated summary"
+    assert (
+        audit_events[0]["changes"]["executive_summary"]["new"]
+        == "Updated summary"
+    )
 
 
 def test_publish_validation_still_blocks_invalid_content(

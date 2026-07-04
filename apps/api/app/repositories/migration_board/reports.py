@@ -154,7 +154,9 @@ def existing_pending_report_exists(
     return row is not None
 
 
-def count_reports_created_today(connection: Connection[Any], user_id: str) -> int:
+def count_reports_created_today(
+    connection: Connection[Any], user_id: str
+) -> int:
     row = fetch_one(
         connection,
         """

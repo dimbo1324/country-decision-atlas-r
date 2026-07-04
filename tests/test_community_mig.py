@@ -3,9 +3,9 @@
 from pathlib import Path
 
 
-MIGRATION_SQL = Path("database/migrations/042_ai_drafts_community.sql").read_text(
-    encoding="utf-8"
-)
+MIGRATION_SQL = Path(
+    "database/migrations/042_ai_drafts_community.sql"
+).read_text(encoding="utf-8")
 
 
 def test_migration_creates_qna_tables() -> None:
@@ -30,7 +30,9 @@ def test_migration_creates_user_story_ratings_table() -> None:
     assert "CONSTRAINT user_story_ratings_score_range_check" in MIGRATION_SQL
 
 
-def test_migration_identity_types_allow_telegram_and_anonymous_session() -> None:
+def test_migration_identity_types_allow_telegram_and_anonymous_session() -> (
+    None
+):
     assert "'telegram', 'anonymous_session', 'system'" in MIGRATION_SQL
 
 
@@ -47,7 +49,10 @@ def test_migration_adds_community_feature_flags() -> None:
 
 
 def test_migration_moderation_statuses_include_pending_and_published() -> None:
-    assert "'pending', 'review', 'published', 'rejected', 'archived'" in MIGRATION_SQL
+    assert (
+        "'pending', 'review', 'published', 'rejected', 'archived'"
+        in MIGRATION_SQL
+    )
 
 
 def test_migration_is_idempotent_style() -> None:

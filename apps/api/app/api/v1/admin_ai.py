@@ -139,8 +139,10 @@ def list_contradiction_candidates(
     severity: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> ContradictionCandidateListResponse:
-    items, total = contradiction_service.list_contradiction_candidates_for_admin(
-        connection, status=status, severity=severity, limit=limit
+    items, total = (
+        contradiction_service.list_contradiction_candidates_for_admin(
+            connection, status=status, severity=severity, limit=limit
+        )
     )
     return ContradictionCandidateListResponse(items=items, total=total)
 

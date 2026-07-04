@@ -11,7 +11,10 @@ export function CiiMetricWinnerList({ metrics, countries }: Props) {
   return (
     <ul className="ciiWinnerList">
       {metrics.map((m) => (
-        <li key={m.metric_slug} className="ciiWinnerItem">
+        <li
+          key={m.metric_slug}
+          className="ciiWinnerItem"
+        >
           <span className="ciiWinnerMetricName">{m.metric_name}</span>
           <span className="ciiWinnerBadgeWrap">
             {m.winner_country_slug != null ? (

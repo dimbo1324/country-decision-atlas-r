@@ -29,7 +29,9 @@ def _append_platform_metrics_checks(
         )
     )
 
-    for row in repository.list_inconsistent_insufficient_data_metrics(connection):
+    for row in repository.list_inconsistent_insufficient_data_metrics(
+        connection
+    ):
         issues.append(
             _issue(
                 "platform_metric_insufficient_data_inconsistent",
@@ -48,7 +50,9 @@ def _append_platform_metrics_checks(
         )
     )
 
-    for row in repository.list_platform_metrics_with_missing_methodology(connection):
+    for row in repository.list_platform_metrics_with_missing_methodology(
+        connection
+    ):
         issues.append(
             _issue(
                 "platform_metric_methodology_missing",
@@ -67,7 +71,9 @@ def _append_platform_metrics_checks(
         )
     )
 
-    for row in repository.list_platform_metrics_with_missing_computed_at(connection):
+    for row in repository.list_platform_metrics_with_missing_computed_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "platform_metric_computed_at_missing",
@@ -145,7 +151,9 @@ def _append_platform_metrics_checks(
         )
     )
 
-    for row in repository.list_mvp_countries_missing_scenario_risk_metrics(connection):
+    for row in repository.list_mvp_countries_missing_scenario_risk_metrics(
+        connection
+    ):
         issues.append(
             _issue(
                 "platform_metric_scenario_missing",

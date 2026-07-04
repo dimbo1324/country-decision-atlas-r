@@ -200,7 +200,9 @@ def create_missing_translation_jobs(
     priority: int = 100,
 ) -> list[dict[str, Any]]:
     units = find_missing_translation_units(connection, target_locale, limit)
-    return _batch_create_translation_jobs(connection, units, target_locale, priority)
+    return _batch_create_translation_jobs(
+        connection, units, target_locale, priority
+    )
 
 
 def create_stale_translation_jobs(
@@ -210,7 +212,9 @@ def create_stale_translation_jobs(
     priority: int = 80,
 ) -> list[dict[str, Any]]:
     units = find_stale_translation_units(connection, target_locale, limit)
-    return _batch_create_translation_jobs(connection, units, target_locale, priority)
+    return _batch_create_translation_jobs(
+        connection, units, target_locale, priority
+    )
 
 
 def list_translation_jobs(
@@ -252,7 +256,9 @@ def count_translation_jobs(
         params.append(target_locale)
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     row = fetch_one(
-        connection, f"SELECT COUNT(*) AS total FROM translation_jobs {where}", params
+        connection,
+        f"SELECT COUNT(*) AS total FROM translation_jobs {where}",
+        params,
     )
     return int(row["total"]) if row else 0
 

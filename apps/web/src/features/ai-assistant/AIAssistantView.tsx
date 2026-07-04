@@ -15,8 +15,14 @@ export function AIAssistantView({ locale }: AIAssistantViewProps) {
   const [response, setResponse] = useState<AIAskResponse | null>(null);
 
   return (
-    <div className="decisionLayout" data-testid="ai-assistant-page">
-      <AIAskForm locale={locale} onResponse={setResponse} />
+    <div
+      className="decisionLayout"
+      data-testid="ai-assistant-page"
+    >
+      <AIAskForm
+        locale={locale}
+        onResponse={setResponse}
+      />
       <div>
         {response ? (
           <AIAnswerCard response={response} />

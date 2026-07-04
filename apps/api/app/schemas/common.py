@@ -87,6 +87,8 @@ def locale_resolution(
 def source_locale_resolution(locale: str | LocaleCode) -> LocaleResolution:
     requested = validate_locale(str(locale))
     status = (
-        TranslationStatus.source if requested == "en" else TranslationStatus.fallback
+        TranslationStatus.source
+        if requested == "en"
+        else TranslationStatus.fallback
     )
     return locale_resolution(requested, "en", status)

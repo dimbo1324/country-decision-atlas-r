@@ -21,7 +21,9 @@ router = APIRouter(prefix="/platform/features", tags=["platform"])
 def read_feature_flags(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
-    access_tier: Annotated[FeatureAccessTier, Query()] = FeatureAccessTier.public,
+    access_tier: Annotated[
+        FeatureAccessTier, Query()
+    ] = FeatureAccessTier.public,
 ) -> FeatureFlagListResponse:
     context = service.default_access_context(settings, access_tier)
     features = repository.list_feature_flags(connection)
@@ -51,7 +53,9 @@ def read_feature_flag(
     feature_key: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
-    access_tier: Annotated[FeatureAccessTier, Query()] = FeatureAccessTier.public,
+    access_tier: Annotated[
+        FeatureAccessTier, Query()
+    ] = FeatureAccessTier.public,
 ) -> FeatureFlagDetailResponse:
     context = service.default_access_context(settings, access_tier)
     feature = repository.get_feature_flag(connection, feature_key)

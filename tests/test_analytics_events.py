@@ -1,5 +1,6 @@
 """Session-id hashing and metadata sanitization for analytics events."""
 
+import pytest
 from app.api.v1.analytics import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
@@ -10,7 +11,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 from psycopg import Connection
 from pydantic import ValidationError
-import pytest
 from typing import Any, cast
 from uuid import UUID, uuid4
 
@@ -45,11 +45,15 @@ def test_hash_session_id_differs_by_session() -> None:
 
 
 def test_sanitize_metadata_stores_safe_keys() -> None:
-    result = analytics_service.sanitize_metadata({"surface": "home", "count": 2})
+    result = analytics_service.sanitize_metadata(
+        {"surface": "home", "count": 2}
+    )
     assert result == {"surface": "home", "count": 2}
 
 
-@pytest.mark.parametrize("key", ["email", "token", "ip", "user_agent", "admin_token"])
+@pytest.mark.parametrize(
+    "key", ["email", "token", "ip", "user_agent", "admin_token"]
+)
 def test_metadata_forbidden_keys_rejected(key: str) -> None:
     with pytest.raises(HTTPException) as exc_info:
         analytics_service.sanitize_metadata({key: "secret"})
@@ -84,14 +88,18 @@ def test_invalid_source_rejected() -> None:
         AnalyticsEventCreate.model_validate(_payload(source="browser"))
 
 
-def test_record_event_disabled_does_not_store(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_record_event_disabled_does_not_store(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     called = {"insert": False}
 
     def fake_insert(*_args: Any, **_kwargs: Any) -> UUID:
         called["insert"] = True
         return uuid4()
 
-    monkeypatch.setattr(analytics_repository, "insert_analytics_event", fake_insert)
+    monkeypatch.setattr(
+        analytics_repository, "insert_analytics_event", fake_insert
+    )
     response = analytics_service.record_analytics_event(
         CONNECTION,
         AnalyticsEventCreate.model_validate(_payload()),
@@ -103,7 +111,9 @@ def test_record_event_disabled_does_not_store(monkeypatch: pytest.MonkeyPatch) -
     assert called["insert"] is False
 
 
-def test_record_event_stores_hashed_session(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_record_event_stores_hashed_session(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     inserted: dict[str, Any] = {}
     event_id = uuid4()
 
@@ -111,7 +121,9 @@ def test_record_event_stores_hashed_session(monkeypatch: pytest.MonkeyPatch) -> 
         inserted.update(kwargs)
         return event_id
 
-    monkeypatch.setattr(analytics_repository, "insert_analytics_event", fake_insert)
+    monkeypatch.setattr(
+        analytics_repository, "insert_analytics_event", fake_insert
+    )
     response = analytics_service.record_analytics_event(
         CONNECTION,
         AnalyticsEventCreate.model_validate(_payload()),
@@ -125,7 +137,9 @@ def test_record_event_stores_hashed_session(monkeypatch: pytest.MonkeyPatch) -> 
     assert inserted["metadata"] == {"surface": "home"}
 
 
-def test_repository_insert_analytics_event(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_repository_insert_analytics_event(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     event_id = uuid4()
     captured: dict[str, Any] = {}
 
@@ -169,7 +183,9 @@ def test_api_endpoint_stores_event(monkeypatch: pytest.MonkeyPatch) -> None:
     app.include_router(router, prefix="/api/v1")
     app.dependency_overrides[get_connection] = lambda: CONNECTION
     app.dependency_overrides[get_settings] = lambda: Settings()
-    monkeypatch.setattr(analytics_repository, "insert_analytics_event", fake_insert)
+    monkeypatch.setattr(
+        analytics_repository, "insert_analytics_event", fake_insert
+    )
     response = TestClient(app).post("/api/v1/analytics/events", json=_payload())
     assert response.status_code == 200
     body = response.json()
@@ -190,8 +206,12 @@ def test_api_endpoint_disabled_mode(monkeypatch: pytest.MonkeyPatch) -> None:
     app = FastAPI()
     app.include_router(router, prefix="/api/v1")
     app.dependency_overrides[get_connection] = lambda: CONNECTION
-    app.dependency_overrides[get_settings] = lambda: Settings(analytics_enabled=False)
-    monkeypatch.setattr(analytics_repository, "insert_analytics_event", fake_insert)
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        analytics_enabled=False
+    )
+    monkeypatch.setattr(
+        analytics_repository, "insert_analytics_event", fake_insert
+    )
     response = TestClient(app).post("/api/v1/analytics/events", json=_payload())
     assert response.status_code == 200
     body = response.json()
@@ -212,4 +232,7 @@ def test_api_endpoint_rejects_pii() -> None:
         json=_payload(metadata={"email": "test@example.test"}),
     )
     assert response.status_code == 422
-    assert response.json()["detail"]["error"]["code"] == "analytics_pii_not_allowed"
+    assert (
+        response.json()["detail"]["error"]["code"]
+        == "analytics_pii_not_allowed"
+    )

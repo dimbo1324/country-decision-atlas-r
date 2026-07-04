@@ -1,5 +1,6 @@
 """Migration Board service: privacy-safe public responses, PII rejection, and self-contact/blocked-relation rules."""
 
+import pytest
 from app.core.auth import CurrentUser
 from app.repositories import migration_board as migration_board_repository
 from app.services import (
@@ -9,7 +10,6 @@ from app.services import (
 from app.services.migration_board import helpers as migration_board_helpers
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -98,7 +98,9 @@ def test_submit_rejects_pii_in_public_text() -> None:
     assert detail["error"]["code"] == "pii_not_allowed"
 
 
-def test_contact_request_rejects_self_contact(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_contact_request_rejects_self_contact(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_features(monkeypatch)
     monkeypatch.setattr(
         migration_board_repository,

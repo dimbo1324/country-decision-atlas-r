@@ -5,7 +5,9 @@ from psycopg import Connection
 from typing import Any
 
 
-def get_user_or_404(connection: Connection[Any], user_id: str) -> dict[str, Any]:
+def get_user_or_404(
+    connection: Connection[Any], user_id: str
+) -> dict[str, Any]:
     user = repository.get_user_by_id(connection, user_id)
     if user is None:
         raise api_error(

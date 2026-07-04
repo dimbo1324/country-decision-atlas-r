@@ -23,9 +23,15 @@ import { migrationBoardErrorMessage } from "./errorMessage";
 
 export function AccountMigrationBoardView() {
   const { user, isLoading: authLoading } = useAuth();
-  const [posts, setPosts] = useState<MyMigrationBoardPostListResponse | null>(null);
-  const [incoming, setIncoming] = useState<ContactRequestListResponse | null>(null);
-  const [outgoing, setOutgoing] = useState<ContactRequestListResponse | null>(null);
+  const [posts, setPosts] = useState<MyMigrationBoardPostListResponse | null>(
+    null,
+  );
+  const [incoming, setIncoming] = useState<ContactRequestListResponse | null>(
+    null,
+  );
+  const [outgoing, setOutgoing] = useState<ContactRequestListResponse | null>(
+    null,
+  );
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -77,13 +83,24 @@ export function AccountMigrationBoardView() {
   }
 
   return (
-    <div className="searchPageContainer" data-testid="account-migration-board">
-      {error !== null && <ErrorState error={migrationBoardErrorMessage(error)} />}
+    <div
+      className="searchPageContainer"
+      data-testid="account-migration-board"
+    >
+      {error !== null && (
+        <ErrorState error={migrationBoardErrorMessage(error)} />
+      )}
       <div className="toolbar">
-        <Link className="runButton" href={routes.migrationBoardNew}>
+        <Link
+          className="runButton"
+          href={routes.migrationBoardNew}
+        >
           Создать запись
         </Link>
-        <Link className="secondaryButton" href={routes.migrationBoard}>
+        <Link
+          className="secondaryButton"
+          href={routes.migrationBoard}
+        >
           Публичная доска
         </Link>
       </div>
@@ -94,7 +111,10 @@ export function AccountMigrationBoardView() {
         ) : (
           <div className="cardGrid">
             {posts?.items.map((post) => (
-              <div className="summaryCard" key={post.id}>
+              <div
+                className="summaryCard"
+                key={post.id}
+              >
                 <p className="eyebrow">{post.destination_country.name}</p>
                 <h2>{post.title}</h2>
                 <p>{post.summary}</p>
@@ -107,7 +127,9 @@ export function AccountMigrationBoardView() {
                     type="button"
                     className="secondaryButton"
                     onClick={() => void action(() => submitBoardPost(post.id))}
-                    disabled={post.status === "review" || post.status === "published"}
+                    disabled={
+                      post.status === "review" || post.status === "published"
+                    }
                     data-testid="migration-board-account-submit"
                   >
                     На модерацию
@@ -132,7 +154,10 @@ export function AccountMigrationBoardView() {
           <p className="notice">Нет входящих requests.</p>
         ) : (
           incoming?.items.map((request) => (
-            <div className="sessionRow" key={request.id}>
+            <div
+              className="sessionRow"
+              key={request.id}
+            >
               <span>
                 {request.post_title} от {request.from_user_display_name}:{" "}
                 {request.status}
@@ -140,14 +165,18 @@ export function AccountMigrationBoardView() {
               <button
                 type="button"
                 className="secondaryButton"
-                onClick={() => void action(() => acceptContactRequest(request.id))}
+                onClick={() =>
+                  void action(() => acceptContactRequest(request.id))
+                }
               >
                 Accept
               </button>
               <button
                 type="button"
                 className="secondaryButton"
-                onClick={() => void action(() => declineContactRequest(request.id))}
+                onClick={() =>
+                  void action(() => declineContactRequest(request.id))
+                }
               >
                 Decline
               </button>
@@ -161,7 +190,10 @@ export function AccountMigrationBoardView() {
           <p className="notice">Нет исходящих requests.</p>
         ) : (
           outgoing?.items.map((request) => (
-            <div className="sessionRow" key={request.id}>
+            <div
+              className="sessionRow"
+              key={request.id}
+            >
               <span>
                 {request.post_title} для {request.to_user_display_name}:{" "}
                 {request.status}
@@ -169,7 +201,9 @@ export function AccountMigrationBoardView() {
               <button
                 type="button"
                 className="secondaryButton"
-                onClick={() => void action(() => cancelContactRequest(request.id))}
+                onClick={() =>
+                  void action(() => cancelContactRequest(request.id))
+                }
                 disabled={request.status !== "pending"}
               >
                 Cancel

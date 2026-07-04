@@ -77,7 +77,10 @@ _METRIC_VALUES = [
     },
 ]
 
-_SCENARIO_ROW = {"slug": "relocation_residence", "title": "Relocation and residence"}
+_SCENARIO_ROW = {
+    "slug": "relocation_residence",
+    "title": "Relocation and residence",
+}
 
 
 def _make_connection() -> MagicMock:
@@ -101,11 +104,17 @@ class TestBuildCiiComparison:
             country_slugs = ["russia", "uruguay"]
         resolved_cii = cii_rows if cii_rows is not None else _CII_ROWS
         resolved_defs = metric_defs if metric_defs is not None else _METRIC_DEFS
-        resolved_vals = metric_values if metric_values is not None else _METRIC_VALUES
-        resolved_scenario = _SCENARIO_ROW if scenario_row is True else scenario_row
+        resolved_vals = (
+            metric_values if metric_values is not None else _METRIC_VALUES
+        )
+        resolved_scenario = (
+            _SCENARIO_ROW if scenario_row is True else scenario_row
+        )
 
         with (
-            patch(f"{_SVC_CMP}.get_cii_for_countries", return_value=resolved_cii),
+            patch(
+                f"{_SVC_CMP}.get_cii_for_countries", return_value=resolved_cii
+            ),
             patch(
                 f"{_SVC_CMP}.get_active_cii_metric_definitions",
                 return_value=resolved_defs,
@@ -182,7 +191,8 @@ class TestBuildCiiComparison:
         partial_vals = [
             v
             for v in _METRIC_VALUES
-            if v["metric_slug"] != "rule_of_law" or v["country_slug"] != "russia"
+            if v["metric_slug"] != "rule_of_law"
+            or v["country_slug"] != "russia"
         ]
         result = self._run(metric_values=partial_vals)
         assert any("russia" in w for w in result.quality_warnings)
@@ -191,7 +201,9 @@ class TestBuildCiiComparison:
         result = self._run(
             country_slugs=["russia", "unknown-country"],
             cii_rows=[_CII_ROWS[0]],
-            metric_values=[v for v in _METRIC_VALUES if v["country_slug"] == "russia"],
+            metric_values=[
+                v for v in _METRIC_VALUES if v["country_slug"] == "russia"
+            ],
         )
         assert any("unknown-country" in w for w in result.quality_warnings)
 

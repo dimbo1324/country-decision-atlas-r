@@ -203,7 +203,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_invalid_migration_board_blocks",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
-    monkeypatch.setattr(data_quality_repository, "count_active_owners", lambda *_: 1)
+    monkeypatch.setattr(
+        data_quality_repository, "count_active_owners", lambda *_: 1
+    )
     for name in [
         "list_published_checklist_items_without_traceability",
         "list_orphan_checklist_items",
@@ -212,7 +214,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         search_index_repository, "list_broken_search_documents", lambda *_: []
     )
-    monkeypatch.setattr(search_index_repository, "count_search_documents", lambda *_: 1)
+    monkeypatch.setattr(
+        search_index_repository, "count_search_documents", lambda *_: 1
+    )
 
 
 def test_data_quality_migration_adds_required_constraints() -> None:
@@ -245,12 +249,16 @@ def test_data_quality_report_aggregates_critical_and_warning_issues(
     monkeypatch.setattr(
         data_quality_repository,
         "list_published_legal_signals_without_source",
-        lambda *_: [{"id": "signal-id", "title": "Signal", "country_id": "country-id"}],
+        lambda *_: [
+            {"id": "signal-id", "title": "Signal", "country_id": "country-id"}
+        ],
     )
     monkeypatch.setattr(
         data_quality_repository,
         "list_published_legal_signals_without_evidence",
-        lambda *_: [{"id": "signal-id", "title": "Signal", "country_id": "country-id"}],
+        lambda *_: [
+            {"id": "signal-id", "title": "Signal", "country_id": "country-id"}
+        ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)
@@ -264,7 +272,9 @@ def test_data_quality_report_aggregates_critical_and_warning_issues(
     assert any(issue.severity == "warning" for issue in report.issues)
 
 
-def test_data_quality_report_detects_invalid_timeline_data(monkeypatch: Any) -> None:
+def test_data_quality_report_detects_invalid_timeline_data(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -503,7 +513,9 @@ def test_data_quality_report_detects_missing_cii(monkeypatch: Any) -> None:
     assert any(issue.severity == "critical" for issue in report.issues)
 
 
-def test_data_quality_report_detects_missing_formula_metadata(monkeypatch: Any) -> None:
+def test_data_quality_report_detects_missing_formula_metadata(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -521,10 +533,14 @@ def test_data_quality_report_detects_missing_formula_metadata(monkeypatch: Any) 
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is False
-    assert any(issue.code == "cii_formula_metadata_missing" for issue in report.issues)
+    assert any(
+        issue.code == "cii_formula_metadata_missing" for issue in report.issues
+    )
 
 
-def test_data_quality_report_detects_invalid_weight_sum(monkeypatch: Any) -> None:
+def test_data_quality_report_detects_invalid_weight_sum(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -535,10 +551,14 @@ def test_data_quality_report_detects_invalid_weight_sum(monkeypatch: Any) -> Non
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is False
-    assert any(issue.code == "cii_weight_sum_invalid" for issue in report.issues)
+    assert any(
+        issue.code == "cii_weight_sum_invalid" for issue in report.issues
+    )
 
 
-def test_data_quality_report_detects_missing_metric_values(monkeypatch: Any) -> None:
+def test_data_quality_report_detects_missing_metric_values(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -549,20 +569,30 @@ def test_data_quality_report_detects_missing_metric_values(monkeypatch: Any) -> 
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is False
-    assert any(issue.code == "cii_metric_value_missing" for issue in report.issues)
+    assert any(
+        issue.code == "cii_metric_value_missing" for issue in report.issues
+    )
 
 
-def test_data_quality_report_detects_score_out_of_range(monkeypatch: Any) -> None:
+def test_data_quality_report_detects_score_out_of_range(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
         "list_cii_scores_out_of_range",
         lambda *_: [
-            {"country_slug": "russia", "version": "v1.0", "overall_score": 150.0}
+            {
+                "country_slug": "russia",
+                "version": "v1.0",
+                "overall_score": 150.0,
+            }
         ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is False
-    assert any(issue.code == "cii_score_out_of_range" for issue in report.issues)
+    assert any(
+        issue.code == "cii_score_out_of_range" for issue in report.issues
+    )

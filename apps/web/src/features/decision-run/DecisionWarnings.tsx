@@ -12,9 +12,15 @@ export function DecisionWarnings({ warnings }: DecisionWarningsProps) {
   if (warnings.length === 0) return null;
 
   return (
-    <ul className="warningsList" role="list">
+    <ul
+      className="warningsList"
+      role="list"
+    >
       {warnings.map((w) => (
-        <li key={`${w.level}-${w.message}`} className="warningItem">
+        <li
+          key={`${w.level}-${w.message}`}
+          className="warningItem"
+        >
           <ImpactLevelBadge level={w.level} />
           <span>{w.message}</span>
         </li>

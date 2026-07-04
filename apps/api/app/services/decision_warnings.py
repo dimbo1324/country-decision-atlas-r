@@ -119,8 +119,12 @@ def build_risk_warnings(
             warnings.append(
                 DecisionRiskWarning(
                     code=f"{signal_type}_legal_signal_review",
-                    level="high" if impact_level == "critical" else impact_level,
-                    message=str(signal.get("summary") or signal.get("title") or ""),
+                    level="high"
+                    if impact_level == "critical"
+                    else impact_level,
+                    message=str(
+                        signal.get("summary") or signal.get("title") or ""
+                    ),
                     legal_signal_ids=[str(signal["id"])],
                     source_ids=[str(source_id)] if source_id else [],
                 )

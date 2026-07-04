@@ -4,16 +4,22 @@ import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test("trust API returns 200 for known country russia", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/countries/russia/trust`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/countries/russia/trust`,
+  );
   expect(response.status()).toBe(200);
 });
 
 test("trust API returns 200 for known country uruguay", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/countries/uruguay/trust`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/countries/uruguay/trust`,
+  );
   expect(response.status()).toBe(200);
 });
 
-test("trust API returns 200 for known country argentina", async ({ request }) => {
+test("trust API returns 200 for known country argentina", async ({
+  request,
+}) => {
   const response = await request.get(
     `${API_BASE_URL}/api/v1/countries/argentina/trust`,
   );
@@ -21,7 +27,9 @@ test("trust API returns 200 for known country argentina", async ({ request }) =>
 });
 
 test("trust API response contains required fields", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/countries/russia/trust`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/countries/russia/trust`,
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(body).toHaveProperty("trust_label");
@@ -50,14 +58,18 @@ test("methodology API returns 200 with items array", async ({ request }) => {
 });
 
 test("methodology API locale=ru returns items", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/methodology?locale=ru`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/methodology?locale=ru`,
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(Array.isArray(body.items)).toBe(true);
   expect(body.items.length).toBeGreaterThanOrEqual(1);
 });
 
-test("methodology API contains CII explanation section", async ({ request }) => {
+test("methodology API contains CII explanation section", async ({
+  request,
+}) => {
   const response = await request.get(`${API_BASE_URL}/api/v1/methodology`);
   const body = await response.json();
   const slugs: string[] = body.items.map((s: { slug: string }) => s.slug);
@@ -75,14 +87,18 @@ test("glossary API returns 200 with items array", async ({ request }) => {
 });
 
 test("glossary API supports category filter", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/glossary?category=trust`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/glossary?category=trust`,
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(Array.isArray(body.items)).toBe(true);
 });
 
 test("glossary API locale=ru returns items", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/glossary?locale=ru`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/glossary?locale=ru`,
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(Array.isArray(body.items)).toBe(true);
@@ -110,7 +126,9 @@ test("country page shows trust surface section", async ({ page }) => {
   await expectNoAppCrash(page);
 });
 
-test("trust surface block shows trust badge and confidence", async ({ page }) => {
+test("trust surface block shows trust badge and confidence", async ({
+  page,
+}) => {
   await page.goto(e2eRoutes.country("russia", "ru"));
   await expectPageReady(page);
   const block = page.getByTestId("trust-surface-block");
@@ -127,19 +145,24 @@ test("trust surface block shows contradiction context", async ({ page }) => {
   await expectNoAppCrash(page);
 });
 
-test("trust surface shows API error when trust endpoint fails", async ({ page }) => {
-  await page.route(`${API_BASE_URL}/api/v1/countries/russia/trust**`, async (route) => {
-    await route.fulfill({
-      status: 500,
-      contentType: "application/json",
-      body: JSON.stringify({
-        error: {
-          code: "forced_trust_failure",
-          message: "Forced trust failure",
-        },
-      }),
-    });
-  });
+test("trust surface shows API error when trust endpoint fails", async ({
+  page,
+}) => {
+  await page.route(
+    `${API_BASE_URL}/api/v1/countries/russia/trust**`,
+    async (route) => {
+      await route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: {
+            code: "forced_trust_failure",
+            message: "Forced trust failure",
+          },
+        }),
+      });
+    },
+  );
 
   await page.goto(e2eRoutes.country("russia", "ru"));
   await expectPageReady(page);

@@ -75,7 +75,10 @@ def update_user_role(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
 ) -> AdminUser:
     updated = service.update_user_role(
-        connection, current_user=current_user, user_id=user_id, new_role=payload.role
+        connection,
+        current_user=current_user,
+        user_id=user_id,
+        new_role=payload.role,
     )
     connection.commit()
     return _to_admin_user(updated)
@@ -106,10 +109,14 @@ def list_user_sessions(
 ) -> UserSessionListResponse:
     service.get_user_or_404(connection, user_id)
     sessions = repository.list_user_sessions(connection, user_id)
-    return UserSessionListResponse(items=[_to_auth_session(row) for row in sessions])
+    return UserSessionListResponse(
+        items=[_to_auth_session(row) for row in sessions]
+    )
 
 
-@router.post("/{user_id}/sessions/revoke-all", response_model=RevokeAllSessionsResponse)
+@router.post(
+    "/{user_id}/sessions/revoke-all", response_model=RevokeAllSessionsResponse
+)
 def revoke_all_user_sessions(
     user_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],

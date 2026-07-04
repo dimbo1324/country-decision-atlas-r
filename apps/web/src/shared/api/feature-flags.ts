@@ -4,7 +4,8 @@ import { apiGet, queryString } from "./http";
 
 export type FeatureAccessTier = components["schemas"]["FeatureAccessTier"];
 export type FeatureFlag = components["schemas"]["FeatureFlag"];
-export type FeatureFlagListResponse = components["schemas"]["FeatureFlagListResponse"];
+export type FeatureFlagListResponse =
+  components["schemas"]["FeatureFlagListResponse"];
 export type FeatureFlagDetailResponse =
   components["schemas"]["FeatureFlagDetailResponse"];
 

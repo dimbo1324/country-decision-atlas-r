@@ -5,7 +5,9 @@ from uuid import UUID
 
 
 ContradictionSeverity = Literal["low", "medium", "high", "critical"]
-ContradictionStatus = Literal["needs_review", "confirmed", "dismissed", "archived"]
+ContradictionStatus = Literal[
+    "needs_review", "confirmed", "dismissed", "archived"
+]
 ContradictionConfidence = Literal["low", "medium", "high"]
 
 

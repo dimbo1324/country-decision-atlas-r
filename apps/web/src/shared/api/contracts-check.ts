@@ -5,7 +5,8 @@ type CiiCountryComparisonResponse =
 type CompareMatrixResponse = components["schemas"]["CompareMatrixResponse"];
 type CountryListResponse = components["schemas"]["CountryListResponse"];
 type CountryResponse = components["schemas"]["CountryResponse"];
-type CountryReadModelResponse = components["schemas"]["CountryReadModelResponse"];
+type CountryReadModelResponse =
+  components["schemas"]["CountryReadModelResponse"];
 type DecisionRunRequest = components["schemas"]["DecisionRunRequest"];
 type DecisionRunResponse = components["schemas"]["DecisionRunResponse"];
 type DecisionPersonalizationResponse =
@@ -14,8 +15,10 @@ type DecisionWeightItem = components["schemas"]["DecisionWeightItem"];
 type DecisionWizardAnswers = components["schemas"]["DecisionWizardAnswers"];
 type DecisionWizardRecommendation =
   components["schemas"]["DecisionWizardRecommendation"];
-type LegalSignalListResponse = components["schemas"]["LegalSignalDetailListResponse"];
-type LegalSignalTimelineResponse = components["schemas"]["LegalSignalTimelineResponse"];
+type LegalSignalListResponse =
+  components["schemas"]["LegalSignalDetailListResponse"];
+type LegalSignalTimelineResponse =
+  components["schemas"]["LegalSignalTimelineResponse"];
 type HomeOverviewResponse = components["schemas"]["HomeOverviewResponse"];
 type RouteListResponse = components["schemas"]["RouteListResponse"];
 type RouteDetailResponse = components["schemas"]["RouteDetailResponse"];
@@ -30,16 +33,20 @@ type DecisionPassportCreateRequest =
   components["schemas"]["DecisionPassportCreateRequest"];
 type DecisionPassportCreateResponse =
   components["schemas"]["DecisionPassportCreateResponse"];
-type DecisionPassportResponse = components["schemas"]["DecisionPassportResponse"];
+type DecisionPassportResponse =
+  components["schemas"]["DecisionPassportResponse"];
 type DecisionPassportMethodologySnapshot =
   components["schemas"]["DecisionPassportMethodologySnapshot"];
-type DecisionPassportSourceRef = components["schemas"]["DecisionPassportSourceRef"];
-type DecisionPassportRouteRef = components["schemas"]["DecisionPassportRouteRef"];
+type DecisionPassportSourceRef =
+  components["schemas"]["DecisionPassportSourceRef"];
+type DecisionPassportRouteRef =
+  components["schemas"]["DecisionPassportRouteRef"];
 type WhatChangedItem = components["schemas"]["WhatChangedItem"];
 type WhatChangedSummary = components["schemas"]["WhatChangedSummary"];
 type WhatChangedResponse = components["schemas"]["WhatChangedResponse"];
 type SourceListResponse = components["schemas"]["SourceListResponse"];
-type EvidenceItemListResponse = components["schemas"]["EvidenceItemListResponse"];
+type EvidenceItemListResponse =
+  components["schemas"]["EvidenceItemListResponse"];
 type ScenarioListResponse = components["schemas"]["ScenarioListResponse"];
 type UserStoryListResponse = components["schemas"]["UserStoryListResponse"];
 type DataQualityReport = components["schemas"]["DataQualityReport"];
@@ -59,11 +66,14 @@ type FeatureFlag = components["schemas"]["FeatureFlag"];
 type FeatureAccessRule = components["schemas"]["FeatureAccessRule"];
 type FeatureAccessDecision = components["schemas"]["FeatureAccessDecision"];
 type FeatureFlagListResponse = components["schemas"]["FeatureFlagListResponse"];
-type FeatureFlagDetailResponse = components["schemas"]["FeatureFlagDetailResponse"];
+type FeatureFlagDetailResponse =
+  components["schemas"]["FeatureFlagDetailResponse"];
 type DataJournalEntry = components["schemas"]["DataJournalEntry"];
-type CountryDataJournalResponse = components["schemas"]["CountryDataJournalResponse"];
+type CountryDataJournalResponse =
+  components["schemas"]["CountryDataJournalResponse"];
 type PlatformMetric = components["schemas"]["PlatformMetric"];
-type PlatformMetricListResponse = components["schemas"]["PlatformMetricListResponse"];
+type PlatformMetricListResponse =
+  components["schemas"]["PlatformMetricListResponse"];
 type PlatformMetricsRecomputeSummary =
   components["schemas"]["PlatformMetricsRecomputeSummary"];
 type CountryTrustResponse = components["schemas"]["CountryTrustResponse"];
@@ -76,7 +86,8 @@ type CountryDriftSnapshot = components["schemas"]["CountryDriftSnapshot"];
 type CountryDriftHistoryItem = components["schemas"]["CountryDriftHistoryItem"];
 type CountryDriftRecomputeRequest =
   components["schemas"]["CountryDriftRecomputeRequest"];
-type CountryDriftRecomputeResult = components["schemas"]["CountryDriftRecomputeResult"];
+type CountryDriftRecomputeResult =
+  components["schemas"]["CountryDriftRecomputeResult"];
 type CountryDriftBatchRecomputeResult =
   components["schemas"]["CountryDriftBatchRecomputeResult"];
 type SearchResultItem = components["schemas"]["SearchResultItem"];
@@ -86,7 +97,8 @@ type AIAskResponse = components["schemas"]["AIAskResponse"];
 type AIExplainNumberRequest = components["schemas"]["AIExplainNumberRequest"];
 type AIExplainNumberResponse = components["schemas"]["AIExplainNumberResponse"];
 type AIDecisionIntentRequest = components["schemas"]["AIDecisionIntentRequest"];
-type AIDecisionIntentResponse = components["schemas"]["AIDecisionIntentResponse"];
+type AIDecisionIntentResponse =
+  components["schemas"]["AIDecisionIntentResponse"];
 type AICitation = components["schemas"]["AICitation"];
 type AIProviderMeta = components["schemas"]["AIProviderMeta"];
 type AIDraft = components["schemas"]["AIDraft"];
@@ -111,7 +123,8 @@ type CurrentUserResponse = components["schemas"]["CurrentUserResponse"];
 type UserSessionListResponse = components["schemas"]["UserSessionListResponse"];
 type TelegramLinkRequest = components["schemas"]["TelegramLinkRequest"];
 type TelegramLinkResponse = components["schemas"]["TelegramLinkResponse"];
-type TelegramLinkStatusResponse = components["schemas"]["TelegramLinkStatusResponse"];
+type TelegramLinkStatusResponse =
+  components["schemas"]["TelegramLinkStatusResponse"];
 type WatchlistItem = components["schemas"]["WatchlistItem"];
 type WatchlistResponse = components["schemas"]["WatchlistResponse"];
 type WatchlistStatusResponse = components["schemas"]["WatchlistStatusResponse"];
@@ -121,7 +134,8 @@ type RoleUpdateRequest = components["schemas"]["RoleUpdateRequest"];
 type UserStatusUpdateRequest = components["schemas"]["UserStatusUpdateRequest"];
 type MigrationBoardPostListResponse =
   components["schemas"]["MigrationBoardPostListResponse"];
-type MigrationBoardPostDetail = components["schemas"]["MigrationBoardPostDetail"];
+type MigrationBoardPostDetail =
+  components["schemas"]["MigrationBoardPostDetail"];
 type MyMigrationBoardPost = components["schemas"]["MyMigrationBoardPost"];
 type MyMigrationBoardPostListResponse =
   components["schemas"]["MyMigrationBoardPostListResponse"];
@@ -130,8 +144,10 @@ type CreateMigrationBoardPostRequest =
 type UpdateMigrationBoardPostRequest =
   components["schemas"]["UpdateMigrationBoardPostRequest"];
 type ContactRequestResponse = components["schemas"]["ContactRequestResponse"];
-type ContactRequestListResponse = components["schemas"]["ContactRequestListResponse"];
-type CompanionMatchesResponse = components["schemas"]["CompanionMatchesResponse"];
+type ContactRequestListResponse =
+  components["schemas"]["ContactRequestListResponse"];
+type CompanionMatchesResponse =
+  components["schemas"]["CompanionMatchesResponse"];
 type MigrationBoardReportResponse =
   components["schemas"]["MigrationBoardReportResponse"];
 type AdminMigrationBoardPostListResponse =

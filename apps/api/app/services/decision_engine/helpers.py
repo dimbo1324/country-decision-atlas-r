@@ -33,7 +33,9 @@ CAVEAT_RU = (
 )
 
 
-def _locale(rows: list[dict[str, Any]], requested_locale: str) -> LocaleResolution:
+def _locale(
+    rows: list[dict[str, Any]], requested_locale: str
+) -> LocaleResolution:
     return build_locale(rows, requested_locale)
 
 
@@ -86,12 +88,16 @@ def _collect_source_ids(
         for source_id in _source_ids(breakdown.get("source_ids"))
     ]
     source_ids.extend(
-        str(signal["source_id"]) for signal in legal_signals if signal.get("source_id")
+        str(signal["source_id"])
+        for signal in legal_signals
+        if signal.get("source_id")
     )
     return sorted(set(source_ids))
 
 
-def _group_by(rows: list[dict[str, Any]], key: str) -> dict[str, list[dict[str, Any]]]:
+def _group_by(
+    rows: list[dict[str, Any]], key: str
+) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         grouped.setdefault(str(row[key]), []).append(row)
@@ -144,19 +150,23 @@ def _attach_breakdowns_and_sources(
             breakdown.get("explanation_ru"),
             locale,
         )
-        breakdowns_by_score.setdefault(str(breakdown["country_score_id"]), []).append(
-            breakdown
-        )
+        breakdowns_by_score.setdefault(
+            str(breakdown["country_score_id"]), []
+        ).append(breakdown)
     sources_by_country: dict[str, list[dict[str, Any]]] = {}
     for source in source_rows:
         for row in rows:
             if source["country_id"] == row["country_id"]:
-                sources_by_country.setdefault(row["country_slug"], []).append(source)
+                sources_by_country.setdefault(row["country_slug"], []).append(
+                    source
+                )
     return [
         DecisionCountryScore(
             **row,
             breakdowns=breakdowns_by_score.get(str(row["id"]), []),
-            source_references=sources_by_country.get(row["country_slug"], [])[:5],
+            source_references=sources_by_country.get(row["country_slug"], [])[
+                :5
+            ],
         )
         for row in rows
     ]
@@ -168,4 +178,6 @@ def _risks_for_country(country: DecisionCountryScore) -> list[str]:
         return [
             "No low-scoring criteria in the MVP breakdown; expert review is still required."
         ]
-    return [f"Low or uncertain criterion: {criterion}" for criterion in weak[:4]]
+    return [
+        f"Low or uncertain criterion: {criterion}" for criterion in weak[:4]
+    ]

@@ -1,3 +1,4 @@
+import pytest
 from app.services.trust_score import (
     METHODOLOGY_VERSION,
     compute_confidence,
@@ -11,7 +12,6 @@ from app.services.trust_score import (
     has_sufficient_data,
 )
 from datetime import UTC, datetime
-import pytest
 
 
 _NOW = datetime(2025, 1, 1, tzinfo=UTC)
@@ -222,7 +222,9 @@ class TestComputeTrustScoreFromInputs:
         assert result["methodology_version"] == METHODOLOGY_VERSION
 
     def test_insufficient_data_returns_none_score(self) -> None:
-        inputs = self._inputs(source_count=2, evidence_count=2, legal_signal_count=1)
+        inputs = self._inputs(
+            source_count=2, evidence_count=2, legal_signal_count=1
+        )
         result = compute_trust_score_from_inputs(inputs, _NOW)
         assert result["trust_score"] is None
         assert result["trust_label"] == "insufficient_data"

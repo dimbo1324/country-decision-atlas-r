@@ -1,6 +1,10 @@
 from app.core.errors import api_error
 from app.repositories import search as repository
-from app.schemas.search import SearchResponse, SearchResultItem, SearchResultType
+from app.schemas.search import (
+    SearchResponse,
+    SearchResultItem,
+    SearchResultType,
+)
 from psycopg import Connection
 from typing import Any, get_args
 
@@ -18,7 +22,10 @@ def _parse_entity_types(types: str | None) -> list[str] | None:
             422,
             "invalid_search_entity_type",
             "Unknown search entity type requested.",
-            {"invalid_types": invalid, "allowed_types": sorted(VALID_ENTITY_TYPES)},
+            {
+                "invalid_types": invalid,
+                "allowed_types": sorted(VALID_ENTITY_TYPES),
+            },
         )
     return parsed or None
 
@@ -42,7 +49,13 @@ def run_search(
         )
     entity_types = _parse_entity_types(types)
     rows = repository.search_documents(
-        connection, normalized_query, locale, entity_types, country_slug, limit, offset
+        connection,
+        normalized_query,
+        locale,
+        entity_types,
+        country_slug,
+        limit,
+        offset,
     )
     total = repository.count_search_documents_matching(
         connection, normalized_query, locale, entity_types, country_slug

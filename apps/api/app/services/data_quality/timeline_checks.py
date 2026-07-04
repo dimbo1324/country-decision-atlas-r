@@ -82,7 +82,9 @@ def _append_timeline_checks(
                     row,
                 )
             )
-    checks.append(_check("legal_signal_timeline_is_valid", issues, timeline_codes))
+    checks.append(
+        _check("legal_signal_timeline_is_valid", issues, timeline_codes)
+    )
     for row in repository.list_mvp_countries_without_legal_events(connection):
         issues.append(
             _issue(

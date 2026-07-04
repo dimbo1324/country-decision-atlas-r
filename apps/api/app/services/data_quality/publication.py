@@ -10,7 +10,9 @@ from app.services.data_quality._issues import (
 from typing import Any
 
 
-def validate_source_for_publish(source: dict[str, Any]) -> list[DataQualityIssue]:
+def validate_source_for_publish(
+    source: dict[str, Any],
+) -> list[DataQualityIssue]:
     issues = _required_field_issues(
         source,
         "source",
@@ -18,7 +20,9 @@ def validate_source_for_publish(source: dict[str, Any]) -> list[DataQualityIssue
         "source_required_field_missing",
         "Published source is missing required field.",
     )
-    if _missing(source.get("confidence")) and _missing(source.get("reliability_level")):
+    if _missing(source.get("confidence")) and _missing(
+        source.get("reliability_level")
+    ):
         issues.append(
             _issue(
                 "source_confidence_missing",
@@ -48,16 +52,24 @@ def validate_legal_signal_for_publish(
         "legal_signal_required_field_missing",
         "Published legal signal is missing required field.",
     )
-    if _missing(legal_signal.get("title_en")) and _missing(legal_signal.get("title")):
-        issues.append(_missing_field_issue(legal_signal, "legal_signal", "title_en"))
+    if _missing(legal_signal.get("title_en")) and _missing(
+        legal_signal.get("title")
+    ):
+        issues.append(
+            _missing_field_issue(legal_signal, "legal_signal", "title_en")
+        )
     if _missing(legal_signal.get("summary_en")) and _missing(
         legal_signal.get("summary")
     ):
-        issues.append(_missing_field_issue(legal_signal, "legal_signal", "summary_en"))
+        issues.append(
+            _missing_field_issue(legal_signal, "legal_signal", "summary_en")
+        )
     if _missing(legal_signal.get("confidence")) and _missing(
         legal_signal.get("confidence_level")
     ):
-        issues.append(_missing_field_issue(legal_signal, "legal_signal", "confidence"))
+        issues.append(
+            _missing_field_issue(legal_signal, "legal_signal", "confidence")
+        )
     return issues
 
 
@@ -71,8 +83,12 @@ def validate_evidence_item_for_publish(
         "evidence_required_field_missing",
         "Published evidence item is missing required field.",
     )
-    if _missing(evidence_item.get("claim")) and _missing(evidence_item.get("title")):
-        issues.append(_missing_field_issue(evidence_item, "evidence_item", "claim"))
+    if _missing(evidence_item.get("claim")) and _missing(
+        evidence_item.get("title")
+    ):
+        issues.append(
+            _missing_field_issue(evidence_item, "evidence_item", "claim")
+        )
     if _missing(evidence_item.get("confidence")) and _missing(
         evidence_item.get("confidence_level")
     ):
@@ -84,14 +100,18 @@ def validate_evidence_item_for_publish(
         and _missing(evidence_item.get("excerpt"))
         and _missing(evidence_item.get("quote"))
     ):
-        issues.append(_missing_field_issue(evidence_item, "evidence_item", "excerpt"))
+        issues.append(
+            _missing_field_issue(evidence_item, "evidence_item", "excerpt")
+        )
     return issues
 
 
 def validate_country_card_for_publish(
     country_card: dict[str, Any],
 ) -> list[DataQualityIssue]:
-    if any(not _missing(country_card.get(field)) for field in COUNTRY_CARD_FIELDS):
+    if any(
+        not _missing(country_card.get(field)) for field in COUNTRY_CARD_FIELDS
+    ):
         return []
     return [
         _issue(
@@ -139,7 +159,9 @@ def validate_user_story_for_publish(
                     user_story.get("id"),
                     "Synthetic user story must not look like a verified real story.",
                     {
-                        "verification_status": user_story.get("verification_status"),
+                        "verification_status": user_story.get(
+                            "verification_status"
+                        ),
                         "notes": user_story.get("notes"),
                     },
                 )
@@ -148,11 +170,17 @@ def validate_user_story_for_publish(
 
 
 def raise_if_critical_issues(issues: list[DataQualityIssue]) -> None:
-    critical_issues = [issue for issue in issues if issue.severity == "critical"]
+    critical_issues = [
+        issue for issue in issues if issue.severity == "critical"
+    ]
     if critical_issues:
         raise api_error(
             422,
             "data_quality_validation_failed",
             "Content cannot be published because data quality checks failed.",
-            {"issues": [issue.model_dump(mode="json") for issue in critical_issues]},
+            {
+                "issues": [
+                    issue.model_dump(mode="json") for issue in critical_issues
+                ]
+            },
         )

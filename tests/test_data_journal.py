@@ -42,7 +42,9 @@ def _client(monkeypatch: Any, rows: list[dict[str, Any]]) -> TestClient:
     monkeypatch.setattr(
         countries_repository,
         "get_country",
-        lambda _conn, slug, _locale: {"slug": slug} if slug != "missing" else None,
+        lambda _conn, slug, _locale: (
+            {"slug": slug} if slug != "missing" else None
+        ),
     )
     monkeypatch.setattr(
         repository, "list_country_data_journal_entries", lambda *_: rows
@@ -53,7 +55,9 @@ def _client(monkeypatch: Any, rows: list[dict[str, Any]]) -> TestClient:
     monkeypatch.setattr(
         repository,
         "get_country_last_verified_at",
-        lambda *_: {"last_verified_at": NOW} if rows else {"last_verified_at": None},
+        lambda *_: (
+            {"last_verified_at": NOW} if rows else {"last_verified_at": None}
+        ),
     )
     return TestClient(app)
 
@@ -61,7 +65,9 @@ def _client(monkeypatch: Any, rows: list[dict[str, Any]]) -> TestClient:
 def test_endpoint_returns_200_for_countries(monkeypatch: Any) -> None:
     client = _client(monkeypatch, [_row()])
     for slug in ["russia", "uruguay", "argentina"]:
-        response = client.get(f"/api/v1/countries/{slug}/data-journal?locale=ru")
+        response = client.get(
+            f"/api/v1/countries/{slug}/data-journal?locale=ru"
+        )
         assert response.status_code == 200
         assert response.json()["country_slug"] == slug
 
@@ -76,10 +82,12 @@ def test_unknown_country_returns_404(monkeypatch: Any) -> None:
 def test_limit_is_bounded(monkeypatch: Any) -> None:
     client = _client(monkeypatch, [])
     assert (
-        client.get("/api/v1/countries/russia/data-journal?limit=0").status_code == 422
+        client.get("/api/v1/countries/russia/data-journal?limit=0").status_code
+        == 422
     )
     assert (
-        client.get("/api/v1/countries/russia/data-journal?limit=51").status_code == 422
+        client.get("/api/v1/countries/russia/data-journal?limit=51").status_code
+        == 422
     )
 
 
@@ -94,8 +102,12 @@ def test_offset_works(monkeypatch: Any) -> None:
         captured["offset"] = offset
         return [_row()]
 
-    monkeypatch.setattr(repository, "list_country_data_journal_entries", fake_list)
-    response = client.get("/api/v1/countries/russia/data-journal?limit=5&offset=2")
+    monkeypatch.setattr(
+        repository, "list_country_data_journal_entries", fake_list
+    )
+    response = client.get(
+        "/api/v1/countries/russia/data-journal?limit=5&offset=2"
+    )
     assert response.status_code == 200
     assert captured == {"limit": 5, "offset": 2}
 
@@ -116,7 +128,13 @@ def test_response_contains_no_internal_fields(monkeypatch: Any) -> None:
     )
     body = client.get("/api/v1/countries/russia/data-journal?locale=en").json()
     text = str(body)
-    for forbidden in ["changed_by", "raw_diff", "admin", "last_error", "attempts"]:
+    for forbidden in [
+        "changed_by",
+        "raw_diff",
+        "admin",
+        "last_error",
+        "attempts",
+    ]:
         assert forbidden not in text
 
 
@@ -130,13 +148,22 @@ def test_empty_journal_returns_items_empty(monkeypatch: Any) -> None:
 def test_journal_supports_ru_and_en(monkeypatch: Any) -> None:
     client = _client(monkeypatch, [_row()])
     assert (
-        client.get("/api/v1/countries/russia/data-journal?locale=ru").status_code == 200
+        client.get(
+            "/api/v1/countries/russia/data-journal?locale=ru"
+        ).status_code
+        == 200
     )
     assert (
-        client.get("/api/v1/countries/russia/data-journal?locale=en").status_code == 200
+        client.get(
+            "/api/v1/countries/russia/data-journal?locale=en"
+        ).status_code
+        == 200
     )
     assert (
-        client.get("/api/v1/countries/russia/data-journal?locale=es").status_code == 422
+        client.get(
+            "/api/v1/countries/russia/data-journal?locale=es"
+        ).status_code
+        == 422
     )
 
 

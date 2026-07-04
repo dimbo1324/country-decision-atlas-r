@@ -19,11 +19,15 @@ test.describe("Decision personalization sliders", () => {
     await expectNoAppCrash(page);
   });
 
-  test("priority sliders are visible after expanding panel", async ({ page }) => {
+  test("priority sliders are visible after expanding panel", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
     await page.getByTestId("decision-weights-panel").locator("summary").click();
-    await expect(page.getByTestId("decision-weight-slider-safety_score")).toBeVisible();
+    await expect(
+      page.getByTestId("decision-weight-slider-safety_score"),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -56,9 +60,9 @@ test.describe("Decision personalization sliders", () => {
     await slider.fill("80");
 
     await runDecision(page);
-    await expect(page.getByTestId("decision-personalization-result")).toContainText(
-      "Результат адаптирован под ваши приоритеты",
-    );
+    await expect(
+      page.getByTestId("decision-personalization-result"),
+    ).toContainText("Результат адаптирован под ваши приоритеты");
     await expectNoAppCrash(page);
   });
 
@@ -105,7 +109,9 @@ test.describe("Decision personalization sliders", () => {
     await slider.fill("80");
 
     await runDecision(page);
-    await expect(page.getByTestId("decision-personalization-result")).toBeVisible();
+    await expect(
+      page.getByTestId("decision-personalization-result"),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 

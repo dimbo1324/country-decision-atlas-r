@@ -14,7 +14,8 @@ class AnalyticsSource(StrEnum):
 
 class AnalyticsEventCreate(BaseModel):
     event_type: Annotated[
-        str, Field(min_length=2, max_length=64, pattern=r"^[a-z][a-z0-9_]{1,63}$")
+        str,
+        Field(min_length=2, max_length=64, pattern=r"^[a-z][a-z0-9_]{1,63}$"),
     ]
     session_id: Annotated[str, Field(min_length=8, max_length=256)]
     source: AnalyticsSource = AnalyticsSource.web

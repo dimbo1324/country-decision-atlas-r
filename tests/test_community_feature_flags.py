@@ -1,5 +1,6 @@
 """Feature-flag gating for community and Q&A endpoints."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import (
     community as repository,
@@ -8,7 +9,6 @@ from app.repositories import (
 from app.schemas.community import CommunityQuestionCreate
 from app.services import community as service
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -36,10 +36,16 @@ def test_community_enabled_flag_disabled_returns_403(
                 "access_tier": "public",
                 "default_enabled": True,
             }
-        return {"status": "enabled", "access_tier": "public", "default_enabled": True}
+        return {
+            "status": "enabled",
+            "access_tier": "public",
+            "default_enabled": True,
+        }
 
     monkeypatch.setattr(feature_repository, "get_feature_flag", fake_get)
-    monkeypatch.setattr(feature_repository, "list_feature_access_rules", lambda *_a: [])
+    monkeypatch.setattr(
+        feature_repository, "list_feature_access_rules", lambda *_a: []
+    )
 
     with pytest.raises(HTTPException) as exc_info:
         service.submit_question(
@@ -60,10 +66,16 @@ def test_qna_flag_disabled_returns_403_even_if_community_enabled(
                 "access_tier": "public",
                 "default_enabled": True,
             }
-        return {"status": "enabled", "access_tier": "public", "default_enabled": True}
+        return {
+            "status": "enabled",
+            "access_tier": "public",
+            "default_enabled": True,
+        }
 
     monkeypatch.setattr(feature_repository, "get_feature_flag", fake_get)
-    monkeypatch.setattr(feature_repository, "list_feature_access_rules", lambda *_a: [])
+    monkeypatch.setattr(
+        feature_repository, "list_feature_access_rules", lambda *_a: []
+    )
 
     with pytest.raises(HTTPException) as exc_info:
         service.submit_question(

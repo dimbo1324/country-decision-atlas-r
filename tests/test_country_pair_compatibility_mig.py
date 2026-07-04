@@ -1,7 +1,7 @@
 """Schema assertions for the country-pair compatibility (origin-aware decisions) migration."""
 
-from pathlib import Path
 import pytest
+from pathlib import Path
 from typing import Any
 
 
@@ -86,11 +86,17 @@ def test_country_pair_compatibility_table_exists() -> None:
 
 
 def test_country_pair_compatibility_sources_table_exists() -> None:
-    assert "CREATE TABLE IF NOT EXISTS country_pair_compatibility_sources" in _sql()
+    assert (
+        "CREATE TABLE IF NOT EXISTS country_pair_compatibility_sources"
+        in _sql()
+    )
 
 
 def test_country_pair_compatibility_evidence_table_exists() -> None:
-    assert "CREATE TABLE IF NOT EXISTS country_pair_compatibility_evidence" in _sql()
+    assert (
+        "CREATE TABLE IF NOT EXISTS country_pair_compatibility_evidence"
+        in _sql()
+    )
 
 
 def test_route_checklist_items_table_exists() -> None:
@@ -130,9 +136,14 @@ def test_indexes_present() -> None:
 
 def test_migration_is_idempotent() -> None:
     sql = _sql()
-    assert sql.count("CREATE TABLE IF NOT EXISTS country_pair_compatibility ") == 1
+    assert (
+        sql.count("CREATE TABLE IF NOT EXISTS country_pair_compatibility ") == 1
+    )
     assert sql.count("CREATE TABLE IF NOT EXISTS route_checklist_items") == 1
-    assert "ON CONFLICT (origin_country_id, destination_country_id) DO UPDATE" in sql
+    assert (
+        "ON CONFLICT (origin_country_id, destination_country_id) DO UPDATE"
+        in sql
+    )
     assert "ON CONFLICT (route_id, step_order) DO UPDATE" in sql
     assert "ON CONFLICT (country_pair_id, source_id) DO NOTHING" in sql
     assert "ON CONFLICT (country_pair_id, evidence_item_id) DO NOTHING" in sql

@@ -12,13 +12,17 @@ test.describe("Argentina CII integration", () => {
     await expect(ciiBlock).toBeVisible({ timeout: 15_000 });
   });
 
-  test("/countries/argentina CII block shows numeric score", async ({ page }) => {
+  test("/countries/argentina CII block shows numeric score", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
     await expect(page.locator("[data-testid='cii-block']")).toBeVisible({
       timeout: 15_000,
     });
-    const scoreText = await page.locator("[data-testid='cii-block']").textContent();
+    const scoreText = await page
+      .locator("[data-testid='cii-block']")
+      .textContent();
     expect(scoreText).toMatch(/\d+/);
   });
 
@@ -31,10 +35,14 @@ test.describe("Argentina CII integration", () => {
 
   test("/compare shows Argentina row with numeric scores", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-argentina"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const row = page.locator('[data-testid="matrix-row-argentina"]');
@@ -45,7 +53,9 @@ test.describe("Argentina CII integration", () => {
 
   test("/compare Argentina row has 5 cells", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const argentinaRow = page.locator('[data-testid="matrix-row-argentina"]');
@@ -83,13 +93,19 @@ test.describe("Argentina CII integration", () => {
     });
   });
 
-  test("responsive: /compare at 390x844 shows Argentina row", async ({ page }) => {
+  test("responsive: /compare at 390x844 shows Argentina row", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-argentina"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);

@@ -4,7 +4,10 @@ type AIDisclaimerProps = {
 
 export function AIDisclaimer({ text }: AIDisclaimerProps) {
   return (
-    <p className="infoNote" data-testid="ai-disclaimer">
+    <p
+      className="infoNote"
+      data-testid="ai-disclaimer"
+    >
       {text}
     </p>
   );

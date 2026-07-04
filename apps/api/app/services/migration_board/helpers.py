@@ -1,10 +1,12 @@
+import re
 from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories.analytics import insert_analytics_event
 from app.repositories.audit import insert_audit_event
-from app.services.feature_flags import ensure_feature_enabled as _ensure_feature_enabled
+from app.services.feature_flags import (
+    ensure_feature_enabled as _ensure_feature_enabled,
+)
 from psycopg import Connection
-import re
 from typing import Any
 from uuid import UUID
 
@@ -78,7 +80,9 @@ PII_PATTERNS = (
 )
 
 
-def ensure_feature_enabled(connection: Connection[Any], feature_key: str) -> None:
+def ensure_feature_enabled(
+    connection: Connection[Any], feature_key: str
+) -> None:
     _ensure_feature_enabled(
         connection,
         feature_key,
@@ -99,7 +103,10 @@ def _reject_public_pii(title: str, summary: str) -> None:
 
 def _require_submit_ready(post: dict[str, Any]) -> None:
     _reject_public_pii(str(post["title"]), str(post["summary"]))
-    if not post["risk_acknowledged"] or not post["legal_disclaimer_acknowledged"]:
+    if (
+        not post["risk_acknowledged"]
+        or not post["legal_disclaimer_acknowledged"]
+    ):
         raise api_error(
             422,
             "acknowledgements_required",
@@ -290,7 +297,9 @@ def _track_event(
         country_slug=metadata.get("destination_country_slug"),
         scenario_slug=metadata.get("scenario_slug"),
         persona_slug=metadata.get("persona_slug"),
-        route_id=UUID(str(metadata["route_id"])) if metadata.get("route_id") else None,
+        route_id=UUID(str(metadata["route_id"]))
+        if metadata.get("route_id")
+        else None,
         entity_type="migration_board_post" if entity_id else None,
         entity_id=UUID(str(entity_id)) if entity_id else None,
         metadata=metadata,

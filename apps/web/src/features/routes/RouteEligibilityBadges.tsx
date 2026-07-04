@@ -38,7 +38,10 @@ export function RouteEligibilityBadges({
   return (
     <div className="routeEligibility">
       {visibleEntries.map(([key, value]) => (
-        <span key={key} className={`routeEligibilityBadge ${VALUE_CLASSES[value]}`}>
+        <span
+          key={key}
+          className={`routeEligibilityBadge ${VALUE_CLASSES[value]}`}
+        >
           <span>{LABELS[key]}</span>
           <strong>{VALUE_LABELS[value]}</strong>
         </span>

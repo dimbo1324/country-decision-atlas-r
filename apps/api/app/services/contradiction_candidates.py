@@ -37,7 +37,11 @@ def detect_contradiction_candidate(
     claim_a = items[0].excerpt[:500] or items[0].title
     claim_b = items[1].excerpt[:500] or items[1].title
     source_ids = _unique(
-        [citation.source_id for citation in package.citations if citation.source_id]
+        [
+            citation.source_id
+            for citation in package.citations
+            if citation.source_id
+        ]
     )
     evidence_item_ids = _unique(
         [

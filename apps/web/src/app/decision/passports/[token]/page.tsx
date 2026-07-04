@@ -19,12 +19,17 @@ export default async function DecisionPassportPage({
   const { token } = await params;
   const resolvedSearchParams = await searchParams;
   const rawLocale = resolvedSearchParams["locale"];
-  const locale = normalizeLocale(typeof rawLocale === "string" ? rawLocale : undefined);
+  const locale = normalizeLocale(
+    typeof rawLocale === "string" ? rawLocale : undefined,
+  );
 
   try {
     const passport = await decisionPassportsApi.getDecisionPassport(token);
     return (
-      <div className="pageShell" data-testid="decision-passport-page">
+      <div
+        className="pageShell"
+        data-testid="decision-passport-page"
+      >
         <header className="pageHeader">
           <p className="eyebrow">Decision Passport</p>
           <h1>Decision Passport</h1>
@@ -43,7 +48,10 @@ export default async function DecisionPassportPage({
 
         <DecisionResults response={passport.decision_result} />
 
-        <section className="cardSection" data-testid="passport-methodology">
+        <section
+          className="cardSection"
+          data-testid="passport-methodology"
+        >
           <h2 className="cardSectionTitle">Методология</h2>
           <dl className="routeFacts">
             <div>
@@ -69,7 +77,9 @@ export default async function DecisionPassportPage({
             <div>
               <dt>Кастомные веса</dt>
               <dd>
-                {passport.methodology_snapshot.custom_weights_applied ? "Да" : "Нет"}
+                {passport.methodology_snapshot.custom_weights_applied
+                  ? "Да"
+                  : "Нет"}
               </dd>
             </div>
             <div>
@@ -96,7 +106,10 @@ export default async function DecisionPassportPage({
           backHref={`/decision?locale=${locale}`}
           backLabel="Назад к подбору"
         />
-        <Link href={`/decision?locale=${locale}`} className="internalLink">
+        <Link
+          href={`/decision?locale=${locale}`}
+          className="internalLink"
+        >
           Запустить новый подбор
         </Link>
       </div>

@@ -31,7 +31,9 @@ def get_country_card(
     return CountryCardResponse(item=row, locale=helpers._locale([row], locale))
 
 
-def get_scenario(connection: Connection[Any], slug: str, locale: str) -> dict[str, Any]:
+def get_scenario(
+    connection: Connection[Any], slug: str, locale: str
+) -> dict[str, Any]:
     row = repository.get_scenario(connection, slug, locale)
     if row is None:
         raise LookupError("Scenario not found")
@@ -155,7 +157,9 @@ def get_legal_signal(
     row = repository.get_legal_signal(connection, signal_id, locale)
     if row is None:
         raise LookupError("Legal signal not found")
-    return LegalSignalDetailResponse(item=row, locale=helpers._locale([row], locale))
+    return LegalSignalDetailResponse(
+        item=row, locale=helpers._locale([row], locale)
+    )
 
 
 def get_legal_signal_evidence(
@@ -178,7 +182,9 @@ def get_source(connection: Connection[Any], source_id: str) -> dict[str, Any]:
 def get_source_evidence(
     connection: Connection[Any], source_id: str, limit: int, offset: int
 ) -> EvidenceItemListResponse:
-    rows = repository.list_evidence_for_source(connection, source_id, limit, offset)
+    rows = repository.list_evidence_for_source(
+        connection, source_id, limit, offset
+    )
     total = repository.count_evidence_for_source(connection, source_id)
     return EvidenceItemListResponse(
         items=rows,
@@ -228,7 +234,9 @@ def list_user_stories(
     )
 
 
-def get_user_story(connection: Connection[Any], story_id: str) -> UserStoryResponse:
+def get_user_story(
+    connection: Connection[Any], story_id: str
+) -> UserStoryResponse:
     row = repository.get_user_story(connection, story_id)
     if row is None:
         raise LookupError("User story not found")

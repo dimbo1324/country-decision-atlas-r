@@ -1,9 +1,8 @@
 from __future__ import annotations
-
-from dataclasses import dataclass
-from pathlib import Path
 import subprocess
 import sys
+from dataclasses import dataclass
+from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parent
@@ -31,6 +30,15 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
             "of its own flags unchanged, e.g. --profile, --fix, --doctor."
         ),
     ),
+    ScriptInfo(
+        key="2",
+        filename="format_code.py",
+        title="format-code",
+        description=(
+            "Auto-formats Python, frontend/contracts, and Go code. Accepts "
+            "optional targets: python, frontend, go, or all."
+        ),
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"
@@ -39,24 +47,34 @@ DEFAULT_SCRIPT_KEY = "1"
 def find_script(choice: str) -> ScriptInfo | None:
     normalized = choice.strip().lower()
     for script in AVAILABLE_SCRIPTS:
-        if normalized in {script.key, script.title.lower(), script.filename.lower()}:
+        if normalized in {
+            script.key,
+            script.title.lower(),
+            script.filename.lower(),
+        }:
             return script
     return None
 
 
 def default_script() -> ScriptInfo:
     script = find_script(DEFAULT_SCRIPT_KEY)
-    assert script is not None, "DEFAULT_SCRIPT_KEY must match a registered script"
+    assert script is not None, (
+        "DEFAULT_SCRIPT_KEY must match a registered script"
+    )
     return script
 
 
 def print_menu() -> None:
     print("\nCountry Decision Atlas — script orchestrator")
     print("=" * 46)
-    print("Choose which script to run. Press Enter to run the default script.\n")
+    print(
+        "Choose which script to run. Press Enter to run the default script.\n"
+    )
 
     for script in AVAILABLE_SCRIPTS:
-        default_marker = " [default]" if script.key == DEFAULT_SCRIPT_KEY else ""
+        default_marker = (
+            " [default]" if script.key == DEFAULT_SCRIPT_KEY else ""
+        )
         print(f"{script.key}. {script.title}{default_marker}")
         print(f"   {script.description}")
 
@@ -91,7 +109,9 @@ def run_interactive() -> int:
 
     if script is None:
         print(f"\nUnknown choice: {raw_choice!r}", file=sys.stderr)
-        print("Please run the orchestrator again and choose one of the listed scripts.")
+        print(
+            "Please run the orchestrator again and choose one of the listed scripts."
+        )
         return 2
 
     return run_script(script, [])

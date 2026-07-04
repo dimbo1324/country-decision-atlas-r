@@ -1,7 +1,7 @@
 """SQL-only repository for logging and listing AI interaction records."""
 
-from app.repositories import ai_interactions as repository
 import inspect
+from app.repositories import ai_interactions as repository
 
 
 def test_repository_is_sql_only() -> None:

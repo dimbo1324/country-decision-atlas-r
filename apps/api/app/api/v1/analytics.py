@@ -1,6 +1,9 @@
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
-from app.schemas.analytics import AnalyticsEventCreate, AnalyticsEventCreateResponse
+from app.schemas.analytics import (
+    AnalyticsEventCreate,
+    AnalyticsEventCreateResponse,
+)
 from app.services.analytics import record_analytics_event
 from fastapi import APIRouter, Depends
 from psycopg import Connection

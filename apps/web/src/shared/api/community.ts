@@ -3,17 +3,21 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 import { apiGet, apiPost, queryString } from "./http";
 
 export type CommunityQuestion = components["schemas"]["CommunityQuestion"];
-export type CommunityQuestionCreate = components["schemas"]["CommunityQuestionCreate"];
+export type CommunityQuestionCreate =
+  components["schemas"]["CommunityQuestionCreate"];
 export type CommunityQuestionListResponse =
   components["schemas"]["CommunityQuestionListResponse"];
 export type CommunityAnswer = components["schemas"]["CommunityAnswer"];
-export type CommunityAnswerCreate = components["schemas"]["CommunityAnswerCreate"];
+export type CommunityAnswerCreate =
+  components["schemas"]["CommunityAnswerCreate"];
 export type CommunityVoteCreate = components["schemas"]["CommunityVoteCreate"];
 export type ConsensusSummary = components["schemas"]["ConsensusSummary"];
 export type DataErrorReport = components["schemas"]["DataErrorReport"];
-export type DataErrorReportCreate = components["schemas"]["DataErrorReportCreate"];
+export type DataErrorReportCreate =
+  components["schemas"]["DataErrorReportCreate"];
 export type UserStoryRating = components["schemas"]["UserStoryRating"];
-export type UserStoryRatingCreate = components["schemas"]["UserStoryRatingCreate"];
+export type UserStoryRatingCreate =
+  components["schemas"]["UserStoryRatingCreate"];
 
 export function listCommunityQuestions(params: {
   country_slug?: string;
@@ -25,8 +29,12 @@ export function listCommunityQuestions(params: {
   );
 }
 
-export function listCommunityAnswers(questionId: string): Promise<CommunityAnswer[]> {
-  return apiGet<CommunityAnswer[]>(`/api/v1/community/questions/${questionId}/answers`);
+export function listCommunityAnswers(
+  questionId: string,
+): Promise<CommunityAnswer[]> {
+  return apiGet<CommunityAnswer[]>(
+    `/api/v1/community/questions/${questionId}/answers`,
+  );
 }
 
 export function createCommunityQuestion(

@@ -16,8 +16,13 @@ export function CountryEvidenceSummary({
   sourceSummary,
 }: CountryEvidenceSummaryProps) {
   return (
-    <div className="evidenceTraceability" data-testid="evidence-traceability">
-      {sourceSummary && <p className="evidenceSourceSummary">{sourceSummary}</p>}
+    <div
+      className="evidenceTraceability"
+      data-testid="evidence-traceability"
+    >
+      {sourceSummary && (
+        <p className="evidenceSourceSummary">{sourceSummary}</p>
+      )}
 
       <div className="summaryGrid">
         <div className="summaryItem">
@@ -25,11 +30,15 @@ export function CountryEvidenceSummary({
           <span className="summaryLabel">Всего доказательств</span>
         </div>
         <div className="summaryItem">
-          <span className="summaryValue">{evidenceSummary.high_confidence}</span>
+          <span className="summaryValue">
+            {evidenceSummary.high_confidence}
+          </span>
           <span className="summaryLabel">Высокая достоверность</span>
         </div>
         <div className="summaryItem">
-          <span className="summaryValue">{evidenceSummary.medium_confidence}</span>
+          <span className="summaryValue">
+            {evidenceSummary.medium_confidence}
+          </span>
           <span className="summaryLabel">Средняя достоверность</span>
         </div>
         <div className="summaryItem">

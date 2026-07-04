@@ -88,7 +88,9 @@ def test_published_route_missing_eligibility_summary_is_returned(
     assert result[0]["missing_field"] == "eligibility_summary"
 
 
-def test_route_with_all_eligibility_unknown_is_returned(monkeypatch: Any) -> None:
+def test_route_with_all_eligibility_unknown_is_returned(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_all", lambda *_: [ROUTE_ROW])
     result = repo.list_published_routes_with_all_eligibility_unknown(CONNECTION)
     assert len(result) == 1
@@ -139,7 +141,9 @@ def test_published_route_missing_source_produces_critical_issue(
     codes = {i.code for i in report.issues}
     assert "published_route_missing_source" in codes
     sevs = {
-        i.severity for i in report.issues if i.code == "published_route_missing_source"
+        i.severity
+        for i in report.issues
+        if i.code == "published_route_missing_source"
     }
     assert sevs == {"critical"}
     assert report.valid is False
@@ -183,7 +187,9 @@ def test_route_source_country_mismatch_produces_critical_issue(
     codes = {i.code for i in report.issues}
     assert "route_source_country_mismatch" in codes
     sevs = {
-        i.severity for i in report.issues if i.code == "route_source_country_mismatch"
+        i.severity
+        for i in report.issues
+        if i.code == "route_source_country_mismatch"
     }
     assert sevs == {"critical"}
     assert report.valid is False
@@ -204,7 +210,9 @@ def test_route_evidence_country_mismatch_produces_critical_issue(
     codes = {i.code for i in report.issues}
     assert "route_evidence_country_mismatch" in codes
     sevs = {
-        i.severity for i in report.issues if i.code == "route_evidence_country_mismatch"
+        i.severity
+        for i in report.issues
+        if i.code == "route_evidence_country_mismatch"
     }
     assert sevs == {"critical"}
     assert report.valid is False
@@ -296,7 +304,9 @@ def test_legal_status_unknown_produces_warning(monkeypatch: Any) -> None:
     assert report.valid is True
 
 
-def test_clean_routes_produce_no_critical_route_issues(monkeypatch: Any) -> None:
+def test_clean_routes_produce_no_critical_route_issues(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
 
     report = service.build_data_quality_report(CONNECTION)

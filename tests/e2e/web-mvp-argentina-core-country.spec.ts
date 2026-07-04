@@ -43,7 +43,9 @@ test.describe("argentina core country slice", () => {
   test("Argentina page renders current legal signals", async ({ page }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
-    await expect(page.locator('[data-testid="country-legal-signals"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="country-legal-signals"]'),
+    ).toBeVisible();
   });
 
   test("Russia and Uruguay remain accessible after Argentina added", async ({

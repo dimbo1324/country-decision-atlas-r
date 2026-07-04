@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
 import pytest
+from datetime import UTC, datetime
 from scripts.outbox_relay import (
     FakePublisher,
     RelayMetrics,
@@ -90,7 +90,9 @@ def _patch_repo(
                     return {**event, "status": "failed", "attempts": attempts}
         return None
 
-    monkeypatch.setattr(repo, "lock_pending_notifiable_domain_events", fake_lock)
+    monkeypatch.setattr(
+        repo, "lock_pending_notifiable_domain_events", fake_lock
+    )
     monkeypatch.setattr(repo, "mark_domain_event_relayed", fake_relayed)
     monkeypatch.setattr(
         repo, "mark_domain_event_publish_failed_or_retry", fake_failed_or_retry
@@ -141,7 +143,9 @@ class TestRelaySelection:
         assert metrics.relayed_total == 1
         assert metrics.failed_total == 0
 
-    def test_no_events_returns_zero(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_no_events_returns_zero(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
         _patch_repo(monkeypatch, [], relayed, failed)
@@ -162,13 +166,17 @@ class TestRelayFiltering:
         run_relay(_make_conn(), pub, notify_after=NOTIFY_AFTER)
         assert len(pub.published) == 0
 
-    def test_dry_run_publishes_nothing(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_dry_run_publishes_nothing(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
         event = _make_event(event_key="key-dry", created_at=AFTER_DT)
         _patch_repo(monkeypatch, [event], relayed, failed)
         pub = FakePublisher()
-        count = run_relay(_make_conn(), pub, notify_after=NOTIFY_AFTER, dry_run=True)
+        count = run_relay(
+            _make_conn(), pub, notify_after=NOTIFY_AFTER, dry_run=True
+        )
         assert count == 1
         assert len(pub.published) == 0
         assert len(relayed) == 0
@@ -193,11 +201,14 @@ class TestRelayFiltering:
         assert metrics.skipped_total == 1
         assert metrics.published_total == 0
 
-    def test_dry_run_changes_no_rows(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_dry_run_changes_no_rows(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
         events = [
-            _make_event(event_key=f"key-dr-{i}", created_at=AFTER_DT) for i in range(3)
+            _make_event(event_key=f"key-dr-{i}", created_at=AFTER_DT)
+            for i in range(3)
         ]
         _patch_repo(monkeypatch, events, relayed, failed)
         pub = FakePublisher()
@@ -212,7 +223,9 @@ class TestRelayFailure:
     ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
-        event = _make_event(event_key="key-fail", created_at=AFTER_DT, attempts=0)
+        event = _make_event(
+            event_key="key-fail", created_at=AFTER_DT, attempts=0
+        )
         _patch_repo(monkeypatch, [event], relayed, failed)
 
         class _FailPublisher:
@@ -220,7 +233,10 @@ class TestRelayFailure:
                 raise RuntimeError("kafka unavailable")
 
         run_relay(
-            _make_conn(), _FailPublisher(), notify_after=NOTIFY_AFTER, max_attempts=3
+            _make_conn(),
+            _FailPublisher(),
+            notify_after=NOTIFY_AFTER,
+            max_attempts=3,
         )
         assert len(failed) == 1
 
@@ -248,10 +264,14 @@ class TestRelayFailure:
         assert metrics.failed_total == 1
         assert metrics.relayed_total == 0
 
-    def test_failure_does_not_relay(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_failure_does_not_relay(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
-        event = _make_event(event_key="key-retry", created_at=AFTER_DT, attempts=0)
+        event = _make_event(
+            event_key="key-retry", created_at=AFTER_DT, attempts=0
+        )
         _patch_repo(monkeypatch, [event], relayed, failed)
 
         class _FailPublisher:
@@ -259,7 +279,10 @@ class TestRelayFailure:
                 raise RuntimeError("kafka unavailable")
 
         run_relay(
-            _make_conn(), _FailPublisher(), notify_after=NOTIFY_AFTER, max_attempts=3
+            _make_conn(),
+            _FailPublisher(),
+            notify_after=NOTIFY_AFTER,
+            max_attempts=3,
         )
         assert len(relayed) == 0
 
@@ -268,7 +291,9 @@ class TestRelayFailure:
     ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
-        event = _make_event(event_key="key-max", created_at=AFTER_DT, attempts=2)
+        event = _make_event(
+            event_key="key-max", created_at=AFTER_DT, attempts=2
+        )
         _patch_repo(monkeypatch, [event], relayed, failed)
 
         class _FailPublisher:
@@ -276,7 +301,10 @@ class TestRelayFailure:
                 raise RuntimeError("kafka unavailable")
 
         run_relay(
-            _make_conn(), _FailPublisher(), notify_after=NOTIFY_AFTER, max_attempts=3
+            _make_conn(),
+            _FailPublisher(),
+            notify_after=NOTIFY_AFTER,
+            max_attempts=3,
         )
         assert failed[0][2] == 3
 
@@ -285,7 +313,9 @@ class TestRelayFailure:
     ) -> None:
         relayed: list[str] = []
         failed: list[tuple[str, str, int]] = []
-        event = _make_event(event_key="key-last", created_at=AFTER_DT, attempts=2)
+        event = _make_event(
+            event_key="key-last", created_at=AFTER_DT, attempts=2
+        )
         _patch_repo(monkeypatch, [event], relayed, failed)
 
         class _FailPublisher:

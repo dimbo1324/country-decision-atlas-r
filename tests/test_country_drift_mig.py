@@ -1,7 +1,7 @@
 """Schema assertions for the country drift snapshots migration."""
 
-from pathlib import Path
 import pytest
+from pathlib import Path
 from typing import Any
 
 
@@ -84,7 +84,9 @@ class FakeDriftSnapshotStore:
             if row.get(count_key, 0) < 0:
                 raise ValueError("country_drift_snapshots_count_check")
         if not isinstance(row.get("input_summary", {}), dict):
-            raise ValueError("country_drift_snapshots_input_summary_object_check")
+            raise ValueError(
+                "country_drift_snapshots_input_summary_object_check"
+            )
 
 
 def _row(**overrides: Any) -> dict[str, Any]:
@@ -201,37 +203,49 @@ def test_invalid_previous_label_rejected() -> None:
 
 def test_invalid_confidence_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_confidence_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_confidence_check"
+    ):
         store.insert(_row(confidence="certain"))
 
 
 def test_negative_window_days_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_window_days_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_window_days_check"
+    ):
         store.insert(_row(window_days=-1))
 
 
 def test_period_start_after_period_end_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_period_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_period_check"
+    ):
         store.insert(_row(period_start="2026-12-01", period_end="2026-01-01"))
 
 
 def test_net_score_below_negative_100_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_net_score_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_net_score_check"
+    ):
         store.insert(_row(net_score=-100.01))
 
 
 def test_net_score_above_100_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_net_score_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_net_score_check"
+    ):
         store.insert(_row(net_score=100.01))
 
 
 def test_negative_weight_rejected() -> None:
     store = FakeDriftSnapshotStore()
-    with pytest.raises(ValueError, match="country_drift_snapshots_weight_check"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_weight_check"
+    ):
         store.insert(_row(positive_weight=-1.0))
 
 
@@ -252,7 +266,9 @@ def test_non_object_input_summary_rejected() -> None:
 def test_unique_country_period_methodology_enforced() -> None:
     store = FakeDriftSnapshotStore()
     store.insert(_row())
-    with pytest.raises(ValueError, match="country_drift_snapshots_unique_period"):
+    with pytest.raises(
+        ValueError, match="country_drift_snapshots_unique_period"
+    ):
         store.insert(_row())
 
 

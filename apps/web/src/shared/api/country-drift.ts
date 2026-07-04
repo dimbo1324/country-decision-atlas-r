@@ -4,9 +4,12 @@ import { DEFAULT_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
-export type CountryDriftResponse = components["schemas"]["CountryDriftResponse"];
-export type CountryDriftSnapshot = components["schemas"]["CountryDriftSnapshot"];
-export type CountryDriftHistoryItem = components["schemas"]["CountryDriftHistoryItem"];
+export type CountryDriftResponse =
+  components["schemas"]["CountryDriftResponse"];
+export type CountryDriftSnapshot =
+  components["schemas"]["CountryDriftSnapshot"];
+export type CountryDriftHistoryItem =
+  components["schemas"]["CountryDriftHistoryItem"];
 
 export function getCountryDrift(
   countrySlug: string,

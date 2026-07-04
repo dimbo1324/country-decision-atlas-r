@@ -326,5 +326,10 @@ def get_vote_summary(conn: Connection[Any], answer_id: str) -> dict[str, Any]:
         (answer_id,),
     )
     if row is None:
-        return {"up_votes": 0, "down_votes": 0, "helpful_votes": 0, "outdated_votes": 0}
+        return {
+            "up_votes": 0,
+            "down_votes": 0,
+            "helpful_votes": 0,
+            "outdated_votes": 0,
+        }
     return row

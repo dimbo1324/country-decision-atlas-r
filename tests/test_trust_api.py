@@ -1,5 +1,6 @@
 """Country trust API: response shape, not-found handling, and admin batch recompute."""
 
+import pytest
 from app.api.v1 import trust as trust_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
@@ -9,7 +10,6 @@ from datetime import UTC, datetime
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -65,8 +65,12 @@ _TRUST_ROW = {
 }
 
 
-def test_get_country_trust_returns_response(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW)
+def test_get_country_trust_returns_response(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW
+    )
     result = trust_api.get_country_trust("russia", CONNECTION)
     assert result.country_slug == "russia"
     assert result.trust_label == "high"
@@ -88,14 +92,18 @@ def test_get_country_trust_returns_404_when_not_found(
 def test_get_country_trust_components_populated(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW)
+    monkeypatch.setattr(
+        trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW
+    )
     result = trust_api.get_country_trust("russia", CONNECTION)
     assert result.components is not None
     assert result.components.source_quality_score == pytest.approx(100.0)
     assert result.components.freshness_score == pytest.approx(100.0)
 
 
-def test_admin_recompute_all_returns_summary(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_recompute_all_returns_summary(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     summary = {
         "feature_enabled": True,
         "dry_run": False,
@@ -148,8 +156,12 @@ def test_admin_recompute_country_returns_result(
     assert result.trust_label == "high"
 
 
-def test_get_country_trust_disclaimer_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW)
+def test_get_country_trust_disclaimer_present(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        trust_repo, "get_country_trust_score", lambda *_: _TRUST_ROW
+    )
     result = trust_api.get_country_trust("russia", CONNECTION)
     assert (
         "data quality" in result.disclaimer.lower()
@@ -187,7 +199,9 @@ def _admin_client(
 
 def test_admin_recompute_without_token_returns_401(monkeypatch: Any) -> None:
     client = _admin_client(monkeypatch)
-    response = client.post("/api/v1/admin/trust/recompute", json={"dry_run": False})
+    response = client.post(
+        "/api/v1/admin/trust/recompute", json={"dry_run": False}
+    )
     assert response.status_code == 401
 
 

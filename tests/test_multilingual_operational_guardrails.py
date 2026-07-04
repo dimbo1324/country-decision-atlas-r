@@ -49,7 +49,9 @@ def _unit() -> dict[str, Any]:
     }
 
 
-def _variant(text: str = "[FAKE en] Налоговый резидент Уругвая") -> dict[str, Any]:
+def _variant(
+    text: str = "[FAKE en] Налоговый резидент Уругвая",
+) -> dict[str, Any]:
     return {
         "id": VARIANT_ID,
         "locale_code": "en",
@@ -63,7 +65,10 @@ def _variant(text: str = "[FAKE en] Налоговый резидент Уруг
 
 class TestEndToEndPipelineSmoke:
     def test_create_missing_then_process_batch_produces_variant(self) -> None:
-        from app.services.translation_jobs import discover_missing_jobs, process_batch
+        from app.services.translation_jobs import (
+            discover_missing_jobs,
+            process_batch,
+        )
         from app.services.translation_providers import FakeTranslationProvider
 
         conn = MagicMock()
@@ -74,7 +79,8 @@ class TestEndToEndPipelineSmoke:
 
         with (
             patch(
-                f"{_REPO}.create_missing_translation_jobs", return_value=[job1, job2]
+                f"{_REPO}.create_missing_translation_jobs",
+                return_value=[job1, job2],
             ),
             patch(
                 f"{_REPO}.lock_next_pending_job",
@@ -112,7 +118,10 @@ class TestEndToEndPipelineSmoke:
         variant = _variant()
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", side_effect=[_job(JOB_ID_1), None]),
+            patch(
+                f"{_REPO}.lock_next_pending_job",
+                side_effect=[_job(JOB_ID_1), None],
+            ),
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit),
             patch(f"{_REPO}.save_translation_variant", return_value=variant),
             patch(f"{_REPO}.mark_job_completed", return_value={}),
@@ -170,9 +179,9 @@ class TestTranslationProviderDefault:
             get_settings.cache_clear()
 
     def test_ai_provider_requires_key_only_when_explicitly_set(self) -> None:
+        import pytest
         from app.core.config import get_settings
         from app.services.translation_providers import get_translation_provider
-        import pytest
 
         get_settings.cache_clear()
         os.environ["TRANSLATION_PROVIDER"] = "ai"
@@ -227,19 +236,25 @@ class TestOriginalVariantProtection:
         assert "DO UPDATE SET" in sql
         assert "WHERE translation_variants.is_original = FALSE" in sql
 
-    def test_process_next_does_not_call_save_when_source_is_missing(self) -> None:
+    def test_process_next_does_not_call_save_when_source_is_missing(
+        self,
+    ) -> None:
         from app.services.translation_jobs import process_next_job
         from app.services.translation_providers import FakeTranslationProvider
 
         conn = MagicMock()
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=_job(JOB_ID_1)),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=_job(JOB_ID_1)
+            ),
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=None),
             patch(f"{_REPO}.save_translation_variant") as mock_save,
             patch(f"{_REPO}.mark_job_failed", return_value={}),
         ):
-            result = process_next_job(conn, "worker", "en", FakeTranslationProvider())
+            result = process_next_job(
+                conn, "worker", "en", FakeTranslationProvider()
+            )
 
         assert result is not None
         assert result["status"] == "failed"
@@ -254,7 +269,9 @@ class TestOriginalVariantProtection:
         variant = _variant()
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=_job(JOB_ID_1)),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=_job(JOB_ID_1)
+            ),
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit),
             patch(
                 f"{_REPO}.save_translation_variant", return_value=variant
@@ -274,7 +291,9 @@ class TestDiagnosticScriptImportable:
         from pathlib import Path
 
         script = (
-            Path(__file__).parent.parent / "scripts" / "translation_pipeline_status.py"
+            Path(__file__).parent.parent
+            / "scripts"
+            / "translation_pipeline_status.py"
         )
         assert script.exists(), f"diagnostic script not found at {script}"
 
@@ -283,7 +302,9 @@ class TestDiagnosticScriptImportable:
         from pathlib import Path
 
         script = (
-            Path(__file__).parent.parent / "scripts" / "translation_pipeline_status.py"
+            Path(__file__).parent.parent
+            / "scripts"
+            / "translation_pipeline_status.py"
         )
         spec = importlib.util.spec_from_file_location(
             "translation_pipeline_status", script

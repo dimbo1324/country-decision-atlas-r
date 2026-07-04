@@ -132,7 +132,9 @@ def _build_timeline_response_uncached(
         total=total,
         limit=limit,
         offset=offset,
-        available_years=repository.list_timeline_years(connection, country_slug),
+        available_years=repository.list_timeline_years(
+            connection, country_slug
+        ),
     )
 
 

@@ -1,5 +1,8 @@
 from app.core.errors import api_error
-from app.repositories import countries as countries_repository, watchlists as repository
+from app.repositories import (
+    countries as countries_repository,
+    watchlists as repository,
+)
 from app.services.feature_flags import ensure_feature_enabled
 from psycopg import Connection
 from typing import Any
@@ -20,7 +23,9 @@ def require_watchlist_enabled(connection: Connection[Any]) -> None:
 def _get_country_or_404(
     connection: Connection[Any], country_slug: str
 ) -> dict[str, Any]:
-    country = countries_repository.get_active_country_by_slug(connection, country_slug)
+    country = countries_repository.get_active_country_by_slug(
+        connection, country_slug
+    )
     if country is None:
         raise api_error(
             404,
@@ -44,7 +49,10 @@ def add_country_to_watchlist(
     require_watchlist_enabled(connection)
     country = _get_country_or_404(connection, country_slug)
     repository.add_country_to_watchlist(
-        connection, user_id=user_id, country_id=country["id"], created_source="web"
+        connection,
+        user_id=user_id,
+        country_id=country["id"],
+        created_source="web",
     )
     item = repository.get_user_watchlist_item_by_country_slug(
         connection, user_id, country_slug

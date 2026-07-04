@@ -20,7 +20,10 @@ export function DecisionCountryTrustBadge({
 
   useEffect(() => {
     let mounted = true;
-    getCountryTrust(countrySlug, locale as Parameters<typeof getCountryTrust>[1])
+    getCountryTrust(
+      countrySlug,
+      locale as Parameters<typeof getCountryTrust>[1],
+    )
       .then((r) => {
         if (mounted) setTrust(r);
       })
@@ -33,9 +36,15 @@ export function DecisionCountryTrustBadge({
   if (!trust) return null;
 
   return (
-    <div className="decisionTrustContext" data-testid="decision-trust-context">
+    <div
+      className="decisionTrustContext"
+      data-testid="decision-trust-context"
+    >
       <span className="trustContextLabel">Качество данных:</span>
-      <TrustBadge label={trust.trust_label} score={trust.trust_score ?? undefined} />
+      <TrustBadge
+        label={trust.trust_label}
+        score={trust.trust_score ?? undefined}
+      />
       <FreshnessBadge status={trust.freshness_status} />
     </div>
   );

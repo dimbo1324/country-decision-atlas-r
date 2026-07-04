@@ -92,7 +92,9 @@ def count_cii_scenario_scores(
     return int(row["cnt"]) if row else 0
 
 
-def count_published_sources(connection: Connection[Any], country_slug: str) -> int:
+def count_published_sources(
+    connection: Connection[Any], country_slug: str
+) -> int:
     row = fetch_one(
         connection,
         """
@@ -107,7 +109,9 @@ def count_published_sources(connection: Connection[Any], country_slug: str) -> i
     return int(row["cnt"]) if row else 0
 
 
-def count_published_evidence(connection: Connection[Any], country_slug: str) -> int:
+def count_published_evidence(
+    connection: Connection[Any], country_slug: str
+) -> int:
     row = fetch_one(
         connection,
         """
@@ -139,7 +143,9 @@ def count_published_legal_signals(
     return int(row["cnt"]) if row else 0
 
 
-def count_timeline_events(connection: Connection[Any], country_slug: str) -> int:
+def count_timeline_events(
+    connection: Connection[Any], country_slug: str
+) -> int:
     row = fetch_one(
         connection,
         """
@@ -170,7 +176,9 @@ def count_timeline_events_with_traceability(
     return int(row["cnt"]) if row else 0
 
 
-def check_localization_metadata(connection: Connection[Any], country_slug: str) -> bool:
+def check_localization_metadata(
+    connection: Connection[Any], country_slug: str
+) -> bool:
     row = fetch_one(
         connection,
         """

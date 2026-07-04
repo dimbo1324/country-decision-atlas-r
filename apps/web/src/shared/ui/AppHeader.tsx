@@ -15,7 +15,10 @@ export function AppHeader() {
   return (
     <header className="appHeader">
       <div className="appHeaderInner">
-        <Link href={withLocale(routes.home, locale)} className="appTitle">
+        <Link
+          href={withLocale(routes.home, locale)}
+          className="appTitle"
+        >
           Country Decision Atlas
         </Link>
         <AppNavigation />

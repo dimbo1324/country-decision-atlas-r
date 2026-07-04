@@ -45,7 +45,9 @@ function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
-export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProps) {
+export function CommunityCountryBlock({
+  countrySlug,
+}: CommunityCountryBlockProps) {
   const [questions, setQuestions] = useState<CommunityQuestion[]>([]);
   const [answers, setAnswers] = useState<AnswersByQuestion>({});
   const [loading, setLoading] = useState(true);
@@ -239,16 +241,22 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
   }
 
   return (
-    <div className="communityBlock" data-testid="community-country-block">
+    <div
+      className="communityBlock"
+      data-testid="community-country-block"
+    >
       <div className="sectionHeaderBlock">
         <div className="sectionHeaderMain">
           <h3 className="sectionHeaderTitle">Community intelligence</h3>
           <p className="sectionHeaderDesc">
-            Human experience is separated from trusted source-backed content and appears
-            publicly only after moderation.
+            Human experience is separated from trusted source-backed content and
+            appears publicly only after moderation.
           </p>
         </div>
-        <span className="badge" data-testid="community-review-badge">
+        <span
+          className="badge"
+          data-testid="community-review-badge"
+        >
           review gate
         </span>
       </div>
@@ -264,18 +272,27 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
       )}
 
       <div className="communityGrid">
-        <section className="communityPanel" data-testid="community-qna-panel">
+        <section
+          className="communityPanel"
+          data-testid="community-qna-panel"
+        >
           <h4>Q&A</h4>
           {loading ? (
             <p className="formHint">Loading community questions...</p>
           ) : questions.length === 0 ? (
-            <p className="formHint" data-testid="community-empty">
+            <p
+              className="formHint"
+              data-testid="community-empty"
+            >
               No published community questions yet.
             </p>
           ) : (
             <div className="communityQuestionList">
               {questions.map((question) => (
-                <article className="communityQuestion" key={question.id}>
+                <article
+                  className="communityQuestion"
+                  key={question.id}
+                >
                   <div className="communityQuestionHeader">
                     <h5>{question.title}</h5>
                     <span className="badge">{question.status}</span>
@@ -283,14 +300,19 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
                   <p>{question.body}</p>
                   <div className="communityAnswerList">
                     {(answers[question.id] ?? []).map((answer) => (
-                      <div className="communityAnswer" key={answer.id}>
+                      <div
+                        className="communityAnswer"
+                        key={answer.id}
+                      >
                         <p>{answer.body}</p>
                         <div className="metaRow">
                           {answer.source_backed && (
                             <span className="badge">source-backed</span>
                           )}
                           {answer.consensus?.controversial && (
-                            <span className="badge metaChipWarn">controversial</span>
+                            <span className="badge metaChipWarn">
+                              controversial
+                            </span>
                           )}
                           {answer.consensus && (
                             <span className="metaChip">
@@ -340,7 +362,10 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
             </div>
           )}
 
-          <form className="communityForm" onSubmit={submitQuestion}>
+          <form
+            className="communityForm"
+            onSubmit={submitQuestion}
+          >
             <label>
               <span className="formLabel">Question title</span>
               <input
@@ -371,14 +396,22 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
           </form>
         </section>
 
-        <section className="communityPanel" data-testid="community-report-panel">
+        <section
+          className="communityPanel"
+          data-testid="community-report-panel"
+        >
           <h4>Report data issue</h4>
-          <form className="communityForm" onSubmit={submitReport}>
+          <form
+            className="communityForm"
+            onSubmit={submitReport}
+          >
             <label>
               <span className="formLabel">Issue type</span>
               <select
                 value={reportType}
-                onChange={(event) => setReportType(event.target.value as ReportType)}
+                onChange={(event) =>
+                  setReportType(event.target.value as ReportType)
+                }
                 data-testid="community-report-type"
               >
                 <option value="outdated">Outdated</option>
@@ -409,12 +442,19 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
           </form>
         </section>
 
-        <section className="communityPanel" data-testid="community-rating-panel">
+        <section
+          className="communityPanel"
+          data-testid="community-rating-panel"
+        >
           <h4>Reality gap preview</h4>
           <p className="formHint">
-            Limited community input only; no trusted ERG score is calculated yet.
+            Limited community input only; no trusted ERG score is calculated
+            yet.
           </p>
-          <form className="communityForm" onSubmit={submitRating}>
+          <form
+            className="communityForm"
+            onSubmit={submitRating}
+          >
             <label>
               <span className="formLabel">Experience score</span>
               <input
@@ -422,7 +462,9 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
                 min="0"
                 max="100"
                 value={realityGapScore}
-                onChange={(event) => setRealityGapScore(Number(event.target.value))}
+                onChange={(event) =>
+                  setRealityGapScore(Number(event.target.value))
+                }
                 data-testid="community-rating-score"
               />
               <span className="summaryValue">{realityGapScore}</span>
@@ -436,7 +478,10 @@ export function CommunityCountryBlock({ countrySlug }: CommunityCountryBlockProp
                 data-testid="community-rating-comment"
               />
             </label>
-            <button type="submit" data-testid="community-rating-submit">
+            <button
+              type="submit"
+              data-testid="community-rating-submit"
+            >
               Submit limited input
             </button>
           </form>

@@ -9,7 +9,10 @@ type AIAnswerCardProps = {
 
 export function AIAnswerCard({ response }: AIAnswerCardProps) {
   return (
-    <article className="resultCard" data-testid="ai-answer-card">
+    <article
+      className="resultCard"
+      data-testid="ai-answer-card"
+    >
       {response.refused ? (
         <AIRefusalState message={response.answer} />
       ) : (
@@ -17,7 +20,10 @@ export function AIAnswerCard({ response }: AIAnswerCardProps) {
       )}
       <AICitationsList citations={response.citations} />
       <AIDisclaimer text={response.disclaimer} />
-      <p className="formHint" data-testid="ai-provider-meta">
+      <p
+        className="formHint"
+        data-testid="ai-provider-meta"
+      >
         Provider: {response.provider} · mode: {response.mode} · context:{" "}
         {response.context_items_count}
       </p>

@@ -45,7 +45,9 @@ def pair_response(
     origin_slug: str = "russia", destination_slug: str = "uruguay"
 ) -> CountryPairCompatibilityResponse:
     return CountryPairCompatibilityResponse(
-        origin_country=CountryPairCountry(slug=origin_slug, name="Origin", iso2="RU"),
+        origin_country=CountryPairCountry(
+            slug=origin_slug, name="Origin", iso2="RU"
+        ),
         destination_country=CountryPairCountry(
             slug=destination_slug, name="Destination", iso2="UY"
         ),
@@ -75,9 +77,13 @@ def pair_response(
     )
 
 
-def list_response(origin_slug: str = "russia") -> CountryPairCompatibilityListResponse:
+def list_response(
+    origin_slug: str = "russia",
+) -> CountryPairCompatibilityListResponse:
     return CountryPairCompatibilityListResponse(
-        origin_country=CountryPairCountry(slug=origin_slug, name="Origin", iso2="RU"),
+        origin_country=CountryPairCountry(
+            slug=origin_slug, name="Origin", iso2="RU"
+        ),
         items=[
             CountryPairCompatibilityListItem(
                 destination_country=CountryPairCountry(
@@ -145,7 +151,9 @@ def test_unknown_origin_returns_country_not_found(monkeypatch: Any) -> None:
     assert body["error"]["code"] == "country_not_found"
 
 
-def test_unknown_destination_returns_country_not_found(monkeypatch: Any) -> None:
+def test_unknown_destination_returns_country_not_found(
+    monkeypatch: Any,
+) -> None:
     def fake(*_: Any) -> CountryPairCompatibilityResponse:
         raise api_error(404, "country_not_found", "Country not found.")
 
@@ -159,7 +167,9 @@ def test_unknown_destination_returns_country_not_found(monkeypatch: Any) -> None
 
 def test_missing_pair_returns_country_pair_not_found(monkeypatch: Any) -> None:
     def fake(*_: Any) -> CountryPairCompatibilityResponse:
-        raise api_error(404, "country_pair_not_found", "Country pair not found.")
+        raise api_error(
+            404, "country_pair_not_found", "Country pair not found."
+        )
 
     monkeypatch.setattr(country_pairs_service, "get_country_pair_context", fake)
 
@@ -213,7 +223,9 @@ def test_locale_ru_works(monkeypatch: Any) -> None:
         _connection: Any, _origin: str, _destination: str, locale: str
     ) -> CountryPairCompatibilityResponse:
         response = pair_response()
-        response.locale = locale_resolution(locale, "en", TranslationStatus.fallback)
+        response.locale = locale_resolution(
+            locale, "en", TranslationStatus.fallback
+        )
         return response
 
     monkeypatch.setattr(country_pairs_service, "get_country_pair_context", fake)
@@ -234,9 +246,13 @@ def test_invalid_locale_returns_unsupported_locale() -> None:
 def test_openapi_contains_country_pair_paths_and_schemas() -> None:
     contract = load_contract()
 
-    assert "/api/v1/country-pairs/{origin_slug}/{destination_slug}" in contract["paths"]
     assert (
-        "/api/v1/countries/{origin_slug}/destination-compatibility" in contract["paths"]
+        "/api/v1/country-pairs/{origin_slug}/{destination_slug}"
+        in contract["paths"]
+    )
+    assert (
+        "/api/v1/countries/{origin_slug}/destination-compatibility"
+        in contract["paths"]
     )
     for schema_name in [
         "CountryPairCountry",

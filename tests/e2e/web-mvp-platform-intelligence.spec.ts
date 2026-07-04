@@ -3,7 +3,9 @@ import { API_BASE_URL } from "./helpers/env";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
-test("platform-metrics API returns 200 with feature enabled", async ({ request }) => {
+test("platform-metrics API returns 200 with feature enabled", async ({
+  request,
+}) => {
   const response = await request.get(
     `${API_BASE_URL}/api/v1/countries/russia/platform-metrics`,
   );
@@ -12,14 +14,18 @@ test("platform-metrics API returns 200 with feature enabled", async ({ request }
   expect(Array.isArray(body.items)).toBe(true);
 });
 
-test("platform-metrics API returns 404 for unknown country", async ({ request }) => {
+test("platform-metrics API returns 404 for unknown country", async ({
+  request,
+}) => {
   const response = await request.get(
     `${API_BASE_URL}/api/v1/countries/unknown-country-xyz/platform-metrics`,
   );
   expect(response.status()).toBe(404);
 });
 
-test("platform-metrics API returns 422 for invalid scenario", async ({ request }) => {
+test("platform-metrics API returns 422 for invalid scenario", async ({
+  request,
+}) => {
   const response = await request.get(
     `${API_BASE_URL}/api/v1/countries/russia/platform-metrics?scenario=bad_scenario`,
   );
@@ -70,7 +76,9 @@ test("platform intelligence shows API error when metrics endpoint fails", async 
   await expect(page.getByTestId("platform-intelligence-error")).toBeVisible({
     timeout: 15_000,
   });
-  await expect(page.getByTestId("platform-intelligence-empty")).not.toBeVisible();
+  await expect(
+    page.getByTestId("platform-intelligence-empty"),
+  ).not.toBeVisible();
   await expectNoAppCrash(page);
 });
 
@@ -94,7 +102,9 @@ test("decision page still shows ranking after platform intelligence added", asyn
   await expectNoAppCrash(page);
 });
 
-test("decision page risk context does not appear when no results", async ({ page }) => {
+test("decision page risk context does not appear when no results", async ({
+  page,
+}) => {
   await page.goto(e2eRoutes.decision());
   await expectPageReady(page);
   await expect(page.getByTestId("decision-risk-context")).not.toBeVisible();

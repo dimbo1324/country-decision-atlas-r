@@ -28,7 +28,9 @@ def test_no_inputs_is_insufficient_data() -> None:
 
 
 def test_too_little_data_is_insufficient_data() -> None:
-    result = compute_contradiction_score([row(), row(signal_id="2", event_id="2")])
+    result = compute_contradiction_score(
+        [row(), row(signal_id="2", event_id="2")]
+    )
     assert result.value is None
 
 
@@ -50,7 +52,10 @@ def test_positive_negative_same_topic_increases_score() -> None:
             row(signal_id="1", event_id="1", impact_direction="positive"),
             row(signal_id="2", event_id="2", impact_direction="negative"),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -64,7 +69,10 @@ def test_positive_mixed_same_topic_increases_score_moderately() -> None:
             row(signal_id="1", event_id="1", impact_direction="positive"),
             row(signal_id="2", event_id="2", impact_direction="mixed"),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -88,7 +96,10 @@ def test_official_vs_non_official_disagreement_increases_score() -> None:
                 impact_direction="negative",
             ),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -99,10 +110,18 @@ def test_official_vs_non_official_disagreement_increases_score() -> None:
 def test_high_impact_low_confidence_increases_score() -> None:
     result = compute_contradiction_score(
         [
-            row(signal_id="1", event_id="1", impact_level="critical", confidence="low"),
+            row(
+                signal_id="1",
+                event_id="1",
+                impact_level="critical",
+                confidence="low",
+            ),
             row(signal_id="2", event_id="2", affected_groups=["families"]),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -171,7 +190,10 @@ def test_label_boundaries_correct() -> None:
             row(signal_id="1", event_id="1", impact_direction="positive"),
             row(signal_id="2", event_id="2", impact_direction="mixed"),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -200,7 +222,10 @@ def test_input_summary_includes_topic_counts() -> None:
             row(signal_id="1", event_id="1", impact_direction="positive"),
             row(signal_id="2", event_id="2", impact_direction="negative"),
             row(
-                signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]
+                signal_id="3",
+                event_id="3",
+                signal_type="tax",
+                affected_groups=["tax"],
             ),
         ]
     )
@@ -212,16 +237,28 @@ def test_deterministic_output() -> None:
     rows = [
         row(signal_id="1", event_id="1", impact_direction="positive"),
         row(signal_id="2", event_id="2", impact_direction="negative"),
-        row(signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]),
+        row(
+            signal_id="3",
+            event_id="3",
+            signal_type="tax",
+            affected_groups=["tax"],
+        ),
     ]
-    assert compute_contradiction_score(rows) == compute_contradiction_score(rows)
+    assert compute_contradiction_score(rows) == compute_contradiction_score(
+        rows
+    )
 
 
 def test_input_rows_are_not_mutated() -> None:
     rows = [
         row(signal_id="1", event_id="1", impact_direction="positive"),
         row(signal_id="2", event_id="2", impact_direction="negative"),
-        row(signal_id="3", event_id="3", signal_type="tax", affected_groups=["tax"]),
+        row(
+            signal_id="3",
+            event_id="3",
+            signal_type="tax",
+            affected_groups=["tax"],
+        ),
     ]
     original = deepcopy(rows)
     compute_contradiction_score(rows)

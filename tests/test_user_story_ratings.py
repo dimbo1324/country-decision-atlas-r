@@ -1,5 +1,7 @@
 """Public user-story rating submission, including score-range and payload validation."""
 
+import inspect
+import pytest
 from app.api.v1.community import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
@@ -9,8 +11,6 @@ from app.repositories import (
 )
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import inspect
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 

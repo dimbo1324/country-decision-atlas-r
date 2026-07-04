@@ -17,17 +17,23 @@ async function runDecision(
 }
 
 test.describe("scenario-specific CII visual comparison", () => {
-  test("visual comparison appears after relocation_residence run", async ({ page }) => {
+  test("visual comparison appears after relocation_residence run", async ({
+    page,
+  }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, RELOCATION_SLUG);
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 
   test("scenario label updates to relocation scenario", async ({ page }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, RELOCATION_SLUG);
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
     const scenarioLabel = page.locator(".ciiCompareScenarioLabel");
     const isVisible = await scenarioLabel.isVisible().catch(() => false);
     if (isVisible) {
@@ -42,7 +48,9 @@ test.describe("scenario-specific CII visual comparison", () => {
   }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, BUSINESS_SLUG);
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 
@@ -52,10 +60,14 @@ test.describe("scenario-specific CII visual comparison", () => {
     await page.goto(DECISION_URL);
 
     await runDecision(page, RELOCATION_SLUG);
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
 
     await runDecision(page, BUSINESS_SLUG);
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
 
     await expectNoAppCrash(page);
   });
@@ -63,14 +75,18 @@ test.describe("scenario-specific CII visual comparison", () => {
   test("metric bars appear for both scenarios", async ({ page }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, RELOCATION_SLUG);
-    await expect(page.locator(".ciiCompareBars")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBars")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 
   test("winner list appears for both scenarios", async ({ page }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, BUSINESS_SLUG);
-    await expect(page.locator(".ciiWinnerList")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiWinnerList")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 
@@ -82,14 +98,18 @@ test.describe("scenario-specific CII visual comparison", () => {
     await expect(page.locator('[data-testid="decision-results"]')).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 
   test("spider chart renders for business scenario", async ({ page }) => {
     await page.goto(DECISION_URL);
     await runDecision(page, BUSINESS_SLUG);
-    await expect(page.locator(".ciiSpiderChart")).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator(".ciiSpiderChart")).toBeVisible({
+      timeout: 10_000,
+    });
     await expectNoAppCrash(page);
   });
 });

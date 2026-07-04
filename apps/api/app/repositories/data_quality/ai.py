@@ -11,7 +11,9 @@ AI_FEATURE_KEYS = (
 )
 
 
-def list_missing_ai_feature_flags(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_missing_ai_feature_flags(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

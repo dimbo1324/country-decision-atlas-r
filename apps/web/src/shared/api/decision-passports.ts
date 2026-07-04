@@ -18,8 +18,12 @@ export function createDecisionPassport(
   );
 }
 
-export function getDecisionPassport(token: string): Promise<DecisionPassportResponse> {
-  return apiGet<DecisionPassportResponse>(`/api/v1/decision/passports/${token}`);
+export function getDecisionPassport(
+  token: string,
+): Promise<DecisionPassportResponse> {
+  return apiGet<DecisionPassportResponse>(
+    `/api/v1/decision/passports/${token}`,
+  );
 }
 
 export const decisionPassportsApi = {

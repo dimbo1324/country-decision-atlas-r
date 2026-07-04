@@ -49,7 +49,10 @@ function HomeOverviewViewInner() {
     latestLegalEvents.length === 0;
 
   return (
-    <div className="homeOverview" data-testid="home-overview">
+    <div
+      className="homeOverview"
+      data-testid="home-overview"
+    >
       <section className="homeHero">
         <p className="eyebrow">Аналитический обзор MVP</p>
         <h1>Country Decision Atlas</h1>
@@ -57,10 +60,16 @@ function HomeOverviewViewInner() {
           Сравните страны по сценариям, индексам CII и правовым сигналам.
         </p>
         <div className="homeActions">
-          <Link href={`/decision?locale=${locale}`} className="homeActionPrimary">
+          <Link
+            href={`/decision?locale=${locale}`}
+            className="homeActionPrimary"
+          >
             Запустить подбор
           </Link>
-          <Link href={`/compare?locale=${locale}`} className="homeActionSecondary">
+          <Link
+            href={`/compare?locale=${locale}`}
+            className="homeActionSecondary"
+          >
             Открыть матрицу
           </Link>
         </div>
@@ -73,7 +82,10 @@ function HomeOverviewViewInner() {
       {isEmpty && <HomeOverviewEmptyState />}
       {overview && !isEmpty && (
         <>
-          <CountryOverviewCards countries={countriesSummary} locale={locale} />
+          <CountryOverviewCards
+            countries={countriesSummary}
+            locale={locale}
+          />
           <ScenarioWinnersPanel winners={scenarioWinners} />
           <HomeMatrixPreview matrix={overview.matrix_preview} />
           <div className="homeOverviewGrid">
@@ -114,7 +126,9 @@ function HomeOverviewViewInner() {
 
 export function HomeOverviewView() {
   return (
-    <Suspense fallback={<LoadingState message="Загрузка аналитического обзора…" />}>
+    <Suspense
+      fallback={<LoadingState message="Загрузка аналитического обзора…" />}
+    >
       <HomeOverviewViewInner />
     </Suspense>
   );

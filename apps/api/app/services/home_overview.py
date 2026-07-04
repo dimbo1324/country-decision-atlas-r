@@ -61,7 +61,9 @@ def _build_home_overview_uncached(
     if not events:
         warnings.append("latest legal events are unavailable")
     return HomeOverviewResponse(
-        locale=build_locale(event_rows, locale) if event_rows else matrix.locale,
+        locale=build_locale(event_rows, locale)
+        if event_rows
+        else matrix.locale,
         countries_summary=countries,
         scenario_winners=winners,
         matrix_preview=_matrix_preview(matrix),
@@ -71,7 +73,9 @@ def _build_home_overview_uncached(
     )
 
 
-def _countries_summary(matrix: CompareMatrixResponse) -> list[CountryOverviewCard]:
+def _countries_summary(
+    matrix: CompareMatrixResponse,
+) -> list[CountryOverviewCard]:
     scenarios = {scenario.slug: scenario for scenario in matrix.scenarios}
     result: list[CountryOverviewCard] = []
     for country in matrix.countries:
@@ -87,7 +91,9 @@ def _countries_summary(matrix: CompareMatrixResponse) -> list[CountryOverviewCar
             if scored
             else None
         )
-        confidences = [cell.cii_confidence for cell in scored if cell.cii_confidence]
+        confidences = [
+            cell.cii_confidence for cell in scored if cell.cii_confidence
+        ]
         confidence = (
             min(confidences, key=lambda value: _CONFIDENCE_ORDER.get(value, -1))
             if confidences
@@ -105,7 +111,9 @@ def _countries_summary(matrix: CompareMatrixResponse) -> list[CountryOverviewCar
                     else None
                 ),
                 best_score=_score(best) if best else None,
-                weakest_scenario_slug=weakest.scenario_slug if weakest else None,
+                weakest_scenario_slug=weakest.scenario_slug
+                if weakest
+                else None,
                 weakest_scenario_name=(
                     scenarios[weakest.scenario_slug].name
                     if weakest and weakest.scenario_slug in scenarios
@@ -127,7 +135,8 @@ def _scenario_winners(matrix: CompareMatrixResponse) -> list[ScenarioWinner]:
             [
                 cell
                 for cell in matrix.cells
-                if cell.scenario_slug == scenario.slug and cell.cii_score is not None
+                if cell.scenario_slug == scenario.slug
+                and cell.cii_score is not None
             ],
             key=_score,
             reverse=True,
@@ -145,7 +154,9 @@ def _scenario_winners(matrix: CompareMatrixResponse) -> list[ScenarioWinner]:
                     else None
                 ),
                 winner_score=_score(winner) if winner else None,
-                runner_up_country_slug=runner_up.country_slug if runner_up else None,
+                runner_up_country_slug=runner_up.country_slug
+                if runner_up
+                else None,
                 runner_up_country_name=(
                     countries[runner_up.country_slug].name
                     if runner_up and runner_up.country_slug in countries
@@ -187,9 +198,15 @@ def _matrix_preview(matrix: CompareMatrixResponse) -> HomeMatrixPreview:
 
 def _latest_event(row: dict[str, Any]) -> LatestLegalEvent:
     source = None
-    if row.get("source_ref_id") and row.get("source_title") and row.get("source_url"):
+    if (
+        row.get("source_ref_id")
+        and row.get("source_title")
+        and row.get("source_url")
+    ):
         source = HomeLegalSourceRef(
-            id=row["source_ref_id"], title=row["source_title"], url=row["source_url"]
+            id=row["source_ref_id"],
+            title=row["source_title"],
+            url=row["source_url"],
         )
     return LatestLegalEvent(
         country_slug=row["country_slug"],
@@ -210,12 +227,15 @@ def _key_insights(
     locale: str,
 ) -> list[HomeKeyInsight]:
     insights: list[HomeKeyInsight] = []
-    scored_winners = [winner for winner in winners if winner.winner_country_slug]
+    scored_winners = [
+        winner for winner in winners if winner.winner_country_slug
+    ]
     winner_slugs = {winner.winner_country_slug for winner in scored_winners}
     if scored_winners and len(winner_slugs) == 1:
         leader_slug = next(iter(winner_slugs))
         leader = next(
-            (country for country in countries if country.slug == leader_slug), None
+            (country for country in countries if country.slug == leader_slug),
+            None,
         )
         if leader:
             insights.append(

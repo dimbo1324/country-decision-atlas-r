@@ -105,7 +105,9 @@ def list_routes_by_country(
         country_slug, route_type, allows_work, allows_family, leads_to_pr
     )
     title_col = (
-        "COALESCE(r.title_ru, r.title)" if requested_locale == "ru" else "r.title"
+        "COALESCE(r.title_ru, r.title)"
+        if requested_locale == "ru"
+        else "r.title"
     )
     return fetch_all(
         connection,

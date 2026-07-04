@@ -46,7 +46,10 @@ type RouteDetailViewProps = {
 
 export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
   return (
-    <article className="routeDetail" data-testid="route-detail">
+    <article
+      className="routeDetail"
+      data-testid="route-detail"
+    >
       <header className="pageHeader">
         <p className="eyebrow">Маршрут</p>
         <h1>{route.title}</h1>
@@ -124,7 +127,10 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
         </section>
       )}
 
-      <section className="cardSection" data-testid="route-checklist-section">
+      <section
+        className="cardSection"
+        data-testid="route-checklist-section"
+      >
         <h2 className="cardSectionTitle">Практический чек-лист</h2>
         <RouteChecklistList
           checklist={route.checklist}
@@ -136,22 +142,34 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
         )}
       </section>
 
-      <section className="cardSection" data-testid="route-documents-section">
+      <section
+        className="cardSection"
+        data-testid="route-documents-section"
+      >
         <h2 className="cardSectionTitle">Документы</h2>
         <RouteDocumentsList documents={route.documents} />
       </section>
 
-      <section className="cardSection" data-testid="route-migration-board-section">
+      <section
+        className="cardSection"
+        data-testid="route-migration-board-section"
+      >
         <h2 className="cardSectionTitle">Люди, рассматривающие этот маршрут</h2>
         <RouteMigrationBoardBlock routeId={route.id} />
       </section>
 
-      <section className="cardSection" data-testid="route-sources-section">
+      <section
+        className="cardSection"
+        data-testid="route-sources-section"
+      >
         <h2 className="cardSectionTitle">Источники</h2>
         <RouteSourcesList sources={route.sources} />
       </section>
 
-      <section className="cardSection" data-testid="route-evidence-section">
+      <section
+        className="cardSection"
+        data-testid="route-evidence-section"
+      >
         <h2 className="cardSectionTitle">Доказательства</h2>
         <RouteEvidenceList evidence={route.evidence} />
       </section>

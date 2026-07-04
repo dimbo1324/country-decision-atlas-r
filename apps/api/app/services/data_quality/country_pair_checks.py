@@ -29,7 +29,9 @@ def _append_country_pair_checks(
         )
     )
 
-    for row in repository.list_published_pairs_missing_last_verified_at(connection):
+    for row in repository.list_published_pairs_missing_last_verified_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "country_pair_missing_last_verified_at",

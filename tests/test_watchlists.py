@@ -1,14 +1,20 @@
 """Personal watchlist: feature gating, listing, and adding countries."""
 
+import pytest
 from app.api.v1 import watchlists as watchlists_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
-from app.repositories import countries as countries_repository, watchlists as repository
-from app.services import feature_flags as feature_flags_service, watchlists as service
+from app.repositories import (
+    countries as countries_repository,
+    watchlists as repository,
+)
+from app.services import (
+    feature_flags as feature_flags_service,
+    watchlists as service,
+)
 from datetime import UTC, datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -48,13 +54,17 @@ def _watchlist_row(**overrides: Any) -> dict[str, Any]:
 
 def _enable_feature(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: True,
     )
 
 
 def _disable_feature(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: False,
     )
 
 
@@ -69,7 +79,9 @@ def test_list_user_watchlist_disabled_feature_returns_403(
     assert detail["error"]["code"] == "feature_disabled"
 
 
-def test_list_user_watchlist_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_user_watchlist_returns_items(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_feature(monkeypatch)
     monkeypatch.setattr(
         repository, "list_user_watchlist", lambda *_a: [_watchlist_row()]
@@ -95,7 +107,9 @@ def test_add_country_to_watchlist_country_not_found_returns_404(
     assert detail["error"]["code"] == "country_not_found"
 
 
-def test_add_country_to_watchlist_success(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_add_country_to_watchlist_success(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_feature(monkeypatch)
     monkeypatch.setattr(
         countries_repository, "get_active_country_by_slug", lambda *_a: _COUNTRY
@@ -134,7 +148,9 @@ def test_remove_country_from_watchlist_calls_archive(
         captured.update(kwargs)
         return {"id": "watchlist-1"}
 
-    monkeypatch.setattr(repository, "archive_country_from_watchlist", fake_archive)
+    monkeypatch.setattr(
+        repository, "archive_country_from_watchlist", fake_archive
+    )
     service.remove_country_from_watchlist(
         CONNECTION, user_id="user-1", country_slug="uruguay"
     )
@@ -187,7 +203,9 @@ def test_update_watchlist_preferences_item_not_found_returns_404(
     assert detail["error"]["code"] == "watchlist_item_not_found"
 
 
-def test_update_watchlist_preferences_success(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_watchlist_preferences_success(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_feature(monkeypatch)
     monkeypatch.setattr(
         countries_repository, "get_active_country_by_slug", lambda *_a: _COUNTRY
@@ -246,7 +264,9 @@ def test_get_my_watchlist_without_auth_returns_401() -> None:
     assert response.status_code == 401
 
 
-def test_get_my_watchlist_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_my_watchlist_returns_items(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_feature(monkeypatch)
     monkeypatch.setattr(
         repository, "list_user_watchlist", lambda *_a: [_watchlist_row()]
@@ -269,7 +289,9 @@ def test_add_country_to_watchlist_endpoint_returns_201(
         countries_repository, "get_active_country_by_slug", lambda *_a: _COUNTRY
     )
     monkeypatch.setattr(
-        repository, "add_country_to_watchlist", lambda *_a, **_kw: {"id": "watchlist-1"}
+        repository,
+        "add_country_to_watchlist",
+        lambda *_a, **_kw: {"id": "watchlist-1"},
     )
     monkeypatch.setattr(
         repository,
@@ -305,7 +327,9 @@ def test_remove_country_from_watchlist_endpoint_returns_204(
     assert response.status_code == 204
 
 
-def test_get_country_watchlist_status_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_country_watchlist_status_endpoint(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_feature(monkeypatch)
     monkeypatch.setattr(
         countries_repository, "get_active_country_by_slug", lambda *_a: _COUNTRY

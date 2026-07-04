@@ -30,12 +30,21 @@ export function SearchResultCard({
   const href = isExternalPath ? item.path : withLocale(item.path, locale);
 
   return (
-    <div className="searchResultCard" data-testid="search-result-card">
+    <div
+      className="searchResultCard"
+      data-testid="search-result-card"
+    >
       <div className="searchResultCardHeader">
         <Badge variant="info">{ENTITY_TYPE_LABELS[item.entity_type]}</Badge>
-        {item.country_slug && <Badge variant="default">{item.country_slug}</Badge>}
+        {item.country_slug && (
+          <Badge variant="default">{item.country_slug}</Badge>
+        )}
       </div>
-      <Link href={href} className="searchResultTitle" data-testid="search-result-link">
+      <Link
+        href={href}
+        className="searchResultTitle"
+        data-testid="search-result-link"
+      >
         {item.title}
       </Link>
       <p className="searchResultSnippet">{stripHighlightTags(item.snippet)}</p>

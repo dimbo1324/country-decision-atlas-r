@@ -28,7 +28,8 @@ export function DecisionWeightSliders({
     >
       <summary>Настроить приоритеты</summary>
       <p className="formHint">
-        Приоритеты влияют только на текущий расчёт и не меняют базовую методологию.
+        Приоритеты влияют только на текущий расчёт и не меняют базовую
+        методологию.
       </p>
       {DECISION_CRITERIA_ORDER.map((criterion) => (
         <DecisionWeightSlider

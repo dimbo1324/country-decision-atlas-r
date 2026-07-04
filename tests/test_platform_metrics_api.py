@@ -1,8 +1,13 @@
 """Platform metrics API: listing, pre-recompute empty state, feature-disabled and unknown-country errors."""
 
+import pytest
+import yaml
 from app.api.v1 import platform_metrics as pm_api
 from app.core.auth import CurrentUser
-from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo
+from app.repositories import (
+    feature_flags as ff_repo,
+    platform_metrics as pm_repo,
+)
 from app.schemas.platform_metrics import (
     PlatformMetricsRecomputeResult,
     PlatformMetricsRecomputeSummary,
@@ -12,10 +17,8 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
-import yaml
 
 
 CONNECTION = cast(Connection[Any], object())
@@ -122,7 +125,9 @@ def install_feature_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def test_list_metrics_for_russia_returns_200(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_metrics_for_russia_returns_200(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
     monkeypatch.setattr(
@@ -131,7 +136,11 @@ def test_list_metrics_for_russia_returns_200(monkeypatch: pytest.MonkeyPatch) ->
         lambda *_a: [METRIC_ROW, CONTRADICTION_ROW],
     )
     result = pm_api.list_country_platform_metrics(
-        "russia", CONNECTION, scenario=None, locale=None, include_input_summary=True
+        "russia",
+        CONNECTION,
+        scenario=None,
+        locale=None,
+        include_input_summary=True,
     )
     assert result.country_slug == "russia"
     assert len(result.items) == 2
@@ -142,25 +151,39 @@ def test_list_metrics_before_recompute_returns_empty(
 ) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "list_country_platform_metrics", lambda *_a: [])
+    monkeypatch.setattr(
+        pm_repo, "list_country_platform_metrics", lambda *_a: []
+    )
     result = pm_api.list_country_platform_metrics(
-        "russia", CONNECTION, scenario=None, locale=None, include_input_summary=True
+        "russia",
+        CONNECTION,
+        scenario=None,
+        locale=None,
+        include_input_summary=True,
     )
     assert result.items == []
 
 
-def test_list_metrics_feature_disabled_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_metrics_feature_disabled_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_disabled(monkeypatch)
     from fastapi import HTTPException
 
     with pytest.raises(HTTPException) as exc_info:
         pm_api.list_country_platform_metrics(
-            "russia", CONNECTION, scenario=None, locale=None, include_input_summary=True
+            "russia",
+            CONNECTION,
+            scenario=None,
+            locale=None,
+            include_input_summary=True,
         )
     assert exc_info.value.status_code == 403
 
 
-def test_list_metrics_unknown_country_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_metrics_unknown_country_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: None)
     from fastapi import HTTPException
@@ -176,7 +199,9 @@ def test_list_metrics_unknown_country_raises(monkeypatch: pytest.MonkeyPatch) ->
     assert exc_info.value.status_code == 404
 
 
-def test_list_metrics_invalid_scenario_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_metrics_invalid_scenario_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
     from fastapi import HTTPException
@@ -195,7 +220,9 @@ def test_list_metrics_invalid_scenario_raises(monkeypatch: pytest.MonkeyPatch) -
 def test_get_lvi_detail_works(monkeypatch: pytest.MonkeyPatch) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW)
+    monkeypatch.setattr(
+        pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW
+    )
     result = pm_api.get_country_platform_metric(
         "russia",
         "legal_velocity_index",
@@ -208,7 +235,9 @@ def test_get_lvi_detail_works(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.item.scenario_slug is None
 
 
-def test_get_contradiction_score_detail_works(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_contradiction_score_detail_works(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
     monkeypatch.setattr(
@@ -225,10 +254,14 @@ def test_get_contradiction_score_detail_works(monkeypatch: pytest.MonkeyPatch) -
     assert result.item.metric_key == "contradiction_score"
 
 
-def test_get_ssrs_scenario_detail_works(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_ssrs_scenario_detail_works(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "get_country_platform_metric", lambda *_a: SSRS_ROW)
+    monkeypatch.setattr(
+        pm_repo, "get_country_platform_metric", lambda *_a: SSRS_ROW
+    )
     result = pm_api.get_country_platform_metric(
         "russia",
         "scenario_specific_risk_score",
@@ -240,10 +273,14 @@ def test_get_ssrs_scenario_detail_works(monkeypatch: pytest.MonkeyPatch) -> None
     assert result.item.scenario_slug == "relocation_residence"
 
 
-def test_global_scenario_slug_is_null_in_api(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_global_scenario_slug_is_null_in_api(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW)
+    monkeypatch.setattr(
+        pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW
+    )
     result = pm_api.get_country_platform_metric(
         "russia",
         "legal_velocity_index",
@@ -260,7 +297,9 @@ def test_include_input_summary_false_hides_summary(
 ) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW)
+    monkeypatch.setattr(
+        pm_repo, "get_country_platform_metric", lambda *_a: METRIC_ROW
+    )
     result = pm_api.get_country_platform_metric(
         "russia",
         "legal_velocity_index",
@@ -275,7 +314,9 @@ def test_include_input_summary_false_hides_summary(
 def test_get_metric_not_found_raises(monkeypatch: pytest.MonkeyPatch) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
-    monkeypatch.setattr(pm_repo, "get_country_platform_metric", lambda *_a: None)
+    monkeypatch.setattr(
+        pm_repo, "get_country_platform_metric", lambda *_a: None
+    )
     from fastapi import HTTPException
 
     with pytest.raises(HTTPException) as exc_info:
@@ -307,7 +348,9 @@ def test_get_metric_invalid_key_raises(monkeypatch: pytest.MonkeyPatch) -> None:
     assert exc_info.value.status_code == 422
 
 
-def test_admin_recompute_all_writes_metrics(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_recompute_all_writes_metrics(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     expected_summary = PlatformMetricsRecomputeSummary(
         feature_enabled=True,
@@ -360,7 +403,9 @@ def test_admin_recompute_dry_run_writes_nothing(
     assert result.metrics_written == 0
 
 
-def test_admin_recompute_one_country_works(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_recompute_one_country_works(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY_ROW)
     expected = PlatformMetricsRecomputeResult(
@@ -402,7 +447,8 @@ def test_admin_recompute_feature_disabled_raises(
 def load_contract() -> dict[str, Any]:
     contract_path = Path("contracts/openapi.yaml")
     return cast(
-        dict[str, Any], yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+        dict[str, Any],
+        yaml.safe_load(contract_path.read_text(encoding="utf-8")),
     )
 
 
@@ -410,7 +456,10 @@ def test_openapi_contract_contains_platform_metrics_endpoints() -> None:
     contract = load_contract()
     paths = set(contract["paths"])
     assert "/api/v1/countries/{country_slug}/platform-metrics" in paths
-    assert "/api/v1/countries/{country_slug}/platform-metrics/{metric_key}" in paths
+    assert (
+        "/api/v1/countries/{country_slug}/platform-metrics/{metric_key}"
+        in paths
+    )
     assert "/api/v1/admin/platform-metrics/recompute" in paths
     assert "/api/v1/admin/platform-metrics/recompute/{country_slug}" in paths
 

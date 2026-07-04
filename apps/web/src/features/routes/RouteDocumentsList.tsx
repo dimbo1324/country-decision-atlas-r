@@ -7,7 +7,9 @@ type RouteDocumentsListProps = {
 
 export function RouteDocumentsList({ documents }: RouteDocumentsListProps) {
   if (documents.length === 0) {
-    return <RouteEmptyState message="Документы для этого маршрута пока не указаны." />;
+    return (
+      <RouteEmptyState message="Документы для этого маршрута пока не указаны." />
+    );
   }
 
   return (

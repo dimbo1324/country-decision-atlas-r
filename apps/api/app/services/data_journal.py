@@ -3,7 +3,10 @@ from app.repositories import (
     countries as countries_repository,
     data_journal as repository,
 )
-from app.schemas.data_journal import CountryDataJournalResponse, DataJournalEntry
+from app.schemas.data_journal import (
+    CountryDataJournalResponse,
+    DataJournalEntry,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -23,7 +26,10 @@ def build_country_data_journal(
     limit: int,
     offset: int,
 ) -> CountryDataJournalResponse:
-    if countries_repository.get_country(connection, country_slug, locale) is None:
+    if (
+        countries_repository.get_country(connection, country_slug, locale)
+        is None
+    ):
         raise api_error(
             404,
             "country_not_found",
@@ -33,7 +39,9 @@ def build_country_data_journal(
     rows = repository.list_country_data_journal_entries(
         connection, country_slug, limit, offset
     )
-    total = repository.count_country_data_journal_entries(connection, country_slug)
+    total = repository.count_country_data_journal_entries(
+        connection, country_slug
+    )
     verified = repository.get_country_last_verified_at(connection, country_slug)
     return CountryDataJournalResponse(
         country_slug=country_slug,
@@ -72,7 +80,11 @@ def public_title_for_event(
     if event_type == "route.published":
         return "Маршрут обновлён" if locale == "ru" else "Route updated"
     if event_type in {"legal_signal.published", "legal_signal_event.published"}:
-        return "Правовой сигнал обновлён" if locale == "ru" else "Legal signal updated"
+        return (
+            "Правовой сигнал обновлён"
+            if locale == "ru"
+            else "Legal signal updated"
+        )
     return "Данные обновлены" if locale == "ru" else "Data updated"
 
 

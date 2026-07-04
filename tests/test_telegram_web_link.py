@@ -1,10 +1,10 @@
 """Telegram account linking/unlinking, including gRPC error mapping."""
 
+import pytest
 from app.repositories import auth as repository
 from app.services import telegram_web_link as service
 from datetime import UTC, datetime
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -14,7 +14,10 @@ CONNECTION = MagicMock()
 
 class FakeTelegramLinkClient:
     def __init__(
-        self, *, consume_result: service.ConsumeLinkCodeResult, unlink_ok: bool = True
+        self,
+        *,
+        consume_result: service.ConsumeLinkCodeResult,
+        unlink_ok: bool = True,
     ) -> None:
         self._consume_result = consume_result
         self._unlink_ok = unlink_ok
@@ -56,7 +59,9 @@ def test_link_telegram_account_rejects_when_already_linked(
         repository, "get_telegram_link_by_user", lambda *_a: _link_row()
     )
     with pytest.raises(HTTPException) as exc_info:
-        service.link_telegram_account(CONNECTION, user_id="user-1", code="123456")
+        service.link_telegram_account(
+            CONNECTION, user_id="user-1", code="123456"
+        )
     assert exc_info.value.status_code == 409
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "telegram_already_linked"
@@ -74,7 +79,9 @@ def test_link_telegram_account_rejects_when_already_linked(
 def test_link_telegram_account_maps_grpc_errors(
     monkeypatch: pytest.MonkeyPatch, grpc_error: str, expected_code: str
 ) -> None:
-    monkeypatch.setattr(repository, "get_telegram_link_by_user", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "get_telegram_link_by_user", lambda *_a: None
+    )
     fake_client = FakeTelegramLinkClient(
         consume_result=service.ConsumeLinkCodeResult(
             ok=False, telegram_user_id="", error=grpc_error
@@ -82,7 +89,9 @@ def test_link_telegram_account_maps_grpc_errors(
     )
     _use_fake_client(monkeypatch, fake_client)
     with pytest.raises(HTTPException) as exc_info:
-        service.link_telegram_account(CONNECTION, user_id="user-1", code="000000")
+        service.link_telegram_account(
+            CONNECTION, user_id="user-1", code="000000"
+        )
     assert exc_info.value.status_code == 422
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == expected_code
@@ -91,7 +100,9 @@ def test_link_telegram_account_maps_grpc_errors(
 def test_link_telegram_account_success_creates_link(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(repository, "get_telegram_link_by_user", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "get_telegram_link_by_user", lambda *_a: None
+    )
     fake_client = FakeTelegramLinkClient(
         consume_result=service.ConsumeLinkCodeResult(
             ok=True, telegram_user_id="tg-42", error=""
@@ -104,8 +115,12 @@ def test_link_telegram_account_success_creates_link(
         captured.update(kwargs)
         return _link_row(telegram_user_id=kwargs["telegram_user_id"])
 
-    monkeypatch.setattr(repository, "create_telegram_link", fake_create_telegram_link)
-    link = service.link_telegram_account(CONNECTION, user_id="user-1", code="123456")
+    monkeypatch.setattr(
+        repository, "create_telegram_link", fake_create_telegram_link
+    )
+    link = service.link_telegram_account(
+        CONNECTION, user_id="user-1", code="123456"
+    )
     assert link["telegram_user_id"] == "tg-42"
     assert captured == {"user_id": "user-1", "telegram_user_id": "tg-42"}
 
@@ -113,7 +128,9 @@ def test_link_telegram_account_success_creates_link(
 def test_unlink_telegram_account_noop_when_not_linked(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(repository, "get_telegram_link_by_user", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "get_telegram_link_by_user", lambda *_a: None
+    )
     fake_client = FakeTelegramLinkClient(
         consume_result=service.ConsumeLinkCodeResult(
             ok=True, telegram_user_id="", error=""
@@ -161,6 +178,8 @@ def test_get_telegram_link_status_returns_repository_result(
 def test_get_telegram_link_status_returns_none_when_not_linked(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(repository, "get_telegram_link_by_user", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "get_telegram_link_by_user", lambda *_a: None
+    )
     status = service.get_telegram_link_status(CONNECTION, user_id="user-1")
     assert status is None

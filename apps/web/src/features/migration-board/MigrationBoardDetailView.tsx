@@ -56,7 +56,10 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
     setStatus(null);
     setError(null);
     try {
-      await reportPost(postId, { reason: "other", details: reportDetails || null });
+      await reportPost(postId, {
+        reason: "other",
+        details: reportDetails || null,
+      });
       setReportDetails("");
       setStatus("Жалоба отправлена на модерацию.");
     } catch (err: unknown) {
@@ -77,8 +80,13 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
   }
 
   return (
-    <div className="searchPageContainer" data-testid="migration-board-detail">
-      {error !== null && <ErrorState error={migrationBoardErrorMessage(error)} />}
+    <div
+      className="searchPageContainer"
+      data-testid="migration-board-detail"
+    >
+      {error !== null && (
+        <ErrorState error={migrationBoardErrorMessage(error)} />
+      )}
       {status && <p className="notice">{status}</p>}
       <section className="accountSection">
         <p className="eyebrow">{post.destination_country.name}</p>
@@ -99,13 +107,17 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         </p>
         {post.route && (
           <p>
-            Route: <Link href={`/routes/${post.route.id}`}>{post.route.title}</Link>
+            Route:{" "}
+            <Link href={`/routes/${post.route.id}`}>{post.route.title}</Link>
           </p>
         )}
         {(post.tags ?? []).length > 0 && (
           <div className="badgeRow">
             {(post.tags ?? []).map((tag) => (
-              <span className="badge" key={tag}>
+              <span
+                className="badge"
+                key={tag}
+              >
                 {tag}
               </span>
             ))}
@@ -117,8 +129,8 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         <p className="accountSectionTitle">Contact request</p>
         {!user ? (
           <p className="notice">
-            <Link href={routes.login}>Войдите</Link>, чтобы отправить request через
-            платформу.
+            <Link href={routes.login}>Войдите</Link>, чтобы отправить request
+            через платформу.
           </p>
         ) : post.contact_requests_enabled ? (
           <>

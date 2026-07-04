@@ -34,9 +34,15 @@ type DecisionWizardLabels = {
   primaryGoalOptions: Array<
     DecisionWizardOption<DecisionWizardAnswers["primary_goal"]>
   >;
-  budgetOptions: Array<DecisionWizardOption<DecisionWizardAnswers["budget_level"]>>;
-  familyOptions: Array<DecisionWizardOption<DecisionWizardAnswers["family_status"]>>;
-  timeframeOptions: Array<DecisionWizardOption<DecisionWizardAnswers["timeframe"]>>;
+  budgetOptions: Array<
+    DecisionWizardOption<DecisionWizardAnswers["budget_level"]>
+  >;
+  familyOptions: Array<
+    DecisionWizardOption<DecisionWizardAnswers["family_status"]>
+  >;
+  timeframeOptions: Array<
+    DecisionWizardOption<DecisionWizardAnswers["timeframe"]>
+  >;
   levelOptions: Array<DecisionWizardOption<Level>>;
   warningLabels: Record<string, string>;
 };
@@ -53,7 +59,10 @@ const LEVEL_OPTIONS_EN: Array<DecisionWizardOption<Level>> = [
   { value: "high", label: "High" },
 ];
 
-export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabels> = {
+export const DECISION_WIZARD_LABELS: Record<
+  SupportedLocale,
+  DecisionWizardLabels
+> = {
   ru: {
     title: "Помочь выбрать настройки",
     hint: "Ответьте на несколько вопросов, и форма подбора заполнится без сохранения профиля.",
@@ -75,7 +84,8 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
     noPersona: "Без персоны",
     explanation: "Почему так",
     warnings: "Ограничения",
-    manualNote: "После применения рекомендации настройки можно изменить вручную.",
+    manualNote:
+      "После применения рекомендации настройки можно изменить вручную.",
     unavailable: "Мастер временно недоступен. Можно продолжить вручную.",
     primaryGoalOptions: [
       { value: "residence", label: "ВНЖ и переезд" },
@@ -86,7 +96,10 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
       { value: "remote_work", label: "Удаленная работа" },
       { value: "study", label: "Учеба" },
     ],
-    budgetOptions: [{ value: "unknown", label: "Не знаю" }, ...LEVEL_OPTIONS_RU],
+    budgetOptions: [
+      { value: "unknown", label: "Не знаю" },
+      ...LEVEL_OPTIONS_RU,
+    ],
     familyOptions: [
       { value: "unknown", label: "Не важно" },
       { value: "solo", label: "Один" },
@@ -101,7 +114,8 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
     ],
     levelOptions: LEVEL_OPTIONS_RU,
     warningLabels: {
-      recommended_persona_unavailable: "Рекомендованная персона пока недоступна.",
+      recommended_persona_unavailable:
+        "Рекомендованная персона пока недоступна.",
     },
   },
   en: {
@@ -127,7 +141,8 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
     warnings: "Warnings",
     manualNote:
       "After applying the recommendation, you can still adjust settings manually.",
-    unavailable: "Wizard is temporarily unavailable. You can continue manually.",
+    unavailable:
+      "Wizard is temporarily unavailable. You can continue manually.",
     primaryGoalOptions: [
       { value: "residence", label: "Residence and relocation" },
       { value: "citizenship", label: "Permanent residence and citizenship" },
@@ -137,7 +152,10 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
       { value: "remote_work", label: "Remote work" },
       { value: "study", label: "Study" },
     ],
-    budgetOptions: [{ value: "unknown", label: "Not sure" }, ...LEVEL_OPTIONS_EN],
+    budgetOptions: [
+      { value: "unknown", label: "Not sure" },
+      ...LEVEL_OPTIONS_EN,
+    ],
     familyOptions: [
       { value: "unknown", label: "Does not matter" },
       { value: "solo", label: "Solo" },
@@ -152,7 +170,8 @@ export const DECISION_WIZARD_LABELS: Record<SupportedLocale, DecisionWizardLabel
     ],
     levelOptions: LEVEL_OPTIONS_EN,
     warningLabels: {
-      recommended_persona_unavailable: "The recommended persona is unavailable.",
+      recommended_persona_unavailable:
+        "The recommended persona is unavailable.",
     },
   },
 };

@@ -1,11 +1,11 @@
 """Public country drift API: latest snapshot, history, and not-found/empty responses."""
 
+import pytest
 from app.api.v1 import country_drift as country_drift_api
 from app.repositories import country_drift as country_drift_repo
 from datetime import UTC, date, datetime
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 
 
@@ -54,10 +54,14 @@ def test_get_country_drift_returns_latest_snapshot(
         country_drift_repo, "get_country_for_drift", lambda *_: _COUNTRY
     )
     monkeypatch.setattr(
-        country_drift_repo, "get_latest_drift_snapshot", lambda *_: _SNAPSHOT_ROW
+        country_drift_repo,
+        "get_latest_drift_snapshot",
+        lambda *_: _SNAPSHOT_ROW,
     )
     monkeypatch.setattr(
-        country_drift_repo, "list_drift_snapshots", lambda *_a, **_kw: [_SNAPSHOT_ROW]
+        country_drift_repo,
+        "list_drift_snapshots",
+        lambda *_a, **_kw: [_SNAPSHOT_ROW],
     )
     result = country_drift_api.get_country_drift("argentina", CONNECTION)
     assert result.country_slug == "argentina"
@@ -66,15 +70,21 @@ def test_get_country_drift_returns_latest_snapshot(
     assert result.latest_snapshot.net_score == pytest.approx(27.5)
 
 
-def test_get_country_drift_returns_history(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_country_drift_returns_history(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
         country_drift_repo, "get_country_for_drift", lambda *_: _COUNTRY
     )
     monkeypatch.setattr(
-        country_drift_repo, "get_latest_drift_snapshot", lambda *_: _SNAPSHOT_ROW
+        country_drift_repo,
+        "get_latest_drift_snapshot",
+        lambda *_: _SNAPSHOT_ROW,
     )
     monkeypatch.setattr(
-        country_drift_repo, "list_drift_snapshots", lambda *_a, **_kw: [_SNAPSHOT_ROW]
+        country_drift_repo,
+        "list_drift_snapshots",
+        lambda *_a, **_kw: [_SNAPSHOT_ROW],
     )
     result = country_drift_api.get_country_drift("argentina", CONNECTION)
     assert len(result.history) == 1
@@ -84,7 +94,9 @@ def test_get_country_drift_returns_history(monkeypatch: pytest.MonkeyPatch) -> N
 def test_get_country_drift_returns_404_for_unknown_country(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(country_drift_repo, "get_country_for_drift", lambda *_: None)
+    monkeypatch.setattr(
+        country_drift_repo, "get_country_for_drift", lambda *_: None
+    )
     with pytest.raises(HTTPException) as exc:
         country_drift_api.get_country_drift("nowhere", CONNECTION)
     assert exc.value.status_code == 404
@@ -107,7 +119,9 @@ def test_get_country_drift_returns_controlled_empty_response_when_no_snapshot(
     assert result.history == []
 
 
-def test_get_country_drift_disclaimer_present(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_country_drift_disclaimer_present(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
         country_drift_repo, "get_country_for_drift", lambda *_: _COUNTRY
     )

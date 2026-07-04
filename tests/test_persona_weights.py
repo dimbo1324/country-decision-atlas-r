@@ -1,9 +1,9 @@
 """Persona weight-profile algorithm: adjusted-weight building, modifier coverage validation, and normalization."""
 
+import pytest
 from app.repositories import personas as personas_repository
 from decimal import Decimal
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -68,7 +68,9 @@ class TestBuildAdjustedWeightsAlgorithm:
         safety_adj = next(
             r["adjusted_weight"] for r in result if r["metric_slug"] == "safety"
         )
-        others = [r["adjusted_weight"] for r in result if r["metric_slug"] != "safety"]
+        others = [
+            r["adjusted_weight"] for r in result if r["metric_slug"] != "safety"
+        ]
         assert safety_adj > max(others)
 
     def test_negative_modifier_decreases_relative_share(self) -> None:
@@ -83,7 +85,9 @@ class TestBuildAdjustedWeightsAlgorithm:
             if r["metric_slug"] == "economic_freedom"
         )
         rl = next(
-            r["adjusted_weight"] for r in result if r["metric_slug"] == "rule_of_law"
+            r["adjusted_weight"]
+            for r in result
+            if r["metric_slug"] == "rule_of_law"
         )
         assert ef < rl
 
@@ -166,14 +170,19 @@ class TestValidateModifierCoverage:
     def test_missing_modifier_raises_persona_modifier_incomplete(self) -> None:
         from app.services.persona_weights import validate_modifier_coverage
 
-        rows: list[dict[str, Any]] = _make_rows([0.1, 0.0, 0.0, 0.15, 0.0, 0.25])
+        rows: list[dict[str, Any]] = _make_rows(
+            [0.1, 0.0, 0.0, 0.15, 0.0, 0.25]
+        )
         rows[1] = {**rows[1], "modifier": None}
         with pytest.raises(HTTPException) as exc_info:
             validate_modifier_coverage(rows)
         detail = cast(dict[str, Any], exc_info.value.detail)
         assert exc_info.value.status_code == 422
         assert detail["error"]["code"] == "persona_modifier_incomplete"
-        assert "economic_freedom" in detail["error"]["details"]["missing_metric_slugs"]
+        assert (
+            "economic_freedom"
+            in detail["error"]["details"]["missing_metric_slugs"]
+        )
 
     def test_empty_rows_raises_degenerate(self) -> None:
         from app.services.persona_weights import validate_modifier_coverage
@@ -282,11 +291,15 @@ _WEIGHT_INPUT_ROWS: list[dict[str, Any]] = [
 
 
 class TestBuildPersonaWeightProfile:
-    def test_returns_profile_with_persona_metadata(self, monkeypatch: Any) -> None:
+    def test_returns_profile_with_persona_metadata(
+        self, monkeypatch: Any
+    ) -> None:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -305,7 +318,9 @@ class TestBuildPersonaWeightProfile:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -319,11 +334,15 @@ class TestBuildPersonaWeightProfile:
 
         assert result["version"] == "v1.0"
 
-    def test_returns_profile_with_adjusted_weights(self, monkeypatch: Any) -> None:
+    def test_returns_profile_with_adjusted_weights(
+        self, monkeypatch: Any
+    ) -> None:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -344,7 +363,9 @@ class TestBuildPersonaWeightProfile:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -359,7 +380,9 @@ class TestBuildPersonaWeightProfile:
         total = sum(w["adjusted_weight"] for w in result["weights"])
         assert total == pytest.approx(1.0, abs=1e-9)
 
-    def test_unknown_persona_raises_persona_not_found(self, monkeypatch: Any) -> None:
+    def test_unknown_persona_raises_persona_not_found(
+        self, monkeypatch: Any
+    ) -> None:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
@@ -379,10 +402,14 @@ class TestBuildPersonaWeightProfile:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
-            personas_repository, "list_persona_weight_inputs", lambda *_a, **_k: []
+            personas_repository,
+            "list_persona_weight_inputs",
+            lambda *_a, **_k: [],
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -396,7 +423,9 @@ class TestBuildPersonaWeightProfile:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -414,7 +443,9 @@ class TestBuildPersonaWeightProfile:
         from app.services.persona_weights import build_persona_weight_profile
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,
@@ -431,7 +462,9 @@ class TestBuildPersonaWeightProfile:
 
 class TestMaybeBuildPersonaWeightProfile:
     def test_none_persona_slug_returns_none(self) -> None:
-        from app.services.persona_weights import maybe_build_persona_weight_profile
+        from app.services.persona_weights import (
+            maybe_build_persona_weight_profile,
+        )
 
         result = maybe_build_persona_weight_profile(
             MagicMock(), "relocation_residence", None
@@ -439,7 +472,9 @@ class TestMaybeBuildPersonaWeightProfile:
         assert result is None
 
     def test_empty_string_persona_slug_returns_none(self) -> None:
-        from app.services.persona_weights import maybe_build_persona_weight_profile
+        from app.services.persona_weights import (
+            maybe_build_persona_weight_profile,
+        )
 
         result = maybe_build_persona_weight_profile(
             MagicMock(), "relocation_residence", ""
@@ -447,10 +482,14 @@ class TestMaybeBuildPersonaWeightProfile:
         assert result is None
 
     def test_valid_slug_returns_profile(self, monkeypatch: Any) -> None:
-        from app.services.persona_weights import maybe_build_persona_weight_profile
+        from app.services.persona_weights import (
+            maybe_build_persona_weight_profile,
+        )
 
         monkeypatch.setattr(
-            personas_repository, "get_persona_by_slug", lambda *_a, **_k: _PERSONA_ROW
+            personas_repository,
+            "get_persona_by_slug",
+            lambda *_a, **_k: _PERSONA_ROW,
         )
         monkeypatch.setattr(
             personas_repository,

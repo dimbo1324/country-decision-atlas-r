@@ -10,7 +10,12 @@ import type {
   DecisionRunResponse,
 } from "../../shared/api/decision";
 import type { PersonaListResponse } from "../../shared/api/personas";
-import { countriesApi, scenariosApi, decisionApi, personasApi } from "../../shared/api";
+import {
+  countriesApi,
+  scenariosApi,
+  decisionApi,
+  personasApi,
+} from "../../shared/api";
 import { trackEvent } from "../../shared/analytics/client";
 import { normalizeLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -42,7 +47,8 @@ const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
   custom_weight_out_of_range: "Проверьте значения приоритетов.",
   custom_weight_invalid: "Проверьте значения приоритетов.",
   custom_weights_sum_zero: "Сумма приоритетов должна быть больше нуля.",
-  decision_personalization_disabled: "Настройка приоритетов временно недоступна.",
+  decision_personalization_disabled:
+    "Настройка приоритетов временно недоступна.",
 };
 
 function DecisionFormInner() {
@@ -64,11 +70,11 @@ function DecisionFormInner() {
   );
   const [selectedPersonaSlug, setSelectedPersonaSlug] = useState("");
 
-  const [customWeights, setCustomWeights] = useState<Record<DecisionCriterion, number>>(
-    {
-      ...DEFAULT_DECISION_WEIGHTS,
-    },
-  );
+  const [customWeights, setCustomWeights] = useState<
+    Record<DecisionCriterion, number>
+  >({
+    ...DEFAULT_DECISION_WEIGHTS,
+  });
   const [personalizationTouched, setPersonalizationTouched] = useState(false);
 
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
@@ -165,7 +171,10 @@ function DecisionFormInner() {
   }
 
   function handleAiDecisionApply(payload: AIDecisionIntentResponse) {
-    if (payload.scenario_slug && isDecisionReadyScenario(payload.scenario_slug)) {
+    if (
+      payload.scenario_slug &&
+      isDecisionReadyScenario(payload.scenario_slug)
+    ) {
       setScenarioSlug(payload.scenario_slug);
     }
     if (payload.persona_slug) {
@@ -176,7 +185,9 @@ function DecisionFormInner() {
     }
     const candidateHints = payload.candidate_country_slugs ?? [];
     if (candidateHints.length > 0) {
-      const knownSlugs = new Set(countries?.items.map((country) => country.slug) ?? []);
+      const knownSlugs = new Set(
+        countries?.items.map((country) => country.slug) ?? [],
+      );
       const next = candidateHints.filter((slug) => knownSlugs.has(slug));
       if (next.length > 0) {
         setCandidateCountrySlugs(next);
@@ -282,10 +293,16 @@ function DecisionFormInner() {
           onApply={handleWizardApply}
         />
 
-        <AIDecisionIntentHelper locale={locale} onApply={handleAiDecisionApply} />
+        <AIDecisionIntentHelper
+          locale={locale}
+          onApply={handleAiDecisionApply}
+        />
 
         <div className="formGroup">
-          <label className="formLabel" htmlFor="origin-select">
+          <label
+            className="formLabel"
+            htmlFor="origin-select"
+          >
             Страна отправления
           </label>
           <select
@@ -297,7 +314,10 @@ function DecisionFormInner() {
           >
             <option value="">Не указано</option>
             {countries.items.map((c) => (
-              <option key={c.slug} value={c.slug}>
+              <option
+                key={c.slug}
+                value={c.slug}
+              >
                 {c.name}
               </option>
             ))}
@@ -311,7 +331,10 @@ function DecisionFormInner() {
           <label className="formLabel">Страны-кандидаты</label>
           <div className="checkboxList">
             {countries.items.map((c) => (
-              <label key={c.slug} className="checkboxLabel">
+              <label
+                key={c.slug}
+                className="checkboxLabel"
+              >
                 <input
                   type="checkbox"
                   checked={candidateCountrySlugs.includes(c.slug)}
@@ -322,18 +345,27 @@ function DecisionFormInner() {
             ))}
           </div>
           {candidateCountrySlugs.length === 0 && (
-            <p className="formError" role="alert">
+            <p
+              className="formError"
+              role="alert"
+            >
               Выберите хотя бы одну страну-кандидат.
             </p>
           )}
         </div>
 
         <div className="formGroup">
-          <label className="formLabel" htmlFor="scenario-select">
+          <label
+            className="formLabel"
+            htmlFor="scenario-select"
+          >
             Сценарий
           </label>
           {noScenariosAvailable ? (
-            <p className="formError" role="alert">
+            <p
+              className="formError"
+              role="alert"
+            >
               Готовые сценарии подбора пока отсутствуют.
             </p>
           ) : (
@@ -345,7 +377,10 @@ function DecisionFormInner() {
               data-testid="decision-scenario-select"
             >
               {decisionReadyScenarios.map((s) => (
-                <option key={s.slug} value={s.slug}>
+                <option
+                  key={s.slug}
+                  value={s.slug}
+                >
                   {s.name}
                 </option>
               ))}
@@ -354,7 +389,10 @@ function DecisionFormInner() {
         </div>
 
         <div className="formGroup">
-          <label className="formLabel" htmlFor="persona-select">
+          <label
+            className="formLabel"
+            htmlFor="persona-select"
+          >
             Персона
           </label>
           <select
@@ -378,12 +416,17 @@ function DecisionFormInner() {
           >
             <option value="">Без персонализации</option>
             {(personas?.items ?? []).map((persona) => (
-              <option key={persona.slug} value={persona.slug}>
+              <option
+                key={persona.slug}
+                value={persona.slug}
+              >
                 {persona.name}
               </option>
             ))}
           </select>
-          <p className="formHint">Рейтинг будет адаптирован под выбранный профиль.</p>
+          <p className="formHint">
+            Рейтинг будет адаптирован под выбранный профиль.
+          </p>
         </div>
 
         <DecisionWeightSliders

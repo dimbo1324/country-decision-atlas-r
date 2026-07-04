@@ -53,7 +53,9 @@ class AIProvider(Protocol):
 
 
 class FakeAIProvider:
-    def __init__(self, model: str = "fake-grounded-v1", mode: str = "fake") -> None:
+    def __init__(
+        self, model: str = "fake-grounded-v1", mode: str = "fake"
+    ) -> None:
         self.provider = "fake"
         self.model = model
         self.mode = mode
@@ -134,13 +136,17 @@ class FakeAIProvider:
                 f"[FAKE AI] Число {number_type}={value_text} объясняется только "
                 f"по {len(context_items)} опубликованным контекстным элементам."
             )
-            what_it_means = f"Доступный контекст указывает на: {first.excerpt[:220]}"
+            what_it_means = (
+                f"Доступный контекст указывает на: {first.excerpt[:220]}"
+            )
         else:
             explanation = (
                 f"[FAKE AI] The {number_type}={value_text} number is explained "
                 f"only from {len(context_items)} published context items."
             )
-            what_it_means = f"The available context indicates: {first.excerpt[:220]}"
+            what_it_means = (
+                f"The available context indicates: {first.excerpt[:220]}"
+            )
         return AIExplainNumberResponse(
             explanation=explanation,
             what_it_means=what_it_means,
@@ -262,10 +268,14 @@ def _intent_result(
     lowered = text.casefold()
     scenario_slug = "relocation_residence"
     persona_slug = "relocator"
-    if any(token in lowered for token in ["бизнес", "business", "self-employed"]):
+    if any(
+        token in lowered for token in ["бизнес", "business", "self-employed"]
+    ):
         scenario_slug = "business_self_employment"
         persona_slug = "investor"
-    elif any(token in lowered for token in ["сем", "family", "children", "дет"]):
+    elif any(
+        token in lowered for token in ["сем", "family", "children", "дет"]
+    ):
         scenario_slug = "permanent_residence_citizenship"
         persona_slug = "family"
     elif any(token in lowered for token in ["бюджет", "budget", "low cost"]):
@@ -277,7 +287,9 @@ def _intent_result(
     if not country_slugs:
         country_slugs = ["uruguay", "argentina"]
     weight_hints = {
-        "safety_score": 25.0 if "безопас" in lowered or "safety" in lowered else 15.0,
+        "safety_score": 25.0
+        if "безопас" in lowered or "safety" in lowered
+        else 15.0,
         "long_term_status_score": 25.0 if "граждан" in lowered else 15.0,
         "cost_of_living_score": 25.0
         if "бюджет" in lowered or "budget" in lowered
@@ -295,7 +307,9 @@ def _intent_result(
         if "росси" in lowered or "russia" in lowered
         else None,
         candidate_country_slugs=country_slugs[:3],
-        route_filters={"requires_family": "сем" in lowered or "family" in lowered},
+        route_filters={
+            "requires_family": "сем" in lowered or "family" in lowered
+        },
         weight_hints=weight_hints,
         clarifying_questions=questions,
         confidence="medium",

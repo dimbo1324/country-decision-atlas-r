@@ -15,12 +15,19 @@ export function CiiComparisonSummary({
     <div className="ciiCompareSummary">
       <div className="ciiCompareSummaryRow">
         {countries.map((c) => (
-          <div key={c.slug} className="ciiCompareSummaryCard">
+          <div
+            key={c.slug}
+            className="ciiCompareSummaryCard"
+          >
             <span className="ciiCompareSummaryName">{c.name}</span>
             {c.cii_score != null ? (
-              <span className="ciiCompareSummaryScore">{c.cii_score.toFixed(1)}</span>
+              <span className="ciiCompareSummaryScore">
+                {c.cii_score.toFixed(1)}
+              </span>
             ) : (
-              <span className="ciiCompareSummaryScore ciiCompareMissing">—</span>
+              <span className="ciiCompareSummaryScore ciiCompareMissing">
+                —
+              </span>
             )}
             {c.cii_confidence != null && (
               <span className="metaChip">{c.cii_confidence}</span>

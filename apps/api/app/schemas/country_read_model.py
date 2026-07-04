@@ -47,7 +47,9 @@ class CountryReadModelScore(BaseModel):
     confidence: str | None = None
     explanation: str | None = None
     calculated_at: datetime | None = None
-    breakdowns: list[CountryReadModelScoreBreakdown] = Field(default_factory=list)
+    breakdowns: list[CountryReadModelScoreBreakdown] = Field(
+        default_factory=list
+    )
     localization: LocalizationMeta | None = None
 
 

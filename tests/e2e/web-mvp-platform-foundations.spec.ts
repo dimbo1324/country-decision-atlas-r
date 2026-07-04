@@ -4,15 +4,21 @@ import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test("platform features API returns seeded flags", async ({ request }) => {
-  const response = await request.get(`${API_BASE_URL}/api/v1/platform/features`);
+  const response = await request.get(
+    `${API_BASE_URL}/api/v1/platform/features`,
+  );
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(
-    body.items.some((item: { key: string }) => item.key === "analytics_enabled"),
+    body.items.some(
+      (item: { key: string }) => item.key === "analytics_enabled",
+    ),
   ).toBe(true);
 });
 
-test("data journal feature detail returns access decision", async ({ request }) => {
+test("data journal feature detail returns access decision", async ({
+  request,
+}) => {
   const response = await request.get(
     `${API_BASE_URL}/api/v1/platform/features/data_journal_enabled`,
   );
@@ -37,7 +43,9 @@ test("country page shows public-safe data journal block when enabled", async ({
   await expectNoAppCrash(page);
 });
 
-test("data journal shows API error when journal endpoint fails", async ({ page }) => {
+test("data journal shows API error when journal endpoint fails", async ({
+  page,
+}) => {
   await page.route(
     `${API_BASE_URL}/api/v1/countries/russia/data-journal**`,
     async (route) => {

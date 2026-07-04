@@ -10,7 +10,9 @@ type PageProps = {
 export default async function AssistantPage({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
   const rawLocale = resolvedSearchParams["locale"];
-  const locale = normalizeLocale(typeof rawLocale === "string" ? rawLocale : undefined);
+  const locale = normalizeLocale(
+    typeof rawLocale === "string" ? rawLocale : undefined,
+  );
 
   return (
     <div className="pageShell">

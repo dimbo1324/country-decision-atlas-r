@@ -78,7 +78,9 @@ def insert_user_story_rating(
         ),
     )
     if row is None:
-        raise RuntimeError("Expected user_story_ratings insert to return a row.")
+        raise RuntimeError(
+            "Expected user_story_ratings insert to return a row."
+        )
     return row
 
 
@@ -152,7 +154,9 @@ def update_user_story_rating_status(
     )
 
 
-def count_user_story_ratings(conn: Connection[Any], status: str | None = None) -> int:
+def count_user_story_ratings(
+    conn: Connection[Any], status: str | None = None
+) -> int:
     row = fetch_one(
         conn,
         """

@@ -36,7 +36,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const resolvedSearchParams = await searchParams;
   const rawLocale = resolvedSearchParams["locale"];
-  const locale = normalizeLocale(typeof rawLocale === "string" ? rawLocale : undefined);
+  const locale = normalizeLocale(
+    typeof rawLocale === "string" ? rawLocale : undefined,
+  );
 
   let card;
   try {
@@ -48,11 +50,20 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
         : (err as { error?: { code?: string; message?: string } });
     return (
       <div className="pageShell">
-        <nav className="breadcrumbs" aria-label="Навигация">
-          <Link href={routes.countries} className="breadcrumbLink">
+        <nav
+          className="breadcrumbs"
+          aria-label="Навигация"
+        >
+          <Link
+            href={routes.countries}
+            className="breadcrumbLink"
+          >
             Страны
           </Link>
-          <span className="breadcrumbSep" aria-hidden="true">
+          <span
+            className="breadcrumbSep"
+            aria-hidden="true"
+          >
             /
           </span>
           <span className="breadcrumbCurrent">{slug}</span>
@@ -74,11 +85,20 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
   return (
     <div className="pageShell">
-      <nav className="breadcrumbs" aria-label="Навигация">
-        <Link href={`${routes.countries}?locale=${locale}`} className="breadcrumbLink">
+      <nav
+        className="breadcrumbs"
+        aria-label="Навигация"
+      >
+        <Link
+          href={`${routes.countries}?locale=${locale}`}
+          className="breadcrumbLink"
+        >
           Страны
         </Link>
-        <span className="breadcrumbSep" aria-hidden="true">
+        <span
+          className="breadcrumbSep"
+          aria-hidden="true"
+        >
           /
         </span>
         <span className="breadcrumbCurrent">{card.country.name}</span>
@@ -86,25 +106,37 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
       {isFallback && (
         <div className="fallbackBanner">
-          Русский перевод частично отсутствует. Показана английская fallback-версия.
+          Русский перевод частично отсутствует. Показана английская
+          fallback-версия.
         </div>
       )}
 
-      <CountryHeader country={card.country} locale={locale} />
+      <CountryHeader
+        country={card.country}
+        locale={locale}
+      />
 
       <div data-testid="watchlist-button-container">
         <WatchlistButton countrySlug={card.country.slug} />
       </div>
 
-      <div className="cardSections" data-testid="country-card">
+      <div
+        className="cardSections"
+        data-testid="country-card"
+      >
         {card.profile?.executive_summary && (
           <section className="cardSection cardSectionHighlight">
             <h2 className="cardSectionTitle">Обзор</h2>
-            <p className="executiveSummaryText">{card.profile.executive_summary}</p>
+            <p className="executiveSummaryText">
+              {card.profile.executive_summary}
+            </p>
           </section>
         )}
 
-        <section className="cardSection" data-testid="cii-section">
+        <section
+          className="cardSection"
+          data-testid="cii-section"
+        >
           <h2 className="cardSectionTitle">
             Индекс инвестиционной привлекательности (CII)
           </h2>
@@ -115,56 +147,98 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           />
         </section>
 
-        <section className="cardSection" data-testid="platform-intelligence-section">
+        <section
+          className="cardSection"
+          data-testid="platform-intelligence-section"
+        >
           <h2 className="cardSectionTitle">Платформенный интеллект</h2>
-          <PlatformIntelligenceBlock countrySlug={card.country.slug} locale={locale} />
+          <PlatformIntelligenceBlock
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
-        <section className="cardSection" data-testid="trust-surface-section">
+        <section
+          className="cardSection"
+          data-testid="trust-surface-section"
+        >
           <h2 className="cardSectionTitle">Качество данных</h2>
-          <TrustSurfaceBlock countrySlug={card.country.slug} locale={locale} />
+          <TrustSurfaceBlock
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
-        <section className="cardSection" data-testid="country-drift-section">
+        <section
+          className="cardSection"
+          data-testid="country-drift-section"
+        >
           <h2 className="cardSectionTitle">Направление изменений</h2>
-          <CountryDriftBlock countrySlug={card.country.slug} locale={locale} />
+          <CountryDriftBlock
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Оценки сценариев</h2>
-          <CountryScores scores={card.scores} sources={card.sources} />
+          <CountryScores
+            scores={card.scores}
+            sources={card.sources}
+          />
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Маршруты</h2>
-          <CountryRoutesBlock countrySlug={card.country.slug} locale={locale} />
+          <CountryRoutesBlock
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
-        <section className="cardSection" data-testid="country-migration-board-section">
-          <h2 className="cardSectionTitle">Люди, планирующие это направление</h2>
+        <section
+          className="cardSection"
+          data-testid="country-migration-board-section"
+        >
+          <h2 className="cardSectionTitle">
+            Люди, планирующие это направление
+          </h2>
           <CountryMigrationBoardBlock countrySlug={card.country.slug} />
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Профиль страны</h2>
-          <CountryProfileSections profile={card.profile} skipExecutiveSummary />
+          <CountryProfileSections
+            profile={card.profile}
+            skipExecutiveSummary
+          />
         </section>
 
-        <section className="cardSection" data-testid="what-changed-section">
+        <section
+          className="cardSection"
+          data-testid="what-changed-section"
+        >
           <h2 className="cardSectionTitle">Что изменилось</h2>
-          <CountryWhatChanged countrySlug={card.country.slug} locale={locale} />
+          <CountryWhatChanged
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Последние обновления данных</h2>
-          <CountryDataJournalBlock countrySlug={card.country.slug} locale={locale} />
+          <CountryDataJournalBlock
+            countrySlug={card.country.slug}
+            locale={locale}
+          />
         </section>
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Правовые сигналы</h2>
           <p className="cardSectionDesc">
-            Правовые сигналы — структурированные изменения и риски, способные повлиять
-            на переезд, бизнес, безопасность или долгосрочное планирование.
+            Правовые сигналы — структурированные изменения и риски, способные
+            повлиять на переезд, бизнес, безопасность или долгосрочное
+            планирование.
           </p>
           <CountryLegalSignals legalSignals={card.legal_signals} />
           <div className="entityLinkRow">
@@ -202,15 +276,23 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
         <section className="cardSection">
           <h2 className="cardSectionTitle">Пользовательские истории</h2>
-          <CountryUserStoriesSummary userStoriesSummary={card.user_stories_summary} />
+          <CountryUserStoriesSummary
+            userStoriesSummary={card.user_stories_summary}
+          />
         </section>
 
-        <section className="cardSection" data-testid="community-section">
+        <section
+          className="cardSection"
+          data-testid="community-section"
+        >
           <h2 className="cardSectionTitle">Community</h2>
           <CommunityCountryBlock countrySlug={card.country.slug} />
         </section>
 
-        <section className="cardSection" data-testid="locale-status">
+        <section
+          className="cardSection"
+          data-testid="locale-status"
+        >
           <h2 className="cardSectionTitle">Статус перевода</h2>
           <LocaleStatusBadge locale={card.locale} />
         </section>

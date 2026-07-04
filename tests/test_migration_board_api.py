@@ -1,12 +1,12 @@
 """Migration Board public/authenticated API: listing, post creation, and role-gated moderation actions."""
 
+import pytest
 from app.api.v1 import admin_migration_board, migration_board
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.services import migration_board as migration_board_service
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -94,7 +94,9 @@ def test_me_endpoint_requires_auth() -> None:
     assert response.status_code == 401
 
 
-def test_authenticated_user_can_create_post(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_authenticated_user_can_create_post(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     captured: dict[str, Any] = {}
 
     def fake_create(_connection: Any, **kwargs: Any) -> dict[str, Any]:
@@ -131,7 +133,9 @@ def test_authenticated_user_can_create_post(monkeypatch: pytest.MonkeyPatch) -> 
             "legal_disclaimer_acknowledged": True,
         }
 
-    monkeypatch.setattr(migration_board_service, "create_user_post", fake_create)
+    monkeypatch.setattr(
+        migration_board_service, "create_user_post", fake_create
+    )
 
     response = _client(USER).post(
         "/api/v1/me/migration-board/posts",
@@ -150,7 +154,9 @@ def test_authenticated_user_can_create_post(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_regular_user_cannot_approve_post() -> None:
-    response = _client(USER).post("/api/v1/admin/migration-board/posts/post-1/approve")
+    response = _client(USER).post(
+        "/api/v1/admin/migration-board/posts/post-1/approve"
+    )
     assert response.status_code == 403
 
 

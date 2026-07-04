@@ -60,7 +60,9 @@ def _context_row() -> dict[str, Any]:
     }
 
 
-def test_ask_with_context_returns_answer_and_citations(monkeypatch: Any) -> None:
+def test_ask_with_context_returns_answer_and_citations(
+    monkeypatch: Any,
+) -> None:
     client = _client(monkeypatch)
     monkeypatch.setattr(
         ai_context_repository,

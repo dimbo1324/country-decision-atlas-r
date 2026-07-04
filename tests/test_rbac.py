@@ -1,5 +1,6 @@
 """Role-based access control primitives: role matching and required-role enforcement."""
 
+import pytest
 from app.core.auth import CurrentUser
 from app.core.rbac import (
     ADMIN,
@@ -17,7 +18,6 @@ from app.core.rbac import (
     require_user,
 )
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 
 
@@ -89,7 +89,9 @@ def test_require_roles_error_details_include_role_and_required_roles() -> None:
 
 
 def test_require_roles_custom_role_set() -> None:
-    require_moderator_or_editor = require_roles("moderator", "editor", "admin", "owner")
+    require_moderator_or_editor = require_roles(
+        "moderator", "editor", "admin", "owner"
+    )
     assert require_moderator_or_editor(_user("moderator")) is not None
     assert require_moderator_or_editor(_user("editor")) is not None
     with pytest.raises(HTTPException):

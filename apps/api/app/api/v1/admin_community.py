@@ -29,10 +29,14 @@ router = APIRouter(prefix="/admin/community", tags=["admin-community"])
 
 _RESPONSES: dict[int | str, dict[str, Any]] = {401: {"model": ErrorResponse}}
 
-require_moderator_or_editor = require_roles("moderator", "editor", "admin", "owner")
+require_moderator_or_editor = require_roles(
+    "moderator", "editor", "admin", "owner"
+)
 
 
-@router.get("/questions", response_model=list[CommunityQuestion], responses=_RESPONSES)
+@router.get(
+    "/questions", response_model=list[CommunityQuestion], responses=_RESPONSES
+)
 def list_questions_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_moderator)],
@@ -62,7 +66,9 @@ def update_question_status(
     return row
 
 
-@router.get("/answers", response_model=list[CommunityAnswer], responses=_RESPONSES)
+@router.get(
+    "/answers", response_model=list[CommunityAnswer], responses=_RESPONSES
+)
 def list_answers_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_moderator)],

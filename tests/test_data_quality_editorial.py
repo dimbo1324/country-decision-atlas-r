@@ -17,14 +17,18 @@ def test_legal_status_unknown_for_published_signal_is_warning(
     monkeypatch.setattr(
         data_quality_repository,
         "list_published_legal_signals_with_unknown_legal_status",
-        lambda *_: [{"id": "signal-id", "title": "Signal", "legal_status": "unknown"}],
+        lambda *_: [
+            {"id": "signal-id", "title": "Signal", "legal_status": "unknown"}
+        ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is True
     assert report.warnings_count == 1
-    assert report.issues[0].code == "published_legal_signal_legal_status_unknown"
+    assert (
+        report.issues[0].code == "published_legal_signal_legal_status_unknown"
+    )
     assert report.issues[0].severity == "warning"
 
 
@@ -41,11 +45,15 @@ def test_missing_legal_status_for_published_signal_is_critical(
     report = data_quality.build_data_quality_report(CONNECTION)
 
     assert report.valid is False
-    assert report.issues[0].code == "published_legal_signal_legal_status_missing"
+    assert (
+        report.issues[0].code == "published_legal_signal_legal_status_missing"
+    )
     assert report.issues[0].severity == "critical"
 
 
-def test_review_source_without_required_fields_is_found(monkeypatch: Any) -> None:
+def test_review_source_without_required_fields_is_found(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -66,7 +74,9 @@ def test_review_legal_signal_without_required_fields_is_found(
     monkeypatch.setattr(
         data_quality_repository,
         "list_review_legal_signals_with_missing_required_fields",
-        lambda *_: [{"id": "signal-id", "title": "", "missing_field": "source_id"}],
+        lambda *_: [
+            {"id": "signal-id", "title": "", "missing_field": "source_id"}
+        ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)

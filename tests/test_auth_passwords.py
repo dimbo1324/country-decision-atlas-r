@@ -5,7 +5,9 @@ from app.services import auth as service
 
 def test_hash_password_roundtrip_verifies_correct_password() -> None:
     encoded = service.hash_password("correct-horse-battery-staple")
-    assert service.verify_password("correct-horse-battery-staple", encoded) is True
+    assert (
+        service.verify_password("correct-horse-battery-staple", encoded) is True
+    )
 
 
 def test_hash_password_rejects_wrong_password() -> None:
@@ -37,7 +39,10 @@ def test_verify_password_rejects_empty_hash() -> None:
 
 
 def test_verify_password_rejects_malformed_hash_missing_parts() -> None:
-    assert service.verify_password("anything", "pbkdf2_sha256$260000$salt") is False
+    assert (
+        service.verify_password("anything", "pbkdf2_sha256$260000$salt")
+        is False
+    )
 
 
 def test_verify_password_rejects_unknown_algorithm() -> None:
@@ -79,7 +84,9 @@ def test_generate_session_token_returns_unique_url_safe_tokens() -> None:
 
 def test_hash_session_token_is_deterministic_sha256() -> None:
     token = "raw-session-token"
-    assert service.hash_session_token(token) == service.hash_session_token(token)
+    assert service.hash_session_token(token) == service.hash_session_token(
+        token
+    )
     assert len(service.hash_session_token(token)) == 64
 
 

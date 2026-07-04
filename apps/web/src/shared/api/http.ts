@@ -24,7 +24,9 @@ export function queryString(
 
 export function isApiError(e: unknown): e is ApiErrorResponse {
   return (
-    typeof e === "object" && e !== null && "error" in (e as Record<string, unknown>)
+    typeof e === "object" &&
+    e !== null &&
+    "error" in (e as Record<string, unknown>)
   );
 }
 
@@ -67,7 +69,7 @@ export async function apiPost<TResponse, TBody>(
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json",
       ...options.headers,
     },
@@ -90,7 +92,7 @@ export async function apiPatch<TResponse, TBody>(
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "PATCH",
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json",
       ...options.headers,
     },

@@ -37,7 +37,9 @@ _SNAPSHOT_COLUMNS = """
 """
 
 
-def list_countries_for_drift(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_countries_for_drift(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

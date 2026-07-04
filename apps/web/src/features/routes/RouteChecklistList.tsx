@@ -21,9 +21,14 @@ export function RouteChecklistList({
   const sorted = [...checklist].sort((a, b) => a.step_order - b.step_order);
 
   return (
-    <ol className="routeChecklist" data-testid="route-checklist-list">
+    <ol
+      className="routeChecklist"
+      data-testid="route-checklist-list"
+    >
       {sorted.map((item) => {
-        const linkedSource = sources.find((source) => source.id === item.source_id);
+        const linkedSource = sources.find(
+          (source) => source.id === item.source_id,
+        );
         const linkedEvidence = evidence.find(
           (evidenceItem) => evidenceItem.id === item.evidence_item_id,
         );
@@ -42,7 +47,9 @@ export function RouteChecklistList({
             </div>
             {item.description && <p>{item.description}</p>}
             {item.document_note && (
-              <p className="routeChecklistNote">Документы: {item.document_note}</p>
+              <p className="routeChecklistNote">
+                Документы: {item.document_note}
+              </p>
             )}
             {item.cost_note && (
               <p className="routeChecklistNote">Стоимость: {item.cost_note}</p>
@@ -72,7 +79,8 @@ export function RouteChecklistList({
                 rel="noreferrer"
                 data-testid="route-checklist-source-link"
               >
-                Источник: {linkedEvidence.source_title ?? linkedEvidence.source_url}
+                Источник:{" "}
+                {linkedEvidence.source_title ?? linkedEvidence.source_url}
               </a>
             )}
           </li>

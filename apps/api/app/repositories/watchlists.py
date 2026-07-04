@@ -70,7 +70,11 @@ def get_user_watchlist_item_by_country_slug(
 
 
 def add_country_to_watchlist(
-    connection: Connection[Any], *, user_id: str, country_id: str, created_source: str
+    connection: Connection[Any],
+    *,
+    user_id: str,
+    country_id: str,
+    created_source: str,
 ) -> dict[str, Any]:
     return execute_one(
         connection,

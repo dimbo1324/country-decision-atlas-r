@@ -12,7 +12,9 @@ DataErrorReportType = Literal[
     "translation_issue",
     "other",
 ]
-DataErrorReportStatus = Literal["pending", "review", "resolved", "rejected", "archived"]
+DataErrorReportStatus = Literal[
+    "pending", "review", "resolved", "rejected", "archived"
+]
 DataErrorReportIdentityType = Literal["telegram", "anonymous_session", "system"]
 
 

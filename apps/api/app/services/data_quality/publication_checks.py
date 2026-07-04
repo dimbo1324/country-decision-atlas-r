@@ -10,7 +10,9 @@ def _append_publication_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_review_sources_with_missing_required_fields(connection):
+    for row in repository.list_review_sources_with_missing_required_fields(
+        connection
+    ):
         issues.append(
             _issue(
                 "review_source_required_field_missing",
@@ -21,7 +23,9 @@ def _append_publication_checks(
                 row,
             )
         )
-    for row in repository.list_review_evidence_items_with_missing_required_fields(
+    for (
+        row
+    ) in repository.list_review_evidence_items_with_missing_required_fields(
         connection
     ):
         issues.append(
@@ -34,7 +38,9 @@ def _append_publication_checks(
                 row,
             )
         )
-    for row in repository.list_review_legal_signals_with_missing_required_fields(
+    for (
+        row
+    ) in repository.list_review_legal_signals_with_missing_required_fields(
         connection
     ):
         issues.append(
@@ -58,7 +64,9 @@ def _append_publication_checks(
             ],
         )
     )
-    for row in repository.list_published_evidence_items_with_missing_required_fields(
+    for (
+        row
+    ) in repository.list_published_evidence_items_with_missing_required_fields(
         connection
     ):
         issues.append(
@@ -71,7 +79,9 @@ def _append_publication_checks(
                 row,
             )
         )
-    for row in repository.list_published_legal_signals_with_missing_required_fields(
+    for (
+        row
+    ) in repository.list_published_legal_signals_with_missing_required_fields(
         connection
     ):
         issues.append(

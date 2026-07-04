@@ -8,7 +8,9 @@ test.describe("AI assistant", () => {
     await expectPageReady(page);
 
     await expect(page.getByTestId("ai-assistant-page")).toBeVisible();
-    await page.getByTestId("ai-question-input").fill("Что известно об Уругвае?");
+    await page
+      .getByTestId("ai-question-input")
+      .fill("Что известно об Уругвае?");
     await page.getByTestId("ai-country-input").fill("uruguay");
     await page.getByTestId("ai-submit").click();
 
@@ -19,7 +21,9 @@ test.describe("AI assistant", () => {
         .or(page.getByTestId("ai-error"))
         .first(),
     ).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByTestId("ai-disclaimer")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByTestId("ai-disclaimer")).toBeVisible({
+      timeout: 20_000,
+    });
     await expectNoAppCrash(page);
   });
 

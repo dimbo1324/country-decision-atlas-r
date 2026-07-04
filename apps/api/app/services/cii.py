@@ -63,7 +63,9 @@ def aggregate_cii_score(
             "warnings": warnings,
         }
 
-    log_sum = sum(e["weight"] * math.log(e["protected_score"]) for e in valid_entries)
+    log_sum = sum(
+        e["weight"] * math.log(e["protected_score"]) for e in valid_entries
+    )
     raw_score = math.exp(log_sum / total_weight)
     overall_score = round(min(max(raw_score, 0.0), 100.0), 2)
 

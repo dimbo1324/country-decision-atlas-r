@@ -1,7 +1,7 @@
 """Basic healthcheck endpoint payload."""
 
-from app.main import health
 import asyncio
+from app.main import health
 
 
 def test_healthcheck_payload() -> None:

@@ -7,7 +7,8 @@ export const e2eRoutes = {
     locale ? `/countries/${slug}?locale=${locale}` : `/countries/${slug}`,
   routeDetail: (id: string, locale?: string) =>
     locale ? `/routes/${id}?locale=${locale}` : `/routes/${id}`,
-  decision: (locale?: string) => (locale ? `/decision?locale=${locale}` : "/decision"),
+  decision: (locale?: string) =>
+    locale ? `/decision?locale=${locale}` : "/decision",
   compare: "/compare",
   legalSignals: (params?: Record<string, string>) => {
     const qs = params ? "?" + new URLSearchParams(params).toString() : "";

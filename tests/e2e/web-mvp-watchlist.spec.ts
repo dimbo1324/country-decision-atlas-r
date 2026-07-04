@@ -14,7 +14,9 @@ async function registerViaUi(
 ) {
   await page.goto(e2eRoutes.register);
   await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Runtime Watchlist User");
+  await page
+    .getByTestId("register-display-name")
+    .fill("Runtime Watchlist User");
   await page.getByTestId("register-password").fill(password);
   await page.getByTestId("register-submit").click();
   await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
@@ -34,12 +36,16 @@ test.describe("watchlist page anonymous state", () => {
   }) => {
     await page.goto(e2eRoutes.country("uruguay", "en"));
     await expectPageReady(page);
-    await expect(page.getByTestId("watchlist-button-login-required")).toBeVisible();
+    await expect(
+      page.getByTestId("watchlist-button-login-required"),
+    ).toBeVisible();
   });
 });
 
 test.describe("watchlist authenticated flow", () => {
-  test("empty watchlist shows the empty state after login", async ({ page }) => {
+  test("empty watchlist shows the empty state after login", async ({
+    page,
+  }) => {
     const email = uniqueEmail("watchlist-empty-user");
     await registerViaUi(page, email);
 
@@ -79,7 +85,9 @@ test.describe("watchlist authenticated flow", () => {
     );
   });
 
-  test("toggling a notification preference persists after reload", async ({ page }) => {
+  test("toggling a notification preference persists after reload", async ({
+    page,
+  }) => {
     const email = uniqueEmail("watchlist-toggle-user");
     await registerViaUi(page, email);
 

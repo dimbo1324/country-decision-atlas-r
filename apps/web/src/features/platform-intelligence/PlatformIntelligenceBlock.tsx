@@ -50,7 +50,9 @@ export function PlatformIntelligenceBlock({
   }, [countrySlug, locale]);
 
   if (isLoading) {
-    return <div className="notice">Загрузка данных платформенного интеллекта...</div>;
+    return (
+      <div className="notice">Загрузка данных платформенного интеллекта...</div>
+    );
   }
 
   if (error !== null) {
@@ -77,7 +79,10 @@ export function PlatformIntelligenceBlock({
           <h3 className="platformMetricGroupTitle">Глобальные показатели</h3>
           <div className="platformMetricGrid">
             {globalMetrics.map((metric) => (
-              <PlatformMetricCard key={metric.metric_key} metric={metric} />
+              <PlatformMetricCard
+                key={metric.metric_key}
+                metric={metric}
+              />
             ))}
           </div>
         </div>

@@ -27,7 +27,9 @@ SCENARIOS = [
 
 
 def install_repository_fakes(monkeypatch: Any) -> None:
-    def fake_scenario(_: Connection[Any], slug: str, locale: str) -> dict[str, Any]:
+    def fake_scenario(
+        _: Connection[Any], slug: str, locale: str
+    ) -> dict[str, Any]:
         status = "source" if locale == "en" else "translated"
         return {
             "slug": slug,
@@ -122,7 +124,9 @@ def install_repository_fakes(monkeypatch: Any) -> None:
                 )
         return rows
 
-    def fake_signals(_: Connection[Any], slugs: list[str]) -> list[dict[str, Any]]:
+    def fake_signals(
+        _: Connection[Any], slugs: list[str]
+    ) -> list[dict[str, Any]]:
         return [
             {
                 "id": "signal-1",
@@ -144,9 +148,15 @@ def install_repository_fakes(monkeypatch: Any) -> None:
             for slug in slugs
         ]
 
-    monkeypatch.setattr(decision_repository, "get_decision_scenario", fake_scenario)
-    monkeypatch.setattr(decision_repository, "list_decision_countries", fake_countries)
-    monkeypatch.setattr(decision_repository, "list_decision_scores", fake_scores)
+    monkeypatch.setattr(
+        decision_repository, "get_decision_scenario", fake_scenario
+    )
+    monkeypatch.setattr(
+        decision_repository, "list_decision_countries", fake_countries
+    )
+    monkeypatch.setattr(
+        decision_repository, "list_decision_scores", fake_scores
+    )
     monkeypatch.setattr(
         decision_repository, "list_decision_score_breakdowns", fake_breakdowns
     )
@@ -189,7 +199,9 @@ def payload(
     )
 
 
-def test_decision_run_returns_ranked_explainable_results(monkeypatch: Any) -> None:
+def test_decision_run_returns_ranked_explainable_results(
+    monkeypatch: Any,
+) -> None:
     install_repository_fakes(monkeypatch)
 
     result = decision_engine.run_decision(CONNECTION, payload())
@@ -235,14 +247,19 @@ def test_decision_run_russian_locale_works(monkeypatch: Any) -> None:
         "fallback",
         "missing",
     }
-    assert body["scenario"]["title"] == "\u041f\u0435\u0440\u0435\u0435\u0437\u0434"
+    assert (
+        body["scenario"]["title"]
+        == "\u041f\u0435\u0440\u0435\u0435\u0437\u0434"
+    )
 
 
 def test_decision_run_all_core_scenarios_work(monkeypatch: Any) -> None:
     install_repository_fakes(monkeypatch)
 
     for scenario_slug in SCENARIOS:
-        result = decision_engine.run_decision(CONNECTION, payload(scenario_slug))
+        result = decision_engine.run_decision(
+            CONNECTION, payload(scenario_slug)
+        )
         assert result.scenario.slug == scenario_slug
         assert [item.rank for item in result.results] == [1, 2]
         assert all(item.breakdown for item in result.results)
@@ -254,7 +271,9 @@ def test_decision_run_scenario_warnings(monkeypatch: Any) -> None:
     business = decision_engine.run_decision(
         CONNECTION, payload("business_self_employment")
     )
-    safety = decision_engine.run_decision(CONNECTION, payload("safety_political_risk"))
+    safety = decision_engine.run_decision(
+        CONNECTION, payload("safety_political_risk")
+    )
 
     assert any(
         warning.code == "banking_tax_review_required"
@@ -279,14 +298,17 @@ def test_decision_run_unknown_locale_fails() -> None:
 
 def test_decision_run_unknown_scenario_fails(monkeypatch: Any) -> None:
     install_repository_fakes(monkeypatch)
-    monkeypatch.setattr(decision_repository, "get_decision_scenario", lambda *_: None)
+    monkeypatch.setattr(
+        decision_repository, "get_decision_scenario", lambda *_: None
+    )
 
     try:
         decision_engine.run_decision(CONNECTION, payload("unknown_scenario"))
     except HTTPException as error:
         assert error.status_code == 404
         assert (
-            cast(dict[str, Any], error.detail)["error"]["code"] == "scenario_not_found"
+            cast(dict[str, Any], error.detail)["error"]["code"]
+            == "scenario_not_found"
         )
     else:
         raise AssertionError("Unknown scenario was accepted")
@@ -305,7 +327,8 @@ def test_decision_run_unknown_origin_country_fails(monkeypatch: Any) -> None:
     except HTTPException as error:
         assert error.status_code == 404
         assert (
-            cast(dict[str, Any], error.detail)["error"]["code"] == "country_not_found"
+            cast(dict[str, Any], error.detail)["error"]["code"]
+            == "country_not_found"
         )
     else:
         raise AssertionError("Unknown country was accepted")
@@ -324,7 +347,8 @@ def test_decision_run_unknown_candidate_country_fails(monkeypatch: Any) -> None:
     except HTTPException as error:
         assert error.status_code == 404
         assert (
-            cast(dict[str, Any], error.detail)["error"]["code"] == "country_not_found"
+            cast(dict[str, Any], error.detail)["error"]["code"]
+            == "country_not_found"
         )
     else:
         raise AssertionError("Unknown country was accepted")

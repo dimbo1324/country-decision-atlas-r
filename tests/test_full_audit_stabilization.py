@@ -1,10 +1,12 @@
 """User-story relation validation, payload limits, and rate-limiter forwarded-for handling."""
 
+import app.main as main_module
+import pytest
+import yaml
 from app.core.mvp_requirements import (
     MVP_CONTENT_DEPTH_TARGETS,
     MVP_READINESS_THRESHOLDS,
 )
-import app.main as main_module
 from app.main import _cleanup_rate_windows, _rate_limit_client, ready
 from app.schemas.decision_engine import UserStoryCreate
 from app.schemas.translation_jobs import TranslationJobProcessBatchRequest
@@ -13,12 +15,13 @@ from app.services.score_labels import optional_score_label, score_label
 from fastapi import HTTPException
 from pathlib import Path
 from pydantic import ValidationError
-import pytest
-from scripts.apply_migrations import migration_checksum, verify_or_record_checksum
+from scripts.apply_migrations import (
+    migration_checksum,
+    verify_or_record_checksum,
+)
 from starlette.requests import Request
 from typing import Any, cast
 from unittest.mock import MagicMock, patch
-import yaml
 
 
 JOB_ID = "00000000-0000-0000-0000-000000000001"
@@ -76,7 +79,11 @@ def _unit() -> dict[str, Any]:
     ("exists", "field", "code"),
     [
         ([False], "origin_country_slug", "user_story_country_invalid"),
-        ([True, False], "destination_country_slug", "user_story_country_invalid"),
+        (
+            [True, False],
+            "destination_country_slug",
+            "user_story_country_invalid",
+        ),
         ([True, True, False], "scenario", "user_story_scenario_invalid"),
     ],
 )
@@ -161,10 +168,16 @@ def test_translation_dry_run_does_not_claim_or_write() -> None:
             "app.repositories.translation_jobs.get_translation_unit_for_job",
             return_value=_unit(),
         ),
-        patch("app.repositories.translation_jobs.lock_next_pending_job") as lock,
+        patch(
+            "app.repositories.translation_jobs.lock_next_pending_job"
+        ) as lock,
         patch("app.repositories.translation_jobs.mark_job_failed") as failed,
-        patch("app.repositories.translation_jobs.mark_job_completed") as completed,
-        patch("app.repositories.translation_jobs.save_translation_variant") as save,
+        patch(
+            "app.repositories.translation_jobs.mark_job_completed"
+        ) as completed,
+        patch(
+            "app.repositories.translation_jobs.save_translation_variant"
+        ) as save,
     ):
         first = translation_jobs.process_next_job(
             connection, "preview", "en", dry_run=True
@@ -185,7 +198,9 @@ def test_stale_processing_recovery_is_retryable() -> None:
     from app.repositories.translation_jobs import recover_stale_processing_jobs
 
     connection = MagicMock()
-    with patch("app.repositories.translation_jobs.fetch_all", return_value=[]) as fetch:
+    with patch(
+        "app.repositories.translation_jobs.fetch_all", return_value=[]
+    ) as fetch:
         recover_stale_processing_jobs(connection, 900, 100)
     sql = fetch.call_args.args[1]
     assert "status = 'pending'" in sql
@@ -253,9 +268,13 @@ def test_readiness_checks_database(monkeypatch: pytest.MonkeyPatch) -> None:
     connection.execute.assert_called_once_with("SELECT 1")
 
 
-def test_readiness_returns_controlled_503(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_readiness_returns_controlled_503(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
-        main_module, "get_pool", MagicMock(side_effect=RuntimeError("unavailable"))
+        main_module,
+        "get_pool",
+        MagicMock(side_effect=RuntimeError("unavailable")),
     )
     with pytest.raises(HTTPException) as error:
         ready()
@@ -270,7 +289,9 @@ def test_committed_openapi_matches_runtime_paths_and_schemas() -> None:
     )
     runtime = main_module.app.openapi()
     assert committed["paths"] == runtime["paths"]
-    assert committed["components"]["schemas"] == runtime["components"]["schemas"]
+    assert (
+        committed["components"]["schemas"] == runtime["components"]["schemas"]
+    )
 
 
 def test_mvp_thresholds_separate_readiness_from_future_depth() -> None:
@@ -282,7 +303,9 @@ def test_mvp_thresholds_separate_readiness_from_future_depth() -> None:
     assert MVP_CONTENT_DEPTH_TARGETS["published_legal_signals"] == 8
 
 
-def test_argentina_decision_migration_has_all_scenarios_and_breakdowns() -> None:
+def test_argentina_decision_migration_has_all_scenarios_and_breakdowns() -> (
+    None
+):
     sql = Path("database/migrations/025_audit_stabilization.sql").read_text(
         encoding="utf-8"
     )

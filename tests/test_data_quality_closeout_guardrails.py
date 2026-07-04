@@ -68,7 +68,9 @@ def _run_report(**overrides: Any) -> Any:
         "list_published_routes_with_unknown_legal_status": empty,
     }
     defaults.update(overrides)
-    patches = {f"{_REPO}.{fn}": MagicMock(return_value=v) for fn, v in defaults.items()}
+    patches = {
+        f"{_REPO}.{fn}": MagicMock(return_value=v) for fn, v in defaults.items()
+    }
     translation_patch = patch(
         f"{_SVC}.build_translation_quality_results", return_value=([], [])
     )
@@ -78,7 +80,9 @@ def _run_report(**overrides: Any) -> Any:
     with (
         translation_patch,
         onboarding_patch,
-        patch.multiple(_REPO, **{k.split(".")[-1]: v for k, v in patches.items()}),
+        patch.multiple(
+            _REPO, **{k.split(".")[-1]: v for k, v in patches.items()}
+        ),
     ):
         return build_data_quality_report(_make_connection())
 
@@ -116,14 +120,18 @@ class TestCiiVisualReadinessGuardrails:
         assert "cii_aggregation_method_not_geometric" in codes
         assert report.valid is False
 
-    def test_geometric_aggregation_check_passes_when_all_geometric(self) -> None:
+    def test_geometric_aggregation_check_passes_when_all_geometric(
+        self,
+    ) -> None:
         report = _run_report()
         passing = {c.code for c in report.checks if c.status == "passed"}
         assert "cii_scores_use_geometric_aggregation" in passing
 
     def test_metric_without_polarity_produces_critical_issue(self) -> None:
         no_polarity = [{"slug": "rule_of_law", "polarity": None}]
-        report = _run_report(list_cii_metric_definitions_without_polarity=no_polarity)
+        report = _run_report(
+            list_cii_metric_definitions_without_polarity=no_polarity
+        )
         codes = {i.code for i in report.issues}
         assert "cii_metric_polarity_missing" in codes
         assert report.valid is False
@@ -151,7 +159,9 @@ class TestLegalTimelineGuardrails:
         assert "legal_timeline_no_events_for_country" in codes
         assert report.valid is False
 
-    def test_legal_timeline_check_passes_when_all_countries_have_events(self) -> None:
+    def test_legal_timeline_check_passes_when_all_countries_have_events(
+        self,
+    ) -> None:
         report = _run_report()
         passing = {c.code for c in report.checks if c.status == "passed"}
         assert "legal_timeline_has_events_per_country" in passing
@@ -165,11 +175,15 @@ class TestLegalTimelineGuardrails:
 class TestGuardrailsDoNotMaskCriticalIssues:
     def test_multiple_visual_guardrail_failures_all_appear(self) -> None:
         report = _run_report(
-            list_inactive_mvp_scenarios=[{"scenario_slug": "low_budget_living"}],
+            list_inactive_mvp_scenarios=[
+                {"scenario_slug": "low_budget_living"}
+            ],
             list_cii_metric_definitions_without_polarity=[
                 {"slug": "safety", "polarity": None}
             ],
-            list_mvp_countries_without_legal_events=[{"country_slug": "uruguay"}],
+            list_mvp_countries_without_legal_events=[
+                {"country_slug": "uruguay"}
+            ],
         )
         codes = {i.code for i in report.issues}
         assert "mvp_scenario_inactive" in codes

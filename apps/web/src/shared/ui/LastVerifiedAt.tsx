@@ -15,5 +15,7 @@ export function LastVerifiedAt({ date }: LastVerifiedAtProps) {
     month: "long",
     day: "numeric",
   });
-  return <span className="last-verified-at">Данные проверены: {formatted}</span>;
+  return (
+    <span className="last-verified-at">Данные проверены: {formatted}</span>
+  );
 }

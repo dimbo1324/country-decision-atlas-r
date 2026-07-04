@@ -10,11 +10,18 @@ export function TimelineYearGroup({
   locale: LocaleCode;
 }) {
   return (
-    <section className="timelineYearGroup" data-testid={`timeline-year-${group.year}`}>
+    <section
+      className="timelineYearGroup"
+      data-testid={`timeline-year-${group.year}`}
+    >
       <h2 className="timelineYearTitle">{group.year}</h2>
       <div className="timelineYearEvents">
         {group.events.map((event) => (
-          <TimelineEventCard key={event.id} event={event} locale={locale} />
+          <TimelineEventCard
+            key={event.id}
+            event={event}
+            locale={locale}
+          />
         ))}
       </div>
     </section>

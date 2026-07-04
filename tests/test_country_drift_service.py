@@ -1,5 +1,7 @@
 """Country drift service: period building, snapshot computation, storage, and change-event emission."""
 
+import inspect
+import pytest
 from app.repositories import (
     country_drift as country_drift_repo,
     domain_events as domain_events_repo,
@@ -12,8 +14,6 @@ from app.services.country_drift import (
     compute_country_drift_snapshot,
 )
 from datetime import date, timedelta
-import inspect
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -42,12 +42,16 @@ def _install_country_and_events(
     events: list[dict[str, Any]],
     previous_snapshot: dict[str, Any] | None,
 ) -> None:
-    monkeypatch.setattr(country_drift_repo, "get_country_for_drift", lambda *_: COUNTRY)
+    monkeypatch.setattr(
+        country_drift_repo, "get_country_for_drift", lambda *_: COUNTRY
+    )
     monkeypatch.setattr(
         country_drift_repo, "list_drift_input_events", lambda *_: events
     )
     monkeypatch.setattr(
-        country_drift_repo, "get_previous_drift_snapshot", lambda *_: previous_snapshot
+        country_drift_repo,
+        "get_previous_drift_snapshot",
+        lambda *_: previous_snapshot,
     )
 
 
@@ -63,7 +67,9 @@ class FakeSnapshotStore:
             kwargs["methodology_version"],
         )
         row = dict(kwargs)
-        row["id"] = self.rows.get(key, {}).get("id") or f"snapshot-{len(self.rows) + 1}"
+        row["id"] = (
+            self.rows.get(key, {}).get("id") or f"snapshot-{len(self.rows) + 1}"
+        )
         self.rows[key] = row
         return row
 
@@ -107,7 +113,9 @@ class TestBuildDriftPeriod:
 
 
 class TestComputeCountryDriftSnapshot:
-    def test_reads_country_and_events(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_reads_country_and_events(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _install_country_and_events(monkeypatch, _positive_events(5), None)
         draft = compute_country_drift_snapshot(
             MagicMock(), country_slug="argentina", period_end=date(2026, 7, 1)
@@ -168,11 +176,15 @@ class TestComputeAndStoreCountryDrift:
         )
         assert len(store.rows) == 1
 
-    def test_unknown_country_result(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_unknown_country_result(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         monkeypatch.setattr(
             country_drift_repo, "get_country_for_drift", lambda *_: None
         )
-        result = compute_and_store_country_drift(MagicMock(), country_slug="nowhere")
+        result = compute_and_store_country_drift(
+            MagicMock(), country_slug="nowhere"
+        )
         assert result.country_not_found is True
         assert result.computed is False
         assert result.stored is False
@@ -185,7 +197,9 @@ class TestComputeAndStoreCountryDrift:
         def failing_upsert(_conn: Any, **_kwargs: Any) -> dict[str, Any]:
             raise RuntimeError("boom")
 
-        monkeypatch.setattr(country_drift_repo, "upsert_drift_snapshot", failing_upsert)
+        monkeypatch.setattr(
+            country_drift_repo, "upsert_drift_snapshot", failing_upsert
+        )
         conn = MagicMock()
         result = compute_and_store_country_drift(
             conn, country_slug="argentina", period_end=date(2026, 7, 1)
@@ -220,7 +234,9 @@ class TestDriftChangedEmission:
     ) -> None:
         _install_country_and_events(monkeypatch, _positive_events(5), None)
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -234,12 +250,16 @@ class TestDriftChangedEmission:
         assert result.event_emitted is False
         assert len(events_store.events) == 0
 
-    def test_same_label_does_not_emit(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_same_label_does_not_emit(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _install_country_and_events(
             monkeypatch, _positive_events(5), {"label": "positive"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -261,7 +281,9 @@ class TestDriftChangedEmission:
             monkeypatch, _positive_events(5), {"label": "stable"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -283,7 +305,9 @@ class TestDriftChangedEmission:
             monkeypatch, _positive_events(5), {"label": "stable"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -305,7 +329,9 @@ class TestDriftChangedEmission:
     ) -> None:
         _install_country_and_events(monkeypatch, [], {"label": "stable"})
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -327,7 +353,9 @@ class TestDriftChangedEmission:
             monkeypatch, _positive_events(5), {"label": "insufficient_data"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         events_store = FakeDomainEventStore()
         monkeypatch.setattr(
@@ -344,7 +372,9 @@ class TestDriftChangedEmission:
 
 
 class TestBatch:
-    def test_processes_active_countries(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_processes_active_countries(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         countries = [
             {"country_id": "c1", "slug": "russia", "name": "Russia"},
             {"country_id": "c2", "slug": "uruguay", "name": "Uruguay"},
@@ -370,10 +400,14 @@ class TestBatch:
             country_drift_repo, "get_previous_drift_snapshot", lambda *_: None
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         monkeypatch.setattr(
-            domain_events_repo, "insert_domain_event", lambda _conn, **kwargs: kwargs
+            domain_events_repo,
+            "insert_domain_event",
+            lambda _conn, **kwargs: kwargs,
         )
         summary = compute_and_store_all_country_drifts(
             MagicMock(), period_end=date(2026, 7, 1)
@@ -400,7 +434,9 @@ class TestBatch:
             country_drift_repo, "get_previous_drift_snapshot", lambda *_: None
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         summary = compute_and_store_all_country_drifts(
             MagicMock(), period_end=date(2026, 7, 1)
@@ -417,7 +453,9 @@ class TestDomainEventShape:
             monkeypatch, _positive_events(5), {"label": "stable"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         captured: dict[str, Any] = {}
 
@@ -425,7 +463,9 @@ class TestDomainEventShape:
             captured.update(kwargs)
             return kwargs
 
-        monkeypatch.setattr(domain_events_repo, "insert_domain_event", fake_insert)
+        monkeypatch.setattr(
+            domain_events_repo, "insert_domain_event", fake_insert
+        )
         compute_and_store_country_drift(
             MagicMock(), country_slug="argentina", period_end=date(2026, 7, 1)
         )
@@ -452,7 +492,9 @@ class TestDomainEventShape:
             monkeypatch, _positive_events(5), {"label": "stable"}
         )
         monkeypatch.setattr(
-            country_drift_repo, "upsert_drift_snapshot", lambda _conn, **kwargs: kwargs
+            country_drift_repo,
+            "upsert_drift_snapshot",
+            lambda _conn, **kwargs: kwargs,
         )
         captured: dict[str, Any] = {}
 
@@ -460,17 +502,22 @@ class TestDomainEventShape:
             captured.update(kwargs)
             return kwargs
 
-        monkeypatch.setattr(domain_events_repo, "insert_domain_event", fake_insert)
+        monkeypatch.setattr(
+            domain_events_repo, "insert_domain_event", fake_insert
+        )
         compute_and_store_country_drift(
             MagicMock(), country_slug="argentina", period_end=date(2026, 7, 1)
         )
         assert (
-            captured["event_key"] == "country:argentina:drift.changed:2026-07-01:v1.0"
+            captured["event_key"]
+            == "country:argentina:drift.changed:2026-07-01:v1.0"
         )
 
 
 class TestDryRun:
-    def test_dry_run_writes_no_snapshot(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_dry_run_writes_no_snapshot(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         _install_country_and_events(
             monkeypatch, _positive_events(5), {"label": "stable"}
         )
@@ -481,7 +528,9 @@ class TestDryRun:
             upsert_called = True
             return kwargs
 
-        monkeypatch.setattr(country_drift_repo, "upsert_drift_snapshot", fake_upsert)
+        monkeypatch.setattr(
+            country_drift_repo, "upsert_drift_snapshot", fake_upsert
+        )
         result = compute_and_store_country_drift(
             MagicMock(),
             country_slug="argentina",
@@ -504,7 +553,9 @@ class TestDryRun:
             insert_called = True
             return kwargs
 
-        monkeypatch.setattr(domain_events_repo, "insert_domain_event", fake_insert)
+        monkeypatch.setattr(
+            domain_events_repo, "insert_domain_event", fake_insert
+        )
         result = compute_and_store_country_drift(
             MagicMock(),
             country_slug="argentina",

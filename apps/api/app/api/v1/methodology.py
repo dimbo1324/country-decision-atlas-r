@@ -23,8 +23,12 @@ def list_methodology_sections(
     locale: str | None = Query(None),
 ) -> MethodologyListResponse:
     effective_locale = locale if locale in ("en", "ru") else "en"
-    rows = methodology_repo.list_methodology_sections(connection, effective_locale)
-    return MethodologyListResponse(items=[MethodologySection(**r) for r in rows])
+    rows = methodology_repo.list_methodology_sections(
+        connection, effective_locale
+    )
+    return MethodologyListResponse(
+        items=[MethodologySection(**r) for r in rows]
+    )
 
 
 @router.get(

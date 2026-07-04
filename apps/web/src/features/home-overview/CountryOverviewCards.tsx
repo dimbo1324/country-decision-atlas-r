@@ -10,14 +10,23 @@ export function CountryOverviewCards({
   locale: LocaleCode;
 }) {
   return (
-    <section className="homeOverviewSection" aria-labelledby="home-countries-title">
+    <section
+      className="homeOverviewSection"
+      aria-labelledby="home-countries-title"
+    >
       <div className="homeSectionHeading">
         <h2 id="home-countries-title">Обзор стран</h2>
         <Link href={`/countries?locale=${locale}`}>Перейти к странам</Link>
       </div>
-      <div className="homeCountryCards" data-testid="home-country-cards">
+      <div
+        className="homeCountryCards"
+        data-testid="home-country-cards"
+      >
         {countries.map((country) => (
-          <article className="homeOverviewCard" key={country.slug}>
+          <article
+            className="homeOverviewCard"
+            key={country.slug}
+          >
             <div className="homeCountryOverviewHeader">
               <div>
                 <h3>{country.name}</h3>
@@ -32,7 +41,8 @@ export function CountryOverviewCards({
                 <dt>Сильнейший сценарий</dt>
                 <dd>
                   {country.best_scenario_name ?? "Нет данных"}
-                  {country.best_score != null && ` · ${country.best_score.toFixed(1)}`}
+                  {country.best_score != null &&
+                    ` · ${country.best_score.toFixed(1)}`}
                 </dd>
               </div>
               <div>

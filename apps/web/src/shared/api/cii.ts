@@ -9,7 +9,8 @@ export type ComparedCountry = components["schemas"]["ComparedCountry"];
 export type ComparedMetric = components["schemas"]["ComparedMetric"];
 export type ComparedMetricValue = components["schemas"]["ComparedMetricValue"];
 export type ComparedScenario = components["schemas"]["ComparedScenario"];
-export type CompareMatrixResponse = components["schemas"]["CompareMatrixResponse"];
+export type CompareMatrixResponse =
+  components["schemas"]["CompareMatrixResponse"];
 export type MatrixCountry = components["schemas"]["MatrixCountry"];
 export type MatrixScenario = components["schemas"]["MatrixScenario"];
 export type MatrixCell = components["schemas"]["MatrixCell"];
@@ -40,7 +41,9 @@ export function compareCountriesCii(
   );
 }
 
-export function getMatrix(params: GetMatrixParams): Promise<CompareMatrixResponse> {
+export function getMatrix(
+  params: GetMatrixParams,
+): Promise<CompareMatrixResponse> {
   const scenariosParam =
     params.scenarios === "all" || params.scenarios === undefined
       ? "all"

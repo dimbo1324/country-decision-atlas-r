@@ -224,7 +224,10 @@ _METRIC_VALUES = [
     },
 ]
 
-_SCENARIO_ROW = {"slug": "relocation_residence", "title": "Relocation and residence"}
+_SCENARIO_ROW = {
+    "slug": "relocation_residence",
+    "title": "Relocation and residence",
+}
 
 
 def _make_connection() -> MagicMock:
@@ -239,7 +242,9 @@ def _run_comparison(
     from app.services.cii_comparison import build_cii_comparison
 
     resolved_weights = (
-        weights_rows if weights_rows is not None else _weights_rows(scenario_slug)
+        weights_rows
+        if weights_rows is not None
+        else _weights_rows(scenario_slug)
     )
     scenario_row = {
         "slug": scenario_slug,
@@ -247,16 +252,23 @@ def _run_comparison(
     }
 
     with (
-        patch(f"{_SVC_CMP}.get_scenario_metric_weights", return_value=resolved_weights),
+        patch(
+            f"{_SVC_CMP}.get_scenario_metric_weights",
+            return_value=resolved_weights,
+        ),
         patch(f"{_SVC_CMP}.get_cii_for_countries", return_value=_CII_ROWS),
         patch(
-            f"{_SVC_CMP}.get_active_cii_metric_definitions", return_value=_METRIC_DEFS
+            f"{_SVC_CMP}.get_active_cii_metric_definitions",
+            return_value=_METRIC_DEFS,
         ),
         patch(
             f"{_SVC_CMP}.get_cii_metric_values_for_countries",
             return_value=_METRIC_VALUES,
         ),
-        patch(f"{_SVC_CMP}.get_scenario_for_cii_comparison", return_value=scenario_row),
+        patch(
+            f"{_SVC_CMP}.get_scenario_for_cii_comparison",
+            return_value=scenario_row,
+        ),
     ):
         return build_cii_comparison(
             _make_connection(), ["russia", "uruguay"], scenario_slug, locale
@@ -268,13 +280,17 @@ class TestScenarioWeightSums:
     def test_weight_sum_within_tolerance(self, scenario_slug: str) -> None:
         weights = _WEIGHTS_BY_SCENARIO[scenario_slug]
         total = sum(weights.values())
-        assert abs(total - 1.0) <= 0.001, f"{scenario_slug} weight sum = {total}"
+        assert abs(total - 1.0) <= 0.001, (
+            f"{scenario_slug} weight sum = {total}"
+        )
 
     @pytest.mark.parametrize("scenario_slug", MVP_SCENARIOS)
     def test_all_6_metrics_have_weights(self, scenario_slug: str) -> None:
         weights = _WEIGHTS_BY_SCENARIO[scenario_slug]
         for metric in MVP_METRIC_SLUGS:
-            assert metric in weights, f"{scenario_slug} missing weight for {metric}"
+            assert metric in weights, (
+                f"{scenario_slug} missing weight for {metric}"
+            )
 
     @pytest.mark.parametrize("scenario_slug", MVP_SCENARIOS)
     def test_no_negative_weights(self, scenario_slug: str) -> None:
@@ -297,7 +313,9 @@ class TestBusinessVsSafetyWeighting:
         spr = _WEIGHTS_BY_SCENARIO["safety_political_risk"]
         assert biz["economic_freedom"] > spr["economic_freedom"]
 
-    def test_safety_political_risk_weights_safety_more_than_business(self) -> None:
+    def test_safety_political_risk_weights_safety_more_than_business(
+        self,
+    ) -> None:
         biz = _WEIGHTS_BY_SCENARIO["business_self_employment"]
         spr = _WEIGHTS_BY_SCENARIO["safety_political_risk"]
         assert spr["safety"] > biz["safety"]
@@ -330,7 +348,9 @@ class TestComparisonWithScenarioWeights:
         result = _run_comparison("relocation_residence")
         assert result.scenario.slug == "relocation_residence"
 
-    def test_business_economic_freedom_weight_higher_than_safety_scenario(self) -> None:
+    def test_business_economic_freedom_weight_higher_than_safety_scenario(
+        self,
+    ) -> None:
         biz = _run_comparison("business_self_employment")
         spr = _run_comparison("safety_political_risk")
         biz_by_slug = {m.metric_slug: m for m in biz.metrics}
@@ -344,7 +364,9 @@ class TestComparisonWithScenarioWeights:
         spr = _run_comparison("safety_political_risk")
         biz_by_slug = {m.metric_slug: m for m in biz.metrics}
         spr_by_slug = {m.metric_slug: m for m in spr.metrics}
-        assert (spr_by_slug["safety"].weight or 0) > (biz_by_slug["safety"].weight or 0)
+        assert (spr_by_slug["safety"].weight or 0) > (
+            biz_by_slug["safety"].weight or 0
+        )
 
     def test_no_weights_scenario_sets_weights_version_to_none(self) -> None:
         result = _run_comparison("relocation_residence", weights_rows=[])
@@ -496,8 +518,8 @@ class TestCiiScoreAggregatorWithScenarioWeights:
         )
 
     def test_geometric_aggregation_preserved(self) -> None:
-        from app.services.cii import aggregate_cii_score
         import math
+        from app.services.cii import aggregate_cii_score
 
         metrics = [
             {

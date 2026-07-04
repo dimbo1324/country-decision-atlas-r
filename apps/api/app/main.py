@@ -1,10 +1,10 @@
+import logging
 from app.bootstrap.app_factory import create_app
 from app.core.config import get_settings
 from app.core.database import get_pool
 from app.core.errors import api_error
 from app.schemas.system import HealthResponse, ReadinessResponse
 from fastapi import Request
-import logging
 from psycopg import Error as PsycopgError
 from psycopg_pool import PoolTimeout
 from typing import Any
@@ -24,7 +24,9 @@ def _rate_limit_client(request: Request) -> str | None:
     if request.client is None:
         return None
     if settings.trusted_proxy_headers:
-        forwarded = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        forwarded = (
+            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        )
         if forwarded:
             return forwarded
     return request.client.host
@@ -42,7 +44,11 @@ def _cleanup_rate_windows(now: float) -> None:
         client: [timestamp for timestamp in timestamps if timestamp > cutoff]
         for client, timestamps in _rate_windows.items()
     }
-    active = {client: timestamps for client, timestamps in active.items() if timestamps}
+    active = {
+        client: timestamps
+        for client, timestamps in active.items()
+        if timestamps
+    }
     if len(active) > settings.api_rate_limit_max_clients:
         active = dict(
             sorted(active.items(), key=lambda item: item[1][-1], reverse=True)[
@@ -55,7 +61,9 @@ def _cleanup_rate_windows(now: float) -> None:
 
 
 async def health() -> HealthResponse:
-    return HealthResponse(status="ok", service="api", environment=settings.app_env)
+    return HealthResponse(
+        status="ok", service="api", environment=settings.app_env
+    )
 
 
 def ready() -> ReadinessResponse:

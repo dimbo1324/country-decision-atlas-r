@@ -32,7 +32,11 @@ export default async function CountriesPage({ searchParams }: PageProps) {
           <p className="eyebrow">Страны</p>
           <h1>Карточки стран для подбора</h1>
         </header>
-        <ErrorState error={errProp} backHref={routes.home} backLabel="На главную" />
+        <ErrorState
+          error={errProp}
+          backHref={routes.home}
+          backLabel="На главную"
+        />
       </div>
     );
   }
@@ -44,7 +48,8 @@ export default async function CountriesPage({ searchParams }: PageProps) {
         <h1>Карточки стран для подбора</h1>
         <p className="pageSubtitle">
           Каждая карточка страны содержит сценарные оценки, правовые сигналы,
-          доказательства с источниками и профильные разделы для принятия решений.
+          доказательства с источниками и профильные разделы для принятия
+          решений.
         </p>
       </header>
 
@@ -53,12 +58,19 @@ export default async function CountriesPage({ searchParams }: PageProps) {
       ) : (
         <div className="countryCardGrid">
           {countries.items.map((country) => (
-            <div key={country.slug} className="countryPreviewCard">
+            <div
+              key={country.slug}
+              className="countryPreviewCard"
+            >
               <div className="countryPreviewTop">
                 <span className="countryPreviewName">{country.name}</span>
                 <div className="countryPreviewMeta">
-                  {country.iso2 && <span className="metaChip">{country.iso2}</span>}
-                  {country.region && <span className="metaChip">{country.region}</span>}
+                  {country.iso2 && (
+                    <span className="metaChip">{country.iso2}</span>
+                  )}
+                  {country.region && (
+                    <span className="metaChip">{country.region}</span>
+                  )}
                 </div>
               </div>
               <div className="countryPreviewActions">
@@ -81,7 +93,10 @@ export default async function CountriesPage({ searchParams }: PageProps) {
       )}
 
       <div className="countryPageFooter">
-        <Link href={`${routes.decision}?locale=${locale}`} className="footerAction">
+        <Link
+          href={`${routes.decision}?locale=${locale}`}
+          className="footerAction"
+        >
           Сравнение Россия vs Уругвай →
         </Link>
       </div>

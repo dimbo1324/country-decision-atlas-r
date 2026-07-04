@@ -12,7 +12,11 @@ from app.schemas.cii_comparison import (
     ComparedMetricValue,
     ComparedScenario,
 )
-from app.schemas.common import LocaleResolution, TranslationStatus, locale_resolution
+from app.schemas.common import (
+    LocaleResolution,
+    TranslationStatus,
+    locale_resolution,
+)
 from app.services.persona_runtime import (
     aggregate_persona_cii_score,
     persona_metric_weight_metadata,
@@ -29,15 +33,20 @@ def build_cii_comparison(
     locale: str,
     persona_slug: str | None = None,
 ) -> CiiCountryComparisonResponse:
-    scenario_row = get_scenario_for_cii_comparison(connection, scenario_slug, locale)
+    scenario_row = get_scenario_for_cii_comparison(
+        connection, scenario_slug, locale
+    )
     scenario = ComparedScenario(
         slug=scenario_slug,
         title=scenario_row["title"] if scenario_row else scenario_slug,
     )
 
-    scenario_weights_rows = get_scenario_metric_weights(connection, scenario_slug)
+    scenario_weights_rows = get_scenario_metric_weights(
+        connection, scenario_slug
+    )
     weights_by_metric: dict[str, float] = {
-        row["metric_slug"]: float(row["weight"]) for row in scenario_weights_rows
+        row["metric_slug"]: float(row["weight"])
+        for row in scenario_weights_rows
     }
     weights_version = "v1.0" if weights_by_metric else None
     persona_profile = maybe_build_persona_weight_profile(
@@ -65,7 +74,9 @@ def build_cii_comparison(
     if persona_profile is not None:
         for slug in country_slugs:
             aggregate = aggregate_persona_cii_score(
-                values_by_country.get(slug, []), persona_profile, metric_defs_by_slug
+                values_by_country.get(slug, []),
+                persona_profile,
+                metric_defs_by_slug,
             )
             persona_scores_by_country[slug] = float(aggregate["overall_score"])
 
@@ -86,7 +97,9 @@ def build_cii_comparison(
                 slug=slug,
                 name=cii_row["country_name"],
                 iso2=cii_row.get("iso2"),
-                cii_score=persona_scores_by_country.get(slug, cii_row.get("cii_score")),
+                cii_score=persona_scores_by_country.get(
+                    slug, cii_row.get("cii_score")
+                ),
                 cii_confidence=cii_row.get("cii_confidence"),
                 country_drift=cii_row.get("country_drift"),
             )
@@ -98,7 +111,9 @@ def build_cii_comparison(
         cii_row = cii_by_slug.get(slug)
         if cii_row:
             formula_version = formula_version or cii_row.get("formula_version")
-            aggregation_method = aggregation_method or cii_row.get("aggregation_method")
+            aggregation_method = aggregation_method or cii_row.get(
+                "aggregation_method"
+            )
 
     metrics: list[ComparedMetric] = []
     for md in metric_defs:

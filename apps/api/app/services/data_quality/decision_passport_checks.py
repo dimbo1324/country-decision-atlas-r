@@ -10,7 +10,9 @@ def _append_decision_passport_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_active_passports_missing_scenario_slug(connection):
+    for row in repository.list_active_passports_missing_scenario_slug(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_passport_missing_scenario_slug",
@@ -29,7 +31,9 @@ def _append_decision_passport_checks(
         )
     )
 
-    for row in repository.list_active_passports_with_empty_candidates(connection):
+    for row in repository.list_active_passports_with_empty_candidates(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_passport_empty_candidates",
@@ -48,7 +52,9 @@ def _append_decision_passport_checks(
         )
     )
 
-    for row in repository.list_active_passports_with_empty_result_snapshot(connection):
+    for row in repository.list_active_passports_with_empty_result_snapshot(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_passport_empty_result_snapshot",
@@ -88,7 +94,9 @@ def _append_decision_passport_checks(
         )
     )
 
-    for row in repository.list_passports_with_inconsistent_expiry_status(connection):
+    for row in repository.list_passports_with_inconsistent_expiry_status(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_passport_expiry_status_inconsistent",
@@ -126,7 +134,9 @@ def _append_decision_passport_checks(
         )
     )
 
-    for row in repository.list_old_active_passports_without_expires_at(connection):
+    for row in repository.list_old_active_passports_without_expires_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_passport_old_without_expiry",

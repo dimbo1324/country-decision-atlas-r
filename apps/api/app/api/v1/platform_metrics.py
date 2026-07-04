@@ -33,7 +33,9 @@ PLATFORM_METRICS_RESPONSES: dict[int | str, dict[str, Any]] = {
 }
 
 
-def _build_metric(row: dict[str, Any], include_input_summary: bool) -> PlatformMetric:
+def _build_metric(
+    row: dict[str, Any], include_input_summary: bool
+) -> PlatformMetric:
     raw_scenario = row.get("scenario_slug")
     scenario_slug = (
         None
@@ -174,7 +176,9 @@ def get_country_platform_metric(
             "Platform metric not found.",
             {"country_slug": country_slug, "metric_key": metric_key},
         )
-    return PlatformMetricDetailResponse(item=_build_metric(row, include_input_summary))
+    return PlatformMetricDetailResponse(
+        item=_build_metric(row, include_input_summary)
+    )
 
 
 admin_router = APIRouter(tags=["admin"])
@@ -232,7 +236,10 @@ def admin_recompute_country_platform_metrics(
             "Country not found.",
             {"country_slug": country_slug},
         )
-    if payload.metric_key is not None and payload.metric_key not in VALID_METRIC_KEYS:
+    if (
+        payload.metric_key is not None
+        and payload.metric_key not in VALID_METRIC_KEYS
+    ):
         raise api_error(
             422,
             "platform_metric_invalid_key",

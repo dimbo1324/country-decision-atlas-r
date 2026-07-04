@@ -1,7 +1,11 @@
+import re
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
 from app.core.errors import api_error
-from app.repositories import ai_interactions, feature_flags as feature_repository
+from app.repositories import (
+    ai_interactions,
+    feature_flags as feature_repository,
+)
 from app.schemas.ai import (
     AIAskRequest,
     AIAskResponse,
@@ -21,7 +25,6 @@ from app.services.ai_providers import get_ai_provider
 from fastapi import APIRouter, Depends
 from hashlib import sha256
 from psycopg import Connection
-import re
 from typing import Annotated, Any
 
 
@@ -223,11 +226,17 @@ def _ensure_ai_enabled(
             error_code="ai_disabled",
         )
         raise api_error(403, "ai_disabled", "AI assistance is disabled.")
-    context = feature_service.default_access_context(settings, FeatureAccessTier.public)
+    context = feature_service.default_access_context(
+        settings, FeatureAccessTier.public
+    )
     for feature_key in feature_keys:
         feature = feature_repository.get_feature_flag(connection, feature_key)
-        rules = feature_repository.list_feature_access_rules(connection, feature_key)
-        decision = feature_service.can_access(context, feature, rules, feature_key)
+        rules = feature_repository.list_feature_access_rules(
+            connection, feature_key
+        )
+        decision = feature_service.can_access(
+            context, feature, rules, feature_key
+        )
         if not decision.is_enabled:
             _log_interaction(
                 connection,

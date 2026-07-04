@@ -13,7 +13,9 @@ def _append_route_checklist_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_published_checklist_items_missing_title(connection):
+    for row in repository.list_published_checklist_items_missing_title(
+        connection
+    ):
         issues.append(
             _issue(
                 "route_checklist_item_missing_title",
@@ -51,10 +53,8 @@ def _append_route_checklist_checks(
         )
     )
 
-    for row in (
-        route_checklists_repository.list_published_checklist_items_without_traceability(
-            connection
-        )
+    for row in route_checklists_repository.list_published_checklist_items_without_traceability(
+        connection
     ):
         issues.append(
             _issue(
@@ -74,7 +74,9 @@ def _append_route_checklist_checks(
         )
     )
 
-    for row in route_checklists_repository.list_orphan_checklist_items(connection):
+    for row in route_checklists_repository.list_orphan_checklist_items(
+        connection
+    ):
         issues.append(
             _issue(
                 "route_checklist_item_for_unpublished_route",

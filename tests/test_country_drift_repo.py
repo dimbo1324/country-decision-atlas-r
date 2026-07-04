@@ -1,10 +1,10 @@
 """Country drift repository queries: active countries, drift input events, lookups by slug."""
 
+import inspect
+import pytest
 from app.repositories import country_drift as repository
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
-import inspect
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -332,7 +332,9 @@ def test_list_drift_input_events_returns_one_row_per_event_with_evidence_count(
     rows = repository.list_drift_input_events(
         MagicMock(), "russia", date(2026, 1, 1), date(2026, 6, 30)
     )
-    matching = [row for row in rows if row["event_id"] == "event-multi-evidence"]
+    matching = [
+        row for row in rows if row["event_id"] == "event-multi-evidence"
+    ]
     assert len(matching) == 1
     assert matching[0]["evidence_count"] == 3
 
@@ -364,7 +366,9 @@ def test_upsert_drift_snapshot_updates_existing_period_instead_of_duplicating(
     monkeypatch.setattr(
         repository, "execute_one", lambda _c, _q, params: store.upsert(params)
     )
-    repository.upsert_drift_snapshot(MagicMock(), **snapshot_params(label="stable"))
+    repository.upsert_drift_snapshot(
+        MagicMock(), **snapshot_params(label="stable")
+    )
     row = repository.upsert_drift_snapshot(
         MagicMock(), **snapshot_params(label="mildly_positive")
     )
@@ -381,7 +385,9 @@ def test_upsert_drift_snapshot_supports_none_net_score_for_insufficient_data(
     )
     row = repository.upsert_drift_snapshot(
         MagicMock(),
-        **snapshot_params(label="insufficient_data", net_score=None, event_count=1),
+        **snapshot_params(
+            label="insufficient_data", net_score=None, event_count=1
+        ),
     )
     assert row["net_score"] is None
     assert row["label"] == "insufficient_data"
@@ -403,7 +409,9 @@ def test_get_latest_drift_snapshot_returns_newest_period(
 ) -> None:
     expected = {"id": "snapshot-1", "period_end": date(2026, 6, 30)}
     monkeypatch.setattr(repository, "fetch_one", lambda *_args: expected)
-    assert repository.get_latest_drift_snapshot(MagicMock(), "russia") == expected
+    assert (
+        repository.get_latest_drift_snapshot(MagicMock(), "russia") == expected
+    )
 
 
 def test_get_latest_drift_snapshot_orders_by_period_end_desc() -> None:
@@ -453,7 +461,9 @@ def test_list_drift_snapshots_orders_by_period_end_desc() -> None:
     assert "ORDER BY cds.period_end DESC, cds.computed_at DESC" in source
 
 
-def test_count_drift_snapshots_works_globally(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_count_drift_snapshots_works_globally(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(repository, "fetch_one", lambda *_args: {"total": 7})
     assert repository.count_drift_snapshots(MagicMock()) == 7
 

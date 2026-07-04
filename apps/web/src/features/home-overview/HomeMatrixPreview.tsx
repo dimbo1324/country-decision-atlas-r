@@ -1,7 +1,11 @@
 import Link from "next/link";
 import type { HomeMatrixPreview as HomeMatrixPreviewData } from "../../shared/api/home";
 
-export function HomeMatrixPreview({ matrix }: { matrix: HomeMatrixPreviewData }) {
+export function HomeMatrixPreview({
+  matrix,
+}: {
+  matrix: HomeMatrixPreviewData;
+}) {
   const countries = matrix.countries ?? [];
   const scenarios = matrix.scenarios ?? [];
   const cells = new Map(
@@ -11,7 +15,10 @@ export function HomeMatrixPreview({ matrix }: { matrix: HomeMatrixPreviewData })
     ]),
   );
   return (
-    <section className="homeOverviewSection" aria-labelledby="home-matrix-title">
+    <section
+      className="homeOverviewSection"
+      aria-labelledby="home-matrix-title"
+    >
       <div className="homeSectionHeading">
         <div>
           <h2 id="home-matrix-title">Матрица CII</h2>
@@ -19,7 +26,10 @@ export function HomeMatrixPreview({ matrix }: { matrix: HomeMatrixPreviewData })
         </div>
         <Link href="/compare">Полная матрица</Link>
       </div>
-      <div className="homeMatrixPreview" data-testid="home-matrix-preview">
+      <div
+        className="homeMatrixPreview"
+        data-testid="home-matrix-preview"
+      >
         {countries.length === 0 || scenarios.length === 0 ? (
           <span>Матрица пока недоступна.</span>
         ) : (

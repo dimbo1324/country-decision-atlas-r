@@ -30,7 +30,10 @@ const SCORE_TIERS = [
 ];
 
 function scoreTier(score: number) {
-  return SCORE_TIERS.find((t) => score >= t.min) ?? SCORE_TIERS[SCORE_TIERS.length - 1];
+  return (
+    SCORE_TIERS.find((t) => score >= t.min) ??
+    SCORE_TIERS[SCORE_TIERS.length - 1]
+  );
 }
 
 function SpiderChart({ metrics }: { metrics: CiiMetric[] }) {
@@ -127,7 +130,8 @@ function SpiderChart({ metrics }: { metrics: CiiMetric[] }) {
       {axes.map((a) => {
         const labelR = R + 20;
         const p = polar(a.angle, labelR);
-        const anchor = Math.abs(p.x - cx) < 5 ? "middle" : p.x < cx ? "end" : "start";
+        const anchor =
+          Math.abs(p.x - cx) < 5 ? "middle" : p.x < cx ? "end" : "start";
         return (
           <text
             key={a.label}
@@ -146,16 +150,25 @@ function SpiderChart({ metrics }: { metrics: CiiMetric[] }) {
   );
 }
 
-export function CountryCiiBlock({ cii, countrySlug, locale }: CountryCiiBlockProps) {
+export function CountryCiiBlock({
+  cii,
+  countrySlug,
+  locale,
+}: CountryCiiBlockProps) {
   if (!cii) {
-    return <EmptyState message="CII-данные для этой страны ещё не рассчитаны." />;
+    return (
+      <EmptyState message="CII-данные для этой страны ещё не рассчитаны." />
+    );
   }
 
   const tier = scoreTier(cii.overall_score);
   const metrics = cii.metrics ?? [];
 
   return (
-    <div className="ciiBlock" data-testid="cii-block">
+    <div
+      className="ciiBlock"
+      data-testid="cii-block"
+    >
       <div className="ciiScoreRow">
         <div className="ciiScorePrimary">
           <span className={`ciiScoreValue ${tier.cls}`}>
@@ -195,7 +208,10 @@ export function CountryCiiBlock({ cii, countrySlug, locale }: CountryCiiBlockPro
             {metrics.map((m) => {
               const mTier = scoreTier(m.score);
               return (
-                <div key={m.slug} className="ciiMetricRow">
+                <div
+                  key={m.slug}
+                  className="ciiMetricRow"
+                >
                   <span className="ciiMetricName">
                     {METRIC_LABEL_RU[m.slug] ?? m.name_en}
                   </span>
@@ -216,8 +232,9 @@ export function CountryCiiBlock({ cii, countrySlug, locale }: CountryCiiBlockPro
       </div>
 
       <p className="ciiDisclaimer">
-        CII — составной индекс: верховенство права, экон. свобода, полит. стабильность,
-        безопасность, антикоррупция, цифровой доступ. Выше = лучше.
+        CII — составной индекс: верховенство права, экон. свобода, полит.
+        стабильность, безопасность, антикоррупция, цифровой доступ. Выше =
+        лучше.
       </p>
     </div>
   );

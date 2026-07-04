@@ -12,7 +12,10 @@ export function CiiMetricCompareBars({ metrics, countries }: Props) {
     <div className="ciiCompareBars">
       <div className="ciiCompareBarsLegend">
         {countries.map((c, i) => (
-          <span key={c.slug} className="ciiBarsLegendItem">
+          <span
+            key={c.slug}
+            className="ciiBarsLegendItem"
+          >
             <span
               className="ciiBarsLegendDot"
               style={{ background: COUNTRY_COLORS[i] ?? "#888" }}
@@ -22,17 +25,24 @@ export function CiiMetricCompareBars({ metrics, countries }: Props) {
         ))}
       </div>
       {metrics.map((m) => (
-        <div key={m.metric_slug} className="ciiBarRow">
+        <div
+          key={m.metric_slug}
+          className="ciiBarRow"
+        >
           <span className="ciiBarLabel">
             {m.metric_name}
             {m.weight != null && (
-              <span className="ciiBarWeight">{Math.round(m.weight * 100)}%</span>
+              <span className="ciiBarWeight">
+                {Math.round(m.weight * 100)}%
+              </span>
             )}
           </span>
           <div className="ciiBarTrack">
             {(m.values ?? []).map((v, i) => {
               const pct =
-                v.effective_value != null ? Math.min(v.effective_value, 100) : 0;
+                v.effective_value != null
+                  ? Math.min(v.effective_value, 100)
+                  : 0;
               return (
                 <div
                   key={v.country_slug}

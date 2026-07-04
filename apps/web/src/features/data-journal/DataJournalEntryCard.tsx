@@ -8,7 +8,10 @@ export function DataJournalEntryCard({ entry }: DataJournalEntryCardProps) {
   const eventDate = new Date(entry.event_date).toLocaleDateString("ru-RU");
 
   return (
-    <article className="sourceCard" data-testid="data-journal-entry">
+    <article
+      className="sourceCard"
+      data-testid="data-journal-entry"
+    >
       <div className="sourceCardHeader">
         <h3>{entry.title}</h3>
         <span className="metaChip">{eventDate}</span>

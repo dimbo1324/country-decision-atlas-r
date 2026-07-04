@@ -65,7 +65,9 @@ def test_list_methodology_sections_empty(monkeypatch: Any) -> None:
 
 def test_get_methodology_section_found(monkeypatch: Any) -> None:
     conn = _conn_returning_one(_SECTION_EN, monkeypatch)
-    result = methodology_repo.get_methodology_section(conn, "what_is_trust_score", "en")
+    result = methodology_repo.get_methodology_section(
+        conn, "what_is_trust_score", "en"
+    )
     assert result is not None
     assert result["slug"] == "what_is_trust_score"
     assert result["section_type"] == "trust"
@@ -79,6 +81,8 @@ def test_get_methodology_section_not_found(monkeypatch: Any) -> None:
 
 def test_get_methodology_section_ru_locale(monkeypatch: Any) -> None:
     conn = _conn_returning_one(_SECTION_RU, monkeypatch)
-    result = methodology_repo.get_methodology_section(conn, "what_is_trust_score", "ru")
+    result = methodology_repo.get_methodology_section(
+        conn, "what_is_trust_score", "ru"
+    )
     assert result is not None
     assert "Что" in result["title"]

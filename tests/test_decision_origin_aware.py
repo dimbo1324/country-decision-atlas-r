@@ -1,5 +1,6 @@
 """Decision runs with an origin country: ranking is preserved and pair context is attached when available."""
 
+import pytest
 from app.repositories import (
     country_pairs as country_pairs_repository,
     feature_flags as ff_repo,
@@ -10,7 +11,6 @@ from app.services import decision_engine, decision_wizard
 from app.services.decision_engine import helpers as decision_engine_helpers
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from tests.test_decision_run import install_repository_fakes, payload
 from typing import Any, cast
 
@@ -52,7 +52,10 @@ def test_decision_without_origin_preserves_previous_ranking(
 
     result = decision_engine.run_decision(CONNECTION, _payload_without_origin())
 
-    assert [item.country.slug for item in result.results] == ["uruguay", "russia"]
+    assert [item.country.slug for item in result.results] == [
+        "uruguay",
+        "russia",
+    ]
     assert [item.rank for item in result.results] == [1, 2]
 
 
@@ -116,12 +119,16 @@ def test_decision_with_origin_includes_pair_context_when_available(
 
     assert result.origin_context_status == "partial"
     assert by_slug["uruguay"].country_pair_context is not None
-    assert by_slug["uruguay"].country_pair_context.compatibility_label == "mixed"
+    assert (
+        by_slug["uruguay"].country_pair_context.compatibility_label == "mixed"
+    )
     assert by_slug["uruguay"].country_pair_context.source_ids == ["source-1"]
     assert by_slug["russia"].country_pair_context is None
 
 
-def test_missing_pair_context_does_not_crash(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_missing_pair_context_does_not_crash(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
 
     result = decision_engine.run_decision(CONNECTION, payload())
@@ -174,7 +181,9 @@ def test_persona_plus_origin_works(monkeypatch: pytest.MonkeyPatch) -> None:
         "weight_sum": 1.0,
     }
     monkeypatch.setattr(
-        decision_engine_helpers, "build_persona_weight_profile", lambda *_: profile
+        decision_engine_helpers,
+        "build_persona_weight_profile",
+        lambda *_: profile,
     )
     monkeypatch.setattr(
         decision_engine_helpers,
@@ -214,7 +223,9 @@ def test_persona_plus_origin_works(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.origin_context_status == "not_available"
 
 
-def test_custom_weights_plus_origin_works(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_custom_weights_plus_origin_works(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     _install_personalization_enabled(monkeypatch)
 
@@ -281,7 +292,9 @@ def test_wizard_with_origin_country_slug_does_not_crash(
         origin_country_slug="russia",
         family_status="family_with_children",
     )
-    recommendation = decision_wizard.resolve_wizard_recommendation(CONNECTION, answers)
+    recommendation = decision_wizard.resolve_wizard_recommendation(
+        CONNECTION, answers
+    )
 
     assert recommendation.recommended_scenario_slug == "relocation_residence"
     assert "russia" in recommendation.candidate_country_slugs
@@ -293,10 +306,16 @@ def test_score_unchanged_with_origin_compared_to_without(
     install_repository_fakes(monkeypatch)
 
     with_origin = decision_engine.run_decision(CONNECTION, payload())
-    without_origin = decision_engine.run_decision(CONNECTION, _payload_without_origin())
+    without_origin = decision_engine.run_decision(
+        CONNECTION, _payload_without_origin()
+    )
 
-    scores_with = {item.country.slug: item.score for item in with_origin.results}
-    scores_without = {item.country.slug: item.score for item in without_origin.results}
+    scores_with = {
+        item.country.slug: item.score for item in with_origin.results
+    }
+    scores_without = {
+        item.country.slug: item.score for item in without_origin.results
+    }
     assert scores_with == scores_without
 
 
@@ -306,8 +325,12 @@ def test_rank_unchanged_with_origin_compared_to_without(
     install_repository_fakes(monkeypatch)
 
     with_origin = decision_engine.run_decision(CONNECTION, payload())
-    without_origin = decision_engine.run_decision(CONNECTION, _payload_without_origin())
+    without_origin = decision_engine.run_decision(
+        CONNECTION, _payload_without_origin()
+    )
 
     ranks_with = {item.country.slug: item.rank for item in with_origin.results}
-    ranks_without = {item.country.slug: item.rank for item in without_origin.results}
+    ranks_without = {
+        item.country.slug: item.rank for item in without_origin.results
+    }
     assert ranks_with == ranks_without

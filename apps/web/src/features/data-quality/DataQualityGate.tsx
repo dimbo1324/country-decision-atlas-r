@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { dataQualityApi, type DataQualityReport } from "../../shared/api/data-quality";
+import {
+  dataQualityApi,
+  type DataQualityReport,
+} from "../../shared/api/data-quality";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
@@ -49,16 +52,22 @@ export function DataQualityGate() {
 
   if (!user) {
     return (
-      <div className="notice" data-testid="data-quality-unauthenticated">
-        Войдите с ролью editor/admin/owner, чтобы посмотреть отчёт качества данных.{" "}
-        <Link href={routes.login}>Войти</Link>
+      <div
+        className="notice"
+        data-testid="data-quality-unauthenticated"
+      >
+        Войдите с ролью editor/admin/owner, чтобы посмотреть отчёт качества
+        данных. <Link href={routes.login}>Войти</Link>
       </div>
     );
   }
 
   if (!isAllowed) {
     return (
-      <div className="notice" data-testid="data-quality-forbidden">
+      <div
+        className="notice"
+        data-testid="data-quality-forbidden"
+      >
         У вашей роли нет доступа к отчёту качества данных.
       </div>
     );

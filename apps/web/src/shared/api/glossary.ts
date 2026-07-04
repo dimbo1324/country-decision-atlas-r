@@ -5,7 +5,8 @@ import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
 export type GlossaryTerm = components["schemas"]["GlossaryTerm"];
-export type GlossaryListResponse = components["schemas"]["GlossaryListResponse"];
+export type GlossaryListResponse =
+  components["schemas"]["GlossaryListResponse"];
 
 export function listGlossaryTerms(
   locale: LocaleCode = DEFAULT_LOCALE,
@@ -21,7 +22,9 @@ export function getGlossaryTerm(
   slug: string,
   locale: LocaleCode = DEFAULT_LOCALE,
 ): Promise<GlossaryTerm> {
-  return apiGet<GlossaryTerm>(`/api/v1/glossary/${slug}${queryString({ locale })}`);
+  return apiGet<GlossaryTerm>(
+    `/api/v1/glossary/${slug}${queryString({ locale })}`,
+  );
 }
 
 export const glossaryApi = { listGlossaryTerms, getGlossaryTerm };

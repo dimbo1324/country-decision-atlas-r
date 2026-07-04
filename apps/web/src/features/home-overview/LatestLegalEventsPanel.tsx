@@ -9,14 +9,24 @@ const directionLabels: Record<string, string> = {
   uncertain: "Неопределённое",
 };
 
-export function LatestLegalEventsPanel({ events }: { events: LatestLegalEvent[] }) {
+export function LatestLegalEventsPanel({
+  events,
+}: {
+  events: LatestLegalEvent[];
+}) {
   return (
-    <section className="homeOverviewSection" aria-labelledby="home-events-title">
+    <section
+      className="homeOverviewSection"
+      aria-labelledby="home-events-title"
+    >
       <div className="homeSectionHeading">
         <h2 id="home-events-title">Последние правовые изменения</h2>
         <Link href="/legal-signals">Открыть правовые сигналы</Link>
       </div>
-      <div className="homeLegalEvents" data-testid="home-latest-legal-events">
+      <div
+        className="homeLegalEvents"
+        data-testid="home-latest-legal-events"
+      >
         {events.length === 0 ? (
           <span>Недавние события пока недоступны.</span>
         ) : (
@@ -26,17 +36,24 @@ export function LatestLegalEventsPanel({ events }: { events: LatestLegalEvent[] 
               key={`${event.country_slug}:${event.event_date}:${event.title}`}
             >
               <div className="homeLegalEventMeta">
-                <time dateTime={event.event_date}>{formatDate(event.event_date)}</time>
+                <time dateTime={event.event_date}>
+                  {formatDate(event.event_date)}
+                </time>
                 <span>{event.country_name}</span>
                 <span>
-                  {directionLabels[event.impact_direction] ?? event.impact_direction}
+                  {directionLabels[event.impact_direction] ??
+                    event.impact_direction}
                 </span>
                 <span>{event.impact_level}</span>
               </div>
               <h3>{event.title}</h3>
               {event.summary && <p>{event.summary}</p>}
               {event.source && (
-                <a href={event.source.url} target="_blank" rel="noreferrer">
+                <a
+                  href={event.source.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Источник: {event.source.title}
                 </a>
               )}

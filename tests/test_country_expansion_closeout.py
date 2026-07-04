@@ -102,16 +102,22 @@ def _run_all_three() -> Any:
         ),
         patch(
             f"{_REPO}.count_published_country_cards",
-            side_effect=lambda _, slug: _data[slug]["count_published_country_cards"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_published_country_cards"
+            ],
         ),
         patch(f"{_REPO}.count_active_cii_metrics", side_effect=lambda _: 6),
         patch(
             f"{_REPO}.count_country_cii_metric_values",
-            side_effect=lambda _, slug: _data[slug]["count_country_cii_metric_values"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_country_cii_metric_values"
+            ],
         ),
         patch(
             f"{_REPO}.count_cii_scenario_scores",
-            side_effect=lambda _, slug, _sc: _data[slug]["count_cii_scenario_scores"],
+            side_effect=lambda _, slug, _sc: _data[slug][
+                "count_cii_scenario_scores"
+            ],
         ),
         patch(
             f"{_REPO}.count_published_sources",
@@ -123,7 +129,9 @@ def _run_all_three() -> Any:
         ),
         patch(
             f"{_REPO}.count_published_legal_signals",
-            side_effect=lambda _, slug: _data[slug]["count_published_legal_signals"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_published_legal_signals"
+            ],
         ),
         patch(
             f"{_REPO}.count_timeline_events",
@@ -177,7 +185,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.mvp_ready is True
 
     def test_argentina_sources_ready(self) -> None:
@@ -186,7 +196,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["sources"].status == "ready"
         assert result.sections["sources"].actual == 10
 
@@ -196,7 +208,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["evidence"].status == "ready"
         assert result.sections["evidence"].actual == 15
 
@@ -206,7 +220,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["legal_signals"].status == "ready"
         assert result.sections["legal_signals"].actual == 6
 
@@ -216,7 +232,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["timeline"].status == "ready"
         assert result.sections["timeline"].actual == 6
 
@@ -226,7 +244,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["cii_metrics"].status == "ready"
 
     def test_argentina_scenario_scores_ready(self) -> None:
@@ -235,7 +255,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert result.sections["scenario_scores"].status == "ready"
 
     def test_argentina_has_no_findings(self) -> None:
@@ -244,7 +266,9 @@ class TestArgentinaMvpReady:
         defaults = _argentina_mvp_defaults()
         patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
         with patch.multiple(_REPO, **patchers):
-            result = evaluate_country_onboarding(_make_connection(), "argentina")
+            result = evaluate_country_onboarding(
+                _make_connection(), "argentina"
+            )
         assert len(result.findings) == 0
 
 
@@ -283,28 +307,41 @@ class TestAllMvpReadyCloseout:
 
     def test_uruguay_mvp_ready(self) -> None:
         result = _run_all_three()
-        uruguay = next(r for r in result.countries if r.country_slug == "uruguay")
+        uruguay = next(
+            r for r in result.countries if r.country_slug == "uruguay"
+        )
         assert uruguay.mvp_ready is True
 
     def test_argentina_mvp_ready(self) -> None:
         result = _run_all_three()
-        argentina = next(r for r in result.countries if r.country_slug == "argentina")
+        argentina = next(
+            r for r in result.countries if r.country_slug == "argentina"
+        )
         assert argentina.mvp_ready is True
 
     def test_all_mvp_ready_false_if_argentina_missing_legal(self) -> None:
         from app.services.country_onboarding import evaluate_country_onboarding
 
-        ar_bad = {**_argentina_mvp_defaults(), "count_published_legal_signals": 0}
+        ar_bad = {
+            **_argentina_mvp_defaults(),
+            "count_published_legal_signals": 0,
+        }
 
         def _svc_eval(conn: Any, slug: str) -> Any:
             if slug == "argentina":
-                patchers = {k: MagicMock(return_value=v) for k, v in ar_bad.items()}
+                patchers = {
+                    k: MagicMock(return_value=v) for k, v in ar_bad.items()
+                }
                 with patch.multiple(_REPO, **patchers):
                     return evaluate_country_onboarding(conn, slug)
             defaults = (
-                _russia_mvp_defaults() if slug == "russia" else _uruguay_mvp_defaults()
+                _russia_mvp_defaults()
+                if slug == "russia"
+                else _uruguay_mvp_defaults()
             )
-            patchers = {k: MagicMock(return_value=v) for k, v in defaults.items()}
+            patchers = {
+                k: MagicMock(return_value=v) for k, v in defaults.items()
+            }
             with patch.multiple(_REPO, **patchers):
                 return evaluate_country_onboarding(conn, slug)
 
@@ -312,7 +349,9 @@ class TestAllMvpReadyCloseout:
             "app.services.country_onboarding.evaluate_country_onboarding",
             side_effect=_svc_eval,
         ):
-            from app.services.country_onboarding import evaluate_all_mvp_countries
+            from app.services.country_onboarding import (
+                evaluate_all_mvp_countries,
+            )
 
             result = evaluate_all_mvp_countries(_make_connection())
         assert result.all_mvp_ready is False
@@ -339,7 +378,9 @@ class TestMatrixThreeCountries:
 
         assert "argentina" in MVP_COUNTRIES
 
-    def test_matrix_three_countries_times_five_scenarios_is_fifteen(self) -> None:
+    def test_matrix_three_countries_times_five_scenarios_is_fifteen(
+        self,
+    ) -> None:
         from app.services.cii_matrix import MVP_COUNTRIES, MVP_SCENARIOS
 
         assert len(MVP_COUNTRIES) * len(MVP_SCENARIOS) == 15

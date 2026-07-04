@@ -1,16 +1,16 @@
 """Schema assertions and upsert behavior for the country platform metrics table."""
 
+import pytest
 from app.repositories import platform_metrics as repository
 from decimal import Decimal
 from pathlib import Path
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
 
-MIGRATION_SQL = Path("database/migrations/032_computed_intelligence.sql").read_text(
-    encoding="utf-8"
-)
+MIGRATION_SQL = Path(
+    "database/migrations/032_computed_intelligence.sql"
+).read_text(encoding="utf-8")
 
 
 class FakeMetricStore:
@@ -68,9 +68,9 @@ class FakeMetricStore:
             "contradiction_score",
         }:
             raise ValueError("metric_key")
-        if row["value"] is not None and not Decimal("0") <= row["value"] <= Decimal(
-            "100"
-        ):
+        if row["value"] is not None and not Decimal("0") <= row[
+            "value"
+        ] <= Decimal("100"):
             raise ValueError("value")
         if row["label"] not in {
             "insufficient_data",
@@ -89,7 +89,12 @@ class FakeMetricStore:
             raise ValueError("input_summary")
         if any(
             row[key] < 0
-            for key in ("source_count", "evidence_count", "signal_count", "event_count")
+            for key in (
+                "source_count",
+                "evidence_count",
+                "signal_count",
+                "event_count",
+            )
         ):
             raise ValueError("counts")
 
@@ -117,7 +122,9 @@ def metric_params(**overrides: Any) -> dict[str, Any]:
 
 
 def test_migration_creates_country_platform_metrics_table() -> None:
-    assert "CREATE TABLE IF NOT EXISTS country_platform_metrics" in MIGRATION_SQL
+    assert (
+        "CREATE TABLE IF NOT EXISTS country_platform_metrics" in MIGRATION_SQL
+    )
     assert "scenario_slug TEXT NOT NULL DEFAULT '__global__'" in MIGRATION_SQL
     assert "CONSTRAINT country_platform_metrics_unique" in MIGRATION_SQL
 
@@ -145,12 +152,16 @@ def test_upsert_inserts_new_metric(monkeypatch: pytest.MonkeyPatch) -> None:
     assert row["metric_key"] == "legal_velocity_index"
 
 
-def test_upsert_updates_existing_metric(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_upsert_updates_existing_metric(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     store = FakeMetricStore()
     monkeypatch.setattr(
         repository, "execute_one", lambda _c, _q, params: store.upsert(params)
     )
-    repository.upsert_country_platform_metric(**metric_params(value=Decimal("10.00")))
+    repository.upsert_country_platform_metric(
+        **metric_params(value=Decimal("10.00"))
+    )
     row = repository.upsert_country_platform_metric(
         **metric_params(value=Decimal("20.00"))
     )
@@ -165,7 +176,9 @@ def test_global_metric_with_none_scenario_stores_global(
     monkeypatch.setattr(
         repository, "execute_one", lambda _c, _q, params: store.upsert(params)
     )
-    row = repository.upsert_country_platform_metric(**metric_params(scenario_slug=None))
+    row = repository.upsert_country_platform_metric(
+        **metric_params(scenario_slug=None)
+    )
     assert row["scenario_slug"] == "__global__"
 
 
@@ -177,11 +190,15 @@ def test_repeated_global_upsert_does_not_duplicate(
         repository, "execute_one", lambda _c, _q, params: store.upsert(params)
     )
     repository.upsert_country_platform_metric(**metric_params(scenario_slug=""))
-    repository.upsert_country_platform_metric(**metric_params(scenario_slug=None))
+    repository.upsert_country_platform_metric(
+        **metric_params(scenario_slug=None)
+    )
     assert len(store.rows) == 1
 
 
-def test_scenario_metric_unique_per_scenario(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_scenario_metric_unique_per_scenario(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     store = FakeMetricStore()
     monkeypatch.setattr(
         repository, "execute_one", lambda _c, _q, params: store.upsert(params)
@@ -201,13 +218,19 @@ def test_list_country_platform_metrics_returns_expected_rows(
 ) -> None:
     expected = [{"metric_key": "legal_velocity_index"}]
     monkeypatch.setattr(repository, "fetch_all", lambda *_args: expected)
-    assert repository.list_country_platform_metrics(MagicMock(), "russia") == expected
+    assert (
+        repository.list_country_platform_metrics(MagicMock(), "russia")
+        == expected
+    )
 
 
 def test_get_country_platform_metric_returns_expected_global_metric(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    expected = {"metric_key": "legal_velocity_index", "scenario_slug": "__global__"}
+    expected = {
+        "metric_key": "legal_velocity_index",
+        "scenario_slug": "__global__",
+    }
     monkeypatch.setattr(repository, "fetch_one", lambda *_args: expected)
     assert (
         repository.get_country_platform_metric(

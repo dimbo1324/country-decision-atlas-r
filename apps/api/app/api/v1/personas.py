@@ -33,7 +33,9 @@ def read_persona(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> Persona:
-    row = personas_repository.get_persona_by_slug(connection, persona_slug, locale)
+    row = personas_repository.get_persona_by_slug(
+        connection, persona_slug, locale
+    )
     if row is None:
         raise api_error(
             404,
@@ -44,7 +46,9 @@ def read_persona(
     return Persona.model_validate(row)
 
 
-@router.get("/{persona_slug}/weights", response_model=PersonaWeightProfileResponse)
+@router.get(
+    "/{persona_slug}/weights", response_model=PersonaWeightProfileResponse
+)
 def read_persona_weights(
     persona_slug: str,
     scenario: Annotated[str, Query(description="Scenario slug")],

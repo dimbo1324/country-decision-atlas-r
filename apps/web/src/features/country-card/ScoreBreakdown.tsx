@@ -11,7 +11,10 @@ type ScoreBreakdownProps = {
   sourcesById?: Map<string, CountryReadModelSource>;
 };
 
-export function ScoreBreakdown({ breakdowns, sourcesById }: ScoreBreakdownProps) {
+export function ScoreBreakdown({
+  breakdowns,
+  sourcesById,
+}: ScoreBreakdownProps) {
   const linkedSources: CountryReadModelSource[] = [];
   if (sourcesById) {
     const seen = new Set<string>();
@@ -54,18 +57,33 @@ export function ScoreBreakdown({ breakdowns, sourcesById }: ScoreBreakdownProps)
       </div>
 
       {linkedSources.length > 0 && (
-        <div className="supportingSourcesList" data-testid="supporting-sources">
+        <div
+          className="supportingSourcesList"
+          data-testid="supporting-sources"
+        >
           <p className="sectionTitle">Подтверждающие источники</p>
           {linkedSources.map((s) => (
-            <div key={s.id} className="sourceLinkCard">
+            <div
+              key={s.id}
+              className="sourceLinkCard"
+            >
               <span className="sourceLinkTitle">{s.title}</span>
               <div className="metaRow">
-                {s.source_type && <span className="metaChip">{s.source_type}</span>}
+                {s.source_type && (
+                  <span className="metaChip">{s.source_type}</span>
+                )}
                 {s.confidence && (
-                  <span className="metaChip">Достоверность: {s.confidence}</span>
+                  <span className="metaChip">
+                    Достоверность: {s.confidence}
+                  </span>
                 )}
               </div>
-              <a href={s.url} target="_blank" rel="noreferrer" className="externalLink">
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                className="externalLink"
+              >
                 Открыть источник ↗
               </a>
             </div>

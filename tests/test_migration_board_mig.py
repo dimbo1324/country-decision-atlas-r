@@ -31,7 +31,9 @@ def test_migration_board_migration_adds_feature_flags() -> None:
     assert "ON CONFLICT (key) DO NOTHING" in MIGRATION_SQL
 
 
-def test_migration_board_migration_enforces_privacy_lifecycle_constraints() -> None:
+def test_migration_board_migration_enforces_privacy_lifecycle_constraints() -> (
+    None
+):
     assert "migration_board_posts_published_state_check" in MIGRATION_SQL
     assert "risk_acknowledged IS TRUE" in MIGRATION_SQL
     assert "legal_disclaimer_acknowledged IS TRUE" in MIGRATION_SQL

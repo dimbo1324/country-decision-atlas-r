@@ -30,9 +30,16 @@ type RouteFiltersProps = {
   onReset?: () => void;
 };
 
-export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) {
+export function RouteFilters({
+  filters,
+  onChange,
+  onReset,
+}: RouteFiltersProps) {
   return (
-    <div className="filterBar routeFilters" data-testid="route-filters">
+    <div
+      className="filterBar routeFilters"
+      data-testid="route-filters"
+    >
       <label>
         Тип маршрута
         <select
@@ -42,7 +49,10 @@ export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) 
         >
           <option value="">Все типы</option>
           {ROUTE_TYPES.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
@@ -57,7 +67,10 @@ export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) 
         >
           <option value="">Любой статус</option>
           {ELIGIBILITY_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
@@ -72,7 +85,10 @@ export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) 
         >
           <option value="">Любой статус</option>
           {ELIGIBILITY_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
@@ -87,14 +103,21 @@ export function RouteFilters({ filters, onChange, onReset }: RouteFiltersProps) 
         >
           <option value="">Любой статус</option>
           {ELIGIBILITY_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
         </select>
       </label>
       {onReset && (
-        <button type="button" data-testid="route-filter-reset" onClick={onReset}>
+        <button
+          type="button"
+          data-testid="route-filter-reset"
+          onClick={onReset}
+        >
           Сбросить
         </button>
       )}

@@ -4,7 +4,8 @@ import { apiDelete, apiGet, apiPatch, apiPost } from "./http";
 
 export type WatchlistItem = components["schemas"]["WatchlistItem"];
 export type WatchlistResponse = components["schemas"]["WatchlistResponse"];
-export type WatchlistStatusResponse = components["schemas"]["WatchlistStatusResponse"];
+export type WatchlistStatusResponse =
+  components["schemas"]["WatchlistStatusResponse"];
 
 type WatchlistPreferencesUpdate = {
   notify_legal_signals?: boolean;
@@ -19,7 +20,9 @@ export function listWatchlist(): Promise<WatchlistResponse> {
   });
 }
 
-export function addCountryToWatchlist(countrySlug: string): Promise<WatchlistItem> {
+export function addCountryToWatchlist(
+  countrySlug: string,
+): Promise<WatchlistItem> {
   return apiPost<WatchlistItem, Record<string, never>>(
     `/api/v1/me/watchlist/countries/${countrySlug}`,
     {},

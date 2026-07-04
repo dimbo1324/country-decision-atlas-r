@@ -20,18 +20,33 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
   return (
     <div className="scoreList">
       {scores.map((score) => (
-        <div key={score.id} className="scoreCard">
+        <div
+          key={score.id}
+          className="scoreCard"
+        >
           <div className="scoreCardHeader">
             <span className="scoreScenario">{score.scenario_title}</span>
             <span className="scoreBadge">{formatScore(score.score)}</span>
-            <LocalizationBadge localization={score.localization} compact />
+            <LocalizationBadge
+              localization={score.localization}
+              compact
+            />
           </div>
-          {score.confidence && <ConfidenceBadge confidence={score.confidence} />}
-          {score.explanation && <p className="scoreExplanation">{score.explanation}</p>}
+          {score.confidence && (
+            <ConfidenceBadge confidence={score.confidence} />
+          )}
+          {score.explanation && (
+            <p className="scoreExplanation">{score.explanation}</p>
+          )}
           {score.breakdowns && score.breakdowns.length > 0 && (
             <details className="breakdownDetails">
-              <summary className="breakdownSummaryToggle">Разбор оценки</summary>
-              <ScoreBreakdown breakdowns={score.breakdowns} sourcesById={sourcesById} />
+              <summary className="breakdownSummaryToggle">
+                Разбор оценки
+              </summary>
+              <ScoreBreakdown
+                breakdowns={score.breakdowns}
+                sourcesById={sourcesById}
+              />
             </details>
           )}
         </div>

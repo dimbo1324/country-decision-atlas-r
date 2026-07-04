@@ -1,5 +1,6 @@
 """Analytics events emitted for custom-weight decision requests, and failure isolation."""
 
+import pytest
 from app.repositories import (
     analytics as analytics_repository,
     countries as countries_repository,
@@ -10,7 +11,6 @@ from app.repositories import (
 from app.schemas.decision_engine import DecisionRunRequest
 from app.schemas.decision_wizard import DecisionWizardAnswers
 from app.services import decision_engine, decision_wizard
-import pytest
 from tests.test_decision_run import install_repository_fakes, payload
 from typing import Any, cast
 from unittest.mock import MagicMock
@@ -71,7 +71,9 @@ def _capture_events(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
         captured.append(kwargs)
         return uuid4()
 
-    monkeypatch.setattr(analytics_repository, "insert_analytics_event", fake_insert)
+    monkeypatch.setattr(
+        analytics_repository, "insert_analytics_event", fake_insert
+    )
     return captured
 
 
@@ -114,7 +116,9 @@ def test_custom_weights_request_writes_analytics_event(
         session_id="session-abcdefgh",
     )
 
-    events = [e for e in captured if e["event_type"] == "decision_custom_weights_used"]
+    events = [
+        e for e in captured if e["event_type"] == "decision_custom_weights_used"
+    ]
     assert len(events) == 1
     assert events[0]["scenario_slug"] == "relocation_residence"
     assert events[0]["metadata"]["candidate_count"] == 2
@@ -128,9 +132,13 @@ def test_no_custom_weights_does_not_write_custom_weights_event(
     install_repository_fakes(monkeypatch)
     captured = _capture_events(monkeypatch)
 
-    decision_engine.run_decision(CONNECTION, payload(), session_id="session-abcdefgh")
+    decision_engine.run_decision(
+        CONNECTION, payload(), session_id="session-abcdefgh"
+    )
 
-    events = [e for e in captured if e["event_type"] == "decision_custom_weights_used"]
+    events = [
+        e for e in captured if e["event_type"] == "decision_custom_weights_used"
+    ]
     assert len(events) == 0
 
 
@@ -185,7 +193,9 @@ def test_wizard_resolve_writes_wizard_completed_event(
         session_id="session-abcdefgh",
     )
 
-    events = [e for e in captured if e["event_type"] == "decision_wizard_completed"]
+    events = [
+        e for e in captured if e["event_type"] == "decision_wizard_completed"
+    ]
     assert len(events) == 1
     assert events[0]["metadata"]["primary_goal"] == "business"
     assert events[0]["metadata"]["recommended_scenario_slug"] == (
@@ -230,7 +240,9 @@ def test_metadata_does_not_contain_ip(monkeypatch: pytest.MonkeyPatch) -> None:
         assert "ip" not in event["metadata"]
 
 
-def test_metadata_does_not_contain_user_agent(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_metadata_does_not_contain_user_agent(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     _install_personalization_enabled(monkeypatch)
     captured = _capture_events(monkeypatch)
@@ -247,7 +259,9 @@ def test_metadata_does_not_contain_user_agent(monkeypatch: pytest.MonkeyPatch) -
         assert "user_agent" not in event["metadata"]
 
 
-def test_metadata_does_not_contain_email(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_metadata_does_not_contain_email(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_personalization_enabled(monkeypatch)
     _install_wizard_fakes(monkeypatch)
     captured = _capture_events(monkeypatch)

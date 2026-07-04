@@ -1,5 +1,6 @@
 """Role-based access rules for admin user management: who can promote/demote which roles."""
 
+import pytest
 from app.api.v1 import admin_users as admin_users_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
@@ -8,7 +9,6 @@ from app.services import admin_users as service
 from datetime import UTC, datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -75,7 +75,10 @@ def test_update_user_role_blocks_non_owner_from_promoting_to_owner(
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     with pytest.raises(HTTPException) as exc_info:
         service.update_user_role(
-            CONNECTION, current_user=ADMIN_USER, user_id="target-id", new_role="owner"
+            CONNECTION,
+            current_user=ADMIN_USER,
+            user_id="target-id",
+            new_role="owner",
         )
     assert exc_info.value.status_code == 403
     detail = cast(dict[str, Any], exc_info.value.detail)
@@ -90,7 +93,10 @@ def test_update_user_role_blocks_non_owner_from_demoting_an_owner(
     )
     with pytest.raises(HTTPException) as exc_info:
         service.update_user_role(
-            CONNECTION, current_user=ADMIN_USER, user_id="target-id", new_role="editor"
+            CONNECTION,
+            current_user=ADMIN_USER,
+            user_id="target-id",
+            new_role="editor",
         )
     assert exc_info.value.status_code == 403
 
@@ -103,7 +109,10 @@ def test_update_user_role_allows_owner_to_promote_to_owner(
         repository, "set_user_role", lambda *_a: _user_row(role="owner")
     )
     updated = service.update_user_role(
-        CONNECTION, current_user=OWNER_USER, user_id="target-id", new_role="owner"
+        CONNECTION,
+        current_user=OWNER_USER,
+        user_id="target-id",
+        new_role="owner",
     )
     assert updated["role"] == "owner"
 
@@ -116,7 +125,10 @@ def test_update_user_role_allows_admin_for_non_owner_roles(
         repository, "set_user_role", lambda *_a: _user_row(role="editor")
     )
     updated = service.update_user_role(
-        CONNECTION, current_user=ADMIN_USER, user_id="target-id", new_role="editor"
+        CONNECTION,
+        current_user=ADMIN_USER,
+        user_id="target-id",
+        new_role="editor",
     )
     assert updated["role"] == "editor"
 
@@ -149,7 +161,10 @@ def test_update_user_status_allows_owner_to_change_owner_status(
         lambda *_a: _user_row(role="owner", status="suspended"),
     )
     updated = service.update_user_status(
-        CONNECTION, current_user=OWNER_USER, user_id="target-id", new_status="suspended"
+        CONNECTION,
+        current_user=OWNER_USER,
+        user_id="target-id",
+        new_status="suspended",
     )
     assert updated["status"] == "suspended"
 
@@ -162,7 +177,10 @@ def test_update_user_status_allows_admin_for_non_owner_target(
         repository, "set_user_status", lambda *_a: _user_row(status="suspended")
     )
     updated = service.update_user_status(
-        CONNECTION, current_user=ADMIN_USER, user_id="target-id", new_status="suspended"
+        CONNECTION,
+        current_user=ADMIN_USER,
+        user_id="target-id",
+        new_status="suspended",
     )
     assert updated["status"] == "suspended"
 
@@ -198,7 +216,9 @@ def test_list_users_with_editor_returns_403() -> None:
     assert response.status_code == 403
 
 
-def test_list_users_with_admin_returns_200(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_list_users_with_admin_returns_200(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(repository, "list_users", lambda *_a: [_user_row()])
     monkeypatch.setattr(repository, "count_users", lambda *_a: 1)
     client = _client(ADMIN_USER)

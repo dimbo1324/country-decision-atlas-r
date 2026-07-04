@@ -21,7 +21,10 @@ type TrustSurfaceBlockProps = {
   locale: LocaleCode;
 };
 
-export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProps) {
+export function TrustSurfaceBlock({
+  countrySlug,
+  locale,
+}: TrustSurfaceBlockProps) {
   const [data, setData] = useState<CountryTrustResponse | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isNotComputed, setIsNotComputed] = useState(false);
@@ -70,7 +73,10 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
 
   if (!data || isNotComputed) {
     return (
-      <div className="notice" data-testid="trust-surface-empty">
+      <div
+        className="notice"
+        data-testid="trust-surface-empty"
+      >
         Данные о доверии к источникам ещё не вычислены для этой страны.
       </div>
     );
@@ -88,16 +94,26 @@ export function TrustSurfaceBlock({ countrySlug, locale }: TrustSurfaceBlockProp
   return (
     <div data-testid="trust-surface-block">
       <div className="trustBadgeRow">
-        <TrustBadge label={data.trust_label} score={data.trust_score ?? undefined} />
+        <TrustBadge
+          label={data.trust_label}
+          score={data.trust_score ?? undefined}
+        />
         <FreshnessBadge status={data.freshness_status} />
         {data.confidence && <ConfidenceBadge confidence={data.confidence} />}
       </div>
       <LastVerifiedAt date={data.last_verified_at ?? undefined} />
-      <p className="infoNote" data-testid="contradiction-context">
-        Противоречивость данных: <span className="metaChip">{contradictionLabel}</span>
+      <p
+        className="infoNote"
+        data-testid="contradiction-context"
+      >
+        Противоречивость данных:{" "}
+        <span className="metaChip">{contradictionLabel}</span>
       </p>
       <p className="infoNote">
-        <Link href="/methodology" className="internalLink">
+        <Link
+          href="/methodology"
+          className="internalLink"
+        >
           О методологии →
         </Link>
       </p>

@@ -20,10 +20,12 @@ def build_country_pair_contexts(
         destination_slug = str(row["destination_slug"])
         if destination_slug not in candidates:
             continue
-        sources = country_pairs_repository.list_pair_sources(connection, row["id"])
+        sources = country_pairs_repository.list_pair_sources(
+            connection, row["id"]
+        )
         enriched = {**row, "source_ids": [item["id"] for item in sources]}
-        contexts[destination_slug] = country_pairs_service.build_country_pair_summary(
-            enriched
+        contexts[destination_slug] = (
+            country_pairs_service.build_country_pair_summary(enriched)
         )
     return contexts
 

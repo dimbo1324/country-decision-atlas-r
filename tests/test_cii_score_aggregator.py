@@ -107,7 +107,9 @@ class TestAggregateGeometric:
     def test_zero_value_protected_score(self) -> None:
         from app.services.cii import aggregate_cii_score
 
-        result = aggregate_cii_score([_mv("m1", 0.0, 1.0), _mv("m2", 80.0, 1.0)])
+        result = aggregate_cii_score(
+            [_mv("m1", 0.0, 1.0), _mv("m2", 80.0, 1.0)]
+        )
         assert result["overall_score"] > 0.0
 
     def test_weighted_aggregation_matches_formula(self) -> None:
@@ -118,9 +120,12 @@ class TestAggregateGeometric:
         metrics = [_mv("m1", v1, w1), _mv("m2", v2, w2)]
         result = aggregate_cii_score(metrics)
         expected = math.exp(
-            (w1 * math.log(max(v1, 1.0)) + w2 * math.log(max(v2, 1.0))) / (w1 + w2)
+            (w1 * math.log(max(v1, 1.0)) + w2 * math.log(max(v2, 1.0)))
+            / (w1 + w2)
         )
-        assert result["overall_score"] == pytest.approx(round(expected, 2), abs=0.01)
+        assert result["overall_score"] == pytest.approx(
+            round(expected, 2), abs=0.01
+        )
 
     def test_missing_normalized_value_yields_warning(self) -> None:
         from app.services.cii import aggregate_cii_score
@@ -206,7 +211,9 @@ class TestComputeConfidence:
     def test_all_high_reliability_returns_high(self) -> None:
         from app.services.cii import compute_confidence
 
-        metrics = [_mv(f"m{i}", 50.0, 1.0, reliability="high") for i in range(6)]
+        metrics = [
+            _mv(f"m{i}", 50.0, 1.0, reliability="high") for i in range(6)
+        ]
         assert compute_confidence(metrics) == "high"
 
     def test_all_low_reliability_returns_low(self) -> None:

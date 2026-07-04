@@ -27,12 +27,16 @@ _TERM_RU = {
 
 
 def _conn_list(rows: list[dict[str, Any]], monkeypatch: Any) -> Any:
-    monkeypatch.setattr("app.repositories.glossary.fetch_all", lambda *_a, **_kw: rows)
+    monkeypatch.setattr(
+        "app.repositories.glossary.fetch_all", lambda *_a, **_kw: rows
+    )
     return MagicMock()
 
 
 def _conn_one(row: dict[str, Any] | None, monkeypatch: Any) -> Any:
-    monkeypatch.setattr("app.repositories.glossary.fetch_one", lambda *_a, **_kw: row)
+    monkeypatch.setattr(
+        "app.repositories.glossary.fetch_one", lambda *_a, **_kw: row
+    )
     return MagicMock()
 
 

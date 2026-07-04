@@ -123,7 +123,9 @@ def _evaluate_all_mvp_with_argentina_full() -> Any:
         ),
         patch(
             f"{_REPO}.count_published_country_cards",
-            side_effect=lambda _, slug: _data[slug]["count_published_country_cards"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_published_country_cards"
+            ],
         ),
         patch(
             f"{_REPO}.count_active_cii_metrics",
@@ -131,11 +133,15 @@ def _evaluate_all_mvp_with_argentina_full() -> Any:
         ),
         patch(
             f"{_REPO}.count_country_cii_metric_values",
-            side_effect=lambda _, slug: _data[slug]["count_country_cii_metric_values"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_country_cii_metric_values"
+            ],
         ),
         patch(
             f"{_REPO}.count_cii_scenario_scores",
-            side_effect=lambda _, slug, _sc: _data[slug]["count_cii_scenario_scores"],
+            side_effect=lambda _, slug, _sc: _data[slug][
+                "count_cii_scenario_scores"
+            ],
         ),
         patch(
             f"{_REPO}.count_published_sources",
@@ -147,7 +153,9 @@ def _evaluate_all_mvp_with_argentina_full() -> Any:
         ),
         patch(
             f"{_REPO}.count_published_legal_signals",
-            side_effect=lambda _, slug: _data[slug]["count_published_legal_signals"],
+            side_effect=lambda _, slug: _data[slug][
+                "count_published_legal_signals"
+            ],
         ),
         patch(
             f"{_REPO}.count_timeline_events",
@@ -428,7 +436,9 @@ class TestAllMvpReadyAfterArgentinaLegal:
 
     def test_uruguay_mvp_ready(self) -> None:
         result = _evaluate_all_mvp_with_argentina_full()
-        uruguay = next(c for c in result.countries if c.country_slug == "uruguay")
+        uruguay = next(
+            c for c in result.countries if c.country_slug == "uruguay"
+        )
         assert uruguay.mvp_ready is True
 
     def test_argentina_in_mvp_countries(self) -> None:
@@ -438,7 +448,9 @@ class TestAllMvpReadyAfterArgentinaLegal:
 
     def test_argentina_mvp_ready_when_full(self) -> None:
         result = _evaluate_all_mvp_with_argentina_full()
-        argentina = next(c for c in result.countries if c.country_slug == "argentina")
+        argentina = next(
+            c for c in result.countries if c.country_slug == "argentina"
+        )
         assert argentina.mvp_ready is True
 
     def test_onboarding_countries_is_empty(self) -> None:
@@ -508,7 +520,9 @@ class TestArgentinaTimelineData:
             assert ev["year"] == 2024
 
     def test_traceability_ratio_is_one(self) -> None:
-        with_source = sum(1 for ev in _ARGENTINA_TIMELINE_EVENTS if ev["source_id"])
+        with_source = sum(
+            1 for ev in _ARGENTINA_TIMELINE_EVENTS if ev["source_id"]
+        )
         assert with_source == len(_ARGENTINA_TIMELINE_EVENTS)
 
 
@@ -545,7 +559,8 @@ class TestArgentinaLegalSignalsApi:
         untraceable = [
             ev
             for ev in _ARGENTINA_TIMELINE_EVENTS
-            if ev.get("source_id") is None and ev.get("evidence_item_id") is None
+            if ev.get("source_id") is None
+            and ev.get("evidence_item_id") is None
         ]
         assert len(untraceable) == 0
 

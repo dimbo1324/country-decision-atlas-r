@@ -76,7 +76,9 @@ def get_country_trust(
     row = trust_repo.get_country_trust_score(connection, country_slug)
     if row is None:
         raise api_error(
-            404, "trust_not_found", f"Trust score not found for country: {country_slug}"
+            404,
+            "trust_not_found",
+            f"Trust score not found for country: {country_slug}",
         )
     return _build_trust_response(row)
 

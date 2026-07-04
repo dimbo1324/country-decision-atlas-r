@@ -31,7 +31,9 @@ def _append_decision_personalization_checks(
             ["decision_personalization_feature_flag_invalid"],
         )
     )
-    for row in repository.list_decision_scores_missing_required_criteria(connection):
+    for row in repository.list_decision_scores_missing_required_criteria(
+        connection
+    ):
         issues.append(
             _issue(
                 "decision_score_required_criterion_missing",

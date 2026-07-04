@@ -41,22 +41,30 @@ export function WatchlistView() {
   async function handleRemove(countrySlug: string) {
     await watchlistsApi.removeCountryFromWatchlist(countrySlug);
     setItems(
-      (prev) => prev?.filter((item) => item.country_slug !== countrySlug) ?? null,
+      (prev) =>
+        prev?.filter((item) => item.country_slug !== countrySlug) ?? null,
     );
   }
 
   async function handleToggle(
     countrySlug: string,
-    field: "notify_legal_signals" | "notify_drift_changes" | "notify_route_updates",
+    field:
+      | "notify_legal_signals"
+      | "notify_drift_changes"
+      | "notify_route_updates",
     value: boolean,
   ) {
-    const updated = await watchlistsApi.updateWatchlistPreferences(countrySlug, {
-      [field]: value,
-    });
+    const updated = await watchlistsApi.updateWatchlistPreferences(
+      countrySlug,
+      {
+        [field]: value,
+      },
+    );
     setItems(
       (prev) =>
-        prev?.map((item) => (item.country_slug === countrySlug ? updated : item)) ??
-        null,
+        prev?.map((item) =>
+          item.country_slug === countrySlug ? updated : item,
+        ) ?? null,
     );
   }
 
@@ -66,7 +74,10 @@ export function WatchlistView() {
 
   if (!user) {
     return (
-      <div className="notice" data-testid="watchlist-unauthenticated">
+      <div
+        className="notice"
+        data-testid="watchlist-unauthenticated"
+      >
         Войдите, чтобы сохранять страны в watchlist.{" "}
         <Link href={routes.login}>Войти</Link>
       </div>
@@ -87,18 +98,30 @@ export function WatchlistView() {
 
   if (!items || items.length === 0) {
     return (
-      <div className="emptyNotice" data-testid="watchlist-empty-state">
+      <div
+        className="emptyNotice"
+        data-testid="watchlist-empty-state"
+      >
         Watchlist пуст. Сохраните страну на странице страны.
       </div>
     );
   }
 
   return (
-    <div className="searchPageContainer" data-testid="watchlist-list">
+    <div
+      className="searchPageContainer"
+      data-testid="watchlist-list"
+    >
       {items.map((item) => (
-        <div className="watchlistCard" key={item.id} data-testid="watchlist-item">
+        <div
+          className="watchlistCard"
+          key={item.id}
+          data-testid="watchlist-item"
+        >
           <div className="watchlistCardHeader">
-            <Link href={routes.country(item.country_slug)}>{item.country_name}</Link>
+            <Link href={routes.country(item.country_slug)}>
+              {item.country_name}
+            </Link>
             <button
               type="button"
               className="runButton"

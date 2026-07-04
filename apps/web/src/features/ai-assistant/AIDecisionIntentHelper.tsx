@@ -17,7 +17,9 @@ export function AIDecisionIntentHelper({
   const [text, setText] = useState(
     "Я хочу переехать с семьёй, бюджет ограничен, важна безопасность и путь к гражданству.",
   );
-  const [response, setResponse] = useState<AIDecisionIntentResponse | null>(null);
+  const [response, setResponse] = useState<AIDecisionIntentResponse | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,8 +41,14 @@ export function AIDecisionIntentHelper({
   }
 
   return (
-    <div className="formGroup" data-testid="ai-decision-helper">
-      <label className="formLabel" htmlFor="ai-decision-intent">
+    <div
+      className="formGroup"
+      data-testid="ai-decision-helper"
+    >
+      <label
+        className="formLabel"
+        htmlFor="ai-decision-intent"
+      >
         Опишите вашу ситуацию
       </label>
       <textarea
@@ -61,12 +69,19 @@ export function AIDecisionIntentHelper({
         {isLoading ? "Подбираем…" : "Подобрать scenario/persona"}
       </button>
       {error && (
-        <p className="formError" role="alert" data-testid="ai-decision-error">
+        <p
+          className="formError"
+          role="alert"
+          data-testid="ai-decision-error"
+        >
           {error}
         </p>
       )}
       {response && (
-        <div className="notice" data-testid="ai-decision-result">
+        <div
+          className="notice"
+          data-testid="ai-decision-result"
+        >
           {response.refused ? (
             <p>{response.refusal?.reason ?? "Недостаточно данных."}</p>
           ) : (
@@ -75,7 +90,9 @@ export function AIDecisionIntentHelper({
                 Scenario: <strong>{response.scenario_slug}</strong> · Persona:{" "}
                 <strong>{response.persona_slug}</strong>
               </p>
-              <p>Кандидаты: {(response.candidate_country_slugs ?? []).join(", ")}</p>
+              <p>
+                Кандидаты: {(response.candidate_country_slugs ?? []).join(", ")}
+              </p>
               <button
                 type="button"
                 className="internalLink"

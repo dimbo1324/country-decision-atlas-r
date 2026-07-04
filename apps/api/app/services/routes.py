@@ -89,7 +89,10 @@ def _list_country_routes_uncached(
     limit: int = 50,
     offset: int = 0,
 ) -> RouteListResponse:
-    if countries_repository.get_country(connection, country_slug, locale) is None:
+    if (
+        countries_repository.get_country(connection, country_slug, locale)
+        is None
+    ):
         raise api_error(
             404,
             "country_not_found",
@@ -108,7 +111,9 @@ def _list_country_routes_uncached(
         offset,
     )
     total = int(rows[0]["total_count"]) if rows else 0
-    items = [RouteListItem(**_with_eligibility(_strip_internal(row))) for row in rows]
+    items = [
+        RouteListItem(**_with_eligibility(_strip_internal(row))) for row in rows
+    ]
     return RouteListResponse(
         items=items,
         pagination=Pagination(limit=limit, offset=offset, total=total),
@@ -168,7 +173,9 @@ def change_route_status(
             )
         old_status = str(before.get("status") or "")
         ensure_allowed_transition(old_status, new_status)
-        after = routes_repository.patch_route_status(connection, route_id, new_status)
+        after = routes_repository.patch_route_status(
+            connection, route_id, new_status
+        )
         _audit_status_change(connection, before, after, changed_by)
         _emit_route_published_event(connection, before, after)
     if is_publish_transition(old_status, new_status):
@@ -194,7 +201,9 @@ def _route_detail_response(
     locale: str,
 ) -> RouteDetailResponse:
     route_id = str(row["id"])
-    documents = routes_repository.list_route_documents(connection, route_id, locale)
+    documents = routes_repository.list_route_documents(
+        connection, route_id, locale
+    )
     sources = routes_repository.list_route_sources(connection, route_id)
     evidence = routes_repository.list_route_evidence(connection, route_id)
     checklist = route_checklists_repository.list_route_checklist_items(
@@ -224,7 +233,9 @@ def _with_eligibility(row: dict[str, Any]) -> dict[str, Any]:
             leads_to_citizenship=row["leads_to_citizenship"],
             requires_income_proof=row["requires_income_proof"],
             requires_local_address=row["requires_local_address"],
-            requires_criminal_record_check=row["requires_criminal_record_check"],
+            requires_criminal_record_check=row[
+                "requires_criminal_record_check"
+            ],
         ),
     }
 
@@ -252,7 +263,9 @@ def _emit_route_published_event(
     before: dict[str, Any],
     after: dict[str, Any],
 ) -> None:
-    if not is_publish_transition(str(before.get("status")), str(after.get("status"))):
+    if not is_publish_transition(
+        str(before.get("status")), str(after.get("status"))
+    ):
         return
     route_id = str(after["id"])
     country_slug = after.get("country_slug")

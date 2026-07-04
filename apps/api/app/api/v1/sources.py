@@ -135,11 +135,15 @@ def read_source(
     )
 
 
-@router.get("/sources/{source_id}/evidence", response_model=EvidenceItemListResponse)
+@router.get(
+    "/sources/{source_id}/evidence", response_model=EvidenceItemListResponse
+)
 def read_source_evidence(
     source_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> EvidenceItemListResponse:
-    return decision_engine.get_source_evidence(connection, source_id, limit, offset)
+    return decision_engine.get_source_evidence(
+        connection, source_id, limit, offset
+    )

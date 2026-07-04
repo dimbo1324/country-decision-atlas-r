@@ -17,7 +17,10 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
   const occurredAt = new Date(item.occurred_at).toLocaleDateString("ru-RU");
 
   return (
-    <article className="sourceCard" data-testid="what-changed-item">
+    <article
+      className="sourceCard"
+      data-testid="what-changed-item"
+    >
       <div className="sourceCardHeader">
         <h3>{item.title}</h3>
         <span className="metaChip">{occurredAt}</span>
@@ -29,7 +32,10 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
         </span>
         <span>{item.source}</span>
       </div>
-      <Link href={item.path} className="internalLink">
+      <Link
+        href={item.path}
+        className="internalLink"
+      >
         Подробнее →
       </Link>
     </article>

@@ -1,5 +1,6 @@
 """Community service: question/answer submission rules and feature-disabled handling."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import (
     community as repository,
@@ -12,7 +13,6 @@ from app.schemas.community import (
 )
 from app.services import community as service
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -47,7 +47,9 @@ def _disable_feature(monkeypatch: pytest.MonkeyPatch) -> None:
             "default_enabled": True,
         },
     )
-    monkeypatch.setattr(feature_repository, "list_feature_access_rules", lambda *_a: [])
+    monkeypatch.setattr(
+        feature_repository, "list_feature_access_rules", lambda *_a: []
+    )
 
 
 def _question_row() -> dict[str, Any]:
@@ -70,7 +72,9 @@ def test_submit_question_creates_pending_and_emits_event(
         repository, "insert_question", lambda *_a, **_kw: _question_row()
     )
     monkeypatch.setattr(
-        service, "insert_domain_event", lambda *_a, **kwargs: events.update(kwargs)
+        service,
+        "insert_domain_event",
+        lambda *_a, **kwargs: events.update(kwargs),
     )
 
     row = service.submit_question(
@@ -206,7 +210,9 @@ def test_submit_vote_returns_consensus_summary(
         Settings(app_env="local"),
         "a1",
         CommunityVoteCreate(
-            vote_type="up", identity_type="anonymous_session", identity_id="session-1"
+            vote_type="up",
+            identity_type="anonymous_session",
+            identity_id="session-1",
         ),
     )
 
@@ -223,8 +229,12 @@ def test_public_answers_include_source_backed_consensus(
         "evidence_item_ids": [],
         "created_at": None,
     }
-    monkeypatch.setattr(repository, "get_question", lambda *_a, **_kw: _question_row())
-    monkeypatch.setattr(repository, "list_published_answers", lambda *_a: [answer])
+    monkeypatch.setattr(
+        repository, "get_question", lambda *_a, **_kw: _question_row()
+    )
+    monkeypatch.setattr(
+        repository, "list_published_answers", lambda *_a: [answer]
+    )
     monkeypatch.setattr(
         repository,
         "get_vote_summary",

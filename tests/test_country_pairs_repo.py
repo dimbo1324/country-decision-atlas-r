@@ -1,7 +1,7 @@
 """Country-pair repository queries filter to published sources/evidence only."""
 
-from app.repositories import country_pairs as repository
 import re
+from app.repositories import country_pairs as repository
 
 
 def test_get_country_pair_compatibility_filters_published_only() -> None:

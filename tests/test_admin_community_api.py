@@ -1,12 +1,12 @@
 """Admin auth/authorization and status-transition behavior for the community Q&A moderation endpoints."""
 
+import pytest
 from app.api.v1.admin_community import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
 from app.repositories import community as repository
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -27,7 +27,9 @@ def _client(*, with_admin: bool = True) -> TestClient:
     app.include_router(router, prefix="/api/v1")
     app.dependency_overrides[get_connection] = lambda: CONNECTION
     if with_admin:
-        app.dependency_overrides[get_current_active_user] = lambda: MODERATOR_USER
+        app.dependency_overrides[get_current_active_user] = lambda: (
+            MODERATOR_USER
+        )
     return TestClient(app)
 
 
@@ -51,14 +53,20 @@ def _question_row(status: str = "pending") -> dict[str, Any]:
 
 
 def test_admin_list_questions_requires_admin_auth() -> None:
-    response = _client(with_admin=False).get("/api/v1/admin/community/questions")
+    response = _client(with_admin=False).get(
+        "/api/v1/admin/community/questions"
+    )
 
     assert response.status_code == 401
 
 
-def test_admin_can_list_pending_questions(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_can_list_pending_questions(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
-        repository, "list_questions_for_admin", lambda *_a, **_kw: [_question_row()]
+        repository,
+        "list_questions_for_admin",
+        lambda *_a, **_kw: [_question_row()],
     )
 
     response = _client().get("/api/v1/admin/community/questions?status=pending")
@@ -87,7 +95,9 @@ def test_admin_can_change_question_status_to_published(
 def test_admin_update_missing_question_returns_404(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(repository, "update_question_status", lambda *_a, **_kw: None)
+    monkeypatch.setattr(
+        repository, "update_question_status", lambda *_a, **_kw: None
+    )
 
     response = _client().patch(
         "/api/v1/admin/community/questions/missing/status",

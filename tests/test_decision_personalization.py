@@ -1,5 +1,6 @@
 """Custom-weight validation, normalization, and effective-weight application for decision personalization."""
 
+import pytest
 from app.services.decision_personalization import (
     apply_effective_weights_to_breakdown,
     build_personalization_summary,
@@ -9,7 +10,6 @@ from app.services.decision_personalization import (
 )
 from decimal import Decimal
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 
 
@@ -175,7 +175,10 @@ class TestResolveWeightMode:
         assert resolve_weight_mode("family", None) == "persona"
 
     def test_custom(self) -> None:
-        assert resolve_weight_mode(None, {"safety_score": Decimal("1")}) == "custom"
+        assert (
+            resolve_weight_mode(None, {"safety_score": Decimal("1")})
+            == "custom"
+        )
 
     def test_persona_custom(self) -> None:
         assert (
@@ -194,7 +197,9 @@ class TestBuildPersonalizationSummary:
         )
         assert summary["weight_mode"] == "base"
         assert summary["custom_weights_applied"] is False
-        assert summary["base_weights"] == [{"criterion": "safety_score", "weight": 0.5}]
+        assert summary["base_weights"] == [
+            {"criterion": "safety_score", "weight": 0.5}
+        ]
 
     def test_persona_custom_summary(self) -> None:
         summary = build_personalization_summary(

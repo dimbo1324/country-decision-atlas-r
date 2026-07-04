@@ -14,12 +14,12 @@ def list_scenarios(
     if requested_locale == SOURCE_LOCALE:
         name_column = "s.name"
         resolved_locale_sql = "'en'"
-        status_sql = "CASE WHEN s.name IS NOT NULL THEN 'source' ELSE 'missing' END"
+        status_sql = (
+            "CASE WHEN s.name IS NOT NULL THEN 'source' ELSE 'missing' END"
+        )
     else:
         name_column = "COALESCE(t_name.translated_value, s.name)"
-        resolved_locale_sql = (
-            "CASE WHEN t_name.translated_value IS NOT NULL THEN 'ru' ELSE 'en' END"
-        )
+        resolved_locale_sql = "CASE WHEN t_name.translated_value IS NOT NULL THEN 'ru' ELSE 'en' END"
         status_sql = """
             CASE
                 WHEN t_name.translated_value IS NOT NULL THEN 'translated'
@@ -73,9 +73,9 @@ def list_scenarios(
     )
     criteria_by_scenario: dict[str, list[dict[str, Any]]] = {}
     for criterion in criteria:
-        criteria_by_scenario.setdefault(str(criterion["scenario_id"]), []).append(
-            criterion
-        )
+        criteria_by_scenario.setdefault(
+            str(criterion["scenario_id"]), []
+        ).append(criterion)
     for row in rows:
         row["criteria"] = criteria_by_scenario.get(str(row["id"]), [])
     return rows
@@ -83,6 +83,7 @@ def list_scenarios(
 
 def count_scenarios(connection: Connection[Any]) -> int:
     row = fetch_one(
-        connection, "SELECT COUNT(*) AS total FROM scenarios WHERE is_active = TRUE"
+        connection,
+        "SELECT COUNT(*) AS total FROM scenarios WHERE is_active = TRUE",
     )
     return int(row["total"]) if row else 0

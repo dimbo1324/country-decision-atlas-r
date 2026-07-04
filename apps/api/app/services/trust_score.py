@@ -18,7 +18,9 @@ def _clamp(value: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 
 def _decimal(value: float) -> Decimal:
-    return Decimal(str(_clamp(value))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return Decimal(str(_clamp(value))).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
 
 
 def compute_source_quality_score(source_count: int) -> float:
@@ -148,12 +150,14 @@ def compute_trust_score_from_inputs(
 
     src_score = compute_source_quality_score(source_count)
     evd_score = compute_evidence_depth_score(evidence_count)
-    freshness_score, freshness_status = compute_freshness_score(last_verified_at, now)
+    freshness_score, freshness_status = compute_freshness_score(
+        last_verified_at, now
+    )
     review_score = compute_review_coverage_score(
         source_count, evidence_count, legal_signal_count, route_count
     )
-    contradiction_component, contradiction_missing = compute_contradiction_component(
-        contradiction_raw
+    contradiction_component, contradiction_missing = (
+        compute_contradiction_component(contradiction_raw)
     )
 
     weighted = (
@@ -164,11 +168,17 @@ def compute_trust_score_from_inputs(
         + contradiction_component * 0.15
     )
     weakest = min(
-        src_score, evd_score, freshness_score, review_score, contradiction_component
+        src_score,
+        evd_score,
+        freshness_score,
+        review_score,
+        contradiction_component,
     )
     raw_trust = min(weighted, weakest + 20.0)
 
-    if not has_sufficient_data(source_count, evidence_count, legal_signal_count):
+    if not has_sufficient_data(
+        source_count, evidence_count, legal_signal_count
+    ):
         trust_score_val: float | None = None
         trust_label = "insufficient_data"
     else:

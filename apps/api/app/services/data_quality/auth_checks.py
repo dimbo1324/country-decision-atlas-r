@@ -21,7 +21,9 @@ def _append_users_and_sessions_checks(
                 {},
             )
         )
-    checks.append(_check("at_least_one_active_owner", issues, ["missing_active_owner"]))
+    checks.append(
+        _check("at_least_one_active_owner", issues, ["missing_active_owner"])
+    )
 
     for row in repository.list_users_with_invalid_role(connection):
         issues.append(
@@ -34,7 +36,9 @@ def _append_users_and_sessions_checks(
                 row,
             )
         )
-    checks.append(_check("users_have_valid_roles", issues, ["user_invalid_role"]))
+    checks.append(
+        _check("users_have_valid_roles", issues, ["user_invalid_role"])
+    )
 
     for row in repository.list_users_with_invalid_status(connection):
         issues.append(
@@ -47,9 +51,13 @@ def _append_users_and_sessions_checks(
                 row,
             )
         )
-    checks.append(_check("users_have_valid_statuses", issues, ["user_invalid_status"]))
+    checks.append(
+        _check("users_have_valid_statuses", issues, ["user_invalid_status"])
+    )
 
-    for row in repository.list_active_users_missing_password_credential(connection):
+    for row in repository.list_active_users_missing_password_credential(
+        connection
+    ):
         issues.append(
             _issue(
                 "active_user_missing_password_credential",
@@ -173,7 +181,9 @@ def _append_telegram_link_checks(
         )
     )
 
-    for row in repository.list_linked_telegram_links_missing_linked_at(connection):
+    for row in repository.list_linked_telegram_links_missing_linked_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "telegram_link_missing_linked_at",
@@ -192,7 +202,9 @@ def _append_telegram_link_checks(
         )
     )
 
-    for row in repository.list_unlinked_telegram_links_missing_unlinked_at(connection):
+    for row in repository.list_unlinked_telegram_links_missing_unlinked_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "telegram_link_missing_unlinked_at",
@@ -211,7 +223,9 @@ def _append_telegram_link_checks(
         )
     )
 
-    for row in repository.list_telegram_links_referencing_missing_users(connection):
+    for row in repository.list_telegram_links_referencing_missing_users(
+        connection
+    ):
         issues.append(
             _issue(
                 "telegram_link_references_missing_user",
@@ -274,7 +288,9 @@ def _append_watchlist_checks(
         )
     )
 
-    for row in repository.list_watchlists_referencing_missing_countries(connection):
+    for row in repository.list_watchlists_referencing_missing_countries(
+        connection
+    ):
         issues.append(
             _issue(
                 "watchlist_references_missing_country",
@@ -305,7 +321,9 @@ def _append_watchlist_checks(
             )
         )
     checks.append(
-        _check("watchlists_have_valid_status", issues, ["watchlist_invalid_status"])
+        _check(
+            "watchlists_have_valid_status", issues, ["watchlist_invalid_status"]
+        )
     )
 
     for row in repository.list_duplicate_active_watchlist_entries(connection):
@@ -327,7 +345,9 @@ def _append_watchlist_checks(
         )
     )
 
-    for row in repository.list_archived_watchlists_missing_archived_at(connection):
+    for row in repository.list_archived_watchlists_missing_archived_at(
+        connection
+    ):
         issues.append(
             _issue(
                 "watchlist_archived_missing_archived_at",
@@ -346,7 +366,9 @@ def _append_watchlist_checks(
         )
     )
 
-    for row in repository.list_watchlists_with_null_notification_flags(connection):
+    for row in repository.list_watchlists_with_null_notification_flags(
+        connection
+    ):
         issues.append(
             _issue(
                 "watchlist_null_notification_flag",

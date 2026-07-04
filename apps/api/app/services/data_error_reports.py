@@ -14,7 +14,9 @@ def submit_data_error_report(
     payload: DataErrorReportCreate,
 ) -> dict[str, Any]:
     ensure_feature_enabled(connection, settings, "community_enabled")
-    ensure_feature_enabled(connection, settings, "community_error_reports_enabled")
+    ensure_feature_enabled(
+        connection, settings, "community_error_reports_enabled"
+    )
     row = repository.insert_data_error_report(
         connection,
         entity_type=payload.entity_type,

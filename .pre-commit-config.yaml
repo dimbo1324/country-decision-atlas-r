@@ -1,37 +1,61 @@
+default_install_hook_types: [pre-commit, pre-push]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
         exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
+        stages: [pre-commit]
       - id: end-of-file-fixer
         exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
+        stages: [pre-commit]
       - id: check-yaml
         exclude: ^(docs/|contracts/openapi\.yaml$)
+        stages: [pre-commit]
       - id: check-json
+        stages: [pre-commit]
       - id: check-toml
+        stages: [pre-commit]
       - id: check-added-large-files
         args: ["--maxkb=1024"]
+        stages: [pre-commit]
       - id: mixed-line-ending
         args: ["--fix=lf"]
         exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
+        stages: [pre-commit]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.0
     hooks:
       - id: ruff-check
         args: ["--fix"]
-        files: ^apps/(api|worker)/.*\.py$
+        files: ^(apps|packages|scripts|tests)/.*\.py$
+        stages: [pre-commit]
       - id: ruff-format
-        files: ^apps/(api|worker)/.*\.py$
+        files: ^(apps|packages|scripts|tests)/.*\.py$
+        stages: [pre-commit]
 
   - repo: local
     hooks:
-      - id: prettier-format-check
+      - id: prettier-format
         name: prettier
-        entry: corepack pnpm@9.12.0 format:check
+        entry: corepack pnpm@9.12.0 format:prettier
         language: system
         pass_filenames: false
+        stages: [pre-commit]
+      - id: gofmt
+        name: gofmt
+        entry: gofmt -w
+        language: system
+        files: ^apps/notifier/.*\.go$
+        stages: [pre-commit]
+      - id: quick-quality-on-push
+        name: quick quality gate
+        entry: python dev_tools_scripts_runner.py --profile quick
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
 
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.4.0
@@ -39,3 +63,4 @@ repos:
       - id: sqlfluff-fix
         args: ["--dialect", "postgres"]
         files: ^database/.*\.sql$
+        stages: [pre-commit]

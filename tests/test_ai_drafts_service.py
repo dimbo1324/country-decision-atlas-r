@@ -1,5 +1,6 @@
 """AI draft generation service: refusal without context, draft creation, and status updates."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import ai_drafts as repository
 from app.schemas.ai import AICitation, AIContextItem
@@ -7,7 +8,6 @@ from app.services import ai_drafts as service
 from app.services.ai_context import AIContextPackage
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 
 
@@ -131,10 +131,14 @@ def test_generate_summary_draft_creates_needs_review_draft_with_event(
 def test_update_ai_draft_status_not_found_raises(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(repository, "update_ai_draft_status", lambda *_a, **_kw: None)
+    monkeypatch.setattr(
+        repository, "update_ai_draft_status", lambda *_a, **_kw: None
+    )
 
     with pytest.raises(HTTPException) as exc_info:
-        service.update_ai_draft_status(CONNECTION, "missing", "approved", "editor")
+        service.update_ai_draft_status(
+            CONNECTION, "missing", "approved", "editor"
+        )
     assert exc_info.value.status_code == 404
 
 

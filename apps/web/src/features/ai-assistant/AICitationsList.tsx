@@ -18,7 +18,10 @@ export function AICitationsList({ citations }: AICitationsListProps) {
         {items.map((citation) => (
           <li key={`${citation.entity_type}-${citation.entity_id}`}>
             {citation.url_path ? (
-              <a className="internalLink" href={citation.url_path}>
+              <a
+                className="internalLink"
+                href={citation.url_path}
+              >
                 {citation.title}
               </a>
             ) : (

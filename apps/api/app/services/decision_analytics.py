@@ -1,7 +1,7 @@
+import logging
 from app.core.config import Settings, get_settings
 from app.schemas.analytics import AnalyticsEventCreate, AnalyticsSource
 from app.services.analytics import record_analytics_event
-import logging
 from psycopg import Connection
 from typing import Any
 

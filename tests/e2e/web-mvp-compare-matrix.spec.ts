@@ -11,7 +11,9 @@ test.describe("compare matrix page", () => {
 
   test("matrix table renders", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -19,15 +21,19 @@ test.describe("compare matrix page", () => {
 
   test("Russia row exists in matrix", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="matrix-row-russia"]')).toBeVisible({
-      timeout: 10_000,
-    });
+    await expect(page.locator('[data-testid="matrix-row-russia"]')).toBeVisible(
+      {
+        timeout: 10_000,
+      },
+    );
     await expectNoAppCrash(page);
   });
 
   test("Uruguay row exists in matrix", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="matrix-row-uruguay"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-uruguay"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -35,7 +41,9 @@ test.describe("compare matrix page", () => {
 
   test("Argentina row exists in matrix", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="matrix-row-argentina"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="matrix-row-argentina"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -43,7 +51,9 @@ test.describe("compare matrix page", () => {
 
   test("5 scenario columns exist", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const headers = page.locator(".matrixScenarioHeader");
@@ -53,7 +63,9 @@ test.describe("compare matrix page", () => {
 
   test("cells contain numeric scores", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const firstScore = page.locator(".matrixCellScore").first();
@@ -64,7 +76,9 @@ test.describe("compare matrix page", () => {
 
   test("legend exists", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-legend"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-legend"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -72,7 +86,9 @@ test.describe("compare matrix page", () => {
 
   test("summary exists", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-summary"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-summary"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);
@@ -80,7 +96,9 @@ test.describe("compare matrix page", () => {
 
   test("cell links exist and point to country pages", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const firstLink = page.locator(".matrixCellLink").first();
@@ -98,7 +116,9 @@ test.describe("compare matrix page", () => {
 
   test("heatmap CSS classes applied to cells", async ({ page }) => {
     await page.goto(e2eRoutes.compare);
-    await expect(page.locator('[data-testid="compare-matrix-table"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="compare-matrix-table"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     const hasHeatmap = await page

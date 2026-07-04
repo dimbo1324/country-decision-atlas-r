@@ -2,7 +2,10 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { countriesApi, type CountryListResponse } from "../../shared/api/countries";
+import {
+  countriesApi,
+  type CountryListResponse,
+} from "../../shared/api/countries";
 import {
   legalSignalsApi,
   type LegalSignalTimelineResponse,
@@ -29,7 +32,9 @@ function LegalSignalsTimelineViewInner() {
     }),
     [searchParams],
   );
-  const [timeline, setTimeline] = useState<LegalSignalTimelineResponse | null>(null);
+  const [timeline, setTimeline] = useState<LegalSignalTimelineResponse | null>(
+    null,
+  );
   const [countries, setCountries] = useState<CountryListResponse["items"]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,7 +86,8 @@ function LegalSignalsTimelineViewInner() {
   return (
     <div className="timelineContainer">
       <p className="timelineIntro">
-        Временная карта правовых, миграционных, политических и деловых изменений.
+        Временная карта правовых, миграционных, политических и деловых
+        изменений.
       </p>
       <TimelineFilters
         filters={filters}
@@ -96,10 +102,17 @@ function LegalSignalsTimelineViewInner() {
       )}
       {timeline && timeline.groups.length === 0 && <TimelineEmptyState />}
       {timeline && timeline.groups.length > 0 && (
-        <div className="timelineGroups" data-testid="legal-signals-timeline">
+        <div
+          className="timelineGroups"
+          data-testid="legal-signals-timeline"
+        >
           <div className="timelineResultCount">Событий: {timeline.total}</div>
           {timeline.groups.map((group) => (
-            <TimelineYearGroup key={group.year} group={group} locale={locale} />
+            <TimelineYearGroup
+              key={group.year}
+              group={group}
+              locale={locale}
+            />
           ))}
         </div>
       )}
@@ -109,7 +122,9 @@ function LegalSignalsTimelineViewInner() {
 
 export function LegalSignalsTimelineView() {
   return (
-    <Suspense fallback={<LoadingState message="Загрузка временной карты изменений…" />}>
+    <Suspense
+      fallback={<LoadingState message="Загрузка временной карты изменений…" />}
+    >
       <LegalSignalsTimelineViewInner />
     </Suspense>
   );

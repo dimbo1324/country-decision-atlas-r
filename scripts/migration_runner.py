@@ -1,6 +1,6 @@
+import psycopg
 from hashlib import sha256
 from pathlib import Path
-import psycopg
 from typing import Any
 
 
@@ -31,8 +31,12 @@ def ensure_migration_table(connection: psycopg.Connection[Any]) -> None:
     )
 
 
-def applied_migrations(connection: psycopg.Connection[Any]) -> dict[str, str | None]:
-    cursor = connection.execute("SELECT version, checksum FROM schema_migrations")
+def applied_migrations(
+    connection: psycopg.Connection[Any],
+) -> dict[str, str | None]:
+    cursor = connection.execute(
+        "SELECT version, checksum FROM schema_migrations"
+    )
     return {
         str(row[0]): str(row[1]) if row[1] is not None else None
         for row in cursor.fetchall()

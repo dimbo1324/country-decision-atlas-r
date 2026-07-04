@@ -69,7 +69,9 @@ def evaluate_country_onboarding(
         status="ready", severity="info", required=1, actual=1, missing=0
     )
 
-    card_count = repository.count_published_country_cards(connection, country_slug)
+    card_count = repository.count_published_country_cards(
+        connection, country_slug
+    )
     if card_count == 0:
         sections["country_card"] = OnboardingSection(
             status="missing",
@@ -89,11 +91,17 @@ def evaluate_country_onboarding(
         mvp_ready = False
     else:
         sections["country_card"] = OnboardingSection(
-            status="ready", severity="info", required=1, actual=card_count, missing=0
+            status="ready",
+            severity="info",
+            required=1,
+            actual=card_count,
+            missing=0,
         )
 
     active_metrics = repository.count_active_cii_metrics(connection)
-    metric_values = repository.count_country_cii_metric_values(connection, country_slug)
+    metric_values = repository.count_country_cii_metric_values(
+        connection, country_slug
+    )
     cii_missing = max(0, active_metrics - metric_values)
     if metric_values < active_metrics:
         sections["cii_metrics"] = OnboardingSection(
@@ -121,7 +129,9 @@ def evaluate_country_onboarding(
             missing=0,
         )
 
-    required_scenarios = COUNTRY_ONBOARDING_THRESHOLDS["required_scenario_scores"]
+    required_scenarios = COUNTRY_ONBOARDING_THRESHOLDS[
+        "required_scenario_scores"
+    ]
     scenario_scores = repository.count_cii_scenario_scores(
         connection, country_slug, MVP_SCENARIO_SLUGS
     )
@@ -182,7 +192,9 @@ def evaluate_country_onboarding(
         )
 
     min_evidence = COUNTRY_ONBOARDING_THRESHOLDS["minimum_evidence_items"]
-    evidence_count = repository.count_published_evidence(connection, country_slug)
+    evidence_count = repository.count_published_evidence(
+        connection, country_slug
+    )
     evidence_missing = max(0, min_evidence - evidence_count)
     if evidence_count < min_evidence:
         sections["evidence"] = OnboardingSection(
@@ -211,7 +223,9 @@ def evaluate_country_onboarding(
         )
 
     min_legal = COUNTRY_ONBOARDING_THRESHOLDS["minimum_legal_signals"]
-    legal_count = repository.count_published_legal_signals(connection, country_slug)
+    legal_count = repository.count_published_legal_signals(
+        connection, country_slug
+    )
     legal_missing = max(0, min_legal - legal_count)
     if legal_count < min_legal:
         sections["legal_signals"] = OnboardingSection(
@@ -316,7 +330,9 @@ def evaluate_country_onboarding(
             missing=0,
         )
 
-    home_ready = scenario_scores >= 1 and timeline_count >= 1 and card_count >= 1
+    home_ready = (
+        scenario_scores >= 1 and timeline_count >= 1 and card_count >= 1
+    )
     if not home_ready:
         sections["home_overview"] = OnboardingSection(
             status="blocked",
@@ -339,7 +355,9 @@ def evaluate_country_onboarding(
             status="ready", severity="info", required=1, actual=1, missing=0
         )
 
-    has_localization = repository.check_localization_metadata(connection, country_slug)
+    has_localization = repository.check_localization_metadata(
+        connection, country_slug
+    )
     if not has_localization:
         sections["localization"] = OnboardingSection(
             status="missing",
@@ -374,7 +392,8 @@ def evaluate_all_mvp_countries(
     connection: Connection[Any],
 ) -> AllCountriesOnboardingResult:
     mvp_results = [
-        evaluate_country_onboarding(connection, slug) for slug in MVP_COUNTRY_SLUGS
+        evaluate_country_onboarding(connection, slug)
+        for slug in MVP_COUNTRY_SLUGS
     ]
     onboarding_results = [
         evaluate_country_onboarding(connection, slug)
@@ -414,7 +433,9 @@ def build_country_onboarding_dq_results(
     for check_code in _ONBOARDING_CHECK_CODES:
         failed = any(i.code == check_code for i in issues)
         checks.append(
-            DataQualityCheck(code=check_code, status="failed" if failed else "passed")
+            DataQualityCheck(
+                code=check_code, status="failed" if failed else "passed"
+            )
         )
 
     for result in all_results.onboarding_countries:

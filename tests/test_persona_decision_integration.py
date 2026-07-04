@@ -1,10 +1,10 @@
 """Decision runs with and without a persona: base vs. runtime-adjusted CII ranking."""
 
+import pytest
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
 from app.services.decision_engine import helpers as decision_engine_helpers
 from psycopg import Connection
-import pytest
 from tests.test_decision_run import install_repository_fakes
 from typing import Any, cast
 from unittest.mock import MagicMock
@@ -63,7 +63,10 @@ def test_decision_without_persona_keeps_base_ranking(
     result = decision_engine.run_decision(CONNECTION, payload())
 
     assert result.ranking_mode == "base"
-    assert [item.country.slug for item in result.results] == ["uruguay", "russia"]
+    assert [item.country.slug for item in result.results] == [
+        "uruguay",
+        "russia",
+    ]
     assert all(item.persona_adjusted_score is None for item in result.results)
 
 
@@ -72,7 +75,9 @@ def test_decision_with_persona_ranks_by_runtime_adjusted_cii(
 ) -> None:
     install_repository_fakes(monkeypatch)
     monkeypatch.setattr(
-        decision_engine_helpers, "build_persona_weight_profile", lambda *_: PROFILE
+        decision_engine_helpers,
+        "build_persona_weight_profile",
+        lambda *_: PROFILE,
     )
     monkeypatch.setattr(
         decision_engine_helpers,
@@ -119,7 +124,10 @@ def test_decision_with_persona_ranks_by_runtime_adjusted_cii(
     assert result.ranking_mode == "persona_adjusted"
     assert result.applied_persona is not None
     assert result.applied_persona.slug == "solo_founder"
-    assert [item.country.slug for item in result.results] == ["russia", "uruguay"]
+    assert [item.country.slug for item in result.results] == [
+        "russia",
+        "uruguay",
+    ]
     assert by_slug["russia"].score == 42.0
     assert by_slug["russia"].persona_adjusted_score == pytest.approx(100.0)
     assert by_slug["russia"].persona_adjusted_rank == 1

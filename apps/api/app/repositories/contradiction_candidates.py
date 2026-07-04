@@ -93,7 +93,9 @@ def insert_contradiction_candidate(
         ),
     )
     if row is None:
-        raise RuntimeError("Expected contradiction_candidates insert to return a row.")
+        raise RuntimeError(
+            "Expected contradiction_candidates insert to return a row."
+        )
     return row
 
 

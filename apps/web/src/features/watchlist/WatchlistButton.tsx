@@ -67,7 +67,10 @@ export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
 
   if (isAuthLoading || state === "loading") {
     return (
-      <span className="notice" data-testid="watchlist-button-loading">
+      <span
+        className="notice"
+        data-testid="watchlist-button-loading"
+      >
         Загрузка…
       </span>
     );
@@ -91,7 +94,10 @@ export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
 
   if (state === "error") {
     return (
-      <span className="notice" data-testid="watchlist-button-error">
+      <span
+        className="notice"
+        data-testid="watchlist-button-error"
+      >
         Не удалось загрузить статус watchlist.
       </span>
     );

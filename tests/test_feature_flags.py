@@ -102,8 +102,12 @@ def test_analytics_enabled_accessible_for_public(monkeypatch: Any) -> None:
     assert body["decision"]["reason"] == "feature_enabled"
 
 
-def test_disabled_feature_is_not_accessible_for_public(monkeypatch: Any) -> None:
-    client = _client(monkeypatch, [_feature(status="disabled", default_enabled=False)])
+def test_disabled_feature_is_not_accessible_for_public(
+    monkeypatch: Any,
+) -> None:
+    client = _client(
+        monkeypatch, [_feature(status="disabled", default_enabled=False)]
+    )
     body = client.get("/api/v1/platform/features/analytics_enabled").json()
     assert body["item"]["is_enabled_for_context"] is False
     assert body["decision"]["reason"] == "feature_disabled"
@@ -121,7 +125,9 @@ def test_internal_feature_access(monkeypatch: Any) -> None:
             )
         ],
     )
-    public_body = client.get("/api/v1/platform/features/redis_cache_enabled").json()
+    public_body = client.get(
+        "/api/v1/platform/features/redis_cache_enabled"
+    ).json()
     internal_body = client.get(
         "/api/v1/platform/features/redis_cache_enabled?access_tier=internal"
     ).json()
@@ -174,9 +180,14 @@ def test_tier_hierarchy_for_beta_internal_admin() -> None:
     beta = FeatureAccessContext(access_tier=FeatureAccessTier.beta)
     internal = FeatureAccessContext(access_tier=FeatureAccessTier.internal)
     assert (
-        service.can_access(public, feature, rules, "beta_feature").is_enabled is False
+        service.can_access(public, feature, rules, "beta_feature").is_enabled
+        is False
     )
-    assert service.can_access(beta, feature, rules, "beta_feature").is_enabled is True
     assert (
-        service.can_access(internal, feature, rules, "beta_feature").is_enabled is True
+        service.can_access(beta, feature, rules, "beta_feature").is_enabled
+        is True
+    )
+    assert (
+        service.can_access(internal, feature, rules, "beta_feature").is_enabled
+        is True
     )

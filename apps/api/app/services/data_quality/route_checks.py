@@ -23,10 +23,14 @@ def _append_route_checks(
         )
     checks.append(
         _check(
-            "published_routes_have_sources", issues, ["published_route_missing_source"]
+            "published_routes_have_sources",
+            issues,
+            ["published_route_missing_source"],
         )
     )
-    for row in repository.list_published_routes_missing_required_text(connection):
+    for row in repository.list_published_routes_missing_required_text(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_route_missing_required_text",
@@ -80,7 +84,9 @@ def _append_route_checks(
             ["route_evidence_country_mismatch"],
         )
     )
-    for row in repository.list_published_routes_missing_legal_status(connection):
+    for row in repository.list_published_routes_missing_legal_status(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_route_missing_legal_status",
@@ -122,7 +128,9 @@ def _append_route_checks(
                 row,
             )
         )
-    for row in repository.list_published_routes_with_unknown_legal_status(connection):
+    for row in repository.list_published_routes_with_unknown_legal_status(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_route_legal_status_unknown",

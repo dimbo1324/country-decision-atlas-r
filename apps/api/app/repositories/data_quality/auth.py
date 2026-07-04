@@ -11,7 +11,9 @@ def count_active_owners(connection: Connection[Any]) -> int:
     return int(rows[0]["count"]) if rows else 0
 
 
-def list_users_with_invalid_role(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_users_with_invalid_role(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """
@@ -22,7 +24,9 @@ def list_users_with_invalid_role(connection: Connection[Any]) -> list[dict[str, 
     )
 
 
-def list_users_with_invalid_status(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_users_with_invalid_status(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """

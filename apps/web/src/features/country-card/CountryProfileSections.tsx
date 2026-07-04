@@ -34,9 +34,12 @@ export function CountryProfileSections({
   if (!profile) return <EmptyState message="Данные профиля отсутствуют." />;
 
   const filled = SECTIONS.filter(
-    (s) => profile[s.key] && !(skipExecutiveSummary && s.key === "executive_summary"),
+    (s) =>
+      profile[s.key] &&
+      !(skipExecutiveSummary && s.key === "executive_summary"),
   );
-  if (filled.length === 0) return <EmptyState message="Разделы профиля отсутствуют." />;
+  if (filled.length === 0)
+    return <EmptyState message="Разделы профиля отсутствуют." />;
 
   return (
     <div className="sectionStack">
@@ -44,7 +47,10 @@ export function CountryProfileSections({
         <LocalizationBadge localization={profile.localization} />
       </div>
       {filled.map((s) => (
-        <div key={s.key} className="profileSection">
+        <div
+          key={s.key}
+          className="profileSection"
+        >
           <h3 className="sectionTitle">{s.label}</h3>
           <p>{profile[s.key]}</p>
         </div>

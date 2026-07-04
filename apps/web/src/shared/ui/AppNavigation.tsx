@@ -33,7 +33,9 @@ export function AppNavigation() {
           key={item.href}
           href={withLocale(item.href, locale)}
           className="navLink"
-          data-active={pathname === item.href || pathname.startsWith(item.href + "/")}
+          data-active={
+            pathname === item.href || pathname.startsWith(item.href + "/")
+          }
         >
           {item.label}
         </Link>

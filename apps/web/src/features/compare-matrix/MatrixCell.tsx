@@ -15,7 +15,8 @@ const LABEL_CLASS: Record<string, string> = {
 };
 
 export function MatrixCell({ cell, locale }: Props) {
-  const cellClass = LABEL_CLASS[cell.score_label ?? "missing"] ?? "matrixCellMissing";
+  const cellClass =
+    LABEL_CLASS[cell.score_label ?? "missing"] ?? "matrixCellMissing";
   const href = `/countries/${cell.country_slug}?locale=${locale}`;
 
   return (
@@ -25,7 +26,10 @@ export function MatrixCell({ cell, locale }: Props) {
       data-country={cell.country_slug}
       data-scenario={cell.scenario_slug}
     >
-      <a href={href} className="matrixCellLink">
+      <a
+        href={href}
+        className="matrixCellLink"
+      >
         <span className="matrixCellScore">
           {cell.cii_score != null ? cell.cii_score.toFixed(1) : "—"}
         </span>

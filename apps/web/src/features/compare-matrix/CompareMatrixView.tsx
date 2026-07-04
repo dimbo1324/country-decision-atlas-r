@@ -69,7 +69,10 @@ export function CompareMatrixView({ locale }: Props) {
   }
 
   return (
-    <div className="matrixBlock" data-testid="compare-matrix-block">
+    <div
+      className="matrixBlock"
+      data-testid="compare-matrix-block"
+    >
       <CountryScenarioMatrix
         countries={countries}
         scenarios={scenarios}
@@ -77,7 +80,11 @@ export function CompareMatrixView({ locale }: Props) {
         locale={locale}
       />
       <MatrixLegend />
-      <MatrixSummary countries={countries} scenarios={scenarios} cells={cells} />
+      <MatrixSummary
+        countries={countries}
+        scenarios={scenarios}
+        cells={cells}
+      />
     </div>
   );
 }

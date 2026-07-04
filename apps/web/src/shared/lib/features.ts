@@ -1,4 +1,7 @@
-import type { FeatureFlag, FeatureFlagListResponse } from "../api/feature-flags";
+import type {
+  FeatureFlag,
+  FeatureFlagListResponse,
+} from "../api/feature-flags";
 
 export function isFeatureEnabled(
   features: FeatureFlagListResponse | FeatureFlag[] | null | undefined,

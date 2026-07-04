@@ -34,7 +34,10 @@ export default async function ScenariosPage({ searchParams }: PageProps) {
       </header>
       <section className="dataGrid">
         {scenarios.items.map((scenario) => (
-          <article className="dataCard" key={scenario.slug}>
+          <article
+            className="dataCard"
+            key={scenario.slug}
+          >
             <span>{scenario.name}</span>
             <small>{scenario.description ?? scenario.slug}</small>
           </article>

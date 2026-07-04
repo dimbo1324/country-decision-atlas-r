@@ -10,9 +10,15 @@ export function DriftHistoryMiniList({ items }: DriftHistoryMiniListProps) {
     return null;
   }
   return (
-    <ul className="driftHistoryMiniList" data-testid="drift-history-mini-list">
+    <ul
+      className="driftHistoryMiniList"
+      data-testid="drift-history-mini-list"
+    >
       {items.map((item) => (
-        <li key={`${item.period_start}-${item.period_end}`} className="driftHistoryRow">
+        <li
+          key={`${item.period_start}-${item.period_end}`}
+          className="driftHistoryRow"
+        >
           <span className="metaChip">
             {item.period_start} — {item.period_end}
           </span>

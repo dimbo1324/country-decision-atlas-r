@@ -13,7 +13,9 @@ def _append_platform_runtime_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_enabled_feature_flags_without_access_rules(connection):
+    for row in repository.list_enabled_feature_flags_without_access_rules(
+        connection
+    ):
         issues.append(
             _issue(
                 "enabled_feature_flag_without_access_rule",
@@ -31,7 +33,9 @@ def _append_platform_runtime_checks(
             ["enabled_feature_flag_without_access_rule"],
         )
     )
-    for row in repository.list_disabled_feature_flags_without_access_rules(connection):
+    for row in repository.list_disabled_feature_flags_without_access_rules(
+        connection
+    ):
         issues.append(
             _issue(
                 "disabled_feature_flag_without_access_rule",
@@ -69,7 +73,9 @@ def _append_platform_runtime_checks(
             ["data_journal_internal_payload_field"],
         )
     )
-    for row in repository.list_data_journal_events_referencing_non_public_content(
+    for (
+        row
+    ) in repository.list_data_journal_events_referencing_non_public_content(
         connection
     ):
         issues.append(

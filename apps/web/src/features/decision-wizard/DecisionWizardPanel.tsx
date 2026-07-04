@@ -52,7 +52,8 @@ export function DecisionWizardPanel({
   onApply,
 }: DecisionWizardPanelProps) {
   const labels = DECISION_WIZARD_LABELS[locale];
-  const effectiveOriginSlug = originCountrySlug || countries.items[0]?.slug || "";
+  const effectiveOriginSlug =
+    originCountrySlug || countries.items[0]?.slug || "";
   const [isOpen, setIsOpen] = useState(false);
   const [hasTrackedOpen, setHasTrackedOpen] = useState(false);
   const [answers, setAnswers] = useState<DecisionWizardAnswers>({
@@ -123,7 +124,10 @@ export function DecisionWizardPanel({
   }
 
   return (
-    <section className="decisionWizard" data-testid="decision-wizard">
+    <section
+      className="decisionWizard"
+      data-testid="decision-wizard"
+    >
       <div className="decisionWizardHeader">
         <div>
           <h2 className="decisionWizardTitle">{labels.title}</h2>
@@ -141,7 +145,10 @@ export function DecisionWizardPanel({
       </div>
 
       {isOpen && (
-        <div className="decisionWizardPanel" data-testid="decision-wizard-panel">
+        <div
+          className="decisionWizardPanel"
+          data-testid="decision-wizard-panel"
+        >
           <div className="decisionWizardGrid">
             <DecisionWizardStep
               label={labels.goal}
@@ -216,12 +223,19 @@ export function DecisionWizardPanel({
           </button>
 
           {error && (
-            <p className="formError" role="alert" data-testid="decision-wizard-error">
+            <p
+              className="formError"
+              role="alert"
+              data-testid="decision-wizard-error"
+            >
               {error}
             </p>
           )}
           {recommendation && (
-            <DecisionWizardSummary recommendation={recommendation} labels={labels} />
+            <DecisionWizardSummary
+              recommendation={recommendation}
+              labels={labels}
+            />
           )}
         </div>
       )}

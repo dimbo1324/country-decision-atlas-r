@@ -131,7 +131,11 @@ class TestAITranslationProvider:
         mock_response = MagicMock()
         mock_response.json.return_value = {
             "choices": [{"message": {"content": "Hello world"}}],
-            "usage": {"prompt_tokens": 50, "completion_tokens": 10, "total_tokens": 60},
+            "usage": {
+                "prompt_tokens": 50,
+                "completion_tokens": 10,
+                "total_tokens": 60,
+            },
         }
         mock_response.headers = {"x-request-id": "req-123"}
         mock_response.raise_for_status = MagicMock()
@@ -180,7 +184,10 @@ class TestAITranslationProvider:
             ]
             mock_client_cls.return_value = mock_client
 
-            with patch("time.sleep"), pytest.raises(RuntimeError, match="failed after"):
+            with (
+                patch("time.sleep"),
+                pytest.raises(RuntimeError, match="failed after"),
+            ):
                 provider.translate(inp)
 
         assert mock_client.post.call_count == 2
@@ -378,9 +385,15 @@ class TestProcessNextJobWithAI:
         )
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
-            patch(f"{_REPO}.save_translation_variant", return_value=variant_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
+            patch(
+                f"{_REPO}.save_translation_variant", return_value=variant_data
+            ),
             patch(f"{_REPO}.mark_job_completed", return_value={}),
         ):
             result = process_next_job(conn, "worker-1", "en", mock_provider)
@@ -405,8 +418,12 @@ class TestProcessNextJobWithAI:
         mock_provider.translate.side_effect = RuntimeError("API timeout")
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
             patch(f"{_REPO}.mark_job_failed", return_value={}) as mock_fail,
         ):
             result = process_next_job(conn, "worker-1", "en", mock_provider)
@@ -432,8 +449,12 @@ class TestProcessNextJobWithAI:
         )
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
             patch(f"{_REPO}.mark_job_failed", return_value={}) as mock_fail,
         ):
             result = process_next_job(conn, "worker-1", "en", mock_provider)
@@ -466,7 +487,9 @@ class TestDryRun:
                 return_value=[processing_job],
             ),
             patch(f"{_REPO}.lock_next_pending_job") as mock_lock,
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
             patch(f"{_REPO}.save_translation_variant") as mock_save,
             patch(f"{_REPO}.mark_job_completed") as mock_complete,
         ):
@@ -498,7 +521,9 @@ class TestDryRun:
                 return_value=[processing_job],
             ),
             patch(f"{_REPO}.lock_next_pending_job") as mock_lock,
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
             patch(f"{_REPO}.mark_job_failed") as mock_fail,
         ):
             result = process_next_job(
@@ -573,9 +598,15 @@ class TestProviderMetadata:
         )
 
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
-            patch(f"{_REPO}.save_translation_variant", return_value=variant_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
+            patch(
+                f"{_REPO}.save_translation_variant", return_value=variant_data
+            ),
             patch(f"{_REPO}.mark_job_completed", return_value={}),
         ):
             result = process_next_job(conn, "worker-1", "en", mock_provider)

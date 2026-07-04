@@ -38,7 +38,9 @@ def list_feature_flags(conn: Connection[Any]) -> list[dict[str, Any]]:
     )
 
 
-def get_feature_flag(conn: Connection[Any], feature_key: str) -> dict[str, Any] | None:
+def get_feature_flag(
+    conn: Connection[Any], feature_key: str
+) -> dict[str, Any] | None:
     return fetch_one(
         conn,
         f"""
@@ -67,7 +69,9 @@ def list_feature_access_rules(
     )
 
 
-def list_all_feature_access_rules(conn: Connection[Any]) -> list[dict[str, Any]]:
+def list_all_feature_access_rules(
+    conn: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         conn,
         f"""

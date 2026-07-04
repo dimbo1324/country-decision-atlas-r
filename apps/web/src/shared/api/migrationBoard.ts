@@ -6,7 +6,8 @@ export type MigrationBoardPostListResponse =
   components["schemas"]["MigrationBoardPostListResponse"];
 export type MigrationBoardPostDetail =
   components["schemas"]["MigrationBoardPostDetail"];
-export type MyMigrationBoardPost = components["schemas"]["MyMigrationBoardPost"];
+export type MyMigrationBoardPost =
+  components["schemas"]["MyMigrationBoardPost"];
 export type MyMigrationBoardPostListResponse =
   components["schemas"]["MyMigrationBoardPostListResponse"];
 export type CreateMigrationBoardPostRequest =
@@ -15,7 +16,8 @@ export type UpdateMigrationBoardPostRequest =
   components["schemas"]["UpdateMigrationBoardPostRequest"];
 export type ContactRequestListResponse =
   components["schemas"]["ContactRequestListResponse"];
-export type ContactRequestResponse = components["schemas"]["ContactRequestResponse"];
+export type ContactRequestResponse =
+  components["schemas"]["ContactRequestResponse"];
 export type CreateContactRequestRequest =
   components["schemas"]["CreateContactRequestRequest"];
 export type CreateMigrationBoardReportRequest =
@@ -32,7 +34,8 @@ export type ModerateMigrationBoardPostRequest =
   components["schemas"]["ModerateMigrationBoardPostRequest"];
 export type ReviewMigrationBoardReportRequest =
   components["schemas"]["ReviewMigrationBoardReportRequest"];
-export type BlockedUserListResponse = components["schemas"]["BlockedUserListResponse"];
+export type BlockedUserListResponse =
+  components["schemas"]["BlockedUserListResponse"];
 
 export type BoardPostFilters = {
   destination_country?: string;
@@ -60,16 +63,24 @@ export function listBoardPosts(
   );
 }
 
-export function getBoardPost(postId: string): Promise<MigrationBoardPostDetail> {
-  return apiGet<MigrationBoardPostDetail>(`/api/v1/migration-board/posts/${postId}`, {
-    headers: authHeaders(),
-  });
+export function getBoardPost(
+  postId: string,
+): Promise<MigrationBoardPostDetail> {
+  return apiGet<MigrationBoardPostDetail>(
+    `/api/v1/migration-board/posts/${postId}`,
+    {
+      headers: authHeaders(),
+    },
+  );
 }
 
 export function listMyBoardPosts(): Promise<MyMigrationBoardPostListResponse> {
-  return apiGet<MyMigrationBoardPostListResponse>("/api/v1/me/migration-board/posts", {
-    headers: authHeaders(),
-  });
+  return apiGet<MyMigrationBoardPostListResponse>(
+    "/api/v1/me/migration-board/posts",
+    {
+      headers: authHeaders(),
+    },
+  );
 }
 
 export function createBoardPost(
@@ -187,11 +198,12 @@ export function reportPost(
   postId: string,
   payload: CreateMigrationBoardReportRequest,
 ): Promise<MigrationBoardReportResponse> {
-  return apiPost<MigrationBoardReportResponse, CreateMigrationBoardReportRequest>(
-    `/api/v1/migration-board/posts/${postId}/report`,
-    payload,
-    { headers: authHeaders() },
-  );
+  return apiPost<
+    MigrationBoardReportResponse,
+    CreateMigrationBoardReportRequest
+  >(`/api/v1/migration-board/posts/${postId}/report`, payload, {
+    headers: authHeaders(),
+  });
 }
 
 export function blockUser(userId: string, reason?: string): Promise<unknown> {

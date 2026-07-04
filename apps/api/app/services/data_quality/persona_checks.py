@@ -12,7 +12,9 @@ def _append_persona_layer_checks(
     issues: list[DataQualityIssue],
     checks: list[DataQualityCheck],
 ) -> None:
-    for row in repository.list_active_personas_missing_required_fields(connection):
+    for row in repository.list_active_personas_missing_required_fields(
+        connection
+    ):
         issues.append(
             _issue(
                 "persona_required_fields",
@@ -27,7 +29,9 @@ def _append_persona_layer_checks(
         _check("persona_required_fields", issues, ["persona_required_fields"])
     )
 
-    for row in repository.list_active_personas_missing_metric_modifiers(connection):
+    for row in repository.list_active_personas_missing_metric_modifiers(
+        connection
+    ):
         issues.append(
             _issue(
                 "persona_modifier_coverage",
@@ -39,7 +43,9 @@ def _append_persona_layer_checks(
             )
         )
     checks.append(
-        _check("persona_modifier_coverage", issues, ["persona_modifier_coverage"])
+        _check(
+            "persona_modifier_coverage", issues, ["persona_modifier_coverage"]
+        )
     )
 
     for row in repository.list_persona_modifiers_out_of_range(connection):
@@ -53,7 +59,9 @@ def _append_persona_layer_checks(
                 {**row, "expected_range": [-0.5, 0.5]},
             )
         )
-    checks.append(_check("persona_modifier_range", issues, ["persona_modifier_range"]))
+    checks.append(
+        _check("persona_modifier_range", issues, ["persona_modifier_range"])
+    )
 
     _append_persona_adjusted_weight_issues(connection, issues)
     checks.append(
@@ -75,7 +83,9 @@ def _append_persona_layer_checks(
                 row,
             )
         )
-    checks.append(_check("persona_descriptions", issues, ["persona_descriptions"]))
+    checks.append(
+        _check("persona_descriptions", issues, ["persona_descriptions"])
+    )
 
     for row in repository.list_inactive_personas_with_modifiers(connection):
         issues.append(
@@ -89,7 +99,9 @@ def _append_persona_layer_checks(
             )
         )
     checks.append(
-        _check("inactive_persona_modifiers", issues, ["inactive_persona_modifiers"])
+        _check(
+            "inactive_persona_modifiers", issues, ["inactive_persona_modifiers"]
+        )
     )
 
 
@@ -108,7 +120,9 @@ def _append_persona_adjusted_weight_issues(
         except HTTPException as exc:
             error_code = "persona_adjusted_weights_invalid"
             if isinstance(exc.detail, dict):
-                error_code = str(exc.detail.get("error", {}).get("code", error_code))
+                error_code = str(
+                    exc.detail.get("error", {}).get("code", error_code)
+                )
             issues.append(
                 _issue(
                     "persona_adjusted_weights_valid",
@@ -126,7 +140,9 @@ def _append_persona_adjusted_weight_issues(
             continue
         weight_sum = sum(float(row["adjusted_weight"]) for row in adjusted)
         negative = [
-            row["metric_slug"] for row in adjusted if float(row["adjusted_weight"]) < 0
+            row["metric_slug"]
+            for row in adjusted
+            if float(row["adjusted_weight"]) < 0
         ]
         if negative or abs(weight_sum - 1.0) > 0.000001:
             issues.append(

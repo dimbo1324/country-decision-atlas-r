@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { listBoardPosts, type MigrationBoardPostListResponse } from "../../shared/api";
+import {
+  listBoardPosts,
+  type MigrationBoardPostListResponse,
+} from "../../shared/api";
 import { routes } from "../../shared/lib/routes";
 
 export function RouteMigrationBoardBlock({ routeId }: { routeId: string }) {
@@ -27,7 +30,9 @@ export function RouteMigrationBoardBlock({ routeId }: { routeId: string }) {
   return (
     <div data-testid="route-migration-board-block">
       {items.length === 0 ? (
-        <p className="notice">Пока нет опубликованных записей по этому маршруту.</p>
+        <p className="notice">
+          Пока нет опубликованных записей по этому маршруту.
+        </p>
       ) : (
         <div className="sectionStack">
           {items.map((post) => (

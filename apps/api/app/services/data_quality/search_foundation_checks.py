@@ -32,7 +32,9 @@ def _append_search_foundation_checks(
         )
     )
 
-    for row in repository.list_search_documents_referencing_non_published_content(
+    for (
+        row
+    ) in repository.list_search_documents_referencing_non_published_content(
         connection
     ):
         issues.append(

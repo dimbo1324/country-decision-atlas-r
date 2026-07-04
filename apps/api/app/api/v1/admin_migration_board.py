@@ -16,7 +16,9 @@ from psycopg import Connection
 from typing import Annotated, Any
 
 
-router = APIRouter(prefix="/admin/migration-board", tags=["admin-migration-board"])
+router = APIRouter(
+    prefix="/admin/migration-board", tags=["admin-migration-board"]
+)
 
 
 @router.get("/posts", response_model=AdminMigrationBoardPostListResponse)
@@ -50,7 +52,9 @@ def approve_migration_board_post(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
-    post = service.approve_post(connection, current_user=current_user, post_id=post_id)
+    post = service.approve_post(
+        connection, current_user=current_user, post_id=post_id
+    )
     connection.commit()
     return {"post": post}
 

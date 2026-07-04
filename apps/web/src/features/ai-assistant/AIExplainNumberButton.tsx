@@ -23,7 +23,9 @@ export function AIExplainNumberButton({
   metricKey,
   locale,
 }: AIExplainNumberButtonProps) {
-  const [response, setResponse] = useState<AIExplainNumberResponse | null>(null);
+  const [response, setResponse] = useState<AIExplainNumberResponse | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,12 +64,18 @@ export function AIExplainNumberButton({
         {isLoading ? "Объясняем…" : "Объяснить число"}
       </button>
       {error && (
-        <p className="formError" role="alert">
+        <p
+          className="formError"
+          role="alert"
+        >
           {error}
         </p>
       )}
       {response && (
-        <div className="notice" data-testid="ai-explain-number-panel">
+        <div
+          className="notice"
+          data-testid="ai-explain-number-panel"
+        >
           {response.refused ? (
             <AIRefusalState message={response.explanation} />
           ) : (

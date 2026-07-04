@@ -36,7 +36,10 @@ export function PlatformMetricCard({ metric }: PlatformMetricCardProps) {
             Недостаточно данных
           </span>
         ) : (
-          <span className="platformMetricValue" data-testid="platform-metric-value">
+          <span
+            className="platformMetricValue"
+            data-testid="platform-metric-value"
+          >
             {metric.value !== null && metric.value !== undefined
               ? Math.round(metric.value)
               : "—"}
@@ -46,7 +49,9 @@ export function PlatformMetricCard({ metric }: PlatformMetricCardProps) {
       </div>
       <div className="platformMetricMeta">
         <span className="platformMetricConfidence">{metric.confidence}</span>
-        <span className="platformMetricFreshness">{metric.freshness_status}</span>
+        <span className="platformMetricFreshness">
+          {metric.freshness_status}
+        </span>
       </div>
     </div>
   );

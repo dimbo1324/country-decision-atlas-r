@@ -16,7 +16,9 @@ def _make_conn() -> Any:
     return conn
 
 
-def _unit(source_text: str = "Привет", source_hash: str = "h1") -> dict[str, Any]:
+def _unit(
+    source_text: str = "Привет", source_hash: str = "h1"
+) -> dict[str, Any]:
     return {
         "translation_unit_id": UNIT_ID,
         "entity_type": "country_card",
@@ -58,7 +60,9 @@ def _job(
 
 class TestFindMissingTranslationUnits:
     def test_returns_units_without_target_variant(self) -> None:
-        from app.repositories.translation_jobs import find_missing_translation_units
+        from app.repositories.translation_jobs import (
+            find_missing_translation_units,
+        )
 
         conn = _make_conn()
         with patch(f"{_REPO}.fetch_all", return_value=[_unit()]) as mock_fetch:
@@ -69,7 +73,9 @@ class TestFindMissingTranslationUnits:
         assert "tv_target.id IS NULL" in sql
 
     def test_excludes_units_with_active_jobs(self) -> None:
-        from app.repositories.translation_jobs import find_missing_translation_units
+        from app.repositories.translation_jobs import (
+            find_missing_translation_units,
+        )
 
         conn = _make_conn()
         with patch(f"{_REPO}.fetch_all", return_value=[]) as mock_fetch:
@@ -81,11 +87,15 @@ class TestFindMissingTranslationUnits:
 
 class TestFindStaleTranslationUnits:
     def test_returns_units_with_different_source_hash(self) -> None:
-        from app.repositories.translation_jobs import find_stale_translation_units
+        from app.repositories.translation_jobs import (
+            find_stale_translation_units,
+        )
 
         conn = _make_conn()
         stale_unit = {**_unit(), "stale_variant_id": VARIANT_ID}
-        with patch(f"{_REPO}.fetch_all", return_value=[stale_unit]) as mock_fetch:
+        with patch(
+            f"{_REPO}.fetch_all", return_value=[stale_unit]
+        ) as mock_fetch:
             result = find_stale_translation_units(conn, "en", 50)
         assert len(result) == 1
         assert result[0]["stale_variant_id"] == VARIANT_ID
@@ -116,7 +126,9 @@ class TestCreateTranslationJob:
 
 class TestCreateMissingNoDuplicates:
     def test_create_missing_skips_duplicate_active_jobs(self) -> None:
-        from app.repositories.translation_jobs import create_missing_translation_jobs
+        from app.repositories.translation_jobs import (
+            create_missing_translation_jobs,
+        )
 
         conn = _make_conn()
         with (
@@ -138,7 +150,9 @@ class TestCreateMissingNoDuplicates:
 
 class TestCreateStaleNoDuplicates:
     def test_create_stale_skips_existing_active_jobs(self) -> None:
-        from app.repositories.translation_jobs import create_stale_translation_jobs
+        from app.repositories.translation_jobs import (
+            create_stale_translation_jobs,
+        )
 
         conn = _make_conn()
         stale_unit = {**_unit(), "stale_variant_id": VARIANT_ID}
@@ -164,7 +178,11 @@ class TestLockNextPendingJob:
         from app.repositories.translation_jobs import lock_next_pending_job
 
         conn = _make_conn()
-        locked = {**_job(status="processing"), "locked_by": "worker-1", "attempts": 1}
+        locked = {
+            **_job(status="processing"),
+            "locked_by": "worker-1",
+            "attempts": 1,
+        }
         with patch(f"{_REPO}.fetch_one", return_value=locked):
             result = lock_next_pending_job(conn, "worker-1", "en")
         assert result is not None
@@ -184,7 +202,11 @@ class TestLockNextPendingJob:
         from app.repositories.translation_jobs import lock_next_pending_job
 
         conn = _make_conn()
-        locked = {**_job(status="processing"), "locked_by": "worker-1", "attempts": 1}
+        locked = {
+            **_job(status="processing"),
+            "locked_by": "worker-1",
+            "attempts": 1,
+        }
         with patch(f"{_REPO}.fetch_one", side_effect=[locked, None]):
             first = lock_next_pending_job(conn, "worker-1", "en")
             second = lock_next_pending_job(conn, "worker-2", "en")
@@ -273,7 +295,11 @@ class TestFakeProviderCreatesVariant:
         from app.services.translation_jobs import process_next_job
 
         conn = _make_conn()
-        processing_job = {**_job(status="processing"), "locked_by": "w", "attempts": 1}
+        processing_job = {
+            **_job(status="processing"),
+            "locked_by": "w",
+            "attempts": 1,
+        }
         unit_data = {
             "id": UNIT_ID,
             "original_locale_code": "ru",
@@ -290,8 +316,12 @@ class TestFakeProviderCreatesVariant:
             "source_hash": "h1",
         }
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
             patch(
                 f"{_REPO}.save_translation_variant", return_value=variant_data
             ) as mock_save,
@@ -349,9 +379,15 @@ class TestOriginalNotOverwritten:
         from app.services.translation_jobs import process_next_job
 
         conn = _make_conn()
-        processing_job = {**_job(status="processing"), "locked_by": "w", "attempts": 1}
+        processing_job = {
+            **_job(status="processing"),
+            "locked_by": "w",
+            "attempts": 1,
+        }
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
             patch(f"{_REPO}.get_translation_unit_for_job", return_value=None),
             patch(f"{_REPO}.mark_job_failed", return_value={}) as mock_fail,
         ):
@@ -364,8 +400,8 @@ class TestOriginalNotOverwritten:
 
 class TestAdminTokenRequirement:
     def test_admin_translation_jobs_route_requires_token(self) -> None:
-        from app.api.v1.admin_translation_jobs import list_jobs
         import inspect
+        from app.api.v1.admin_translation_jobs import list_jobs
 
         sig = inspect.signature(list_jobs)
         assert "_" in sig.parameters
@@ -410,9 +446,15 @@ class TestAdminProcessNextEndpoint:
             "source_hash": "h1",
         }
         with (
-            patch(f"{_REPO}.lock_next_pending_job", return_value=processing_job),
-            patch(f"{_REPO}.get_translation_unit_for_job", return_value=unit_data),
-            patch(f"{_REPO}.save_translation_variant", return_value=variant_data),
+            patch(
+                f"{_REPO}.lock_next_pending_job", return_value=processing_job
+            ),
+            patch(
+                f"{_REPO}.get_translation_unit_for_job", return_value=unit_data
+            ),
+            patch(
+                f"{_REPO}.save_translation_variant", return_value=variant_data
+            ),
             patch(f"{_REPO}.mark_job_completed", return_value={}),
         ):
             result = process_next_job(conn, "api-admin", "en")

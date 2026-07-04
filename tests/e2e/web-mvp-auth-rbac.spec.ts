@@ -62,7 +62,9 @@ test.describe("anonymous auth state", () => {
   }) => {
     await page.goto(e2eRoutes.dataQuality);
     await expectHasMainHeading(page, /отчёт качества данных/i);
-    await expect(page.getByTestId("data-quality-unauthenticated")).toBeVisible();
+    await expect(
+      page.getByTestId("data-quality-unauthenticated"),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -83,7 +85,9 @@ test.describe("anonymous auth state", () => {
 });
 
 test.describe("registration and account flow", () => {
-  test("register creates an account and redirects to /account", async ({ page }) => {
+  test("register creates an account and redirects to /account", async ({
+    page,
+  }) => {
     const email = uniqueEmail("register-flow-user");
     await registerViaUi(page, email);
 
@@ -95,7 +99,9 @@ test.describe("registration and account flow", () => {
     await expectNoAppCrash(page);
   });
 
-  test("registering with an already-used email shows an error", async ({ page }) => {
+  test("registering with an already-used email shows an error", async ({
+    page,
+  }) => {
     const email = uniqueEmail("duplicate-user");
     await registerViaUi(page, email);
     await expect(page).toHaveURL(new RegExp(e2eRoutes.account));

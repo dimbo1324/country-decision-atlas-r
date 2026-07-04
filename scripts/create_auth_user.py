@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Sequence
 import json
+import sys
+from collections.abc import Sequence
 from pathlib import Path
 from psycopg import connect
 from psycopg.rows import dict_row
-import sys
 from typing import Any
 
 
@@ -71,7 +71,9 @@ def create_or_update_auth_user(
                 or user
             )
         if update_role and role != user["role"]:
-            user = repository.set_user_role(connection, user["id"], role) or user
+            user = (
+                repository.set_user_role(connection, user["id"], role) or user
+            )
         repository.set_password_credential(
             connection, user["id"], hash_password(password)
         )

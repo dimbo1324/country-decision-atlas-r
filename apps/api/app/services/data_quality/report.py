@@ -10,7 +10,9 @@ from app.services.data_quality.content_checks import _append_content_checks
 from app.services.data_quality.country_drift_checks import (
     _append_country_drift_checks,
 )
-from app.services.data_quality.country_pair_checks import _append_country_pair_checks
+from app.services.data_quality.country_pair_checks import (
+    _append_country_pair_checks,
+)
 from app.services.data_quality.decision_passport_checks import (
     _append_decision_passport_checks,
 )
@@ -21,9 +23,15 @@ from app.services.data_quality.migration_board_checks import (
     _append_migration_board_checks,
 )
 from app.services.data_quality.mvp_checks import _append_mvp_checks
-from app.services.data_quality.persona_checks import _append_persona_layer_checks
-from app.services.data_quality.platform_checks import _append_platform_runtime_checks
-from app.services.data_quality.publication_checks import _append_publication_checks
+from app.services.data_quality.persona_checks import (
+    _append_persona_layer_checks,
+)
+from app.services.data_quality.platform_checks import (
+    _append_platform_runtime_checks,
+)
+from app.services.data_quality.publication_checks import (
+    _append_publication_checks,
+)
 from app.services.data_quality.route_checklist_checks import (
     _append_route_checklist_checks,
 )
@@ -33,7 +41,9 @@ from app.services.data_quality.search_foundation_checks import (
 )
 from app.services.data_quality.timeline_checks import _append_timeline_checks
 from app.services.data_quality.trust_checks import _append_trust_surface_checks
-from app.services.data_quality.what_changed_checks import _append_what_changed_checks
+from app.services.data_quality.what_changed_checks import (
+    _append_what_changed_checks,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -74,9 +84,13 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     )
     checks.extend(onboarding_checks)
     issues.extend(onboarding_issues)
-    critical_issues_count = sum(1 for issue in issues if issue.severity == "critical")
+    critical_issues_count = sum(
+        1 for issue in issues if issue.severity == "critical"
+    )
     warnings_count = sum(
-        1 for issue in issues if issue.severity in {"warning", "accepted_mvp_warning"}
+        1
+        for issue in issues
+        if issue.severity in {"warning", "accepted_mvp_warning"}
     )
     return DataQualityReport(
         overall_status="valid" if critical_issues_count == 0 else "invalid",

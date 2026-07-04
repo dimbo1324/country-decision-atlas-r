@@ -1,9 +1,9 @@
 """Search-index rebuild script: per-entity-type processing and locale-partitioned vs. dual-locale routes."""
 
-from app.repositories import search_index as search_index_repository
-from psycopg import Connection
 import pytest
 import scripts.rebuild_search_index as rebuild_script
+from app.repositories import search_index as search_index_repository
+from psycopg import Connection
 from typing import Any, cast
 
 
@@ -52,14 +52,18 @@ def _source_row(**overrides: Any) -> dict[str, Any]:
     return row
 
 
-def install_no_op_upsert(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
+def install_no_op_upsert(
+    monkeypatch: pytest.MonkeyPatch,
+) -> list[dict[str, Any]]:
     calls: list[dict[str, Any]] = []
 
     def fake_upsert(_connection: Any, **kwargs: Any) -> dict[str, Any]:
         calls.append(kwargs)
         return kwargs
 
-    monkeypatch.setattr(search_index_repository, "upsert_search_document", fake_upsert)
+    monkeypatch.setattr(
+        search_index_repository, "upsert_search_document", fake_upsert
+    )
     return calls
 
 
@@ -91,7 +95,9 @@ def test_rebuild_all_processes_every_entity_type(
     assert result["errors"] == []
 
 
-def test_rebuild_indexes_dual_locale_route(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_rebuild_indexes_dual_locale_route(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     calls = install_no_op_upsert(monkeypatch)
     install_all_jobs_empty(monkeypatch)
     monkeypatch.setitem(
@@ -117,7 +123,9 @@ def test_rebuild_indexes_locale_partitioned_country(
         lambda *_: [_country_row(locale="en"), _country_row(locale="ru")],
     )
 
-    result = rebuild_script.rebuild(CONNECTION, ["country"], None, dry_run=False)
+    result = rebuild_script.rebuild(
+        CONNECTION, ["country"], None, dry_run=False
+    )
 
     assert result["ok"] is True
     assert result["summary"]["documents_upserted"] == 2
@@ -130,7 +138,9 @@ def test_rebuild_indexes_single_locale_both_source(
     calls = install_no_op_upsert(monkeypatch)
     install_all_jobs_empty(monkeypatch)
     monkeypatch.setitem(
-        rebuild_script.ENTITY_JOBS["source"], "fetch", lambda *_: [_source_row()]
+        rebuild_script.ENTITY_JOBS["source"],
+        "fetch",
+        lambda *_: [_source_row()],
     )
 
     result = rebuild_script.rebuild(CONNECTION, ["source"], None, dry_run=False)
@@ -171,14 +181,18 @@ def test_rebuild_country_filter_excludes_other_countries(
         ],
     )
 
-    result = rebuild_script.rebuild(CONNECTION, ["route"], "argentina", dry_run=False)
+    result = rebuild_script.rebuild(
+        CONNECTION, ["route"], "argentina", dry_run=False
+    )
 
     assert result["ok"] is True
     assert all(call["country_slug"] == "argentina" for call in calls)
     assert result["summary"]["documents_upserted"] == 2
 
 
-def test_rebuild_dry_run_does_not_upsert(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_rebuild_dry_run_does_not_upsert(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     calls = install_no_op_upsert(monkeypatch)
     install_all_jobs_empty(monkeypatch)
     monkeypatch.setitem(
@@ -241,7 +255,9 @@ def test_rebuild_country_filter_skips_stale_deletion(
         search_index_repository, "list_indexed_entity_ids", fail_list_indexed
     )
 
-    result = rebuild_script.rebuild(CONNECTION, ["route"], "argentina", dry_run=False)
+    result = rebuild_script.rebuild(
+        CONNECTION, ["route"], "argentina", dry_run=False
+    )
 
     assert result["ok"] is True
     assert result["summary"]["documents_deleted"] == 0
@@ -270,7 +286,9 @@ def test_rebuild_catches_fetch_exceptions_per_entity_type(
     def failing_fetch(*_a: Any) -> list[dict[str, Any]]:
         raise RuntimeError("boom")
 
-    monkeypatch.setitem(rebuild_script.ENTITY_JOBS["route"], "fetch", failing_fetch)
+    monkeypatch.setitem(
+        rebuild_script.ENTITY_JOBS["route"], "fetch", failing_fetch
+    )
 
     result = rebuild_script.rebuild(
         CONNECTION, ["route", "source"], None, dry_run=False
@@ -296,8 +314,12 @@ def test_main_rejects_unknown_entity_type_without_touching_db(
 
 
 def test_content_hash_is_deterministic() -> None:
-    first = rebuild_script._content_hash("route", "route-1", "en", "Title", "Summary")
-    second = rebuild_script._content_hash("route", "route-1", "en", "Title", "Summary")
+    first = rebuild_script._content_hash(
+        "route", "route-1", "en", "Title", "Summary"
+    )
+    second = rebuild_script._content_hash(
+        "route", "route-1", "en", "Title", "Summary"
+    )
     different = rebuild_script._content_hash(
         "route", "route-1", "en", "Title", "Changed summary"
     )

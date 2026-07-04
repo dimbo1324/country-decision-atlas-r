@@ -18,5 +18,7 @@ export async function expectPageReady(page: Page) {
 }
 
 export async function expectHasMainHeading(page: Page, text: string | RegExp) {
-  await expect(page.getByRole("heading", { name: text, level: 1 })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: text, level: 1 }),
+  ).toBeVisible();
 }

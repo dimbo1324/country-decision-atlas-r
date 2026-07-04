@@ -10,14 +10,18 @@ from typing import Any, cast
 CONNECTION = cast(Connection[Any], object())
 
 
-def test_migration_board_data_quality_checks_are_registered(monkeypatch: Any) -> None:
+def test_migration_board_data_quality_checks_are_registered(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
 
     report = data_quality.build_data_quality_report(CONNECTION)
     check_codes = {check.code for check in report.checks}
 
     assert "migration_board_published_posts_are_approved" in check_codes
-    assert "migration_board_published_posts_have_acknowledgements" in check_codes
+    assert (
+        "migration_board_published_posts_have_acknowledgements" in check_codes
+    )
     assert "migration_board_public_text_has_no_pii" in check_codes
     assert "migration_board_contact_requests_are_valid" in check_codes
     assert "migration_board_reports_are_valid" in check_codes
@@ -36,7 +40,9 @@ def test_migration_board_data_quality_detects_broken_public_post(
     monkeypatch.setattr(
         data_quality_repository,
         "list_migration_board_public_posts_with_pii",
-        lambda *_: [{"id": "post-2", "title": "Contact me", "summary": "email"}],
+        lambda *_: [
+            {"id": "post-2", "title": "Contact me", "summary": "email"}
+        ],
     )
 
     report = data_quality.build_data_quality_report(CONNECTION)

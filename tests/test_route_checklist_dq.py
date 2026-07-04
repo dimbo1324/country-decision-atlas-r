@@ -17,10 +17,14 @@ CONNECTION = cast(Connection[Any], object())
 
 def test_detects_missing_traceability(monkeypatch: Any) -> None:
     monkeypatch.setattr(
-        dq_repository, "list_published_checklist_items_missing_title", lambda *_: []
+        dq_repository,
+        "list_published_checklist_items_missing_title",
+        lambda *_: [],
     )
     monkeypatch.setattr(
-        dq_repository, "list_duplicate_step_order_checklist_items", lambda *_: []
+        dq_repository,
+        "list_duplicate_step_order_checklist_items",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         route_checklists_repository,
@@ -34,7 +38,9 @@ def test_detects_missing_traceability(monkeypatch: Any) -> None:
         ],
     )
     monkeypatch.setattr(
-        route_checklists_repository, "list_orphan_checklist_items", lambda *_: []
+        route_checklists_repository,
+        "list_orphan_checklist_items",
+        lambda *_: [],
     )
 
     issues: list[DataQualityIssue] = []
@@ -51,10 +57,14 @@ def test_detects_missing_traceability(monkeypatch: Any) -> None:
 
 def test_passes_when_traceability_present(monkeypatch: Any) -> None:
     monkeypatch.setattr(
-        dq_repository, "list_published_checklist_items_missing_title", lambda *_: []
+        dq_repository,
+        "list_published_checklist_items_missing_title",
+        lambda *_: [],
     )
     monkeypatch.setattr(
-        dq_repository, "list_duplicate_step_order_checklist_items", lambda *_: []
+        dq_repository,
+        "list_duplicate_step_order_checklist_items",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         route_checklists_repository,
@@ -62,7 +72,9 @@ def test_passes_when_traceability_present(monkeypatch: Any) -> None:
         lambda *_: [],
     )
     monkeypatch.setattr(
-        route_checklists_repository, "list_orphan_checklist_items", lambda *_: []
+        route_checklists_repository,
+        "list_orphan_checklist_items",
+        lambda *_: [],
     )
 
     issues: list[DataQualityIssue] = []
@@ -77,7 +89,9 @@ def test_passes_when_traceability_present(monkeypatch: Any) -> None:
 
 def test_detects_duplicate_step_order(monkeypatch: Any) -> None:
     monkeypatch.setattr(
-        dq_repository, "list_published_checklist_items_missing_title", lambda *_: []
+        dq_repository,
+        "list_published_checklist_items_missing_title",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         dq_repository,
@@ -98,7 +112,9 @@ def test_detects_duplicate_step_order(monkeypatch: Any) -> None:
         lambda *_: [],
     )
     monkeypatch.setattr(
-        route_checklists_repository, "list_orphan_checklist_items", lambda *_: []
+        route_checklists_repository,
+        "list_orphan_checklist_items",
+        lambda *_: [],
     )
 
     issues: list[DataQualityIssue] = []
@@ -126,7 +142,9 @@ def test_detects_missing_title(monkeypatch: Any) -> None:
         ],
     )
     monkeypatch.setattr(
-        dq_repository, "list_duplicate_step_order_checklist_items", lambda *_: []
+        dq_repository,
+        "list_duplicate_step_order_checklist_items",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         route_checklists_repository,
@@ -134,7 +152,9 @@ def test_detects_missing_title(monkeypatch: Any) -> None:
         lambda *_: [],
     )
     monkeypatch.setattr(
-        route_checklists_repository, "list_orphan_checklist_items", lambda *_: []
+        route_checklists_repository,
+        "list_orphan_checklist_items",
+        lambda *_: [],
     )
 
     issues: list[DataQualityIssue] = []
@@ -147,10 +167,14 @@ def test_detects_missing_title(monkeypatch: Any) -> None:
 
 def test_detects_checklist_item_for_unpublished_route(monkeypatch: Any) -> None:
     monkeypatch.setattr(
-        dq_repository, "list_published_checklist_items_missing_title", lambda *_: []
+        dq_repository,
+        "list_published_checklist_items_missing_title",
+        lambda *_: [],
     )
     monkeypatch.setattr(
-        dq_repository, "list_duplicate_step_order_checklist_items", lambda *_: []
+        dq_repository,
+        "list_duplicate_step_order_checklist_items",
+        lambda *_: [],
     )
     monkeypatch.setattr(
         route_checklists_repository,

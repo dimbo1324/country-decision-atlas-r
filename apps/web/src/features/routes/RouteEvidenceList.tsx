@@ -19,7 +19,11 @@ export function RouteEvidenceList({ evidence }: RouteEvidenceListProps) {
           <strong>{item.claim ?? item.source_title ?? "Доказательство"}</strong>
           {item.excerpt && <p>{item.excerpt}</p>}
           {item.source_url && (
-            <a href={item.source_url} target="_blank" rel="noreferrer">
+            <a
+              href={item.source_url}
+              target="_blank"
+              rel="noreferrer"
+            >
               {item.source_title ?? item.source_url}
             </a>
           )}

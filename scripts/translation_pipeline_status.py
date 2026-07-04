@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 _api_path = str(Path(__file__).resolve().parents[1] / "apps" / "api")
@@ -30,7 +30,7 @@ def _scalar(
     if row is None:
         return 0
     val = row["n"]
-    return int(val) if isinstance(val, (int, float, str)) else 0
+    return int(val) if isinstance(val, int | float | str) else 0
 
 
 def main() -> None:
@@ -41,7 +41,8 @@ def main() -> None:
 
     with psycopg.connect(database_url, row_factory=dict_row) as conn:
         tu_total = _scalar(
-            conn, "SELECT COUNT(*) AS n FROM translation_units WHERE is_active = TRUE"
+            conn,
+            "SELECT COUNT(*) AS n FROM translation_units WHERE is_active = TRUE",
         )
         tu_with_original = _scalar(
             conn,

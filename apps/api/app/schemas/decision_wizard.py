@@ -14,9 +14,9 @@ class DecisionWizardAnswers(BaseModel):
     ]
     origin_country_slug: str | None = None
     budget_level: Literal["low", "medium", "high", "unknown"] = "unknown"
-    family_status: Literal["solo", "couple", "family_with_children", "unknown"] = (
-        "unknown"
-    )
+    family_status: Literal[
+        "solo", "couple", "family_with_children", "unknown"
+    ] = "unknown"
     work_priority: Literal["low", "medium", "high"] = "medium"
     safety_priority: Literal["low", "medium", "high"] = "medium"
     citizenship_priority: Literal["low", "medium", "high"] = "medium"

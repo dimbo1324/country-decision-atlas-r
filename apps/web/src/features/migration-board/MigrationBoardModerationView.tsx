@@ -23,8 +23,10 @@ const MODERATION_ROLES = new Set(["moderator", "admin", "owner"]);
 
 export function MigrationBoardModerationView() {
   const { user, isLoading: authLoading } = useAuth();
-  const [posts, setPosts] = useState<AdminMigrationBoardPostListResponse | null>(null);
-  const [reports, setReports] = useState<MigrationBoardReportListResponse | null>(null);
+  const [posts, setPosts] =
+    useState<AdminMigrationBoardPostListResponse | null>(null);
+  const [reports, setReports] =
+    useState<MigrationBoardReportListResponse | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -72,15 +74,23 @@ export function MigrationBoardModerationView() {
   }
 
   return (
-    <div className="searchPageContainer" data-testid="migration-board-moderation">
-      {error !== null && <ErrorState error={migrationBoardErrorMessage(error)} />}
+    <div
+      className="searchPageContainer"
+      data-testid="migration-board-moderation"
+    >
+      {error !== null && (
+        <ErrorState error={migrationBoardErrorMessage(error)} />
+      )}
       <section className="accountSection">
         <p className="accountSectionTitle">Записи на модерации</p>
         {(posts?.items ?? []).length === 0 ? (
           <EmptyState message="Нет записей на модерации." />
         ) : (
           posts?.items.map((post) => (
-            <div className="summaryCard" key={post.id}>
+            <div
+              className="summaryCard"
+              key={post.id}
+            >
               <p className="eyebrow">{post.author_display_name}</p>
               <h2>{post.title}</h2>
               <p>{post.summary}</p>
@@ -88,7 +98,9 @@ export function MigrationBoardModerationView() {
                 <button
                   type="button"
                   className="runButton"
-                  onClick={() => void action(() => approveAdminBoardPost(post.id))}
+                  onClick={() =>
+                    void action(() => approveAdminBoardPost(post.id))
+                  }
                   data-testid="migration-board-admin-approve"
                 >
                   Approve
@@ -130,7 +142,10 @@ export function MigrationBoardModerationView() {
           <p className="notice">Нет жалоб.</p>
         ) : (
           reports?.items.map((report) => (
-            <div className="sessionRow" key={report.id}>
+            <div
+              className="sessionRow"
+              key={report.id}
+            >
               <span>
                 {report.reason}: {report.status}
               </span>

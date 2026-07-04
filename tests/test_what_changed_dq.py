@@ -2,7 +2,9 @@
 
 from app.repositories import data_quality as dq_repository
 from app.schemas.what_changed import WhatChangedItem
-from app.services.data_quality.what_changed_checks import _append_what_changed_checks
+from app.services.data_quality.what_changed_checks import (
+    _append_what_changed_checks,
+)
 from datetime import UTC, datetime
 from psycopg import Connection
 from typing import Any, cast
@@ -47,7 +49,9 @@ def test_detects_unknown_country_reference(monkeypatch: Any) -> None:
 
     assert any(i.code == "what_changed_event_unknown_country" for i in issues)
     check = next(
-        c for c in checks if c.code == "what_changed_events_reference_known_country"
+        c
+        for c in checks
+        if c.code == "what_changed_events_reference_known_country"
     )
     assert check.status == "failed"
 

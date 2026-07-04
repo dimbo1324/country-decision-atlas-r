@@ -7,15 +7,23 @@ test.describe("home visual overview", () => {
     await page.goto(e2eRoutes.home);
     await expectHasMainHeading(page, /country decision atlas/i);
     await expect(page.locator('[data-testid="home-overview"]')).toBeVisible();
-    await expect(page.locator('[data-testid="home-country-cards"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="home-country-cards"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator('[data-testid="home-scenario-winners"]')).toBeVisible();
-    await expect(page.locator('[data-testid="home-matrix-preview"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="home-scenario-winners"]'),
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-testid="home-matrix-preview"]'),
+    ).toBeVisible();
     await expect(
       page.locator('[data-testid="home-latest-legal-events"]'),
     ).toBeVisible();
-    await expect(page.locator('[data-testid="home-key-insights"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="home-key-insights"]'),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -36,10 +44,9 @@ test.describe("home visual overview", () => {
       "href",
       /\/countries/,
     );
-    await expect(links.getByRole("link", { name: /decision/i })).toHaveAttribute(
-      "href",
-      /\/decision/,
-    );
+    await expect(
+      links.getByRole("link", { name: /decision/i }),
+    ).toHaveAttribute("href", /\/decision/);
     await expect(links.getByRole("link", { name: /матрицу/i })).toHaveAttribute(
       "href",
       /\/compare/,
@@ -53,7 +60,9 @@ test.describe("home visual overview", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.home);
     await expectHasMainHeading(page, /country decision atlas/i);
-    await expect(page.locator('[data-testid="home-matrix-preview"]')).toBeVisible({
+    await expect(
+      page.locator('[data-testid="home-matrix-preview"]'),
+    ).toBeVisible({
       timeout: 10_000,
     });
     await expectNoAppCrash(page);

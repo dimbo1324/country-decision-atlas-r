@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -11,16 +11,18 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR / "apps" / "api"))
     sys.path.insert(0, str(ROOT_DIR))
 
+import psycopg  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from app.services.country_drift import (  # noqa: E402
     compute_and_store_all_country_drifts,
     compute_and_store_country_drift,
 )
-import psycopg  # noqa: E402
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Recompute country drift snapshots.")
+    parser = argparse.ArgumentParser(
+        description="Recompute country drift snapshots."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--all", action="store_true")
     group.add_argument("--country", type=str)

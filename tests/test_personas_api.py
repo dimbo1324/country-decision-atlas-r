@@ -1,10 +1,10 @@
 """Persona listing and detail API, including the normalized weight-profile endpoint."""
 
+import pytest
 from app.api.v1 import personas as personas_route
 from app.repositories import personas as personas_repository
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -48,7 +48,9 @@ PROFILE = {
 }
 
 
-def test_personas_list_returns_active_personas(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_personas_list_returns_active_personas(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
         personas_repository,
         "list_personas",
@@ -67,7 +69,9 @@ def test_personas_list_returns_active_personas(monkeypatch: pytest.MonkeyPatch) 
 def test_persona_detail_unknown_slug_returns_404(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(personas_repository, "get_persona_by_slug", lambda *_: None)
+    monkeypatch.setattr(
+        personas_repository, "get_persona_by_slug", lambda *_: None
+    )
 
     with pytest.raises(HTTPException) as exc_info:
         personas_route.read_persona("unknown", CONNECTION, "en")

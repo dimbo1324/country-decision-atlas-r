@@ -1,5 +1,6 @@
 """Public community Q&A submission and listing endpoints."""
 
+import pytest
 from app.api.v1.community import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
@@ -9,7 +10,6 @@ from app.repositories import (
 )
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -61,7 +61,9 @@ def _published_question() -> dict[str, Any]:
     }
 
 
-def test_public_post_question_creates_pending(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_public_post_question_creates_pending(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_features(monkeypatch)
     monkeypatch.setattr(
         repository,
@@ -98,7 +100,9 @@ def test_public_get_questions_only_shows_published(
     response = _client().get("/api/v1/community/questions")
 
     assert response.status_code == 200
-    assert all(item["status"] == "published" for item in response.json()["items"])
+    assert all(
+        item["status"] == "published" for item in response.json()["items"]
+    )
 
 
 def test_public_get_pending_question_returns_404(
@@ -111,7 +115,9 @@ def test_public_get_pending_question_returns_404(
     assert response.status_code == 404
 
 
-def test_public_post_answer_creates_pending(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_public_post_answer_creates_pending(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_features(monkeypatch)
     monkeypatch.setattr(
         repository, "get_question", lambda *_a, **_kw: _published_question()

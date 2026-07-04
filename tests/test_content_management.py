@@ -1,5 +1,6 @@
 """Schema assertions for the content management migration and related OpenAPI/publish-validation behavior."""
 
+import pytest
 from app.repositories import sources as source_repository
 from app.repositories.sorting import resolve_sort_clause
 from app.schemas.admin_content import EvidenceItemCreate, SourceCreate
@@ -7,14 +8,13 @@ from app.schemas.common import PublicationStatus
 from app.services import admin_content
 from fastapi import HTTPException
 from pathlib import Path
-import pytest
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
 
 
-MIGRATION_SQL = Path("database/migrations/007_content_management.sql").read_text(
-    encoding="utf-8"
-)
+MIGRATION_SQL = Path(
+    "database/migrations/007_content_management.sql"
+).read_text(encoding="utf-8")
 
 
 def test_content_management_migration_adds_lifecycle_and_audit() -> None:
@@ -121,7 +121,8 @@ def test_public_read_openapi_exposes_filters_pagination_and_sort() -> None:
 
     for path, expected_params in checks.items():
         params = {
-            param["name"] for param in contract["paths"][path]["get"]["parameters"]
+            param["name"]
+            for param in contract["paths"][path]["get"]["parameters"]
         }
         assert expected_params.issubset(params)
 
@@ -142,7 +143,8 @@ def test_publish_source_validation_blocks_missing_required_fields() -> None:
     detail = cast(dict[str, Any], error.value.detail)
     assert detail["error"]["code"] == "data_quality_validation_failed"
     fields = {
-        issue["details"]["field"] for issue in detail["error"]["details"]["issues"]
+        issue["details"]["field"]
+        for issue in detail["error"]["details"]["issues"]
     }
     assert "url" in fields
 
@@ -151,12 +153,15 @@ def test_publish_evidence_validation_blocks_missing_required_fields() -> None:
     payload = EvidenceItemCreate(status=PublicationStatus.published)
 
     with pytest.raises(HTTPException) as error:
-        admin_content.create_evidence_item(cast(Any, object()), payload, "admin")
+        admin_content.create_evidence_item(
+            cast(Any, object()), payload, "admin"
+        )
 
     assert error.value.status_code == 422
     detail = cast(dict[str, Any], error.value.detail)
     fields = {
-        issue["details"]["field"] for issue in detail["error"]["details"]["issues"]
+        issue["details"]["field"]
+        for issue in detail["error"]["details"]["issues"]
     }
     assert {"source_id", "country_id", "claim"}.issubset(fields)
 
@@ -195,7 +200,9 @@ def test_sort_clause_resolver_uses_whitelisted_columns() -> None:
         "items.title",
         "ASC",
     )
-    assert resolve_sort_clause("unsafe", "drop table", columns, "created_at") == (
+    assert resolve_sort_clause(
+        "unsafe", "drop table", columns, "created_at"
+    ) == (
         "items.created_at",
         "DESC",
     )

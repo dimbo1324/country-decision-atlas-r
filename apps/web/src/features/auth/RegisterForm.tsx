@@ -46,7 +46,11 @@ export function RegisterForm() {
   }
 
   return (
-    <form className="authForm" onSubmit={handleSubmit} data-testid="register-form">
+    <form
+      className="authForm"
+      onSubmit={handleSubmit}
+      data-testid="register-form"
+    >
       <label className="formGroup">
         <span className="formLabel">Email</span>
         <input
@@ -82,7 +86,10 @@ export function RegisterForm() {
         />
       </label>
       {error && (
-        <p className="formError" data-testid="register-error">
+        <p
+          className="formError"
+          data-testid="register-error"
+        >
           {error}
         </p>
       )}

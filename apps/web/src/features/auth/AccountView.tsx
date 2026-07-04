@@ -61,11 +61,16 @@ export function AccountView() {
     setTelegramError(null);
     try {
       const link = await authApi.linkTelegram(linkCode);
-      setTelegramStatus({ linked: true, telegram_user_id: link.telegram_user_id });
+      setTelegramStatus({
+        linked: true,
+        telegram_user_id: link.telegram_user_id,
+      });
       setLinkCode("");
     } catch (err: unknown) {
       if (isApiError(err)) {
-        setTelegramError(err.error?.message ?? "Не удалось привязать Telegram.");
+        setTelegramError(
+          err.error?.message ?? "Не удалось привязать Telegram.",
+        );
       } else {
         setTelegramError("Не удалось привязать Telegram.");
       }
@@ -83,7 +88,10 @@ export function AccountView() {
 
   if (!user) {
     return (
-      <div className="notice" data-testid="account-unauthenticated">
+      <div
+        className="notice"
+        data-testid="account-unauthenticated"
+      >
         Войдите, чтобы просмотреть личный кабинет.{" "}
         <Link href={routes.login}>Войти</Link>
       </div>
@@ -91,7 +99,10 @@ export function AccountView() {
   }
 
   return (
-    <div className="searchPageContainer" data-testid="account-view">
+    <div
+      className="searchPageContainer"
+      data-testid="account-view"
+    >
       <div className="accountSection">
         <p className="accountSectionTitle">Профиль</p>
         <div className="accountField">
@@ -110,7 +121,11 @@ export function AccountView() {
           <span className="accountFieldLabel">Статус</span>
           <span data-testid="account-status">{user.status}</span>
         </div>
-        <button type="button" className="runButton" onClick={handleLogout}>
+        <button
+          type="button"
+          className="runButton"
+          onClick={handleLogout}
+        >
           Выйти
         </button>
       </div>
@@ -134,7 +149,10 @@ export function AccountView() {
             </button>
           </>
         ) : (
-          <form onSubmit={handleLinkTelegram} className="authForm">
+          <form
+            onSubmit={handleLinkTelegram}
+            className="authForm"
+          >
             <label className="formGroup">
               <span className="formLabel">Код из /web_link</span>
               <input
@@ -165,9 +183,13 @@ export function AccountView() {
         ) : (
           <div data-testid="session-list">
             {sessions.map((session) => (
-              <div className="sessionRow" key={session.id}>
+              <div
+                className="sessionRow"
+                key={session.id}
+              >
                 <span>
-                  Создана: {new Date(session.created_at).toLocaleString("ru-RU")}
+                  Создана:{" "}
+                  {new Date(session.created_at).toLocaleString("ru-RU")}
                 </span>
                 <button
                   type="button"
@@ -180,7 +202,11 @@ export function AccountView() {
             ))}
           </div>
         )}
-        <button type="button" className="runButton" onClick={handleRevokeAll}>
+        <button
+          type="button"
+          className="runButton"
+          onClick={handleRevokeAll}
+        >
           Отозвать все сессии
         </button>
       </div>

@@ -46,7 +46,10 @@ def report_contact_request(
         request["to_user_id"],
     }:
         raise api_error(
-            404, "contact_request_not_found", "Contact request was not found.", {}
+            404,
+            "contact_request_not_found",
+            "Contact request was not found.",
+            {},
         )
     return _create_report(
         connection,
@@ -132,7 +135,10 @@ def _create_report(
         contact_request_id=contact_request_id,
     ):
         raise api_error(
-            409, "duplicate_pending_report", "A pending report already exists.", {}
+            409,
+            "duplicate_pending_report",
+            "A pending report already exists.",
+            {},
         )
     report = repository.create_report(
         connection,
@@ -160,7 +166,9 @@ def _create_report(
 
 def _validate_report(reason: str, details: str | None) -> None:
     if reason not in helpers.ALLOWED_REPORT_REASONS:
-        raise api_error(422, "invalid_report_reason", "Report reason is invalid.", {})
+        raise api_error(
+            422, "invalid_report_reason", "Report reason is invalid.", {}
+        )
     if details is not None and len(details) > 1000:
         raise api_error(
             422, "report_details_too_long", "Report details are too long.", {}
@@ -189,7 +197,9 @@ def _review_report(
         resolution_note=resolution_note,
     )
     if updated is None:
-        raise api_error(409, "invalid_report_status", "Report cannot be reviewed.", {})
+        raise api_error(
+            409, "invalid_report_status", "Report cannot be reviewed.", {}
+        )
     if hide_related_post and updated.get("post_id"):
         repository.hide_post(
             connection,

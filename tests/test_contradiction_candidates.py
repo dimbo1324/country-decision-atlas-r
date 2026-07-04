@@ -1,5 +1,7 @@
 """Detection and status updates for AI contradiction candidates."""
 
+import inspect
+import pytest
 from app.api.v1.admin_ai import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.config import Settings, get_settings
@@ -10,8 +12,6 @@ from app.services import contradiction_candidates as service
 from app.services.ai_context import AIContextPackage
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
-import inspect
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -118,7 +118,9 @@ def test_repository_is_sql_only() -> None:
 def test_detect_contradiction_candidate_requires_two_context_items(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(service, "build_ask_context", lambda *_a, **_kw: _package([]))
+    monkeypatch.setattr(
+        service, "build_ask_context", lambda *_a, **_kw: _package([])
+    )
 
     with pytest.raises(HTTPException) as exc_info:
         service.detect_contradiction_candidate(
@@ -137,7 +139,9 @@ def test_detect_contradiction_candidate_creates_needs_review_with_event(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        service, "build_ask_context", lambda *_a, **_kw: _package(_two_context_items())
+        service,
+        "build_ask_context",
+        lambda *_a, **_kw: _package(_two_context_items()),
     )
     events: dict[str, Any] = {}
 
@@ -150,7 +154,9 @@ def test_detect_contradiction_candidate_creates_needs_review_with_event(
     def fake_event(_conn: Any, **kwargs: Any) -> None:
         events.update(kwargs)
 
-    monkeypatch.setattr(repository, "insert_contradiction_candidate", fake_insert)
+    monkeypatch.setattr(
+        repository, "insert_contradiction_candidate", fake_insert
+    )
     monkeypatch.setattr(service, "insert_domain_event", fake_event)
 
     row = service.detect_contradiction_candidate(
@@ -172,7 +178,11 @@ def test_detect_contradiction_candidate_creates_needs_review_with_event(
 def test_update_contradiction_candidate_status_requires_explicit_call(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    confirmed = {**_candidate_row(), "status": "confirmed", "reviewed_by": "editor"}
+    confirmed = {
+        **_candidate_row(),
+        "status": "confirmed",
+        "reviewed_by": "editor",
+    }
     monkeypatch.setattr(
         repository,
         "update_contradiction_candidate_status",
@@ -196,7 +206,9 @@ def test_admin_endpoints_require_admin_auth() -> None:
     assert response.status_code == 401
 
 
-def test_admin_list_contradiction_candidates(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_admin_list_contradiction_candidates(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     client = _client()
     monkeypatch.setattr(
         repository,

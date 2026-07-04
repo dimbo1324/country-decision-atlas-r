@@ -1,8 +1,8 @@
 """Persona-adjusted CII comparisons reweight the overall score without changing per-metric winners."""
 
+import pytest
 from app.services import cii_comparison
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -124,13 +124,19 @@ def install_fakes(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
     )
     monkeypatch.setattr(
-        cii_comparison, "get_cii_for_countries", lambda *_args, **_kwargs: COUNTRIES
+        cii_comparison,
+        "get_cii_for_countries",
+        lambda *_args, **_kwargs: COUNTRIES,
     )
     monkeypatch.setattr(
-        cii_comparison, "get_active_cii_metric_definitions", lambda *_: METRIC_DEFS
+        cii_comparison,
+        "get_active_cii_metric_definitions",
+        lambda *_: METRIC_DEFS,
     )
     monkeypatch.setattr(
-        cii_comparison, "get_cii_metric_values_for_countries", lambda *_: METRIC_VALUES
+        cii_comparison,
+        "get_cii_metric_values_for_countries",
+        lambda *_: METRIC_VALUES,
     )
 
 
@@ -175,6 +181,8 @@ def test_compare_with_persona_reweights_overall_score_but_not_metric_winners(
     assert metrics_by_slug["rule_of_law"].winner_country_slug == "alpha"
     assert metrics_by_slug["economic_freedom"].winner_country_slug == "beta"
     assert metrics_by_slug["economic_freedom"].base_weight == pytest.approx(0.5)
-    assert metrics_by_slug["economic_freedom"].adjusted_weight == pytest.approx(0.99)
+    assert metrics_by_slug["economic_freedom"].adjusted_weight == pytest.approx(
+        0.99
+    )
     assert result.applied_persona is not None
     assert result.applied_persona.slug == "solo_founder"

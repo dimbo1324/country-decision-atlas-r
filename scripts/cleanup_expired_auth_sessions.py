@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Sequence
 import json
+import sys
+from collections.abc import Sequence
 from pathlib import Path
 from psycopg import connect
 from psycopg.rows import dict_row
-import sys
 from typing import Any
 
 
@@ -24,7 +24,11 @@ from app.repositories import auth as repository  # noqa: E402
 def cleanup(connection: Any, limit: int, dry_run: bool) -> dict[str, Any]:
     if dry_run:
         expired = repository.list_expired_unrevoked_sessions(connection, limit)
-        return {"dry_run": True, "sessions_revoked": 0, "sessions_found": len(expired)}
+        return {
+            "dry_run": True,
+            "sessions_revoked": 0,
+            "sessions_found": len(expired),
+        }
     revoked = repository.cleanup_expired_sessions(connection, limit)
     return {"dry_run": False, "sessions_revoked": len(revoked)}
 

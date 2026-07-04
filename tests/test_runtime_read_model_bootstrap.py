@@ -1,7 +1,7 @@
 """Runtime read-model bootstrap script: ordered platform-then-trust execution and failure propagation."""
 
-from app.schemas.platform_metrics import PlatformMetricsRecomputeSummary
 import scripts.bootstrap_runtime_read_models as bootstrap
+from app.schemas.platform_metrics import PlatformMetricsRecomputeSummary
 from typing import Any
 
 
@@ -48,7 +48,9 @@ def test_bootstrap_runtime_read_models_runs_platform_then_trust(
         lambda: type("Settings", (), {"database_url": "postgresql://test"})(),
     )
 
-    def fake_platform(*_args: Any, **_kwargs: Any) -> PlatformMetricsRecomputeSummary:
+    def fake_platform(
+        *_args: Any, **_kwargs: Any
+    ) -> PlatformMetricsRecomputeSummary:
         calls.append("platform")
         return _platform_summary()
 
@@ -89,7 +91,9 @@ def test_bootstrap_runtime_read_models_stops_when_platform_fails(
         lambda: type("Settings", (), {"database_url": "postgresql://test"})(),
     )
 
-    def fake_platform(*_args: Any, **_kwargs: Any) -> PlatformMetricsRecomputeSummary:
+    def fake_platform(
+        *_args: Any, **_kwargs: Any
+    ) -> PlatformMetricsRecomputeSummary:
         calls.append("platform")
         return _platform_summary(metrics_failed=1)
 

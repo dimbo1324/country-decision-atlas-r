@@ -9,7 +9,9 @@ from uuid import UUID
 EventType = Literal[
     "created", "updated", "amended", "effective", "expired", "confirmed"
 ]
-ImpactDirection = Literal["positive", "negative", "neutral", "mixed", "uncertain"]
+ImpactDirection = Literal[
+    "positive", "negative", "neutral", "mixed", "uncertain"
+]
 ImpactLevel = Literal["low", "medium", "high", "critical"]
 
 

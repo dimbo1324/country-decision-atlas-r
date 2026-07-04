@@ -1,12 +1,12 @@
 """CLI recompute script for country drift: batch/single-country flags and error handling."""
 
+import psycopg
+import sys
 from app.services.country_drift import (
     CountryDriftBatchResult,
     CountryDriftStoredResult,
 )
-import psycopg
 from scripts import recompute_country_drift
-import sys
 from unittest.mock import MagicMock
 
 
@@ -174,7 +174,9 @@ def test_no_events_flag_disables_emit_events(monkeypatch: MagicMock) -> None:
         )
 
     monkeypatch.setattr(
-        recompute_country_drift, "compute_and_store_all_country_drifts", fake_batch
+        recompute_country_drift,
+        "compute_and_store_all_country_drifts",
+        fake_batch,
     )
     monkeypatch.setattr(
         sys, "argv", ["recompute_country_drift.py", "--all", "--no-events"]

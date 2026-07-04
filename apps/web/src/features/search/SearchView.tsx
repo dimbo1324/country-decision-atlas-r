@@ -2,7 +2,10 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { countriesApi, type CountryListResponse } from "../../shared/api/countries";
+import {
+  countriesApi,
+  type CountryListResponse,
+} from "../../shared/api/countries";
 import { isApiError } from "../../shared/api/http";
 import { searchApi, type SearchResponse } from "../../shared/api/search";
 import { resolveLocale } from "../../shared/lib/locale";
@@ -122,7 +125,10 @@ function SearchViewInner() {
   const items = result?.items ?? [];
 
   return (
-    <div className="searchPageContainer" data-testid="search-page">
+    <div
+      className="searchPageContainer"
+      data-testid="search-page"
+    >
       <form
         className="searchPageForm"
         onSubmit={handleSubmit}
@@ -155,7 +161,10 @@ function SearchViewInner() {
       />
 
       {!q.trim() && (
-        <div className="notice" data-testid="search-prompt">
+        <div
+          className="notice"
+          data-testid="search-prompt"
+        >
           Введите запрос, чтобы начать поиск.
         </div>
       )}
@@ -170,17 +179,30 @@ function SearchViewInner() {
 
       {q.trim() !== "" && !isLoading && error === null && result && (
         <>
-          <div className="resultCount" data-testid="search-result-count">
+          <div
+            className="resultCount"
+            data-testid="search-result-count"
+          >
             Результатов: {result.total}
           </div>
           {items.length === 0 ? (
-            <div className="emptyNotice" data-testid="search-empty-state">
+            <div
+              className="emptyNotice"
+              data-testid="search-empty-state"
+            >
               Ничего не найдено по запросу «{result.query}».
             </div>
           ) : (
-            <div className="searchResultList" data-testid="search-result-list">
+            <div
+              className="searchResultList"
+              data-testid="search-result-list"
+            >
               {items.map((item) => (
-                <SearchResultCard key={item.id} item={item} locale={locale} />
+                <SearchResultCard
+                  key={item.id}
+                  item={item}
+                  locale={locale}
+                />
               ))}
             </div>
           )}

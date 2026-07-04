@@ -2,7 +2,8 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 
 import { apiGet, queryString } from "./http";
 
-export type UserStoryListResponse = components["schemas"]["UserStoryListResponse"];
+export type UserStoryListResponse =
+  components["schemas"]["UserStoryListResponse"];
 
 type ListUserStoriesParams = {
   originCountrySlug?: string;

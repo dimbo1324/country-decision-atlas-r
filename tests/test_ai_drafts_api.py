@@ -1,5 +1,6 @@
 """Admin API for generating and listing AI-authored content drafts."""
 
+import pytest
 from app.api.v1.admin_ai import router
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.config import Settings, get_settings
@@ -8,7 +9,6 @@ from app.repositories import ai_drafts as repository
 from app.services import ai_drafts as service
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -91,7 +91,9 @@ def test_generate_summary_draft_returns_needs_review(
 
 def test_list_ai_drafts(monkeypatch: pytest.MonkeyPatch) -> None:
     client = _client()
-    monkeypatch.setattr(repository, "list_ai_drafts", lambda *_a, **_kw: [_draft_row()])
+    monkeypatch.setattr(
+        repository, "list_ai_drafts", lambda *_a, **_kw: [_draft_row()]
+    )
     monkeypatch.setattr(repository, "count_ai_drafts", lambda *_a, **_kw: 1)
 
     response = client.get("/api/v1/admin/ai/drafts")
@@ -111,7 +113,9 @@ def test_get_ai_draft_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
     assert response.status_code == 404
 
 
-def test_patch_ai_draft_status_to_approved(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_patch_ai_draft_status_to_approved(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     client = _client()
     approved = {**_draft_row(), "status": "approved", "reviewed_by": "editor"}
     monkeypatch.setattr(

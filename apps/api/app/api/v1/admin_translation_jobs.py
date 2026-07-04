@@ -22,7 +22,9 @@ from psycopg import Connection
 from typing import Annotated, Any
 
 
-router = APIRouter(prefix="/admin/translation-jobs", tags=["admin-translation-jobs"])
+router = APIRouter(
+    prefix="/admin/translation-jobs", tags=["admin-translation-jobs"]
+)
 
 
 @router.get("", response_model=TranslationJobListResponse)
@@ -48,7 +50,9 @@ def list_jobs(
 
 
 @router.post(
-    "/create-missing", response_model=TranslationJobCreateResponse, status_code=201
+    "/create-missing",
+    response_model=TranslationJobCreateResponse,
+    status_code=201,
 )
 def create_missing(
     payload: TranslationJobCreateMissingRequest,
@@ -63,7 +67,9 @@ def create_missing(
 
 
 @router.post(
-    "/create-stale", response_model=TranslationJobCreateResponse, status_code=201
+    "/create-stale",
+    response_model=TranslationJobCreateResponse,
+    status_code=201,
 )
 def create_stale(
     payload: TranslationJobCreateStaleRequest,
@@ -85,7 +91,11 @@ def process_next(
 ) -> TranslationJobProcessResult:
     provider = get_translation_provider()
     result = svc.process_next_job(
-        connection, payload.worker_id, payload.target_locale, provider, payload.dry_run
+        connection,
+        payload.worker_id,
+        payload.target_locale,
+        provider,
+        payload.dry_run,
     )
     if result is None:
         if not payload.dry_run:
@@ -111,7 +121,9 @@ def process_batch(
         provider,
         payload.dry_run,
     )
-    results = [TranslationJobProcessResult.model_validate(r) for r in result["results"]]
+    results = [
+        TranslationJobProcessResult.model_validate(r) for r in result["results"]
+    ]
     return TranslationJobBatchResult(
         processed=result["processed"],
         completed=result["completed"],
@@ -130,7 +142,11 @@ def retry_failed(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> TranslationJobRetryFailedResponse:
-    jobs = svc.retry_failed_jobs(connection, payload.target_locale, payload.limit)
+    jobs = svc.retry_failed_jobs(
+        connection, payload.target_locale, payload.limit
+    )
     connection.commit()
     items = [TranslationJobItem.model_validate(j) for j in jobs]
-    return TranslationJobRetryFailedResponse(reset_count=len(items), items=items)
+    return TranslationJobRetryFailedResponse(
+        reset_count=len(items), items=items
+    )

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -26,9 +26,13 @@ from scripts.outbox_relay_runner import (
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Outbox relay: domain_events -> Kafka")
+    parser = argparse.ArgumentParser(
+        description="Outbox relay: domain_events -> Kafka"
+    )
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
-    parser.add_argument("--max-attempts", type=int, default=DEFAULT_MAX_ATTEMPTS)
+    parser.add_argument(
+        "--max-attempts", type=int, default=DEFAULT_MAX_ATTEMPTS
+    )
     parser.add_argument(
         "--notify-after",
         default=os.environ.get("NOTIFY_AFTER", DEFAULT_NOTIFY_AFTER),
@@ -50,7 +54,9 @@ def main(argv: list[str] | None = None) -> int:
 
     publisher: EventPublisher = KafkaPublisher(kafka_brokers, kafka_topic)
 
-    with psycopg.connect(database_url, row_factory=psycopg.rows.dict_row) as conn:
+    with psycopg.connect(
+        database_url, row_factory=psycopg.rows.dict_row
+    ) as conn:
         metrics = RelayMetrics()
         count = run_relay(
             conn,
@@ -64,7 +70,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.metrics_json or args.metrics_output:
         write_metrics(
-            metrics, metrics_json=args.metrics_json, metrics_output=args.metrics_output
+            metrics,
+            metrics_json=args.metrics_json,
+            metrics_output=args.metrics_output,
         )
     elif args.dry_run:
         print(f"dry-run: {count} eligible events found, nothing published")

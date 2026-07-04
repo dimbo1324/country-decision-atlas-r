@@ -15,7 +15,9 @@ test.describe("Search", () => {
     await expectNoAppCrash(page);
   });
 
-  test("header search box navigates to the search page on submit", async ({ page }) => {
+  test("header search box navigates to the search page on submit", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.home);
     await expectPageReady(page);
 
@@ -27,7 +29,9 @@ test.describe("Search", () => {
     await expectNoAppCrash(page);
   });
 
-  test("empty result state shows for a query with no matches", async ({ page }) => {
+  test("empty result state shows for a query with no matches", async ({
+    page,
+  }) => {
     await page.goto(
       e2eRoutes.search({ q: "zzzznonexistentquerykeyword123", locale: "ru" }),
     );
@@ -74,7 +78,9 @@ test.describe("Search", () => {
     }
   });
 
-  test("type filter checkbox narrows results and updates URL", async ({ page }) => {
+  test("type filter checkbox narrows results and updates URL", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.search({ q: "residence", locale: "ru" }));
     await expectPageReady(page);
 

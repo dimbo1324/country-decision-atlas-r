@@ -69,7 +69,9 @@ def _run_report_with_patches(**overrides: Any) -> Any:
     }
     defaults.update(overrides)
 
-    patches = {f"{_REPO}.{fn}": MagicMock(return_value=v) for fn, v in defaults.items()}
+    patches = {
+        f"{_REPO}.{fn}": MagicMock(return_value=v) for fn, v in defaults.items()
+    }
 
     translation_patch = patch(
         f"{_SVC}.build_translation_quality_results",
@@ -83,14 +85,18 @@ def _run_report_with_patches(**overrides: Any) -> Any:
     with (
         translation_patch,
         onboarding_patch,
-        patch.multiple(_REPO, **{k.split(".")[-1]: v for k, v in patches.items()}),
+        patch.multiple(
+            _REPO, **{k.split(".")[-1]: v for k, v in patches.items()}
+        ),
     ):
         return build_data_quality_report(_make_connection())
 
 
 class TestDataQualityScenarioWeightChecks:
     def test_missing_scenario_weight_produces_critical_issue(self) -> None:
-        missing = [{"scenario_slug": "relocation_residence", "metric_slug": "safety"}]
+        missing = [
+            {"scenario_slug": "relocation_residence", "metric_slug": "safety"}
+        ]
         report = _run_report_with_patches(
             list_mvp_scenarios_missing_cii_weights=missing
         )
@@ -98,7 +104,9 @@ class TestDataQualityScenarioWeightChecks:
         assert "cii_scenario_weight_missing" in codes
         assert report.valid is False
 
-    def test_check_mvp_scenarios_have_cii_weights_passes_when_empty(self) -> None:
+    def test_check_mvp_scenarios_have_cii_weights_passes_when_empty(
+        self,
+    ) -> None:
         report = _run_report_with_patches()
         check_codes = {c.code for c in report.checks}
         assert "mvp_scenarios_have_cii_weights" in check_codes
@@ -133,7 +141,9 @@ class TestDataQualityScenarioWeightChecks:
                 "weight": 1.1,
             }
         ]
-        report = _run_report_with_patches(list_cii_scenario_weights_exceeding_one=over)
+        report = _run_report_with_patches(
+            list_cii_scenario_weights_exceeding_one=over
+        )
         codes = {i.code for i in report.issues}
         assert "cii_scenario_weight_exceeds_one" in codes
         assert report.valid is False
@@ -145,7 +155,11 @@ class TestDataQualityScenarioWeightChecks:
 
     def test_invalid_weight_sum_produces_critical_issue(self) -> None:
         bad_sum = [
-            {"version": "v1.0", "scenario_slug": "low_budget_living", "weight_sum": 0.9}
+            {
+                "version": "v1.0",
+                "scenario_slug": "low_budget_living",
+                "weight_sum": 0.9,
+            }
         ]
         report = _run_report_with_patches(
             list_cii_metric_weights_with_invalid_sum=bad_sum
@@ -155,8 +169,12 @@ class TestDataQualityScenarioWeightChecks:
         assert report.valid is False
 
     def test_missing_scenario_cii_score_produces_critical_issue(self) -> None:
-        missing = [{"country_slug": "russia", "scenario_slug": "safety_political_risk"}]
-        report = _run_report_with_patches(list_mvp_scenarios_missing_cii_scores=missing)
+        missing = [
+            {"country_slug": "russia", "scenario_slug": "safety_political_risk"}
+        ]
+        report = _run_report_with_patches(
+            list_mvp_scenarios_missing_cii_scores=missing
+        )
         codes = {i.code for i in report.issues}
         assert "cii_scenario_score_missing" in codes
         assert report.valid is False
@@ -166,7 +184,9 @@ class TestDataQualityScenarioWeightChecks:
         check_codes = {c.code for c in report.checks}
         assert "mvp_countries_have_scenario_cii_scores" in check_codes
 
-    def test_scenario_formula_metadata_missing_produces_critical_issue(self) -> None:
+    def test_scenario_formula_metadata_missing_produces_critical_issue(
+        self,
+    ) -> None:
         missing_meta = [
             {
                 "country_slug": "uruguay",
@@ -183,7 +203,9 @@ class TestDataQualityScenarioWeightChecks:
         assert "cii_scenario_formula_metadata_missing" in codes
         assert report.valid is False
 
-    def test_scenario_formula_metadata_check_passes_when_all_present(self) -> None:
+    def test_scenario_formula_metadata_check_passes_when_all_present(
+        self,
+    ) -> None:
         report = _run_report_with_patches()
         passing = {c.code for c in report.checks if c.status == "passed"}
         assert "cii_scenario_scores_have_formula_metadata" in passing

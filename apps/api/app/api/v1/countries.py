@@ -22,7 +22,10 @@ from app.schemas.countries import (
     CountryProfileResponse,
     CountryResponse,
 )
-from app.schemas.country_read_model import CountryReadModelCii, CountryReadModelResponse
+from app.schemas.country_read_model import (
+    CountryReadModelCii,
+    CountryReadModelResponse,
+)
 from app.schemas.decision_engine import SourceListWithLocaleResponse
 from app.schemas.scores import CountryScoreListResponse
 from app.services import decision_engine
@@ -44,10 +47,13 @@ from typing import Annotated, Any, Literal
 router = APIRouter(prefix="/countries", tags=["countries"])
 
 
-@router.get("/compare", response_model=CiiCountryComparisonResponse, tags=["cii"])
+@router.get(
+    "/compare", response_model=CiiCountryComparisonResponse, tags=["cii"]
+)
 def compare_countries_cii(
     countries: Annotated[
-        str, Query(description="Comma-separated country slugs, exactly 2 for MVP")
+        str,
+        Query(description="Comma-separated country slugs, exactly 2 for MVP"),
     ],
     scenario: Annotated[str, Query(description="Scenario slug")],
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -64,7 +70,9 @@ def compare_countries_cii(
             {"provided": slugs},
         )
     if not scenario:
-        raise api_error(422, "scenario_required", "Scenario slug is required.", {})
+        raise api_error(
+            422, "scenario_required", "Scenario slug is required.", {}
+        )
     if not get_scenario_metric_weights(connection, scenario):
         raise api_error(
             422,
@@ -72,7 +80,9 @@ def compare_countries_cii(
             "Scenario not found or has no CII weights configured.",
             {"scenario": scenario},
         )
-    return build_cii_comparison(connection, unique_slugs, scenario, locale, persona)
+    return build_cii_comparison(
+        connection, unique_slugs, scenario, locale, persona
+    )
 
 
 @router.get("/matrix", response_model=CompareMatrixResponse, tags=["cii"])
@@ -126,7 +136,9 @@ def get_countries_matrix(
                     {"scenario_slug": slug},
                 )
 
-    return build_matrix_response(connection, country_slugs, scenario_slugs, locale)
+    return build_matrix_response(
+        connection, country_slugs, scenario_slugs, locale
+    )
 
 
 @router.get("", response_model=CountryListResponse)
@@ -170,7 +182,9 @@ def read_country_profile(
 ) -> CountryProfileResponse:
     row = get_profile(connection, country_id, locale)
     if row is None:
-        raise HTTPException(status_code=404, detail="Country profile not found.")
+        raise HTTPException(
+            status_code=404, detail="Country profile not found."
+        )
     return CountryProfileResponse(item=row, locale=build_locale([row], locale))
 
 
@@ -249,7 +263,9 @@ def read_country_cii(
     return cii
 
 
-@router.get("/{country_slug}/sources", response_model=SourceListWithLocaleResponse)
+@router.get(
+    "/{country_slug}/sources", response_model=SourceListWithLocaleResponse
+)
 def read_country_sources(
     country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],

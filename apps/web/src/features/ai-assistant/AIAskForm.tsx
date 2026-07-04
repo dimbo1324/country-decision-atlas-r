@@ -11,7 +11,9 @@ type AIAskFormProps = {
 };
 
 export function AIAskForm({ locale, onResponse }: AIAskFormProps) {
-  const [question, setQuestion] = useState("Что известно об Уругвае для переезда?");
+  const [question, setQuestion] = useState(
+    "Что известно об Уругвае для переезда?",
+  );
   const [countrySlug, setCountrySlug] = useState("uruguay");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,9 +41,16 @@ export function AIAskForm({ locale, onResponse }: AIAskFormProps) {
   }
 
   return (
-    <form className="decisionForm" onSubmit={handleSubmit} data-testid="ai-ask-form">
+    <form
+      className="decisionForm"
+      onSubmit={handleSubmit}
+      data-testid="ai-ask-form"
+    >
       <div className="formGroup">
-        <label className="formLabel" htmlFor="ai-question">
+        <label
+          className="formLabel"
+          htmlFor="ai-question"
+        >
           Вопрос
         </label>
         <textarea
@@ -54,7 +63,10 @@ export function AIAskForm({ locale, onResponse }: AIAskFormProps) {
         />
       </div>
       <div className="formGroup">
-        <label className="formLabel" htmlFor="ai-country">
+        <label
+          className="formLabel"
+          htmlFor="ai-country"
+        >
           Страна, если нужно
         </label>
         <input
@@ -66,7 +78,11 @@ export function AIAskForm({ locale, onResponse }: AIAskFormProps) {
         />
       </div>
       {error && (
-        <p className="formError" role="alert" data-testid="ai-error">
+        <p
+          className="formError"
+          role="alert"
+          data-testid="ai-error"
+        >
           {error}
         </p>
       )}

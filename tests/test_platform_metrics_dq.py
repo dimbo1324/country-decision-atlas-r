@@ -10,11 +10,15 @@ from typing import Any, cast
 CONNECTION = cast(Connection[Any], object())
 
 
-def test_clean_platform_metrics_produces_no_critical_issues(monkeypatch: Any) -> None:
+def test_clean_platform_metrics_produces_no_critical_issues(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     report = data_quality.build_data_quality_report(CONNECTION)
     assert report.valid is True
-    pm_codes = {i.code for i in report.issues if i.entity_type == "platform_metric"}
+    pm_codes = {
+        i.code for i in report.issues if i.entity_type == "platform_metric"
+    }
     assert pm_codes == set()
 
 
@@ -28,7 +32,9 @@ def test_missing_global_lvi_is_detected(monkeypatch: Any) -> None:
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "platform_metric_global_missing" for i in report.issues)
+    assert any(
+        i.code == "platform_metric_global_missing" for i in report.issues
+    )
 
 
 def test_missing_contradiction_score_is_detected(monkeypatch: Any) -> None:
@@ -41,7 +47,9 @@ def test_missing_contradiction_score_is_detected(monkeypatch: Any) -> None:
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "platform_metric_global_missing" for i in report.issues)
+    assert any(
+        i.code == "platform_metric_global_missing" for i in report.issues
+    )
 
 
 def test_missing_ssrs_is_detected(monkeypatch: Any) -> None:
@@ -54,7 +62,9 @@ def test_missing_ssrs_is_detected(monkeypatch: Any) -> None:
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "platform_metric_scenario_missing" for i in report.issues)
+    assert any(
+        i.code == "platform_metric_scenario_missing" for i in report.issues
+    )
 
 
 def test_invalid_metric_value_is_critical(monkeypatch: Any) -> None:
@@ -72,7 +82,9 @@ def test_invalid_metric_value_is_critical(monkeypatch: Any) -> None:
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    issue = next(i for i in report.issues if i.code == "platform_metric_value_invalid")
+    issue = next(
+        i for i in report.issues if i.code == "platform_metric_value_invalid"
+    )
     assert issue.severity == "critical"
     assert report.valid is False
 
@@ -107,7 +119,11 @@ def test_stale_metric_is_warning(monkeypatch: Any) -> None:
         data_quality_repository,
         "list_stale_platform_metrics",
         lambda *_: [
-            {"id": "metric-3", "country_slug": "russia", "days_since_computed": 45}
+            {
+                "id": "metric-3",
+                "country_slug": "russia",
+                "days_since_computed": 45,
+            }
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
@@ -145,12 +161,18 @@ def test_missing_methodology_is_critical(monkeypatch: Any) -> None:
         data_quality_repository,
         "list_platform_metrics_with_missing_methodology",
         lambda *_: [
-            {"id": "metric-5", "country_slug": "russia", "methodology_version": None}
+            {
+                "id": "metric-5",
+                "country_slug": "russia",
+                "methodology_version": None,
+            }
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        i for i in report.issues if i.code == "platform_metric_methodology_missing"
+        i
+        for i in report.issues
+        if i.code == "platform_metric_methodology_missing"
     )
     assert issue.severity == "critical"
 
@@ -160,10 +182,14 @@ def test_missing_computed_at_is_critical(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         data_quality_repository,
         "list_platform_metrics_with_missing_computed_at",
-        lambda *_: [{"id": "metric-6", "country_slug": "russia", "computed_at": None}],
+        lambda *_: [
+            {"id": "metric-6", "country_slug": "russia", "computed_at": None}
+        ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     issue = next(
-        i for i in report.issues if i.code == "platform_metric_computed_at_missing"
+        i
+        for i in report.issues
+        if i.code == "platform_metric_computed_at_missing"
     )
     assert issue.severity == "critical"

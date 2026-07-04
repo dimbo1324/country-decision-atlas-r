@@ -29,12 +29,8 @@ RU_BREAKDOWN = (
     "\u0420\u0443\u0441\u0441\u043a\u0430\u044f "
     "\u0440\u0430\u0437\u0431\u0438\u0432\u043a\u0430"
 )
-RU_SIGNAL = (
-    "\u0420\u0443\u0441\u0441\u043a\u0438\u0439 \u0441\u0438\u0433\u043d\u0430\u043b"
-)
-RU_SUMMARY = (
-    "\u0420\u0443\u0441\u0441\u043a\u043e\u0435 \u0440\u0435\u0437\u044e\u043c\u0435"
-)
+RU_SIGNAL = "\u0420\u0443\u0441\u0441\u043a\u0438\u0439 \u0441\u0438\u0433\u043d\u0430\u043b"
+RU_SUMMARY = "\u0420\u0443\u0441\u0441\u043a\u043e\u0435 \u0440\u0435\u0437\u044e\u043c\u0435"
 RU_MVP_SCORE = "MVP-\u0431\u0430\u043b\u043b"
 
 
@@ -66,7 +62,9 @@ def scenario_row(status: str) -> dict[str, Any]:
         "id": uuid4(),
         "slug": "relocation_residence",
         "title": RU_RELOCATION if status == "translated" else "Relocation",
-        "description": RU_DESCRIPTION if status == "translated" else "Description",
+        "description": RU_DESCRIPTION
+        if status == "translated"
+        else "Description",
         "weights": {"legalization_score": 1.0},
         "translation_status": status,
         "resolved_locale": "ru" if status == "translated" else "en",
@@ -82,7 +80,9 @@ def score_row(status: str) -> dict[str, Any]:
         "country_name": "Uruguay",
         "scenario_id": uuid4(),
         "scenario_slug": "relocation_residence",
-        "scenario_name": RU_RELOCATION if status == "translated" else "Relocation",
+        "scenario_name": RU_RELOCATION
+        if status == "translated"
+        else "Relocation",
         "score": 72.0,
         "explanation": RU_EXPLANATION
         if status == "translated"
@@ -136,12 +136,20 @@ def legal_signal_row(status: str) -> dict[str, Any]:
 
 
 def test_locale_resolution_status_values() -> None:
-    assert locale_resolution("en", "en", "source").translation_status == "source"
     assert (
-        locale_resolution("ru", "ru", "translated").translation_status == "translated"
+        locale_resolution("en", "en", "source").translation_status == "source"
     )
-    assert locale_resolution("ru", "en", "fallback").translation_status == "fallback"
-    assert locale_resolution("ru", "en", "missing").translation_status == "missing"
+    assert (
+        locale_resolution("ru", "ru", "translated").translation_status
+        == "translated"
+    )
+    assert (
+        locale_resolution("ru", "en", "fallback").translation_status
+        == "fallback"
+    )
+    assert (
+        locale_resolution("ru", "en", "missing").translation_status == "missing"
+    )
     assert source_locale_resolution("ru").translation_status == "fallback"
 
 
@@ -149,7 +157,9 @@ def test_country_card_locale_fallback(monkeypatch: Any) -> None:
     def fake_get_country_card(_: Any, __: str, locale: str) -> dict[str, Any]:
         return card_row("source" if locale == "en" else "fallback")
 
-    monkeypatch.setattr(decision_repository, "get_country_card", fake_get_country_card)
+    monkeypatch.setattr(
+        decision_repository, "get_country_card", fake_get_country_card
+    )
 
     english = decision_engine.get_country_card(CONNECTION, "russia", "en")
     russian = decision_engine.get_country_card(CONNECTION, "russia", "ru")
@@ -211,7 +221,9 @@ def test_score_and_breakdown_locale(monkeypatch: Any) -> None:
         "list_score_breakdowns",
         lambda *_: [breakdown],
     )
-    monkeypatch.setattr(decision_repository, "list_score_sources", lambda *_: [])
+    monkeypatch.setattr(
+        decision_repository, "list_score_sources", lambda *_: []
+    )
 
     scores = decision_engine.list_scenario_countries(
         CONNECTION, "relocation_residence", "ru"
@@ -244,7 +256,9 @@ def test_score_breakdown_fallback(monkeypatch: Any) -> None:
         "list_score_breakdowns",
         lambda *_: [breakdown],
     )
-    monkeypatch.setattr(decision_repository, "list_score_sources", lambda *_: [])
+    monkeypatch.setattr(
+        decision_repository, "list_score_sources", lambda *_: []
+    )
 
     scores = decision_engine.list_scenario_countries(
         CONNECTION, "relocation_residence", "ru"
@@ -331,7 +345,9 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
         ],
     )
     monkeypatch.setattr(
-        country_pairs_repository, "list_destination_compatibility", lambda *_: []
+        country_pairs_repository,
+        "list_destination_compatibility",
+        lambda *_: [],
     )
 
     result = decision_engine.run_decision(

@@ -31,7 +31,9 @@ def test_one_event_is_insufficient_data() -> None:
 
 
 def test_two_events_are_insufficient_data() -> None:
-    result = compute_legal_velocity_index([event(event_id="1"), event(event_id="2")])
+    result = compute_legal_velocity_index(
+        [event(event_id="1"), event(event_id="2")]
+    )
     assert result.value is None
 
 
@@ -106,7 +108,10 @@ def test_mixed_contributes_less_than_positive_or_negative() -> None:
 
 def test_value_capped_at_100() -> None:
     result = compute_legal_velocity_index(
-        [event(event_id=str(index), impact_level="critical") for index in range(1, 10)]
+        [
+            event(event_id=str(index), impact_level="critical")
+            for index in range(1, 10)
+        ]
     )
     assert result.value is not None
     assert result.value == 100
@@ -162,7 +167,10 @@ def test_freshness_fresh_stale_unknown_correct() -> None:
     )
     stale = compute_legal_velocity_index(
         [
-            event(event_id=str(index), event_date=date.today() - timedelta(days=180))
+            event(
+                event_id=str(index),
+                event_date=date.today() - timedelta(days=180),
+            )
             for index in range(3)
         ]
     )
@@ -186,7 +194,9 @@ def test_input_summary_includes_raw_points_and_counts() -> None:
 
 def test_deterministic_for_same_input() -> None:
     rows = [event(event_id=str(index)) for index in range(3)]
-    assert compute_legal_velocity_index(rows) == compute_legal_velocity_index(rows)
+    assert compute_legal_velocity_index(rows) == compute_legal_velocity_index(
+        rows
+    )
 
 
 def test_input_events_are_not_mutated() -> None:

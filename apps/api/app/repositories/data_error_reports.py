@@ -61,7 +61,9 @@ def insert_data_error_report(
         ),
     )
     if row is None:
-        raise RuntimeError("Expected data_error_reports insert to return a row.")
+        raise RuntimeError(
+            "Expected data_error_reports insert to return a row."
+        )
     return row
 
 
@@ -121,7 +123,9 @@ def update_data_error_report_status(
     )
 
 
-def count_data_error_reports(conn: Connection[Any], status: str | None = None) -> int:
+def count_data_error_reports(
+    conn: Connection[Any], status: str | None = None
+) -> int:
     row = fetch_one(
         conn,
         """

@@ -23,9 +23,13 @@ from typing import Any
 def ensure_feature_enabled(
     connection: Connection[Any], settings: Settings, feature_key: str
 ) -> None:
-    context = feature_service.default_access_context(settings, FeatureAccessTier.public)
+    context = feature_service.default_access_context(
+        settings, FeatureAccessTier.public
+    )
     feature = feature_repository.get_feature_flag(connection, feature_key)
-    rules = feature_repository.list_feature_access_rules(connection, feature_key)
+    rules = feature_repository.list_feature_access_rules(
+        connection, feature_key
+    )
     decision = feature_service.can_access(context, feature, rules, feature_key)
     if not decision.is_enabled:
         raise api_error(
@@ -85,7 +89,9 @@ def get_public_question(
 ) -> dict[str, Any]:
     row = repository.get_question(connection, question_id, public_only=True)
     if row is None:
-        raise api_error(404, "question_not_found", f"Question not found: {question_id}")
+        raise api_error(
+            404, "question_not_found", f"Question not found: {question_id}"
+        )
     return row
 
 
@@ -105,9 +111,13 @@ def submit_answer(
 ) -> dict[str, Any]:
     ensure_feature_enabled(connection, settings, "community_enabled")
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
-    question = repository.get_question(connection, question_id, public_only=True)
+    question = repository.get_question(
+        connection, question_id, public_only=True
+    )
     if question is None:
-        raise api_error(404, "question_not_found", f"Question not found: {question_id}")
+        raise api_error(
+            404, "question_not_found", f"Question not found: {question_id}"
+        )
     row = repository.insert_answer(
         connection,
         question_id=question_id,
@@ -141,7 +151,9 @@ def submit_vote(
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
     answer = repository.get_answer(connection, answer_id, public_only=True)
     if answer is None:
-        raise api_error(404, "answer_not_found", f"Answer not found: {answer_id}")
+        raise api_error(
+            404, "answer_not_found", f"Answer not found: {answer_id}"
+        )
     repository.insert_vote(
         connection,
         answer_id=answer_id,
@@ -185,7 +197,9 @@ def _with_consensus(
 def list_questions_for_admin(
     connection: Connection[Any], *, status: str | None, limit: int
 ) -> list[dict[str, Any]]:
-    return repository.list_questions_for_admin(connection, status=status, limit=limit)
+    return repository.list_questions_for_admin(
+        connection, status=status, limit=limit
+    )
 
 
 def update_question_status(
@@ -198,14 +212,18 @@ def update_question_status(
         connection, question_id, status, moderated_by=moderated_by
     )
     if row is None:
-        raise api_error(404, "question_not_found", f"Question not found: {question_id}")
+        raise api_error(
+            404, "question_not_found", f"Question not found: {question_id}"
+        )
     return row
 
 
 def list_answers_for_admin(
     connection: Connection[Any], *, status: str | None, limit: int
 ) -> list[dict[str, Any]]:
-    return repository.list_answers_for_admin(connection, status=status, limit=limit)
+    return repository.list_answers_for_admin(
+        connection, status=status, limit=limit
+    )
 
 
 def update_answer_status(
@@ -218,5 +236,7 @@ def update_answer_status(
         connection, answer_id, status, moderated_by=moderated_by
     )
     if row is None:
-        raise api_error(404, "answer_not_found", f"Answer not found: {answer_id}")
+        raise api_error(
+            404, "answer_not_found", f"Answer not found: {answer_id}"
+        )
     return row

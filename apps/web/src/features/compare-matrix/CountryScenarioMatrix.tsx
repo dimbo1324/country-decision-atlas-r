@@ -12,20 +12,38 @@ type Props = {
   locale: string;
 };
 
-export function CountryScenarioMatrix({ countries, scenarios, cells, locale }: Props) {
+export function CountryScenarioMatrix({
+  countries,
+  scenarios,
+  cells,
+  locale,
+}: Props) {
   const cellMap = new Map<string, MatrixCellType>();
   for (const cell of cells) {
     cellMap.set(`${cell.country_slug}::${cell.scenario_slug}`, cell);
   }
 
   return (
-    <div className="matrixTableWrapper" data-testid="compare-matrix">
-      <table className="matrixTable" data-testid="compare-matrix-table">
+    <div
+      className="matrixTableWrapper"
+      data-testid="compare-matrix"
+    >
+      <table
+        className="matrixTable"
+        data-testid="compare-matrix-table"
+      >
         <thead>
           <tr>
-            <th className="matrixCornerCell" scope="col" />
+            <th
+              className="matrixCornerCell"
+              scope="col"
+            />
             {scenarios.map((s) => (
-              <th key={s.slug} className="matrixScenarioHeader" scope="col">
+              <th
+                key={s.slug}
+                className="matrixScenarioHeader"
+                scope="col"
+              >
                 {s.name}
               </th>
             ))}
@@ -33,8 +51,14 @@ export function CountryScenarioMatrix({ countries, scenarios, cells, locale }: P
         </thead>
         <tbody>
           {countries.map((country) => (
-            <tr key={country.slug} data-testid={`matrix-row-${country.slug}`}>
-              <th className="matrixCountryHeader" scope="row">
+            <tr
+              key={country.slug}
+              data-testid={`matrix-row-${country.slug}`}
+            >
+              <th
+                className="matrixCountryHeader"
+                scope="row"
+              >
                 {country.name}
               </th>
               {scenarios.map((scenario) => {
@@ -50,7 +74,13 @@ export function CountryScenarioMatrix({ countries, scenarios, cells, locale }: P
                     </td>
                   );
                 }
-                return <MatrixCell key={scenario.slug} cell={cell} locale={locale} />;
+                return (
+                  <MatrixCell
+                    key={scenario.slug}
+                    cell={cell}
+                    locale={locale}
+                  />
+                );
               })}
             </tr>
           ))}

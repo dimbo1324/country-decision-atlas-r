@@ -1,5 +1,6 @@
 """Community domain events (question/answer/report submitted) are marked non-notifiable."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import (
     community as repository,
@@ -12,7 +13,6 @@ from app.services import (
     community as service,
     data_error_reports as error_report_service,
 )
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -53,7 +53,9 @@ def test_community_question_submitted_event_is_notifiable_false(
     )
     events: dict[str, Any] = {}
     monkeypatch.setattr(
-        service, "insert_domain_event", lambda *_a, **kwargs: events.update(kwargs)
+        service,
+        "insert_domain_event",
+        lambda *_a, **kwargs: events.update(kwargs),
     )
 
     service.submit_question(
@@ -89,11 +91,17 @@ def test_community_answer_submitted_event_is_notifiable_false(
     monkeypatch.setattr(
         repository,
         "insert_answer",
-        lambda *_a, **_kw: {"id": "a1", "question_id": "q1", "status": "pending"},
+        lambda *_a, **_kw: {
+            "id": "a1",
+            "question_id": "q1",
+            "status": "pending",
+        },
     )
     events: dict[str, Any] = {}
     monkeypatch.setattr(
-        service, "insert_domain_event", lambda *_a, **kwargs: events.update(kwargs)
+        service,
+        "insert_domain_event",
+        lambda *_a, **kwargs: events.update(kwargs),
     )
 
     service.submit_answer(

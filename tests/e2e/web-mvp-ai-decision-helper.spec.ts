@@ -25,7 +25,9 @@ test.describe("AI decision helper", () => {
     await page.goto(e2eRoutes.country("uruguay", "ru"));
     await expectPageReady(page);
 
-    await expect(page.getByTestId("cii-block")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByTestId("cii-block")).toBeVisible({
+      timeout: 20_000,
+    });
     await page.getByTestId("ai-explain-number-button").click();
     await expect(
       page

@@ -23,7 +23,8 @@ export function DecisionPassportActions({
   locale,
 }: DecisionPassportActionsProps) {
   const [isCreating, setIsCreating] = useState(false);
-  const [passport, setPassport] = useState<DecisionPassportCreateResponse | null>(null);
+  const [passport, setPassport] =
+    useState<DecisionPassportCreateResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -72,7 +73,10 @@ export function DecisionPassportActions({
   }
 
   return (
-    <div className="decisionPassportActions" data-testid="decision-passport-actions">
+    <div
+      className="decisionPassportActions"
+      data-testid="decision-passport-actions"
+    >
       <button
         type="button"
         className="runButton"
@@ -82,17 +86,26 @@ export function DecisionPassportActions({
         aria-label="Создать Decision Passport"
         data-testid="create-passport-button"
       >
-        {isCreating ? "Создаём Decision Passport…" : "Создать Decision Passport"}
+        {isCreating
+          ? "Создаём Decision Passport…"
+          : "Создать Decision Passport"}
       </button>
 
       {error && (
-        <p className="formError" role="alert" data-testid="passport-error">
+        <p
+          className="formError"
+          role="alert"
+          data-testid="passport-error"
+        >
           {error}
         </p>
       )}
 
       {passport && fullUrl && (
-        <div className="passportLinkBlock" data-testid="passport-link-block">
+        <div
+          className="passportLinkBlock"
+          data-testid="passport-link-block"
+        >
           <a
             href={fullUrl}
             data-testid="passport-link"
@@ -109,7 +122,8 @@ export function DecisionPassportActions({
             {copied ? "Скопировано" : "Скопировать ссылку"}
           </button>
           <p className="formHint">
-            Decision Passport — это сохранённый снимок результата, а не консультация.
+            Decision Passport — это сохранённый снимок результата, а не
+            консультация.
           </p>
         </div>
       )}

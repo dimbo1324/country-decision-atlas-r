@@ -10,7 +10,8 @@ def build_translation_quality_results(
     checks: list[DataQualityCheck] = []
     issues: list[DataQualityIssue] = []
     locales = {
-        row["code"]: row for row in repository.list_foundation_locales(connection)
+        row["code"]: row
+        for row in repository.list_foundation_locales(connection)
     }
     for code in ("ru", "en"):
         locale = locales.get(code)
@@ -128,7 +129,10 @@ def build_translation_quality_results(
         _check(
             "localization_units_have_originals",
             issues,
-            ["translation_unit_without_variants", "translation_unit_without_original"],
+            [
+                "translation_unit_without_variants",
+                "translation_unit_without_original",
+            ],
         )
     )
     for row in repository.list_original_variant_mismatches(connection):
@@ -201,7 +205,10 @@ def build_translation_quality_results(
         _check(
             "localization_variant_workflow_valid",
             issues,
-            ["translation_machine_review_invalid", "translation_fallback_persisted"],
+            [
+                "translation_machine_review_invalid",
+                "translation_fallback_persisted",
+            ],
         )
     )
     return checks, issues

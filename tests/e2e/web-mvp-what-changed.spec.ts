@@ -53,7 +53,9 @@ test.describe("What Changed", () => {
     await expectNoAppCrash(page);
   });
 
-  test("mobile viewport does not crash on What Changed block", async ({ page }) => {
+  test("mobile viewport does not crash on What Changed block", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectPageReady(page);

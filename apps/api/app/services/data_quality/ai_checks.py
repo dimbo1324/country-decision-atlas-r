@@ -28,7 +28,9 @@ def _append_ai_foundation_checks(
             ["ai_feature_flag_missing"],
         )
     )
-    for row in repository.list_ai_feature_flags_without_public_access_rules(connection):
+    for row in repository.list_ai_feature_flags_without_public_access_rules(
+        connection
+    ):
         issues.append(
             _issue(
                 "ai_feature_flag_public_access_rule_missing",
@@ -174,7 +176,9 @@ def _append_ai_foundation_checks(
             ["contradiction_candidate_traceability_missing"],
         )
     )
-    for row in repository.list_confirmed_contradiction_candidates_without_review(
+    for (
+        row
+    ) in repository.list_confirmed_contradiction_candidates_without_review(
         connection
     ):
         issues.append(
@@ -231,7 +235,9 @@ def _append_ai_foundation_checks(
             published_community_moderation_issue_codes,
         )
     )
-    for row in repository.list_published_qna_questions_without_content(connection):
+    for row in repository.list_published_qna_questions_without_content(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_qna_question_content_missing",
@@ -267,7 +273,9 @@ def _append_ai_foundation_checks(
             ["published_qna_answer_body_missing"],
         )
     )
-    for row in repository.list_published_qna_answers_with_invalid_traceability_refs(
+    for (
+        row
+    ) in repository.list_published_qna_answers_with_invalid_traceability_refs(
         connection
     ):
         issues.append(
@@ -361,7 +369,9 @@ def _append_ai_foundation_checks(
             ["published_user_story_rating_moderation_missing"],
         )
     )
-    for row in repository.list_user_story_ratings_with_invalid_scores(connection):
+    for row in repository.list_user_story_ratings_with_invalid_scores(
+        connection
+    ):
         issues.append(
             _issue(
                 "user_story_rating_score_invalid",

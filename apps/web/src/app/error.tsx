@@ -19,7 +19,10 @@ export default function GlobalError({ error, reset }: Props) {
         <h1>Что-то пошло не так</h1>
       </header>
       <p>Произошла непредвиденная ошибка. Попробуйте обновить страницу.</p>
-      <button onClick={reset} className="clearButton">
+      <button
+        onClick={reset}
+        className="clearButton"
+      >
         Попробовать снова
       </button>
     </div>

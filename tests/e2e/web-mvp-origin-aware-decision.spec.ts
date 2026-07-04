@@ -15,7 +15,9 @@ test.describe("Origin-aware decision context", () => {
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByTestId("origin-aware-context").first()).toBeVisible();
+    await expect(
+      page.getByTestId("origin-aware-context").first(),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -59,7 +61,9 @@ test.describe("Origin-aware decision context", () => {
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByTestId("decision-personalization-result")).toBeVisible();
+    await expect(
+      page.getByTestId("decision-personalization-result"),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 });

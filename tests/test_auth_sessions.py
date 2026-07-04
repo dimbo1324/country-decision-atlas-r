@@ -1,11 +1,11 @@
 """Registration feature gating and input validation (email/password strength)."""
 
+import pytest
 from app.core.config import Settings
 from app.repositories import auth as repository
 from app.services import auth as service, feature_flags as feature_flags_service
 from datetime import UTC, datetime, timedelta
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -22,14 +22,18 @@ _SETTINGS = Settings(
 
 def _enable_auth(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: True,
     )
     monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
 
 
 def _disable_auth(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: False
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: False,
     )
     monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
 
@@ -81,7 +85,9 @@ def test_register_user_registration_disabled_returns_403(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        feature_flags_service, "is_feature_enabled_by_key", lambda *_a, **_kw: True
+        feature_flags_service,
+        "is_feature_enabled_by_key",
+        lambda *_a, **_kw: True,
     )
     monkeypatch.setattr(
         service,
@@ -100,7 +106,9 @@ def test_register_user_registration_disabled_returns_403(
     assert detail["error"]["code"] == "feature_disabled"
 
 
-def test_register_user_rejects_invalid_email(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_register_user_rejects_invalid_email(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     with pytest.raises(HTTPException) as exc_info:
         service.register_user(
@@ -114,20 +122,29 @@ def test_register_user_rejects_invalid_email(monkeypatch: pytest.MonkeyPatch) ->
     assert detail["error"]["code"] == "invalid_email"
 
 
-def test_register_user_rejects_weak_password(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_register_user_rejects_weak_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     with pytest.raises(HTTPException) as exc_info:
         service.register_user(
-            CONNECTION, email="new@example.local", password="short", display_name="New"
+            CONNECTION,
+            email="new@example.local",
+            password="short",
+            display_name="New",
         )
     assert exc_info.value.status_code == 422
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "weak_password"
 
 
-def test_register_user_rejects_duplicate_email(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_register_user_rejects_duplicate_email(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
-    monkeypatch.setattr(repository, "get_user_by_email", lambda *_a: _user_row())
+    monkeypatch.setattr(
+        repository, "get_user_by_email", lambda *_a: _user_row()
+    )
     with pytest.raises(HTTPException) as exc_info:
         service.register_user(
             CONNECTION,
@@ -145,7 +162,9 @@ def test_register_user_creates_user_and_password_credential(
 ) -> None:
     _enable_auth(monkeypatch)
     monkeypatch.setattr(repository, "get_user_by_email", lambda *_a: None)
-    monkeypatch.setattr(repository, "create_user", lambda *_a, **_kw: _user_row())
+    monkeypatch.setattr(
+        repository, "create_user", lambda *_a, **_kw: _user_row()
+    )
     stored: dict[str, Any] = {}
 
     def fake_set_password_credential(
@@ -168,7 +187,9 @@ def test_register_user_creates_user_and_password_credential(
     assert service.verify_password("a-long-password", stored["password_hash"])
 
 
-def test_login_user_rejects_missing_user(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_login_user_rejects_missing_user(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     monkeypatch.setattr(
         repository, "get_user_by_email_with_credentials", lambda *_a: None
@@ -182,7 +203,9 @@ def test_login_user_rejects_missing_user(monkeypatch: pytest.MonkeyPatch) -> Non
     assert detail["error"]["code"] == "invalid_credentials"
 
 
-def test_login_user_rejects_wrong_password(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_login_user_rejects_wrong_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     correct_hash = service.hash_password("correct-password-123")
     monkeypatch.setattr(
@@ -192,41 +215,57 @@ def test_login_user_rejects_wrong_password(monkeypatch: pytest.MonkeyPatch) -> N
     )
     with pytest.raises(HTTPException) as exc_info:
         service.login_user(
-            CONNECTION, email="user@example.local", password="wrong-password-123"
+            CONNECTION,
+            email="user@example.local",
+            password="wrong-password-123",
         )
     assert exc_info.value.status_code == 401
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "invalid_credentials"
 
 
-def test_login_user_rejects_suspended_account(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_login_user_rejects_suspended_account(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     correct_hash = service.hash_password("correct-password-123")
     monkeypatch.setattr(
         repository,
         "get_user_by_email_with_credentials",
-        lambda *_a: {**_user_row(status="suspended"), "password_hash": correct_hash},
+        lambda *_a: {
+            **_user_row(status="suspended"),
+            "password_hash": correct_hash,
+        },
     )
     with pytest.raises(HTTPException) as exc_info:
         service.login_user(
-            CONNECTION, email="user@example.local", password="correct-password-123"
+            CONNECTION,
+            email="user@example.local",
+            password="correct-password-123",
         )
     assert exc_info.value.status_code == 403
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "user_suspended"
 
 
-def test_login_user_rejects_deleted_account(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_login_user_rejects_deleted_account(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _enable_auth(monkeypatch)
     correct_hash = service.hash_password("correct-password-123")
     monkeypatch.setattr(
         repository,
         "get_user_by_email_with_credentials",
-        lambda *_a: {**_user_row(status="deleted"), "password_hash": correct_hash},
+        lambda *_a: {
+            **_user_row(status="deleted"),
+            "password_hash": correct_hash,
+        },
     )
     with pytest.raises(HTTPException) as exc_info:
         service.login_user(
-            CONNECTION, email="user@example.local", password="correct-password-123"
+            CONNECTION,
+            email="user@example.local",
+            password="correct-password-123",
         )
     assert exc_info.value.status_code == 403
     detail = cast(dict[str, Any], exc_info.value.detail)
@@ -274,14 +313,20 @@ def test_create_login_session_stores_hashed_token_not_raw(
         captured.update(kwargs)
         return _session_row(user_id=kwargs["user_id"])
 
-    monkeypatch.setattr(repository, "create_auth_session", fake_create_auth_session)
-    raw_token, session = service.create_login_session(CONNECTION, user_id="user-1")
+    monkeypatch.setattr(
+        repository, "create_auth_session", fake_create_auth_session
+    )
+    raw_token, session = service.create_login_session(
+        CONNECTION, user_id="user-1"
+    )
     assert captured["token_hash"] == service.hash_session_token(raw_token)
     assert captured["token_hash"] != raw_token
     assert session["id"] == "session-1"
 
 
-def test_logout_session_revokes_session(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_logout_session_revokes_session(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     captured: dict[str, Any] = {}
 
     def fake_revoke_session(_conn: Any, session_id: str, user_id: str) -> None:
@@ -299,7 +344,9 @@ def test_validate_session_token_rejects_unknown_token(
     monkeypatch.setattr(
         repository, "get_active_session_by_token_hash", lambda *_a: None
     )
-    monkeypatch.setattr(repository, "get_session_by_token_hash", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "get_session_by_token_hash", lambda *_a: None
+    )
     with pytest.raises(HTTPException) as exc_info:
         service.validate_session_token(CONNECTION, "unknown-token")
     assert exc_info.value.status_code == 401
@@ -331,7 +378,9 @@ def test_validate_session_token_rejects_suspended_user(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        repository, "get_active_session_by_token_hash", lambda *_a: _session_row()
+        repository,
+        "get_active_session_by_token_hash",
+        lambda *_a: _session_row(),
     )
     monkeypatch.setattr(
         repository, "get_user_by_id", lambda *_a: _user_row(status="suspended")
@@ -347,7 +396,9 @@ def test_validate_session_token_success_touches_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        repository, "get_active_session_by_token_hash", lambda *_a: _session_row()
+        repository,
+        "get_active_session_by_token_hash",
+        lambda *_a: _session_row(),
     )
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     touched: dict[str, Any] = {}
@@ -366,7 +417,9 @@ def test_get_current_user_from_token_returns_user_dict(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        repository, "get_active_session_by_token_hash", lambda *_a: _session_row()
+        repository,
+        "get_active_session_by_token_hash",
+        lambda *_a: _session_row(),
     )
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     monkeypatch.setattr(repository, "touch_session", lambda *_a: None)

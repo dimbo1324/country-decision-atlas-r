@@ -40,7 +40,10 @@ export function TimelineEventCard({
       className={`timelineEventCard ${directionClass}`}
       data-testid="timeline-event-card"
     >
-      <div className="timelineEventMarker" aria-hidden="true" />
+      <div
+        className="timelineEventMarker"
+        aria-hidden="true"
+      />
       <div className="timelineEventMeta">
         <time dateTime={event.event_date}>
           {formatEventDate(event.event_date, locale)}
@@ -48,13 +51,16 @@ export function TimelineEventCard({
         <span>{event.country_name}</span>
         <span>{typeLabels[event.signal_type] ?? event.signal_type}</span>
         <span>{directionLabels[event.impact_direction]}</span>
-        <span>Уровень: {levelLabels[event.impact_level] ?? event.impact_level}</span>
+        <span>
+          Уровень: {levelLabels[event.impact_level] ?? event.impact_level}
+        </span>
       </div>
       <h3>{event.title}</h3>
       {event.summary && <p>{event.summary}</p>}
       {(event.affected_groups ?? []).length > 0 && (
         <div className="timelineAffectedGroups">
-          <strong>Затронутые группы:</strong> {(event.affected_groups ?? []).join(", ")}
+          <strong>Затронутые группы:</strong>{" "}
+          {(event.affected_groups ?? []).join(", ")}
         </div>
       )}
       <div className="timelineEventEvidence">
@@ -87,11 +93,15 @@ export function TimelineEventCard({
         >
           Карточка страны: {event.country_name} →
         </Link>
-        <Link href={`/sources?country_slug=${event.country_slug}&locale=${locale}`}>
+        <Link
+          href={`/sources?country_slug=${event.country_slug}&locale=${locale}`}
+        >
           Все источники страны
         </Link>
       </div>
-      {event.localization && <LocalizationBadge localization={event.localization} />}
+      {event.localization && (
+        <LocalizationBadge localization={event.localization} />
+      )}
     </article>
   );
 }

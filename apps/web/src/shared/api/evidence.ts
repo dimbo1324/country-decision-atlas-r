@@ -5,7 +5,8 @@ import { apiGet, queryString } from "./http";
 export type EvidenceItem = components["schemas"]["EvidenceItem"];
 export type EvidenceItemListResponse =
   components["schemas"]["EvidenceItemListResponse"];
-export type EvidenceListResponse = components["schemas"]["EvidenceListResponse"];
+export type EvidenceListResponse =
+  components["schemas"]["EvidenceListResponse"];
 
 type ListEvidenceItemsParams = {
   countrySlug?: string;

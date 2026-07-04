@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { listBoardPosts, type MigrationBoardPostListResponse } from "../../shared/api";
+import {
+  listBoardPosts,
+  type MigrationBoardPostListResponse,
+} from "../../shared/api";
 import { routes } from "../../shared/lib/routes";
 
-export function CountryMigrationBoardBlock({ countrySlug }: { countrySlug: string }) {
+export function CountryMigrationBoardBlock({
+  countrySlug,
+}: {
+  countrySlug: string;
+}) {
   const [data, setData] = useState<MigrationBoardPostListResponse | null>(null);
 
   useEffect(() => {
@@ -27,7 +34,9 @@ export function CountryMigrationBoardBlock({ countrySlug }: { countrySlug: strin
   return (
     <div data-testid="country-migration-board-block">
       {items.length === 0 ? (
-        <p className="notice">Пока нет опубликованных записей для этой страны.</p>
+        <p className="notice">
+          Пока нет опубликованных записей для этой страны.
+        </p>
       ) : (
         <div className="sectionStack">
           {items.map((post) => (

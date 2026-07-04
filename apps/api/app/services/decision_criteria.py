@@ -59,12 +59,18 @@ def list_decision_criterion_metadata_issues() -> list[dict[str, str]]:
     seen: set[str] = set()
     for definition in DECISION_CRITERION_DEFINITIONS:
         if definition.slug in seen:
-            issues.append({"criterion": definition.slug, "reason": "duplicate_slug"})
+            issues.append(
+                {"criterion": definition.slug, "reason": "duplicate_slug"}
+            )
         seen.add(definition.slug)
         if not definition.label_ru:
-            issues.append({"criterion": definition.slug, "reason": "missing_label_ru"})
+            issues.append(
+                {"criterion": definition.slug, "reason": "missing_label_ru"}
+            )
         if not definition.label_en:
-            issues.append({"criterion": definition.slug, "reason": "missing_label_en"})
+            issues.append(
+                {"criterion": definition.slug, "reason": "missing_label_en"}
+            )
     for slug in DECISION_CRITERIA:
         if slug not in DECISION_CRITERIA_BY_SLUG:
             issues.append({"criterion": slug, "reason": "missing_definition"})

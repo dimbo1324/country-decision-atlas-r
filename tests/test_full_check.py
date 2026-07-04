@@ -4,15 +4,18 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
-from pathlib import Path
 import sys
+from pathlib import Path
 from types import ModuleType
 from typing import Any
 
 
 def load_full_check_module() -> ModuleType:
     path = (
-        Path(__file__).resolve().parents[1] / "scripts" / "dev_tools" / "full_check.py"
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "dev_tools"
+        / "full_check.py"
     )
     spec = importlib.util.spec_from_file_location("full_check_script", path)
     assert spec is not None

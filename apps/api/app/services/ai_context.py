@@ -104,7 +104,13 @@ def build_explain_number_context(
     )
     question = " ".join(
         part
-        for part in ["explain", number_type, country_slug, scenario_slug, metric_key]
+        for part in [
+            "explain",
+            number_type,
+            country_slug,
+            scenario_slug,
+            metric_key,
+        ]
         if part
     )
     return _package(rows, settings, question=question, locale=resolved_locale)
@@ -228,7 +234,9 @@ def _limit_context(
         if result and chars + item_chars > max_chars:
             break
         if not result and item_chars > max_chars:
-            result.append(item.model_copy(update={"excerpt": item.excerpt[:max_chars]}))
+            result.append(
+                item.model_copy(update={"excerpt": item.excerpt[:max_chars]})
+            )
             break
         result.append(item)
         chars += item_chars
@@ -239,7 +247,9 @@ def _build_citations(items: list[AIContextItem]) -> list[AICitation]:
     citations: list[AICitation] = []
     for item in items:
         source_id = item.source_ids[0] if item.source_ids else None
-        evidence_item_id = item.evidence_item_ids[0] if item.evidence_item_ids else None
+        evidence_item_id = (
+            item.evidence_item_ids[0] if item.evidence_item_ids else None
+        )
         if item.entity_type == "source":
             source_id = item.entity_id
         if item.entity_type == "evidence_item":

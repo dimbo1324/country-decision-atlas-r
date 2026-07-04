@@ -38,7 +38,9 @@ def request_json(
         method=method,
         headers={
             "Accept": "application/json",
-            **({"Content-Type": "application/json"} if body is not None else {}),
+            **(
+                {"Content-Type": "application/json"} if body is not None else {}
+            ),
             **(headers or {}),
         },
     )
@@ -49,7 +51,9 @@ def request_json(
         return error.code, json.loads(error.read().decode("utf-8"))
 
 
-def get_json(path: str, headers: dict[str, str] | None = None) -> dict[str, Any]:
+def get_json(
+    path: str, headers: dict[str, str] | None = None
+) -> dict[str, Any]:
     status, body = request_json("GET", path, headers=headers)
     assert status == 200
     return body
@@ -100,7 +104,9 @@ def test_decision_run_smoke(scenario_slug: str, locale: str) -> None:
         },
     )
     assert status == 200
-    assert {"scenario", "origin_country", "results", "meta", "locale"}.issubset(body)
+    assert {"scenario", "origin_country", "results", "meta", "locale"}.issubset(
+        body
+    )
     assert len(body["results"]) == 2
     for result in body["results"]:
         assert {
@@ -119,7 +125,9 @@ def test_decision_run_smoke(scenario_slug: str, locale: str) -> None:
 
 
 def test_legal_signals_filter_smoke() -> None:
-    body = get_json("/api/v1/legal-signals?country_slug=russia&locale=ru&limit=5")
+    body = get_json(
+        "/api/v1/legal-signals?country_slug=russia&locale=ru&limit=5"
+    )
     assert {"items", "pagination", "sort", "locale"}.issubset(body)
 
 
@@ -129,12 +137,16 @@ def test_sources_filter_smoke() -> None:
 
 
 def test_evidence_items_filter_smoke() -> None:
-    body = get_json("/api/v1/evidence-items?country_slug=russia&limit=5&offset=0")
+    body = get_json(
+        "/api/v1/evidence-items?country_slug=russia&limit=5&offset=0"
+    )
     assert {"items", "pagination", "sort"}.issubset(body)
 
 
 def test_user_stories_filter_smoke() -> None:
-    body = get_json("/api/v1/user-stories?destination_country_slug=uruguay&limit=5")
+    body = get_json(
+        "/api/v1/user-stories?destination_country_slug=uruguay&limit=5"
+    )
     assert {"items", "pagination"}.issubset(body)
 
 

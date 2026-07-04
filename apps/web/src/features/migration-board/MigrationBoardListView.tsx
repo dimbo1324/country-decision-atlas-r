@@ -78,7 +78,10 @@ export function MigrationBoardListView() {
   const items = data?.items ?? [];
 
   return (
-    <div className="searchPageContainer" data-testid="migration-board-page">
+    <div
+      className="searchPageContainer"
+      data-testid="migration-board-page"
+    >
       <div className="toolbar">
         <input
           className="formInput"
@@ -115,7 +118,10 @@ export function MigrationBoardListView() {
           data-testid="migration-board-timeline-filter"
         >
           {TIMELINES.map(([value, label]) => (
-            <option key={value} value={value}>
+            <option
+              key={value}
+              value={value}
+            >
               {label}
             </option>
           ))}
@@ -132,7 +138,10 @@ export function MigrationBoardListView() {
           data-testid="migration-board-goal-filter"
         >
           {GOALS.map(([value, label]) => (
-            <option key={value} value={value}>
+            <option
+              key={value}
+              value={value}
+            >
               {label}
             </option>
           ))}
@@ -140,17 +149,23 @@ export function MigrationBoardListView() {
       </div>
 
       <div className="notice">
-        Контакты, email и Telegram не публикуются. Записи появляются в общем списке
-        только после модерации и подтверждения рисков.
+        Контакты, email и Telegram не публикуются. Записи появляются в общем
+        списке только после модерации и подтверждения рисков.
       </div>
 
       <div className="toolbar">
         {authLoading ? null : user ? (
           <>
-            <Link className="runButton" href={routes.migrationBoardNew}>
+            <Link
+              className="runButton"
+              href={routes.migrationBoardNew}
+            >
               Создать запись
             </Link>
-            <Link className="secondaryButton" href={routes.accountMigrationBoard}>
+            <Link
+              className="secondaryButton"
+              href={routes.accountMigrationBoard}
+            >
               Мои записи
             </Link>
           </>
@@ -168,7 +183,10 @@ export function MigrationBoardListView() {
       {items.length === 0 ? (
         <EmptyState message="Пока нет опубликованных записей." />
       ) : (
-        <div className="cardGrid" data-testid="migration-board-list">
+        <div
+          className="cardGrid"
+          data-testid="migration-board-list"
+        >
           {items.map((post) => (
             <Link
               className="summaryCard"

@@ -20,7 +20,9 @@ export function formatLocalePair(
   return `${src} → ${res}`;
 }
 
-export function getTranslationStatusLabel(status: string | null | undefined): string {
+export function getTranslationStatusLabel(
+  status: string | null | undefined,
+): string {
   switch (status) {
     case "original":
       return "Оригинал";

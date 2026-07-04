@@ -1,9 +1,9 @@
 """Route checklist listing: published-only filtering and step ordering."""
 
+import inspect
 from app.repositories import route_checklists as repository
 from app.services import route_checklists as service, routes as routes_service
 from datetime import UTC, datetime
-import inspect
 from psycopg import Connection
 from typing import Any, cast
 
@@ -43,7 +43,9 @@ def test_list_route_checklist_items_sorted_by_step_order() -> None:
 
 
 def test_list_route_checklist_items_by_slug_filters_published_only() -> None:
-    sql_source = inspect.getsource(repository.list_route_checklist_items_by_route_slug)
+    sql_source = inspect.getsource(
+        repository.list_route_checklist_items_by_route_slug
+    )
     assert "rci.status = 'published'" in sql_source
     assert "ORDER BY rci.step_order" in sql_source
 
@@ -75,7 +77,9 @@ def test_get_route_checklist_by_slug_returns_items(monkeypatch: Any) -> None:
         "list_route_checklist_items_by_route_slug",
         lambda *_: [
             _checklist_row(),
-            _checklist_row(step_order=2, id="44444444-4444-4444-4444-444444444444"),
+            _checklist_row(
+                step_order=2, id="44444444-4444-4444-4444-444444444444"
+            ),
         ],
     )
 
@@ -118,8 +122,12 @@ def _route_row() -> dict[str, Any]:
 def test_route_detail_includes_checklist(monkeypatch: Any) -> None:
     from app.repositories import routes as routes_repository
 
-    monkeypatch.setattr(routes_repository, "get_route_by_id", lambda *_: _route_row())
-    monkeypatch.setattr(routes_repository, "list_route_documents", lambda *_: [])
+    monkeypatch.setattr(
+        routes_repository, "get_route_by_id", lambda *_: _route_row()
+    )
+    monkeypatch.setattr(
+        routes_repository, "list_route_documents", lambda *_: []
+    )
     monkeypatch.setattr(routes_repository, "list_route_sources", lambda *_: [])
     monkeypatch.setattr(routes_repository, "list_route_evidence", lambda *_: [])
     monkeypatch.setattr(
@@ -137,8 +145,12 @@ def test_route_detail_returns_empty_checklist_when_none_seeded(
 ) -> None:
     from app.repositories import routes as routes_repository
 
-    monkeypatch.setattr(routes_repository, "get_route_by_id", lambda *_: _route_row())
-    monkeypatch.setattr(routes_repository, "list_route_documents", lambda *_: [])
+    monkeypatch.setattr(
+        routes_repository, "get_route_by_id", lambda *_: _route_row()
+    )
+    monkeypatch.setattr(
+        routes_repository, "list_route_documents", lambda *_: []
+    )
     monkeypatch.setattr(routes_repository, "list_route_sources", lambda *_: [])
     monkeypatch.setattr(routes_repository, "list_route_evidence", lambda *_: [])
     monkeypatch.setattr(repository, "list_route_checklist_items", lambda *_: [])

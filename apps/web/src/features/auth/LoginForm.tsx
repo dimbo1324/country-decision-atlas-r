@@ -39,7 +39,11 @@ export function LoginForm() {
   }
 
   return (
-    <form className="authForm" onSubmit={handleSubmit} data-testid="login-form">
+    <form
+      className="authForm"
+      onSubmit={handleSubmit}
+      data-testid="login-form"
+    >
       <label className="formGroup">
         <span className="formLabel">Email</span>
         <input
@@ -63,7 +67,10 @@ export function LoginForm() {
         />
       </label>
       {error && (
-        <p className="formError" data-testid="login-error">
+        <p
+          className="formError"
+          data-testid="login-error"
+        >
           {error}
         </p>
       )}

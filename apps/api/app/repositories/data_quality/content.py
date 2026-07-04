@@ -10,7 +10,9 @@ from psycopg import Connection
 from typing import Any
 
 
-def list_missing_mvp_countries(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_missing_mvp_countries(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """
@@ -440,7 +442,9 @@ def list_unplanned_future_timeline_events(
     )
 
 
-def list_evidence_without_source(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_evidence_without_source(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """
@@ -455,7 +459,9 @@ def list_evidence_without_source(connection: Connection[Any]) -> list[dict[str, 
     )
 
 
-def list_evidence_without_country(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_evidence_without_country(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """

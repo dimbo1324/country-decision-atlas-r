@@ -75,14 +75,21 @@ def reject_post(
             404, "post_not_found", "Migration board post was not found.", {}
         )
     updated = repository.reject_post(
-        connection, post_id=post_id, moderator_user_id=current_user.id, reason=reason
+        connection,
+        post_id=post_id,
+        moderator_user_id=current_user.id,
+        reason=reason,
     )
     if updated is None:
         raise api_error(
             409, "invalid_status_transition", "Post cannot be rejected.", {}
         )
     helpers._audit(
-        connection, updated, "rejected", current_user, {"reason": {"new": reason}}
+        connection,
+        updated,
+        "rejected",
+        current_user,
+        {"reason": {"new": reason}},
     )
     return helpers._admin_post(updated)
 
@@ -102,10 +109,15 @@ def hide_post(
             404, "post_not_found", "Migration board post was not found.", {}
         )
     updated = repository.hide_post(
-        connection, post_id=post_id, moderator_user_id=current_user.id, reason=reason
+        connection,
+        post_id=post_id,
+        moderator_user_id=current_user.id,
+        reason=reason,
     )
     if updated is None:
-        raise api_error(409, "invalid_status_transition", "Post cannot be hidden.", {})
+        raise api_error(
+            409, "invalid_status_transition", "Post cannot be hidden.", {}
+        )
     helpers._audit(
         connection, updated, "hidden", current_user, {"reason": {"new": reason}}
     )

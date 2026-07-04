@@ -32,7 +32,9 @@ def run_decision(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     x_cda_session: Annotated[str | None, Header(alias="X-CDA-Session")] = None,
 ) -> DecisionRunResponse:
-    return decision_engine.run_decision(connection, payload, session_id=x_cda_session)
+    return decision_engine.run_decision(
+        connection, payload, session_id=x_cda_session
+    )
 
 
 @router.post("/wizard/resolve", response_model=DecisionWizardRecommendation)

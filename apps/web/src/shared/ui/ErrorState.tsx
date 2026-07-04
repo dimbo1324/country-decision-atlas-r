@@ -41,7 +41,10 @@ export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
           : message}
       </span>
       {backHref && (
-        <Link href={backHref} className="errorBack">
+        <Link
+          href={backHref}
+          className="errorBack"
+        >
           {backLabel ?? "Назад"}
         </Link>
       )}

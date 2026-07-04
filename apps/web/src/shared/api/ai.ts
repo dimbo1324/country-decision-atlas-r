@@ -6,9 +6,12 @@ import { apiPost } from "./http";
 type LocaleCode = components["schemas"]["LocaleCode"];
 export type AIAskRequest = components["schemas"]["AIAskRequest"];
 export type AIAskResponse = components["schemas"]["AIAskResponse"];
-export type AIExplainNumberRequest = components["schemas"]["AIExplainNumberRequest"];
-export type AIExplainNumberResponse = components["schemas"]["AIExplainNumberResponse"];
-export type AIDecisionIntentRequest = components["schemas"]["AIDecisionIntentRequest"];
+export type AIExplainNumberRequest =
+  components["schemas"]["AIExplainNumberRequest"];
+export type AIExplainNumberResponse =
+  components["schemas"]["AIExplainNumberResponse"];
+export type AIDecisionIntentRequest =
+  components["schemas"]["AIDecisionIntentRequest"];
 export type AIDecisionIntentResponse =
   components["schemas"]["AIDecisionIntentResponse"];
 export type AICitation = components["schemas"]["AICitation"];

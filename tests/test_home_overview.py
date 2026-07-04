@@ -24,15 +24,23 @@ COUNTRIES = [
     MatrixCountry(slug="uruguay", name="Uruguay", iso2="UY"),
 ]
 SCENARIOS = [
-    MatrixScenario(slug="relocation_residence", name="Relocation", display_order=1),
+    MatrixScenario(
+        slug="relocation_residence", name="Relocation", display_order=1
+    ),
     MatrixScenario(
         slug="permanent_residence_citizenship",
         name="Permanent residence",
         display_order=2,
     ),
-    MatrixScenario(slug="low_budget_living", name="Low budget", display_order=3),
-    MatrixScenario(slug="business_self_employment", name="Business", display_order=4),
-    MatrixScenario(slug="safety_political_risk", name="Safety", display_order=5),
+    MatrixScenario(
+        slug="low_budget_living", name="Low budget", display_order=3
+    ),
+    MatrixScenario(
+        slug="business_self_employment", name="Business", display_order=4
+    ),
+    MatrixScenario(
+        slug="safety_political_risk", name="Safety", display_order=5
+    ),
 ]
 CELLS = [
     MatrixCell(
@@ -120,7 +128,8 @@ def test_home_overview_contains_five_scenario_winners() -> None:
 
     assert len(result.scenario_winners) == 5
     assert all(
-        winner.winner_country_slug == "uruguay" for winner in result.scenario_winners
+        winner.winner_country_slug == "uruguay"
+        for winner in result.scenario_winners
     )
 
 
@@ -135,7 +144,9 @@ def test_home_overview_matrix_has_expected_shape() -> None:
 def test_country_summary_computes_best_weakest_and_average() -> None:
     result = build()
     russia = next(
-        country for country in result.countries_summary if country.slug == "russia"
+        country
+        for country in result.countries_summary
+        if country.slug == "russia"
     )
 
     assert russia.best_score == 29.0
@@ -158,7 +169,8 @@ def test_home_overview_handles_missing_legal_events() -> None:
 
     assert result.latest_legal_events == []
     assert any(
-        insight.kind == "legal_events_missing" for insight in result.key_insights
+        insight.kind == "legal_events_missing"
+        for insight in result.key_insights
     )
 
 

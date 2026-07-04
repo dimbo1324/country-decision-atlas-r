@@ -8,8 +8,12 @@ export type PersonaListResponse = components["schemas"]["PersonaListResponse"];
 export type PersonaWeightProfileResponse =
   components["schemas"]["PersonaWeightProfileResponse"];
 
-export function listPersonas(locale = DEFAULT_LOCALE): Promise<PersonaListResponse> {
-  return apiGet<PersonaListResponse>(`/api/v1/personas${queryString({ locale })}`);
+export function listPersonas(
+  locale = DEFAULT_LOCALE,
+): Promise<PersonaListResponse> {
+  return apiGet<PersonaListResponse>(
+    `/api/v1/personas${queryString({ locale })}`,
+  );
 }
 
 export function getPersonaWeightProfile(

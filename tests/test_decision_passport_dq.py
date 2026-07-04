@@ -49,7 +49,9 @@ def test_detects_missing_result_snapshot(monkeypatch: Any) -> None:
     _append_decision_passport_checks(CONNECTION, issues, checks)
 
     critical = [i for i in issues if i.severity == "critical"]
-    assert any(i.code == "decision_passport_empty_result_snapshot" for i in critical)
+    assert any(
+        i.code == "decision_passport_empty_result_snapshot" for i in critical
+    )
 
 
 def test_detects_selected_country_not_in_candidates(monkeypatch: Any) -> None:
@@ -82,7 +84,9 @@ def test_missing_sources_is_warning_not_critical(monkeypatch: Any) -> None:
     checks: list[DataQualityCheck] = []
     _append_decision_passport_checks(CONNECTION, issues, checks)
 
-    issue = next(i for i in issues if i.code == "decision_passport_missing_sources")
+    issue = next(
+        i for i in issues if i.code == "decision_passport_missing_sources"
+    )
     assert issue.severity == "warning"
 
 
@@ -98,5 +102,7 @@ def test_old_without_expires_at_is_warning(monkeypatch: Any) -> None:
     checks: list[DataQualityCheck] = []
     _append_decision_passport_checks(CONNECTION, issues, checks)
 
-    issue = next(i for i in issues if i.code == "decision_passport_old_without_expiry")
+    issue = next(
+        i for i in issues if i.code == "decision_passport_old_without_expiry"
+    )
     assert issue.severity == "warning"

@@ -34,7 +34,10 @@ export function TrustBadge({ label, score }: TrustBadgeProps) {
   const cls = TRUST_VARIANT[label] ?? "badge--default";
   const text = TRUST_LABELS[label] ?? label;
   return (
-    <span className={`badge ${cls}`} title="Индикатор качества данных">
+    <span
+      className={`badge ${cls}`}
+      title="Индикатор качества данных"
+    >
       Доверие: {text}
       {score != null && ` (${score.toFixed(0)})`}
     </span>

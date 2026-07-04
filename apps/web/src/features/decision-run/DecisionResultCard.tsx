@@ -51,25 +51,40 @@ export function DecisionResultCard({
   return (
     <div className="resultCard">
       <div className="resultCardHeader">
-        <span className="resultRank" aria-label={`Место ${result.rank}`}>
+        <span
+          className="resultRank"
+          aria-label={`Место ${result.rank}`}
+        >
           #{result.rank}
         </span>
         <span className="resultCountryName">{result.country.name}</span>
         <span className="resultScore">{formatScore(result.score)}</span>
         <span className="metaChip">{result.score_label}</span>
-        {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
-        <LocalizationBadge localization={result.localization} compact />
+        {result.confidence && (
+          <ConfidenceBadge confidence={result.confidence} />
+        )}
+        <LocalizationBadge
+          localization={result.localization}
+          compact
+        />
       </div>
 
-      <DecisionCountryTrustBadge countrySlug={result.country.slug} locale={locale} />
+      <DecisionCountryTrustBadge
+        countrySlug={result.country.slug}
+        locale={locale}
+      />
 
       {result.summary && <p className="resultSummary">{result.summary}</p>}
 
       {result.persona_adjusted_score != null && (
-        <div className="resultPersonaScores" data-testid="persona-adjusted-score">
+        <div
+          className="resultPersonaScores"
+          data-testid="persona-adjusted-score"
+        >
           <span>Базовая оценка: {formatScore(result.score)}</span>
           <span>
-            Оценка с учетом персоны: {formatScore(result.persona_adjusted_score)}
+            Оценка с учетом персоны:{" "}
+            {formatScore(result.persona_adjusted_score)}
           </span>
         </div>
       )}
@@ -103,25 +118,37 @@ export function DecisionResultCard({
         </div>
       )}
 
-      <div className="resultSection" data-testid="origin-aware-context">
+      <div
+        className="resultSection"
+        data-testid="origin-aware-context"
+      >
         <h4 className="resultSectionTitle">Контекст маршрута</h4>
         {!originContextStatus || originContextStatus === "not_requested" ? (
-          <p className="formHint" data-testid="origin-context-not-requested">
+          <p
+            className="formHint"
+            data-testid="origin-context-not-requested"
+          >
             Укажите страну отправления, чтобы увидеть контекст маршрута.
           </p>
         ) : result.country_pair_context ? (
-          <div className="originPairContext" data-testid="origin-pair-context">
+          <div
+            className="originPairContext"
+            data-testid="origin-pair-context"
+          >
             <div className="metaRow">
               <span className="metaChip">
                 {COMPATIBILITY_LABELS[
                   result.country_pair_context.compatibility_label
                 ] ?? result.country_pair_context.compatibility_label}
               </span>
-              <ConfidenceBadge confidence={result.country_pair_context.confidence} />
+              <ConfidenceBadge
+                confidence={result.country_pair_context.confidence}
+              />
               <span className="metaChip">
                 Данные:{" "}
-                {FRESHNESS_LABELS[result.country_pair_context.freshness_status] ??
-                  result.country_pair_context.freshness_status}
+                {FRESHNESS_LABELS[
+                  result.country_pair_context.freshness_status
+                ] ?? result.country_pair_context.freshness_status}
               </span>
             </div>
             {result.country_pair_context.practical_summary && (
@@ -141,12 +168,16 @@ export function DecisionResultCard({
             )}
             {(result.country_pair_context.source_ids ?? []).length > 0 && (
               <p className="formHint">
-                Источников: {(result.country_pair_context.source_ids ?? []).length}
+                Источников:{" "}
+                {(result.country_pair_context.source_ids ?? []).length}
               </p>
             )}
           </div>
         ) : (
-          <p className="formHint" data-testid="origin-pair-context-empty">
+          <p
+            className="formHint"
+            data-testid="origin-pair-context-empty"
+          >
             Пока нет данных по этому маршруту.
           </p>
         )}

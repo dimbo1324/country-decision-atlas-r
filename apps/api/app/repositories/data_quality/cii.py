@@ -7,7 +7,9 @@ from psycopg import Connection
 from typing import Any
 
 
-def list_mvp_countries_missing_cii(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_mvp_countries_missing_cii(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
         """

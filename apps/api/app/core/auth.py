@@ -42,7 +42,9 @@ def get_current_session_context(
 ) -> CurrentSessionContext:
     if credentials is None or not credentials.credentials:
         raise api_error(401, "auth_required", "Authentication is required.", {})
-    result = auth_service.validate_session_token(connection, credentials.credentials)
+    result = auth_service.validate_session_token(
+        connection, credentials.credentials
+    )
     return CurrentSessionContext(
         user=_to_current_user(result["user"]),
         session_id=result["session"]["id"],
@@ -50,7 +52,9 @@ def get_current_session_context(
 
 
 def get_current_user(
-    context: Annotated[CurrentSessionContext, Depends(get_current_session_context)],
+    context: Annotated[
+        CurrentSessionContext, Depends(get_current_session_context)
+    ],
 ) -> CurrentUser:
     return context.user
 

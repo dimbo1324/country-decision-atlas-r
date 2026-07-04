@@ -1,3 +1,5 @@
+import logging
+import time
 from app.api.v1 import (
     admin,
     admin_ai,
@@ -42,9 +44,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse, Response
-import logging
 from psycopg import Error as PsycopgError
-import time
 from typing import Any
 
 
@@ -107,7 +107,9 @@ def error_response(
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status_code,
-        content={"error": {"code": code, "message": message, "details": details}},
+        content={
+            "error": {"code": code, "message": message, "details": details}
+        },
     )
 
 
@@ -146,7 +148,9 @@ def _register_middleware(
             cutoff = now - 60.0
             recent = [t for t in rate_windows.get(client, []) if t > cutoff]
             if len(recent) >= settings.api_rate_limit_per_minute:
-                return error_response(429, "rate_limit_exceeded", "Too many requests.")
+                return error_response(
+                    429, "rate_limit_exceeded", "Too many requests."
+                )
             recent.append(now)
             rate_windows[client] = recent
         return await call_next(request)
@@ -154,11 +158,15 @@ def _register_middleware(
 
 def _register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(HTTPException)
-    async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
+    async def http_exception_handler(
+        _: Request, exc: HTTPException
+    ) -> JSONResponse:
         if isinstance(exc.detail, dict) and "error" in exc.detail:
             return JSONResponse(status_code=exc.status_code, content=exc.detail)
         message = exc.detail if isinstance(exc.detail, str) else "HTTP error."
-        return error_response(exc.status_code, "http_error", message, exc.detail)
+        return error_response(
+            exc.status_code, "http_error", message, exc.detail
+        )
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
@@ -169,18 +177,28 @@ def _register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(LookupError)
-    async def lookup_exception_handler(_: Request, exc: LookupError) -> JSONResponse:
+    async def lookup_exception_handler(
+        _: Request, exc: LookupError
+    ) -> JSONResponse:
         return error_response(404, "not_found", str(exc))
 
     @app.exception_handler(PsycopgError)
-    async def database_exception_handler(_: Request, exc: PsycopgError) -> JSONResponse:
+    async def database_exception_handler(
+        _: Request, exc: PsycopgError
+    ) -> JSONResponse:
         logger.error("Database error", exc_info=exc)
-        return error_response(500, "database_error", "A database error occurred.")
+        return error_response(
+            500, "database_error", "A database error occurred."
+        )
 
     @app.exception_handler(Exception)
-    async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONResponse:
+    async def unhandled_exception_handler(
+        _: Request, exc: Exception
+    ) -> JSONResponse:
         logger.error("Unhandled exception", exc_info=exc)
-        return error_response(500, "internal_error", "An unexpected error occurred.")
+        return error_response(
+            500, "internal_error", "An unexpected error occurred."
+        )
 
 
 def _register_system_routes(
@@ -188,7 +206,9 @@ def _register_system_routes(
     health_handler: Callable[[], Awaitable[HealthResponse]],
     readiness_handler: Callable[[], ReadinessResponse],
 ) -> None:
-    app.get("/health", tags=["system"], response_model=HealthResponse)(health_handler)
+    app.get("/health", tags=["system"], response_model=HealthResponse)(
+        health_handler
+    )
     app.get(
         "/ready",
         tags=["system"],

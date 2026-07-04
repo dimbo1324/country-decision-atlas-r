@@ -1,5 +1,5 @@
-from app.core.database import execute_one, fetch_one
 import json
+from app.core.database import execute_one, fetch_one
 from psycopg import Connection, sql
 from typing import Any, cast
 
@@ -196,7 +196,9 @@ def get_country_id_by_slug(
     return str(row["id"]) if row else None
 
 
-def get_country_slug_by_id(connection: Connection[Any], country_id: str) -> str | None:
+def get_country_slug_by_id(
+    connection: Connection[Any], country_id: str
+) -> str | None:
     row = fetch_one(
         connection,
         "SELECT slug FROM countries WHERE id::text = %s",
@@ -330,7 +332,9 @@ def create_evidence_item(
             payload.get("country_id"),
             payload.get("legal_signal_id"),
             payload.get("claim") or "Draft evidence claim",
-            payload.get("excerpt") or payload.get("claim") or "Draft evidence excerpt",
+            payload.get("excerpt")
+            or payload.get("claim")
+            or "Draft evidence excerpt",
             payload.get("url"),
             payload.get("excerpt"),
             payload.get("confidence") or "medium",
@@ -353,7 +357,8 @@ def patch_evidence_item(
         "evidence_items",
         evidence_item_id,
         payload,
-        EVIDENCE_PATCH_FIELDS | {"title", "summary", "quote", "confidence_level"},
+        EVIDENCE_PATCH_FIELDS
+        | {"title", "summary", "quote", "confidence_level"},
         EVIDENCE_RETURNING,
     )
 
@@ -372,8 +377,16 @@ def create_legal_signal(
     connection: Connection[Any],
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    title = payload.get("title_en") or payload.get("title_ru") or "Draft legal signal"
-    summary = payload.get("summary_en") or payload.get("summary_ru") or "Draft summary"
+    title = (
+        payload.get("title_en")
+        or payload.get("title_ru")
+        or "Draft legal signal"
+    )
+    summary = (
+        payload.get("summary_en")
+        or payload.get("summary_ru")
+        or "Draft summary"
+    )
     return execute_one(
         connection,
         f"""
@@ -627,7 +640,9 @@ def _patch_entity(
     allowed_fields: set[str],
     returning: str,
 ) -> dict[str, Any] | None:
-    data = {key: value for key, value in payload.items() if key in allowed_fields}
+    data = {
+        key: value for key, value in payload.items() if key in allowed_fields
+    }
     if not data:
         row = connection.execute(
             sql.SQL("SELECT {} FROM {} WHERE id::text = %s").format(
@@ -637,10 +652,14 @@ def _patch_entity(
             (entity_id,),
         ).fetchone()
         return cast(dict[str, Any] | None, row)
-    set_parts = [sql.SQL("{} = %s").format(sql.Identifier(field)) for field in data]
+    set_parts = [
+        sql.SQL("{} = %s").format(sql.Identifier(field)) for field in data
+    ]
     values: list[Any] = []
     for field, value in data.items():
-        values.append(json.dumps(value or []) if field == "affected_groups" else value)
+        values.append(
+            json.dumps(value or []) if field == "affected_groups" else value
+        )
     values.append(entity_id)
     query = sql.SQL("""
         UPDATE {}
@@ -667,7 +686,9 @@ def _mirror_evidence_fields(payload: dict[str, Any]) -> dict[str, Any]:
         payload["title"] = payload["claim"] or "Draft evidence claim"
     if "excerpt" in payload:
         payload["summary"] = (
-            payload["excerpt"] or payload.get("claim") or "Draft evidence excerpt"
+            payload["excerpt"]
+            or payload.get("claim")
+            or "Draft evidence excerpt"
         )
         payload["quote"] = payload["excerpt"]
     if "confidence" in payload:
@@ -685,7 +706,9 @@ def _mirror_legal_signal_fields(payload: dict[str, Any]) -> dict[str, Any]:
         if summary:
             payload["summary"] = summary
     if "impact_direction" in payload:
-        payload["sentiment"] = _sentiment_from_impact(payload.get("impact_direction"))
+        payload["sentiment"] = _sentiment_from_impact(
+            payload.get("impact_direction")
+        )
     if "impact_level" in payload:
         payload["severity"] = payload["impact_level"]
     if "confidence" in payload:

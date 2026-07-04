@@ -44,7 +44,9 @@ def build_matrix_response(
     scenario_slugs_param: list[str] | None,
     locale: str,
 ) -> CompareMatrixResponse:
-    key = countries_matrix_key(locale, country_slugs_param, scenario_slugs_param)
+    key = countries_matrix_key(
+        locale, country_slugs_param, scenario_slugs_param
+    )
     cached = get_cache_backend().get_or_set_json(
         key,
         cache_ttl(),
@@ -61,8 +63,12 @@ def _build_matrix_response_uncached(
     scenario_slugs_param: list[str] | None,
     locale: str,
 ) -> CompareMatrixResponse:
-    country_slugs = country_slugs_param if country_slugs_param else MVP_COUNTRIES
-    scenario_slugs = scenario_slugs_param if scenario_slugs_param else MVP_SCENARIOS
+    country_slugs = (
+        country_slugs_param if country_slugs_param else MVP_COUNTRIES
+    )
+    scenario_slugs = (
+        scenario_slugs_param if scenario_slugs_param else MVP_SCENARIOS
+    )
 
     country_rows = list_matrix_countries(connection, country_slugs, locale)
     found_country_slugs = {r["slug"] for r in country_rows}
@@ -83,7 +89,9 @@ def _build_matrix_response_uncached(
         row = next((r for r in country_rows if r["slug"] == slug), None)
         if row:
             countries.append(
-                MatrixCountry(slug=row["slug"], name=row["name"], iso2=row.get("iso2"))
+                MatrixCountry(
+                    slug=row["slug"], name=row["name"], iso2=row.get("iso2")
+                )
             )
 
     scenarios: list[MatrixScenario] = []
@@ -92,7 +100,9 @@ def _build_matrix_response_uncached(
         if row:
             order = _MVP_SCENARIO_ORDER.get(slug, 99)
             scenarios.append(
-                MatrixScenario(slug=row["slug"], name=row["name"], display_order=order)
+                MatrixScenario(
+                    slug=row["slug"], name=row["name"], display_order=order
+                )
             )
 
     cell_rows = get_cii_matrix_cells(connection, country_slugs, scenario_slugs)
@@ -148,7 +158,8 @@ def _build_matrix_response_uncached(
                         country_drift=row.get("country_drift"),
                         score_label=_score_label(score),
                         confidence_label=_confidence_label(confidence),
-                        formula_version=row.get("formula_version") or formula_version,
+                        formula_version=row.get("formula_version")
+                        or formula_version,
                         aggregation_method=row.get("aggregation_method")
                         or aggregation_method,
                         weights_version=weights_version,
@@ -156,7 +167,9 @@ def _build_matrix_response_uncached(
                     )
                 )
 
-    resolved_locale = locale_resolution(locale, locale, TranslationStatus.source)
+    resolved_locale = locale_resolution(
+        locale, locale, TranslationStatus.source
+    )
 
     return CompareMatrixResponse(
         locale=resolved_locale,

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Sequence
 import json
+import sys
+from collections.abc import Sequence
 from pathlib import Path
 from psycopg import OperationalError, connect
 from psycopg.rows import dict_row
-import sys
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]

@@ -1,5 +1,6 @@
 """Route service: response shaping, unknown-country errors, and route-detail assembly with documents/sources/evidence."""
 
+import pytest
 from app.repositories import (
     countries as countries_repository,
     route_checklists as route_checklists_repository,
@@ -9,7 +10,6 @@ from app.services import routes as service
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 
 
@@ -80,7 +80,9 @@ def route_row(
     }
 
 
-def patch_country_exists(monkeypatch: pytest.MonkeyPatch, exists: bool = True) -> None:
+def patch_country_exists(
+    monkeypatch: pytest.MonkeyPatch, exists: bool = True
+) -> None:
     monkeypatch.setattr(
         countries_repository,
         "get_country",
@@ -170,7 +172,9 @@ def patch_lifecycle(
         seen_keys.add(kwargs["event_key"])
         domain_events.append(kwargs)
 
-    monkeypatch.setattr(service, "insert_domain_event", fake_insert_domain_event)
+    monkeypatch.setattr(
+        service, "insert_domain_event", fake_insert_domain_event
+    )
     return audit_events, domain_events
 
 
@@ -210,7 +214,9 @@ def test_list_country_routes_valid_country_without_routes_returns_empty_items(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     patch_country_exists(monkeypatch)
-    monkeypatch.setattr(routes_repository, "list_routes_by_country", lambda *_: [])
+    monkeypatch.setattr(
+        routes_repository, "list_routes_by_country", lambda *_: []
+    )
 
     result = service.list_country_routes(CONNECTION, "uruguay", "ru")
 
@@ -221,7 +227,9 @@ def test_list_country_routes_valid_country_without_routes_returns_empty_items(
 def test_get_route_detail_returns_documents_sources_and_evidence(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(routes_repository, "get_route_by_id", lambda *_: route_row())
+    monkeypatch.setattr(
+        routes_repository, "get_route_by_id", lambda *_: route_row()
+    )
     patch_detail_children(monkeypatch)
 
     result = service.get_route_detail(CONNECTION, ROUTE_ID, "ru")
@@ -242,7 +250,9 @@ def test_get_route_detail_unknown_route_raises_route_not_found(
     assert_error(exc.value, 404, "route_not_found")
 
 
-def test_locale_ru_uses_repository_ru_fields(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_locale_ru_uses_repository_ru_fields(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     patch_country_exists(monkeypatch)
     monkeypatch.setattr(
         routes_repository,
@@ -257,7 +267,9 @@ def test_locale_ru_uses_repository_ru_fields(monkeypatch: pytest.MonkeyPatch) ->
     assert result.locale.requested_locale == "ru"
 
 
-def test_locale_en_uses_repository_en_fields(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_locale_en_uses_repository_en_fields(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     patch_country_exists(monkeypatch)
     monkeypatch.setattr(
         routes_repository,
@@ -351,11 +363,17 @@ def test_seeded_routes_do_not_create_route_published_events(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def fail_insert_domain_event(*_: Any, **__: Any) -> None:
-        raise AssertionError("domain event should not be inserted by read service")
+        raise AssertionError(
+            "domain event should not be inserted by read service"
+        )
 
     patch_country_exists(monkeypatch)
-    monkeypatch.setattr(routes_repository, "list_routes_by_country", lambda *_: [])
-    monkeypatch.setattr(service, "insert_domain_event", fail_insert_domain_event)
+    monkeypatch.setattr(
+        routes_repository, "list_routes_by_country", lambda *_: []
+    )
+    monkeypatch.setattr(
+        service, "insert_domain_event", fail_insert_domain_event
+    )
 
     service.list_country_routes(CONNECTION, "uruguay", "ru")
 
@@ -393,7 +411,9 @@ def test_locale_ru_returns_partial_translation_status(
 def test_get_route_detail_by_slug_returns_detail(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(routes_repository, "get_route_by_slug", lambda *_: route_row())
+    monkeypatch.setattr(
+        routes_repository, "get_route_by_slug", lambda *_: route_row()
+    )
     patch_detail_children(monkeypatch)
 
     result = service.get_route_detail_by_slug(

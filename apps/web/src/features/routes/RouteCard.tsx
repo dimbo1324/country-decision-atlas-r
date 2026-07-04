@@ -12,7 +12,10 @@ type RouteCardProps = {
 
 export function RouteCard({ route, locale }: RouteCardProps) {
   return (
-    <article className="routeCard" data-testid="route-card">
+    <article
+      className="routeCard"
+      data-testid="route-card"
+    >
       <div className="routeCardHeader">
         <div>
           <h3>{route.title}</h3>
@@ -21,7 +24,10 @@ export function RouteCard({ route, locale }: RouteCardProps) {
             <span className="metaChip">{route.legal_status}</span>
           </div>
         </div>
-        <Link href={routeDetailPath(route.id, locale)} className="internalLink">
+        <Link
+          href={routeDetailPath(route.id, locale)}
+          className="internalLink"
+        >
           Открыть
         </Link>
       </div>
@@ -29,7 +35,10 @@ export function RouteCard({ route, locale }: RouteCardProps) {
       {route.eligibility_summary && (
         <p className="routeEligibilitySummary">{route.eligibility_summary}</p>
       )}
-      <RouteEligibilityBadges eligibility={route.eligibility} compact />
+      <RouteEligibilityBadges
+        eligibility={route.eligibility}
+        compact
+      />
     </article>
   );
 }

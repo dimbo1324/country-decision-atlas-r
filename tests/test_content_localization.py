@@ -156,8 +156,12 @@ def install_quality_fakes(monkeypatch: Any) -> None:
             },
         ],
     )
-    monkeypatch.setattr(translation_repository, "count_default_locales", lambda *_: 1)
-    monkeypatch.setattr(translation_repository, "count_translation_units", lambda *_: 1)
+    monkeypatch.setattr(
+        translation_repository, "count_default_locales", lambda *_: 1
+    )
+    monkeypatch.setattr(
+        translation_repository, "count_translation_units", lambda *_: 1
+    )
     monkeypatch.setattr(
         translation_repository, "count_translation_variants", lambda *_: 2
     )
@@ -227,10 +231,13 @@ def test_translation_quality_reports_missing_english_as_warning(
     checks, issues = build_translation_quality_results(CONNECTION)
 
     missing_issue = next(
-        issue for issue in issues if issue.code == "translation_english_variant_missing"
+        issue
+        for issue in issues
+        if issue.code == "translation_english_variant_missing"
     )
     assert missing_issue.severity == "warning"
     assert any(
-        check.code == "localization_english_coverage" and check.status == "failed"
+        check.code == "localization_english_coverage"
+        and check.status == "failed"
         for check in checks
     )

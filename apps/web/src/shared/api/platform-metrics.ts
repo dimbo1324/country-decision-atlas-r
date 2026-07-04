@@ -32,10 +32,12 @@ export function getCountryPlatformMetric(
   scenario?: string,
 ): Promise<PlatformMetricDetailResponse> {
   return apiGet<PlatformMetricDetailResponse>(
-    `/api/v1/countries/${countrySlug}/platform-metrics/${metricKey}${queryString({
-      locale,
-      ...(scenario ? { scenario } : {}),
-    })}`,
+    `/api/v1/countries/${countrySlug}/platform-metrics/${metricKey}${queryString(
+      {
+        locale,
+        ...(scenario ? { scenario } : {}),
+      },
+    )}`,
   );
 }
 

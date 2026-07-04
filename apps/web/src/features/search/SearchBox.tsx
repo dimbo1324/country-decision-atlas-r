@@ -33,7 +33,11 @@ export function SearchBox() {
         aria-label="Поиск по платформе"
         data-testid="search-box-input"
       />
-      <button type="submit" className="searchBoxSubmit" data-testid="search-box-submit">
+      <button
+        type="submit"
+        className="searchBoxSubmit"
+        data-testid="search-box-submit"
+      >
         Найти
       </button>
     </form>

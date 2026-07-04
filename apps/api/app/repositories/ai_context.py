@@ -18,7 +18,9 @@ def search_ai_context_items(
 ) -> list[dict[str, Any]]:
     normalized = query.strip()
     if not normalized:
-        return _latest_search_documents(conn, locale, types, country_slug, limit)
+        return _latest_search_documents(
+            conn, locale, types, country_slug, limit
+        )
     config = _ts_config(locale)
     filters = ["sd.status = 'published'", "sd.locale = %s"]
     params: list[Any] = [locale]
@@ -132,20 +134,33 @@ def get_metric_ai_context(
     locale: str,
     limit: int,
 ) -> list[dict[str, Any]]:
-    rows = _stored_metric_context(conn, country_slug, metric_key, scenario_slug, limit)
+    rows = _stored_metric_context(
+        conn, country_slug, metric_key, scenario_slug, limit
+    )
     remaining = max(limit - len(rows), 0)
     if remaining == 0:
         return rows
     query = " ".join(
         part
-        for part in [country_slug, metric_key, scenario_slug, "trust drift metric"]
+        for part in [
+            country_slug,
+            metric_key,
+            scenario_slug,
+            "trust drift metric",
+        ]
         if part
     )
     return rows + search_ai_context_items(
         conn,
         query=query,
         locale=locale,
-        types=["country", "legal_signal", "source", "evidence_item", "methodology"],
+        types=[
+            "country",
+            "legal_signal",
+            "source",
+            "evidence_item",
+            "methodology",
+        ],
         country_slug=country_slug,
         limit=remaining,
     )
@@ -163,7 +178,12 @@ def get_decision_ai_context(
 ) -> list[dict[str, Any]]:
     query = " ".join(
         part
-        for part in [scenario_slug, persona_slug, origin_country_slug, "decision route"]
+        for part in [
+            scenario_slug,
+            persona_slug,
+            origin_country_slug,
+            "decision route",
+        ]
         if part
     )
     if country_slugs:

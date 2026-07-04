@@ -22,7 +22,10 @@ from app.schemas.auth import (
     TelegramUnlinkResponse,
     UserSessionListResponse,
 )
-from app.services import auth as service, telegram_web_link as telegram_link_service
+from app.services import (
+    auth as service,
+    telegram_web_link as telegram_link_service,
+)
 from app.services.feature_flags import ensure_feature_enabled
 from fastapi import APIRouter, Depends
 from psycopg import Connection
@@ -75,10 +78,14 @@ def register(
         password=payload.password,
         display_name=payload.display_name,
     )
-    raw_token, session = service.create_login_session(connection, user_id=user["id"])
+    raw_token, session = service.create_login_session(
+        connection, user_id=user["id"]
+    )
     connection.commit()
     return AuthTokenResponse(
-        token=raw_token, user=_to_auth_user(user), expires_at=session["expires_at"]
+        token=raw_token,
+        user=_to_auth_user(user),
+        expires_at=session["expires_at"],
     )
 
 
@@ -92,13 +99,17 @@ def login(
     )
     connection.commit()
     return AuthTokenResponse(
-        token=raw_token, user=_to_auth_user(user), expires_at=session["expires_at"]
+        token=raw_token,
+        user=_to_auth_user(user),
+        expires_at=session["expires_at"],
     )
 
 
 @router.post("/logout", response_model=LogoutResponse)
 def logout(
-    context: Annotated[CurrentSessionContext, Depends(get_current_session_context)],
+    context: Annotated[
+        CurrentSessionContext, Depends(get_current_session_context)
+    ],
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> LogoutResponse:
     service.logout_session(
@@ -115,7 +126,9 @@ def me(
 ) -> CurrentUserResponse:
     user_row = repository.get_user_by_id(connection, current_user.id)
     if user_row is None:
-        raise api_error(401, "invalid_auth_token", "Session token is invalid.", {})
+        raise api_error(
+            401, "invalid_auth_token", "Session token is invalid.", {}
+        )
     return CurrentUserResponse(user=_to_auth_user(user_row))
 
 
@@ -125,7 +138,9 @@ def list_sessions(
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> UserSessionListResponse:
     sessions = repository.list_user_sessions(connection, current_user.id)
-    return UserSessionListResponse(items=[_to_auth_session(row) for row in sessions])
+    return UserSessionListResponse(
+        items=[_to_auth_session(row) for row in sessions]
+    )
 
 
 @router.delete("/sessions/{session_id}", response_model=LogoutResponse)
@@ -144,7 +159,9 @@ def revoke_all_sessions(
     current_user: Annotated[CurrentUser, Depends(get_current_active_user)],
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> RevokeAllSessionsResponse:
-    revoked_count = repository.revoke_all_user_sessions(connection, current_user.id)
+    revoked_count = repository.revoke_all_user_sessions(
+        connection, current_user.id
+    )
     connection.commit()
     return RevokeAllSessionsResponse(revoked_count=revoked_count)
 
@@ -173,7 +190,9 @@ def unlink_telegram(
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> TelegramUnlinkResponse:
     _require_telegram_web_link_enabled(connection)
-    telegram_link_service.unlink_telegram_account(connection, user_id=current_user.id)
+    telegram_link_service.unlink_telegram_account(
+        connection, user_id=current_user.id
+    )
     connection.commit()
     return TelegramUnlinkResponse(ok=True)
 

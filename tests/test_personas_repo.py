@@ -1,8 +1,8 @@
 """Persona repository queries: active-only filtering, ordering, and locale-specific names."""
 
+import pytest
 from app.repositories import personas as repo
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 
 
@@ -181,7 +181,9 @@ def test_list_personas_returns_7_personas(monkeypatch: Any) -> None:
 def test_list_personas_sorted_by_display_order(monkeypatch: Any) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_fetch_all(_: Any, query: str, _params: Any) -> list[dict[str, Any]]:
+    def fake_fetch_all(
+        _: Any, query: str, _params: Any
+    ) -> list[dict[str, Any]]:
         captured["query"] = query
         return _SEVEN_PERSONAS
 
@@ -202,7 +204,9 @@ def test_list_personas_locale_ru_uses_russian_name(monkeypatch: Any) -> None:
     result = repo.list_personas(CONNECTION, "ru")
 
     assert result[0]["name"] == "Цифровой кочевник"
-    assert "ru" in str(captured["params"]).lower() or "locale" in captured["query"]
+    assert (
+        "ru" in str(captured["params"]).lower() or "locale" in captured["query"]
+    )
 
 
 def test_list_personas_locale_en_uses_english_name(monkeypatch: Any) -> None:
@@ -237,7 +241,9 @@ def test_list_persona_modifiers_returns_modifiers_for_digital_nomad(
 ) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_fetch_all(_: Any, _query: str, params: Any) -> list[dict[str, Any]]:
+    def fake_fetch_all(
+        _: Any, _query: str, params: Any
+    ) -> list[dict[str, Any]]:
         captured["params"] = params
         return _MODIFIER_ROWS
 
@@ -245,7 +251,9 @@ def test_list_persona_modifiers_returns_modifiers_for_digital_nomad(
     result = repo.list_persona_modifiers(CONNECTION, "digital_nomad")
 
     assert all(r["persona_slug"] == "digital_nomad" for r in result)
-    digital_access_row = next(r for r in result if r["metric_slug"] == "digital_access")
+    digital_access_row = next(
+        r for r in result if r["metric_slug"] == "digital_access"
+    )
     assert float(digital_access_row["modifier"]) == pytest.approx(0.25)
 
 
@@ -259,7 +267,9 @@ def test_list_active_persona_slugs_returns_7_slugs(monkeypatch: Any) -> None:
     assert "digital_nomad" in result
 
 
-def test_list_active_cii_metrics_returns_expected_metrics(monkeypatch: Any) -> None:
+def test_list_active_cii_metrics_returns_expected_metrics(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_all", lambda *_a, **_k: _ACTIVE_METRICS)
     result = repo.list_active_cii_metrics(CONNECTION)
     slugs = [r["slug"] for r in result]
@@ -273,7 +283,9 @@ def test_list_base_scenario_weights_returns_rows_for_relocation_residence(
 ) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_fetch_all(_: Any, _query: str, params: Any) -> list[dict[str, Any]]:
+    def fake_fetch_all(
+        _: Any, _query: str, params: Any
+    ) -> list[dict[str, Any]]:
         captured["params"] = params
         return _SCENARIO_WEIGHT_ROWS
 
@@ -288,7 +300,9 @@ def test_list_base_scenario_weights_does_not_mutate_stored_weights(
     monkeypatch: Any,
 ) -> None:
     original_weight = _SCENARIO_WEIGHT_ROWS[0]["base_weight"]
-    monkeypatch.setattr(repo, "fetch_all", lambda *_a, **_k: _SCENARIO_WEIGHT_ROWS)
+    monkeypatch.setattr(
+        repo, "fetch_all", lambda *_a, **_k: _SCENARIO_WEIGHT_ROWS
+    )
     repo.list_base_scenario_weights(CONNECTION, "relocation_residence")
     assert _SCENARIO_WEIGHT_ROWS[0]["base_weight"] == original_weight
 

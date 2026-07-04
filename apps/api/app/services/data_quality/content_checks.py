@@ -68,7 +68,9 @@ def _append_content_checks(
             ],
         )
     )
-    for row in repository.list_published_legal_signals_without_source(connection):
+    for row in repository.list_published_legal_signals_without_source(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_legal_signal_source_missing",
@@ -86,7 +88,9 @@ def _append_content_checks(
             ["published_legal_signal_source_missing"],
         )
     )
-    for row in repository.list_published_legal_signals_without_evidence(connection):
+    for row in repository.list_published_legal_signals_without_evidence(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_legal_signal_evidence_missing",
@@ -104,7 +108,9 @@ def _append_content_checks(
             ["published_legal_signal_evidence_missing"],
         )
     )
-    for row in repository.list_published_legal_signals_with_missing_legal_status(
+    for (
+        row
+    ) in repository.list_published_legal_signals_with_missing_legal_status(
         connection
     ):
         issues.append(
@@ -117,7 +123,9 @@ def _append_content_checks(
                 row,
             )
         )
-    for row in repository.list_published_legal_signals_with_unknown_legal_status(
+    for (
+        row
+    ) in repository.list_published_legal_signals_with_unknown_legal_status(
         connection
     ):
         issues.append(
@@ -189,7 +197,9 @@ def _append_content_checks(
             ["published_source_required_field_missing"],
         )
     )
-    for row in repository.list_published_sources_with_example_invalid_url(connection):
+    for row in repository.list_published_sources_with_example_invalid_url(
+        connection
+    ):
         issues.append(
             _issue(
                 "published_source_example_invalid_url",
@@ -225,7 +235,9 @@ def _append_content_checks(
             ["synthetic_user_story_invalid"],
         )
     )
-    for row in repository.list_country_cards_with_empty_major_sections(connection):
+    for row in repository.list_country_cards_with_empty_major_sections(
+        connection
+    ):
         issues.append(
             _issue(
                 "country_card_section_missing",
@@ -236,7 +248,9 @@ def _append_content_checks(
                 row,
             )
         )
-    for row in repository.list_country_cards_with_demo_source_summary(connection):
+    for row in repository.list_country_cards_with_demo_source_summary(
+        connection
+    ):
         issues.append(
             _issue(
                 "country_card_source_summary_demo",
@@ -251,6 +265,9 @@ def _append_content_checks(
         _check(
             "country_cards_have_public_sections",
             issues,
-            ["country_card_section_missing", "country_card_source_summary_demo"],
+            [
+                "country_card_section_missing",
+                "country_card_source_summary_demo",
+            ],
         )
     )

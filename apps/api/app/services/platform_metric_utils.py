@@ -1,7 +1,7 @@
+import json
 from collections.abc import Iterable, Mapping
 from datetime import UTC, date, datetime
 from decimal import ROUND_HALF_UP, Decimal
-import json
 from typing import Any
 
 
@@ -10,7 +10,9 @@ def clamp(value: float, minimum: float = 0.0, maximum: float = 100.0) -> float:
 
 
 def decimal_score(value: float) -> Decimal:
-    return Decimal(str(clamp(value))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return Decimal(str(clamp(value))).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
 
 
 def risk_label(value: Decimal | None) -> str:
@@ -53,7 +55,9 @@ def normalize_groups(value: Any) -> list[str]:
         except json.JSONDecodeError:
             decoded = [raw]
         raw = decoded
-    if isinstance(raw, Iterable) and not isinstance(raw, bytes | bytearray | str):
+    if isinstance(raw, Iterable) and not isinstance(
+        raw, bytes | bytearray | str
+    ):
         return sorted(
             {
                 str(item).strip()

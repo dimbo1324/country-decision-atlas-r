@@ -36,7 +36,9 @@ test.describe("decision visual comparison (CII)", () => {
       timeout: 20_000,
     });
 
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+      timeout: 15_000,
+    });
 
     await expectNoAppCrash(page);
   });
@@ -51,7 +53,9 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiSpiderChart")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".ciiSpiderChart")).toBeVisible({
+      timeout: 15_000,
+    });
 
     await expectNoAppCrash(page);
   });
@@ -66,7 +70,9 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiCompareBars")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".ciiCompareBars")).toBeVisible({
+      timeout: 15_000,
+    });
 
     await expectNoAppCrash(page);
   });
@@ -81,7 +87,9 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiWinnerList")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".ciiWinnerList")).toBeVisible({
+      timeout: 15_000,
+    });
 
     await expectNoAppCrash(page);
   });

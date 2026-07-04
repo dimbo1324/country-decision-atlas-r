@@ -10,7 +10,11 @@ from app.repositories.country_read_model import (
     list_country_read_model_scores,
     list_country_read_model_sources,
 )
-from app.schemas.common import LocaleResolution, TranslationStatus, locale_resolution
+from app.schemas.common import (
+    LocaleResolution,
+    TranslationStatus,
+    locale_resolution,
+)
 from app.schemas.country_read_model import (
     CountryReadModelCii,
     CountryReadModelCiiMetric,
@@ -69,7 +73,12 @@ def _get_country_read_model_uncached(
                 ("executive_summary", "executive_summary", None, None),
                 ("migration_overview", "migration_overview", None, None),
                 ("tax_overview", "tax_overview", None, None),
-                ("cost_of_living_overview", "cost_of_living_overview", None, None),
+                (
+                    "cost_of_living_overview",
+                    "cost_of_living_overview",
+                    None,
+                    None,
+                ),
                 ("business_overview", "business_overview", None, None),
                 ("safety_overview", "safety_overview", None, None),
                 ("legal_signals_summary", "legal_signals_summary", None, None),
@@ -123,8 +132,12 @@ def _get_country_read_model_uncached(
         ],
         locale,
     )
-    sources = list_country_read_model_sources(connection, country_slug, SOURCE_LIMIT)
-    evidence_summary = get_country_read_model_evidence_summary(connection, country_slug)
+    sources = list_country_read_model_sources(
+        connection, country_slug, SOURCE_LIMIT
+    )
+    evidence_summary = get_country_read_model_evidence_summary(
+        connection, country_slug
+    )
     user_stories_summary = get_country_read_model_user_stories_summary(
         connection, country_slug
     )
@@ -166,7 +179,9 @@ def group_breakdowns_by_score_id(
 ) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for breakdown in breakdowns:
-        grouped.setdefault(str(breakdown["country_score_id"]), []).append(breakdown)
+        grouped.setdefault(str(breakdown["country_score_id"]), []).append(
+            breakdown
+        )
     return grouped
 
 
@@ -265,7 +280,9 @@ def build_persona_adjusted_cii(
         return None
     raw_metrics = row.get("metrics") or []
     metric_defs_by_slug = {str(item["slug"]): item for item in metric_defs}
-    aggregate = aggregate_persona_cii_score(raw_metrics, profile, metric_defs_by_slug)
+    aggregate = aggregate_persona_cii_score(
+        raw_metrics, profile, metric_defs_by_slug
+    )
     metric_entries = []
     for metric in raw_metrics:
         metric_slug = str(metric["slug"])
@@ -278,7 +295,9 @@ def build_persona_adjusted_cii(
             {
                 **metric,
                 "weight": weight_metadata["adjusted_weight"],
-                "weighted_score": round(score * weight_metadata["adjusted_weight"], 4),
+                "weighted_score": round(
+                    score * weight_metadata["adjusted_weight"], 4
+                ),
                 **weight_metadata,
             }
         )
@@ -295,12 +314,15 @@ def build_persona_adjusted_cii(
         ),
         drift=float(row["drift"]) if row.get("drift") is not None else None,
         version=str(row["version"]),
-        formula_version=aggregate.get("formula_version") or row.get("formula_version"),
+        formula_version=aggregate.get("formula_version")
+        or row.get("formula_version"),
         aggregation_method=aggregate.get("aggregation_method")
         or row.get("aggregation_method"),
         quality_warnings=list(aggregate.get("warnings") or []),
         calculated_at=row["calculated_at"],
-        metrics=[CountryReadModelCiiMetric.model_validate(m) for m in metric_entries],
+        metrics=[
+            CountryReadModelCiiMetric.model_validate(m) for m in metric_entries
+        ],
         applied_persona=profile["persona"],
         persona_weight_profile=profile,
     )

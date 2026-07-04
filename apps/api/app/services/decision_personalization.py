@@ -1,5 +1,7 @@
 from app.core.errors import api_error
-from app.services.decision_criteria import DECISION_CRITERIA as DECISION_CRITERIA
+from app.services.decision_criteria import (
+    DECISION_CRITERIA as DECISION_CRITERIA,
+)
 from collections.abc import Mapping, Sequence
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any

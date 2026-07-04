@@ -1,5 +1,6 @@
 """Schema assertions for the decision-passports migration, including idempotency and token hashing."""
 
+import pytest
 from app.repositories import (
     decision_engine as decision_repository,
     decision_passports as passport_repository,
@@ -9,7 +10,6 @@ from app.services import decision_engine, decision_passports as service
 from datetime import UTC, datetime, timedelta
 from fastapi import HTTPException
 from pathlib import Path
-import pytest
 from tests.test_decision_run import install_repository_fakes, payload
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
@@ -45,7 +45,9 @@ class FakePassportStore:
         return self.rows.get(token_hash)
 
 
-def install_passport_store(monkeypatch: pytest.MonkeyPatch) -> FakePassportStore:
+def install_passport_store(
+    monkeypatch: pytest.MonkeyPatch,
+) -> FakePassportStore:
     store = FakePassportStore()
     monkeypatch.setattr(
         passport_repository,
@@ -92,7 +94,9 @@ def test_create_passport_success(monkeypatch: pytest.MonkeyPatch) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
 
-    response = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    response = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
 
     assert response.token
     assert response.path == f"/decision/passports/{response.token}"
@@ -118,11 +122,15 @@ def test_create_passport_runs_decision_server_side(
     assert len(calls) == 1
 
 
-def test_create_passport_returns_token_once(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_create_passport_returns_token_once(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     store = install_passport_store(monkeypatch)
 
-    response = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    response = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
 
     stored_row = next(iter(store.rows.values()))
     assert "token" not in stored_row
@@ -133,7 +141,9 @@ def test_db_stores_hash_not_raw_token(monkeypatch: pytest.MonkeyPatch) -> None:
     install_repository_fakes(monkeypatch)
     store = install_passport_store(monkeypatch)
 
-    response = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    response = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
 
     stored_row = next(iter(store.rows.values()))
     assert stored_row["public_token_prefix"] == response.token[:8]
@@ -144,17 +154,23 @@ def test_get_passport_by_token(monkeypatch: pytest.MonkeyPatch) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
 
-    created = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    created = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
     result = service.get_decision_passport_by_token(CONNECTION, created.token)
 
     assert result.id == created.passport_id
     assert result.status == "active"
 
 
-def test_get_passport_does_not_rerun_decision(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_passport_does_not_rerun_decision(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
-    created = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    created = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
 
     def fail_if_called(*_args: Any, **_kwargs: Any) -> Any:
         raise AssertionError("decision engine should not run again on GET")
@@ -239,10 +255,14 @@ def test_revoked_token_returns_410(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def test_invalid_decision_request_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_invalid_decision_request_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
-    monkeypatch.setattr(decision_repository, "get_decision_scenario", lambda *_: None)
+    monkeypatch.setattr(
+        decision_repository, "get_decision_scenario", lambda *_: None
+    )
     bad_request = payload("unknown_scenario")
 
     with pytest.raises(HTTPException) as exc_info:
@@ -273,7 +293,9 @@ def test_source_ids_included(monkeypatch: pytest.MonkeyPatch) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
 
-    created = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    created = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
     result = service.get_decision_passport_by_token(CONNECTION, created.token)
 
     assert "source-1" in result.source_ids
@@ -281,15 +303,20 @@ def test_source_ids_included(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.source_refs[0].id == "source-1"
 
 
-def test_selected_country_slug_is_winner(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_selected_country_slug_is_winner(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     install_repository_fakes(monkeypatch)
     install_passport_store(monkeypatch)
 
-    created = service.create_decision_passport(CONNECTION, payload(), "en", None)
+    created = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
     result = service.get_decision_passport_by_token(CONNECTION, created.token)
 
     assert (
-        result.selected_country_slug == result.decision_result.results[0].country.slug
+        result.selected_country_slug
+        == result.decision_result.results[0].country.slug
     )
     assert result.selected_country_slug == "uruguay"
 

@@ -10,7 +10,9 @@ from typing import Any, cast
 CONNECTION = cast(Connection[Any], object())
 
 
-def test_clean_trust_surface_produces_no_critical_issues(monkeypatch: Any) -> None:
+def test_clean_trust_surface_produces_no_critical_issues(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     report = data_quality.build_data_quality_report(CONNECTION)
     assert report.valid is True
@@ -61,7 +63,8 @@ def test_inconsistent_insufficient_data_is_detected(monkeypatch: Any) -> None:
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(
-        i.code == "trust_score_insufficient_data_inconsistent" for i in report.issues
+        i.code == "trust_score_insufficient_data_inconsistent"
+        for i in report.issues
     )
 
 
@@ -70,7 +73,9 @@ def test_stale_trust_score_is_warning(monkeypatch: Any) -> None:
     monkeypatch.setattr(
         data_quality_repository,
         "list_stale_trust_scores",
-        lambda *_: [{"id": "abc123", "country_slug": "uruguay", "days_old": 45}],
+        lambda *_: [
+            {"id": "abc123", "country_slug": "uruguay", "days_old": 45}
+        ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(i.code == "trust_score_stale" for i in report.issues)
@@ -95,7 +100,9 @@ def test_missing_methodology_section_is_detected(monkeypatch: Any) -> None:
     )
 
 
-def test_missing_trust_score_for_active_country_is_detected(monkeypatch: Any) -> None:
+def test_missing_trust_score_for_active_country_is_detected(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -104,7 +111,8 @@ def test_missing_trust_score_for_active_country_is_detected(monkeypatch: Any) ->
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(
-        i.code == "trust_score_missing_for_active_country" for i in report.issues
+        i.code == "trust_score_missing_for_active_country"
+        for i in report.issues
     )
     assert any(
         i.severity == "critical"
@@ -179,7 +187,9 @@ def test_required_glossary_slugs_covers_all_19() -> None:
     assert len(REQUIRED_GLOSSARY_SLUGS) == 19
 
 
-def test_each_required_methodology_slug_triggers_critical(monkeypatch: Any) -> None:
+def test_each_required_methodology_slug_triggers_critical(
+    monkeypatch: Any,
+) -> None:
     from app.repositories.data_quality.trust import REQUIRED_METHODOLOGY_SLUGS
 
     for slug in REQUIRED_METHODOLOGY_SLUGS:
@@ -190,13 +200,17 @@ def test_each_required_methodology_slug_triggers_critical(monkeypatch: Any) -> N
             lambda *_, s=slug: [{"slug": s}],
         )
         report = data_quality.build_data_quality_report(CONNECTION)
-        assert any(i.code == "methodology_section_missing" for i in report.issues), (
-            f"no issue for {slug}"
+        assert any(
+            i.code == "methodology_section_missing" for i in report.issues
+        ), f"no issue for {slug}"
+        assert report.valid is False, (
+            f"expected valid=False for missing slug {slug}"
         )
-        assert report.valid is False, f"expected valid=False for missing slug {slug}"
 
 
-def test_each_required_glossary_slug_triggers_critical(monkeypatch: Any) -> None:
+def test_each_required_glossary_slug_triggers_critical(
+    monkeypatch: Any,
+) -> None:
     from app.repositories.data_quality.trust import REQUIRED_GLOSSARY_SLUGS
 
     for slug in REQUIRED_GLOSSARY_SLUGS:
@@ -210,4 +224,6 @@ def test_each_required_glossary_slug_triggers_critical(monkeypatch: Any) -> None
         assert any(i.code == "glossary_term_missing" for i in report.issues), (
             f"no issue for {slug}"
         )
-        assert report.valid is False, f"expected valid=False for missing slug {slug}"
+        assert report.valid is False, (
+            f"expected valid=False for missing slug {slug}"
+        )

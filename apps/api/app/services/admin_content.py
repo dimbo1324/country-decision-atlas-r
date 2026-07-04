@@ -119,7 +119,9 @@ def create_source(
     changed_by: str,
 ) -> dict[str, Any]:
     data = _model_data(payload)
-    data["country_id"] = _country_id_or_none(connection, data.pop("country_slug", None))
+    data["country_id"] = _country_id_or_none(
+        connection, data.pop("country_slug", None)
+    )
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_source_for_publish(data))
     with connection.transaction():
@@ -164,7 +166,9 @@ def create_evidence_item(
     changed_by: str,
 ) -> dict[str, Any]:
     data = _model_data(payload)
-    data["country_id"] = _country_id_or_none(connection, data.pop("country_slug", None))
+    data["country_id"] = _country_id_or_none(
+        connection, data.pop("country_slug", None)
+    )
     _validate_source_exists(connection, data.get("source_id"))
     _validate_legal_signal_exists(connection, data.get("legal_signal_id"))
     if data.get("status") == PublicationStatus.published.value:
@@ -183,7 +187,9 @@ def patch_evidence_item(
 ) -> dict[str, Any]:
     with connection.transaction():
         before = _require(
-            repository.get_evidence_item_for_admin(connection, evidence_item_id),
+            repository.get_evidence_item_for_admin(
+                connection, evidence_item_id
+            ),
             "Evidence item",
         )
         data = _model_data(payload, exclude_unset=True)
@@ -192,10 +198,14 @@ def patch_evidence_item(
         _ensure_status_transition(before, data)
         candidate = {**before, **data}
         if candidate.get("status") == PublicationStatus.published.value:
-            raise_if_critical_issues(validate_evidence_item_for_publish(candidate))
+            raise_if_critical_issues(
+                validate_evidence_item_for_publish(candidate)
+            )
         repository.patch_evidence_item(connection, evidence_item_id, data)
         after = _require(
-            repository.get_evidence_item_for_admin(connection, evidence_item_id),
+            repository.get_evidence_item_for_admin(
+                connection, evidence_item_id
+            ),
             "Evidence item",
         )
         _audit_patch(
@@ -215,7 +225,9 @@ def create_legal_signal(
     changed_by: str,
 ) -> dict[str, Any]:
     data = _model_data(payload)
-    data["country_id"] = _country_id_required(connection, data.pop("country_slug"))
+    data["country_id"] = _country_id_required(
+        connection, data.pop("country_slug")
+    )
     _validate_source_exists(connection, data.get("source_id"))
     if data.get("status") == PublicationStatus.published.value:
         raise_if_critical_issues(validate_legal_signal_for_publish(data))
@@ -241,7 +253,9 @@ def patch_legal_signal(
         _ensure_status_transition(before, data)
         candidate = {**before, **data}
         if candidate.get("status") == PublicationStatus.published.value:
-            raise_if_critical_issues(validate_legal_signal_for_publish(candidate))
+            raise_if_critical_issues(
+                validate_legal_signal_for_publish(candidate)
+            )
         repository.patch_legal_signal(connection, signal_id, data)
         after = _require(
             repository.get_legal_signal_for_admin(connection, signal_id),
@@ -256,7 +270,9 @@ def patch_legal_signal(
             LEGAL_SIGNAL_AUDIT_FIELDS,
         )
         _emit_legal_signal_published_event(connection, before, after)
-    if is_publish_transition(str(before.get("status")), str(after.get("status"))):
+    if is_publish_transition(
+        str(before.get("status")), str(after.get("status"))
+    ):
         country_slug = repository.get_country_slug_by_id(
             connection, str(after["country_id"])
         )
@@ -284,11 +300,15 @@ def patch_country_profile(
         _ensure_status_transition(before, data)
         candidate = {**before, **data}
         if candidate.get("status") == PublicationStatus.published.value:
-            raise_if_critical_issues(validate_country_card_for_publish(candidate))
+            raise_if_critical_issues(
+                validate_country_card_for_publish(candidate)
+            )
         repository.patch_country_profile(connection, country_slug, data)
         after = _require(
             repository.get_country_profile_for_admin(
-                connection, country_slug, data.get("locale", before.get("locale", "en"))
+                connection,
+                country_slug,
+                data.get("locale", before.get("locale", "en")),
             ),
             "Country profile",
         )
@@ -334,7 +354,8 @@ def patch_user_story(
 ) -> dict[str, Any]:
     with connection.transaction():
         before = _require(
-            repository.get_user_story_for_admin(connection, story_id), "User story"
+            repository.get_user_story_for_admin(connection, story_id),
+            "User story",
         )
         data = _model_data(payload, exclude_unset=True)
         if "origin_country_slug" in data:
@@ -351,7 +372,8 @@ def patch_user_story(
             raise_if_critical_issues(validate_user_story_for_publish(candidate))
         repository.patch_user_story_for_admin(connection, story_id, data)
         after = _require(
-            repository.get_user_story_for_admin(connection, story_id), "User story"
+            repository.get_user_story_for_admin(connection, story_id),
+            "User story",
         )
         _audit_patch(
             connection,
@@ -406,12 +428,17 @@ def _country_id_or_none(
     return _country_id_required(connection, country_slug)
 
 
-def _validate_source_exists(connection: Connection[Any], source_id: Any) -> None:
+def _validate_source_exists(
+    connection: Connection[Any], source_id: Any
+) -> None:
     if source_id is None:
         return
     if repository.get_source_for_admin(connection, str(source_id)) is None:
         raise api_error(
-            404, "source_not_found", "Source not found.", {"source_id": str(source_id)}
+            404,
+            "source_not_found",
+            "Source not found.",
+            {"source_id": str(source_id)},
         )
 
 
@@ -420,7 +447,10 @@ def _validate_legal_signal_exists(
 ) -> None:
     if legal_signal_id is None:
         return
-    if repository.get_legal_signal_for_admin(connection, str(legal_signal_id)) is None:
+    if (
+        repository.get_legal_signal_for_admin(connection, str(legal_signal_id))
+        is None
+    ):
         raise api_error(
             404,
             "legal_signal_not_found",
@@ -451,7 +481,14 @@ def _audit_create(
     entity: dict[str, Any],
     changed_by: str,
 ) -> None:
-    _audit(connection, entity_type, entity, "created", changed_by, {"created": entity})
+    _audit(
+        connection,
+        entity_type,
+        entity,
+        "created",
+        changed_by,
+        {"created": entity},
+    )
 
 
 def _audit_patch(
@@ -478,7 +515,11 @@ def _audit_patch(
 def _audit_action(before: dict[str, Any], after: dict[str, Any]) -> str:
     old_status = before.get("status")
     new_status = after.get("status")
-    if old_status != new_status and old_status is not None and new_status is not None:
+    if (
+        old_status != new_status
+        and old_status is not None
+        and new_status is not None
+    ):
         return audit_action_for_transition(str(old_status), str(new_status))
     return "updated"
 
@@ -506,7 +547,9 @@ def _emit_legal_signal_published_event(
     before: dict[str, Any],
     after: dict[str, Any],
 ) -> None:
-    if not is_publish_transition(str(before.get("status")), str(after.get("status"))):
+    if not is_publish_transition(
+        str(before.get("status")), str(after.get("status"))
+    ):
         return
     signal_id = str(after["id"])
     country_slug = repository.get_country_slug_by_id(
@@ -542,6 +585,9 @@ def _as_uuid(value: Any) -> UUID:
 def _json_value(value: Any) -> Any:
     if isinstance(value, UUID):
         return str(value)
-    if isinstance(value, list | dict | str | int | float | bool) or value is None:
+    if (
+        isinstance(value, list | dict | str | int | float | bool)
+        or value is None
+    ):
         return value
     return str(value)

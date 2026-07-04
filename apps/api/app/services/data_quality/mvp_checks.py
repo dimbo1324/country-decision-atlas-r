@@ -21,7 +21,9 @@ def _append_mvp_checks(
                 row,
             )
         )
-    checks.append(_check("mvp_countries_exist", issues, ["mvp_country_missing"]))
+    checks.append(
+        _check("mvp_countries_exist", issues, ["mvp_country_missing"])
+    )
     for row in repository.list_published_countries_without_cards(connection):
         issues.append(
             _issue(
@@ -33,7 +35,9 @@ def _append_mvp_checks(
                 row,
             )
         )
-    checks.append(_check("mvp_countries_have_cards", issues, ["country_card_missing"]))
+    checks.append(
+        _check("mvp_countries_have_cards", issues, ["country_card_missing"])
+    )
     for row in repository.list_published_countries_without_sources(connection):
         issues.append(
             _issue(
@@ -46,9 +50,13 @@ def _append_mvp_checks(
             )
         )
     checks.append(
-        _check("mvp_countries_have_sources", issues, ["country_sources_missing"])
+        _check(
+            "mvp_countries_have_sources", issues, ["country_sources_missing"]
+        )
     )
-    for row in repository.list_mvp_countries_with_too_few_published_sources(connection):
+    for row in repository.list_mvp_countries_with_too_few_published_sources(
+        connection
+    ):
         issues.append(
             _issue(
                 "mvp_country_published_source_count_low",
@@ -72,7 +80,9 @@ def _append_mvp_checks(
                 {**row, "classification": "future_scope"},
             )
         )
-    for row in repository.list_mvp_countries_with_too_few_published_legal_signals(
+    for (
+        row
+    ) in repository.list_mvp_countries_with_too_few_published_legal_signals(
         connection
     ):
         issues.append(
@@ -123,4 +133,6 @@ def _append_mvp_checks(
                 row,
             )
         )
-    checks.append(_check("mvp_scenarios_active", issues, ["mvp_scenario_inactive"]))
+    checks.append(
+        _check("mvp_scenarios_active", issues, ["mvp_scenario_inactive"])
+    )

@@ -1,3 +1,5 @@
+import hashlib
+import secrets
 from app.core.errors import api_error
 from app.repositories import decision_passports as repository
 from app.schemas.decision_engine import DecisionRunRequest, DecisionRunResponse
@@ -9,9 +11,7 @@ from app.schemas.decision_passports import (
 )
 from app.services import decision_engine
 from datetime import UTC, datetime, timedelta
-import hashlib
 from psycopg import Connection
-import secrets
 from typing import Any
 
 
@@ -65,7 +65,9 @@ def create_decision_passport(
 ) -> DecisionPassportCreateResponse:
     decision_result = decision_engine.run_decision(connection, decision_request)
     selected_country_slug = (
-        decision_result.results[0].country.slug if decision_result.results else None
+        decision_result.results[0].country.slug
+        if decision_result.results
+        else None
     )
     source_ids = _collect_source_ids(decision_result)
     methodology_snapshot = _build_methodology_snapshot(
@@ -133,7 +135,11 @@ def get_decision_passport_by_token(
         )
     status = str(row["status"])
     expires_at = row.get("expires_at")
-    if status == "active" and expires_at is not None and expires_at < datetime.now(UTC):
+    if (
+        status == "active"
+        and expires_at is not None
+        and expires_at < datetime.now(UTC)
+    ):
         status = "expired"
     if status == "revoked":
         raise api_error(

@@ -3,7 +3,8 @@ import { DEFAULT_LOCALE } from "../lib/locale";
 import type { LocaleCode } from "./countries";
 import { apiGet, queryString } from "./http";
 
-export type HomeOverviewResponse = components["schemas"]["HomeOverviewResponse"];
+export type HomeOverviewResponse =
+  components["schemas"]["HomeOverviewResponse"];
 export type CountryOverviewCard = components["schemas"]["CountryOverviewCard"];
 export type ScenarioWinner = components["schemas"]["ScenarioWinner"];
 export type HomeMatrixPreview = components["schemas"]["HomeMatrixPreview"];

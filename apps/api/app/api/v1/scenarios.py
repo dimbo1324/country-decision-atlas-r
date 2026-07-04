@@ -69,7 +69,8 @@ def read_scenario_detail(
 
 
 @router.get(
-    "/scenarios/{slug}/countries", response_model=DecisionCountryScoreListResponse
+    "/scenarios/{slug}/countries",
+    response_model=DecisionCountryScoreListResponse,
 )
 def read_scenario_countries(
     slug: str,

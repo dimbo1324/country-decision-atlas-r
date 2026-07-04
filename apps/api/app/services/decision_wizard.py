@@ -87,7 +87,9 @@ _PERSONA_EXPLANATIONS: dict[str, str] = {
 
 def _is_decision_wizard_enabled(connection: Connection[Any]) -> bool:
     feature = ff_repo.get_feature_flag(connection, DECISION_WIZARD_FEATURE_KEY)
-    rules = ff_repo.list_feature_access_rules(connection, DECISION_WIZARD_FEATURE_KEY)
+    rules = ff_repo.list_feature_access_rules(
+        connection, DECISION_WIZARD_FEATURE_KEY
+    )
     ctx = default_access_context(get_settings())
     decision = can_access(ctx, feature, rules, DECISION_WIZARD_FEATURE_KEY)
     return decision.is_enabled
@@ -115,7 +117,9 @@ def resolve_persona_slug(answers: DecisionWizardAnswers) -> str | None:
     return None
 
 
-def build_initial_custom_weights(answers: DecisionWizardAnswers) -> dict[str, float]:
+def build_initial_custom_weights(
+    answers: DecisionWizardAnswers,
+) -> dict[str, float]:
     raw = dict(BASE_WEIGHT_TEMPLATE)
     if answers.safety_priority == "high":
         raw["safety_score"] += 10
@@ -129,7 +133,10 @@ def build_initial_custom_weights(answers: DecisionWizardAnswers) -> dict[str, fl
         raw["legalization_score"] += 5
     normalized = normalize_custom_weights(raw, DECISION_CRITERIA)
     assert normalized is not None
-    return {criterion: float(weight * 100) for criterion, weight in normalized.items()}
+    return {
+        criterion: float(weight * 100)
+        for criterion, weight in normalized.items()
+    }
 
 
 def build_wizard_explanation(
@@ -192,7 +199,9 @@ def resolve_wizard_recommendation(
     if persona_candidate is not None and persona_slug is None:
         warnings.append("recommended_persona_unavailable")
     initial_custom_weights = build_initial_custom_weights(answers)
-    candidate_country_slugs = countries_repository.list_active_country_slugs(connection)
+    candidate_country_slugs = countries_repository.list_active_country_slugs(
+        connection
+    )
     explanation = build_wizard_explanation(answers, scenario_slug, persona_slug)
     confidence = _resolve_confidence(answers, persona_slug)
     decision_analytics.record_wizard_completed(

@@ -1,10 +1,10 @@
 """Platform metrics service: building LVI/contradiction/SSRS metrics across global and scenario scopes."""
 
+import pytest
 from app.repositories import platform_metrics as repository
 from app.services import platform_metrics
 from datetime import date, timedelta
 from decimal import Decimal
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -72,8 +72,12 @@ def patch_repository(
     monkeypatch: pytest.MonkeyPatch, stored: list[dict[str, Any]]
 ) -> None:
     monkeypatch.setattr(repository, "get_country_by_slug", lambda *_a: COUNTRY)
-    monkeypatch.setattr(repository, "list_active_countries", lambda *_a: [COUNTRY])
-    monkeypatch.setattr(repository, "list_active_mvp_scenarios", lambda *_a: SCENARIOS)
+    monkeypatch.setattr(
+        repository, "list_active_countries", lambda *_a: [COUNTRY]
+    )
+    monkeypatch.setattr(
+        repository, "list_active_mvp_scenarios", lambda *_a: SCENARIOS
+    )
     monkeypatch.setattr(
         repository,
         "list_legal_velocity_events",
@@ -91,7 +95,9 @@ def patch_repository(
         "list_contradiction_inputs",
         lambda *_a: [contradiction_row(index) for index in range(1, 5)],
     )
-    monkeypatch.setattr(repository, "upsert_country_platform_metric", _append(stored))
+    monkeypatch.setattr(
+        repository, "upsert_country_platform_metric", _append(stored)
+    )
 
 
 def _append(
@@ -142,9 +148,15 @@ def test_compute_country_platform_metrics_builds_lvi_contradiction_and_ssrs(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    results = platform_metrics.compute_country_platform_metrics(MagicMock(), "russia")
-    assert [result.metric_key for result in results].count("legal_velocity_index") == 1
-    assert [result.metric_key for result in results].count("contradiction_score") == 1
+    results = platform_metrics.compute_country_platform_metrics(
+        MagicMock(), "russia"
+    )
+    assert [result.metric_key for result in results].count(
+        "legal_velocity_index"
+    ) == 1
+    assert [result.metric_key for result in results].count(
+        "contradiction_score"
+    ) == 1
     assert [result.metric_key for result in results].count(
         "scenario_specific_risk_score"
     ) == 5
@@ -155,7 +167,9 @@ def test_returns_global_and_scenario_metrics(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    results = platform_metrics.compute_country_platform_metrics(MagicMock(), "russia")
+    results = platform_metrics.compute_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     global_results = [
         result for result in results if result.scenario_slug == "__global__"
     ]
@@ -174,7 +188,11 @@ def test_output_count_correct_for_mvp_scenarios(
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
     assert (
-        len(platform_metrics.compute_country_platform_metrics(MagicMock(), "russia"))
+        len(
+            platform_metrics.compute_country_platform_metrics(
+                MagicMock(), "russia"
+            )
+        )
         == 7
     )
 
@@ -184,8 +202,12 @@ def test_insufficient_data_metrics_are_included(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    monkeypatch.setattr(repository, "list_legal_velocity_events", lambda *_a: [])
-    results = platform_metrics.compute_country_platform_metrics(MagicMock(), "russia")
+    monkeypatch.setattr(
+        repository, "list_legal_velocity_events", lambda *_a: []
+    )
+    results = platform_metrics.compute_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     assert any(result.label == "insufficient_data" for result in results)
     assert len(results) == 7
 
@@ -195,7 +217,9 @@ def test_all_computations_have_methodology_version(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    results = platform_metrics.compute_country_platform_metrics(MagicMock(), "russia")
+    results = platform_metrics.compute_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     assert {result.methodology_version for result in results} == {"v1.0"}
 
 
@@ -204,7 +228,9 @@ def test_values_are_between_zero_and_100_or_none(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    results = platform_metrics.compute_country_platform_metrics(MagicMock(), "russia")
+    results = platform_metrics.compute_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     assert all(
         result.value is None or Decimal("0") <= result.value <= Decimal("100")
         for result in results
@@ -229,9 +255,15 @@ def test_repeated_compute_and_store_does_not_duplicate_rows(
     stored: list[dict[str, Any]] = []
     unique: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     patch_repository(monkeypatch, stored)
-    monkeypatch.setattr(repository, "upsert_country_platform_metric", _upsert(unique))
-    platform_metrics.compute_and_store_country_platform_metrics(MagicMock(), "russia")
-    platform_metrics.compute_and_store_country_platform_metrics(MagicMock(), "russia")
+    monkeypatch.setattr(
+        repository, "upsert_country_platform_metric", _upsert(unique)
+    )
+    platform_metrics.compute_and_store_country_platform_metrics(
+        MagicMock(), "russia"
+    )
+    platform_metrics.compute_and_store_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     assert len(unique) == 7
 
 
@@ -306,6 +338,8 @@ def test_cii_and_decision_tables_are_not_modified(
 ) -> None:
     stored: list[dict[str, Any]] = []
     patch_repository(monkeypatch, stored)
-    platform_metrics.compute_and_store_country_platform_metrics(MagicMock(), "russia")
+    platform_metrics.compute_and_store_country_platform_metrics(
+        MagicMock(), "russia"
+    )
     assert all(row["metric_key"] != "country_cii_scores" for row in stored)
     assert all(row["metric_key"] != "country_scores" for row in stored)

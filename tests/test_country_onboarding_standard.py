@@ -51,15 +51,21 @@ def _run_dq_with_onboarding(**onboarding_override: Any) -> Any:
     from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
     from app.services.data_quality import build_data_quality_report
 
-    onboarding_checks: list[DataQualityCheck] = onboarding_override.get("checks", [])
-    onboarding_issues: list[DataQualityIssue] = onboarding_override.get("issues", [])
+    onboarding_checks: list[DataQualityCheck] = onboarding_override.get(
+        "checks", []
+    )
+    onboarding_issues: list[DataQualityIssue] = onboarding_override.get(
+        "issues", []
+    )
 
     dq_repo = "app.repositories.data_quality"
     empty: list[Any] = []
     repo_patches = {
         "list_missing_mvp_countries": MagicMock(return_value=empty),
         "list_published_countries_without_cards": MagicMock(return_value=empty),
-        "list_published_countries_without_sources": MagicMock(return_value=empty),
+        "list_published_countries_without_sources": MagicMock(
+            return_value=empty
+        ),
         "list_mvp_countries_with_too_few_published_sources": MagicMock(
             return_value=empty
         ),
@@ -78,8 +84,12 @@ def _run_dq_with_onboarding(**onboarding_override: Any) -> Any:
         "list_published_score_breakdowns_without_source_ids": MagicMock(
             return_value=empty
         ),
-        "list_published_legal_signals_without_source": MagicMock(return_value=empty),
-        "list_published_legal_signals_without_evidence": MagicMock(return_value=empty),
+        "list_published_legal_signals_without_source": MagicMock(
+            return_value=empty
+        ),
+        "list_published_legal_signals_without_evidence": MagicMock(
+            return_value=empty
+        ),
         "list_published_legal_signals_without_timeline_event": MagicMock(
             return_value=empty
         ),
@@ -87,9 +97,15 @@ def _run_dq_with_onboarding(**onboarding_override: Any) -> Any:
         "list_timeline_events_with_invalid_impact_direction": MagicMock(
             return_value=empty
         ),
-        "list_timeline_events_with_invalid_impact_level": MagicMock(return_value=empty),
-        "list_timeline_events_with_country_mismatch": MagicMock(return_value=empty),
-        "list_timeline_events_without_traceability": MagicMock(return_value=empty),
+        "list_timeline_events_with_invalid_impact_level": MagicMock(
+            return_value=empty
+        ),
+        "list_timeline_events_with_country_mismatch": MagicMock(
+            return_value=empty
+        ),
+        "list_timeline_events_without_traceability": MagicMock(
+            return_value=empty
+        ),
         "list_unplanned_future_timeline_events": MagicMock(return_value=empty),
         "list_evidence_without_source": MagicMock(return_value=empty),
         "list_evidence_without_country": MagicMock(return_value=empty),
@@ -100,27 +116,48 @@ def _run_dq_with_onboarding(**onboarding_override: Any) -> Any:
             return_value=empty
         ),
         "list_invalid_synthetic_user_stories": MagicMock(return_value=empty),
-        "list_country_cards_with_empty_major_sections": MagicMock(return_value=empty),
-        "list_country_cards_with_demo_source_summary": MagicMock(return_value=empty),
+        "list_country_cards_with_empty_major_sections": MagicMock(
+            return_value=empty
+        ),
+        "list_country_cards_with_demo_source_summary": MagicMock(
+            return_value=empty
+        ),
         "list_mvp_countries_missing_cii": MagicMock(return_value=empty),
-        "list_cii_scores_missing_formula_metadata": MagicMock(return_value=empty),
-        "list_cii_metric_weights_with_invalid_sum": MagicMock(return_value=empty),
+        "list_cii_scores_missing_formula_metadata": MagicMock(
+            return_value=empty
+        ),
+        "list_cii_metric_weights_with_invalid_sum": MagicMock(
+            return_value=empty
+        ),
         "list_mvp_metrics_missing_values": MagicMock(return_value=empty),
         "list_cii_scores_out_of_range": MagicMock(return_value=empty),
         "list_mvp_scenarios_missing_cii_weights": MagicMock(return_value=empty),
-        "list_cii_scenario_weights_with_negative_values": MagicMock(return_value=empty),
-        "list_cii_scenario_weights_exceeding_one": MagicMock(return_value=empty),
+        "list_cii_scenario_weights_with_negative_values": MagicMock(
+            return_value=empty
+        ),
+        "list_cii_scenario_weights_exceeding_one": MagicMock(
+            return_value=empty
+        ),
         "list_mvp_scenarios_missing_cii_scores": MagicMock(return_value=empty),
         "list_cii_scenario_scores_missing_formula_metadata": MagicMock(
             return_value=empty
         ),
         "list_inactive_mvp_scenarios": MagicMock(return_value=empty),
-        "list_cii_scores_with_non_geometric_aggregation": MagicMock(return_value=empty),
-        "list_cii_metric_definitions_without_polarity": MagicMock(return_value=empty),
-        "list_mvp_countries_without_legal_events": MagicMock(return_value=empty),
+        "list_cii_scores_with_non_geometric_aggregation": MagicMock(
+            return_value=empty
+        ),
+        "list_cii_metric_definitions_without_polarity": MagicMock(
+            return_value=empty
+        ),
+        "list_mvp_countries_without_legal_events": MagicMock(
+            return_value=empty
+        ),
     }
     with (
-        patch(f"{_DQ_SVC}.build_translation_quality_results", return_value=([], [])),
+        patch(
+            f"{_DQ_SVC}.build_translation_quality_results",
+            return_value=([], []),
+        ),
         patch(
             f"{_DQ_SVC}.build_country_onboarding_dq_results",
             return_value=(onboarding_checks, onboarding_issues),
@@ -387,7 +424,8 @@ class TestEvaluateAllMvpCountries:
 
         defaults = _full_pass_defaults()
         patchers = {
-            name: MagicMock(return_value=value) for name, value in defaults.items()
+            name: MagicMock(return_value=value)
+            for name, value in defaults.items()
         }
         with patch.multiple(_REPO, **patchers):
             result = evaluate_all_mvp_countries(_make_connection())
@@ -413,7 +451,8 @@ class TestEvaluateAllMvpCountries:
 
         defaults = _full_pass_defaults()
         patchers = {
-            name: MagicMock(return_value=value) for name, value in defaults.items()
+            name: MagicMock(return_value=value)
+            for name, value in defaults.items()
         }
         patchers["get_country_base"] = MagicMock(
             side_effect=get_country_base_side_effect
@@ -427,7 +466,9 @@ class TestDataQualityIntegration:
     def test_clean_report_has_no_onboarding_issues(self) -> None:
         report = _run_dq_with_onboarding()
         onboarding_issue_codes = {
-            i.code for i in report.issues if i.code.startswith("country_onboarding_")
+            i.code
+            for i in report.issues
+            if i.code.startswith("country_onboarding_")
         }
         assert onboarding_issue_codes == set()
 
@@ -435,7 +476,9 @@ class TestDataQualityIntegration:
         from app.schemas.data_quality import DataQualityCheck
 
         onboarding_checks = [
-            DataQualityCheck(code="country_onboarding_mvp_ready", status="passed")
+            DataQualityCheck(
+                code="country_onboarding_mvp_ready", status="passed"
+            )
         ]
         report = _run_dq_with_onboarding(checks=onboarding_checks)
         check_codes = {c.code for c in report.checks}
@@ -476,14 +519,17 @@ class TestDataQualityIntegration:
             "country_onboarding_mvp_ready",
         ]
         onboarding_checks = [
-            DataQualityCheck(code=code, status="passed") for code in expected_codes
+            DataQualityCheck(code=code, status="passed")
+            for code in expected_codes
         ]
         report = _run_dq_with_onboarding(checks=onboarding_checks)
         check_codes = {c.code for c in report.checks}
         for code in expected_codes:
             assert code in check_codes
 
-    def test_country_onboarding_issues_include_required_actual_missing(self) -> None:
+    def test_country_onboarding_issues_include_required_actual_missing(
+        self,
+    ) -> None:
         from app.schemas.data_quality import DataQualityIssue
 
         issue = DataQualityIssue(
@@ -501,7 +547,9 @@ class TestDataQualityIntegration:
         )
         report = _run_dq_with_onboarding(issues=[issue])
         matching = [
-            i for i in report.issues if i.code == "country_onboarding_sources_threshold"
+            i
+            for i in report.issues
+            if i.code == "country_onboarding_sources_threshold"
         ]
         assert len(matching) == 1
         assert matching[0].details.get("required") == 10
@@ -511,56 +559,87 @@ class TestDataQualityIntegration:
 
 class TestThresholdValues:
     def test_required_cii_metrics_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["required_cii_metrics"] == 6
 
     def test_required_scenario_scores_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["required_scenario_scores"] == 5
 
     def test_minimum_sources_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["minimum_sources"] == 10
 
     def test_minimum_evidence_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["minimum_evidence_items"] == 15
 
     def test_minimum_legal_signals_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["minimum_legal_signals"] == 5
 
     def test_minimum_timeline_events_threshold(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["minimum_timeline_events"] == 5
 
     def test_timeline_events_source_ratio_is_full(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
-        assert COUNTRY_ONBOARDING_THRESHOLDS["timeline_events_with_source_ratio"] == 1.0
+        assert (
+            COUNTRY_ONBOARDING_THRESHOLDS["timeline_events_with_source_ratio"]
+            == 1.0
+        )
 
     def test_country_card_required(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["country_card_required"] is True
 
     def test_localization_required(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
-        assert COUNTRY_ONBOARDING_THRESHOLDS["localization_metadata_required"] is True
+        assert (
+            COUNTRY_ONBOARDING_THRESHOLDS["localization_metadata_required"]
+            is True
+        )
 
     def test_matrix_ready_required(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
         assert COUNTRY_ONBOARDING_THRESHOLDS["matrix_ready_required"] is True
 
     def test_home_overview_ready_required(self) -> None:
-        from app.services.country_onboarding import COUNTRY_ONBOARDING_THRESHOLDS
+        from app.services.country_onboarding import (
+            COUNTRY_ONBOARDING_THRESHOLDS,
+        )
 
-        assert COUNTRY_ONBOARDING_THRESHOLDS["home_overview_ready_required"] is True
+        assert (
+            COUNTRY_ONBOARDING_THRESHOLDS["home_overview_ready_required"]
+            is True
+        )

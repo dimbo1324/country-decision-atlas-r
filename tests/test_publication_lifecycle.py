@@ -1,5 +1,6 @@
 """Editorial publication lifecycle status transitions: allowed and forbidden moves."""
 
+import pytest
 from app.services.publication import (
     PUBLICATION_STATUSES,
     allowed_transition,
@@ -8,7 +9,6 @@ from app.services.publication import (
     is_publish_transition,
 )
 from fastapi import HTTPException
-import pytest
 from typing import Any, cast
 
 
@@ -116,7 +116,9 @@ def test_is_publish_transition_false_not_to_published() -> None:
 
 
 def test_audit_action_submitted_for_review() -> None:
-    assert audit_action_for_transition("draft", "review") == "submitted_for_review"
+    assert (
+        audit_action_for_transition("draft", "review") == "submitted_for_review"
+    )
 
 
 def test_audit_action_published_from_review() -> None:

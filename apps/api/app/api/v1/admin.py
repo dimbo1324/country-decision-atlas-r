@@ -21,7 +21,10 @@ from app.schemas.admin_content import (
 from app.schemas.common import ContentValidationError, ErrorResponse
 from app.schemas.country_onboarding import AllCountriesOnboardingResult
 from app.schemas.data_quality import DataQualityReport
-from app.schemas.translations import TranslationJobCreate, TranslationJobResponse
+from app.schemas.translations import (
+    TranslationJobCreate,
+    TranslationJobResponse,
+)
 from app.services import admin_content
 from app.services.country_onboarding import evaluate_all_mvp_countries
 from app.services.data_quality import build_data_quality_report
@@ -66,7 +69,9 @@ def admin_patch_source(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminSourceResponse:
-    row = admin_content.patch_source(connection, source_id, payload, current_user.email)
+    row = admin_content.patch_source(
+        connection, source_id, payload, current_user.email
+    )
     connection.commit()
     return AdminSourceResponse(item=row)
 
@@ -82,7 +87,9 @@ def admin_create_evidence_item(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminEvidenceItemResponse:
-    row = admin_content.create_evidence_item(connection, payload, current_user.email)
+    row = admin_content.create_evidence_item(
+        connection, payload, current_user.email
+    )
     connection.commit()
     return AdminEvidenceItemResponse(item=row)
 
@@ -116,7 +123,9 @@ def admin_create_legal_signal(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminLegalSignalResponse:
-    row = admin_content.create_legal_signal(connection, payload, current_user.email)
+    row = admin_content.create_legal_signal(
+        connection, payload, current_user.email
+    )
     connection.commit()
     return AdminLegalSignalResponse(item=row)
 
@@ -168,7 +177,9 @@ def admin_create_user_story(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminUserStoryResponse:
-    row = admin_content.create_user_story(connection, payload, current_user.email)
+    row = admin_content.create_user_story(
+        connection, payload, current_user.email
+    )
     connection.commit()
     return AdminUserStoryResponse(item=row)
 

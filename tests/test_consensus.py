@@ -58,7 +58,9 @@ def test_controversial_when_scores_are_close() -> None:
     best = _item(answer_id="best", up=5)
     second = _item(answer_id="second", up=4)
 
-    summaries = {s.answer_id: s for s in build_consensus_summaries([best, second])}
+    summaries = {
+        s.answer_id: s for s in build_consensus_summaries([best, second])
+    }
 
     assert summaries["best"].controversial is True
     assert summaries["second"].controversial is True
@@ -68,7 +70,9 @@ def test_not_controversial_when_scores_are_far_apart() -> None:
     best = _item(answer_id="best", up=20)
     second = _item(answer_id="second", up=1)
 
-    summaries = {s.answer_id: s for s in build_consensus_summaries([best, second])}
+    summaries = {
+        s.answer_id: s for s in build_consensus_summaries([best, second])
+    }
 
     assert summaries["best"].controversial is False
     assert summaries["second"].controversial is False

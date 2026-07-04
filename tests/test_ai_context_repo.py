@@ -1,7 +1,7 @@
 """Repository queries that assemble grounded AI context from published search documents and stored metrics."""
 
-from app.repositories import ai_context as repository
 import inspect
+from app.repositories import ai_context as repository
 
 
 def test_ai_context_repository_uses_published_search_documents() -> None:

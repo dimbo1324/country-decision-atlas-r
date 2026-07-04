@@ -1,10 +1,10 @@
 """Fake AI provider used in local/dev: deterministic answers and no external API dependency."""
 
+import pytest
 from app.core.config import Settings
 from app.schemas.ai import AICitation, AIContextItem
 from app.services.ai_context import REFUSAL_RU
 from app.services.ai_providers import FakeAIProvider, get_ai_provider
-import pytest
 from typing import Any
 
 

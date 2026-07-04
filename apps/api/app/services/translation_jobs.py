@@ -41,7 +41,9 @@ def list_jobs(
     limit: int,
     offset: int,
 ) -> dict[str, Any]:
-    items = repo.list_translation_jobs(connection, status, target_locale, limit, offset)
+    items = repo.list_translation_jobs(
+        connection, status, target_locale, limit, offset
+    )
     total = repo.count_translation_jobs(connection, status, target_locale)
     return {"items": items, "total": total, "limit": limit, "offset": offset}
 
@@ -68,7 +70,9 @@ def process_next_job(
     if job is None:
         return None
 
-    return _process_job(connection, job, target_locale, effective_provider, not dry_run)
+    return _process_job(
+        connection, job, target_locale, effective_provider, not dry_run
+    )
 
 
 def _process_job(
@@ -85,15 +89,25 @@ def _process_job(
     if not unit_id or not target:
         if persist:
             repo.mark_job_failed(
-                connection, job_id, "missing translation_unit_id or target_locale_code"
+                connection,
+                job_id,
+                "missing translation_unit_id or target_locale_code",
             )
-        return {"job_id": job_id, "status": "failed", "error": "missing unit or locale"}
+        return {
+            "job_id": job_id,
+            "status": "failed",
+            "error": "missing unit or locale",
+        }
 
     unit = repo.get_translation_unit_for_job(connection, unit_id)
     if not unit or not unit.get("source_text"):
         if persist:
             repo.mark_job_failed(connection, job_id, "source text not found")
-        return {"job_id": job_id, "status": "failed", "error": "source text not found"}
+        return {
+            "job_id": job_id,
+            "status": "failed",
+            "error": "source text not found",
+        }
 
     translation_input = TranslationInput(
         source_text=unit["source_text"],

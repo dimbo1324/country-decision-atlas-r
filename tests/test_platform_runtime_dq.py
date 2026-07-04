@@ -26,7 +26,9 @@ def test_platform_runtime_dq_detects_enabled_flag_without_rule(
     }
 
 
-def test_platform_runtime_dq_detects_internal_journal_payload(monkeypatch: Any) -> None:
+def test_platform_runtime_dq_detects_internal_journal_payload(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         repository,
@@ -40,7 +42,9 @@ def test_platform_runtime_dq_detects_internal_journal_payload(monkeypatch: Any) 
     }
 
 
-def test_platform_runtime_dq_cache_config_check_is_present(monkeypatch: Any) -> None:
+def test_platform_runtime_dq_cache_config_check_is_present(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     report = data_quality.build_data_quality_report(CONNECTION)
     assert "cache_config_is_safe" in {check.code for check in report.checks}

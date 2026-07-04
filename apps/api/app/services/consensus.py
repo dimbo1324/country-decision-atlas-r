@@ -42,7 +42,9 @@ def _is_recent(created_at: datetime | None) -> bool:
     reference = created_at
     if reference.tzinfo is None:
         reference = reference.replace(tzinfo=UTC)
-    return datetime.now(UTC) - reference <= timedelta(days=FRESHNESS_WINDOW_DAYS)
+    return datetime.now(UTC) - reference <= timedelta(
+        days=FRESHNESS_WINDOW_DAYS
+    )
 
 
 def _own_controversial(item: AnswerVoteInput) -> bool:
@@ -60,7 +62,9 @@ def build_consensus_summaries(
     top_two_ids: set[str] = {pair[0].answer_id for pair in ranked[:2]}
     spread_controversial = False
     if len(ranked) >= 2:
-        spread_controversial = (ranked[0][1] - ranked[1][1]) <= CONTROVERSIAL_SCORE_GAP
+        spread_controversial = (
+            ranked[0][1] - ranked[1][1]
+        ) <= CONTROVERSIAL_SCORE_GAP
     summaries: list[ConsensusSummary] = []
     for item, score in scored:
         controversial = _own_controversial(item) or (

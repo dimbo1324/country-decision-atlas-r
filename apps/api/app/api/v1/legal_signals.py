@@ -1,7 +1,10 @@
 from app.core.database import get_connection
 from app.core.locales import LocaleQuery
 from app.repositories.common import build_locale
-from app.repositories.legal_signals import count_legal_signals, list_legal_signals
+from app.repositories.legal_signals import (
+    count_legal_signals,
+    list_legal_signals,
+)
 from app.schemas.common import Pagination, SortMeta
 from app.schemas.decision_engine import (
     EvidenceListResponse,
@@ -32,7 +35,11 @@ def read_country_legal_signals(
     impact_level: str | None = None,
     status: Literal["published", "archived"] = "published",
     sort: Literal[
-        "published_date", "effective_date", "impact_level", "created_at", "updated_at"
+        "published_date",
+        "effective_date",
+        "impact_level",
+        "created_at",
+        "updated_at",
     ] = "published_date",
     order: Literal["asc", "desc"] = "desc",
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
@@ -62,7 +69,12 @@ def read_country_legal_signals(
         locale,
     )
     total = count_legal_signals(
-        connection, country_id, signal_type, impact_direction, impact_level, status
+        connection,
+        country_id,
+        signal_type,
+        impact_direction,
+        impact_level,
+        status,
     )
     return LegalSignalListResponse(
         items=rows,
@@ -90,7 +102,9 @@ def read_legal_signal_timeline(
         "other",
     ]
     | None = None,
-    impact_direction: Literal["positive", "negative", "neutral", "mixed", "uncertain"]
+    impact_direction: Literal[
+        "positive", "negative", "neutral", "mixed", "uncertain"
+    ]
     | None = None,
     impact_level: Literal["low", "medium", "high", "critical"] | None = None,
     affected_group: str | None = None,
@@ -135,24 +149,30 @@ def read_legal_signals(
     impact_level: str | None = None,
     status: Literal["published", "archived"] = "published",
     sort: Literal[
-        "published_date", "effective_date", "impact_level", "created_at", "updated_at"
+        "published_date",
+        "effective_date",
+        "impact_level",
+        "created_at",
+        "updated_at",
     ] = "published_date",
     order: Literal["asc", "desc"] = "desc",
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> LegalSignalDetailListResponse:
-    rows, pagination, locale_meta, sort_meta = decision_engine.list_legal_signals(
-        connection,
-        locale,
-        country_slug,
-        limit,
-        offset,
-        signal_type,
-        impact_direction,
-        impact_level,
-        status,
-        sort,
-        order,
+    rows, pagination, locale_meta, sort_meta = (
+        decision_engine.list_legal_signals(
+            connection,
+            locale,
+            country_slug,
+            limit,
+            offset,
+            signal_type,
+            impact_direction,
+            impact_level,
+            status,
+            sort,
+            order,
+        )
     )
     return LegalSignalDetailListResponse(
         items=rows, pagination=pagination, sort=sort_meta, locale=locale_meta
@@ -168,7 +188,9 @@ def read_legal_signal(
     return decision_engine.get_legal_signal(connection, signal_id, locale)
 
 
-@top_level_router.get("/{signal_id}/evidence", response_model=EvidenceListResponse)
+@top_level_router.get(
+    "/{signal_id}/evidence", response_model=EvidenceListResponse
+)
 def read_legal_signal_evidence(
     signal_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],

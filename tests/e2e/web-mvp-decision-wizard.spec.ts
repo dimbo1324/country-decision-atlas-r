@@ -3,15 +3,21 @@ import { expectNoAppCrash } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("Decision wizard", () => {
-  test("applies a guided recommendation and runs decision", async ({ page }) => {
+  test("applies a guided recommendation and runs decision", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
     await expect(page.getByTestId("decision-wizard")).toBeVisible();
     await page.getByTestId("decision-wizard-toggle").click();
     await expect(page.getByTestId("decision-wizard-panel")).toBeVisible();
-    await page.getByTestId("decision-wizard-primary-goal").selectOption("business");
+    await page
+      .getByTestId("decision-wizard-primary-goal")
+      .selectOption("business");
     await page.getByTestId("decision-wizard-budget").selectOption("high");
-    await page.getByTestId("decision-wizard-business_priority").selectOption("high");
+    await page
+      .getByTestId("decision-wizard-business_priority")
+      .selectOption("high");
     await page.getByTestId("decision-wizard-apply").click();
 
     await expect(page.getByTestId("decision-wizard-result")).toBeVisible({

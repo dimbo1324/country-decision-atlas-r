@@ -232,10 +232,12 @@ def _evaluate_all_mvp_with_argentina_cii() -> Any:
         patch(f"{_REPO}.count_published_country_cards", return_value=2),
         patch(f"{_REPO}.count_active_cii_metrics", return_value=6),
         patch(
-            f"{_REPO}.count_country_cii_metric_values", side_effect=lambda _, _slug: 6
+            f"{_REPO}.count_country_cii_metric_values",
+            side_effect=lambda _, _slug: 6,
         ),
         patch(
-            f"{_REPO}.count_cii_scenario_scores", side_effect=lambda _, _slug, _sc: 5
+            f"{_REPO}.count_cii_scenario_scores",
+            side_effect=lambda _, _slug, _sc: 5,
         ),
         patch(
             f"{_REPO}.count_published_sources",
@@ -283,7 +285,9 @@ class TestAllMvpReadyWithArgentinaCiiReady:
 
     def test_uruguay_remains_mvp_ready(self) -> None:
         result = _evaluate_all_mvp_with_argentina_cii()
-        uruguay = next(r for r in result.countries if r.country_slug == "uruguay")
+        uruguay = next(
+            r for r in result.countries if r.country_slug == "uruguay"
+        )
         assert uruguay.mvp_ready is True
 
 
@@ -306,7 +310,8 @@ class TestArgentinaCiiSlugInMatrix:
                 return_value=_MATRIX_SCENARIO_ROWS,
             ),
             patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells", return_value=_MATRIX_CELL_ROWS
+                f"{_MATRIX_SVC}.get_cii_matrix_cells",
+                return_value=_MATRIX_CELL_ROWS,
             ),
         ):
             result = build_matrix_response(_make_connection(), None, None, "ru")
@@ -328,7 +333,8 @@ class TestArgentinaCiiSlugInMatrix:
                 return_value=_MATRIX_SCENARIO_ROWS,
             ),
             patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells", return_value=_MATRIX_CELL_ROWS
+                f"{_MATRIX_SVC}.get_cii_matrix_cells",
+                return_value=_MATRIX_CELL_ROWS,
             ),
         ):
             result = build_matrix_response(_make_connection(), None, None, "ru")
@@ -348,12 +354,15 @@ class TestArgentinaCiiSlugInMatrix:
                 return_value=_MATRIX_SCENARIO_ROWS,
             ),
             patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells", return_value=_MATRIX_CELL_ROWS
+                f"{_MATRIX_SVC}.get_cii_matrix_cells",
+                return_value=_MATRIX_CELL_ROWS,
             ),
         ):
             result = build_matrix_response(_make_connection(), None, None, "ru")
 
-        argentina_cells = [c for c in result.cells if c.country_slug == "argentina"]
+        argentina_cells = [
+            c for c in result.cells if c.country_slug == "argentina"
+        ]
         assert len(argentina_cells) == 5
         for cell in argentina_cells:
             assert cell.cii_score == pytest.approx(43.0)
@@ -371,12 +380,15 @@ class TestArgentinaCiiSlugInMatrix:
                 return_value=_MATRIX_SCENARIO_ROWS,
             ),
             patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells", return_value=_MATRIX_CELL_ROWS
+                f"{_MATRIX_SVC}.get_cii_matrix_cells",
+                return_value=_MATRIX_CELL_ROWS,
             ),
         ):
             result = build_matrix_response(_make_connection(), None, None, "ru")
 
-        argentina_cells = [c for c in result.cells if c.country_slug == "argentina"]
+        argentina_cells = [
+            c for c in result.cells if c.country_slug == "argentina"
+        ]
         for cell in argentina_cells:
             assert cell.score_label == "limited"
 
@@ -414,7 +426,11 @@ _CII_SCORES_BY_SLUG: dict[str, float] = {
     "russia": 24.88,
 }
 
-_ISO2_BY_SLUG: dict[str, str] = {"argentina": "AR", "uruguay": "UY", "russia": "RU"}
+_ISO2_BY_SLUG: dict[str, str] = {
+    "argentina": "AR",
+    "uruguay": "UY",
+    "russia": "RU",
+}
 
 
 class TestArgentinaCiiComparison:

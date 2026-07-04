@@ -25,7 +25,9 @@ test.describe("Decision Passport", () => {
     await expectNoAppCrash(page);
   });
 
-  test("passport page shows disclaimer, methodology, and winner", async ({ page }) => {
+  test("passport page shows disclaimer, methodology, and winner", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await page.getByTestId("origin-select").selectOption("russia");
     await page.getByTestId("decision-run-button").click();
@@ -60,9 +62,13 @@ test.describe("Decision Passport", () => {
     await expectNoAppCrash(page);
   });
 
-  test("unknown passport token shows error state, not a crash", async ({ page }) => {
+  test("unknown passport token shows error state, not a crash", async ({
+    page,
+  }) => {
     await page.goto("/decision/passports/unknown-token-value?locale=ru");
-    await expect(page.getByText(/недоступен|not found|error/i).first()).toBeVisible();
+    await expect(
+      page.getByText(/недоступен|not found|error/i).first(),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 

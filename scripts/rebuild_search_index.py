@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Callable, Sequence
 import hashlib
 import json
+import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from psycopg import Connection, connect
 from psycopg.rows import dict_row
-import sys
 from typing import Any
 
 
@@ -46,7 +46,9 @@ def _upsert(
     if not title.strip() or not path.strip():
         summary["skipped_invalid"] += 1
         return
-    content_hash = _content_hash(entity_type, entity_id, locale, title, body_summary)
+    content_hash = _content_hash(
+        entity_type, entity_id, locale, title, body_summary
+    )
     if not dry_run:
         search_index.upsert_search_document(
             connection,
@@ -242,10 +244,18 @@ def rebuild(
         try:
             rows = job["fetch"](connection)
             kept = job["index"](
-                connection, rows, entity_type, job["path"], dry_run, summary, country
+                connection,
+                rows,
+                entity_type,
+                job["path"],
+                dry_run,
+                summary,
+                country,
             )
             if not country and not dry_run:
-                existing = search_index.list_indexed_entity_ids(connection, entity_type)
+                existing = search_index.list_indexed_entity_ids(
+                    connection, entity_type
+                )
                 stale = [
                     (str(item["entity_id"]), str(item["locale"]))
                     for item in existing
@@ -268,7 +278,9 @@ def rebuild(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Rebuild the public search index.")
+    parser = argparse.ArgumentParser(
+        description="Rebuild the public search index."
+    )
     parser.add_argument("--all", action="store_true", default=False)
     parser.add_argument("--entity-type", action="append", default=None)
     parser.add_argument("--country", default=None)

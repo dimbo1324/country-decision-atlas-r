@@ -1,5 +1,7 @@
 """Public data-error-report submission and admin status updates."""
 
+import inspect
+import pytest
 from app.api.v1.community import router
 from app.core.config import Settings, get_settings
 from app.core.database import get_connection
@@ -10,8 +12,6 @@ from app.repositories import (
 from app.services import data_error_reports as service
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
-import inspect
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -109,7 +109,9 @@ def test_public_create_data_error_report_is_pending(
     assert response.json()["status"] == "pending"
 
 
-def test_update_missing_report_raises_404(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_missing_report_raises_404(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
         repository, "update_data_error_report_status", lambda *_a, **_kw: None
     )

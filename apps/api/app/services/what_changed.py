@@ -66,7 +66,9 @@ def _domain_event_item(row: dict[str, Any]) -> dict[str, Any] | None:
         path = f"/routes/{entity_id}"
         importance = "medium"
     elif event_type == "legal_signal_published":
-        signal_type = payload.get("signal_type") if isinstance(payload, dict) else None
+        signal_type = (
+            payload.get("signal_type") if isinstance(payload, dict) else None
+        )
         summary = (
             f"A published legal signal was updated: {signal_type}."
             if signal_type
@@ -169,11 +171,15 @@ def _build_summary(items: list[dict[str, Any]]) -> WhatChangedSummary:
             1 for i in items if i["event_type"] == "legal_signal_published"
         ),
         routes=sum(
-            1 for i in items if i["event_type"] in {"route_published", "route_updated"}
+            1
+            for i in items
+            if i["event_type"] in {"route_published", "route_updated"}
         ),
         drift=sum(1 for i in items if i["event_type"] == "drift_changed"),
         sources=sum(
-            1 for i in items if i["event_type"] in {"source_added", "evidence_added"}
+            1
+            for i in items
+            if i["event_type"] in {"source_added", "evidence_added"}
         ),
     )
 
@@ -186,7 +192,10 @@ def build_what_changed(
     days: int,
     limit: int,
 ) -> WhatChangedResponse:
-    if countries_repository.get_country(connection, country_slug, locale) is None:
+    if (
+        countries_repository.get_country(connection, country_slug, locale)
+        is None
+    ):
         raise api_error(
             404,
             "country_not_found",

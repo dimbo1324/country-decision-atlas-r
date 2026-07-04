@@ -182,7 +182,8 @@ def _run_matrix(
 
     with (
         patch(
-            f"{_SVC}.list_matrix_countries", return_value=country_rows or _COUNTRY_ROWS
+            f"{_SVC}.list_matrix_countries",
+            return_value=country_rows or _COUNTRY_ROWS,
         ),
         patch(
             f"{_SVC}.list_matrix_scenarios",
@@ -387,9 +388,13 @@ class TestLocale:
 
 class TestFiltering:
     def test_single_scenario_filter(self) -> None:
-        single_scenario_rows = [{"slug": "relocation_residence", "name": "Релокация"}]
+        single_scenario_rows = [
+            {"slug": "relocation_residence", "name": "Релокация"}
+        ]
         single_cells = [
-            c for c in _CELL_ROWS if c["scenario_slug"] == "relocation_residence"
+            c
+            for c in _CELL_ROWS
+            if c["scenario_slug"] == "relocation_residence"
         ]
         result = _run_matrix(
             scenario_slugs=["relocation_residence"],
@@ -400,7 +405,9 @@ class TestFiltering:
         assert len(result.cells) == 3
 
     def test_single_country_filter(self) -> None:
-        single_country_rows = [{"slug": "russia", "name": "Россия", "iso2": "RU"}]
+        single_country_rows = [
+            {"slug": "russia", "name": "Россия", "iso2": "RU"}
+        ]
         single_cells = [c for c in _CELL_ROWS if c["country_slug"] == "russia"]
         result = _run_matrix(
             country_slugs=["russia"],

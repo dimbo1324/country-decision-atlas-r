@@ -34,7 +34,9 @@ def test_no_relevant_signals_is_insufficient_data() -> None:
 
 
 def test_one_relevant_signal_is_insufficient_data() -> None:
-    result = compute_scenario_specific_risk_score([signal()], "relocation_residence")
+    result = compute_scenario_specific_risk_score(
+        [signal()], "relocation_residence"
+    )
     assert result.value is None
 
 
@@ -94,7 +96,9 @@ def test_older_signal_contributes_less() -> None:
     )
     old = compute_scenario_specific_risk_score(
         [
-            signal(signal_id="1", event_date=date.today() - timedelta(days=600)),
+            signal(
+                signal_id="1", event_date=date.today() - timedelta(days=600)
+            ),
             signal(
                 signal_id="2",
                 event_id="2",
@@ -131,7 +135,11 @@ def test_weakly_relevant_signal_has_lower_contribution() -> None:
     )
     weak = compute_scenario_specific_risk_score(
         [
-            signal(signal_id="1", signal_type="migration_policy", affected_groups=[]),
+            signal(
+                signal_id="1",
+                signal_type="migration_policy",
+                affected_groups=[],
+            ),
             signal(
                 signal_id="2",
                 event_id="2",
@@ -164,7 +172,11 @@ def test_value_clamped_to_zero() -> None:
 def test_value_clamped_to_100() -> None:
     result = compute_scenario_specific_risk_score(
         [
-            signal(signal_id=str(index), event_id=str(index), impact_level="critical")
+            signal(
+                signal_id=str(index),
+                event_id=str(index),
+                impact_level="critical",
+            )
             for index in range(8)
         ],
         "relocation_residence",
@@ -182,7 +194,11 @@ def test_label_boundaries_correct() -> None:
     )
     critical = compute_scenario_specific_risk_score(
         [
-            signal(signal_id=str(index), event_id=str(index), impact_level="critical")
+            signal(
+                signal_id=str(index),
+                event_id=str(index),
+                impact_level="critical",
+            )
             for index in range(8)
         ],
         "relocation_residence",

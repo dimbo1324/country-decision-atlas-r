@@ -56,7 +56,9 @@ def compute_and_store_trust_for_country(
         result["confidence"] = payload["confidence"]
         result["freshness_status"] = payload["freshness_status"]
         if not dry_run:
-            trust_repo.upsert_country_trust_score(connection, _jsonb_payload(payload))
+            trust_repo.upsert_country_trust_score(
+                connection, _jsonb_payload(payload)
+            )
             result["stored"] = True
     except Exception as exc:
         result["error"] = str(exc)
@@ -94,5 +96,7 @@ def compute_and_store_trust_for_all_countries(
             summary["countries_stored"] += 1
         if r.get("error"):
             summary["countries_failed"] += 1
-            summary["errors"].append({"country_slug": slug, "error": r["error"]})
+            summary["errors"].append(
+                {"country_slug": slug, "error": r["error"]}
+            )
     return summary

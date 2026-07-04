@@ -14,7 +14,9 @@ def test_migration_creates_ai_interaction_logs() -> None:
     assert "CONSTRAINT ai_interaction_logs_ai_mode_check" in MIGRATION_SQL
     assert "CONSTRAINT ai_interaction_logs_status_check" in MIGRATION_SQL
     assert "CONSTRAINT ai_interaction_logs_counts_check" in MIGRATION_SQL
-    assert "CONSTRAINT ai_interaction_logs_metadata_object_check" in MIGRATION_SQL
+    assert (
+        "CONSTRAINT ai_interaction_logs_metadata_object_check" in MIGRATION_SQL
+    )
 
 
 def test_migration_adds_ai_feature_flags() -> None:

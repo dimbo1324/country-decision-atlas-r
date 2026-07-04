@@ -1,5 +1,6 @@
 """Country drift methodology: impact weighting, net score computation, and label/confidence derivation."""
 
+import pytest
 from app.services.country_drift_methodology import (
     METHODOLOGY_VERSION,
     build_drift_input_summary,
@@ -9,7 +10,6 @@ from app.services.country_drift_methodology import (
     label_for_drift,
 )
 from decimal import Decimal
-import pytest
 
 
 class TestImpactLevelWeight:
@@ -34,7 +34,11 @@ class TestComputeNetScore:
     def test_zero_total_weight_returns_none(self) -> None:
         assert (
             compute_net_score(
-                Decimal("0"), Decimal("0"), Decimal("0"), Decimal("0"), Decimal("0")
+                Decimal("0"),
+                Decimal("0"),
+                Decimal("0"),
+                Decimal("0"),
+                Decimal("0"),
             )
             is None
         )
@@ -47,19 +51,31 @@ class TestComputeNetScore:
 
     def test_fully_positive(self) -> None:
         result = compute_net_score(
-            Decimal("10"), Decimal("0"), Decimal("0"), Decimal("0"), Decimal("0")
+            Decimal("10"),
+            Decimal("0"),
+            Decimal("0"),
+            Decimal("0"),
+            Decimal("0"),
         )
         assert result == Decimal("100.00")
 
     def test_fully_negative(self) -> None:
         result = compute_net_score(
-            Decimal("0"), Decimal("10"), Decimal("0"), Decimal("0"), Decimal("0")
+            Decimal("0"),
+            Decimal("10"),
+            Decimal("0"),
+            Decimal("0"),
+            Decimal("0"),
         )
         assert result == Decimal("-100.00")
 
     def test_range_bounds(self) -> None:
         result = compute_net_score(
-            Decimal("1"), Decimal("1"), Decimal("50"), Decimal("0"), Decimal("0")
+            Decimal("1"),
+            Decimal("1"),
+            Decimal("50"),
+            Decimal("0"),
+            Decimal("0"),
         )
         assert result is not None
         assert Decimal("-100") <= result <= Decimal("100")
@@ -84,10 +100,14 @@ class TestLabelForDrift:
     def test_net_score_zero_gives_stable(self) -> None:
         assert label_for_drift(5, Decimal("0")) == "stable"
 
-    def test_net_score_just_below_mildly_positive_threshold_gives_stable(self) -> None:
+    def test_net_score_just_below_mildly_positive_threshold_gives_stable(
+        self,
+    ) -> None:
         assert label_for_drift(5, Decimal("14.99")) == "stable"
 
-    def test_net_score_at_mildly_positive_threshold_gives_mildly_positive(self) -> None:
+    def test_net_score_at_mildly_positive_threshold_gives_mildly_positive(
+        self,
+    ) -> None:
         assert label_for_drift(5, Decimal("15")) == "mildly_positive"
 
     def test_net_score_just_below_positive_threshold_gives_mildly_positive(

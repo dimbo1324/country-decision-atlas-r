@@ -4,6 +4,7 @@ dist/
 build/
 coverage/
 htmlcov/
+local-artifacts/
 .venv/
 venv/
 __pycache__/
@@ -19,6 +20,9 @@ __pycache__/
 .tmp
 .tmp/
 **/.tmp/**
+*.log
+*.py
+*.go
 docs/
 README*
 *.md

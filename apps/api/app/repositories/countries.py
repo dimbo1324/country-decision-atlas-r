@@ -84,7 +84,8 @@ def list_countries(
 
 def count_countries(connection: Connection[Any]) -> int:
     row = fetch_one(
-        connection, "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE"
+        connection,
+        "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE",
     )
     return int(row["total"]) if row else 0
 

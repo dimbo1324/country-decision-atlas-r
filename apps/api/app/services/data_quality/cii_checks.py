@@ -21,7 +21,9 @@ def _append_cii_checks(
                 row,
             )
         )
-    checks.append(_check("mvp_countries_have_cii", issues, ["cii_score_missing"]))
+    checks.append(
+        _check("mvp_countries_have_cii", issues, ["cii_score_missing"])
+    )
     for row in repository.list_cii_scores_missing_formula_metadata(connection):
         issues.append(
             _issue(
@@ -35,7 +37,9 @@ def _append_cii_checks(
         )
     checks.append(
         _check(
-            "cii_scores_have_formula_metadata", issues, ["cii_formula_metadata_missing"]
+            "cii_scores_have_formula_metadata",
+            issues,
+            ["cii_formula_metadata_missing"],
         )
     )
     for row in repository.list_cii_metric_weights_with_invalid_sum(connection):
@@ -49,7 +53,9 @@ def _append_cii_checks(
                 row,
             )
         )
-    checks.append(_check("cii_weights_sum_to_one", issues, ["cii_weight_sum_invalid"]))
+    checks.append(
+        _check("cii_weights_sum_to_one", issues, ["cii_weight_sum_invalid"])
+    )
     for row in repository.list_mvp_scenarios_missing_cii_weights(connection):
         issues.append(
             _issue(
@@ -63,10 +69,14 @@ def _append_cii_checks(
         )
     checks.append(
         _check(
-            "mvp_scenarios_have_cii_weights", issues, ["cii_scenario_weight_missing"]
+            "mvp_scenarios_have_cii_weights",
+            issues,
+            ["cii_scenario_weight_missing"],
         )
     )
-    for row in repository.list_cii_scenario_weights_with_negative_values(connection):
+    for row in repository.list_cii_scenario_weights_with_negative_values(
+        connection
+    ):
         issues.append(
             _issue(
                 "cii_scenario_weight_negative",
@@ -120,7 +130,9 @@ def _append_cii_checks(
             ["cii_scenario_score_missing"],
         )
     )
-    for row in repository.list_cii_scenario_scores_missing_formula_metadata(connection):
+    for row in repository.list_cii_scenario_scores_missing_formula_metadata(
+        connection
+    ):
         issues.append(
             _issue(
                 "cii_scenario_formula_metadata_missing",
@@ -151,7 +163,9 @@ def _append_cii_checks(
         )
     checks.append(
         _check(
-            "mvp_countries_have_all_cii_metrics", issues, ["cii_metric_value_missing"]
+            "mvp_countries_have_all_cii_metrics",
+            issues,
+            ["cii_metric_value_missing"],
         )
     )
     for row in repository.list_cii_scores_out_of_range(connection):
@@ -168,7 +182,9 @@ def _append_cii_checks(
     checks.append(
         _check("cii_scores_in_valid_range", issues, ["cii_score_out_of_range"])
     )
-    for row in repository.list_cii_scores_with_non_geometric_aggregation(connection):
+    for row in repository.list_cii_scores_with_non_geometric_aggregation(
+        connection
+    ):
         issues.append(
             _issue(
                 "cii_aggregation_method_not_geometric",
@@ -186,7 +202,9 @@ def _append_cii_checks(
             ["cii_aggregation_method_not_geometric"],
         )
     )
-    for row in repository.list_cii_metric_definitions_without_polarity(connection):
+    for row in repository.list_cii_metric_definitions_without_polarity(
+        connection
+    ):
         issues.append(
             _issue(
                 "cii_metric_polarity_missing",

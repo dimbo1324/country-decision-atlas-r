@@ -4,7 +4,8 @@ import { DEFAULT_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
 
-export type ScenarioListResponse = components["schemas"]["ScenarioListResponse"];
+export type ScenarioListResponse =
+  components["schemas"]["ScenarioListResponse"];
 
 type ListScenariosParams = {
   locale?: LocaleCode;

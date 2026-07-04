@@ -10,11 +10,17 @@ const severityLabels: Record<string, string> = {
 
 export function KeyInsightsPanel({ insights }: { insights: HomeKeyInsight[] }) {
   return (
-    <section className="homeOverviewSection" aria-labelledby="home-insights-title">
+    <section
+      className="homeOverviewSection"
+      aria-labelledby="home-insights-title"
+    >
       <div className="homeSectionHeading">
         <h2 id="home-insights-title">Ключевые выводы</h2>
       </div>
-      <div className="homeKeyInsights" data-testid="home-key-insights">
+      <div
+        className="homeKeyInsights"
+        data-testid="home-key-insights"
+      >
         {insights.length === 0 ? (
           <span>Выводы появятся после обновления аналитических данных.</span>
         ) : (
@@ -23,7 +29,9 @@ export function KeyInsightsPanel({ insights }: { insights: HomeKeyInsight[] }) {
               className={`homeInsight homeInsight${capitalize(insight.severity)}`}
               key={`${insight.kind}:${insight.target_url}`}
             >
-              <span>{severityLabels[insight.severity] ?? insight.severity}</span>
+              <span>
+                {severityLabels[insight.severity] ?? insight.severity}
+              </span>
               <h3>{insight.title}</h3>
               <p>{insight.summary}</p>
               <Link href={insight.target_url}>Подробнее</Link>

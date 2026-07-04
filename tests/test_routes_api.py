@@ -179,7 +179,9 @@ def test_get_argentina_routes_returns_200(monkeypatch: Any) -> None:
     assert body["items"][0]["country_slug"] == "argentina"
 
 
-def test_route_list_response_has_pagination_and_locale(monkeypatch: Any) -> None:
+def test_route_list_response_has_pagination_and_locale(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(
         routes_service,
         "list_country_routes",
@@ -200,7 +202,9 @@ def test_route_type_filter_is_passed_to_service(monkeypatch: Any) -> None:
         captured["route_type"] = args[3]
         return route_list_response()
 
-    monkeypatch.setattr(routes_service, "list_country_routes", fake_list_country_routes)
+    monkeypatch.setattr(
+        routes_service, "list_country_routes", fake_list_country_routes
+    )
 
     status, _ = get_json(
         "/api/v1/countries/russia/routes?locale=ru&route_type=temporary_residence"
@@ -217,9 +221,13 @@ def test_allows_work_filter_is_passed_to_service(monkeypatch: Any) -> None:
         captured["allows_work"] = args[4]
         return route_list_response()
 
-    monkeypatch.setattr(routes_service, "list_country_routes", fake_list_country_routes)
+    monkeypatch.setattr(
+        routes_service, "list_country_routes", fake_list_country_routes
+    )
 
-    status, _ = get_json("/api/v1/countries/russia/routes?locale=ru&allows_work=yes")
+    status, _ = get_json(
+        "/api/v1/countries/russia/routes?locale=ru&allows_work=yes"
+    )
 
     assert status == 200
     assert captured["allows_work"] == "yes"
@@ -232,9 +240,13 @@ def test_allows_family_filter_is_passed_to_service(monkeypatch: Any) -> None:
         captured["allows_family"] = args[5]
         return route_list_response()
 
-    monkeypatch.setattr(routes_service, "list_country_routes", fake_list_country_routes)
+    monkeypatch.setattr(
+        routes_service, "list_country_routes", fake_list_country_routes
+    )
 
-    status, _ = get_json("/api/v1/countries/russia/routes?locale=ru&allows_family=yes")
+    status, _ = get_json(
+        "/api/v1/countries/russia/routes?locale=ru&allows_family=yes"
+    )
 
     assert status == 200
     assert captured["allows_family"] == "yes"
@@ -247,9 +259,13 @@ def test_leads_to_pr_filter_is_passed_to_service(monkeypatch: Any) -> None:
         captured["leads_to_pr"] = args[6]
         return route_list_response()
 
-    monkeypatch.setattr(routes_service, "list_country_routes", fake_list_country_routes)
+    monkeypatch.setattr(
+        routes_service, "list_country_routes", fake_list_country_routes
+    )
 
-    status, _ = get_json("/api/v1/countries/russia/routes?locale=ru&leads_to_pr=yes")
+    status, _ = get_json(
+        "/api/v1/countries/russia/routes?locale=ru&leads_to_pr=yes"
+    )
 
     assert status == 200
     assert captured["leads_to_pr"] == "yes"
@@ -259,7 +275,9 @@ def test_unknown_country_returns_country_not_found(monkeypatch: Any) -> None:
     def fake_list_country_routes(*_: Any) -> RouteListResponse:
         raise api_error(404, "country_not_found", "Country not found.")
 
-    monkeypatch.setattr(routes_service, "list_country_routes", fake_list_country_routes)
+    monkeypatch.setattr(
+        routes_service, "list_country_routes", fake_list_country_routes
+    )
 
     status, body = get_json("/api/v1/countries/missing/routes?locale=ru")
 
@@ -301,7 +319,9 @@ def test_get_missing_route_returns_route_not_found(monkeypatch: Any) -> None:
     def fake_get_route_detail(*_: Any) -> RouteDetailResponse:
         raise api_error(404, "route_not_found", "Route not found.")
 
-    monkeypatch.setattr(routes_service, "get_route_detail", fake_get_route_detail)
+    monkeypatch.setattr(
+        routes_service, "get_route_detail", fake_get_route_detail
+    )
 
     status, body = get_json(
         "/api/v1/routes/99999999-9999-9999-9999-999999999999?locale=ru"
@@ -312,7 +332,9 @@ def test_get_missing_route_returns_route_not_found(monkeypatch: Any) -> None:
 
 
 def test_invalid_route_type_returns_422() -> None:
-    status, body = get_json("/api/v1/countries/russia/routes?route_type=invalid")
+    status, body = get_json(
+        "/api/v1/countries/russia/routes?route_type=invalid"
+    )
 
     assert status == 422
     assert body["error"]["code"] == "validation_error"
@@ -336,7 +358,10 @@ def test_openapi_contains_route_paths_and_schemas() -> None:
     contract = load_contract()
 
     assert "/api/v1/countries/{country_slug}/routes" in contract["paths"]
-    assert "/api/v1/countries/{country_slug}/routes/{route_slug}" in contract["paths"]
+    assert (
+        "/api/v1/countries/{country_slug}/routes/{route_slug}"
+        in contract["paths"]
+    )
     assert "/api/v1/routes/{route_id}" in contract["paths"]
     for schema_name in [
         "RouteEligibility",

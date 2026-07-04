@@ -1,7 +1,7 @@
 """SQL-only repository layer for AI drafts: required functions and reviewed_at bookkeeping."""
 
-from app.repositories import ai_drafts as repository
 import inspect
+from app.repositories import ai_drafts as repository
 
 
 def test_ai_drafts_repository_is_sql_only() -> None:

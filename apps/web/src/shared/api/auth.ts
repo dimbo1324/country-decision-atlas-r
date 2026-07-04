@@ -8,18 +8,26 @@ export type AuthTokenResponse = components["schemas"]["AuthTokenResponse"];
 export type RegisterRequest = components["schemas"]["RegisterRequest"];
 export type LoginRequest = components["schemas"]["LoginRequest"];
 export type CurrentUserResponse = components["schemas"]["CurrentUserResponse"];
-export type UserSessionListResponse = components["schemas"]["UserSessionListResponse"];
+export type UserSessionListResponse =
+  components["schemas"]["UserSessionListResponse"];
 export type TelegramLinkRequest = components["schemas"]["TelegramLinkRequest"];
-export type TelegramLinkResponse = components["schemas"]["TelegramLinkResponse"];
+export type TelegramLinkResponse =
+  components["schemas"]["TelegramLinkResponse"];
 export type TelegramLinkStatusResponse =
   components["schemas"]["TelegramLinkStatusResponse"];
 
 export function register(payload: RegisterRequest): Promise<AuthTokenResponse> {
-  return apiPost<AuthTokenResponse, RegisterRequest>("/api/v1/auth/register", payload);
+  return apiPost<AuthTokenResponse, RegisterRequest>(
+    "/api/v1/auth/register",
+    payload,
+  );
 }
 
 export function login(payload: LoginRequest): Promise<AuthTokenResponse> {
-  return apiPost<AuthTokenResponse, LoginRequest>("/api/v1/auth/login", payload);
+  return apiPost<AuthTokenResponse, LoginRequest>(
+    "/api/v1/auth/login",
+    payload,
+  );
 }
 
 export function logout(): Promise<{ ok: boolean }> {
@@ -31,7 +39,9 @@ export function logout(): Promise<{ ok: boolean }> {
 }
 
 export function getMe(): Promise<CurrentUserResponse> {
-  return apiGet<CurrentUserResponse>("/api/v1/auth/me", { headers: authHeaders() });
+  return apiGet<CurrentUserResponse>("/api/v1/auth/me", {
+    headers: authHeaders(),
+  });
 }
 
 export function listSessions(): Promise<UserSessionListResponse> {

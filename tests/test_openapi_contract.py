@@ -1,14 +1,15 @@
 """Generated OpenAPI contract includes required paths, schemas, and bearer-auth security."""
 
+import yaml
 from pathlib import Path
 from typing import Any, cast
-import yaml
 
 
 def load_contract() -> dict[str, Any]:
     contract_path = Path("contracts/openapi.yaml")
     return cast(
-        dict[str, Any], yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+        dict[str, Any],
+        yaml.safe_load(contract_path.read_text(encoding="utf-8")),
     )
 
 
@@ -130,25 +131,25 @@ def test_openapi_contract_has_decision_engine_schemas() -> None:
     assert run_path["requestBody"]["content"]["application/json"]["schema"] == {
         "$ref": "#/components/schemas/DecisionRunRequest"
     }
-    assert run_path["responses"]["200"]["content"]["application/json"]["schema"] == {
-        "$ref": "#/components/schemas/DecisionRunResponse"
-    }
+    assert run_path["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/DecisionRunResponse"}
 
     analytics_path = contract["paths"]["/api/v1/analytics/events"]["post"]
-    assert analytics_path["requestBody"]["content"]["application/json"]["schema"] == {
-        "$ref": "#/components/schemas/AnalyticsEventCreate"
-    }
+    assert analytics_path["requestBody"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/AnalyticsEventCreate"}
     assert analytics_path["responses"]["200"]["content"]["application/json"][
         "schema"
     ] == {"$ref": "#/components/schemas/AnalyticsEventCreateResponse"}
 
     wizard_path = contract["paths"]["/api/v1/decision/wizard/resolve"]["post"]
-    assert wizard_path["requestBody"]["content"]["application/json"]["schema"] == {
-        "$ref": "#/components/schemas/DecisionWizardAnswers"
-    }
-    assert wizard_path["responses"]["200"]["content"]["application/json"]["schema"] == {
-        "$ref": "#/components/schemas/DecisionWizardRecommendation"
-    }
+    assert wizard_path["requestBody"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/DecisionWizardAnswers"}
+    assert wizard_path["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/DecisionWizardRecommendation"}
 
 
 def test_openapi_contract_has_bearer_auth_security() -> None:

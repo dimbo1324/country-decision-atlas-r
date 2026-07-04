@@ -165,7 +165,9 @@ def _install_clean_coverage_fakes(monkeypatch: Any) -> Any:
 
 
 def test_dq_ignores_empty_index_as_non_critical(monkeypatch: Any) -> None:
-    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+    monkeypatch.setattr(
+        repository, "list_broken_search_documents", lambda *_: []
+    )
     monkeypatch.setattr(repository, "count_search_documents", lambda *_: 0)
     _install_clean_coverage_fakes(monkeypatch)
 
@@ -195,13 +197,17 @@ def test_dq_detects_broken_document(monkeypatch: Any) -> None:
 
 
 def test_dq_detects_coverage_gap_when_index_populated(monkeypatch: Any) -> None:
-    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+    monkeypatch.setattr(
+        repository, "list_broken_search_documents", lambda *_: []
+    )
     monkeypatch.setattr(repository, "count_search_documents", lambda *_: 1)
     dq_repository = _install_clean_coverage_fakes(monkeypatch)
     monkeypatch.setattr(
         dq_repository,
         "list_published_routes_missing_from_index",
-        lambda *_: [{"id": "route-1", "slug": "route-slug", "country_slug": "russia"}],
+        lambda *_: [
+            {"id": "route-1", "slug": "route-slug", "country_slug": "russia"}
+        ],
     )
 
     issues: list[Any] = []
@@ -212,8 +218,12 @@ def test_dq_detects_coverage_gap_when_index_populated(monkeypatch: Any) -> None:
     assert any(i.code == "search_coverage_gap_route" for i in critical)
 
 
-def test_dq_flags_incomplete_locale_coverage_as_warning(monkeypatch: Any) -> None:
-    monkeypatch.setattr(repository, "list_broken_search_documents", lambda *_: [])
+def test_dq_flags_incomplete_locale_coverage_as_warning(
+    monkeypatch: Any,
+) -> None:
+    monkeypatch.setattr(
+        repository, "list_broken_search_documents", lambda *_: []
+    )
     monkeypatch.setattr(repository, "count_search_documents", lambda *_: 1)
     dq_repository = _install_clean_coverage_fakes(monkeypatch)
     monkeypatch.setattr(
@@ -229,5 +239,7 @@ def test_dq_flags_incomplete_locale_coverage_as_warning(monkeypatch: Any) -> Non
     _append_search_foundation_checks(CONNECTION, issues, checks)
 
     warnings = [i for i in issues if i.severity == "warning"]
-    assert any(i.code == "search_document_incomplete_locale_coverage" for i in warnings)
+    assert any(
+        i.code == "search_document_incomplete_locale_coverage" for i in warnings
+    )
     assert all(i.severity != "critical" for i in issues)

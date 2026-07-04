@@ -96,7 +96,10 @@ def _key_notes(row: dict[str, Any]) -> list[CountryPairNote]:
 def _ensure_country_exists(
     connection: Connection[Any], country_slug: str, locale: str
 ) -> None:
-    if countries_repository.get_country(connection, country_slug, locale) is None:
+    if (
+        countries_repository.get_country(connection, country_slug, locale)
+        is None
+    ):
         raise api_error(
             404,
             "country_not_found",
@@ -180,16 +183,22 @@ def _fallback_origin_ref(
             {"country_slug": origin_slug},
         )
     return CountryPairCountry(
-        slug=str(country["slug"]), name=str(country["name"]), iso2=country.get("iso2")
+        slug=str(country["slug"]),
+        name=str(country["name"]),
+        iso2=country.get("iso2"),
     )
 
 
-def build_country_pair_summary(row: dict[str, Any]) -> CountryPairCompatibilitySummary:
+def build_country_pair_summary(
+    row: dict[str, Any],
+) -> CountryPairCompatibilitySummary:
     source_ids = row.get("source_ids") or []
     return CountryPairCompatibilitySummary(
         origin_slug=str(row["origin_slug"]),
         destination_slug=str(row["destination_slug"]),
-        compatibility_label=cast(CompatibilityLabel, row["compatibility_label"]),
+        compatibility_label=cast(
+            CompatibilityLabel, row["compatibility_label"]
+        ),
         confidence=cast(CompatibilityConfidence, row["confidence"]),
         freshness_status=cast(CompatibilityFreshness, row["freshness_status"]),
         practical_summary=row.get("practical_summary"),

@@ -1,6 +1,9 @@
 from app.core.errors import api_error
 from app.core.locales import validate_locale
-from app.repositories import decision_engine as repository, feature_flags as ff_repo
+from app.repositories import (
+    decision_engine as repository,
+    feature_flags as ff_repo,
+)
 from app.schemas.common import LocaleCode
 from app.schemas.country_pairs import CountryPairCompatibilitySummary
 from app.schemas.decision_engine import (
@@ -50,14 +53,18 @@ DECISION_PERSONALIZATION_FEATURE_KEY = "decision_personalization_enabled"
 
 
 def _is_decision_personalization_enabled(connection: Connection[Any]) -> bool:
-    feature = ff_repo.get_feature_flag(connection, DECISION_PERSONALIZATION_FEATURE_KEY)
+    feature = ff_repo.get_feature_flag(
+        connection, DECISION_PERSONALIZATION_FEATURE_KEY
+    )
     rules = ff_repo.list_feature_access_rules(
         connection, DECISION_PERSONALIZATION_FEATURE_KEY
     )
     from app.core.config import get_settings
 
     ctx = default_access_context(get_settings())
-    decision = can_access(ctx, feature, rules, DECISION_PERSONALIZATION_FEATURE_KEY)
+    decision = can_access(
+        ctx, feature, rules, DECISION_PERSONALIZATION_FEATURE_KEY
+    )
     return decision.is_enabled
 
 
@@ -128,10 +135,16 @@ def run_decision(
             {"candidate_country_slugs": candidate_slugs},
         )
     origin_slug = payload.origin_country_slug
-    country_slugs = sorted({*candidate_slugs, *([origin_slug] if origin_slug else [])})
-    country_rows = repository.list_decision_countries(connection, country_slugs, locale)
+    country_slugs = sorted(
+        {*candidate_slugs, *([origin_slug] if origin_slug else [])}
+    )
+    country_rows = repository.list_decision_countries(
+        connection, country_slugs, locale
+    )
     countries_by_slug = {row["slug"]: row for row in country_rows}
-    missing_slugs = [slug for slug in country_slugs if slug not in countries_by_slug]
+    missing_slugs = [
+        slug for slug in country_slugs if slug not in countries_by_slug
+    ]
     if missing_slugs:
         details_key = (
             "country_slug"
@@ -174,7 +187,9 @@ def run_decision(
             },
         )
     score_ids = [row["id"] for row in score_rows]
-    breakdown_rows = repository.list_decision_score_breakdowns(connection, score_ids)
+    breakdown_rows = repository.list_decision_score_breakdowns(
+        connection, score_ids
+    )
     breakdown_rows = helpers.overlay_localized_fields(
         connection,
         breakdown_rows,
@@ -198,9 +213,12 @@ def run_decision(
         locale,
     )
     source_ids = helpers._collect_source_ids(breakdown_rows, legal_signal_rows)
-    source_rows = repository.list_decision_sources_by_ids(connection, source_ids)
+    source_rows = repository.list_decision_sources_by_ids(
+        connection, source_ids
+    )
     base_weights_map: dict[str, Decimal] = {
-        str(item["criterion"]): Decimal(str(item["weight"])) for item in breakdown_rows
+        str(item["criterion"]): Decimal(str(item["weight"]))
+        for item in breakdown_rows
     }
     allowed_criteria = sorted(base_weights_map)
     effective_weights: dict[str, Decimal] | None = None
@@ -233,12 +251,14 @@ def run_decision(
     persona_profile: dict[str, Any] | None = None
     persona_adjusted_scores: dict[str, float] = {}
     if payload.persona:
-        persona_profile, persona_adjusted_scores = _build_persona_adjusted_scores(
-            connection,
-            candidate_slugs,
-            payload.scenario_slug,
-            payload.persona,
-            locale,
+        persona_profile, persona_adjusted_scores = (
+            _build_persona_adjusted_scores(
+                connection,
+                candidate_slugs,
+                payload.scenario_slug,
+                payload.persona,
+                locale,
+            )
         )
     pair_contexts = (
         decision_origin_context.build_country_pair_contexts(
@@ -251,7 +271,9 @@ def run_decision(
         _build_country_result(
             country=countries_by_slug[slug],
             score=scores_by_country[slug],
-            breakdowns=breakdowns_by_score.get(scores_by_country[slug]["id"], []),
+            breakdowns=breakdowns_by_score.get(
+                scores_by_country[slug]["id"], []
+            ),
             legal_signals=signals_by_country.get(slug, []),
             sources_by_id=sources_by_id,
             scenario_slug=payload.scenario_slug,
@@ -277,7 +299,9 @@ def run_decision(
             if adjusted_score is None:
                 continue
             result.persona_adjusted_score = adjusted_score
-            result.persona_adjusted_label = helpers._score_label_literal(adjusted_score)
+            result.persona_adjusted_label = helpers._score_label_literal(
+                adjusted_score
+            )
         ranked_results = _rank_persona_adjusted_results(results)
     else:
         ranked_results = _rank_results(results)
@@ -298,7 +322,9 @@ def run_decision(
     personalization = DecisionPersonalizationResponse(
         weight_mode=personalization_summary["weight_mode"],
         persona_slug=personalization_summary["persona_slug"],
-        custom_weights_applied=personalization_summary["custom_weights_applied"],
+        custom_weights_applied=personalization_summary[
+            "custom_weights_applied"
+        ],
         base_weights=[
             DecisionWeightItem(**item)
             for item in personalization_summary["base_weights"]
@@ -521,7 +547,11 @@ def _recommend(
     countries: list[DecisionCountryScore],
 ) -> tuple[str, str | None, str]:
     if len(countries) < 2:
-        return "winner", countries[0].country_slug if countries else None, "medium"
+        return (
+            "winner",
+            countries[0].country_slug if countries else None,
+            "medium",
+        )
     ordered = sorted(countries, key=lambda item: item.score, reverse=True)
     delta = ordered[0].score - ordered[1].score
     if delta < 3:

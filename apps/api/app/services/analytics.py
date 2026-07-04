@@ -1,10 +1,13 @@
-from app.core.config import Settings
-from app.core.errors import api_error
-from app.repositories import analytics as analytics_repository
-from app.schemas.analytics import AnalyticsEventCreate, AnalyticsEventCreateResponse
 import hashlib
 import hmac
 import json
+from app.core.config import Settings
+from app.core.errors import api_error
+from app.repositories import analytics as analytics_repository
+from app.schemas.analytics import (
+    AnalyticsEventCreate,
+    AnalyticsEventCreateResponse,
+)
 from psycopg import Connection
 from typing import Any
 

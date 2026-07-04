@@ -107,7 +107,9 @@ def sample_response(slug: str, locale: str) -> CountryReadModelResponse:
             sources_count=1,
             last_updated_at=NOW,
         ),
-        locale=locale_resolution(locale, locale if locale == "ru" else "en", status),
+        locale=locale_resolution(
+            locale, locale if locale == "ru" else "en", status
+        ),
     )
 
 
@@ -122,7 +124,9 @@ def test_country_read_model_route_default_locale(monkeypatch: Any) -> None:
         "get_country_read_model",
         fake_get_country_read_model,
     )
-    result = countries_route.read_country_card("uruguay", CONNECTION, get_locale())
+    result = countries_route.read_country_card(
+        "uruguay", CONNECTION, get_locale()
+    )
     body = result.model_dump(mode="json")
 
     assert set(body) == {
@@ -189,7 +193,9 @@ def test_country_read_model_route_unknown_country(monkeypatch: Any) -> None:
         lambda *_: None,
     )
     try:
-        countries_route.read_country_card("unknown", CONNECTION, get_locale("en"))
+        countries_route.read_country_card(
+            "unknown", CONNECTION, get_locale("en")
+        )
     except HTTPException as error:
         details = cast(dict[str, Any], error.detail)
 
@@ -325,7 +331,9 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
         lambda *_: legal_signals,
     )
     monkeypatch.setattr(
-        country_read_model, "list_country_read_model_sources", lambda *_: sources
+        country_read_model,
+        "list_country_read_model_sources",
+        lambda *_: sources,
     )
     monkeypatch.setattr(
         country_read_model,
@@ -343,7 +351,9 @@ def test_country_read_model_service_aggregates_blocks(monkeypatch: Any) -> None:
         lambda *_: None,
     )
 
-    result = country_read_model.get_country_read_model(CONNECTION, "uruguay", "ru")
+    result = country_read_model.get_country_read_model(
+        CONNECTION, "uruguay", "ru"
+    )
 
     assert result is not None
     assert result.country.slug == "uruguay"
@@ -362,9 +372,9 @@ def test_country_read_model_openapi_contract() -> None:
     path = contract["paths"]["/api/v1/countries/{country_slug}/card"]["get"]
     schemas = contract["components"]["schemas"]
 
-    assert path["responses"]["200"]["content"]["application/json"]["schema"] == {
-        "$ref": "#/components/schemas/CountryReadModelResponse"
-    }
+    assert path["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/CountryReadModelResponse"}
     for schema_name in (
         "CountryReadModelResponse",
         "CountryReadModelCountry",

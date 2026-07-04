@@ -1,5 +1,6 @@
 """Admin endpoints for recomputing country drift, including auth/role enforcement."""
 
+import pytest
 from app.api.v1 import country_drift as country_drift_api
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
@@ -10,7 +11,6 @@ from app.services.country_drift import (
 )
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -80,7 +80,10 @@ def test_admin_recompute_country_returns_result(
     )
     conn = MagicMock()
     result = country_drift_api.admin_recompute_country_drift(
-        "argentina", CountryDriftRecomputeRequest(dry_run=False), conn, ADMIN_USER
+        "argentina",
+        CountryDriftRecomputeRequest(dry_run=False),
+        conn,
+        ADMIN_USER,
     )
     assert result.computed is True
     assert result.stored is True

@@ -1,9 +1,9 @@
 """Country CII scores with and without persona-adjusted runtime weights."""
 
+import pytest
 from app.api.v1 import countries as countries_route
 from datetime import UTC, datetime
 from psycopg import Connection
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 

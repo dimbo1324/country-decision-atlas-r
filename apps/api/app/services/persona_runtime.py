@@ -2,7 +2,9 @@ from app.services.cii import aggregate_cii_score
 from typing import Any
 
 
-def persona_weights_by_metric(profile: dict[str, Any]) -> dict[str, dict[str, Any]]:
+def persona_weights_by_metric(
+    profile: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
     return {str(row["metric_slug"]): row for row in profile.get("weights", [])}
 
 

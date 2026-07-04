@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
 import json
 import os
-from pathlib import Path
 import shutil
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -49,7 +49,9 @@ def request_json(
         method=method,
         headers={
             "Accept": "application/json",
-            **({"Content-Type": "application/json"} if body is not None else {}),
+            **(
+                {"Content-Type": "application/json"} if body is not None else {}
+            ),
             **(headers or {}),
         },
     )

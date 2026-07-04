@@ -50,7 +50,9 @@ def test_list_routes_by_country_returns_only_published_routes(
     assert "COUNT(*) OVER() AS total_count" in captured["query"]
 
 
-def test_list_routes_by_country_returns_routes_for_russia(monkeypatch: Any) -> None:
+def test_list_routes_by_country_returns_routes_for_russia(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_all", lambda *_: [ROUTE_ROW])
 
     result = repo.list_routes_by_country(CONNECTION, "russia", "en")
@@ -58,7 +60,9 @@ def test_list_routes_by_country_returns_routes_for_russia(monkeypatch: Any) -> N
     assert result[0]["status"] == "published"
 
 
-def test_list_routes_by_country_returns_routes_for_uruguay(monkeypatch: Any) -> None:
+def test_list_routes_by_country_returns_routes_for_uruguay(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_all", lambda *_: [ROUTE_ROW])
 
     result = repo.list_routes_by_country(CONNECTION, "uruguay", "en")
@@ -66,7 +70,9 @@ def test_list_routes_by_country_returns_routes_for_uruguay(monkeypatch: Any) -> 
     assert result[0]["country_slug"] == "uruguay"
 
 
-def test_list_routes_by_country_returns_routes_for_argentina(monkeypatch: Any) -> None:
+def test_list_routes_by_country_returns_routes_for_argentina(
+    monkeypatch: Any,
+) -> None:
     row = {**ROUTE_ROW, "country_slug": "argentina"}
     monkeypatch.setattr(repo, "fetch_all", lambda *_: [row])
 
@@ -106,7 +112,9 @@ def test_list_routes_by_country_filters_allows_work(monkeypatch: Any) -> None:
 
     monkeypatch.setattr(repo, "fetch_all", fake_fetch_all)
 
-    repo.list_routes_by_country(CONNECTION, "argentina", "en", allows_work="yes")
+    repo.list_routes_by_country(
+        CONNECTION, "argentina", "en", allows_work="yes"
+    )
 
     assert "r.allows_work = %s" in captured["query"]
     assert "yes" in captured["params"]
@@ -122,7 +130,9 @@ def test_list_routes_by_country_filters_allows_family(monkeypatch: Any) -> None:
 
     monkeypatch.setattr(repo, "fetch_all", fake_fetch_all)
 
-    repo.list_routes_by_country(CONNECTION, "russia", "en", allows_family="unknown")
+    repo.list_routes_by_country(
+        CONNECTION, "russia", "en", allows_family="unknown"
+    )
 
     assert "r.allows_family = %s" in captured["query"]
     assert "unknown" in captured["params"]
@@ -161,7 +171,9 @@ def test_get_route_by_id_returns_published_route(monkeypatch: Any) -> None:
     assert captured["params"][-1] == "route-id"
 
 
-def test_get_route_by_id_returns_none_for_missing_route(monkeypatch: Any) -> None:
+def test_get_route_by_id_returns_none_for_missing_route(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_one", lambda *_: None)
 
     assert repo.get_route_by_id(CONNECTION, "missing", "en") is None
@@ -189,10 +201,14 @@ def test_get_route_by_slug_returns_published_route(monkeypatch: Any) -> None:
     assert captured["params"][-2:] == ("uruguay", "temporary-legal-residence")
 
 
-def test_get_route_by_slug_returns_none_for_missing_route(monkeypatch: Any) -> None:
+def test_get_route_by_slug_returns_none_for_missing_route(
+    monkeypatch: Any,
+) -> None:
     monkeypatch.setattr(repo, "fetch_one", lambda *_: None)
 
-    assert repo.get_route_by_slug(CONNECTION, "uruguay", "missing", "en") is None
+    assert (
+        repo.get_route_by_slug(CONNECTION, "uruguay", "missing", "en") is None
+    )
 
 
 def test_list_route_documents_returns_documents(monkeypatch: Any) -> None:

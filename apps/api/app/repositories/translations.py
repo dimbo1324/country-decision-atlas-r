@@ -257,12 +257,16 @@ def list_stale_translation_variants(
 
 
 def count_translation_units(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM translation_units")
+    row = fetch_one(
+        connection, "SELECT COUNT(*) AS total FROM translation_units"
+    )
     return int(row["total"]) if row else 0
 
 
 def count_translation_variants(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM translation_variants")
+    row = fetch_one(
+        connection, "SELECT COUNT(*) AS total FROM translation_variants"
+    )
     return int(row["total"]) if row else 0
 
 
@@ -345,7 +349,9 @@ def list_critical_content_without_units(
     )
 
 
-def list_foundation_locales(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_foundation_locales(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

@@ -86,14 +86,21 @@ export function MigrationBoardFormView() {
   }
 
   return (
-    <form className="authForm" data-testid="migration-board-new-form">
-      {error !== null && <ErrorState error={migrationBoardErrorMessage(error)} />}
+    <form
+      className="authForm"
+      data-testid="migration-board-new-form"
+    >
+      {error !== null && (
+        <ErrorState error={migrationBoardErrorMessage(error)} />
+      )}
       <label className="formGroup">
         <span className="formLabel">Страна назначения</span>
         <input
           className="formInput"
           value={payload.destination_country_slug}
-          onChange={(event) => update("destination_country_slug", event.target.value)}
+          onChange={(event) =>
+            update("destination_country_slug", event.target.value)
+          }
           placeholder="uruguay"
           required
           data-testid="migration-board-destination-input"
@@ -104,7 +111,9 @@ export function MigrationBoardFormView() {
         <input
           className="formInput"
           value={payload.origin_country_slug ?? ""}
-          onChange={(event) => update("origin_country_slug", event.target.value)}
+          onChange={(event) =>
+            update("origin_country_slug", event.target.value)
+          }
           placeholder="russia"
         />
       </label>
@@ -113,7 +122,9 @@ export function MigrationBoardFormView() {
         <input
           className="formInput"
           value={payload.route_id ?? ""}
-          onChange={(event) => update("route_id", event.target.value || undefined)}
+          onChange={(event) =>
+            update("route_id", event.target.value || undefined)
+          }
         />
       </label>
       <div className="toolbar">
@@ -236,7 +247,9 @@ export function MigrationBoardFormView() {
         <input
           type="checkbox"
           checked={payload.risk_acknowledged}
-          onChange={(event) => update("risk_acknowledged", event.target.checked)}
+          onChange={(event) =>
+            update("risk_acknowledged", event.target.checked)
+          }
           data-testid="migration-board-risk-checkbox"
         />
         <span>Я понимаю риски переезда и публичной записи.</span>
@@ -256,7 +269,9 @@ export function MigrationBoardFormView() {
         <input
           type="checkbox"
           checked={payload.contact_requests_enabled}
-          onChange={(event) => update("contact_requests_enabled", event.target.checked)}
+          onChange={(event) =>
+            update("contact_requests_enabled", event.target.checked)
+          }
         />
         <span>Разрешить contact requests через платформу.</span>
       </label>

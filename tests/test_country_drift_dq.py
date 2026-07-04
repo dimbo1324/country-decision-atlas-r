@@ -10,7 +10,9 @@ from typing import Any, cast
 CONNECTION = cast(Connection[Any], object())
 
 
-def test_clean_drift_surface_produces_no_critical_issues(monkeypatch: Any) -> None:
+def test_clean_drift_surface_produces_no_critical_issues(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     report = data_quality.build_data_quality_report(CONNECTION)
     assert report.valid is True
@@ -28,7 +30,9 @@ def test_missing_drift_snapshot_for_active_country_is_detected(
         lambda *_: [{"slug": "argentina"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_missing_for_active_country" for i in report.issues)
+    assert any(
+        i.code == "drift_missing_for_active_country" for i in report.issues
+    )
     assert any(
         i.severity == "critical"
         for i in report.issues
@@ -116,7 +120,9 @@ def test_insufficient_data_inconsistency_is_detected(monkeypatch: Any) -> None:
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_insufficient_data_inconsistent" for i in report.issues)
+    assert any(
+        i.code == "drift_insufficient_data_inconsistent" for i in report.issues
+    )
     assert report.valid is False
 
 
@@ -138,7 +144,8 @@ def test_insufficient_data_high_confidence_mismatch_is_detected(
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert any(
-        i.code == "drift_insufficient_data_confidence_mismatch" for i in report.issues
+        i.code == "drift_insufficient_data_confidence_mismatch"
+        for i in report.issues
     )
     assert report.valid is False
 
@@ -151,7 +158,9 @@ def test_missing_methodology_version_is_detected(monkeypatch: Any) -> None:
         lambda *_: [{"id": "abc123", "country_slug": "argentina"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_methodology_version_missing" for i in report.issues)
+    assert any(
+        i.code == "drift_methodology_version_missing" for i in report.issues
+    )
     assert report.valid is False
 
 
@@ -175,11 +184,15 @@ def test_non_object_input_summary_is_detected(monkeypatch: Any) -> None:
         lambda *_: [{"id": "abc123", "country_slug": "argentina"}],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_input_summary_not_object" for i in report.issues)
+    assert any(
+        i.code == "drift_input_summary_not_object" for i in report.issues
+    )
     assert report.valid is False
 
 
-def test_duplicate_drift_changed_event_key_is_detected(monkeypatch: Any) -> None:
+def test_duplicate_drift_changed_event_key_is_detected(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -192,11 +205,15 @@ def test_duplicate_drift_changed_event_key_is_detected(monkeypatch: Any) -> None
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_changed_event_key_duplicate" for i in report.issues)
+    assert any(
+        i.code == "drift_changed_event_key_duplicate" for i in report.issues
+    )
     assert report.valid is False
 
 
-def test_drift_changed_payload_missing_fields_is_detected(monkeypatch: Any) -> None:
+def test_drift_changed_payload_missing_fields_is_detected(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
@@ -210,11 +227,15 @@ def test_drift_changed_payload_missing_fields_is_detected(monkeypatch: Any) -> N
         ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
-    assert any(i.code == "drift_changed_payload_incomplete" for i in report.issues)
+    assert any(
+        i.code == "drift_changed_payload_incomplete" for i in report.issues
+    )
     assert report.valid is False
 
 
-def test_insufficient_data_alone_is_not_a_critical_issue(monkeypatch: Any) -> None:
+def test_insufficient_data_alone_is_not_a_critical_issue(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,

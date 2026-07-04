@@ -103,7 +103,9 @@ def delete_search_document(
 
 
 def count_search_documents(connection: Connection[Any]) -> int:
-    row = fetch_one(connection, "SELECT COUNT(*) AS total FROM search_documents")
+    row = fetch_one(
+        connection, "SELECT COUNT(*) AS total FROM search_documents"
+    )
     return int(row["total"]) if row else 0
 
 
@@ -128,11 +130,15 @@ def delete_search_documents_by_ids(
         return 0
     deleted = 0
     for entity_id, locale in stale:
-        deleted += delete_search_document(connection, entity_type, entity_id, locale)
+        deleted += delete_search_document(
+            connection, entity_type, entity_id, locale
+        )
     return deleted
 
 
-def list_broken_search_documents(connection: Connection[Any]) -> list[dict[str, Any]]:
+def list_broken_search_documents(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
         """

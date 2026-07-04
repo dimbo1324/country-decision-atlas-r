@@ -20,4 +20,6 @@ def read_country_what_changed(
     days: Annotated[int, Query(ge=1, le=365)] = 30,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> WhatChangedResponse:
-    return build_what_changed(connection, country_slug, locale, since, days, limit)
+    return build_what_changed(
+        connection, country_slug, locale, since, days, limit
+    )

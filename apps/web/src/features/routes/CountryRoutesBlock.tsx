@@ -22,7 +22,10 @@ const DEFAULT_FILTERS: RouteFilterValues = {
   leads_to_pr: "",
 };
 
-export function CountryRoutesBlock({ countrySlug, locale }: CountryRoutesBlockProps) {
+export function CountryRoutesBlock({
+  countrySlug,
+  locale,
+}: CountryRoutesBlockProps) {
   const [filters, setFilters] = useState<RouteFilterValues>(DEFAULT_FILTERS);
   const [data, setData] = useState<RouteListResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -80,8 +83,15 @@ export function CountryRoutesBlock({ countrySlug, locale }: CountryRoutesBlockPr
   }
 
   return (
-    <div className="routeBlock" data-testid="country-routes-block">
-      <RouteFilters filters={filters} onChange={updateFilter} onReset={resetFilters} />
+    <div
+      className="routeBlock"
+      data-testid="country-routes-block"
+    >
+      <RouteFilters
+        filters={filters}
+        onChange={updateFilter}
+        onReset={resetFilters}
+      />
       {isLoading && <div className="notice">Загрузка маршрутов…</div>}
       {!isLoading && error && <div className="notice errorNotice">{error}</div>}
       {!isLoading && !error && data?.items.length === 0 && <RouteEmptyState />}
@@ -94,7 +104,11 @@ export function CountryRoutesBlock({ countrySlug, locale }: CountryRoutesBlockPr
           )}
           <div className="routeGrid">
             {data.items.map((route) => (
-              <RouteCard key={route.id} route={route} locale={locale} />
+              <RouteCard
+                key={route.id}
+                route={route}
+                locale={locale}
+              />
             ))}
           </div>
         </>

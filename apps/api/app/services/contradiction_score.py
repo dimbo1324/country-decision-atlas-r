@@ -16,11 +16,23 @@ from typing import Any
 
 GROUP_BUCKETS = {
     "business": {"business", "entrepreneurs", "self_employed", "investors"},
-    "migration": {"migration", "migrants", "residents", "families", "remote_workers"},
+    "migration": {
+        "migration",
+        "migrants",
+        "residents",
+        "families",
+        "remote_workers",
+    },
     "citizenship": {"citizenship"},
     "banking": {"banking"},
     "tax": {"tax", "low_income"},
-    "safety": {"safety", "political_risk", "freedom", "activists", "journalists"},
+    "safety": {
+        "safety",
+        "political_risk",
+        "freedom",
+        "activists",
+        "journalists",
+    },
 }
 OFFICIAL_SOURCE_TYPES = {"official", "dataset"}
 
@@ -99,7 +111,9 @@ def _result(
     )
 
 
-def _topics(rows: Sequence[Mapping[str, Any]]) -> dict[str, list[Mapping[str, Any]]]:
+def _topics(
+    rows: Sequence[Mapping[str, Any]],
+) -> dict[str, list[Mapping[str, Any]]]:
     grouped: dict[str, list[Mapping[str, Any]]] = {}
     for row in rows:
         signal_type = str(row.get("signal_type") or "other")
@@ -122,11 +136,15 @@ def _group_buckets(row: Mapping[str, Any]) -> list[str]:
 
 
 def _topic_points(rows: Sequence[Mapping[str, Any]]) -> int:
-    directions = {str(row.get("impact_direction") or "uncertain") for row in rows}
+    directions = {
+        str(row.get("impact_direction") or "uncertain") for row in rows
+    }
     points = 0
     if "positive" in directions and "negative" in directions:
         points += 4
-    elif "positive" in directions and directions.intersection({"mixed", "uncertain"}):
+    elif "positive" in directions and directions.intersection(
+        {"mixed", "uncertain"}
+    ):
         points += 2
     if _source_type_disagreement(rows):
         points += 3

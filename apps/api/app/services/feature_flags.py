@@ -21,7 +21,8 @@ TIER_ORDER = {
 
 
 def default_access_context(
-    settings: Settings, access_tier: FeatureAccessTier = FeatureAccessTier.public
+    settings: Settings,
+    access_tier: FeatureAccessTier = FeatureAccessTier.public,
 ) -> FeatureAccessContext:
     environment = "local" if settings.app_env == "local" else "production"
     return FeatureAccessContext(
@@ -47,9 +48,13 @@ def can_access(
         )
     status = FeatureFlagStatus(str(feature["status"]))
     if status == FeatureFlagStatus.disabled:
-        return _decision(feature_key, False, "feature_disabled", context, status)
+        return _decision(
+            feature_key, False, "feature_disabled", context, status
+        )
     if status == FeatureFlagStatus.deprecated:
-        return _decision(feature_key, False, "feature_deprecated", context, status)
+        return _decision(
+            feature_key, False, "feature_deprecated", context, status
+        )
     if status == FeatureFlagStatus.internal:
         allowed = context.access_tier in {
             FeatureAccessTier.internal,
@@ -66,7 +71,9 @@ def can_access(
     if context.is_admin:
         return _decision(feature_key, True, "feature_enabled", context, status)
     if not _tier_allowed(context.access_tier, feature_tier):
-        return _decision(feature_key, False, "tier_not_allowed", context, status)
+        return _decision(
+            feature_key, False, "tier_not_allowed", context, status
+        )
     if not rules:
         enabled = bool(feature["default_enabled"])
         return _decision(
@@ -109,7 +116,9 @@ def feature_response(
     )
 
 
-def is_feature_enabled_by_key(connection: Connection[Any], feature_key: str) -> bool:
+def is_feature_enabled_by_key(
+    connection: Connection[Any], feature_key: str
+) -> bool:
     feature = ff_repo.get_feature_flag(connection, feature_key)
     rules = ff_repo.list_feature_access_rules(connection, feature_key)
     context = default_access_context(get_settings())
@@ -121,10 +130,14 @@ def ensure_feature_enabled(
     connection: Connection[Any], feature_key: str, message: str
 ) -> None:
     if not is_feature_enabled_by_key(connection, feature_key):
-        raise api_error(403, "feature_disabled", message, {"feature_key": feature_key})
+        raise api_error(
+            403, "feature_disabled", message, {"feature_key": feature_key}
+        )
 
 
-def _tier_allowed(requested: FeatureAccessTier, required: FeatureAccessTier) -> bool:
+def _tier_allowed(
+    requested: FeatureAccessTier, required: FeatureAccessTier
+) -> bool:
     return TIER_ORDER[requested] >= TIER_ORDER[required]
 
 

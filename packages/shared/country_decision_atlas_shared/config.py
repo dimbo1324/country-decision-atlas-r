@@ -14,7 +14,9 @@ class Settings(BaseSettings):
     app_port: int = 8000
     api_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
     api_rate_limit_per_minute: int = 120
-    database_url: str = Field(default="postgresql://localhost:5433/country_atlas")
+    database_url: str = Field(
+        default="postgresql://localhost:5433/country_atlas"
+    )
     redis_url: str = "redis://localhost:6379/0"
     meilisearch_host: str = "http://localhost:7700"
     source_refresh_enabled: bool = False

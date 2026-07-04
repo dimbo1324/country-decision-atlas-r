@@ -27,10 +27,14 @@ export function DecisionResults({ response }: DecisionResultsProps) {
   const isFallback = locale.translation_status === "fallback";
 
   return (
-    <div className="decisionResults" data-testid="decision-results">
+    <div
+      className="decisionResults"
+      data-testid="decision-results"
+    >
       {isFallback && (
         <div className="fallbackBanner">
-          Русский перевод частично отсутствует. Показана английская fallback-версия.
+          Русский перевод частично отсутствует. Показана английская
+          fallback-версия.
         </div>
       )}
 
@@ -54,7 +58,10 @@ export function DecisionResults({ response }: DecisionResultsProps) {
       </div>
 
       {applied_persona && (
-        <div className="decisionPersonaMeta" data-testid="decision-persona-meta">
+        <div
+          className="decisionPersonaMeta"
+          data-testid="decision-persona-meta"
+        >
           <div className="resultMetaRow">
             <span>Рейтинг адаптирован под профиль:</span>
             <strong>{applied_persona.name}</strong>
@@ -79,9 +86,13 @@ export function DecisionResults({ response }: DecisionResultsProps) {
           </div>
           <div className="metaRow">
             <span className="metaChip">{winner.score_label}</span>
-            {winner.confidence && <ConfidenceBadge confidence={winner.confidence} />}
+            {winner.confidence && (
+              <ConfidenceBadge confidence={winner.confidence} />
+            )}
           </div>
-          {winner.summary && <p className="decisionWinnerSummary">{winner.summary}</p>}
+          {winner.summary && (
+            <p className="decisionWinnerSummary">{winner.summary}</p>
+          )}
         </div>
       )}
 

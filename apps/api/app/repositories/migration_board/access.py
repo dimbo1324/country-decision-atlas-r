@@ -182,5 +182,7 @@ def persona_exists(connection: Connection[Any], slug: str) -> bool:
 
 
 def user_exists(connection: Connection[Any], user_id: str) -> bool:
-    row = fetch_one(connection, "SELECT 1 FROM users WHERE id::text = %s", (user_id,))
+    row = fetch_one(
+        connection, "SELECT 1 FROM users WHERE id::text = %s", (user_id,)
+    )
     return row is not None

@@ -79,9 +79,15 @@ export function CountryDataJournalBlock({
   }
 
   return (
-    <div className="sourceGrid" data-testid="data-journal-block">
+    <div
+      className="sourceGrid"
+      data-testid="data-journal-block"
+    >
       {items.map((entry) => (
-        <DataJournalEntryCard key={entry.id} entry={entry} />
+        <DataJournalEntryCard
+          key={entry.id}
+          entry={entry}
+        />
       ))}
     </div>
   );

@@ -25,7 +25,9 @@ def list_glossary_terms(
     q: str | None = Query(None),
 ) -> GlossaryListResponse:
     effective_locale = locale if locale in ("en", "ru") else "en"
-    rows = glossary_repo.list_glossary_terms(connection, effective_locale, category, q)
+    rows = glossary_repo.list_glossary_terms(
+        connection, effective_locale, category, q
+    )
     return GlossaryListResponse(items=[_build_term(r) for r in rows])
 
 
@@ -40,7 +42,9 @@ def get_glossary_term(
     locale: str | None = Query(None),
 ) -> GlossaryTerm:
     effective_locale = locale if locale in ("en", "ru") else "en"
-    row = glossary_repo.get_glossary_term(connection, term_slug, effective_locale)
+    row = glossary_repo.get_glossary_term(
+        connection, term_slug, effective_locale
+    )
     if row is None:
         raise api_error(
             404, "glossary_not_found", f"Glossary term not found: {term_slug}"

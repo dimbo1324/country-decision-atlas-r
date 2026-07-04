@@ -43,9 +43,15 @@ def validate_translation(
     if src_len > 0:
         ratio = len(cleaned) / src_len
         if ratio > _MAX_RATIO:
-            return False, f"translated_text suspiciously long: ratio={ratio:.1f}"
+            return (
+                False,
+                f"translated_text suspiciously long: ratio={ratio:.1f}",
+            )
         if ratio < _MIN_RATIO and src_len > 20:
-            return False, f"translated_text suspiciously short: ratio={ratio:.2f}"
+            return (
+                False,
+                f"translated_text suspiciously short: ratio={ratio:.2f}",
+            )
 
     for pattern in _AI_GARBAGE_PATTERNS:
         if pattern.search(cleaned[:200]):

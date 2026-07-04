@@ -23,7 +23,8 @@ def _worse_status(a: str | None, b: str) -> str:
         return b
     return (
         a
-        if _STATUS_DEGRADATION_RANK.get(a, 3) >= _STATUS_DEGRADATION_RANK.get(b, 3)
+        if _STATUS_DEGRADATION_RANK.get(a, 3)
+        >= _STATUS_DEGRADATION_RANK.get(b, 3)
         else b
     )
 
@@ -109,10 +110,13 @@ def build_localization_meta(
             fields=[],
         )
     stale_fields = [m.field_name for m in field_metas if m.is_stale]
-    missing_fields = [m.field_name for m in field_metas if m.status == "missing"]
+    missing_fields = [
+        m.field_name for m in field_metas if m.status == "missing"
+    ]
     has_fallback = any(m.is_fallback for m in field_metas)
     has_machine = any(
-        m.status == "machine_translated" or m.method == "machine" for m in field_metas
+        m.status == "machine_translated" or m.method == "machine"
+        for m in field_metas
     )
     has_human_review = any(m.status == "human_reviewed" for m in field_metas)
 
@@ -187,7 +191,12 @@ def overlay_localized_fields(
         entity_id = str(item[entity_id_key])
         worst: str | None = None
         field_metas: list[TranslationFieldMeta] = []
-        for field_name, output_key, legacy_primary_key, legacy_fallback_key in specs:
+        for (
+            field_name,
+            output_key,
+            legacy_primary_key,
+            legacy_fallback_key,
+        ) in specs:
             variant = variants.get((entity_id, field_name))
             if variant is not None:
                 locale_code = str(variant["locale_code"])
@@ -198,11 +207,15 @@ def overlay_localized_fields(
                     field_status = "translated"
                 else:
                     field_status = "fallback"
-                meta = field_meta_from_variant(output_key, resolved_requested, variant)
+                meta = field_meta_from_variant(
+                    output_key, resolved_requested, variant
+                )
                 field_metas.append(meta)
             else:
                 primary_text: str | None = (
-                    item.get(legacy_primary_key) or None if legacy_primary_key else None
+                    item.get(legacy_primary_key) or None
+                    if legacy_primary_key
+                    else None
                 )
                 fallback_text: str | None = (
                     item.get(legacy_fallback_key) or None
@@ -237,7 +250,10 @@ def overlay_localized_fields(
                     meta_status = "missing"
 
                 leg_meta = legacy_field_meta(
-                    output_key, resolved_requested, meta_resolved_locale, meta_status
+                    output_key,
+                    resolved_requested,
+                    meta_resolved_locale,
+                    meta_status,
                 )
                 field_metas.append(leg_meta)
             worst = _worse_status(worst, field_status)
@@ -247,7 +263,9 @@ def overlay_localized_fields(
         final_status = _worse_status(existing_status, new_status)
         item["translation_status"] = final_status
         item["resolved_locale"] = (
-            resolved_requested if final_status in ("translated", "source") else "en"
+            resolved_requested
+            if final_status in ("translated", "source")
+            else "en"
         )
 
         existing_loc = item.get("localization")
@@ -260,7 +278,9 @@ def overlay_localized_fields(
         else:
             all_field_metas = field_metas
 
-        localization = build_localization_meta(resolved_requested, all_field_metas)
+        localization = build_localization_meta(
+            resolved_requested, all_field_metas
+        )
         item["localization"] = localization.model_dump(mode="json")
 
     return items

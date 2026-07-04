@@ -1,6 +1,10 @@
 from app.core.database import fetch_one
 from app.core.locales import SOURCE_LOCALE, validate_locale
-from app.schemas.common import LocaleResolution, TranslationStatus, locale_resolution
+from app.schemas.common import (
+    LocaleResolution,
+    TranslationStatus,
+    locale_resolution,
+)
 from psycopg import Connection
 from typing import Any
 
@@ -13,15 +17,23 @@ def _status_value(status: Any) -> str | None:
     return None
 
 
-def build_locale(rows: list[dict[str, Any]], requested_locale: str) -> LocaleResolution:
+def build_locale(
+    rows: list[dict[str, Any]], requested_locale: str
+) -> LocaleResolution:
     locale = validate_locale(str(requested_locale))
     if not rows:
-        return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.missing)
+        return locale_resolution(
+            locale, SOURCE_LOCALE, TranslationStatus.missing
+        )
     if locale == SOURCE_LOCALE:
-        return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.source)
+        return locale_resolution(
+            locale, SOURCE_LOCALE, TranslationStatus.source
+        )
     statuses = {
         status
-        for status in (_status_value(row.get("translation_status")) for row in rows)
+        for status in (
+            _status_value(row.get("translation_status")) for row in rows
+        )
         if status
     }
     resolved_locales = {
@@ -32,17 +44,25 @@ def build_locale(rows: list[dict[str, Any]], requested_locale: str) -> LocaleRes
     if statuses == {TranslationStatus.translated.value}:
         return locale_resolution(locale, locale, TranslationStatus.translated)
     if statuses == {TranslationStatus.missing.value}:
-        return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.missing)
+        return locale_resolution(
+            locale, SOURCE_LOCALE, TranslationStatus.missing
+        )
     if TranslationStatus.translated.value in statuses and (
         TranslationStatus.fallback.value in statuses
         or TranslationStatus.missing.value in statuses
     ):
         return locale_resolution(locale, locale, TranslationStatus.fallback)
     if TranslationStatus.fallback.value in statuses:
-        resolved_locale = locale if locale in resolved_locales else SOURCE_LOCALE
-        return locale_resolution(locale, resolved_locale, TranslationStatus.fallback)
+        resolved_locale = (
+            locale if locale in resolved_locales else SOURCE_LOCALE
+        )
+        return locale_resolution(
+            locale, resolved_locale, TranslationStatus.fallback
+        )
     if TranslationStatus.source.value in statuses:
-        return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.fallback)
+        return locale_resolution(
+            locale, SOURCE_LOCALE, TranslationStatus.fallback
+        )
     return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.missing)
 
 

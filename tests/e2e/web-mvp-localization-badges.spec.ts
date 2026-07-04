@@ -61,7 +61,9 @@ test.describe("localization badges", () => {
     }
   });
 
-  test("sources RU — page opens, badge visible if items exist", async ({ page }) => {
+  test("sources RU — page opens, badge visible if items exist", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.sources({ locale: "ru" }));
     await expectNoAppCrash(page);
     const list = page.locator('[data-testid="sources-list"]');

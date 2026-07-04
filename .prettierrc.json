@@ -1,5 +1,5 @@
 {
-  "printWidth": 88,
+  "printWidth": 80,
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
@@ -8,6 +8,9 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "arrowParens": "always",
+  "singleAttributePerLine": true,
+  "quoteProps": "consistent",
   "proseWrap": "always",
+  "embeddedLanguageFormatting": "auto",
   "endOfLine": "lf"
 }

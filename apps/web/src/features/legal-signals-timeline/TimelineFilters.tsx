@@ -20,7 +20,10 @@ export function TimelineFilters({
   onChange: (name: keyof Filters, value: string) => void;
 }) {
   return (
-    <div className="filterBar timelineFilters" data-testid="timeline-filters">
+    <div
+      className="filterBar timelineFilters"
+      data-testid="timeline-filters"
+    >
       <label>
         Страна
         <select
@@ -30,7 +33,10 @@ export function TimelineFilters({
         >
           <option value="">Все страны</option>
           {countries.map((country) => (
-            <option key={country.slug} value={country.slug}>
+            <option
+              key={country.slug}
+              value={country.slug}
+            >
               {country.name}
             </option>
           ))}
@@ -47,7 +53,9 @@ export function TimelineFilters({
           <option value="bill">Законопроект</option>
           <option value="policy">Политика</option>
           <option value="court_decision">Судебное решение</option>
-          <option value="administrative_change">Административное изменение</option>
+          <option value="administrative_change">
+            Административное изменение
+          </option>
           <option value="political_signal">Политический сигнал</option>
           <option value="other">Другое</option>
         </select>
@@ -87,7 +95,10 @@ export function TimelineFilters({
         >
           <option value="">Все годы</option>
           {years.map((year) => (
-            <option key={year} value={year}>
+            <option
+              key={year}
+              value={year}
+            >
               {year}
             </option>
           ))}

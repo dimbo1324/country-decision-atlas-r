@@ -15,7 +15,9 @@ def list_public_posts(
     offset: int,
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
-    helpers.ensure_feature_enabled(connection, helpers.PUBLIC_LISTING_FEATURE_KEY)
+    helpers.ensure_feature_enabled(
+        connection, helpers.PUBLIC_LISTING_FEATURE_KEY
+    )
     rows = repository.list_public_posts(
         connection,
         filters=filters,
@@ -40,7 +42,10 @@ def list_public_posts(
 
 
 def get_public_post(
-    connection: Connection[Any], *, post_id: str, current_user: CurrentUser | None
+    connection: Connection[Any],
+    *,
+    post_id: str,
+    current_user: CurrentUser | None,
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
     post = repository.get_post_by_id(connection, post_id)
@@ -52,7 +57,9 @@ def get_public_post(
         connection,
         "migration_board_post_viewed",
         entity_id=post_id,
-        metadata={"destination_country_slug": post.get("destination_country_slug")},
+        metadata={
+            "destination_country_slug": post.get("destination_country_slug")
+        },
     )
     return helpers._public_detail(post)
 
@@ -134,15 +141,19 @@ def update_user_post(
         "rejected",
         "archived",
     }:
-        raise api_error(409, "invalid_post_status", "Post cannot be updated.", {})
+        raise api_error(
+            409, "invalid_post_status", "Post cannot be updated.", {}
+        )
     refs = _validate_post_payload(connection, payload, existing=existing)
     title = payload.title if payload.title is not None else existing["title"]
-    summary = payload.summary if payload.summary is not None else existing["summary"]
+    summary = (
+        payload.summary if payload.summary is not None else existing["summary"]
+    )
     helpers._reject_public_pii(title, summary)
     tags = _validate_tags(payload.tags) if payload.tags is not None else None
-    reset_to_review = existing["status"] == "published" and _is_significant_edit(
-        payload
-    )
+    reset_to_review = existing[
+        "status"
+    ] == "published" and _is_significant_edit(payload)
     updated = repository.update_post(
         connection,
         post_id=post_id,
@@ -234,7 +245,10 @@ def list_my_posts(
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
     rows = repository.list_user_posts(connection, current_user.id)
-    return {"items": [helpers._my_post(row) for row in rows], "total": len(rows)}
+    return {
+        "items": [helpers._my_post(row) for row in rows],
+        "total": len(rows),
+    }
 
 
 def get_my_post(
@@ -267,7 +281,10 @@ def list_companion_matches(
     )
     return {
         "items": [
-            {**helpers._public_post(row), "match_reasons": _match_reasons(source, row)}
+            {
+                **helpers._public_post(row),
+                "match_reasons": _match_reasons(source, row),
+            }
             for row in rows
         ],
         "total": len(rows),
@@ -275,9 +292,13 @@ def list_companion_matches(
 
 
 def _validate_post_payload(
-    connection: Connection[Any], payload: Any, existing: dict[str, Any] | None = None
+    connection: Connection[Any],
+    payload: Any,
+    existing: dict[str, Any] | None = None,
 ) -> dict[str, str | None]:
-    destination_country_id = existing["destination_country_id"] if existing else None
+    destination_country_id = (
+        existing["destination_country_id"] if existing else None
+    )
     origin_country_id = existing.get("origin_country_id") if existing else None
     if getattr(payload, "destination_country_slug", None):
         country = repository.get_country_by_slug(
@@ -297,7 +318,10 @@ def _validate_post_payload(
         )
         if country is None:
             raise api_error(
-                404, "origin_country_not_found", "Origin country was not found.", {}
+                404,
+                "origin_country_not_found",
+                "Origin country was not found.",
+                {},
             )
         origin_country_id = country["id"]
     route_id = getattr(payload, "route_id", None)
@@ -313,27 +337,37 @@ def _validate_post_payload(
                 {},
             )
     scenario_slug = getattr(payload, "scenario_slug", None)
-    if scenario_slug and not repository.scenario_exists(connection, scenario_slug):
-        raise api_error(404, "scenario_not_found", "Scenario was not found.", {})
+    if scenario_slug and not repository.scenario_exists(
+        connection, scenario_slug
+    ):
+        raise api_error(
+            404, "scenario_not_found", "Scenario was not found.", {}
+        )
     persona_slug = getattr(payload, "persona_slug", None)
     if persona_slug and not repository.persona_exists(connection, persona_slug):
         raise api_error(404, "persona_not_found", "Persona was not found.", {})
     _validate_enum(
-        getattr(payload, "timeline_window", None), helpers.ALLOWED_TIMELINE_WINDOWS
+        getattr(payload, "timeline_window", None),
+        helpers.ALLOWED_TIMELINE_WINDOWS,
     )
     _validate_enum(
         getattr(payload, "budget_range", None), helpers.ALLOWED_BUDGET_RANGES
     )
     _validate_enum(
-        getattr(payload, "household_type", None), helpers.ALLOWED_HOUSEHOLD_TYPES
+        getattr(payload, "household_type", None),
+        helpers.ALLOWED_HOUSEHOLD_TYPES,
     )
     _validate_enum(
-        getattr(payload, "migration_stage", None), helpers.ALLOWED_MIGRATION_STAGES
+        getattr(payload, "migration_stage", None),
+        helpers.ALLOWED_MIGRATION_STAGES,
     )
     _validate_enum(
-        getattr(payload, "companion_goal", None), helpers.ALLOWED_COMPANION_GOALS
+        getattr(payload, "companion_goal", None),
+        helpers.ALLOWED_COMPANION_GOALS,
     )
-    _validate_enum(getattr(payload, "visibility", None), helpers.ALLOWED_VISIBILITIES)
+    _validate_enum(
+        getattr(payload, "visibility", None), helpers.ALLOWED_VISIBILITIES
+    )
     if destination_country_id is None:
         raise api_error(
             422,
@@ -343,20 +377,26 @@ def _validate_post_payload(
         )
     return {
         "destination_country_id": str(destination_country_id),
-        "origin_country_id": str(origin_country_id) if origin_country_id else None,
+        "origin_country_id": str(origin_country_id)
+        if origin_country_id
+        else None,
     }
 
 
 def _validate_enum(value: str | None, allowed: set[str]) -> None:
     if value is not None and value not in allowed:
-        raise api_error(422, "invalid_enum_value", "Invalid migration board value.", {})
+        raise api_error(
+            422, "invalid_enum_value", "Invalid migration board value.", {}
+        )
 
 
 def _validate_tags(tags: list[str]) -> list[str]:
     unique_tags = list(dict.fromkeys(tags))
     invalid = [tag for tag in unique_tags if tag not in helpers.ALLOWED_TAGS]
     if invalid:
-        raise api_error(422, "invalid_tag", "Migration board tag is not allowed.", {})
+        raise api_error(
+            422, "invalid_tag", "Migration board tag is not allowed.", {}
+        )
     return unique_tags
 
 
@@ -371,7 +411,9 @@ def _get_owner_post_or_404(
     return post
 
 
-def _can_view_post(post: dict[str, Any], current_user: CurrentUser | None) -> bool:
+def _can_view_post(
+    post: dict[str, Any], current_user: CurrentUser | None
+) -> bool:
     if post["status"] != "published" or post["moderation_status"] != "approved":
         return current_user is not None and current_user.id == post["user_id"]
     if post["visibility"] == "public":
@@ -415,26 +457,32 @@ def _is_significant_edit(payload: Any) -> bool:
     return any(getattr(payload, field, None) is not None for field in fields)
 
 
-def _match_reasons(source: dict[str, Any], candidate: dict[str, Any]) -> list[str]:
+def _match_reasons(
+    source: dict[str, Any], candidate: dict[str, Any]
+) -> list[str]:
     reasons = ["same_destination"]
-    if source.get("route_id") and source.get("route_id") == candidate.get("route_id"):
+    if source.get("route_id") and source.get("route_id") == candidate.get(
+        "route_id"
+    ):
         reasons.append("same_route")
     if source.get("timeline_window") == candidate.get("timeline_window"):
         reasons.append("similar_timeline")
-    if source.get("scenario_slug") and source.get("scenario_slug") == candidate.get(
+    if source.get("scenario_slug") and source.get(
         "scenario_slug"
-    ):
+    ) == candidate.get("scenario_slug"):
         reasons.append("same_scenario")
-    if source.get("persona_slug") and source.get("persona_slug") == candidate.get(
+    if source.get("persona_slug") and source.get(
         "persona_slug"
-    ):
+    ) == candidate.get("persona_slug"):
         reasons.append("same_persona")
     if source.get("companion_goal") == candidate.get("companion_goal"):
         reasons.append("same_goal")
     return reasons
 
 
-def _diff_for_update(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+def _diff_for_update(
+    before: dict[str, Any], after: dict[str, Any]
+) -> dict[str, Any]:
     changes: dict[str, Any] = {}
     for field in (
         "title",

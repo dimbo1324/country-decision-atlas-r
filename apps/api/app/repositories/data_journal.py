@@ -108,7 +108,9 @@ def list_country_data_journal_entries(
     )
 
 
-def count_country_data_journal_entries(conn: Connection[Any], country_slug: str) -> int:
+def count_country_data_journal_entries(
+    conn: Connection[Any], country_slug: str
+) -> int:
     row = fetch_one(
         conn,
         """

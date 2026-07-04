@@ -1,15 +1,12 @@
 from __future__ import annotations
+
 import argparse
-from collections.abc import Callable
 import contextlib
 import ctypes
-from dataclasses import asdict, dataclass
-from datetime import datetime
 import getpass
 import importlib
 import json
 import os
-from pathlib import Path
 import platform
 import re
 import secrets
@@ -18,9 +15,14 @@ import socket
 import subprocess
 import sys
 import time
-from typing import Any
 import urllib.error
 import urllib.request
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, ClassVar
+
 
 # ____________________________________________________________________________________________________
 # 					Constants: Toolchain Baselines, Network Checks & Secret Redaction Patterns
@@ -190,7 +192,9 @@ class DualWriter:
         self.console = sys.stdout
         self.file = transcript_path.open("a", encoding="utf-8")
 
-    def write_line(self, plain_text: str, console_text: str | None = None) -> None:
+    def write_line(
+        self, plain_text: str, console_text: str | None = None
+    ) -> None:
         safe_plain_text = sanitize_log_line(plain_text)
         safe_console_text = sanitize_log_line(
             console_text if console_text is not None else plain_text
@@ -245,7 +249,7 @@ def compare_semver(actual: str, required: str) -> int:
 # 					System Resource Diagnostics (CPU, Memory, Disk, WSL)
 # ____________________________________________________________________________________________________
 class WindowsMemoryStatusEx(ctypes.Structure):
-    _fields_ = [
+    _fields_: ClassVar[list[tuple[str, Any]]] = [
         ("dwLength", ctypes.c_ulong),
         ("dwMemoryLoad", ctypes.c_ulong),
         ("ullTotalPhys", ctypes.c_ulonglong),
@@ -495,14 +499,22 @@ def get_repo_diagnostics() -> dict[str, Any]:
     migrations_dir = REPO_ROOT / "database" / "migrations"
     env_files = [".env", "apps/api/.env", "apps/web/.env.local"]
     diag: dict[str, Any] = {
-        "package_manager": (package_json or {}).get("packageManager", "unknown"),
-        "migration_count": (
-            len(list(migrations_dir.glob("*.sql"))) if migrations_dir.exists() else 0
+        "package_manager": (package_json or {}).get(
+            "packageManager", "unknown"
         ),
-        "missing_env_files": [p for p in env_files if not (REPO_ROOT / p).exists()],
+        "migration_count": (
+            len(list(migrations_dir.glob("*.sql")))
+            if migrations_dir.exists()
+            else 0
+        ),
+        "missing_env_files": [
+            p for p in env_files if not (REPO_ROOT / p).exists()
+        ],
         "node_modules_size_gb": directory_size_gb(REPO_ROOT / "node_modules"),
         "venv_size_gb": directory_size_gb(REPO_ROOT / ".venv"),
-        "next_cache_size_gb": directory_size_gb(REPO_ROOT / "apps" / "web" / ".next"),
+        "next_cache_size_gb": directory_size_gb(
+            REPO_ROOT / "apps" / "web" / ".next"
+        ),
         "report_dir_count": (
             len(list((REPO_ROOT / "full-check-reports").glob("*")))
             if (REPO_ROOT / "full-check-reports").exists()
@@ -515,7 +527,9 @@ def get_repo_diagnostics() -> dict[str, Any]:
 # ____________________________________________________________________________________________________
 # 					Docker Diagnostics
 # ____________________________________________________________________________________________________
-def run_capture(args: list[str], timeout: int = 20) -> subprocess.CompletedProcess[str]:
+def run_capture(
+    args: list[str], timeout: int = 20
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         args,
         cwd=REPO_ROOT,
@@ -550,7 +564,9 @@ def get_docker_diagnostics() -> dict[str, Any]:
     except Exception:
         pass
     try:
-        info_result = run_capture([docker_exe, "info", "--format", "{{json .}}"])
+        info_result = run_capture(
+            [docker_exe, "info", "--format", "{{json .}}"]
+        )
         if info_result.returncode == 0 and info_result.stdout.strip():
             info = json.loads(info_result.stdout)
             diag.update(
@@ -627,9 +643,13 @@ def http_json(
 
 def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
     if name == "health":
-        return isinstance(data, dict) and data.get("status") == "ok", "status=ok"
+        return isinstance(data, dict) and data.get(
+            "status"
+        ) == "ok", "status=ok"
     if name == "ready":
-        return isinstance(data, dict) and data.get("status") == "ready", "status=ready"
+        return isinstance(data, dict) and data.get(
+            "status"
+        ) == "ready", "status=ready"
     if name == "countries":
         if isinstance(data, dict) and isinstance(data.get("items"), list):
             count = len(data["items"])
@@ -669,7 +689,10 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
         return isinstance(data, list), f"items={count}"
     if name == "community-question-create":
         ok = isinstance(data, dict) and data.get("status") == "pending"
-        return ok, f"status={data.get('status') if isinstance(data, dict) else None}"
+        return (
+            ok,
+            f"status={data.get('status') if isinstance(data, dict) else None}",
+        )
     if name == "ai-ask":
         ok = (
             isinstance(data, dict)
@@ -679,7 +702,9 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
             and "refused" in data
         )
         refused = data.get("refused") if isinstance(data, dict) else None
-        citations = len(data.get("citations", [])) if isinstance(data, dict) else 0
+        citations = (
+            len(data.get("citations", [])) if isinstance(data, dict) else 0
+        )
         return ok, f"refused={refused} citations={citations}"
     if name == "ai-explain-number":
         ok = (
@@ -699,9 +724,15 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
         )
         confidence = data.get("confidence") if isinstance(data, dict) else None
         return ok, f"confidence={confidence}"
-    if name in {"community-data-error-report-create", "community-rating-create"}:
+    if name in {
+        "community-data-error-report-create",
+        "community-rating-create",
+    }:
         ok = isinstance(data, dict) and data.get("status") == "pending"
-        return ok, f"status={data.get('status') if isinstance(data, dict) else None}"
+        return (
+            ok,
+            f"status={data.get('status') if isinstance(data, dict) else None}",
+        )
     return True, "no validator"
 
 
@@ -710,7 +741,9 @@ def validate_semantic_response(name: str, data: Any) -> tuple[bool, str]:
 # ____________________________________________________________________________________________________
 def get_package_json() -> dict[str, Any] | None:
     try:
-        data = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
+        data = json.loads(
+            (REPO_ROOT / "package.json").read_text(encoding="utf-8")
+        )
     except (OSError, json.JSONDecodeError):
         return None
     return data if isinstance(data, dict) else None
@@ -814,7 +847,9 @@ class FullCheck:
         self.docker_max_attempts = args.docker_max_attempts
         self.docker_retry_initial_delay = args.docker_retry_initial_delay
         self.docker_retry_delay_step = args.docker_retry_delay_step
-        self.admin_password = args.admin_token or "local-gate-" + secrets.token_hex(8)
+        self.admin_password = (
+            args.admin_token or "local-gate-" + secrets.token_hex(8)
+        )
         self.config_path = args.config
         self.regen_proto = args.regen_proto
         self.run_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -868,16 +903,23 @@ class FullCheck:
         self.log(bar, "section")
 
     def add_stage_result(
-        self, stage: str, status: str, detail: str = "", duration_seconds: float = 0.0
+        self,
+        stage: str,
+        status: str,
+        detail: str = "",
+        duration_seconds: float = 0.0,
     ) -> None:
         self.stage_results.append(
             StageResult(stage, status, detail, round(duration_seconds, 1))
         )
         if self.quiet and status == "OK":
             return
-        level = {"OK": "ok", "FAIL": "error", "SKIP": "warn", "WARN": "warn"}.get(
-            status, "info"
-        )
+        level = {
+            "OK": "ok",
+            "FAIL": "error",
+            "SKIP": "warn",
+            "WARN": "warn",
+        }.get(status, "info")
         duration_text = (
             f" ({round(duration_seconds, 1)}s)" if duration_seconds >= 1 else ""
         )
@@ -971,13 +1013,16 @@ class FullCheck:
             try:
                 exit_code = func()
             except Exception as exc:
-                self.log(f"  attempt {attempt} threw an exception: {exc}", "warn")
+                self.log(
+                    f"  attempt {attempt} threw an exception: {exc}", "warn"
+                )
                 exit_code = -1
             if exit_code == 0:
                 return 0
             if attempt >= max_attempts:
                 self.log(
-                    f"  giving up after {attempt} attempts: {description}", "error"
+                    f"  giving up after {attempt} attempts: {description}",
+                    "error",
                 )
                 return exit_code
             self.log(
@@ -991,7 +1036,9 @@ class FullCheck:
     # ____________________________________________________________________________________________________
     # 					FullCheck — Tool Version Checking
     # ____________________________________________________________________________________________________
-    def get_tool_version_string(self, exe_args: list[str], pattern: str) -> str | None:
+    def get_tool_version_string(
+        self, exe_args: list[str], pattern: str
+    ) -> str | None:
         try:
             result = subprocess.run(
                 exe_args,
@@ -1028,7 +1075,9 @@ class FullCheck:
             return False
         version = self.get_tool_version_string([exe, *version_args], pattern)
         if mode == "presence":
-            self.add_stage_result(name, "OK", f"found ({command}), version={version}")
+            self.add_stage_result(
+                name, "OK", f"found ({command}), version={version}"
+            )
             return True
         if not version:
             self.add_stage_result(
@@ -1096,8 +1145,12 @@ class FullCheck:
                     "name": t.get("name"),
                     "command": t.get("command"),
                     "version_args": t.get("versionArgs", []),
-                    "version_pattern": t.get("versionPattern", r"(\d+\.\d+\.\d+)"),
-                    "recommended_min_version": t.get("recommendedMinVersion", ""),
+                    "version_pattern": t.get(
+                        "versionPattern", r"(\d+\.\d+\.\d+)"
+                    ),
+                    "recommended_min_version": t.get(
+                        "recommendedMinVersion", ""
+                    ),
                     "severity": t.get("severity", "required"),
                     "install_hint": t.get("installHint", ""),
                 }
@@ -1105,7 +1158,9 @@ class FullCheck:
             ]
             return {
                 "tools": tools or DEFAULT_TOOL_BASELINES,
-                "network_checks": data.get("networkChecks", DEFAULT_NETWORK_CHECKS),
+                "network_checks": data.get(
+                    "networkChecks", DEFAULT_NETWORK_CHECKS
+                ),
                 "min_free_disk_space_gb": data.get(
                     "minFreeDiskSpaceGb", DEFAULT_MIN_FREE_DISK_GB
                 ),
@@ -1121,7 +1176,9 @@ class FullCheck:
         py_launcher = shutil.which("py")
         if py_launcher:
             probe = subprocess.run(
-                [py_launcher, "-3.12", "--version"], capture_output=True, text=True
+                [py_launcher, "-3.12", "--version"],
+                capture_output=True,
+                text=True,
             )
             if probe.returncode == 0:
                 return [py_launcher, "-3.12"]
@@ -1280,7 +1337,9 @@ class FullCheck:
         else:
             self.add_stage_result("Disk space", "OK", f"{free_gb} GB free")
         for net in config["network_checks"]:
-            reachable = test_port_reachable(net["host"], net["port"], timeout=3.0)
+            reachable = test_port_reachable(
+                net["host"], net["port"], timeout=3.0
+            )
             self.network_results.append(
                 NetworkResult(net["name"], net["host"], net["port"], reachable)
             )
@@ -1313,7 +1372,9 @@ class FullCheck:
                         if status == "OK"
                         else "exists and could not be removed; likely locked"
                     )
-                    self.add_stage_result(f"Stale cache: {stale_dir}", status, detail)
+                    self.add_stage_result(
+                        f"Stale cache: {stale_dir}", status, detail
+                    )
                 else:
                     self.add_stage_result(
                         f"Stale cache: {stale_dir}",
@@ -1349,7 +1410,9 @@ class FullCheck:
                 pnpm_required = package_json["packageManager"].split("@")[-1]
             dev_deps = package_json.get("devDependencies", {})
             if dev_deps.get("@playwright/test"):
-                playwright_required = re.sub(r"[\^~]", "", dev_deps["@playwright/test"])
+                playwright_required = re.sub(
+                    r"[\^~]", "", dev_deps["@playwright/test"]
+                )
             if dev_deps.get("prettier"):
                 prettier_required = re.sub(r"[\^~]", "", dev_deps["prettier"])
             if dev_deps.get("openapi-typescript"):
@@ -1382,12 +1445,16 @@ class FullCheck:
                 install_hint="https://www.python.org/downloads/ (winget install --id Python.Python.3.12 -e)",
             )
         else:
-            self.add_stage_result("Python 3.12", "FAIL", "no usable interpreter found")
+            self.add_stage_result(
+                "Python 3.12", "FAIL", "no usable interpreter found"
+            )
         if self.pnpm_command:
             pnpm_version = self.get_tool_version_string(
                 [*self.pnpm_command, "--version"], r"(\d+\.\d+\.\d+)"
             )
-            if pnpm_version and (not pnpm_required or pnpm_version == pnpm_required):
+            if pnpm_version and (
+                not pnpm_required or pnpm_version == pnpm_required
+            ):
                 self.add_stage_result(
                     "pnpm",
                     "OK",
@@ -1401,10 +1468,14 @@ class FullCheck:
                 )
             else:
                 self.add_stage_result(
-                    "pnpm", "WARN", "command found but version could not be parsed"
+                    "pnpm",
+                    "WARN",
+                    "command found but version could not be parsed",
                 )
         else:
-            self.add_stage_result("pnpm", "FAIL", "pnpm/corepack command not found")
+            self.add_stage_result(
+                "pnpm", "FAIL", "pnpm/corepack command not found"
+            )
             self.add_recommendation(
                 "pnpm",
                 "not installed",
@@ -1493,7 +1564,9 @@ class FullCheck:
             initial_delay=5,
             delay_step=5,
         )
-        self.add_stage_result("pnpm install", "OK" if pnpm_result == 0 else "FAIL")
+        self.add_stage_result(
+            "pnpm install", "OK" if pnpm_result == 0 else "FAIL"
+        )
         if pnpm_result != 0:
             self.add_recommendation(
                 "pnpm install",
@@ -1511,7 +1584,13 @@ class FullCheck:
             "pnpm exec playwright install chromium",
             lambda: (
                 self.run_streaming(
-                    [*pnpm_command, "exec", "playwright", "install", "chromium"],
+                    [
+                        *pnpm_command,
+                        "exec",
+                        "playwright",
+                        "install",
+                        "chromium",
+                    ],
                     env=pnpm_safe_env(),
                 )
                 if pnpm_command
@@ -1522,7 +1601,8 @@ class FullCheck:
             delay_step=5,
         )
         self.add_stage_result(
-            "playwright install chromium", "OK" if playwright_result == 0 else "FAIL"
+            "playwright install chromium",
+            "OK" if playwright_result == 0 else "FAIL",
         )
 
     # ____________________________________________________________________________________________________
@@ -1590,8 +1670,12 @@ class FullCheck:
                     [*self.pnpm_command, *args], r"(\d+\.\d+\.\d+)"
                 )
                 if not version:
-                    self.add_stage_result(name, "WARN", "could not parse version")
-                elif not recommended or compare_semver(version, recommended) >= 0:
+                    self.add_stage_result(
+                        name, "WARN", "could not parse version"
+                    )
+                elif (
+                    not recommended or compare_semver(version, recommended) >= 0
+                ):
                     self.add_stage_result(name, "OK", f"version={version}")
                 else:
                     self.add_stage_result(
@@ -1626,14 +1710,25 @@ class FullCheck:
             )
             self.run_gate_step(
                 "ruff format",
-                py_args("-m", "ruff", "format", "apps", "packages", "scripts", "tests"),
+                py_args(
+                    "-m",
+                    "ruff",
+                    "format",
+                    "apps",
+                    "packages",
+                    "scripts",
+                    "tests",
+                ),
             )
         self.run_gate_step(
             "ruff check",
-            py_args("-m", "ruff", "check", "apps", "packages", "scripts", "tests"),
+            py_args(
+                "-m", "ruff", "check", "apps", "packages", "scripts", "tests"
+            ),
         )
         self.run_gate_step(
-            "mypy", py_args("-m", "mypy", "apps", "packages", "scripts", "tests")
+            "mypy",
+            py_args("-m", "mypy", "apps", "packages", "scripts", "tests"),
         )
         if self.profile in {"backend", "full", "ci"}:
             self.run_gate_step(
@@ -1651,7 +1746,14 @@ class FullCheck:
             )
             self.run_gate_step(
                 "sqlfluff lint",
-                py_args("-m", "sqlfluff", "lint", "database", "--dialect", "postgres"),
+                py_args(
+                    "-m",
+                    "sqlfluff",
+                    "lint",
+                    "database",
+                    "--dialect",
+                    "postgres",
+                ),
             )
         pytest_temp = self.temp_root / "pytest"
         pytest_temp.mkdir(parents=True, exist_ok=True)
@@ -1743,10 +1845,14 @@ class FullCheck:
                 "(Docker build has no codegen step and requires them to be tracked)",
             )
         self.run_gate_step(
-            "go vet", [go_exe, "vet", "./..."] if go_exe else None, cwd=notifier_dir
+            "go vet",
+            [go_exe, "vet", "./..."] if go_exe else None,
+            cwd=notifier_dir,
         )
         self.run_gate_step(
-            "go test", [go_exe, "test", "./..."] if go_exe else None, cwd=notifier_dir
+            "go test",
+            [go_exe, "test", "./..."] if go_exe else None,
+            cwd=notifier_dir,
         )
 
     # ____________________________________________________________________________________________________
@@ -1860,7 +1966,9 @@ class FullCheck:
         redis_ready = self.run_streaming(
             [docker_exe, "compose", "exec", "-T", "redis", "redis-cli", "ping"]
         )
-        self.add_stage_result("Redis readiness", "OK" if redis_ready == 0 else "FAIL")
+        self.add_stage_result(
+            "Redis readiness", "OK" if redis_ready == 0 else "FAIL"
+        )
         mig1 = self.run_streaming(
             [
                 docker_exe,
@@ -1887,7 +1995,8 @@ class FullCheck:
             ]
         )
         self.add_stage_result(
-            "apply_migrations.py (idempotency rerun)", "OK" if mig2 == 0 else "FAIL"
+            "apply_migrations.py (idempotency rerun)",
+            "OK" if mig2 == 0 else "FAIL",
         )
         bootstrap_exit = self.run_streaming(
             [
@@ -1901,7 +2010,8 @@ class FullCheck:
             ]
         )
         self.add_stage_result(
-            "bootstrap_runtime_read_models.py", "OK" if bootstrap_exit == 0 else "FAIL"
+            "bootstrap_runtime_read_models.py",
+            "OK" if bootstrap_exit == 0 else "FAIL",
         )
         search_index_exit = self.run_streaming(
             [
@@ -1916,14 +2026,17 @@ class FullCheck:
             ]
         )
         self.add_stage_result(
-            "rebuild_search_index.py --all", "OK" if search_index_exit == 0 else "FAIL"
+            "rebuild_search_index.py --all",
+            "OK" if search_index_exit == 0 else "FAIL",
         )
         for url in SMOKE_URLS:
             try:
                 with urllib.request.urlopen(url, timeout=10) as resp:
                     status = resp.status
                 self.add_stage_result(
-                    f"smoke: {url}", "OK" if status == 200 else "FAIL", f"HTTP {status}"
+                    f"smoke: {url}",
+                    "OK" if status == 200 else "FAIL",
+                    f"HTTP {status}",
                 )
             except Exception as exc:
                 self.add_stage_result(f"smoke: {url}", "FAIL", str(exc))
@@ -1935,7 +2048,10 @@ class FullCheck:
                 "trust",
                 "http://localhost:8000/api/v1/countries/russia/trust?locale=ru",
             ),
-            ("search", "http://localhost:8000/api/v1/search?q=residence&locale=ru"),
+            (
+                "search",
+                "http://localhost:8000/api/v1/search?q=residence&locale=ru",
+            ),
             ("openapi", "http://localhost:8000/api/openapi.json"),
         ]
         for name, url in semantic_checks:
@@ -2166,11 +2282,15 @@ class FullCheck:
         )
         if self.skip_e2e:
             self.add_stage_result(
-                "pnpm web:mvp:check (Playwright E2E)", "SKIP", "--skip-e2e was set"
+                "pnpm web:mvp:check (Playwright E2E)",
+                "SKIP",
+                "--skip-e2e was set",
             )
             return
         if platform.system() == "Windows":
-            subprocess.run(["taskkill", "/F", "/IM", "node.exe"], capture_output=True)
+            subprocess.run(
+                ["taskkill", "/F", "/IM", "node.exe"], capture_output=True
+            )
         self.run_gate_step(
             "pnpm web:mvp:check (Playwright E2E)",
             self.pnpm_args("web:mvp:check"),
@@ -2215,7 +2335,9 @@ class FullCheck:
             (finished_at - self.started_at).total_seconds() / 60, 1
         )
         self.section("Summary")
-        name_width = max((len(r.stage) for r in self.stage_results), default=10) + 2
+        name_width = (
+            max((len(r.stage) for r in self.stage_results), default=10) + 2
+        )
         for r in self.stage_results:
             duration_text = (
                 f" ({r.duration_seconds}s)" if r.duration_seconds >= 1 else ""
@@ -2270,7 +2392,10 @@ class FullCheck:
                     "\n".join(rec_lines) + "\n", encoding="utf-8"
                 )
             except OSError as exc:
-                self.log(f"WARNING: could not write recommendations.txt: {exc}", "warn")
+                self.log(
+                    f"WARNING: could not write recommendations.txt: {exc}",
+                    "warn",
+                )
         summary_lines = [
             "Country Decision Atlas — full-check.py run",
             f"Started:  {self.started_at.isoformat()}",
@@ -2286,7 +2411,9 @@ class FullCheck:
             duration_text = (
                 f" ({r.duration_seconds}s)" if r.duration_seconds >= 1 else ""
             )
-            summary_lines.append(f"[{r.status}] {r.stage} {r.detail}{duration_text}")
+            summary_lines.append(
+                f"[{r.status}] {r.stage} {r.detail}{duration_text}"
+            )
         if self.recommendations:
             summary_lines.append("")
             summary_lines.append(
@@ -2321,7 +2448,8 @@ class FullCheck:
                 "recommendations": [asdict(r) for r in self.recommendations],
             }
             self.report_json_path.write_text(
-                json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
+                json.dumps(report, indent=2, ensure_ascii=False),
+                encoding="utf-8",
             )
         except OSError as exc:
             self.log(f"WARNING: could not write report.json: {exc}", "warn")
@@ -2336,7 +2464,9 @@ class FullCheck:
         if failed:
             self.log("")
             self.log("Result: FAIL", "error")
-            self.log(f"Main blocker: {failed[0].stage} — {failed[0].detail}", "error")
+            self.log(
+                f"Main blocker: {failed[0].stage} — {failed[0].detail}", "error"
+            )
             if warnings:
                 self.log("Secondary warnings:", "warn")
                 for item in warnings[:5]:
@@ -2364,7 +2494,9 @@ class FullCheck:
         if self.doctor:
             self.log("Mode:          doctor (read-only diagnostics)")
         if self.fix:
-            self.log("Mode:          fix (safe local cache/format fixes enabled)")
+            self.log(
+                "Mode:          fix (safe local cache/format fixes enabled)"
+            )
         config = self.load_config()
         fail_count = 0
         try:

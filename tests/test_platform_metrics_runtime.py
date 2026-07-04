@@ -1,6 +1,10 @@
 """Platform metrics runtime computation: per-country and batch recompute, idempotency, and dry-run mode."""
 
-from app.repositories import feature_flags as ff_repo, platform_metrics as pm_repo
+import pytest
+from app.repositories import (
+    feature_flags as ff_repo,
+    platform_metrics as pm_repo,
+)
 from app.services import platform_metrics as pm_service
 from app.services.platform_metric_types import (
     METHODOLOGY_VERSION,
@@ -12,7 +16,6 @@ from app.services.platform_metrics_runtime import (
     compute_platform_metrics_for_country,
 )
 from decimal import Decimal
-import pytest
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -163,7 +166,9 @@ def test_compute_country_writes_expected_metrics(
     assert result.errors == []
 
 
-def test_compute_all_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_compute_all_writes_expected_metrics(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "list_active_countries", lambda *_a: COUNTRIES)
     monkeypatch.setattr(
@@ -189,7 +194,9 @@ def test_compute_all_writes_expected_metrics(monkeypatch: pytest.MonkeyPatch) ->
     assert result.metrics_failed == 0
 
 
-def test_repeated_recompute_does_not_duplicate(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_repeated_recompute_does_not_duplicate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
     monkeypatch.setattr(
@@ -241,14 +248,20 @@ def test_unknown_country_returns_error(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "country_not_found" in result.errors
 
 
-def test_invalid_metric_key_returns_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_invalid_metric_key_returns_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     conn = MagicMock()
-    result = compute_platform_metrics_for_country(conn, "russia", metric_key="bad_key")
+    result = compute_platform_metrics_for_country(
+        conn, "russia", metric_key="bad_key"
+    )
     assert "platform_metric_invalid_key: bad_key" in result.errors
 
 
-def test_invalid_scenario_slug_returns_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_invalid_scenario_slug_returns_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     conn = MagicMock()
     result = compute_platform_metrics_for_country(
@@ -283,7 +296,9 @@ def test_one_failed_country_in_summary(monkeypatch: pytest.MonkeyPatch) -> None:
         call_count[0] += 1
         raise RuntimeError("db error")
 
-    monkeypatch.setattr(pm_repo, "upsert_country_platform_metric", failing_upsert)
+    monkeypatch.setattr(
+        pm_repo, "upsert_country_platform_metric", failing_upsert
+    )
     conn = MagicMock()
     summary = compute_platform_metrics_for_all_countries(conn)
     assert summary.metrics_failed == 7
@@ -319,29 +334,41 @@ def test_all_persisted_metrics_have_methodology_version(
         written.append(methodology_version)
         return {}
 
-    monkeypatch.setattr(pm_repo, "upsert_country_platform_metric", capture_upsert)
+    monkeypatch.setattr(
+        pm_repo, "upsert_country_platform_metric", capture_upsert
+    )
     conn = MagicMock()
     compute_platform_metrics_for_country(conn, "russia")
     assert all(v == METHODOLOGY_VERSION for v in written)
     assert len(written) == 7
 
 
-def test_compute_one_metric_filters_correctly(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_compute_one_metric_filters_correctly(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _install_feature_enabled(monkeypatch)
     monkeypatch.setattr(pm_repo, "get_country_by_slug", lambda *_a: COUNTRY)
     computations = _seven_computations()
     monkeypatch.setattr(
-        pm_service, "compute_country_platform_metrics", lambda *_a, **_kw: computations
+        pm_service,
+        "compute_country_platform_metrics",
+        lambda *_a, **_kw: computations,
     )
     written: list[str] = []
 
     def capture_upsert(
-        _conn: Any, _country_id: Any, metric_key: Any, *_args: Any, **_kwargs: Any
+        _conn: Any,
+        _country_id: Any,
+        metric_key: Any,
+        *_args: Any,
+        **_kwargs: Any,
     ) -> dict[str, Any]:
         written.append(metric_key)
         return {}
 
-    monkeypatch.setattr(pm_repo, "upsert_country_platform_metric", capture_upsert)
+    monkeypatch.setattr(
+        pm_repo, "upsert_country_platform_metric", capture_upsert
+    )
     conn = MagicMock()
     result = compute_one_platform_metric(conn, "russia", "legal_velocity_index")
     assert result.metrics_written == 1

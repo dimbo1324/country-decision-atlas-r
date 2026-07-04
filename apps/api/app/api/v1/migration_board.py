@@ -40,7 +40,9 @@ def optional_current_user(
 ) -> CurrentUser | None:
     if credentials is None or not credentials.credentials:
         return None
-    result = auth_service.validate_session_token(connection, credentials.credentials)
+    result = auth_service.validate_session_token(
+        connection, credentials.credentials
+    )
     user = result["user"]
     return CurrentUser(
         id=user["id"],
@@ -51,7 +53,9 @@ def optional_current_user(
     )
 
 
-@router.get("/migration-board/posts", response_model=MigrationBoardPostListResponse)
+@router.get(
+    "/migration-board/posts", response_model=MigrationBoardPostListResponse
+)
 def list_board_posts(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser | None, Depends(optional_current_user)],
@@ -92,7 +96,9 @@ def list_board_posts(
     )
 
 
-@router.get("/migration-board/posts/{post_id}", response_model=MigrationBoardPostDetail)
+@router.get(
+    "/migration-board/posts/{post_id}", response_model=MigrationBoardPostDetail
+)
 def get_board_post(
     post_id: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -140,7 +146,9 @@ def get_my_board_post(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
-    return service.get_my_post(connection, current_user=current_user, post_id=post_id)
+    return service.get_my_post(
+        connection, current_user=current_user, post_id=post_id
+    )
 
 
 @router.patch(
@@ -233,7 +241,10 @@ def create_board_contact_request(
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     request = service.create_contact_request(
-        connection, current_user=current_user, post_id=post_id, message=payload.message
+        connection,
+        current_user=current_user,
+        post_id=post_id,
+        message=payload.message,
     )
     connection.commit()
     return request
@@ -388,7 +399,9 @@ def unblock_board_user(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> None:
-    service.unblock_user(connection, current_user=current_user, blocked_user_id=user_id)
+    service.unblock_user(
+        connection, current_user=current_user, blocked_user_id=user_id
+    )
     connection.commit()
 
 

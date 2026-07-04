@@ -1,5 +1,6 @@
 """Decision wizard goal-to-scenario mapping."""
 
+import pytest
 from app.repositories import (
     countries as countries_repository,
     decision_engine as decision_repository,
@@ -10,7 +11,6 @@ from app.schemas.decision_wizard import DecisionWizardAnswers
 from app.services import decision_wizard
 from fastapi import HTTPException
 from pydantic import ValidationError
-import pytest
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -209,7 +209,9 @@ def test_initial_weights_include_all_expected_criteria(
 ) -> None:
     _install_wizard_enabled(monkeypatch)
     _install_repository_fakes(monkeypatch)
-    result = decision_wizard.resolve_wizard_recommendation(CONNECTION, _answers())
+    result = decision_wizard.resolve_wizard_recommendation(
+        CONNECTION, _answers()
+    )
     assert set(result.initial_custom_weights) == {
         "legalization_score",
         "long_term_status_score",
@@ -227,7 +229,9 @@ def test_initial_weights_are_suitable_for_decision_run_custom_weights(
 ) -> None:
     _install_wizard_enabled(monkeypatch)
     _install_repository_fakes(monkeypatch)
-    result = decision_wizard.resolve_wizard_recommendation(CONNECTION, _answers())
+    result = decision_wizard.resolve_wizard_recommendation(
+        CONNECTION, _answers()
+    )
     for value in result.initial_custom_weights.values():
         assert 0 <= value <= 100
 
@@ -261,5 +265,7 @@ def test_candidate_countries_come_from_repository(
 ) -> None:
     _install_wizard_enabled(monkeypatch)
     _install_repository_fakes(monkeypatch)
-    result = decision_wizard.resolve_wizard_recommendation(CONNECTION, _answers())
+    result = decision_wizard.resolve_wizard_recommendation(
+        CONNECTION, _answers()
+    )
     assert result.candidate_country_slugs == ACTIVE_COUNTRIES

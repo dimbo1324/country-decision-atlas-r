@@ -1,3 +1,4 @@
+import grpc
 from app.core.config import Settings, get_settings
 from app.core.errors import api_error
 from app.integrations.notifier_grpc.generated import (
@@ -5,7 +6,6 @@ from app.integrations.notifier_grpc.generated import (
     subscriptions_pb2_grpc,
 )
 from app.repositories import auth as repository
-import grpc
 from psycopg import Connection
 from typing import Any, Protocol
 
@@ -33,7 +33,9 @@ class GrpcTelegramLinkClient:
     def _metadata(self) -> list[tuple[str, str]]:
         return [("authorization", f"Bearer {self._token}")]
 
-    def consume_link_code(self, code: str, web_user_id: str) -> ConsumeLinkCodeResult:
+    def consume_link_code(
+        self, code: str, web_user_id: str
+    ) -> ConsumeLinkCodeResult:
         with grpc.insecure_channel(self._addr) as channel:
             stub = subscriptions_pb2_grpc.SubscriptionServiceStub(channel)  # type: ignore[no-untyped-call]
             response = stub.ConsumeTelegramWebLinkCode(
@@ -79,15 +81,22 @@ def link_telegram_account(
     result = client.consume_link_code(code, user_id)
     if not result.ok:
         error_map = {
-            "invalid_code": ("telegram_link_invalid_code", "Link code is invalid."),
-            "expired_code": ("telegram_link_expired_code", "Link code has expired."),
+            "invalid_code": (
+                "telegram_link_invalid_code",
+                "Link code is invalid.",
+            ),
+            "expired_code": (
+                "telegram_link_expired_code",
+                "Link code has expired.",
+            ),
             "already_used": (
                 "telegram_link_already_used",
                 "Link code has already been used.",
             ),
         }
         code_name, message = error_map.get(
-            result.error, ("telegram_link_invalid_code", "Link code is invalid.")
+            result.error,
+            ("telegram_link_invalid_code", "Link code is invalid."),
         )
         raise api_error(422, code_name, message, {"error": result.error})
     return repository.create_telegram_link(
@@ -95,7 +104,9 @@ def link_telegram_account(
     )
 
 
-def unlink_telegram_account(connection: Connection[Any], *, user_id: str) -> None:
+def unlink_telegram_account(
+    connection: Connection[Any], *, user_id: str
+) -> None:
     existing = repository.get_telegram_link_by_user(connection, user_id)
     if existing is None:
         return

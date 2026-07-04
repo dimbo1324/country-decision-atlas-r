@@ -45,7 +45,11 @@ class CountryDriftWeights:
     @property
     def total(self) -> Decimal:
         return (
-            self.positive + self.negative + self.neutral + self.mixed + self.uncertain
+            self.positive
+            + self.negative
+            + self.neutral
+            + self.mixed
+            + self.uncertain
         )
 
 
@@ -60,7 +64,11 @@ class CountryDriftCounts:
     @property
     def total(self) -> int:
         return (
-            self.positive + self.negative + self.neutral + self.mixed + self.uncertain
+            self.positive
+            + self.negative
+            + self.neutral
+            + self.mixed
+            + self.uncertain
         )
 
 
@@ -147,7 +155,9 @@ def _parse_event(row: Mapping[str, Any]) -> CountryDriftInputEvent:
     legal_signal_id = row.get("legal_signal_id")
     return CountryDriftInputEvent(
         event_id=str(event_id) if event_id is not None else None,
-        legal_signal_id=str(legal_signal_id) if legal_signal_id is not None else None,
+        legal_signal_id=str(legal_signal_id)
+        if legal_signal_id is not None
+        else None,
         impact_direction=str(row["impact_direction"]),
         impact_level=str(row["impact_level"]),
     )
@@ -167,7 +177,9 @@ def calculate_country_drift(
     for row in events:
         parsed = _parse_event(row)
         if parsed.impact_direction not in IMPACT_DIRECTIONS:
-            raise ValueError(f"unknown impact_direction: {parsed.impact_direction}")
+            raise ValueError(
+                f"unknown impact_direction: {parsed.impact_direction}"
+            )
         weight = impact_level_weight(parsed.impact_level)
 
         if parsed.impact_direction == "positive":
@@ -200,7 +212,9 @@ def calculate_country_drift(
         weights.uncertain,
     )
     label = label_for_drift(event_count, net_score)
-    confidence = confidence_for_drift(event_count, counts.mixed, counts.uncertain)
+    confidence = confidence_for_drift(
+        event_count, counts.mixed, counts.uncertain
+    )
 
     input_summary = build_drift_input_summary(
         window_days=window_days,
@@ -245,7 +259,9 @@ def build_drift_period(
     if window_days <= 0:
         raise ValueError("window_days must be > 0")
     resolved_period_end = period_end or date.today()
-    resolved_period_start = resolved_period_end - timedelta(days=window_days - 1)
+    resolved_period_start = resolved_period_end - timedelta(
+        days=window_days - 1
+    )
     return resolved_period_start, resolved_period_end
 
 
@@ -324,7 +340,9 @@ def _drift_changed_payload(draft: CountryDriftSnapshotDraft) -> dict[str, Any]:
         "period_start": draft.period_start.isoformat(),
         "period_end": draft.period_end.isoformat(),
         "window_days": draft.window_days,
-        "net_score": float(draft.net_score) if draft.net_score is not None else None,
+        "net_score": float(draft.net_score)
+        if draft.net_score is not None
+        else None,
         "confidence": draft.confidence,
         "event_count": draft.event_count,
         "methodology_version": draft.methodology_version,
@@ -361,7 +379,9 @@ def compute_and_store_country_drift(
     emit_events: bool = True,
     dry_run: bool = False,
 ) -> CountryDriftStoredResult:
-    result = CountryDriftStoredResult(country_slug=country_slug, dry_run=dry_run)
+    result = CountryDriftStoredResult(
+        country_slug=country_slug, dry_run=dry_run
+    )
 
     try:
         draft = compute_country_drift_snapshot(

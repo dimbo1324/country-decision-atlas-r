@@ -16,7 +16,10 @@ type CountryWhatChangedProps = {
 
 const DISPLAY_LIMIT = 5;
 
-export function CountryWhatChanged({ countrySlug, locale }: CountryWhatChangedProps) {
+export function CountryWhatChanged({
+  countrySlug,
+  locale,
+}: CountryWhatChangedProps) {
   const [data, setData] = useState<WhatChangedResponse | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +29,11 @@ export function CountryWhatChanged({ countrySlug, locale }: CountryWhatChangedPr
     setIsLoading(true);
     setError(null);
     whatChangedApi
-      .getCountryWhatChanged(countrySlug, { locale, days: 30, limit: DISPLAY_LIMIT })
+      .getCountryWhatChanged(countrySlug, {
+        locale,
+        days: 30,
+        limit: DISPLAY_LIMIT,
+      })
       .then((response) => {
         if (isMounted) {
           setData(response);
@@ -64,7 +71,10 @@ export function CountryWhatChanged({ countrySlug, locale }: CountryWhatChangedPr
 
   if (items.length === 0) {
     return (
-      <div className="notice" data-testid="what-changed-empty">
+      <div
+        className="notice"
+        data-testid="what-changed-empty"
+      >
         Пока нет изменений за выбранный период.
       </div>
     );
@@ -74,13 +84,16 @@ export function CountryWhatChanged({ countrySlug, locale }: CountryWhatChangedPr
     <div data-testid="what-changed-block">
       {data && (
         <p className="formHint">
-          С {new Date(data.since).toLocaleDateString("ru-RU")} · всего изменений:{" "}
-          {data.summary.total}
+          С {new Date(data.since).toLocaleDateString("ru-RU")} · всего
+          изменений: {data.summary.total}
         </p>
       )}
       <div className="sourceGrid">
         {items.map((item) => (
-          <WhatChangedItemCard key={item.id} item={item} />
+          <WhatChangedItemCard
+            key={item.id}
+            item={item}
+          />
         ))}
       </div>
     </div>

@@ -3,9 +3,9 @@
 from pathlib import Path
 
 
-MIGRATION_SQL = Path("database/migrations/042_ai_drafts_community.sql").read_text(
-    encoding="utf-8"
-)
+MIGRATION_SQL = Path(
+    "database/migrations/042_ai_drafts_community.sql"
+).read_text(encoding="utf-8")
 
 
 def test_migration_creates_ai_drafts_table() -> None:
@@ -18,7 +18,9 @@ def test_migration_creates_ai_drafts_table() -> None:
 
 
 def test_migration_creates_contradiction_candidates_table() -> None:
-    assert "CREATE TABLE IF NOT EXISTS contradiction_candidates" in MIGRATION_SQL
+    assert (
+        "CREATE TABLE IF NOT EXISTS contradiction_candidates" in MIGRATION_SQL
+    )
     assert "CONSTRAINT contradiction_candidates_severity_check" in MIGRATION_SQL
     assert "CONSTRAINT contradiction_candidates_status_check" in MIGRATION_SQL
 

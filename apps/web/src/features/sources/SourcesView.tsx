@@ -23,7 +23,10 @@ import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type EvidenceState = EvidenceItem[] | "loading" | "error" | null;
 
-type ViewError = { error?: { code?: string; message?: string } } | string | null;
+type ViewError =
+  | { error?: { code?: string; message?: string } }
+  | string
+  | null;
 
 type ConfidenceFilter = "" | "high" | "medium" | "low";
 
@@ -78,7 +81,9 @@ function SourcesViewInner() {
       })
       .catch((err: unknown) => {
         if (!cancelled)
-          setError(err instanceof Error ? err.message : "Ошибка загрузки стран");
+          setError(
+            err instanceof Error ? err.message : "Ошибка загрузки стран",
+          );
       });
     return () => {
       cancelled = true;
@@ -126,7 +131,10 @@ function SourcesViewInner() {
     if (loadedSourceIds.current.has(expandedSourceId)) return;
 
     loadedSourceIds.current.add(expandedSourceId);
-    setEvidenceBySourceId((prev) => ({ ...prev, [expandedSourceId]: "loading" }));
+    setEvidenceBySourceId((prev) => ({
+      ...prev,
+      [expandedSourceId]: "loading",
+    }));
 
     evidenceApi
       .listEvidenceForSource(expandedSourceId)
@@ -161,7 +169,10 @@ function SourcesViewInner() {
     <div className="filterPageWrap">
       <div className="filterBar">
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-country">
+          <label
+            className="filterLabel"
+            htmlFor="src-country"
+          >
             Страна
           </label>
           <select
@@ -172,14 +183,20 @@ function SourcesViewInner() {
           >
             <option value="">Все страны</option>
             {countries?.items.map((c) => (
-              <option key={c.slug} value={c.slug}>
+              <option
+                key={c.slug}
+                value={c.slug}
+              >
                 {c.name}
               </option>
             ))}
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-type">
+          <label
+            className="filterLabel"
+            htmlFor="src-type"
+          >
             Тип источника
           </label>
           <select
@@ -190,14 +207,20 @@ function SourcesViewInner() {
           >
             <option value="">Все типы</option>
             {SOURCE_TYPES.map((t) => (
-              <option key={t} value={t}>
+              <option
+                key={t}
+                value={t}
+              >
                 {t}
               </option>
             ))}
           </select>
         </div>
         <div className="filterGroup">
-          <label className="filterLabel" htmlFor="src-confidence">
+          <label
+            className="filterLabel"
+            htmlFor="src-confidence"
+          >
             Достоверность
           </label>
           <select
@@ -208,14 +231,20 @@ function SourcesViewInner() {
           >
             <option value="">Все уровни</option>
             {CONFIDENCE_OPTIONS.map((c) => (
-              <option key={c} value={c}>
+              <option
+                key={c}
+                value={c}
+              >
                 {c}
               </option>
             ))}
           </select>
         </div>
         {hasFilters && (
-          <button className="clearButton" onClick={clearFilters}>
+          <button
+            className="clearButton"
+            onClick={clearFilters}
+          >
             Сбросить фильтры
           </button>
         )}
@@ -226,9 +255,13 @@ function SourcesViewInner() {
           {countrySlug && (
             <span className="activeFilterChip">страна: {countrySlug}</span>
           )}
-          {sourceType && <span className="activeFilterChip">тип: {sourceType}</span>}
+          {sourceType && (
+            <span className="activeFilterChip">тип: {sourceType}</span>
+          )}
           {confidence && (
-            <span className="activeFilterChip">достоверность: {confidence}</span>
+            <span className="activeFilterChip">
+              достоверность: {confidence}
+            </span>
           )}
         </div>
       )}
@@ -238,8 +271,14 @@ function SourcesViewInner() {
       {!isLoading && error === null && sources !== null && (
         <>
           <div className="analyticalSummaryRow">
-            <SummaryCard label="Показано источников" value={sources.items.length} />
-            <SummaryCard label="Всего" value={sources.pagination.total} />
+            <SummaryCard
+              label="Показано источников"
+              value={sources.items.length}
+            />
+            <SummaryCard
+              label="Всего"
+              value={sources.pagination.total}
+            />
             <SummaryCard
               label="Язык"
               value={sources.locale.resolved_locale}
@@ -250,7 +289,10 @@ function SourcesViewInner() {
           {sources.items.length === 0 ? (
             <EmptyState message="По выбранным фильтрам источники не найдены." />
           ) : (
-            <div className="sourceList" data-testid="sources-list">
+            <div
+              className="sourceList"
+              data-testid="sources-list"
+            >
               {sources.items.map((source) => {
                 const country = source.country_id
                   ? countriesById.get(source.country_id)
@@ -258,7 +300,10 @@ function SourcesViewInner() {
                 const isExpanded = expandedSourceId === source.id;
                 const evidence = evidenceBySourceId[source.id];
                 return (
-                  <div key={source.id} className="sourceCard">
+                  <div
+                    key={source.id}
+                    className="sourceCard"
+                  >
                     <div className="sourceCardHeader">
                       <span className="sourceTitle">{source.title}</span>
                       <div className="metaRow">
@@ -271,12 +316,19 @@ function SourcesViewInner() {
                         {source.language && (
                           <Badge variant="default">{source.language}</Badge>
                         )}
-                        {source.status && <StatusBadge status={source.status} />}
-                        <LocalizationBadge localization={source.localization} compact />
+                        {source.status && (
+                          <StatusBadge status={source.status} />
+                        )}
+                        <LocalizationBadge
+                          localization={source.localization}
+                          compact
+                        />
                       </div>
                     </div>
                     {source.publisher && (
-                      <span className="sourcePublisher">{source.publisher}</span>
+                      <span className="sourcePublisher">
+                        {source.publisher}
+                      </span>
                     )}
                     <div className="metaRow">
                       {source.last_checked_at && (

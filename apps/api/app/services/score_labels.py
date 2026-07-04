@@ -16,7 +16,9 @@ def score_label(score: float) -> ScoreLabel:
     return "excellent"
 
 
-def optional_score_label(score: float | None) -> ScoreLabel | Literal["missing"]:
+def optional_score_label(
+    score: float | None,
+) -> ScoreLabel | Literal["missing"]:
     if score is None:
         return "missing"
     return score_label(score)

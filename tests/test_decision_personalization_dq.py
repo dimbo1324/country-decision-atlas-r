@@ -17,7 +17,9 @@ def test_decision_personalization_dq_detects_feature_flag_mismatch(
     monkeypatch.setattr(
         repository,
         "list_decision_personalization_feature_flag_mismatches",
-        lambda *_: [{"feature_key": "decision_wizard_enabled", "status": "disabled"}],
+        lambda *_: [
+            {"feature_key": "decision_wizard_enabled", "status": "disabled"}
+        ],
     )
     report = data_quality.build_data_quality_report(CONNECTION)
     assert report.valid is False
@@ -69,7 +71,9 @@ def test_decision_personalization_dq_detects_missing_wizard_dependency(
     }
 
 
-def test_decision_personalization_dq_checks_are_present(monkeypatch: Any) -> None:
+def test_decision_personalization_dq_checks_are_present(
+    monkeypatch: Any,
+) -> None:
     install_clean_report_fakes(monkeypatch)
     report = data_quality.build_data_quality_report(CONNECTION)
     assert {

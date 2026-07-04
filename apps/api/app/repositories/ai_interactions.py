@@ -90,7 +90,9 @@ def count_ai_interactions(
     conn: Connection[Any], request_type: str | None = None
 ) -> int:
     if request_type is None:
-        row = fetch_one(conn, "SELECT COUNT(*) AS total FROM ai_interaction_logs")
+        row = fetch_one(
+            conn, "SELECT COUNT(*) AS total FROM ai_interaction_logs"
+        )
     else:
         row = fetch_one(
             conn,

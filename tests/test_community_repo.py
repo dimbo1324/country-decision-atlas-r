@@ -1,7 +1,7 @@
 """SQL-only community repository: required functions and published-only filtering."""
 
-from app.repositories import community as repository
 import inspect
+from app.repositories import community as repository
 
 
 def test_community_repository_is_sql_only() -> None:

@@ -14,7 +14,8 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
   const locale = getLocaleFromSearchParams(params);
 
   let sections;
-  let glossaryItems: Awaited<ReturnType<typeof listGlossaryTerms>>["items"] = [];
+  let glossaryItems: Awaited<ReturnType<typeof listGlossaryTerms>>["items"] =
+    [];
   try {
     const response = await listMethodologySections(locale);
     sections = response.items;
@@ -37,7 +38,10 @@ export default async function MethodologyPage({ searchParams }: PageProps) {
   }
 
   return (
-    <main className="pageShell" data-testid="methodology-page">
+    <main
+      className="pageShell"
+      data-testid="methodology-page"
+    >
       <header className="pageHeader">
         <p className="eyebrow">Методология</p>
         <h1>Методология платформы</h1>

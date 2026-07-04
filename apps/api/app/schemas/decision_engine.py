@@ -124,7 +124,9 @@ class DecisionRunRequest(BaseModel):
     candidate_country_slugs: list[str] = Field(
         min_length=1,
         max_length=10,
-        validation_alias=AliasChoices("candidate_country_slugs", "candidate_countries"),
+        validation_alias=AliasChoices(
+            "candidate_country_slugs", "candidate_countries"
+        ),
         json_schema_extra={"uniqueItems": True},
     )
     scenario_slug: str = Field(
@@ -218,7 +220,9 @@ class DecisionRunMeta(BaseModel):
     model_version: str = "scenario-decision-engine-v1"
 
 
-OriginContextStatus = Literal["not_requested", "available", "partial", "not_available"]
+OriginContextStatus = Literal[
+    "not_requested", "available", "partial", "not_available"
+]
 
 
 class DecisionRunResponse(BaseModel):
@@ -278,19 +282,21 @@ class UserStory(BaseModel):
 
 
 class UserStoryCreate(BaseModel):
-    origin_country_slug: Annotated[str, Field(min_length=1, max_length=100)] | None = (
-        None
-    )
-    destination_country_slug: Annotated[str, Field(min_length=1, max_length=100)]
+    origin_country_slug: (
+        Annotated[str, Field(min_length=1, max_length=100)] | None
+    ) = None
+    destination_country_slug: Annotated[
+        str, Field(min_length=1, max_length=100)
+    ]
     city: Annotated[str, Field(min_length=1, max_length=120)] | None = None
     year: int | None = Field(default=None, ge=1990, le=2100)
     scenario: Annotated[str, Field(min_length=1, max_length=100)]
     budget_initial_usd: Decimal | None = Field(default=None, ge=0)
     budget_monthly_usd: Decimal | None = Field(default=None, ge=0)
     legal_path: Annotated[str, Field(max_length=4000)] | None = None
-    documents_used: list[Annotated[str, Field(min_length=1, max_length=200)]] = Field(
-        default_factory=list, max_length=30
-    )
+    documents_used: list[
+        Annotated[str, Field(min_length=1, max_length=200)]
+    ] = Field(default_factory=list, max_length=30)
     problems: Annotated[str, Field(max_length=4000)] | None = None
     positive_outcome: Annotated[str, Field(max_length=4000)] | None = None
     negative_outcome: Annotated[str, Field(max_length=4000)] | None = None

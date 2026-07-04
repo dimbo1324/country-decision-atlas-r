@@ -18,20 +18,28 @@ export default async function RoutePage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
   const rawLocale = resolvedSearchParams["locale"];
-  const locale = normalizeLocale(typeof rawLocale === "string" ? rawLocale : undefined);
+  const locale = normalizeLocale(
+    typeof rawLocale === "string" ? rawLocale : undefined,
+  );
 
   try {
     const route = await routesApi.getRoute(id, { locale });
     return (
       <div className="pageShell">
-        <nav className="breadcrumbs" aria-label="Навигация">
+        <nav
+          className="breadcrumbs"
+          aria-label="Навигация"
+        >
           <Link
             href={`${routes.countries}?locale=${locale}`}
             className="breadcrumbLink"
           >
             Страны
           </Link>
-          <span className="breadcrumbSep" aria-hidden="true">
+          <span
+            className="breadcrumbSep"
+            aria-hidden="true"
+          >
             /
           </span>
           <Link
@@ -40,12 +48,18 @@ export default async function RoutePage({ params, searchParams }: PageProps) {
           >
             {route.country_slug}
           </Link>
-          <span className="breadcrumbSep" aria-hidden="true">
+          <span
+            className="breadcrumbSep"
+            aria-hidden="true"
+          >
             /
           </span>
           <span className="breadcrumbCurrent">{route.title}</span>
         </nav>
-        <RouteDetailView route={route} locale={locale} />
+        <RouteDetailView
+          route={route}
+          locale={locale}
+        />
         <DisclaimerNotice />
       </div>
     );
@@ -56,14 +70,20 @@ export default async function RoutePage({ params, searchParams }: PageProps) {
         : (err as { error?: { code?: string; message?: string } });
     return (
       <div className="pageShell">
-        <nav className="breadcrumbs" aria-label="Навигация">
+        <nav
+          className="breadcrumbs"
+          aria-label="Навигация"
+        >
           <Link
             href={`${routes.countries}?locale=${locale}`}
             className="breadcrumbLink"
           >
             Страны
           </Link>
-          <span className="breadcrumbSep" aria-hidden="true">
+          <span
+            className="breadcrumbSep"
+            aria-hidden="true"
+          >
             /
           </span>
           <span className="breadcrumbCurrent">{id}</span>

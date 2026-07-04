@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import psycopg
 import sys
+from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -28,7 +28,9 @@ def main() -> None:
     if not files:
         raise RuntimeError(f"No SQL migrations found in {MIGRATIONS_DIR}.")
     with psycopg.connect(database_url) as connection:
-        connection.execute("SELECT pg_advisory_lock(%s)", (MIGRATION_ADVISORY_LOCK_ID,))
+        connection.execute(
+            "SELECT pg_advisory_lock(%s)", (MIGRATION_ADVISORY_LOCK_ID,)
+        )
         try:
             ensure_migration_table(connection)
             seen = applied_migrations(connection)

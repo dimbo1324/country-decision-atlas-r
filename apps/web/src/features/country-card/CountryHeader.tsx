@@ -25,7 +25,10 @@ export function CountryHeader({ country, locale = "ru" }: CountryHeaderProps) {
         </div>
       </header>
       <div className="quickActions">
-        <Link href={`${routes.countries}${localeParam}`} className="quickAction">
+        <Link
+          href={`${routes.countries}${localeParam}`}
+          className="quickAction"
+        >
           ← Все страны
         </Link>
         <Link
@@ -34,10 +37,16 @@ export function CountryHeader({ country, locale = "ru" }: CountryHeaderProps) {
         >
           Запустить подбор
         </Link>
-        <Link href={`${routes.legalSignals}${localeParam}`} className="quickAction">
+        <Link
+          href={`${routes.legalSignals}${localeParam}`}
+          className="quickAction"
+        >
           Правовые сигналы
         </Link>
-        <Link href={`${routes.sources}${localeParam}`} className="quickAction">
+        <Link
+          href={`${routes.sources}${localeParam}`}
+          className="quickAction"
+        >
           Источники
         </Link>
       </div>

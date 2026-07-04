@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -11,12 +11,12 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR / "apps" / "api"))
     sys.path.insert(0, str(ROOT_DIR))
 
+import psycopg  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from app.services.platform_metrics_runtime import (  # noqa: E402
     compute_platform_metrics_for_all_countries,
     compute_platform_metrics_for_country,
 )
-import psycopg  # noqa: E402
 
 
 def main() -> int:
@@ -57,7 +57,10 @@ def main() -> int:
                 print(json.dumps(country_result.model_dump(), default=str))
                 if not country_result.feature_enabled:
                     return 1
-                if country_result.errors and country_result.metrics_computed == 0:
+                if (
+                    country_result.errors
+                    and country_result.metrics_computed == 0
+                ):
                     return 1
                 if country_result.metrics_failed > 0:
                     return 1

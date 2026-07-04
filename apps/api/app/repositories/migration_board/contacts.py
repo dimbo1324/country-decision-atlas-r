@@ -155,7 +155,9 @@ def update_contact_request_status(
         (status, status, status, response_note, request_id),
     )
     return (
-        get_contact_request_by_id(connection, request_id) if row is not None else None
+        get_contact_request_by_id(connection, request_id)
+        if row is not None
+        else None
     )
 
 

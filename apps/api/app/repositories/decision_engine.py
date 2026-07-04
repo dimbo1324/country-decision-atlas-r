@@ -552,7 +552,9 @@ def get_legal_signal(
 ) -> dict[str, Any] | None:
     requested_locale = validate_locale(locale)
     title_column = localized_column(requested_locale, "title_en", "title_ru")
-    summary_column = localized_column(requested_locale, "summary_en", "summary_ru")
+    summary_column = localized_column(
+        requested_locale, "summary_en", "summary_ru"
+    )
     if requested_locale == SOURCE_LOCALE:
         resolved_locale_sql = "'en'"
         status_sql = """
@@ -632,7 +634,9 @@ def list_evidence_for_legal_signal(
     )
 
 
-def get_source(connection: Connection[Any], source_id: str) -> dict[str, Any] | None:
+def get_source(
+    connection: Connection[Any], source_id: str
+) -> dict[str, Any] | None:
     return fetch_one(
         connection,
         """
@@ -689,7 +693,9 @@ def list_evidence_for_source(
     )
 
 
-def count_evidence_for_source(connection: Connection[Any], source_id: str) -> int:
+def count_evidence_for_source(
+    connection: Connection[Any], source_id: str
+) -> int:
     row = fetch_one(
         connection,
         """

@@ -9,8 +9,14 @@ from app.schemas.community import (
     CommunityVoteCreate,
     ConsensusSummary,
 )
-from app.schemas.data_error_reports import DataErrorReport, DataErrorReportCreate
-from app.schemas.user_story_ratings import UserStoryRating, UserStoryRatingCreate
+from app.schemas.data_error_reports import (
+    DataErrorReport,
+    DataErrorReportCreate,
+)
+from app.schemas.user_story_ratings import (
+    UserStoryRating,
+    UserStoryRatingCreate,
+)
 from app.services import (
     community as community_service,
     data_error_reports as data_error_reports_service,
@@ -83,7 +89,9 @@ def create_answer(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> dict[str, Any]:
-    row = community_service.submit_answer(connection, settings, question_id, payload)
+    row = community_service.submit_answer(
+        connection, settings, question_id, payload
+    )
     connection.commit()
     return row
 
@@ -99,12 +107,16 @@ def create_vote(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> ConsensusSummary:
-    result = community_service.submit_vote(connection, settings, answer_id, payload)
+    result = community_service.submit_vote(
+        connection, settings, answer_id, payload
+    )
     connection.commit()
     return result
 
 
-@router.post("/data-error-reports", response_model=DataErrorReport, status_code=201)
+@router.post(
+    "/data-error-reports", response_model=DataErrorReport, status_code=201
+)
 def create_data_error_report(
     payload: DataErrorReportCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
@@ -117,7 +129,9 @@ def create_data_error_report(
     return row
 
 
-@router.post("/user-story-ratings", response_model=UserStoryRating, status_code=201)
+@router.post(
+    "/user-story-ratings", response_model=UserStoryRating, status_code=201
+)
 def create_user_story_rating(
     payload: UserStoryRatingCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
