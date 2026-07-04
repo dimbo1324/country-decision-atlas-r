@@ -34,6 +34,7 @@ var supportedEventTypes = map[string]struct{}{
 	"legal_signal.published":       {},
 	"legal_signal_event.published": {},
 	"route.published":              {},
+	"trip_reminder_due":            {},
 }
 
 func Parse(data []byte) (*DomainEvent, error) {

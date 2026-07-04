@@ -2549,6 +2549,323 @@ export interface paths {
         patch: operations["update_weight_profile_api_v1_me_weight_profiles__profile_id__patch"];
         trace?: never;
     };
+    "/api/v1/me/trips": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Trips */
+        get: operations["list_my_trips_api_v1_me_trips_get"];
+        put?: never;
+        /** Create My Trip */
+        post: operations["create_my_trip_api_v1_me_trips_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/from-passport": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create My Trip From Passport */
+        post: operations["create_my_trip_from_passport_api_v1_me_trips_from_passport_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Trip */
+        get: operations["get_my_trip_api_v1_me_trips__trip_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete My Trip */
+        delete: operations["delete_my_trip_api_v1_me_trips__trip_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update My Trip */
+        patch: operations["update_my_trip_api_v1_me_trips__trip_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/waypoints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Trip Waypoints */
+        get: operations["list_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_get"];
+        put?: never;
+        /** Create My Trip Waypoint */
+        post: operations["create_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/waypoints/{waypoint_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete My Trip Waypoint */
+        delete: operations["delete_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update My Trip Waypoint */
+        patch: operations["update_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/waypoints/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder My Trip Waypoints */
+        post: operations["reorder_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_reorder_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/checklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Trip Checklist */
+        get: operations["list_my_trip_checklist_api_v1_me_trips__trip_id__checklist_get"];
+        put?: never;
+        /** Create My Trip Checklist Item */
+        post: operations["create_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/checklist/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import My Trip Checklist */
+        post: operations["import_my_trip_checklist_api_v1_me_trips__trip_id__checklist_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/checklist/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete My Trip Checklist Item */
+        delete: operations["delete_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update My Trip Checklist Item */
+        patch: operations["update_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/warnings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read My Trip Warnings */
+        get: operations["read_my_trip_warnings_api_v1_me_trips__trip_id__warnings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Trip Reminders */
+        get: operations["list_my_trip_reminders_api_v1_me_trips__trip_id__reminders_get"];
+        put?: never;
+        /** Create My Trip Reminder */
+        post: operations["create_my_trip_reminder_api_v1_me_trips__trip_id__reminders_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/reminders/{reminder_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Cancel My Trip Reminder */
+        delete: operations["cancel_my_trip_reminder_api_v1_me_trips__trip_id__reminders__reminder_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enable My Trip Share */
+        post: operations["enable_my_trip_share_api_v1_me_trips__trip_id__share_post"];
+        /** Disable My Trip Share */
+        delete: operations["disable_my_trip_share_api_v1_me_trips__trip_id__share_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export My Trip */
+        get: operations["export_my_trip_api_v1_me_trips__trip_id__export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/annotations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Trip Annotations */
+        get: operations["list_my_trip_annotations_api_v1_me_trips__trip_id__annotations_get"];
+        put?: never;
+        /** Create My Trip Annotation */
+        post: operations["create_my_trip_annotation_api_v1_me_trips__trip_id__annotations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/annotations/{annotation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete My Trip Annotation */
+        delete: operations["delete_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update My Trip Annotation */
+        patch: operations["update_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/trips/{trip_id}/what-changed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read My Trip What Changed */
+        get: operations["read_my_trip_what_changed_api_v1_me_trips__trip_id__what_changed_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trips/shared/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Shared Trip */
+        get: operations["read_shared_trip_api_v1_trips_shared__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -6955,6 +7272,66 @@ export interface components {
             /** Rank */
             rank: number;
         };
+        /** SharedTripChecklistItem */
+        SharedTripChecklistItem: {
+            /** Title */
+            title: string;
+            /** Due Date */
+            due_date?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "todo" | "in_progress" | "done" | "skipped";
+            /** Position */
+            position: number;
+        };
+        /** SharedTripResponse */
+        SharedTripResponse: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            origin_country?: components["schemas"]["TripCountryRef"] | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "active" | "completed" | "abandoned";
+            /**
+             * Confidence Tier
+             * @enum {string}
+             */
+            confidence_tier: "declared" | "active" | "confirmed";
+            /** Waypoints */
+            waypoints: components["schemas"]["SharedTripWaypoint"][];
+            /** Checklist Items */
+            checklist_items: components["schemas"]["SharedTripChecklistItem"][];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** SharedTripWaypoint */
+        SharedTripWaypoint: {
+            /** Position */
+            position: number;
+            country: components["schemas"]["TripCountryRef"];
+            /** City */
+            city?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "transit" | "destination" | "stopover";
+            /** Planned From */
+            planned_from?: string | null;
+            /** Planned To */
+            planned_to?: string | null;
+        };
         /** SortMeta */
         SortMeta: {
             /** Sort */
@@ -7499,6 +7876,479 @@ export interface components {
          * @enum {string}
          */
         TranslationStatus: "source" | "translated" | "fallback" | "missing";
+        /** TripAnnotation */
+        TripAnnotation: {
+            /** Id */
+            id: string;
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "note" | "item_to_bring" | "warning_ack";
+            /** Body */
+            body: string;
+            /** Position */
+            position?: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TripAnnotationCreateRequest */
+        TripAnnotationCreateRequest: {
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "note" | "item_to_bring" | "warning_ack";
+            /** Body */
+            body: string;
+            /** Position */
+            position?: number | null;
+        };
+        /** TripAnnotationListResponse */
+        TripAnnotationListResponse: {
+            /** Items */
+            items: components["schemas"]["TripAnnotation"][];
+        };
+        /** TripAnnotationUpdateRequest */
+        TripAnnotationUpdateRequest: {
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /** Kind */
+            kind?: ("note" | "item_to_bring" | "warning_ack") | null;
+            /** Body */
+            body?: string | null;
+            /** Position */
+            position?: number | null;
+        };
+        /** TripChecklistImportRequest */
+        TripChecklistImportRequest: {
+            /** Route Id */
+            route_id: string;
+        };
+        /** TripChecklistItem */
+        TripChecklistItem: {
+            /** Id */
+            id: string;
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /** Title */
+            title: string;
+            /** Description */
+            description?: string | null;
+            /** Due Date */
+            due_date?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "todo" | "in_progress" | "done" | "skipped";
+            /**
+             * Origin Kind
+             * @enum {string}
+             */
+            origin_kind: "manual" | "route_template" | "author_template";
+            /** Origin Ref */
+            origin_ref?: string | null;
+            /** Position */
+            position: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TripChecklistItemCreateRequest */
+        TripChecklistItemCreateRequest: {
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /** Title */
+            title: string;
+            /** Description */
+            description?: string | null;
+            /** Due Date */
+            due_date?: string | null;
+            /**
+             * Status
+             * @default todo
+             * @enum {string}
+             */
+            status: "todo" | "in_progress" | "done" | "skipped";
+            /** Position */
+            position?: number | null;
+        };
+        /** TripChecklistItemUpdateRequest */
+        TripChecklistItemUpdateRequest: {
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Due Date */
+            due_date?: string | null;
+            /** Status */
+            status?: ("todo" | "in_progress" | "done" | "skipped") | null;
+            /** Position */
+            position?: number | null;
+        };
+        /** TripChecklistResponse */
+        TripChecklistResponse: {
+            /** Items */
+            items: components["schemas"]["TripChecklistItem"][];
+        };
+        /** TripCountryRef */
+        TripCountryRef: {
+            /** Id */
+            id?: string | null;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Iso2 */
+            iso2?: string | null;
+        };
+        /** TripCreateFromPassportRequest */
+        TripCreateFromPassportRequest: {
+            /** Token */
+            token: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** TripCreateRequest */
+        TripCreateRequest: {
+            /** Title */
+            title: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "active" | "completed" | "abandoned";
+        };
+        /** TripDetail */
+        TripDetail: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            origin_country?: components["schemas"]["TripCountryRef"] | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "active" | "completed" | "abandoned";
+            /**
+             * Confidence Tier
+             * @enum {string}
+             */
+            confidence_tier: "declared" | "active" | "confirmed";
+            /**
+             * Visibility
+             * @enum {string}
+             */
+            visibility: "private" | "link";
+            /** Share Token Prefix */
+            share_token_prefix?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Completed At */
+            completed_at?: string | null;
+            /** Waypoints */
+            waypoints?: components["schemas"]["TripWaypoint"][];
+            /** Checklist Items */
+            checklist_items?: components["schemas"]["TripChecklistItem"][];
+            /** Reminders */
+            reminders?: components["schemas"]["TripReminder"][];
+            /** Annotations */
+            annotations?: components["schemas"]["TripAnnotation"][];
+        };
+        /** TripDetailResponse */
+        TripDetailResponse: {
+            item: components["schemas"]["TripDetail"];
+        };
+        /** TripListResponse */
+        TripListResponse: {
+            /** Total */
+            total: number;
+            /** Items */
+            items: components["schemas"]["TripSummary"][];
+        };
+        /** TripReminder */
+        TripReminder: {
+            /** Id */
+            id: string;
+            /** Checklist Item Id */
+            checklist_item_id?: string | null;
+            /** Checklist Item Title */
+            checklist_item_title?: string | null;
+            /**
+             * Remind At
+             * Format: date-time
+             */
+            remind_at: string;
+            /**
+             * Channel
+             * @constant
+             */
+            channel: "telegram";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "scheduled" | "sent" | "cancelled";
+            /** Sent At */
+            sent_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TripReminderCreateRequest */
+        TripReminderCreateRequest: {
+            /** Checklist Item Id */
+            checklist_item_id?: string | null;
+            /**
+             * Remind At
+             * Format: date-time
+             */
+            remind_at: string;
+            /**
+             * Channel
+             * @default telegram
+             * @constant
+             */
+            channel: "telegram";
+        };
+        /** TripReminderListResponse */
+        TripReminderListResponse: {
+            /** Items */
+            items: components["schemas"]["TripReminder"][];
+        };
+        /** TripShareResponse */
+        TripShareResponse: {
+            /** Trip Id */
+            trip_id: string;
+            /** Token */
+            token: string;
+            /** Path */
+            path: string;
+            /**
+             * Visibility
+             * @enum {string}
+             */
+            visibility: "private" | "link";
+        };
+        /** TripSummary */
+        TripSummary: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            origin_country?: components["schemas"]["TripCountryRef"] | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "active" | "completed" | "abandoned";
+            /**
+             * Confidence Tier
+             * @enum {string}
+             */
+            confidence_tier: "declared" | "active" | "confirmed";
+            /**
+             * Visibility
+             * @enum {string}
+             */
+            visibility: "private" | "link";
+            /** Share Token Prefix */
+            share_token_prefix?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Completed At */
+            completed_at?: string | null;
+        };
+        /** TripUpdateRequest */
+        TripUpdateRequest: {
+            /** Title */
+            title?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Status */
+            status?: ("draft" | "active" | "completed" | "abandoned") | null;
+            /** Confidence Tier */
+            confidence_tier?: ("declared" | "active" | "confirmed") | null;
+        };
+        /** TripWarning */
+        TripWarning: {
+            /** Code */
+            code: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high" | "critical";
+            /** Message */
+            message: string;
+            /** Source Ids */
+            source_ids?: string[];
+            /** Origin Country Slug */
+            origin_country_slug?: string | null;
+            /** Destination Country Slug */
+            destination_country_slug?: string | null;
+            /** Waypoint Id */
+            waypoint_id?: string | null;
+        };
+        /** TripWarningsResponse */
+        TripWarningsResponse: {
+            /** Trip Id */
+            trip_id: string;
+            /** Methodology Version */
+            methodology_version: string;
+            /** Items */
+            items: components["schemas"]["TripWarning"][];
+        };
+        /** TripWaypoint */
+        TripWaypoint: {
+            /** Id */
+            id: string;
+            /** Position */
+            position: number;
+            country: components["schemas"]["TripCountryRef"];
+            /** City */
+            city?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "transit" | "destination" | "stopover";
+            /** Planned From */
+            planned_from?: string | null;
+            /** Planned To */
+            planned_to?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** TripWaypointCreateRequest */
+        TripWaypointCreateRequest: {
+            /** Country Slug */
+            country_slug: string;
+            /** City */
+            city?: string | null;
+            /**
+             * Kind
+             * @default destination
+             * @enum {string}
+             */
+            kind: "transit" | "destination" | "stopover";
+            /** Planned From */
+            planned_from?: string | null;
+            /** Planned To */
+            planned_to?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /** Position */
+            position?: number | null;
+        };
+        /** TripWaypointListResponse */
+        TripWaypointListResponse: {
+            /** Items */
+            items: components["schemas"]["TripWaypoint"][];
+        };
+        /** TripWaypointReorderRequest */
+        TripWaypointReorderRequest: {
+            /** Waypoint Ids */
+            waypoint_ids: string[];
+        };
+        /** TripWaypointUpdateRequest */
+        TripWaypointUpdateRequest: {
+            /** Country Slug */
+            country_slug?: string | null;
+            /** City */
+            city?: string | null;
+            /** Kind */
+            kind?: ("transit" | "destination" | "stopover") | null;
+            /** Planned From */
+            planned_from?: string | null;
+            /** Planned To */
+            planned_to?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /** Position */
+            position?: number | null;
+        };
+        /** TripWhatChangedCountry */
+        TripWhatChangedCountry: {
+            /** Country Slug */
+            country_slug: string;
+            /** Total */
+            total: number;
+        };
+        /** TripWhatChangedResponse */
+        TripWhatChangedResponse: {
+            /** Trip Id */
+            trip_id: string;
+            /** Countries */
+            countries: components["schemas"]["TripWhatChangedCountry"][];
+        };
         /** TrustComponentBreakdown */
         TrustComponentBreakdown: {
             /** Source Quality Score */
@@ -13802,6 +14652,940 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserWeightProfileResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_trips_api_v1_me_trips_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripListResponse"];
+                };
+            };
+        };
+    };
+    create_my_trip_api_v1_me_trips_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_trip_from_passport_api_v1_me_trips_from_passport_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripCreateFromPassportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_trip_api_v1_me_trips__trip_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_trip_api_v1_me_trips__trip_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_trip_api_v1_me_trips__trip_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWaypointListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripWaypointCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWaypoint"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                waypoint_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                waypoint_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripWaypointUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWaypoint"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_reorder_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripWaypointReorderRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWaypointListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_trip_checklist_api_v1_me_trips__trip_id__checklist_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripChecklistResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripChecklistItemCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripChecklistItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_my_trip_checklist_api_v1_me_trips__trip_id__checklist_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripChecklistImportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripChecklistResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripChecklistItemUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripChecklistItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_my_trip_warnings_api_v1_me_trips__trip_id__warnings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWarningsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_trip_reminders_api_v1_me_trips__trip_id__reminders_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripReminderListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_trip_reminder_api_v1_me_trips__trip_id__reminders_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripReminderCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripReminder"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_my_trip_reminder_api_v1_me_trips__trip_id__reminders__reminder_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                reminder_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    enable_my_trip_share_api_v1_me_trips__trip_id__share_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripShareResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    disable_my_trip_share_api_v1_me_trips__trip_id__share_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_my_trip_api_v1_me_trips__trip_id__export_get: {
+        parameters: {
+            query?: {
+                format?: "json" | "ics" | "geojson";
+            };
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_trip_annotations_api_v1_me_trips__trip_id__annotations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripAnnotationListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_trip_annotation_api_v1_me_trips__trip_id__annotations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripAnnotationCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripAnnotation"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                annotation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trip_id: string;
+                annotation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TripAnnotationUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripAnnotation"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_my_trip_what_changed_api_v1_me_trips__trip_id__what_changed_get: {
+        parameters: {
+            query?: {
+                since?: string | null;
+                days?: number;
+                limit?: number;
+                locale?: "en" | "ru";
+            };
+            header?: never;
+            path: {
+                trip_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TripWhatChangedResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_shared_trip_api_v1_trips_shared__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SharedTripResponse"];
                 };
             };
             /** @description Validation Error */

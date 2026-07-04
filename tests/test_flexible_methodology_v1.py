@@ -18,6 +18,9 @@ from unittest.mock import MagicMock
 CONNECTION = cast(Connection[Any], MagicMock())
 MIGRATION = Path("database/migrations/046_flexible_methodology_v1.sql")
 MIGRATION_SQL = MIGRATION.read_text(encoding="utf-8")
+METHODOLOGY_SEED_SQL = MIGRATION_SQL + Path(
+    "database/migrations/047_trip_planner_v1.sql"
+).read_text(encoding="utf-8")
 NOW = datetime(2026, 7, 4, tzinfo=UTC)
 
 
@@ -50,6 +53,9 @@ def _rows(**overrides: float) -> list[dict[str, Any]]:
         methodology_config.BOARD_MAX_CONTACT_REQUESTS_PER_DAY: 20.0,
         methodology_config.BOARD_MAX_REPORTS_PER_DAY: 20.0,
         methodology_config.FLOWS_K_ANONYMITY: 20.0,
+        methodology_config.TRIP_WARNING_HIGH_IMPACT_MIN_RANK: 3.0,
+        methodology_config.TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK: 3.0,
+        methodology_config.TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK: 2.0,
     }
     values.update(overrides)
     return [_row(param_key, value) for param_key, value in values.items()]
@@ -67,9 +73,9 @@ def test_migration_creates_methodology_and_weight_profile_tables() -> None:
 
 def test_migration_seeds_required_current_constants() -> None:
     for param_key in methodology_config.REQUIRED_NUMERIC_KEYS:
-        assert f"'{param_key}'" in MIGRATION_SQL
-    assert "'flows.k_anonymity'" in MIGRATION_SQL
-    assert "20" in MIGRATION_SQL
+        assert f"'{param_key}'" in METHODOLOGY_SEED_SQL
+    assert "'flows.k_anonymity'" in METHODOLOGY_SEED_SQL
+    assert "20" in METHODOLOGY_SEED_SQL
 
 
 def test_methodology_config_builds_typed_active_version() -> None:
@@ -80,6 +86,7 @@ def test_methodology_config_builds_typed_active_version() -> None:
     assert config.decision.strength_min_score == 70.0
     assert config.board.max_active_posts == 5
     assert config.flows_k_anonymity == 20
+    assert config.trip_warnings.high_impact_min_rank == 3
 
 
 def test_methodology_config_missing_key_is_hard_error() -> None:

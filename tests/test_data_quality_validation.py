@@ -204,6 +204,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_duplicate_pending_migration_board_contact_requests",
         "list_invalid_migration_board_reports",
         "list_invalid_migration_board_blocks",
+        "list_trips_with_invalid_share_state",
+        "list_reminders_with_invalid_trip_or_item",
+        "list_trip_waypoints_with_invalid_position",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     monkeypatch.setattr(

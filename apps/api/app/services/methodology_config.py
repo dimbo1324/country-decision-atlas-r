@@ -26,6 +26,13 @@ BOARD_MAX_ACTIVE_POSTS = "board.max_active_posts"
 BOARD_MAX_CONTACT_REQUESTS_PER_DAY = "board.max_contact_requests_per_day"
 BOARD_MAX_REPORTS_PER_DAY = "board.max_reports_per_day"
 FLOWS_K_ANONYMITY = "flows.k_anonymity"
+TRIP_WARNING_HIGH_IMPACT_MIN_RANK = "trip.warning.high_impact_min_rank"
+TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK = (
+    "trip.warning.restrictive_pair_severity_rank"
+)
+TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK = (
+    "trip.warning.missing_pair_severity_rank"
+)
 
 REQUIRED_NUMERIC_KEYS = (
     SCORE_LABEL_WEAK_BELOW,
@@ -42,6 +49,9 @@ REQUIRED_NUMERIC_KEYS = (
     BOARD_MAX_CONTACT_REQUESTS_PER_DAY,
     BOARD_MAX_REPORTS_PER_DAY,
     FLOWS_K_ANONYMITY,
+    TRIP_WARNING_HIGH_IMPACT_MIN_RANK,
+    TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK,
+    TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK,
 )
 
 
@@ -97,6 +107,13 @@ class BoardLimits:
 
 
 @dataclass(frozen=True)
+class TripWarningThresholds:
+    high_impact_min_rank: int
+    restrictive_pair_severity_rank: int
+    missing_pair_severity_rank: int
+
+
+@dataclass(frozen=True)
 class MethodologyConfig:
     version: str
     parameters: dict[str, MethodologyParameter]
@@ -104,6 +121,7 @@ class MethodologyConfig:
     decision: DecisionThresholds
     board: BoardLimits
     flows_k_anonymity: int
+    trip_warnings: TripWarningThresholds
 
 
 _cached_config: MethodologyConfig | None = None
@@ -187,6 +205,17 @@ def build_methodology_config(
         ),
     )
     flows_k_anonymity = _positive_int(parameters, FLOWS_K_ANONYMITY)
+    trip_warnings = TripWarningThresholds(
+        high_impact_min_rank=_severity_rank(
+            parameters, TRIP_WARNING_HIGH_IMPACT_MIN_RANK
+        ),
+        restrictive_pair_severity_rank=_severity_rank(
+            parameters, TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK
+        ),
+        missing_pair_severity_rank=_severity_rank(
+            parameters, TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK
+        ),
+    )
     _validate_thresholds(score_labels, decision)
     return MethodologyConfig(
         version=version,
@@ -195,6 +224,7 @@ def build_methodology_config(
         decision=decision,
         board=board,
         flows_k_anonymity=flows_k_anonymity,
+        trip_warnings=trip_warnings,
     )
 
 
@@ -243,6 +273,17 @@ def _positive_int(
             f"Methodology parameter {param_key} must be a positive integer."
         )
     return int(value)
+
+
+def _severity_rank(
+    parameters: dict[str, MethodologyParameter], param_key: str
+) -> int:
+    value = _positive_int(parameters, param_key)
+    if value > 4:
+        raise MethodologyConfigError(
+            f"Methodology parameter {param_key} must be a severity rank within 1..4."
+        )
+    return value
 
 
 def _validate_thresholds(

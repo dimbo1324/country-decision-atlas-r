@@ -18,7 +18,10 @@ REQUIRED_NUMERIC_PARAMETER_SQL = """
         ('board.max_active_posts', 1::numeric, 1000::numeric),
         ('board.max_contact_requests_per_day', 1::numeric, 1000::numeric),
         ('board.max_reports_per_day', 1::numeric, 1000::numeric),
-        ('flows.k_anonymity', 1::numeric, 100000::numeric)
+        ('flows.k_anonymity', 1::numeric, 100000::numeric),
+        ('trip.warning.high_impact_min_rank', 1::numeric, 4::numeric),
+        ('trip.warning.restrictive_pair_severity_rank', 1::numeric, 4::numeric),
+        ('trip.warning.missing_pair_severity_rank', 1::numeric, 4::numeric)
 """
 
 

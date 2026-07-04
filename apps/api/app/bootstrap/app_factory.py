@@ -30,6 +30,7 @@ from app.api.v1 import (
     search,
     sources,
     translations,
+    trip_planner,
     trust,
     user_stories,
     watchlists,
@@ -256,6 +257,8 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(admin_users.router, prefix="/api/v1")
     app.include_router(watchlists.router, prefix="/api/v1")
     app.include_router(weight_profiles.router, prefix="/api/v1")
+    app.include_router(trip_planner.router, prefix="/api/v1")
+    app.include_router(trip_planner.shared_router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

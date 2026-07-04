@@ -6151,6 +6151,916 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips:
+    get:
+      tags:
+      - trip-planner
+      summary: List My Trips
+      operationId: list_my_trips_api_v1_me_trips_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripListResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip
+      operationId: create_my_trip_api_v1_me_trips_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/trips/from-passport:
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip From Passport
+      operationId: create_my_trip_from_passport_api_v1_me_trips_from_passport_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripCreateFromPassportRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/trips/{trip_id}:
+    get:
+      tags:
+      - trip-planner
+      summary: Get My Trip
+      operationId: get_my_trip_api_v1_me_trips__trip_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - trip-planner
+      summary: Update My Trip
+      operationId: update_my_trip_api_v1_me_trips__trip_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - trip-planner
+      summary: Delete My Trip
+      operationId: delete_my_trip_api_v1_me_trips__trip_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/waypoints:
+    get:
+      tags:
+      - trip-planner
+      summary: List My Trip Waypoints
+      operationId: list_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWaypointListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip Waypoint
+      operationId: create_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripWaypointCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWaypoint'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/waypoints/{waypoint_id}:
+    patch:
+      tags:
+      - trip-planner
+      summary: Update My Trip Waypoint
+      operationId: update_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: waypoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Waypoint Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripWaypointUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWaypoint'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - trip-planner
+      summary: Delete My Trip Waypoint
+      operationId: delete_my_trip_waypoint_api_v1_me_trips__trip_id__waypoints__waypoint_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: waypoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Waypoint Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/waypoints/reorder:
+    post:
+      tags:
+      - trip-planner
+      summary: Reorder My Trip Waypoints
+      operationId: reorder_my_trip_waypoints_api_v1_me_trips__trip_id__waypoints_reorder_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripWaypointReorderRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWaypointListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/checklist:
+    get:
+      tags:
+      - trip-planner
+      summary: List My Trip Checklist
+      operationId: list_my_trip_checklist_api_v1_me_trips__trip_id__checklist_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripChecklistResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip Checklist Item
+      operationId: create_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripChecklistItemCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripChecklistItem'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/checklist/import:
+    post:
+      tags:
+      - trip-planner
+      summary: Import My Trip Checklist
+      operationId: import_my_trip_checklist_api_v1_me_trips__trip_id__checklist_import_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripChecklistImportRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripChecklistResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/checklist/{item_id}:
+    patch:
+      tags:
+      - trip-planner
+      summary: Update My Trip Checklist Item
+      operationId: update_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Item Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripChecklistItemUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripChecklistItem'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - trip-planner
+      summary: Delete My Trip Checklist Item
+      operationId: delete_my_trip_checklist_item_api_v1_me_trips__trip_id__checklist__item_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Item Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/warnings:
+    get:
+      tags:
+      - trip-planner
+      summary: Read My Trip Warnings
+      operationId: read_my_trip_warnings_api_v1_me_trips__trip_id__warnings_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWarningsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/reminders:
+    get:
+      tags:
+      - trip-planner
+      summary: List My Trip Reminders
+      operationId: list_my_trip_reminders_api_v1_me_trips__trip_id__reminders_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripReminderListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip Reminder
+      operationId: create_my_trip_reminder_api_v1_me_trips__trip_id__reminders_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripReminderCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripReminder'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/reminders/{reminder_id}:
+    delete:
+      tags:
+      - trip-planner
+      summary: Cancel My Trip Reminder
+      operationId: cancel_my_trip_reminder_api_v1_me_trips__trip_id__reminders__reminder_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: reminder_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Reminder Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/share:
+    post:
+      tags:
+      - trip-planner
+      summary: Enable My Trip Share
+      operationId: enable_my_trip_share_api_v1_me_trips__trip_id__share_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripShareResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - trip-planner
+      summary: Disable My Trip Share
+      operationId: disable_my_trip_share_api_v1_me_trips__trip_id__share_delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/export:
+    get:
+      tags:
+      - trip-planner
+      summary: Export My Trip
+      operationId: export_my_trip_api_v1_me_trips__trip_id__export_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: format
+        in: query
+        required: false
+        schema:
+          enum:
+          - json
+          - ics
+          - geojson
+          type: string
+          default: json
+          title: Format
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/annotations:
+    get:
+      tags:
+      - trip-planner
+      summary: List My Trip Annotations
+      operationId: list_my_trip_annotations_api_v1_me_trips__trip_id__annotations_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripAnnotationListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - trip-planner
+      summary: Create My Trip Annotation
+      operationId: create_my_trip_annotation_api_v1_me_trips__trip_id__annotations_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripAnnotationCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripAnnotation'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/annotations/{annotation_id}:
+    patch:
+      tags:
+      - trip-planner
+      summary: Update My Trip Annotation
+      operationId: update_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: annotation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Annotation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripAnnotationUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripAnnotation'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - trip-planner
+      summary: Delete My Trip Annotation
+      operationId: delete_my_trip_annotation_api_v1_me_trips__trip_id__annotations__annotation_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: annotation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Annotation Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/trips/{trip_id}/what-changed:
+    get:
+      tags:
+      - trip-planner
+      summary: Read My Trip What Changed
+      operationId: read_my_trip_what_changed_api_v1_me_trips__trip_id__what_changed_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: trip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trip Id
+      - name: since
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Since
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 365
+          minimum: 1
+          default: 30
+          title: Days
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: locale
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-z]{2}$
+          enum:
+          - en
+          - ru
+          default: ru
+          title: Locale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripWhatChangedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/trips/shared/{token}:
+    get:
+      tags:
+      - trip-planner
+      summary: Read Shared Trip
+      operationId: read_shared_trip_api_v1_trips_shared__token__get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedTripResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/home/overview:
     get:
       tags:
@@ -14800,6 +15710,127 @@ components:
       - path
       - rank
       title: SearchResultItem
+    SharedTripChecklistItem:
+      properties:
+        title:
+          type: string
+          title: Title
+        due_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Due Date
+        status:
+          type: string
+          enum:
+          - todo
+          - in_progress
+          - done
+          - skipped
+          title: Status
+        position:
+          type: integer
+          title: Position
+      type: object
+      required:
+      - title
+      - status
+      - position
+      title: SharedTripChecklistItem
+    SharedTripResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/TripCountryRef'
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - completed
+          - abandoned
+          title: Status
+        confidence_tier:
+          type: string
+          enum:
+          - declared
+          - active
+          - confirmed
+          title: Confidence Tier
+        waypoints:
+          items:
+            $ref: '#/components/schemas/SharedTripWaypoint'
+          type: array
+          title: Waypoints
+        checklist_items:
+          items:
+            $ref: '#/components/schemas/SharedTripChecklistItem'
+          type: array
+          title: Checklist Items
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - confidence_tier
+      - waypoints
+      - checklist_items
+      - updated_at
+      title: SharedTripResponse
+    SharedTripWaypoint:
+      properties:
+        position:
+          type: integer
+          title: Position
+        country:
+          $ref: '#/components/schemas/TripCountryRef'
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        kind:
+          type: string
+          enum:
+          - transit
+          - destination
+          - stopover
+          title: Kind
+        planned_from:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned From
+        planned_to:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned To
+      type: object
+      required:
+      - position
+      - country
+      - kind
+      title: SharedTripWaypoint
     SortMeta:
       properties:
         sort:
@@ -15788,6 +16819,948 @@ components:
       - fallback
       - missing
       title: TranslationStatus
+    TripAnnotation:
+      properties:
+        id:
+          type: string
+          title: Id
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        kind:
+          type: string
+          enum:
+          - note
+          - item_to_bring
+          - warning_ack
+          title: Kind
+        body:
+          type: string
+          title: Body
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - kind
+      - body
+      - created_at
+      - updated_at
+      title: TripAnnotation
+    TripAnnotationCreateRequest:
+      properties:
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        kind:
+          type: string
+          enum:
+          - note
+          - item_to_bring
+          - warning_ack
+          title: Kind
+        body:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Body
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      required:
+      - kind
+      - body
+      title: TripAnnotationCreateRequest
+    TripAnnotationListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TripAnnotation'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: TripAnnotationListResponse
+    TripAnnotationUpdateRequest:
+      properties:
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        kind:
+          anyOf:
+          - type: string
+            enum:
+            - note
+            - item_to_bring
+            - warning_ack
+          - type: 'null'
+          title: Kind
+        body:
+          anyOf:
+          - type: string
+            maxLength: 4000
+            minLength: 1
+          - type: 'null'
+          title: Body
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      title: TripAnnotationUpdateRequest
+    TripChecklistImportRequest:
+      properties:
+        route_id:
+          type: string
+          title: Route Id
+      type: object
+      required:
+      - route_id
+      title: TripChecklistImportRequest
+    TripChecklistItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        due_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Due Date
+        status:
+          type: string
+          enum:
+          - todo
+          - in_progress
+          - done
+          - skipped
+          title: Status
+        origin_kind:
+          type: string
+          enum:
+          - manual
+          - route_template
+          - author_template
+          title: Origin Kind
+        origin_ref:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Ref
+        position:
+          type: integer
+          title: Position
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - origin_kind
+      - position
+      - created_at
+      - updated_at
+      title: TripChecklistItem
+    TripChecklistItemCreateRequest:
+      properties:
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        title:
+          type: string
+          maxLength: 240
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Description
+        due_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Due Date
+        status:
+          type: string
+          enum:
+          - todo
+          - in_progress
+          - done
+          - skipped
+          title: Status
+          default: todo
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      required:
+      - title
+      title: TripChecklistItemCreateRequest
+    TripChecklistItemUpdateRequest:
+      properties:
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+        title:
+          anyOf:
+          - type: string
+            maxLength: 240
+            minLength: 1
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Description
+        due_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Due Date
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - todo
+            - in_progress
+            - done
+            - skipped
+          - type: 'null'
+          title: Status
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      title: TripChecklistItemUpdateRequest
+    TripChecklistResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TripChecklistItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: TripChecklistResponse
+    TripCountryRef:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        iso2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso2
+      type: object
+      required:
+      - slug
+      - name
+      title: TripCountryRef
+    TripCreateFromPassportRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+        title:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Title
+      type: object
+      required:
+      - token
+      title: TripCreateFromPassportRequest
+    TripCreateRequest:
+      properties:
+        title:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Title
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - completed
+          - abandoned
+          title: Status
+          default: draft
+      type: object
+      required:
+      - title
+      title: TripCreateRequest
+    TripDetail:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/TripCountryRef'
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - completed
+          - abandoned
+          title: Status
+        confidence_tier:
+          type: string
+          enum:
+          - declared
+          - active
+          - confirmed
+          title: Confidence Tier
+        visibility:
+          type: string
+          enum:
+          - private
+          - link
+          title: Visibility
+        share_token_prefix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Share Token Prefix
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        waypoints:
+          items:
+            $ref: '#/components/schemas/TripWaypoint'
+          type: array
+          title: Waypoints
+        checklist_items:
+          items:
+            $ref: '#/components/schemas/TripChecklistItem'
+          type: array
+          title: Checklist Items
+        reminders:
+          items:
+            $ref: '#/components/schemas/TripReminder'
+          type: array
+          title: Reminders
+        annotations:
+          items:
+            $ref: '#/components/schemas/TripAnnotation'
+          type: array
+          title: Annotations
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - confidence_tier
+      - visibility
+      - created_at
+      - updated_at
+      title: TripDetail
+    TripDetailResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/TripDetail'
+      type: object
+      required:
+      - item
+      title: TripDetailResponse
+    TripListResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/TripSummary'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      - items
+      title: TripListResponse
+    TripReminder:
+      properties:
+        id:
+          type: string
+          title: Id
+        checklist_item_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checklist Item Id
+        checklist_item_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checklist Item Title
+        remind_at:
+          type: string
+          format: date-time
+          title: Remind At
+        channel:
+          type: string
+          const: telegram
+          title: Channel
+        status:
+          type: string
+          enum:
+          - scheduled
+          - sent
+          - cancelled
+          title: Status
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - remind_at
+      - channel
+      - status
+      - created_at
+      - updated_at
+      title: TripReminder
+    TripReminderCreateRequest:
+      properties:
+        checklist_item_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checklist Item Id
+        remind_at:
+          type: string
+          format: date-time
+          title: Remind At
+        channel:
+          type: string
+          const: telegram
+          title: Channel
+          default: telegram
+      type: object
+      required:
+      - remind_at
+      title: TripReminderCreateRequest
+    TripReminderListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TripReminder'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: TripReminderListResponse
+    TripShareResponse:
+      properties:
+        trip_id:
+          type: string
+          title: Trip Id
+        token:
+          type: string
+          title: Token
+        path:
+          type: string
+          title: Path
+        visibility:
+          type: string
+          enum:
+          - private
+          - link
+          title: Visibility
+      type: object
+      required:
+      - trip_id
+      - token
+      - path
+      - visibility
+      title: TripShareResponse
+    TripSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        origin_country:
+          anyOf:
+          - $ref: '#/components/schemas/TripCountryRef'
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - completed
+          - abandoned
+          title: Status
+        confidence_tier:
+          type: string
+          enum:
+          - declared
+          - active
+          - confirmed
+          title: Confidence Tier
+        visibility:
+          type: string
+          enum:
+          - private
+          - link
+          title: Visibility
+        share_token_prefix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Share Token Prefix
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - confidence_tier
+      - visibility
+      - created_at
+      - updated_at
+      title: TripSummary
+    TripUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Title
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - draft
+            - active
+            - completed
+            - abandoned
+          - type: 'null'
+          title: Status
+        confidence_tier:
+          anyOf:
+          - type: string
+            enum:
+            - declared
+            - active
+            - confirmed
+          - type: 'null'
+          title: Confidence Tier
+      type: object
+      title: TripUpdateRequest
+    TripWarning:
+      properties:
+        code:
+          type: string
+          title: Code
+        severity:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - critical
+          title: Severity
+        message:
+          type: string
+          title: Message
+        source_ids:
+          items:
+            type: string
+          type: array
+          title: Source Ids
+        origin_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Origin Country Slug
+        destination_country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Country Slug
+        waypoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Waypoint Id
+      type: object
+      required:
+      - code
+      - severity
+      - message
+      title: TripWarning
+    TripWarningsResponse:
+      properties:
+        trip_id:
+          type: string
+          title: Trip Id
+        methodology_version:
+          type: string
+          title: Methodology Version
+        items:
+          items:
+            $ref: '#/components/schemas/TripWarning'
+          type: array
+          title: Items
+      type: object
+      required:
+      - trip_id
+      - methodology_version
+      - items
+      title: TripWarningsResponse
+    TripWaypoint:
+      properties:
+        id:
+          type: string
+          title: Id
+        position:
+          type: integer
+          title: Position
+        country:
+          $ref: '#/components/schemas/TripCountryRef'
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        kind:
+          type: string
+          enum:
+          - transit
+          - destination
+          - stopover
+          title: Kind
+        planned_from:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned From
+        planned_to:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned To
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - position
+      - country
+      - kind
+      - created_at
+      - updated_at
+      title: TripWaypoint
+    TripWaypointCreateRequest:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        city:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: City
+        kind:
+          type: string
+          enum:
+          - transit
+          - destination
+          - stopover
+          title: Kind
+          default: destination
+        planned_from:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned From
+        planned_to:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned To
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Notes
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      required:
+      - country_slug
+      title: TripWaypointCreateRequest
+    TripWaypointListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TripWaypoint'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: TripWaypointListResponse
+    TripWaypointReorderRequest:
+      properties:
+        waypoint_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Waypoint Ids
+      type: object
+      required:
+      - waypoint_ids
+      title: TripWaypointReorderRequest
+    TripWaypointUpdateRequest:
+      properties:
+        country_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Slug
+        city:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: City
+        kind:
+          anyOf:
+          - type: string
+            enum:
+            - transit
+            - destination
+            - stopover
+          - type: 'null'
+          title: Kind
+        planned_from:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned From
+        planned_to:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Planned To
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Notes
+        position:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Position
+      type: object
+      title: TripWaypointUpdateRequest
+    TripWhatChangedCountry:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - country_slug
+      - total
+      title: TripWhatChangedCountry
+    TripWhatChangedResponse:
+      properties:
+        trip_id:
+          type: string
+          title: Trip Id
+        countries:
+          items:
+            $ref: '#/components/schemas/TripWhatChangedCountry'
+          type: array
+          title: Countries
+      type: object
+      required:
+      - trip_id
+      - countries
+      title: TripWhatChangedResponse
     TrustComponentBreakdown:
       properties:
         source_quality_score:

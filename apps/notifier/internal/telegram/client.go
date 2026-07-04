@@ -61,6 +61,14 @@ func (r *RealClient) SendMessage(ctx context.Context, chatID string, text string
 }
 
 func FormatMessage(countrySlug string, eventType string, title string) string {
+	if eventType == "trip_reminder_due" {
+		return fmt.Sprintf(
+			"Напоминание по плану переезда\n\n%s\nСтрана: %s\n\n%s",
+			title,
+			countrySlug,
+			Disclaimer,
+		)
+	}
 	return fmt.Sprintf(
 		"Новое правовое событие по стране: %s\n\nТип события: %s\nЗаголовок: %s\n\n%s",
 		countrySlug,

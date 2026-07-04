@@ -194,6 +194,11 @@ from app.repositories.data_quality.telegram_links import (
     list_telegram_links_with_invalid_status as list_telegram_links_with_invalid_status,
     list_unlinked_telegram_links_missing_unlinked_at as list_unlinked_telegram_links_missing_unlinked_at,
 )
+from app.repositories.data_quality.trip_planner import (
+    list_reminders_with_invalid_trip_or_item as list_reminders_with_invalid_trip_or_item,
+    list_trip_waypoints_with_invalid_position as list_trip_waypoints_with_invalid_position,
+    list_trips_with_invalid_share_state as list_trips_with_invalid_share_state,
+)
 from app.repositories.data_quality.trust import (
     list_active_countries_missing_trust_scores as list_active_countries_missing_trust_scores,
     list_inconsistent_trust_insufficient_data as list_inconsistent_trust_insufficient_data,

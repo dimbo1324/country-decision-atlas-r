@@ -43,6 +43,9 @@ from app.services.data_quality.search_foundation_checks import (
     _append_search_foundation_checks,
 )
 from app.services.data_quality.timeline_checks import _append_timeline_checks
+from app.services.data_quality.trip_planner_checks import (
+    _append_trip_planner_checks,
+)
 from app.services.data_quality.trust_checks import _append_trust_surface_checks
 from app.services.data_quality.what_changed_checks import (
     _append_what_changed_checks,
@@ -75,6 +78,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_ai_foundation_checks(connection, issues, checks)
     _append_auth_watchlist_checks(connection, issues, checks)
     _append_migration_board_checks(connection, issues, checks)
+    _append_trip_planner_checks(connection, issues, checks)
 
     from app.services import data_quality as data_quality_facade
 

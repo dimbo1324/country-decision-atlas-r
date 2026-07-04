@@ -7,6 +7,7 @@ from app.services.methodology_config import (
     MethodologyConfig,
     RecommendationThresholds,
     ScoreLabelThresholds,
+    TripWarningThresholds,
 )
 
 
@@ -33,6 +34,11 @@ def methodology_config() -> MethodologyConfig:
             max_reports_per_day=20,
         ),
         flows_k_anonymity=20,
+        trip_warnings=TripWarningThresholds(
+            high_impact_min_rank=3,
+            restrictive_pair_severity_rank=3,
+            missing_pair_severity_rank=2,
+        ),
     )
 
 
