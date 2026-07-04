@@ -32,6 +32,18 @@ def list_weight_profiles(
     )
 
 
+@router.get("/{profile_id}", response_model=UserWeightProfileResponse)
+def get_weight_profile(
+    profile_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[CurrentUser, Depends(require_user)],
+) -> UserWeightProfileResponse:
+    profile = service.get_user_weight_profile(
+        connection, profile_id, current_user.id
+    )
+    return UserWeightProfileResponse(item=UserWeightProfile(**profile))
+
+
 @router.post(
     "",
     response_model=UserWeightProfileResponse,

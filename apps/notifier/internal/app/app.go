@@ -62,7 +62,7 @@ func Run() {
 
 	registry := channels.NewRegistry()
 	registry.Register(channels.NewTelegramChannel(tgClient))
-	h := notifier.NewHandler(dedup, subRepo, dl, deadLetters, registry, metricsCollector)
+	h := notifier.NewHandler(dedup, subRepo, identityRepo, dl, deadLetters, registry, metricsCollector)
 
 	grpcSrv := grpcserver.NewWithMetrics(svc, dl, identityRepo, linkCodeRepo, metricsCollector)
 

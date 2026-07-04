@@ -178,14 +178,3 @@ def _attach_breakdowns_and_sources(
         )
         for row in rows
     ]
-
-
-def _risks_for_country(country: DecisionCountryScore) -> list[str]:
-    weak = [item.criterion for item in country.breakdowns if item.score < 50]
-    if not weak:
-        return [
-            "No low-scoring criteria in the MVP breakdown; expert review is still required."
-        ]
-    return [
-        f"Low or uncertain criterion: {criterion}" for criterion in weak[:4]
-    ]

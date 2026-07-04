@@ -221,9 +221,10 @@ func TestUnsupportedChannelWritesDeliveryDLQAndMetrics(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
 	registry := channels.NewRegistry()
 	m := metrics.New()
-	h := NewHandler(dedup, subs, dl, deadLetters, registry, m)
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, m)
 
 	err := h.Handle(context.Background(), makeTestEvent("key-unsupported", "argentina"))
 	if err != nil {
@@ -259,10 +260,11 @@ func TestTelegramFailureWritesDeliveryDLQ(t *testing.T) {
 	})
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
 	registry := channels.NewRegistry()
 	registry.Register(channels.NewTelegramChannel(&errorClient{}))
 	m := metrics.New()
-	h := NewHandler(dedup, subs, dl, deadLetters, registry, m)
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, m)
 
 	err := h.Handle(context.Background(), makeTestEvent("key-telegram-dlq", "argentina"))
 	if err != nil {
@@ -278,5 +280,137 @@ func TestTelegramFailureWritesDeliveryDLQ(t *testing.T) {
 	}
 	if m.Snapshot().TelegramErrors != 1 {
 		t.Errorf("want telegram_errors=1 got %d", m.Snapshot().TelegramErrors)
+	}
+}
+
+func makeTripReminderEvent(eventKey, countrySlug, userID string) *events.DomainEvent {
+	return &events.DomainEvent{
+		EventKey:      eventKey,
+		EventType:     "trip_reminder_due",
+		AggregateType: "trip_reminder",
+		AggregateID:   "reminder-1",
+		CountrySlug:   countrySlug,
+		Payload: map[string]interface{}{
+			"reminder_id": "reminder-1",
+			"trip_id":     "trip-1",
+			"user_id":     userID,
+			"title":       "Visa appointment",
+		},
+		CreatedAt: time.Now().UTC(),
+	}
+}
+
+func TestTripReminderDeliversToLinkedTelegramAccountNotCountrySubscribers(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository([]*mongostore.Subscription{
+		makeActiveSub("bystander", "argentina"),
+	})
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	if err := identities.SetWebUserID(context.Background(), "owner-telegram-id", "web-user-42"); err != nil {
+		t.Fatalf("link setup: %v", err)
+	}
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	tg := &telegram.FakeClient{}
+	registry.Register(channels.NewTelegramChannel(tg))
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, metrics.New())
+
+	e := makeTripReminderEvent("key-trip-reminder", "argentina", "web-user-42")
+	if err := h.Handle(context.Background(), e); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(tg.Sent) != 1 {
+		t.Fatalf("want 1 sent message got %d", len(tg.Sent))
+	}
+	if tg.Sent[0].ChatID != "owner-telegram-id" {
+		t.Errorf("want message routed to linked owner chat, got %s", tg.Sent[0].ChatID)
+	}
+	if len(deadLetters.Entries) != 0 {
+		t.Errorf("want 0 dead letters got %d", len(deadLetters.Entries))
+	}
+}
+
+func TestTripReminderWithoutLinkedAccountWritesDLQAndDoesNotError(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository([]*mongostore.Subscription{
+		makeActiveSub("bystander", "argentina"),
+	})
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	tg := &telegram.FakeClient{}
+	registry.Register(channels.NewTelegramChannel(tg))
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, metrics.New())
+
+	e := makeTripReminderEvent("key-trip-reminder-unlinked", "argentina", "web-user-unlinked")
+	if err := h.Handle(context.Background(), e); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(tg.Sent) != 0 {
+		t.Errorf("want 0 messages sent (no linked account) got %d", len(tg.Sent))
+	}
+	if len(deadLetters.Entries) != 1 {
+		t.Fatalf("want 1 dead letter got %d", len(deadLetters.Entries))
+	}
+	for _, entry := range deadLetters.Entries {
+		if entry.ReasonCode != dlq.ReasonTelegramNotLinked {
+			t.Errorf("want reason %s got %s", dlq.ReasonTelegramNotLinked, entry.ReasonCode)
+		}
+	}
+}
+
+func TestTripReminderMissingUserIDWritesDLQAndDoesNotError(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository(nil)
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	tg := &telegram.FakeClient{}
+	registry.Register(channels.NewTelegramChannel(tg))
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, metrics.New())
+
+	e := makeTripReminderEvent("key-trip-reminder-no-user", "argentina", "")
+	if err := h.Handle(context.Background(), e); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(tg.Sent) != 0 {
+		t.Errorf("want 0 messages sent got %d", len(tg.Sent))
+	}
+	if len(deadLetters.Entries) != 1 {
+		t.Fatalf("want 1 dead letter got %d", len(deadLetters.Entries))
+	}
+	for _, entry := range deadLetters.Entries {
+		if entry.ReasonCode != dlq.ReasonMissingRecipient {
+			t.Errorf("want reason %s got %s", dlq.ReasonMissingRecipient, entry.ReasonCode)
+		}
+	}
+}
+
+func TestTripReminderDuplicateEventKeySkipped(t *testing.T) {
+	dedup := mongostore.NewInMemoryDedupRepository()
+	subs := mongostore.NewInMemorySubscriptionRepository(nil)
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	if err := identities.SetWebUserID(context.Background(), "owner-telegram-id", "web-user-42"); err != nil {
+		t.Fatalf("link setup: %v", err)
+	}
+	dl := mongostore.NewInMemoryDeliveryLogRepository()
+	deadLetters := mongostore.NewInMemoryDeadLetterRepository()
+	registry := channels.NewRegistry()
+	tg := &telegram.FakeClient{}
+	registry.Register(channels.NewTelegramChannel(tg))
+	h := NewHandler(dedup, subs, identities, dl, deadLetters, registry, metrics.New())
+
+	e := makeTripReminderEvent("key-trip-reminder-dup", "argentina", "web-user-42")
+	_ = h.Handle(context.Background(), e)
+	_ = h.Handle(context.Background(), e)
+
+	if len(tg.Sent) != 1 {
+		t.Errorf("want 1 sent message got %d", len(tg.Sent))
 	}
 }

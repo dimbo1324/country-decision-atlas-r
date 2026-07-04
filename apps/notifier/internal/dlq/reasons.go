@@ -15,4 +15,6 @@ const (
 	ReasonDeliveryRetriesExhausted = "delivery_retries_exhausted"
 	ReasonNotifyAfterSkipped       = "notify_after_skipped"
 	ReasonUnknownProcessingError   = "unknown_processing_error"
+	ReasonMissingRecipient         = "missing_recipient"
+	ReasonTelegramNotLinked        = "telegram_not_linked"
 )

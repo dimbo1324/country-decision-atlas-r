@@ -24,6 +24,7 @@ type TelegramIdentityRepository interface {
 	SetWebUserID(ctx context.Context, telegramUserID string, webUserID string) error
 	ClearWebUserID(ctx context.Context, telegramUserID string) error
 	GetLinkStatus(ctx context.Context, telegramUserID string) (linked bool, webUserID string, err error)
+	FindByWebUserID(ctx context.Context, webUserID string) (linked bool, telegramUserID string, err error)
 }
 
 type MongoTelegramIdentityRepository struct {
@@ -100,6 +101,20 @@ func (r *MongoTelegramIdentityRepository) GetLinkStatus(ctx context.Context, tel
 	return true, *identity.WebUserID, nil
 }
 
+func (r *MongoTelegramIdentityRepository) FindByWebUserID(ctx context.Context, webUserID string) (bool, string, error) {
+	var identity TelegramIdentity
+	err := r.store.TelegramIdentities().
+		FindOne(ctx, bson.M{"web_user_id": webUserID}).
+		Decode(&identity)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return false, "", nil
+		}
+		return false, "", err
+	}
+	return true, identity.TelegramUserID, nil
+}
+
 type InMemoryTelegramIdentityRepository struct {
 	mu         sync.Mutex
 	identities map[string]*TelegramIdentity
@@ -171,6 +186,17 @@ func (r *InMemoryTelegramIdentityRepository) GetLinkStatus(_ context.Context, te
 		return false, "", nil
 	}
 	return true, *existing.WebUserID, nil
+}
+
+func (r *InMemoryTelegramIdentityRepository) FindByWebUserID(_ context.Context, webUserID string) (bool, string, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for _, identity := range r.identities {
+		if identity.WebUserID != nil && *identity.WebUserID == webUserID {
+			return true, identity.TelegramUserID, nil
+		}
+	}
+	return false, "", nil
 }
 
 var _ TelegramIdentityRepository = (*MongoTelegramIdentityRepository)(nil)

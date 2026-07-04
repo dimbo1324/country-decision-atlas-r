@@ -3,8 +3,8 @@ from app.repositories import weight_profiles as repository
 from app.services.decision_criteria import DECISION_CRITERIA
 from app.services.decision_personalization import validate_custom_weights
 from decimal import Decimal
-from psycopg import Connection
-from typing import Any
+from psycopg import Connection, errors as psycopg_errors
+from typing import Any, NoReturn
 
 
 def list_user_weight_profiles(
@@ -45,14 +45,17 @@ def create_user_weight_profile(
     _ensure_name_available(connection, user_id, clean_name, None)
     if is_default:
         repository.clear_default_profiles(connection, user_id, scenario_slug)
-    row = repository.create_profile(
-        connection,
-        user_id=user_id,
-        name=clean_name,
-        scenario_slug=scenario_slug,
-        weights=clean_weights,
-        is_default=is_default,
-    )
+    try:
+        row = repository.create_profile(
+            connection,
+            user_id=user_id,
+            name=clean_name,
+            scenario_slug=scenario_slug,
+            weights=clean_weights,
+            is_default=is_default,
+        )
+    except psycopg_errors.UniqueViolation:
+        _raise_name_conflict(clean_name)
     return _profile(row)
 
 
@@ -108,15 +111,18 @@ def update_user_weight_profile(
         repository.clear_default_profiles(
             connection, user_id, next_scenario_slug
         )
-    row = repository.update_profile(
-        connection,
-        profile_id=profile_id,
-        user_id=user_id,
-        name=next_name,
-        scenario_slug=next_scenario_slug,
-        weights=next_weights,
-        is_default=next_is_default,
-    )
+    try:
+        row = repository.update_profile(
+            connection,
+            profile_id=profile_id,
+            user_id=user_id,
+            name=next_name,
+            scenario_slug=next_scenario_slug,
+            weights=next_weights,
+            is_default=next_is_default,
+        )
+    except psycopg_errors.UniqueViolation:
+        _raise_name_conflict(next_name)
     if row is None:
         raise api_error(
             404,
@@ -228,6 +234,10 @@ def _ensure_name_available(
     )
     if existing is None or str(existing["id"]) == str(profile_id):
         return
+    _raise_name_conflict(name)
+
+
+def _raise_name_conflict(name: str) -> NoReturn:
     raise api_error(
         409,
         "weight_profile_name_exists",

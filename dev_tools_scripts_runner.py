@@ -17,10 +17,12 @@ class ScriptInfo:
     title: str
     description: str
     aliases: tuple[str, ...] = ()
+    directory: Path = SCRIPTS_DIR
 
 
-# Add new scripts here as they're placed in scripts/dev_tools/ — no other
-# changes are needed for the orchestrator to pick them up.
+# Add new scripts here as they're placed in scripts/dev_tools/ (default
+# directory) or elsewhere under scripts/ (set directory= explicitly) — no
+# other changes are needed for the orchestrator to pick them up.
 AVAILABLE_SCRIPTS: list[ScriptInfo] = [
     ScriptInfo(
         key="1",
@@ -52,6 +54,19 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
             "and pushes main. Requires --message."
         ),
         aliases=("ship", "push-main", "publish"),
+    ),
+    ScriptInfo(
+        key="4",
+        filename="dispatch_trip_reminders.py",
+        title="dispatch-trip-reminders",
+        description=(
+            "Dispatches due trip reminders into the domain_events outbox "
+            "(transactional, idempotent, SKIP LOCKED). Accepts --limit and "
+            "--dry-run. Intended to run on a recurring schedule (cron/systemd "
+            "timer/CronJob) once a deployment target exists."
+        ),
+        aliases=("dispatch-reminders", "trip-reminders"),
+        directory=ROOT_DIR / "scripts",
     ),
 ]
 
@@ -103,7 +118,7 @@ def print_menu() -> None:
 
 
 def run_script(script: ScriptInfo, extra_args: list[str]) -> int:
-    script_path = SCRIPTS_DIR / script.filename
+    script_path = script.directory / script.filename
 
     if not script_path.exists():
         print(f"ERROR: script file not found: {script_path}", file=sys.stderr)

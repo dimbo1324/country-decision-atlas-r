@@ -6095,6 +6095,33 @@ paths:
       security:
       - BearerAuth: []
   /api/v1/me/weight-profiles/{profile_id}:
+    get:
+      tags:
+      - weight-profiles
+      summary: Get Weight Profile
+      operationId: get_weight_profile_api_v1_me_weight_profiles__profile_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWeightProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
     patch:
       tags:
       - weight-profiles

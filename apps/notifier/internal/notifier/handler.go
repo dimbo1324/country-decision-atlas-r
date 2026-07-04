@@ -14,9 +14,12 @@ import (
 
 var ErrDeliveryIncomplete = errors.New("delivery incomplete")
 
+const tripReminderDueEventType = "trip_reminder_due"
+
 type Handler struct {
 	dedup       mongostore.DedupRepository
 	subs        mongostore.SubscriptionRepository
+	identities  mongostore.TelegramIdentityRepository
 	deliveryLog mongostore.DeliveryLogRepository
 	deadLetters mongostore.DeadLetterRepository
 	registry    *channels.ChannelRegistry
@@ -26,6 +29,7 @@ type Handler struct {
 func NewHandler(
 	dedup mongostore.DedupRepository,
 	subs mongostore.SubscriptionRepository,
+	identities mongostore.TelegramIdentityRepository,
 	deliveryLog mongostore.DeliveryLogRepository,
 	deadLetters mongostore.DeadLetterRepository,
 	registry *channels.ChannelRegistry,
@@ -40,6 +44,7 @@ func NewHandler(
 	return &Handler{
 		dedup:       dedup,
 		subs:        subs,
+		identities:  identities,
 		deliveryLog: deliveryLog,
 		deadLetters: deadLetters,
 		registry:    registry,
@@ -58,6 +63,7 @@ func NewTelegramHandler(
 	return NewHandler(
 		dedup,
 		subs,
+		mongostore.NewInMemoryTelegramIdentityRepository(),
 		deliveryLog,
 		mongostore.NewInMemoryDeadLetterRepository(),
 		registry,
@@ -76,13 +82,13 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 		return nil
 	}
 
-	subscribers, err := h.subs.FindActiveByCountry(ctx, e.CountrySlug)
+	recipients, err := h.resolveRecipients(ctx, e)
 	if err != nil {
 		h.metrics.IncMongoErrors()
 		return err
 	}
 	h.metrics.IncEventsProcessed()
-	h.metrics.AddSubscriptionsMatched(len(subscribers))
+	h.metrics.AddSubscriptionsMatched(len(recipients))
 
 	text := telegram.FormatMessage(e.CountrySlug, e.EventType, e.Title())
 	message := channels.NotificationMessage{
@@ -93,8 +99,7 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 		Body:        text,
 	}
 
-	for _, sub := range subscribers {
-		recipient := recipientFromSubscription(sub)
+	for _, recipient := range recipients {
 		already, err := h.alreadyDelivered(ctx, e.EventKey, recipient)
 		if err != nil {
 			h.metrics.IncMongoErrors()
@@ -167,6 +172,59 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 		return err
 	}
 	return nil
+}
+
+func (h *Handler) resolveRecipients(ctx context.Context, e *events.DomainEvent) ([]channels.Recipient, error) {
+	if e.EventType == tripReminderDueEventType {
+		return h.resolvePersonalRecipients(ctx, e)
+	}
+	subscribers, err := h.subs.FindActiveByCountry(ctx, e.CountrySlug)
+	if err != nil {
+		return nil, err
+	}
+	recipients := make([]channels.Recipient, 0, len(subscribers))
+	for _, sub := range subscribers {
+		recipients = append(recipients, recipientFromSubscription(sub))
+	}
+	return recipients, nil
+}
+
+func (h *Handler) resolvePersonalRecipients(ctx context.Context, e *events.DomainEvent) ([]channels.Recipient, error) {
+	userID, _ := e.Payload["user_id"].(string)
+	placeholder := channels.Recipient{ChannelType: channels.ChannelTelegram, CountrySlug: e.CountrySlug}
+	if userID == "" {
+		if err := h.recordUnroutablePersonalEvent(ctx, e, placeholder, dlq.ReasonMissingRecipient, "trip_reminder_due event payload is missing user_id"); err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+	linked, telegramUserID, err := h.identities.FindByWebUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	if !linked {
+		if err := h.recordUnroutablePersonalEvent(ctx, e, placeholder, dlq.ReasonTelegramNotLinked, "trip owner has no linked telegram account"); err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+	return []channels.Recipient{
+		{
+			ChannelType:    channels.ChannelTelegram,
+			RecipientID:    telegramUserID,
+			TelegramUserID: telegramUserID,
+			CountrySlug:    e.CountrySlug,
+		},
+	}, nil
+}
+
+func (h *Handler) recordUnroutablePersonalEvent(ctx context.Context, e *events.DomainEvent, recipient channels.Recipient, reason string, errText string) error {
+	h.metrics.IncDeliveriesFailed()
+	h.metrics.IncDeliveriesDLQ()
+	if err := h.insertDeliveryFailure(ctx, e, recipient, reason); err != nil {
+		return err
+	}
+	return h.writeDeliveryDLQ(ctx, e, recipient, reason, errText, false)
 }
 
 func (h *Handler) alreadyDelivered(ctx context.Context, eventKey string, recipient channels.Recipient) (bool, error) {

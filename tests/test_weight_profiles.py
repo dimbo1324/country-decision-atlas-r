@@ -9,7 +9,7 @@ from app.services import weight_profiles as service
 from datetime import UTC, datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
-from psycopg import Connection
+from psycopg import Connection, errors as psycopg_errors
 from typing import Any, cast
 from unittest.mock import MagicMock
 
@@ -125,6 +125,63 @@ def test_duplicate_profile_name_returns_409(
     assert exc.value.status_code == 409
 
 
+def test_create_profile_race_on_unique_name_returns_409(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(repository, "scenario_exists", lambda *_: True)
+    monkeypatch.setattr(
+        repository, "get_profile_by_name_for_user", lambda *_: None
+    )
+
+    def fake_create(_connection: Any, **_kwargs: Any) -> dict[str, Any]:
+        raise psycopg_errors.UniqueViolation("duplicate key value")
+
+    monkeypatch.setattr(repository, "create_profile", fake_create)
+
+    with pytest.raises(HTTPException) as exc:
+        service.create_user_weight_profile(
+            CONNECTION,
+            user_id=USER_ID,
+            name="Balanced",
+            scenario_slug=None,
+            weights=cast(Any, WEIGHTS),
+            is_default=False,
+        )
+
+    assert exc.value.status_code == 409
+    assert "weight_profile_name_exists" in str(exc.value.detail)
+
+
+def test_update_profile_race_on_unique_name_returns_409(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(repository, "get_profile_for_user", lambda *_: _row())
+    monkeypatch.setattr(repository, "scenario_exists", lambda *_: True)
+    monkeypatch.setattr(
+        repository, "get_profile_by_name_for_user", lambda *_: None
+    )
+
+    def fake_update(_connection: Any, **_kwargs: Any) -> dict[str, Any]:
+        raise psycopg_errors.UniqueViolation("duplicate key value")
+
+    monkeypatch.setattr(repository, "update_profile", fake_update)
+
+    with pytest.raises(HTTPException) as exc:
+        service.update_user_weight_profile(
+            CONNECTION,
+            user_id=USER_ID,
+            profile_id="profile-1",
+            fields={"name"},
+            name="Taken",
+            scenario_slug=None,
+            weights=None,
+            is_default=None,
+        )
+
+    assert exc.value.status_code == 409
+    assert "weight_profile_name_exists" in str(exc.value.detail)
+
+
 def test_resolve_profile_rejects_scenario_mismatch(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -173,6 +230,27 @@ def test_list_weight_profiles_api(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert response.status_code == 200
     assert response.json()["items"][0]["id"] == "profile-1"
+
+
+def test_get_weight_profile_api(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        service, "get_user_weight_profile", lambda *_a, **_kw: _row()
+    )
+
+    response = _client().get("/api/v1/me/weight-profiles/profile-1")
+
+    assert response.status_code == 200
+    assert response.json()["item"]["id"] == "profile-1"
+
+
+def test_get_weight_profile_api_returns_404_when_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(repository, "get_profile_for_user", lambda *_: None)
+
+    response = _client().get("/api/v1/me/weight-profiles/missing")
+
+    assert response.status_code == 404
 
 
 def test_create_weight_profile_api_commits(

@@ -24,7 +24,6 @@ from app.services.decision_engine.helpers import (
     _group_by as _group_by,
     _locale as _locale,
     _localized_explanation as _localized_explanation,
-    _risks_for_country as _risks_for_country,
     _score_label_literal as _score_label_literal,
     _source_ids as _source_ids,
     aggregate_confidence as aggregate_confidence,
