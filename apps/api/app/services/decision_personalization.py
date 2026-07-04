@@ -15,6 +15,8 @@ WEIGHT_MODE_BASE = "base"
 WEIGHT_MODE_PERSONA = "persona"
 WEIGHT_MODE_CUSTOM = "custom"
 WEIGHT_MODE_PERSONA_CUSTOM = "persona_custom"
+WEIGHT_MODE_PROFILE = "profile"
+WEIGHT_MODE_PERSONA_PROFILE = "persona_profile"
 
 
 def _to_decimal(criterion: str, value: Any) -> Decimal:
@@ -127,9 +129,14 @@ def apply_effective_weights_to_breakdown(
 def resolve_weight_mode(
     persona_slug: str | None,
     custom_weights: Mapping[str, Any] | None,
+    weight_profile_id: str | None = None,
 ) -> str:
+    if persona_slug and weight_profile_id:
+        return WEIGHT_MODE_PERSONA_PROFILE
     if persona_slug and custom_weights:
         return WEIGHT_MODE_PERSONA_CUSTOM
+    if weight_profile_id:
+        return WEIGHT_MODE_PROFILE
     if persona_slug:
         return WEIGHT_MODE_PERSONA
     if custom_weights:
@@ -143,13 +150,19 @@ def build_personalization_summary(
     custom_weights_applied: bool,
     base_weights: Mapping[str, Decimal],
     effective_weights: Mapping[str, Decimal],
+    weight_profile_id: str | None = None,
+    weight_profile_name: str | None = None,
 ) -> dict[str, Any]:
     weight_mode = resolve_weight_mode(
-        persona_slug, effective_weights if custom_weights_applied else None
+        persona_slug,
+        effective_weights if custom_weights_applied else None,
+        weight_profile_id,
     )
     return {
         "weight_mode": weight_mode,
         "persona_slug": persona_slug,
+        "weight_profile_id": weight_profile_id,
+        "weight_profile_name": weight_profile_name,
         "custom_weights_applied": custom_weights_applied,
         "base_weights": [
             {"criterion": criterion, "weight": float(weight)}

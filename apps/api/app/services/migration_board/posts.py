@@ -68,15 +68,13 @@ def create_user_post(
     connection: Connection[Any], *, current_user: CurrentUser, payload: Any
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
-    if (
-        repository.count_user_active_posts(connection, current_user.id)
-        >= helpers.MAX_ACTIVE_POSTS
-    ):
+    limit = helpers.max_active_posts(connection)
+    if repository.count_user_active_posts(connection, current_user.id) >= limit:
         raise api_error(
             429,
             "active_post_limit_exceeded",
             "You have reached the active migration board post limit.",
-            {"limit": helpers.MAX_ACTIVE_POSTS},
+            {"limit": limit},
         )
     refs = _validate_post_payload(connection, payload)
     helpers._reject_public_pii(payload.title, payload.summary)

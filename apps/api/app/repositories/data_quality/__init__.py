@@ -113,6 +113,11 @@ from app.repositories.data_quality.decision_personalization import (
     list_decision_scores_missing_required_criteria as list_decision_scores_missing_required_criteria,
     list_decision_wizard_rule_mismatches as list_decision_wizard_rule_mismatches,
 )
+from app.repositories.data_quality.methodology_config import (
+    list_invalid_methodology_threshold_order as list_invalid_methodology_threshold_order,
+    list_methodology_parameters_out_of_range as list_methodology_parameters_out_of_range,
+    list_missing_required_methodology_parameters as list_missing_required_methodology_parameters,
+)
 from app.repositories.data_quality.migration_board import (
     list_duplicate_pending_migration_board_contact_requests as list_duplicate_pending_migration_board_contact_requests,
     list_invalid_migration_board_blocks as list_invalid_migration_board_blocks,

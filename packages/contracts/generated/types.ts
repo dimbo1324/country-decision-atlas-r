@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/methodology/parameters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Methodology Parameters */
+        get: operations["list_methodology_parameters_api_v1_methodology_parameters_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/methodology/{section_slug}": {
         parameters: {
             query?: never;
@@ -2496,6 +2513,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/weight-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Weight Profiles */
+        get: operations["list_weight_profiles_api_v1_me_weight_profiles_get"];
+        put?: never;
+        /** Create Weight Profile */
+        post: operations["create_weight_profile_api_v1_me_weight_profiles_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/weight-profiles/{profile_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Weight Profile */
+        delete: operations["delete_weight_profile_api_v1_me_weight_profiles__profile_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Weight Profile */
+        patch: operations["update_weight_profile_api_v1_me_weight_profiles__profile_id__patch"];
+        trace?: never;
+    };
     "/api/v1/home/overview": {
         parameters: {
             query?: never;
@@ -4830,6 +4883,8 @@ export interface components {
              * @enum {string}
              */
             confidence: "high" | "medium" | "low";
+            /** Methodology Version */
+            methodology_version: string;
             /** Explanation */
             explanation: string;
             /** Caveat */
@@ -4968,16 +5023,24 @@ export interface components {
         DecisionPassportMethodologySnapshot: {
             /** Decision Engine Version */
             decision_engine_version: string;
+            /** Methodology Version */
+            methodology_version: string;
             /** Scenario Slug */
             scenario_slug: string;
             /** Persona Slug */
             persona_slug?: string | null;
             /** Origin Country Slug */
             origin_country_slug?: string | null;
+            /** Weight Profile Id */
+            weight_profile_id?: string | null;
+            /** Weight Profile Name */
+            weight_profile_name?: string | null;
             /** Custom Weights Applied */
             custom_weights_applied: boolean;
             /** Weight Mode */
             weight_mode: string;
+            /** Applied Weights */
+            applied_weights: components["schemas"]["DecisionWeightItem"][];
             /** Ranking Policy */
             ranking_policy: string;
             /** Disclaimer */
@@ -5008,6 +5071,8 @@ export interface components {
             /** Selected Country Slug */
             selected_country_slug?: string | null;
             decision_result: components["schemas"]["DecisionRunResponse"];
+            /** Methodology Version */
+            methodology_version: string;
             methodology_snapshot: components["schemas"]["DecisionPassportMethodologySnapshot"];
             /** Source Ids */
             source_ids?: string[];
@@ -5056,9 +5121,13 @@ export interface components {
              * Weight Mode
              * @enum {string}
              */
-            weight_mode: "base" | "persona" | "custom" | "persona_custom";
+            weight_mode: "base" | "persona" | "custom" | "persona_custom" | "profile" | "persona_profile";
             /** Persona Slug */
             persona_slug?: string | null;
+            /** Weight Profile Id */
+            weight_profile_id?: string | null;
+            /** Weight Profile Name */
+            weight_profile_name?: string | null;
             /** Custom Weights Applied */
             custom_weights_applied: boolean;
             /** Base Weights */
@@ -5099,6 +5168,8 @@ export interface components {
              * Format: date-time
              */
             generated_at: string;
+            /** Methodology Version */
+            methodology_version: string;
             /**
              * Model Version
              * @default scenario-decision-engine-v1
@@ -5125,6 +5196,8 @@ export interface components {
             custom_weights?: {
                 [key: string]: number | string;
             } | null;
+            /** Weight Profile Id */
+            weight_profile_id?: string | null;
         };
         /** DecisionRunResponse */
         DecisionRunResponse: {
@@ -5139,6 +5212,8 @@ export interface components {
             /** Results */
             results: components["schemas"]["DecisionCountryResult"][];
             meta: components["schemas"]["DecisionRunMeta"];
+            /** Methodology Version */
+            methodology_version: string;
             locale: components["schemas"]["LocaleResolution"];
             applied_persona?: components["schemas"]["Persona"] | null;
             persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
@@ -5996,6 +6071,36 @@ export interface components {
         MethodologyListResponse: {
             /** Items */
             items: components["schemas"]["MethodologySection"][];
+        };
+        /** MethodologyParameter */
+        MethodologyParameter: {
+            /** Version */
+            version: string;
+            /** Param Key */
+            param_key: string;
+            /** Value Numeric */
+            value_numeric?: number | null;
+            /** Value Json */
+            value_json?: unknown | null;
+            /** Description */
+            description: string;
+            /**
+             * Effective From
+             * Format: date-time
+             */
+            effective_from: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** MethodologyParametersResponse */
+        MethodologyParametersResponse: {
+            /** Version */
+            version: string;
+            /** Items */
+            items: components["schemas"]["MethodologyParameter"][];
         };
         /** MethodologySection */
         MethodologySection: {
@@ -7795,6 +7900,71 @@ export interface components {
         UserStoryResponse: {
             item: components["schemas"]["UserStory"];
         };
+        /** UserWeightProfile */
+        UserWeightProfile: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string;
+            /** Name */
+            name: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Weights */
+            weights: {
+                [key: string]: number;
+            };
+            /** Is Default */
+            is_default: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** UserWeightProfileCreate */
+        UserWeightProfileCreate: {
+            /** Name */
+            name: string;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Weights */
+            weights: {
+                [key: string]: number | string;
+            };
+            /**
+             * Is Default
+             * @default false
+             */
+            is_default: boolean;
+        };
+        /** UserWeightProfileListResponse */
+        UserWeightProfileListResponse: {
+            /** Items */
+            items: components["schemas"]["UserWeightProfile"][];
+        };
+        /** UserWeightProfilePatch */
+        UserWeightProfilePatch: {
+            /** Name */
+            name?: string | null;
+            /** Scenario Slug */
+            scenario_slug?: string | null;
+            /** Weights */
+            weights?: {
+                [key: string]: number | string;
+            } | null;
+            /** Is Default */
+            is_default?: boolean | null;
+        };
+        /** UserWeightProfileResponse */
+        UserWeightProfileResponse: {
+            item: components["schemas"]["UserWeightProfile"];
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -8155,6 +8325,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_methodology_parameters_api_v1_methodology_parameters_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MethodologyParametersResponse"];
                 };
             };
         };
@@ -13495,6 +13685,123 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WatchlistStatusResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_weight_profiles_api_v1_me_weight_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserWeightProfileListResponse"];
+                };
+            };
+        };
+    };
+    create_weight_profile_api_v1_me_weight_profiles_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserWeightProfileCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserWeightProfileResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_weight_profile_api_v1_me_weight_profiles__profile_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profile_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_weight_profile_api_v1_me_weight_profiles__profile_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profile_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserWeightProfilePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserWeightProfileResponse"];
                 };
             };
             /** @description Validation Error */

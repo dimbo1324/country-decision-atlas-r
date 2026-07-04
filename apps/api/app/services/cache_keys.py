@@ -47,12 +47,14 @@ def countries_matrix_key(
     locale: str,
     country_slugs: list[str] | None,
     scenario_slugs: list[str] | None,
+    methodology_version: str = "",
 ) -> str:
     return cache_key(
         "v1",
         "countries",
         "matrix",
         locale=locale,
+        methodology_version=methodology_version,
         filters=filter_hash(
             {
                 "countries": country_slugs or [],

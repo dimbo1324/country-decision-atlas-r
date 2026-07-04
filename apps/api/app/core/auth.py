@@ -51,6 +51,20 @@ def get_current_session_context(
     )
 
 
+def get_optional_current_user(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    credentials: Annotated[
+        HTTPAuthorizationCredentials | None, Security(bearer_scheme)
+    ],
+) -> CurrentUser | None:
+    if credentials is None or not credentials.credentials:
+        return None
+    result = auth_service.validate_session_token(
+        connection, credentials.credentials
+    )
+    return _to_current_user(result["user"])
+
+
 def get_current_user(
     context: Annotated[
         CurrentSessionContext, Depends(get_current_session_context)

@@ -1,6 +1,10 @@
 """Country comparison matrix: defaults, cell values, score labels, and missing-cell handling."""
 
 import pytest
+from tests.methodology_test_helpers import (
+    methodology_config,
+    score_label_thresholds,
+)
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -165,6 +169,8 @@ _CELL_ROWS = [
     },
 ]
 
+_THRESHOLDS = score_label_thresholds()
+
 
 def _make_connection() -> MagicMock:
     return MagicMock()
@@ -192,6 +198,10 @@ def _run_matrix(
         patch(
             f"{_SVC}.get_cii_matrix_cells",
             return_value=cell_rows if cell_rows is not None else _CELL_ROWS,
+        ),
+        patch(
+            f"{_SVC}.get_active_methodology_config",
+            return_value=methodology_config(),
         ),
     ):
         return build_matrix_response(
@@ -287,38 +297,38 @@ class TestScoreLabels:
     def test_score_below_30_is_weak(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(22.5) == "weak"
-        assert _score_label(0.0) == "weak"
-        assert _score_label(29.9) == "weak"
+        assert _score_label(22.5, _THRESHOLDS) == "weak"
+        assert _score_label(0.0, _THRESHOLDS) == "weak"
+        assert _score_label(29.9, _THRESHOLDS) == "weak"
 
     def test_score_30_to_50_is_limited(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(30.0) == "limited"
-        assert _score_label(49.9) == "limited"
+        assert _score_label(30.0, _THRESHOLDS) == "limited"
+        assert _score_label(49.9, _THRESHOLDS) == "limited"
 
     def test_score_50_to_70_is_moderate(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(50.0) == "moderate"
-        assert _score_label(69.9) == "moderate"
+        assert _score_label(50.0, _THRESHOLDS) == "moderate"
+        assert _score_label(69.9, _THRESHOLDS) == "moderate"
 
     def test_score_70_to_85_is_strong(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(70.0) == "strong"
-        assert _score_label(84.9) == "strong"
+        assert _score_label(70.0, _THRESHOLDS) == "strong"
+        assert _score_label(84.9, _THRESHOLDS) == "strong"
 
     def test_score_85_plus_is_excellent(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(85.0) == "excellent"
-        assert _score_label(100.0) == "excellent"
+        assert _score_label(85.0, _THRESHOLDS) == "excellent"
+        assert _score_label(100.0, _THRESHOLDS) == "excellent"
 
     def test_none_score_is_missing(self) -> None:
         from app.services.cii_matrix import _score_label
 
-        assert _score_label(None) == "missing"
+        assert _score_label(None, _THRESHOLDS) == "missing"
 
     def test_russia_scores_are_weak(self) -> None:
         result = _run_matrix()

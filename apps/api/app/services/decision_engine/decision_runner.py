@@ -42,7 +42,13 @@ from app.services.decision_personalization import (
 )
 from app.services.decision_warnings import build_risk_warnings
 from app.services.feature_flags import can_access, default_access_context
+from app.services.methodology_config import (
+    MethodologyConfig,
+    RecommendationThresholds,
+    get_active_methodology_config,
+)
 from app.services.persona_runtime import aggregate_persona_cii_score
+from app.services.weight_profiles import resolve_profile_for_decision
 from datetime import UTC, datetime
 from decimal import Decimal
 from psycopg import Connection
@@ -72,6 +78,7 @@ def compare_countries(
     connection: Connection[Any], payload: DecisionCompareInput
 ) -> DecisionCompareResult:
     locale = validate_locale(str(payload.locale))
+    methodology = get_active_methodology_config(connection)
     scenario_row = get_scenario(connection, payload.scenario_slug, locale)
     rows = repository.list_scenario_countries(connection, payload.scenario_slug)
     rows = [row for row in rows if row["country_slug"] in payload.country_slugs]
@@ -94,7 +101,9 @@ def compare_countries(
     countries = helpers._attach_breakdowns_and_sources(connection, rows, locale)
     if len(countries) != len(set(payload.country_slugs)):
         raise LookupError("One or more country scores were not found")
-    recommendation_type, recommended_country, confidence = _recommend(countries)
+    recommendation_type, recommended_country, confidence = _recommend(
+        countries, methodology.decision.recommendation
+    )
     explanation = _compare_explanation(
         countries, recommended_country, recommendation_type, locale
     )
@@ -104,6 +113,7 @@ def compare_countries(
         recommended_country=recommended_country,
         recommendation_type=recommendation_type,
         confidence=confidence,
+        methodology_version=methodology.version,
         explanation=explanation,
         caveat=helpers._caveat(locale),
         locale=helpers._locale([scenario_row], locale),
@@ -114,8 +124,20 @@ def run_decision(
     connection: Connection[Any],
     payload: DecisionRunRequest | DecisionRunInput,
     session_id: str | None = None,
+    current_user_id: str | None = None,
 ) -> DecisionRunResponse:
     locale = validate_locale(str(payload.locale))
+    methodology = get_active_methodology_config(connection)
+    if (
+        payload.weight_profile_id is not None
+        and payload.custom_weights is not None
+    ):
+        raise api_error(
+            422,
+            "weight_profile_custom_weights_conflict",
+            "Use either weight_profile_id or custom_weights, not both.",
+            {},
+        )
     scenario_row = repository.get_decision_scenario(
         connection, payload.scenario_slug, locale
     )
@@ -221,8 +243,36 @@ def run_decision(
         for item in breakdown_rows
     }
     allowed_criteria = sorted(base_weights_map)
+    profile_weights: dict[str, Decimal] | None = None
+    weight_profile_id: str | None = None
+    weight_profile_name: str | None = None
+    if payload.weight_profile_id is not None:
+        if current_user_id is None:
+            raise api_error(
+                401,
+                "auth_required",
+                "Authentication is required.",
+                {},
+            )
+        profile = resolve_profile_for_decision(
+            connection,
+            profile_id=payload.weight_profile_id,
+            user_id=current_user_id,
+            scenario_slug=payload.scenario_slug,
+        )
+        profile_weights = {
+            criterion: Decimal(str(value))
+            for criterion, value in profile["weights"].items()
+        }
+        weight_profile_id = profile["id"]
+        weight_profile_name = profile["name"]
+    requested_weights = (
+        profile_weights
+        if profile_weights is not None
+        else payload.custom_weights
+    )
     effective_weights: dict[str, Decimal] | None = None
-    if payload.custom_weights is not None:
+    if requested_weights is not None:
         if not _is_decision_personalization_enabled(connection):
             raise api_error(
                 422,
@@ -230,7 +280,7 @@ def run_decision(
                 "Decision personalization is currently disabled.",
             )
         effective_weights = normalize_custom_weights(
-            payload.custom_weights, allowed_criteria
+            requested_weights, allowed_criteria
         )
     if effective_weights is not None:
         breakdown_rows = apply_effective_weights_to_breakdown(
@@ -243,7 +293,9 @@ def run_decision(
             persona_slug=payload.persona,
             candidate_count=len(candidate_slugs),
             criteria_count=len(allowed_criteria),
-            weight_mode=resolve_weight_mode(payload.persona, effective_weights),
+            weight_mode=resolve_weight_mode(
+                payload.persona, effective_weights, weight_profile_id
+            ),
         )
     breakdowns_by_score = helpers._group_by(breakdown_rows, "country_score_id")
     signals_by_country = helpers._group_by(legal_signal_rows, "country_slug")
@@ -290,6 +342,7 @@ def run_decision(
                 else None
             ),
             country_pair_context=pair_contexts.get(slug),
+            methodology=methodology,
         )
         for slug in candidate_slugs
     ]
@@ -300,7 +353,7 @@ def run_decision(
                 continue
             result.persona_adjusted_score = adjusted_score
             result.persona_adjusted_label = helpers._score_label_literal(
-                adjusted_score
+                adjusted_score, methodology.score_labels
             )
         ranked_results = _rank_persona_adjusted_results(results)
     else:
@@ -318,10 +371,14 @@ def run_decision(
         custom_weights_applied=effective_weights is not None,
         base_weights=base_weights_map,
         effective_weights=effective_weights or base_weights_map,
+        weight_profile_id=weight_profile_id,
+        weight_profile_name=weight_profile_name,
     )
     personalization = DecisionPersonalizationResponse(
         weight_mode=personalization_summary["weight_mode"],
         persona_slug=personalization_summary["persona_slug"],
+        weight_profile_id=personalization_summary["weight_profile_id"],
+        weight_profile_name=personalization_summary["weight_profile_name"],
         custom_weights_applied=personalization_summary[
             "custom_weights_applied"
         ],
@@ -352,7 +409,9 @@ def run_decision(
         meta=DecisionRunMeta(
             candidate_count=len(candidate_slugs),
             generated_at=datetime.now(UTC),
+            methodology_version=methodology.version,
         ),
+        methodology_version=methodology.version,
         locale=helpers._locale(locale_rows, locale),
         applied_persona=persona_profile["persona"] if persona_profile else None,
         persona_weight_profile=persona_profile,
@@ -370,6 +429,7 @@ def _build_country_result(
     scenario_slug: str,
     scenario_title: str,
     locale: str,
+    methodology: MethodologyConfig,
     override_score: float | None = None,
     country_pair_context: CountryPairCompatibilitySummary | None = None,
 ) -> DecisionCountryResult:
@@ -382,7 +442,7 @@ def _build_country_result(
     final_score = (
         override_score if override_score is not None else float(score["score"])
     )
-    score_label = helpers.get_score_label(final_score)
+    score_label = helpers.get_score_label(final_score, methodology.score_labels)
     return DecisionCountryResult(
         rank=0,
         country=helpers._country_ref(country),
@@ -391,8 +451,12 @@ def _build_country_result(
         summary=_build_summary(
             country["name"], final_score, score_label, scenario_title, locale
         ),
-        strengths=_build_strengths(breakdowns, locale),
-        weaknesses=_build_weaknesses(breakdowns, locale),
+        strengths=_build_strengths(
+            breakdowns, locale, methodology.decision.strength_min_score
+        ),
+        weaknesses=_build_weaknesses(
+            breakdowns, locale, methodology.decision.weakness_max_score
+        ),
         risk_warnings=build_risk_warnings(scenario_slug, legal_signals, locale),
         confidence=helpers.aggregate_confidence(
             [
@@ -400,7 +464,8 @@ def _build_country_result(
                 *[item.get("confidence") for item in breakdowns],
                 *[item.get("confidence") for item in legal_signals],
                 *[item.confidence for item in result_sources],
-            ]
+            ],
+            methodology.decision.confidence,
         ),
         breakdown=[
             DecisionBreakdownItem(
@@ -421,7 +486,7 @@ def _build_country_result(
 
 
 def _build_strengths(
-    breakdowns: list[dict[str, Any]], locale: str
+    breakdowns: list[dict[str, Any]], locale: str, min_score: float
 ) -> list[DecisionPoint]:
     return [
         DecisionPoint(
@@ -431,12 +496,12 @@ def _build_strengths(
             source_ids=helpers._source_ids(item.get("source_ids")),
         )
         for item in breakdowns
-        if float(item["score"]) >= 70
+        if float(item["score"]) >= min_score
     ]
 
 
 def _build_weaknesses(
-    breakdowns: list[dict[str, Any]], locale: str
+    breakdowns: list[dict[str, Any]], locale: str, max_score: float
 ) -> list[DecisionPoint]:
     return [
         DecisionPoint(
@@ -446,7 +511,7 @@ def _build_weaknesses(
             source_ids=helpers._source_ids(item.get("source_ids")),
         )
         for item in breakdowns
-        if float(item["score"]) <= 50
+        if float(item["score"]) <= max_score
     ]
 
 
@@ -545,6 +610,7 @@ def _scenario_model(row: dict[str, Any]) -> DecisionScenario:
 
 def _recommend(
     countries: list[DecisionCountryScore],
+    thresholds: RecommendationThresholds,
 ) -> tuple[str, str | None, str]:
     if len(countries) < 2:
         return (
@@ -554,9 +620,15 @@ def _recommend(
         )
     ordered = sorted(countries, key=lambda item: item.score, reverse=True)
     delta = ordered[0].score - ordered[1].score
-    if delta < 3:
+    if delta < thresholds.tie_delta_below:
         return "tie", None, "low"
-    return "winner", ordered[0].country_slug, "medium" if delta < 10 else "high"
+    return (
+        "winner",
+        ordered[0].country_slug,
+        "medium"
+        if delta < thresholds.medium_confidence_delta_below
+        else "high",
+    )
 
 
 def _compare_explanation(

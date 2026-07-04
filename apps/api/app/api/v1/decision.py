@@ -1,3 +1,4 @@
+from app.core.auth import CurrentUser, get_optional_current_user
 from app.core.database import get_connection
 from app.schemas.decision_engine import (
     DecisionCompareInput,
@@ -30,10 +31,16 @@ def compare_countries(
 def run_decision(
     payload: DecisionRunRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[
+        CurrentUser | None, Depends(get_optional_current_user)
+    ],
     x_cda_session: Annotated[str | None, Header(alias="X-CDA-Session")] = None,
 ) -> DecisionRunResponse:
     return decision_engine.run_decision(
-        connection, payload, session_id=x_cda_session
+        connection,
+        payload,
+        session_id=x_cda_session,
+        current_user_id=current_user.id if current_user else None,
     )
 
 

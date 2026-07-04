@@ -1,6 +1,7 @@
 """Argentina's CII onboarding, MVP-readiness, and comparison-matrix integration."""
 
 import pytest
+from tests.methodology_test_helpers import methodology_config
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -264,6 +265,30 @@ def _evaluate_all_mvp_with_argentina_cii() -> Any:
         return evaluate_all_mvp_countries(_make_connection())
 
 
+def _build_argentina_matrix() -> Any:
+    from app.services.cii_matrix import build_matrix_response
+
+    with (
+        patch(
+            f"{_MATRIX_SVC}.list_matrix_countries",
+            return_value=_MATRIX_COUNTRY_ROWS,
+        ),
+        patch(
+            f"{_MATRIX_SVC}.list_matrix_scenarios",
+            return_value=_MATRIX_SCENARIO_ROWS,
+        ),
+        patch(
+            f"{_MATRIX_SVC}.get_cii_matrix_cells",
+            return_value=_MATRIX_CELL_ROWS,
+        ),
+        patch(
+            f"{_MATRIX_SVC}.get_active_methodology_config",
+            return_value=methodology_config(),
+        ),
+    ):
+        return build_matrix_response(_make_connection(), None, None, "ru")
+
+
 class TestAllMvpReadyWithArgentinaCiiReady:
     def test_all_mvp_ready_true_with_argentina_cii_ready(self) -> None:
         result = _evaluate_all_mvp_with_argentina_cii()
@@ -298,67 +323,19 @@ class TestArgentinaCiiSlugInMatrix:
         assert "argentina" in MVP_COUNTRIES
 
     def test_matrix_has_three_countries_by_default(self) -> None:
-        from app.services.cii_matrix import build_matrix_response
-
-        with (
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_countries",
-                return_value=_MATRIX_COUNTRY_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_scenarios",
-                return_value=_MATRIX_SCENARIO_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells",
-                return_value=_MATRIX_CELL_ROWS,
-            ),
-        ):
-            result = build_matrix_response(_make_connection(), None, None, "ru")
+        result = _build_argentina_matrix()
 
         slugs = [c.slug for c in result.countries]
         assert len(slugs) == 3
         assert "argentina" in slugs
 
     def test_matrix_has_fifteen_cells_by_default(self) -> None:
-        from app.services.cii_matrix import build_matrix_response
-
-        with (
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_countries",
-                return_value=_MATRIX_COUNTRY_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_scenarios",
-                return_value=_MATRIX_SCENARIO_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells",
-                return_value=_MATRIX_CELL_ROWS,
-            ),
-        ):
-            result = build_matrix_response(_make_connection(), None, None, "ru")
+        result = _build_argentina_matrix()
 
         assert len(result.cells) == 15
 
     def test_argentina_cells_have_scores(self) -> None:
-        from app.services.cii_matrix import build_matrix_response
-
-        with (
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_countries",
-                return_value=_MATRIX_COUNTRY_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_scenarios",
-                return_value=_MATRIX_SCENARIO_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells",
-                return_value=_MATRIX_CELL_ROWS,
-            ),
-        ):
-            result = build_matrix_response(_make_connection(), None, None, "ru")
+        result = _build_argentina_matrix()
 
         argentina_cells = [
             c for c in result.cells if c.country_slug == "argentina"
@@ -368,23 +345,7 @@ class TestArgentinaCiiSlugInMatrix:
             assert cell.cii_score == pytest.approx(43.0)
 
     def test_argentina_matrix_scores_are_limited_range(self) -> None:
-        from app.services.cii_matrix import build_matrix_response
-
-        with (
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_countries",
-                return_value=_MATRIX_COUNTRY_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.list_matrix_scenarios",
-                return_value=_MATRIX_SCENARIO_ROWS,
-            ),
-            patch(
-                f"{_MATRIX_SVC}.get_cii_matrix_cells",
-                return_value=_MATRIX_CELL_ROWS,
-            ),
-        ):
-            result = build_matrix_response(_make_connection(), None, None, "ru")
+        result = _build_argentina_matrix()
 
         argentina_cells = [
             c for c in result.cells if c.country_slug == "argentina"

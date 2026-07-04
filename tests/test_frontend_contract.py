@@ -186,7 +186,12 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
                 sources=[],
             )
         ],
-        meta=DecisionRunMeta(candidate_count=2, generated_at=NOW),
+        meta=DecisionRunMeta(
+            candidate_count=2,
+            generated_at=NOW,
+            methodology_version="v1.0",
+        ),
+        methodology_version="v1.0",
         locale=locale_resolution("en", "en", "source"),
         personalization=DecisionPersonalizationResponse(
             weight_mode="base",
@@ -205,6 +210,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
             scenario_slug="relocation_residence",
         ),
         CONNECTION,
+        None,
     )
     body = result.model_dump(mode="json")
 
@@ -214,6 +220,7 @@ def test_decision_run_frontend_contract(monkeypatch: Any) -> None:
         "origin_context_status",
         "results",
         "meta",
+        "methodology_version",
         "locale",
         "applied_persona",
         "persona_weight_profile",

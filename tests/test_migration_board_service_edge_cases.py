@@ -90,6 +90,17 @@ def _enable_features(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         feature_flags_service, "is_feature_enabled_by_key", lambda *_: True
     )
+    monkeypatch.setattr(
+        migration_board_helpers, "max_active_posts", lambda *_: 5
+    )
+    monkeypatch.setattr(
+        migration_board_helpers,
+        "max_contact_requests_per_day",
+        lambda *_: 20,
+    )
+    monkeypatch.setattr(
+        migration_board_helpers, "max_reports_per_day", lambda *_: 20
+    )
 
 
 def _create_payload(**overrides: Any) -> CreateMigrationBoardPostRequest:
@@ -239,7 +250,7 @@ class TestCreatePost:
         monkeypatch.setattr(
             repository,
             "count_user_active_posts",
-            lambda *_a, **_kw: service.MAX_ACTIVE_POSTS,
+            lambda *_a, **_kw: 5,
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -640,7 +651,7 @@ class TestContactRequestLifecycle:
         monkeypatch.setattr(
             repository,
             "count_contact_requests_created_since",
-            lambda *_a, **_kw: service.MAX_CONTACT_REQUESTS_PER_DAY,
+            lambda *_a, **_kw: 20,
         )
 
         with pytest.raises(HTTPException) as exc_info:
@@ -839,7 +850,7 @@ class TestReports:
         monkeypatch.setattr(
             repository,
             "count_reports_created_today",
-            lambda *_a, **_kw: service.MAX_REPORTS_PER_DAY,
+            lambda *_a, **_kw: 20,
         )
 
         with pytest.raises(HTTPException) as exc_info:

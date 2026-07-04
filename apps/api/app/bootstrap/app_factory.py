@@ -33,6 +33,7 @@ from app.api.v1 import (
     trust,
     user_stories,
     watchlists,
+    weight_profiles,
     what_changed,
 )
 from app.core.database import close_database_pool, open_database_pool
@@ -254,6 +255,7 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(auth.router, prefix="/api/v1")
     app.include_router(admin_users.router, prefix="/api/v1")
     app.include_router(watchlists.router, prefix="/api/v1")
+    app.include_router(weight_profiles.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

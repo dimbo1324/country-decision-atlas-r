@@ -8,10 +8,14 @@ from app.repositories import (
 from app.schemas.common import locale_resolution, source_locale_resolution
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
-from app.services.decision_engine import helpers as decision_engine_helpers
+from app.services.decision_engine import (
+    decision_runner,
+    helpers as decision_engine_helpers,
+)
 from datetime import UTC, date, datetime
 from fastapi import HTTPException
 from psycopg import Connection
+from tests.methodology_test_helpers import methodology_config
 from tests.test_openapi_contract import load_contract
 from typing import Any, cast
 from uuid import uuid4
@@ -348,6 +352,11 @@ def test_decision_output_respects_locale(monkeypatch: Any) -> None:
         country_pairs_repository,
         "list_destination_compatibility",
         lambda *_: [],
+    )
+    monkeypatch.setattr(
+        decision_runner,
+        "get_active_methodology_config",
+        lambda *_: methodology_config(),
     )
 
     result = decision_engine.run_decision(

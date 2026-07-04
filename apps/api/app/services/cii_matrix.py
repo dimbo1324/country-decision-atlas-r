@@ -13,6 +13,10 @@ from app.schemas.cii_matrix import (
 from app.schemas.common import TranslationStatus, locale_resolution
 from app.services.cache import cache_ttl, get_cache_backend
 from app.services.cache_keys import countries_matrix_key
+from app.services.methodology_config import (
+    ScoreLabelThresholds,
+    get_active_methodology_config,
+)
 from app.services.score_labels import optional_score_label
 from psycopg import Connection
 from typing import Any
@@ -28,8 +32,10 @@ _MVP_SCENARIO_ORDER: dict[str, int] = {
 WEIGHTS_VERSION = "cii-scenario-weights-v1.0"
 
 
-def _score_label(score: float | None) -> str | None:
-    return optional_score_label(score)
+def _score_label(
+    score: float | None, thresholds: ScoreLabelThresholds
+) -> str | None:
+    return optional_score_label(score, thresholds)
 
 
 def _confidence_label(confidence: str | None) -> str | None:
@@ -44,14 +50,22 @@ def build_matrix_response(
     scenario_slugs_param: list[str] | None,
     locale: str,
 ) -> CompareMatrixResponse:
+    methodology = get_active_methodology_config(connection)
     key = countries_matrix_key(
-        locale, country_slugs_param, scenario_slugs_param
+        locale,
+        country_slugs_param,
+        scenario_slugs_param,
+        methodology.version,
     )
     cached = get_cache_backend().get_or_set_json(
         key,
         cache_ttl(),
         lambda: _build_matrix_response_uncached(
-            connection, country_slugs_param, scenario_slugs_param, locale
+            connection,
+            country_slugs_param,
+            scenario_slugs_param,
+            locale,
+            methodology.score_labels,
         ).model_dump(mode="json"),
     )
     return CompareMatrixResponse.model_validate(cached)
@@ -62,6 +76,7 @@ def _build_matrix_response_uncached(
     country_slugs_param: list[str] | None,
     scenario_slugs_param: list[str] | None,
     locale: str,
+    score_label_thresholds: ScoreLabelThresholds,
 ) -> CompareMatrixResponse:
     country_slugs = (
         country_slugs_param if country_slugs_param else MVP_COUNTRIES
@@ -156,7 +171,7 @@ def _build_matrix_response_uncached(
                         cii_score=score,
                         cii_confidence=confidence,
                         country_drift=row.get("country_drift"),
-                        score_label=_score_label(score),
+                        score_label=_score_label(score, score_label_thresholds),
                         confidence_label=_confidence_label(confidence),
                         formula_version=row.get("formula_version")
                         or formula_version,

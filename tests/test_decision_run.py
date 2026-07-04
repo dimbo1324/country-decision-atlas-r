@@ -12,6 +12,7 @@ from app.services.decision_engine import helpers as decision_engine_helpers
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from psycopg import Connection
+from tests.methodology_test_helpers import methodology_config
 from typing import Any, cast
 
 
@@ -185,6 +186,10 @@ def install_repository_fakes(monkeypatch: Any) -> None:
         country_pairs_repository,
         "list_destination_compatibility",
         lambda *_: [],
+    )
+    monkeypatch.setattr(
+        "app.services.decision_engine.decision_runner.get_active_methodology_config",
+        lambda *_: methodology_config(),
     )
 
 
@@ -411,7 +416,7 @@ def test_decision_run_missing_score_fails(monkeypatch: Any) -> None:
 def test_decision_run_route_is_thin(monkeypatch: Any) -> None:
     install_repository_fakes(monkeypatch)
 
-    result = decision_route.run_decision(payload(), CONNECTION)
+    result = decision_route.run_decision(payload(), CONNECTION, None)
 
     assert result.results[0].rank == 1
     assert result.results[0].country.slug == "uruguay"

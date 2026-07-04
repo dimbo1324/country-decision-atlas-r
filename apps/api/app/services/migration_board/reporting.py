@@ -118,15 +118,16 @@ def _create_report(
     reason: str,
     details: str | None,
 ) -> dict[str, Any]:
+    limit = helpers.max_reports_per_day(connection)
     if (
         repository.count_reports_created_today(connection, current_user.id)
-        >= helpers.MAX_REPORTS_PER_DAY
+        >= limit
     ):
         raise api_error(
             429,
             "report_limit_exceeded",
             "Daily report limit exceeded.",
-            {"limit": helpers.MAX_REPORTS_PER_DAY},
+            {"limit": limit},
         )
     if repository.existing_pending_report_exists(
         connection,

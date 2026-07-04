@@ -19,6 +19,9 @@ from app.services.data_quality.decision_passport_checks import (
 from app.services.data_quality.decision_personalization_checks import (
     _append_decision_personalization_checks,
 )
+from app.services.data_quality.methodology_config_checks import (
+    _append_methodology_config_checks,
+)
 from app.services.data_quality.migration_board_checks import (
     _append_migration_board_checks,
 )
@@ -57,6 +60,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_publication_checks(connection, issues, checks)
     _append_timeline_checks(connection, issues, checks)
     _append_cii_checks(connection, issues, checks)
+    _append_methodology_config_checks(connection, issues, checks)
     _append_route_checks(connection, issues, checks)
     _append_persona_layer_checks(connection, issues, checks)
     _append_platform_runtime_checks(connection, issues, checks)

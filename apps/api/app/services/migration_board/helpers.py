@@ -6,6 +6,7 @@ from app.repositories.audit import insert_audit_event
 from app.services.feature_flags import (
     ensure_feature_enabled as _ensure_feature_enabled,
 )
+from app.services.methodology_config import get_active_methodology_config
 from psycopg import Connection
 from typing import Any
 from uuid import UUID
@@ -16,9 +17,6 @@ MATCHING_FEATURE_KEY = "companion_matching_enabled"
 CONTACT_FEATURE_KEY = "contact_requests_enabled"
 PUBLIC_LISTING_FEATURE_KEY = "migration_board_public_listing_enabled"
 MODERATION_FEATURE_KEY = "migration_board_moderation_enabled"
-MAX_ACTIVE_POSTS = 5
-MAX_CONTACT_REQUESTS_PER_DAY = 20
-MAX_REPORTS_PER_DAY = 20
 ALLOWED_TAGS = {
     "pets",
     "children",
@@ -88,6 +86,20 @@ def ensure_feature_enabled(
         feature_key,
         "This migration board feature is currently disabled.",
     )
+
+
+def max_active_posts(connection: Connection[Any]) -> int:
+    return get_active_methodology_config(connection).board.max_active_posts
+
+
+def max_contact_requests_per_day(connection: Connection[Any]) -> int:
+    return get_active_methodology_config(
+        connection
+    ).board.max_contact_requests_per_day
+
+
+def max_reports_per_day(connection: Connection[Any]) -> int:
+    return get_active_methodology_config(connection).board.max_reports_per_day
 
 
 def _reject_public_pii(title: str, summary: str) -> None:

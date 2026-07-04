@@ -39,17 +39,18 @@ def create_contact_request(
             "A pending request already exists.",
             {},
         )
+    limit = helpers.max_contact_requests_per_day(connection)
     if (
         repository.count_contact_requests_created_since(
             connection, user_id=current_user.id, since_sql="1 day"
         )
-        >= helpers.MAX_CONTACT_REQUESTS_PER_DAY
+        >= limit
     ):
         raise api_error(
             429,
             "contact_request_limit_exceeded",
             "Daily contact request limit exceeded.",
-            {"limit": helpers.MAX_CONTACT_REQUESTS_PER_DAY},
+            {"limit": limit},
         )
     request = repository.create_contact_request(
         connection,

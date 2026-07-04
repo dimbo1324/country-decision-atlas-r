@@ -10,6 +10,10 @@ from app.schemas.decision_engine import DecisionCountryRef, DecisionCountryScore
 from app.services.localization import (
     overlay_localized_fields as overlay_localized_fields,
 )
+from app.services.methodology_config import (
+    ConfidenceThresholds,
+    ScoreLabelThresholds,
+)
 from app.services.persona_weights import (
     build_persona_weight_profile as build_persona_weight_profile,
 )
@@ -39,15 +43,19 @@ def _locale(
     return build_locale(rows, requested_locale)
 
 
-def get_score_label(score: float) -> str:
-    return score_label(score)
+def get_score_label(score: float, thresholds: ScoreLabelThresholds) -> str:
+    return score_label(score, thresholds)
 
 
-def _score_label_literal(score: float) -> ScoreLabel:
-    return cast(ScoreLabel, get_score_label(score))
+def _score_label_literal(
+    score: float, thresholds: ScoreLabelThresholds
+) -> ScoreLabel:
+    return cast(ScoreLabel, get_score_label(score, thresholds))
 
 
-def aggregate_confidence(values: Iterable[str | None]) -> str:
+def aggregate_confidence(
+    values: Iterable[str | None], thresholds: ConfidenceThresholds
+) -> str:
     confidence_value = {"low": 1, "medium": 2, "high": 3}
     clean_values = [
         confidence_value[value] for value in values if value in confidence_value
@@ -55,9 +63,9 @@ def aggregate_confidence(values: Iterable[str | None]) -> str:
     if not clean_values:
         return "low"
     average = sum(clean_values) / len(clean_values)
-    if average >= 2.5:
+    if average >= thresholds.high_min_average:
         return "high"
-    if average >= 1.7:
+    if average >= thresholds.medium_min_average:
         return "medium"
     return "low"
 

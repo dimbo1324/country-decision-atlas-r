@@ -5,7 +5,11 @@ from app.schemas.decision_engine import (
     DecisionCountryResult,
 )
 from app.services import decision_engine as service
+from tests.methodology_test_helpers import methodology_config
 from typing import Any
+
+
+METHODOLOGY = methodology_config()
 
 
 def _result(
@@ -20,7 +24,9 @@ def _result(
             id=slug, slug=slug, name=slug.title(), iso_code=None
         ),
         score=score,
-        score_label=service._score_label_literal(score),
+        score_label=service._score_label_literal(
+            score, METHODOLOGY.score_labels
+        ),
         summary="summary",
         strengths=[],
         weaknesses=[],
@@ -34,39 +40,84 @@ def _result(
 
 class TestAggregateConfidence:
     def test_empty_input_defaults_to_low(self) -> None:
-        assert service.aggregate_confidence([]) == "low"
+        assert (
+            service.aggregate_confidence([], METHODOLOGY.decision.confidence)
+            == "low"
+        )
 
     def test_all_none_defaults_to_low(self) -> None:
-        assert service.aggregate_confidence([None, None]) == "low"
+        assert (
+            service.aggregate_confidence(
+                [None, None], METHODOLOGY.decision.confidence
+            )
+            == "low"
+        )
 
     def test_unknown_strings_are_ignored_not_counted(self) -> None:
-        assert service.aggregate_confidence(["not_a_level", None]) == "low"
+        assert (
+            service.aggregate_confidence(
+                ["not_a_level", None], METHODOLOGY.decision.confidence
+            )
+            == "low"
+        )
 
     def test_all_high_is_high(self) -> None:
-        assert service.aggregate_confidence(["high", "high", "high"]) == "high"
+        assert (
+            service.aggregate_confidence(
+                ["high", "high", "high"], METHODOLOGY.decision.confidence
+            )
+            == "high"
+        )
 
     def test_all_low_is_low(self) -> None:
-        assert service.aggregate_confidence(["low", "low"]) == "low"
+        assert (
+            service.aggregate_confidence(
+                ["low", "low"], METHODOLOGY.decision.confidence
+            )
+            == "low"
+        )
 
     def test_average_exactly_at_high_boundary_is_high(self) -> None:
-        assert service.aggregate_confidence(["high", "medium"]) == "high"
+        assert (
+            service.aggregate_confidence(
+                ["high", "medium"], METHODOLOGY.decision.confidence
+            )
+            == "high"
+        )
 
     def test_average_just_below_high_boundary_is_medium(self) -> None:
         assert (
-            service.aggregate_confidence(["medium", "medium", "high"])
+            service.aggregate_confidence(
+                ["medium", "medium", "high"],
+                METHODOLOGY.decision.confidence,
+            )
             == "medium"
         )
 
     def test_average_at_medium_boundary_is_medium(self) -> None:
-        assert service.aggregate_confidence(
-            ["low", "medium", "medium", "medium"]
-        ) == ("medium")
+        assert (
+            service.aggregate_confidence(
+                ["low", "medium", "medium", "medium"],
+                METHODOLOGY.decision.confidence,
+            )
+            == "medium"
+        )
 
     def test_average_just_below_medium_boundary_is_low(self) -> None:
-        assert service.aggregate_confidence(["low", "low", "high"]) == "low"
+        assert (
+            service.aggregate_confidence(
+                ["low", "low", "high"], METHODOLOGY.decision.confidence
+            )
+            == "low"
+        )
 
     def test_mixed_none_and_valid_values_ignores_none(self) -> None:
-        assert service.aggregate_confidence([None, "high", None]) == "high"
+        assert (
+            service.aggregate_confidence(
+                [None, "high", None], METHODOLOGY.decision.confidence
+            )
+            == "high"
+        )
 
 
 class TestRankResultsTieBreaking:
@@ -154,48 +205,73 @@ class TestStrengthWeaknessBoundaries:
         breakdowns = [
             {"criterion": "safety_score", "score": 70, "source_ids": []}
         ]
-        strengths = service._build_strengths(breakdowns, "en")
+        strengths = service._build_strengths(
+            breakdowns, "en", METHODOLOGY.decision.strength_min_score
+        )
         assert len(strengths) == 1
 
     def test_score_of_sixty_nine_is_not_a_strength(self) -> None:
         breakdowns = [
             {"criterion": "safety_score", "score": 69, "source_ids": []}
         ]
-        assert service._build_strengths(breakdowns, "en") == []
+        assert (
+            service._build_strengths(
+                breakdowns, "en", METHODOLOGY.decision.strength_min_score
+            )
+            == []
+        )
 
     def test_score_of_exactly_fifty_counts_as_weakness(self) -> None:
         breakdowns = [
             {"criterion": "safety_score", "score": 50, "source_ids": []}
         ]
-        weaknesses = service._build_weaknesses(breakdowns, "en")
+        weaknesses = service._build_weaknesses(
+            breakdowns, "en", METHODOLOGY.decision.weakness_max_score
+        )
         assert len(weaknesses) == 1
 
     def test_score_of_fifty_one_is_not_a_weakness(self) -> None:
         breakdowns = [
             {"criterion": "safety_score", "score": 51, "source_ids": []}
         ]
-        assert service._build_weaknesses(breakdowns, "en") == []
+        assert (
+            service._build_weaknesses(
+                breakdowns, "en", METHODOLOGY.decision.weakness_max_score
+            )
+            == []
+        )
 
     def test_mid_range_score_is_neither_strength_nor_weakness(self) -> None:
         breakdowns = [
             {"criterion": "safety_score", "score": 60, "source_ids": []}
         ]
-        assert service._build_strengths(breakdowns, "en") == []
-        assert service._build_weaknesses(breakdowns, "en") == []
+        assert (
+            service._build_strengths(
+                breakdowns, "en", METHODOLOGY.decision.strength_min_score
+            )
+            == []
+        )
+        assert (
+            service._build_weaknesses(
+                breakdowns, "en", METHODOLOGY.decision.weakness_max_score
+            )
+            == []
+        )
 
 
 class TestScoreLabelThresholds:
     def test_boundary_values_map_to_expected_labels(self) -> None:
-        assert service._score_label_literal(29.99) == "weak"
-        assert service._score_label_literal(30) == "limited"
-        assert service._score_label_literal(49.99) == "limited"
-        assert service._score_label_literal(50) == "moderate"
-        assert service._score_label_literal(69.99) == "moderate"
-        assert service._score_label_literal(70) == "strong"
-        assert service._score_label_literal(84.99) == "strong"
-        assert service._score_label_literal(85) == "excellent"
-        assert service._score_label_literal(100) == "excellent"
-        assert service._score_label_literal(0) == "weak"
+        thresholds = METHODOLOGY.score_labels
+        assert service._score_label_literal(29.99, thresholds) == "weak"
+        assert service._score_label_literal(30, thresholds) == "limited"
+        assert service._score_label_literal(49.99, thresholds) == "limited"
+        assert service._score_label_literal(50, thresholds) == "moderate"
+        assert service._score_label_literal(69.99, thresholds) == "moderate"
+        assert service._score_label_literal(70, thresholds) == "strong"
+        assert service._score_label_literal(84.99, thresholds) == "strong"
+        assert service._score_label_literal(85, thresholds) == "excellent"
+        assert service._score_label_literal(100, thresholds) == "excellent"
+        assert service._score_label_literal(0, thresholds) == "weak"
 
 
 class TestSourceIdHelpers:

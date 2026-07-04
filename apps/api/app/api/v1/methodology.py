@@ -1,7 +1,13 @@
 from app.core.database import get_connection
 from app.core.errors import api_error
 from app.repositories import methodology as methodology_repo
-from app.schemas.methodology import MethodologyListResponse, MethodologySection
+from app.schemas.methodology import (
+    MethodologyListResponse,
+    MethodologyParameter,
+    MethodologyParametersResponse,
+    MethodologySection,
+)
+from app.services import methodology_config
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -28,6 +34,33 @@ def list_methodology_sections(
     )
     return MethodologyListResponse(
         items=[MethodologySection(**r) for r in rows]
+    )
+
+
+@router.get(
+    "/methodology/parameters",
+    response_model=MethodologyParametersResponse,
+)
+def list_methodology_parameters(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+) -> MethodologyParametersResponse:
+    version, parameters = methodology_config.list_active_parameters(connection)
+    return MethodologyParametersResponse(
+        version=version,
+        items=[
+            MethodologyParameter(
+                version=parameter.version,
+                param_key=parameter.param_key,
+                value_numeric=float(parameter.value_numeric)
+                if parameter.value_numeric is not None
+                else None,
+                value_json=parameter.value_json,
+                description=parameter.description,
+                effective_from=parameter.effective_from,
+                created_at=parameter.created_at,
+            )
+            for parameter in parameters
+        ],
     )
 
 

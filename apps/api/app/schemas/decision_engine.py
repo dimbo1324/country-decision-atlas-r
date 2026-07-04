@@ -109,6 +109,7 @@ class DecisionCompareResult(BaseModel):
     recommended_country: str | None
     recommendation_type: Literal["winner", "tie", "low_confidence"]
     confidence: Literal["high", "medium", "low"]
+    methodology_version: str
     explanation: str
     caveat: str
     locale: LocaleResolution
@@ -138,6 +139,7 @@ class DecisionRunRequest(BaseModel):
     )
     persona: str | None = None
     custom_weights: dict[str, Decimal] | None = None
+    weight_profile_id: str | None = None
 
 
 DecisionRunInput = DecisionRunRequest
@@ -217,6 +219,7 @@ class DecisionCountryResult(BaseModel):
 class DecisionRunMeta(BaseModel):
     candidate_count: int
     generated_at: datetime
+    methodology_version: str
     model_version: str = "scenario-decision-engine-v1"
 
 
@@ -231,6 +234,7 @@ class DecisionRunResponse(BaseModel):
     origin_context_status: OriginContextStatus = "not_requested"
     results: list[DecisionCountryResult]
     meta: DecisionRunMeta
+    methodology_version: str
     locale: LocaleResolution
     applied_persona: Persona | None = None
     persona_weight_profile: PersonaWeightProfile | None = None

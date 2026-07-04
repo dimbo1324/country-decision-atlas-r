@@ -7,6 +7,7 @@ from app.repositories import (
 )
 from app.schemas.decision_engine import DecisionRunRequest
 from app.services import decision_engine
+from app.services.decision_engine import decision_runner
 from fastapi import HTTPException
 from tests.test_decision_run import install_repository_fakes, payload
 from typing import Any, cast
@@ -249,6 +250,69 @@ def test_request_without_custom_weights_ignores_disabled_feature_flag(
 
     result = decision_engine.run_decision(CONNECTION, payload())
     assert result.personalization.weight_mode == "base"
+
+
+def test_weight_profile_id_conflicts_with_inline_weights(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    install_repository_fakes(monkeypatch)
+    _install_personalization_enabled(monkeypatch)
+    request = _payload_with_weights(dict.fromkeys(ALL_CRITERIA, 10.0))
+    request.weight_profile_id = "profile-1"
+
+    with pytest.raises(HTTPException) as exc:
+        decision_engine.run_decision(
+            CONNECTION, request, current_user_id="user-1"
+        )
+    detail = cast(dict[str, Any], exc.value.detail)
+    assert exc.value.status_code == 422
+    assert detail["error"]["code"] == "weight_profile_custom_weights_conflict"
+
+
+def test_weight_profile_requires_authenticated_user(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    install_repository_fakes(monkeypatch)
+    _install_personalization_enabled(monkeypatch)
+    request = payload()
+    request.weight_profile_id = "profile-1"
+
+    with pytest.raises(HTTPException) as exc:
+        decision_engine.run_decision(CONNECTION, request)
+    detail = cast(dict[str, Any], exc.value.detail)
+    assert exc.value.status_code == 401
+    assert detail["error"]["code"] == "auth_required"
+
+
+def test_weight_profile_applies_saved_weights(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    install_repository_fakes(monkeypatch)
+    _install_personalization_enabled(monkeypatch)
+    weights = dict.fromkeys(ALL_CRITERIA, 0.0)
+    weights["safety_score"] = 100.0
+    monkeypatch.setattr(
+        decision_runner,
+        "resolve_profile_for_decision",
+        lambda *_a, **_kw: {
+            "id": "profile-1",
+            "name": "Safety first",
+            "scenario_slug": "relocation_residence",
+            "weights": weights,
+        },
+    )
+    request = payload()
+    request.weight_profile_id = "profile-1"
+
+    result = decision_engine.run_decision(
+        CONNECTION, request, current_user_id="user-1"
+    )
+
+    assert result.personalization.weight_mode == "profile"
+    assert result.personalization.weight_profile_id == "profile-1"
+    assert result.personalization.weight_profile_name == "Safety first"
+    assert result.personalization.custom_weights_applied is True
+    assert result.results[0].score == pytest.approx(72.0)
 
 
 def test_custom_weights_do_not_change_persona_layer(

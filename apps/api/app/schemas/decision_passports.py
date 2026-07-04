@@ -1,4 +1,5 @@
 from app.schemas.decision_engine import DecisionRunRequest, DecisionRunResponse
+from app.schemas.decision_personalization import DecisionWeightItem
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Literal
@@ -21,11 +22,15 @@ class DecisionPassportRouteRef(BaseModel):
 
 class DecisionPassportMethodologySnapshot(BaseModel):
     decision_engine_version: str
+    methodology_version: str
     scenario_slug: str
     persona_slug: str | None = None
     origin_country_slug: str | None = None
+    weight_profile_id: str | None = None
+    weight_profile_name: str | None = None
     custom_weights_applied: bool
     weight_mode: str
+    applied_weights: list[DecisionWeightItem]
     ranking_policy: str
     disclaimer: str
     generated_at: datetime
@@ -54,6 +59,7 @@ class DecisionPassportResponse(BaseModel):
     candidate_country_slugs: list[str]
     selected_country_slug: str | None = None
     decision_result: DecisionRunResponse
+    methodology_version: str
     methodology_snapshot: DecisionPassportMethodologySnapshot
     source_ids: list[str] = Field(default_factory=list)
     route_ids: list[str] = Field(default_factory=list)

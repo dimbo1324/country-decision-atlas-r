@@ -20,6 +20,7 @@ from scripts.apply_migrations import (
     verify_or_record_checksum,
 )
 from starlette.requests import Request
+from tests.methodology_test_helpers import score_label_thresholds
 from typing import Any, cast
 from unittest.mock import MagicMock, patch
 
@@ -254,8 +255,9 @@ def test_migration_runner_uses_advisory_lock() -> None:
     ],
 )
 def test_score_label_boundaries(value: float, label: str) -> None:
-    assert score_label(value) == label
-    assert optional_score_label(value) == label
+    thresholds = score_label_thresholds()
+    assert score_label(value, thresholds) == label
+    assert optional_score_label(value, thresholds) == label
 
 
 def test_readiness_checks_database(monkeypatch: pytest.MonkeyPatch) -> None:

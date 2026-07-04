@@ -152,6 +152,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/methodology/parameters:
+    get:
+      tags:
+      - methodology
+      summary: List Methodology Parameters
+      operationId: list_methodology_parameters_api_v1_methodology_parameters_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MethodologyParametersResponse'
   /api/v1/methodology/{section_slug}:
     get:
       tags:
@@ -3290,6 +3303,8 @@ paths:
       - decision
       summary: Run Decision
       operationId: run_decision_api_v1_decision_run_post
+      security:
+      - BearerAuth: []
       parameters:
       - name: X-CDA-Session
         in: header
@@ -3377,6 +3392,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
   /api/v1/decision/passports/{token}:
     get:
       tags:
@@ -6030,6 +6047,104 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WatchlistStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/weight-profiles:
+    get:
+      tags:
+      - weight-profiles
+      summary: List Weight Profiles
+      operationId: list_weight_profiles_api_v1_me_weight_profiles_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWeightProfileListResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - weight-profiles
+      summary: Create Weight Profile
+      operationId: create_weight_profile_api_v1_me_weight_profiles_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWeightProfileCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWeightProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/weight-profiles/{profile_id}:
+    patch:
+      tags:
+      - weight-profiles
+      summary: Update Weight Profile
+      operationId: update_weight_profile_api_v1_me_weight_profiles__profile_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Profile Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWeightProfilePatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWeightProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - weight-profiles
+      summary: Delete Weight Profile
+      operationId: delete_weight_profile_api_v1_me_weight_profiles__profile_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Profile Id
+      responses:
+        '204':
+          description: Successful Response
         '422':
           description: Validation Error
           content:
@@ -10584,6 +10699,9 @@ components:
           - medium
           - low
           title: Confidence
+        methodology_version:
+          type: string
+          title: Methodology Version
         explanation:
           type: string
           title: Explanation
@@ -10599,6 +10717,7 @@ components:
       - recommended_country
       - recommendation_type
       - confidence
+      - methodology_version
       - explanation
       - caveat
       - locale
@@ -10862,6 +10981,9 @@ components:
         decision_engine_version:
           type: string
           title: Decision Engine Version
+        methodology_version:
+          type: string
+          title: Methodology Version
         scenario_slug:
           type: string
           title: Scenario Slug
@@ -10875,12 +10997,27 @@ components:
           - type: string
           - type: 'null'
           title: Origin Country Slug
+        weight_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weight Profile Id
+        weight_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weight Profile Name
         custom_weights_applied:
           type: boolean
           title: Custom Weights Applied
         weight_mode:
           type: string
           title: Weight Mode
+        applied_weights:
+          items:
+            $ref: '#/components/schemas/DecisionWeightItem'
+          type: array
+          title: Applied Weights
         ranking_policy:
           type: string
           title: Ranking Policy
@@ -10894,9 +11031,11 @@ components:
       type: object
       required:
       - decision_engine_version
+      - methodology_version
       - scenario_slug
       - custom_weights_applied
       - weight_mode
+      - applied_weights
       - ranking_policy
       - disclaimer
       - generated_at
@@ -10937,6 +11076,9 @@ components:
           title: Selected Country Slug
         decision_result:
           $ref: '#/components/schemas/DecisionRunResponse'
+        methodology_version:
+          type: string
+          title: Methodology Version
         methodology_snapshot:
           $ref: '#/components/schemas/DecisionPassportMethodologySnapshot'
         source_ids:
@@ -10986,6 +11128,7 @@ components:
       - scenario_slug
       - candidate_country_slugs
       - decision_result
+      - methodology_version
       - methodology_snapshot
       - disclaimer
       - generated_at
@@ -11035,12 +11178,24 @@ components:
           - persona
           - custom
           - persona_custom
+          - profile
+          - persona_profile
           title: Weight Mode
         persona_slug:
           anyOf:
           - type: string
           - type: 'null'
           title: Persona Slug
+        weight_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weight Profile Id
+        weight_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weight Profile Name
         custom_weights_applied:
           type: boolean
           title: Custom Weights Applied
@@ -11117,6 +11272,9 @@ components:
           type: string
           format: date-time
           title: Generated At
+        methodology_version:
+          type: string
+          title: Methodology Version
         model_version:
           type: string
           title: Model Version
@@ -11125,6 +11283,7 @@ components:
       required:
       - candidate_count
       - generated_at
+      - methodology_version
       title: DecisionRunMeta
     DecisionRunRequest:
       properties:
@@ -11166,6 +11325,11 @@ components:
             type: object
           - type: 'null'
           title: Custom Weights
+        weight_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Weight Profile Id
       type: object
       required:
       - candidate_country_slugs
@@ -11195,6 +11359,9 @@ components:
           title: Results
         meta:
           $ref: '#/components/schemas/DecisionRunMeta'
+        methodology_version:
+          type: string
+          title: Methodology Version
         locale:
           $ref: '#/components/schemas/LocaleResolution'
         applied_persona:
@@ -11220,6 +11387,7 @@ components:
       - origin_country
       - results
       - meta
+      - methodology_version
       - locale
       - personalization
       title: DecisionRunResponse
@@ -12880,6 +13048,58 @@ components:
       required:
       - items
       title: MethodologyListResponse
+    MethodologyParameter:
+      properties:
+        version:
+          type: string
+          title: Version
+        param_key:
+          type: string
+          title: Param Key
+        value_numeric:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value Numeric
+        value_json:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value Json
+        description:
+          type: string
+          title: Description
+        effective_from:
+          type: string
+          format: date-time
+          title: Effective From
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - version
+      - param_key
+      - description
+      - effective_from
+      - created_at
+      title: MethodologyParameter
+    MethodologyParametersResponse:
+      properties:
+        version:
+          type: string
+          title: Version
+        items:
+          items:
+            $ref: '#/components/schemas/MethodologyParameter'
+          type: array
+          title: Items
+      type: object
+      required:
+      - version
+      - items
+      title: MethodologyParametersResponse
     MethodologySection:
       properties:
         slug:
@@ -16498,6 +16718,127 @@ components:
       required:
       - item
       title: UserStoryResponse
+    UserWeightProfile:
+      properties:
+        id:
+          type: string
+          title: Id
+        user_id:
+          type: string
+          title: User Id
+        name:
+          type: string
+          title: Name
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        weights:
+          additionalProperties:
+            type: number
+          type: object
+          title: Weights
+        is_default:
+          type: boolean
+          title: Is Default
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - user_id
+      - name
+      - weights
+      - is_default
+      - created_at
+      - updated_at
+      title: UserWeightProfile
+    UserWeightProfileCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Name
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        weights:
+          additionalProperties:
+            anyOf:
+            - type: number
+            - type: string
+              pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          type: object
+          title: Weights
+        is_default:
+          type: boolean
+          title: Is Default
+          default: false
+      type: object
+      required:
+      - name
+      - weights
+      title: UserWeightProfileCreate
+    UserWeightProfileListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/UserWeightProfile'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: UserWeightProfileListResponse
+    UserWeightProfilePatch:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 120
+            minLength: 1
+          - type: 'null'
+          title: Name
+        scenario_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scenario Slug
+        weights:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - type: number
+              - type: string
+                pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+            type: object
+          - type: 'null'
+          title: Weights
+        is_default:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Default
+      type: object
+      title: UserWeightProfilePatch
+    UserWeightProfileResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/UserWeightProfile'
+      type: object
+      required:
+      - item
+      title: UserWeightProfileResponse
     ValidationError:
       properties:
         loc:

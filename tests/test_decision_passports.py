@@ -182,6 +182,33 @@ def test_get_passport_does_not_rerun_decision(
     assert result.decision_result.results
 
 
+def test_get_passport_reads_legacy_methodology_snapshot(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    install_repository_fakes(monkeypatch)
+    store = install_passport_store(monkeypatch)
+    created = service.create_decision_passport(
+        CONNECTION, payload(), "en", None
+    )
+    stored_row = next(iter(store.rows.values()))
+    decision_snapshot = stored_row["decision_result_snapshot"]
+    decision_snapshot.pop("methodology_version", None)
+    decision_snapshot["meta"].pop("methodology_version", None)
+    methodology_snapshot = stored_row["methodology_snapshot"]
+    for field_name in (
+        "methodology_version",
+        "weight_profile_id",
+        "weight_profile_name",
+        "applied_weights",
+    ):
+        methodology_snapshot.pop(field_name, None)
+
+    result = service.get_decision_passport_by_token(CONNECTION, created.token)
+
+    assert result.methodology_version == service.LEGACY_METHODOLOGY_VERSION
+    assert result.methodology_snapshot.applied_weights
+
+
 def test_unknown_token_returns_404(monkeypatch: pytest.MonkeyPatch) -> None:
     install_passport_store(monkeypatch)
 
@@ -287,6 +314,9 @@ def test_persona_and_origin_preserved_in_snapshot(
 
     assert result.origin_country_slug == "russia"
     assert result.methodology_snapshot.origin_country_slug == "russia"
+    assert result.methodology_version == "v1.0"
+    assert result.methodology_snapshot.methodology_version == "v1.0"
+    assert result.methodology_snapshot.applied_weights
 
 
 def test_source_ids_included(monkeypatch: pytest.MonkeyPatch) -> None:
