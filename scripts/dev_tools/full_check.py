@@ -216,7 +216,10 @@ def enable_windows_ansi() -> bool:
     if platform.system() != "Windows":
         return True
     try:
-        kernel32 = ctypes.windll.kernel32
+        windll = getattr(ctypes, "windll", None)
+        if windll is None:
+            return False
+        kernel32 = windll.kernel32
         handle = kernel32.GetStdHandle(-11)
         mode = ctypes.c_uint32()
         if not kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
@@ -264,9 +267,12 @@ class WindowsMemoryStatusEx(ctypes.Structure):
 
 def windows_memory_gb() -> tuple[float | None, float | None]:
     try:
+        windll = getattr(ctypes, "windll", None)
+        if windll is None:
+            return None, None
         stat = WindowsMemoryStatusEx()
         stat.dwLength = ctypes.sizeof(WindowsMemoryStatusEx)
-        ok = ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
+        ok = windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
         if not ok:
             return None, None
         total_gb = round(stat.ullTotalPhys / 1_073_741_824, 1)
