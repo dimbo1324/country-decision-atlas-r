@@ -35,12 +35,37 @@ point: keep it compact, operational, and aligned with `CLAUDE.md`.
 - `.codex/agents/` contains narrow project agents. Use them for parallel
   exploration, review, CI triage, architecture work, and focused backend or
   frontend changes when the task is broad enough to benefit from delegation.
+  Claude Code carries the same six agents under `.claude/agents/` with the
+  same `country-atlas-*` names and the same responsibilities — keep the two
+  sets aligned when either changes.
 - `.codex/skills/` contains reusable project workflows. Prefer these skills and
-  `scripts/dev_tools` before inventing fresh command sequences.
+  `scripts/dev_tools` before inventing fresh command sequences. Claude Code
+  mirrors these under `.claude/skills/`.
 - For architecture episodes, read `docs/_arch_/` first, then work from the
   episode plan and verify with targeted tests plus the quick gate.
 - Keep subagent fan-out intentional: spawn several agents for independent
   questions, then consolidate their findings before editing shared files.
+
+## Multi-Agent Collaboration (Codex + Claude Code)
+
+This repository is worked on by both Codex and Claude Code, usually in
+separate sessions driven by the same person, not concurrently in real time.
+Treat git as the coordination surface between them:
+
+- Before starting non-trivial work, check `git log --oneline -10` and
+  `git status --short --branch` — recent commits may be the other assistant's
+  finished work, not yours to redo or second-guess.
+- `AGENTS.md` and `CLAUDE.md` are kept as near-mirrors on purpose (one per
+  assistant, same content, assistant-specific framing only). If a task changes
+  shared rules — house style, git workflow, quality gate, product guardrails —
+  apply the same edit to both files in the same turn. Do the same for
+  `.codex/agents|skills` and `.claude/agents|skills` when the two toolsets
+  overlap.
+- Commit messages should stay attributable: keep using a trailer that
+  identifies which assistant authored the commit, so `git log` shows who did
+  what.
+- Do not treat the other assistant's in-flight branch as free to rewrite
+  history on. If you need to build on top of it, branch from it or ask first.
 
 ## First Steps For Agents
 

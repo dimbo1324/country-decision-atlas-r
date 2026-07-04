@@ -30,12 +30,45 @@ hold the product vision and domain model. Keep this file aligned with
 ## Claude Code Workspace
 
 - `.claude/launch.json` contains local run targets for Claude Code.
-- `.claude/skills/` contains project-specific reusable workflows.
+- `.claude/agents/` contains project-scoped subagents (`country-atlas-*`) for
+  delegated work: domain reading, backend, frontend, quality review, CI
+  triage, and repo maintenance. Use them for independent, well-scoped work
+  instead of doing everything on the main thread — mirrors `.codex/agents/`
+  one-to-one so both assistants delegate the same way.
+- `.claude/skills/` contains project-specific reusable workflows
+  (`project-maintenance`, `architecture-episode`, `ci-fix`, `code-review`) —
+  mirrors `.codex/skills/`.
+- `.claude/settings.json` allowlists routine read-only/verification commands
+  and explicitly denies destructive git/Docker operations (force-push, hard
+  reset, branch -D, volume/prune). Extend the allowlist rather than routing
+  around it; never remove a deny entry without the user's explicit approval.
 - Prefer project skills and `scripts/dev_tools` before inventing new shell
   sequences.
 - Keep long-running or risky commands visible in the conversation.
 - When changing shared assistant behavior, keep `AGENTS.md` and `.codex`
   guidance aligned where their scopes overlap.
+
+## Multi-Agent Collaboration (Claude Code + Codex)
+
+This repository is worked on by both Claude Code and Codex, usually in
+separate sessions driven by the same person, not concurrently in real time.
+Treat git as the coordination surface between them:
+
+- Before starting non-trivial work, check `git log --oneline -10` and
+  `git status --short --branch` — recent commits may be the other assistant's
+  finished work, not yours to redo or second-guess.
+- `CLAUDE.md` and `AGENTS.md` are kept as near-mirrors on purpose (one per
+  assistant, same content, assistant-specific framing only). If a task changes
+  shared rules — house style, git workflow, quality gate, product guardrails —
+  apply the same edit to both files in the same turn. Do the same for
+  `.claude/agents|skills` and `.codex/agents|skills` when the two toolsets
+  overlap.
+- Commit messages should stay attributable: keep using a trailer that
+  identifies which assistant authored the commit (Claude Code already does
+  this; ask the user before assuming Codex's convention if it's unclear from
+  recent history).
+- Do not treat the other assistant's in-flight branch as free to rewrite
+  history on. If you need to build on top of it, branch from it or ask first.
 
 ## First Steps For Agents
 

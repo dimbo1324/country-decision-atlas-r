@@ -5,6 +5,11 @@ Atlas. It is intentionally small: durable repo rules live in `AGENTS.md`,
 developer automation lives in `scripts/dev_tools`, and this directory wires
 Codex to those existing project contracts.
 
+Claude Code carries an equivalent, name-for-name mirror of the agents and
+skills below under `.claude/agents/` and `.claude/skills/`, driven by
+`CLAUDE.md`. Keep both sides aligned when either changes — see "Multi-Agent
+Collaboration" in `AGENTS.md`/`CLAUDE.md`.
+
 ## Files
 
 - `config.toml` — project defaults for model reasoning and subagent limits.
