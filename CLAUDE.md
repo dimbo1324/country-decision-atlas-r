@@ -24,6 +24,8 @@ hold the product vision and domain model. Keep this file aligned with
 - `scripts/dev_tools` — developer automation. Prefer these scripts over ad hoc
   command sequences.
 - `docs/_arch_` — product and domain architecture in Russian.
+- `.codex` — project-scoped Codex configuration, custom agents, and reusable
+  skills. Keep shared assistant rules aligned with this file and `AGENTS.md`.
 
 ## Claude Code Workspace
 
@@ -32,6 +34,8 @@ hold the product vision and domain model. Keep this file aligned with
 - Prefer project skills and `scripts/dev_tools` before inventing new shell
   sequences.
 - Keep long-running or risky commands visible in the conversation.
+- When changing shared assistant behavior, keep `AGENTS.md` and `.codex`
+  guidance aligned where their scopes overlap.
 
 ## First Steps For Agents
 

@@ -24,6 +24,23 @@ point: keep it compact, operational, and aligned with `CLAUDE.md`.
 - `scripts/dev_tools` — developer automation. Prefer these scripts over ad hoc
   command sequences.
 - `docs/_arch_` — product and domain architecture in Russian.
+- `.codex` — project-scoped Codex configuration, custom agents, and reusable
+  skills. Keep this directory lightweight and operational.
+
+## Codex Workspace
+
+- `.codex/config.toml` sets project defaults for model reasoning and subagent
+  limits. Do not put personal credentials or machine-specific absolute paths
+  there.
+- `.codex/agents/` contains narrow project agents. Use them for parallel
+  exploration, review, CI triage, architecture work, and focused backend or
+  frontend changes when the task is broad enough to benefit from delegation.
+- `.codex/skills/` contains reusable project workflows. Prefer these skills and
+  `scripts/dev_tools` before inventing fresh command sequences.
+- For architecture episodes, read `docs/_arch_/` first, then work from the
+  episode plan and verify with targeted tests plus the quick gate.
+- Keep subagent fan-out intentional: spawn several agents for independent
+  questions, then consolidate their findings before editing shared files.
 
 ## First Steps For Agents
 
