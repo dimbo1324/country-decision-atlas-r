@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import argparse
 from collections.abc import Callable
 import contextlib
@@ -23,18 +22,15 @@ from typing import Any
 import urllib.error
 import urllib.request
 
-
 # ____________________________________________________________________________________________________
 # 					Constants: Toolchain Baselines, Network Checks & Secret Redaction Patterns
 # ____________________________________________________________________________________________________
 REPO_ROOT = Path(__file__).resolve().parents[2]
-
 RED = "\033[31m"
 GREEN = "\033[32m"
 YELLOW = "\033[33m"
 CYAN = "\033[36m"
 RESET = "\033[0m"
-
 DEFAULT_TOOL_BASELINES: list[dict[str, Any]] = [
     {
         "name": "Git",
@@ -109,17 +105,14 @@ DEFAULT_TOOL_BASELINES: list[dict[str, Any]] = [
         "install_hint": "Install: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest (then ensure %GOPATH%\\bin is on PATH)",
     },
 ]
-
 DEFAULT_NETWORK_CHECKS: list[dict[str, Any]] = [
     {"name": "npm registry", "host": "registry.npmjs.org", "port": 443},
     {"name": "PyPI", "host": "pypi.org", "port": 443},
     {"name": "Docker Hub", "host": "registry-1.docker.io", "port": 443},
     {"name": "GitHub", "host": "github.com", "port": 443},
 ]
-
 DEFAULT_MIN_FREE_DISK_GB = 5
 PROFILE_CHOICES = ("quick", "backend", "frontend", "docker", "full", "ci")
-
 SMOKE_URLS = [
     "http://localhost:8000/health",
     "http://localhost:8000/ready",
@@ -129,10 +122,8 @@ SMOKE_URLS = [
     "http://localhost:8000/api/v1/countries/argentina/trust?locale=ru",
     "http://localhost:8000/api/v1/search?q=residence&locale=ru",
 ]
-
 STALE_CACHE_DIRS = [".pytest_cache", ".mypy_cache", ".ruff_cache"]
 CACHE_DIRS_SAFE_TO_FIX = [*STALE_CACHE_DIRS, ".tmp/pytest", ".tmp/full-check"]
-
 SECRET_KEY_PATTERNS = (
     "ADMIN_TOKEN",
     "DATABASE_URL",
@@ -147,7 +138,6 @@ SECRET_KEY_PATTERNS = (
     "SECRET",
     "TOKEN",
 )
-
 SECRET_ASSIGNMENT_RE = re.compile(
     rf"(?i)\b({'|'.join(re.escape(k) for k in SECRET_KEY_PATTERNS)})"
     r"\s*[:=]\s*([^\s,;]+)"
@@ -300,7 +290,6 @@ def unix_memory_gb() -> tuple[float | None, float | None]:
 def psutil_memory_gb() -> tuple[float | None, float | None]:
     try:
         psutil = importlib.import_module("psutil")
-
         mem = psutil.virtual_memory()
         return round(mem.total / 1_073_741_824, 1), round(
             mem.available / 1_073_741_824, 1
@@ -312,7 +301,6 @@ def psutil_memory_gb() -> tuple[float | None, float | None]:
 def psutil_cpu_counts() -> tuple[int | None, int | None]:
     try:
         psutil = importlib.import_module("psutil")
-
         return psutil.cpu_count(logical=False), psutil.cpu_count(logical=True)
     except Exception:
         return None, os.cpu_count()
@@ -353,7 +341,6 @@ def get_system_diagnostics() -> dict[str, Any]:
         total_gb, free_gb = windows_memory_gb()
     if total_gb is None:
         total_gb, free_gb = unix_memory_gb()
-
     diag: dict[str, Any] = {
         "hostname": "unknown",
         "current_user": "unknown",
@@ -509,16 +496,18 @@ def get_repo_diagnostics() -> dict[str, Any]:
     env_files = [".env", "apps/api/.env", "apps/web/.env.local"]
     diag: dict[str, Any] = {
         "package_manager": (package_json or {}).get("packageManager", "unknown"),
-        "migration_count": len(list(migrations_dir.glob("*.sql")))
-        if migrations_dir.exists()
-        else 0,
+        "migration_count": (
+            len(list(migrations_dir.glob("*.sql"))) if migrations_dir.exists() else 0
+        ),
         "missing_env_files": [p for p in env_files if not (REPO_ROOT / p).exists()],
         "node_modules_size_gb": directory_size_gb(REPO_ROOT / "node_modules"),
         "venv_size_gb": directory_size_gb(REPO_ROOT / ".venv"),
         "next_cache_size_gb": directory_size_gb(REPO_ROOT / "apps" / "web" / ".next"),
-        "report_dir_count": len(list((REPO_ROOT / "full-check-reports").glob("*")))
-        if (REPO_ROOT / "full-check-reports").exists()
-        else 0,
+        "report_dir_count": (
+            len(list((REPO_ROOT / "full-check-reports").glob("*")))
+            if (REPO_ROOT / "full-check-reports").exists()
+            else 0
+        ),
     }
     return diag
 
@@ -571,11 +560,11 @@ def get_docker_diagnostics() -> dict[str, Any]:
                     "root_dir": info.get("DockerRootDir", "unknown"),
                     "storage_driver": info.get("Driver", "unknown"),
                     "docker_cpus": info.get("NCPU"),
-                    "docker_memory_gb": round(
-                        float(info.get("MemTotal", 0)) / 1_073_741_824, 1
-                    )
-                    if info.get("MemTotal")
-                    else None,
+                    "docker_memory_gb": (
+                        round(float(info.get("MemTotal", 0)) / 1_073_741_824, 1)
+                        if info.get("MemTotal")
+                        else None
+                    ),
                     "running_containers": info.get("ContainersRunning"),
                 }
             )
@@ -828,7 +817,6 @@ class FullCheck:
         self.admin_password = args.admin_token or "local-gate-" + secrets.token_hex(8)
         self.config_path = args.config
         self.regen_proto = args.regen_proto
-
         self.run_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         self.report_dir = REPO_ROOT / "full-check-reports" / self.run_timestamp
         self.report_dir.mkdir(parents=True, exist_ok=True)
@@ -837,10 +825,8 @@ class FullCheck:
         self.report_json_path = self.report_dir / "report.json"
         self.recommendations_path = self.report_dir / "recommendations.txt"
         self.temp_root = REPO_ROOT / ".tmp" / "full-check" / self.run_timestamp
-
         self.out = DualWriter(self.transcript_path)
         self.color_enabled = sys.stdout.isatty() and enable_windows_ansi()
-
         self.stage_results: list[StageResult] = []
         self.recommendations: list[Recommendation] = []
         self.network_results: list[NetworkResult] = []
@@ -1040,9 +1026,7 @@ class FullCheck:
             if install_hint:
                 self.add_recommendation(name, "not installed", install_hint)
             return False
-
         version = self.get_tool_version_string([exe, *version_args], pattern)
-
         if mode == "presence":
             self.add_stage_result(name, "OK", f"found ({command}), version={version}")
             return True
@@ -1070,7 +1054,6 @@ class FullCheck:
                 "global/site-packages install.",
             )
             return True
-
         cmp_result = compare_semver(version, recommended)
         if not recommended or cmp_result >= 0:
             self.add_stage_result(name, "OK", f"version={version}")
@@ -1212,7 +1195,6 @@ class FullCheck:
     # ____________________________________________________________________________________________________
     def phase_diagnostics(self, config: dict[str, Any]) -> None:
         self.section("Phase -1 — Diagnostics (system, git, network)")
-
         self.system_info = get_system_diagnostics()
         self.log(
             "  host={} user={} os={} ({}) kernel={} cpu={} cores={}/{} ram={}GB free-ram={}GB "
@@ -1237,7 +1219,6 @@ class FullCheck:
             )
         )
         self.log(f"  python executable={self.system_info['python_executable']}")
-
         self.git_context = get_git_context()
         self.log(
             "  git branch={} commit={} upstream={} dirty-files={} {}".format(
@@ -1248,7 +1229,6 @@ class FullCheck:
                 self.git_context["ahead_behind"],
             )
         )
-
         self.repo_info = get_repo_diagnostics()
         self.log(
             "  repo package-manager={} migrations={} missing-env={} node_modules={}GB .venv={}GB .next={}GB".format(
@@ -1260,7 +1240,6 @@ class FullCheck:
                 self.repo_info["next_cache_size_gb"],
             )
         )
-
         self.docker_info = get_docker_diagnostics()
         if self.docker_info["available"]:
             self.log(
@@ -1283,7 +1262,6 @@ class FullCheck:
                 self.log(f"  docker compose services={services}")
         else:
             self.log("  docker command is not available", "warn")
-
         min_free_gb = config["min_free_disk_space_gb"]
         free_gb = self.system_info["repo_drive_free_gb"]
         if free_gb is not None and free_gb < min_free_gb:
@@ -1301,7 +1279,6 @@ class FullCheck:
             )
         else:
             self.add_stage_result("Disk space", "OK", f"{free_gb} GB free")
-
         for net in config["network_checks"]:
             reachable = test_port_reachable(net["host"], net["port"], timeout=3.0)
             self.network_results.append(
@@ -1325,7 +1302,6 @@ class FullCheck:
                     "Check internet connection, VPN, proxy, or corporate firewall settings. Installs that "
                     "need this host may fail or need more retries.",
                 )
-
         for stale_dir in CACHE_DIRS_SAFE_TO_FIX:
             stale_path = REPO_ROOT / stale_dir
             if stale_path.exists():
@@ -1364,7 +1340,6 @@ class FullCheck:
         self.section("Phase 0 — System toolchain verification")
         self.python312 = self.resolve_python312()
         self.pnpm_command = get_project_pnpm_command()
-
         package_json = get_package_json()
         pnpm_required = playwright_required = prettier_required = (
             openapi_ts_required
@@ -1387,7 +1362,6 @@ class FullCheck:
                 "WARN",
                 "could not be read/parsed; pnpm/Next/Playwright/Prettier/openapi-typescript baselines unavailable this run",
             )
-
         self.fastapi_required = get_pyproject_exact_pin("fastapi")
         self.pydantic_required = get_pyproject_exact_pin("pydantic")
         python_required = get_requires_python_min_version()
@@ -1396,7 +1370,6 @@ class FullCheck:
         self.playwright_required = playwright_required
         self.prettier_required = prettier_required
         self.openapi_ts_required = openapi_ts_required
-
         if self.python312:
             self.check_tool_version(
                 "Python 3.12",
@@ -1452,7 +1425,6 @@ class FullCheck:
             severity="required",
             install_hint="https://go.dev/dl/",
         )
-
         for tool in config["tools"]:
             self.check_tool_version(
                 tool["name"],
@@ -1464,7 +1436,6 @@ class FullCheck:
                 severity=tool.get("severity", "required"),
                 install_hint=tool.get("install_hint", ""),
             )
-
         self.go_tooling_present = all(
             shutil.which(cmd)
             for cmd in ("go", "protoc", "protoc-gen-go", "protoc-gen-go-grpc")
@@ -1475,7 +1446,6 @@ class FullCheck:
     # ____________________________________________________________________________________________________
     def phase_dependencies(self) -> None:
         self.section("Phase 1 — Dependency installation")
-
         python312 = self.python312
         if not python312:
             self.add_stage_result(
@@ -1508,7 +1478,6 @@ class FullCheck:
                     "Check the transcript above for the pip error. Common causes: no internet, a locked "
                     "virtualenv, or a Python version mismatch (project requires >= 3.12).",
                 )
-
         pnpm_command = self.pnpm_command
         pnpm_result = self.run_with_retry(
             "pnpm install",
@@ -1538,7 +1507,6 @@ class FullCheck:
                     "corepack pnpm@9.12.0 install --frozen-lockfile",
                 ),
             )
-
         playwright_result = self.run_with_retry(
             "pnpm exec playwright install chromium",
             lambda: (
@@ -1562,7 +1530,6 @@ class FullCheck:
     # ____________________________________________________________________________________________________
     def phase_pinned_versions(self) -> None:
         self.section("Phase 2 — Project-pinned version verification")
-
         if self.python312:
             self.check_tool_version(
                 "FastAPI (pip)",
@@ -1590,7 +1557,6 @@ class FullCheck:
                 mode="exact",
                 severity="optional",
             )
-
         if self.pnpm_command:
             for name, args, recommended in (
                 (
@@ -1662,7 +1628,6 @@ class FullCheck:
                 "ruff format",
                 py_args("-m", "ruff", "format", "apps", "packages", "scripts", "tests"),
             )
-
         self.run_gate_step(
             "ruff check",
             py_args("-m", "ruff", "check", "apps", "packages", "scripts", "tests"),
@@ -1670,7 +1635,6 @@ class FullCheck:
         self.run_gate_step(
             "mypy", py_args("-m", "mypy", "apps", "packages", "scripts", "tests")
         )
-
         if self.profile in {"backend", "full", "ci"}:
             self.run_gate_step(
                 "ruff format --check",
@@ -1689,7 +1653,6 @@ class FullCheck:
                 "sqlfluff lint",
                 py_args("-m", "sqlfluff", "lint", "database", "--dialect", "postgres"),
             )
-
         pytest_temp = self.temp_root / "pytest"
         pytest_temp.mkdir(parents=True, exist_ok=True)
         self.run_gate_step(
@@ -1702,7 +1665,6 @@ class FullCheck:
                 f"--basetemp={pytest_temp}",
             ),
         )
-
         if self.profile == "quick":
             self.run_gate_step(
                 "pnpm typecheck",
@@ -1710,7 +1672,6 @@ class FullCheck:
                 env=pnpm_safe_env(),
             )
             return
-
         if self.profile in {"frontend", "full", "ci"}:
             self.run_gate_step(
                 "pnpm contracts:generate",
@@ -1733,26 +1694,26 @@ class FullCheck:
                 "go/protoc/protoc-gen-go/protoc-gen-go-grpc not all present; see Phase 0 recommendations above",
             )
             return
-
         notifier_dir = REPO_ROOT / "apps" / "notifier"
         protoc_exe = shutil.which("protoc")
         go_exe = shutil.which("go")
-
         if self.regen_proto:
             self.run_gate_step(
                 "protoc generate",
-                [
-                    protoc_exe,
-                    "-I",
-                    ".",
-                    "--go_out=.",
-                    "--go_opt=module=github.com/country-decision-atlas/notifier",
-                    "--go-grpc_out=.",
-                    "--go-grpc_opt=module=github.com/country-decision-atlas/notifier",
-                    "proto/subscriptions.proto",
-                ]
-                if protoc_exe
-                else None,
+                (
+                    [
+                        protoc_exe,
+                        "-I",
+                        ".",
+                        "--go_out=.",
+                        "--go_opt=module=github.com/country-decision-atlas/notifier",
+                        "--go-grpc_out=.",
+                        "--go-grpc_opt=module=github.com/country-decision-atlas/notifier",
+                        "proto/subscriptions.proto",
+                    ]
+                    if protoc_exe
+                    else None
+                ),
                 cwd=notifier_dir,
             )
             git_exe = shutil.which("git")
@@ -1781,7 +1742,6 @@ class FullCheck:
                 "pass --regen-proto to regenerate; committed .pb.go files are used as-is "
                 "(Docker build has no codegen step and requires them to be tracked)",
             )
-
         self.run_gate_step(
             "go vet", [go_exe, "vet", "./..."] if go_exe else None, cwd=notifier_dir
         )
@@ -1800,7 +1760,6 @@ class FullCheck:
                 "--skip-docker was set",
             )
             return
-
         self.section("Phase 5 — Docker stack, migrations, runtime smoke")
         docker_exe = shutil.which("docker")
         if not docker_exe:
@@ -1810,7 +1769,6 @@ class FullCheck:
                 "docker command not found; see Phase 0 recommendations",
             )
             return
-
         docker_info_exit = self.run_streaming([docker_exe, "info"])
         if docker_info_exit != 0:
             self.add_stage_result(
@@ -1820,7 +1778,6 @@ class FullCheck:
             )
             return
         self.add_stage_result("docker daemon reachable", "OK")
-
         if self.docker_info:
             memory = self.docker_info.get("docker_memory_gb")
             cpus = self.docker_info.get("docker_cpus")
@@ -1836,7 +1793,6 @@ class FullCheck:
                     "OK",
                     f"cpus={cpus} memory={memory}GB",
                 )
-
         docker_up_exit = self.run_with_retry(
             "docker compose up --build -d api redis",
             lambda: self.run_streaming(
@@ -1871,7 +1827,6 @@ class FullCheck:
                 f"docker compose up failed after {self.docker_max_attempts} attempts",
             )
             return
-
         api_healthy = wait_for_http_health(
             "http://localhost:8000/health", timeout_seconds=90
         )
@@ -1885,7 +1840,6 @@ class FullCheck:
                 "API never became healthy",
             )
             return
-
         postgres_ready = self.run_streaming(
             [
                 docker_exe,
@@ -1903,12 +1857,10 @@ class FullCheck:
         self.add_stage_result(
             "Postgres readiness", "OK" if postgres_ready == 0 else "FAIL"
         )
-
         redis_ready = self.run_streaming(
             [docker_exe, "compose", "exec", "-T", "redis", "redis-cli", "ping"]
         )
         self.add_stage_result("Redis readiness", "OK" if redis_ready == 0 else "FAIL")
-
         mig1 = self.run_streaming(
             [
                 docker_exe,
@@ -1923,7 +1875,6 @@ class FullCheck:
         self.add_stage_result(
             "apply_migrations.py (first run)", "OK" if mig1 == 0 else "FAIL"
         )
-
         mig2 = self.run_streaming(
             [
                 docker_exe,
@@ -1938,7 +1889,6 @@ class FullCheck:
         self.add_stage_result(
             "apply_migrations.py (idempotency rerun)", "OK" if mig2 == 0 else "FAIL"
         )
-
         bootstrap_exit = self.run_streaming(
             [
                 docker_exe,
@@ -1953,7 +1903,6 @@ class FullCheck:
         self.add_stage_result(
             "bootstrap_runtime_read_models.py", "OK" if bootstrap_exit == 0 else "FAIL"
         )
-
         search_index_exit = self.run_streaming(
             [
                 docker_exe,
@@ -1969,7 +1918,6 @@ class FullCheck:
         self.add_stage_result(
             "rebuild_search_index.py --all", "OK" if search_index_exit == 0 else "FAIL"
         )
-
         for url in SMOKE_URLS:
             try:
                 with urllib.request.urlopen(url, timeout=10) as resp:
@@ -1979,7 +1927,6 @@ class FullCheck:
                 )
             except Exception as exc:
                 self.add_stage_result(f"smoke: {url}", "FAIL", str(exc))
-
         semantic_checks = [
             ("health", "http://localhost:8000/health"),
             ("ready", "http://localhost:8000/ready"),
@@ -2004,7 +1951,6 @@ class FullCheck:
             self.add_stage_result(
                 f"semantic smoke: {name}", "OK" if ok else "FAIL", detail
             )
-
         admin_email = f"full-check-owner-{self.run_timestamp}@example.local"
         bootstrap_owner_exit = self.run_streaming(
             [
@@ -2029,7 +1975,6 @@ class FullCheck:
             "create_auth_user.py (owner bootstrap)",
             "OK" if bootstrap_owner_exit == 0 else "FAIL",
         )
-
         admin_headers: dict[str, str] = {}
         if bootstrap_owner_exit == 0:
             login_status, login_payload, login_error = http_json(
@@ -2199,7 +2144,6 @@ class FullCheck:
                 "OK" if ok else "FAIL",
                 detail,
             )
-
         migration_count_exit = self.run_streaming(
             [
                 docker_exe,
@@ -2220,16 +2164,13 @@ class FullCheck:
             "migration version count query",
             "OK" if migration_count_exit == 0 else "FAIL",
         )
-
         if self.skip_e2e:
             self.add_stage_result(
                 "pnpm web:mvp:check (Playwright E2E)", "SKIP", "--skip-e2e was set"
             )
             return
-
         if platform.system() == "Windows":
             subprocess.run(["taskkill", "/F", "/IM", "node.exe"], capture_output=True)
-
         self.run_gate_step(
             "pnpm web:mvp:check (Playwright E2E)",
             self.pnpm_args("web:mvp:check"),
@@ -2273,7 +2214,6 @@ class FullCheck:
         duration_minutes = round(
             (finished_at - self.started_at).total_seconds() / 60, 1
         )
-
         self.section("Summary")
         name_width = max((len(r.stage) for r in self.stage_results), default=10) + 2
         for r in self.stage_results:
@@ -2283,18 +2223,15 @@ class FullCheck:
             self.log(
                 f"  [{r.status:<4}] {r.stage:<{name_width}} {r.detail}{duration_text}"
             )
-
         ok_count = sum(1 for r in self.stage_results if r.status == "OK")
         warn_count = sum(1 for r in self.stage_results if r.status == "WARN")
         fail_count = sum(1 for r in self.stage_results if r.status == "FAIL")
         skip_count = sum(1 for r in self.stage_results if r.status == "SKIP")
-
         self.log("")
         self.log(
             f"OK: {ok_count}   WARN: {warn_count}   FAIL: {fail_count}   SKIP: {skip_count}   "
             f"Duration: {duration_minutes} min"
         )
-
         if self.recommendations:
             self.section("Recommendations")
             rec_lines = [
@@ -2334,7 +2271,6 @@ class FullCheck:
                 )
             except OSError as exc:
                 self.log(f"WARNING: could not write recommendations.txt: {exc}", "warn")
-
         summary_lines = [
             "Country Decision Atlas — full-check.py run",
             f"Started:  {self.started_at.isoformat()}",
@@ -2362,7 +2298,6 @@ class FullCheck:
             )
         except OSError as exc:
             self.log(f"WARNING: could not write summary.txt: {exc}", "warn")
-
         try:
             report = {
                 "started_at": self.started_at.isoformat(),
@@ -2390,14 +2325,12 @@ class FullCheck:
             )
         except OSError as exc:
             self.log(f"WARNING: could not write report.json: {exc}", "warn")
-
         self.log("")
         self.log(f"Full transcript:  {self.transcript_path}")
         self.log(f"Summary:          {self.summary_path}")
         self.log(f"JSON report:      {self.report_json_path}")
         if self.recommendations:
             self.log(f"Recommendations:  {self.recommendations_path}")
-
         failed = [r for r in self.stage_results if r.status == "FAIL"]
         warnings = [r for r in self.stage_results if r.status == "WARN"]
         if failed:
@@ -2418,7 +2351,6 @@ class FullCheck:
         else:
             self.log("")
             self.log("Result: OK", "ok")
-
         return fail_count
 
     # ____________________________________________________________________________________________________
@@ -2433,9 +2365,7 @@ class FullCheck:
             self.log("Mode:          doctor (read-only diagnostics)")
         if self.fix:
             self.log("Mode:          fix (safe local cache/format fixes enabled)")
-
         config = self.load_config()
-
         fail_count = 0
         try:
             if self.should_run_phase("diagnostics"):
@@ -2466,7 +2396,6 @@ class FullCheck:
         finally:
             fail_count = self.write_reports(datetime.now())
             self.out.close()
-
         return 1 if fail_count > 0 else 0
 
 
