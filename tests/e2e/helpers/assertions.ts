@@ -13,7 +13,7 @@ export async function expectNoAppCrash(page: Page) {
 }
 
 export async function expectPageReady(page: Page) {
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   await expectNoAppCrash(page);
 }
 
