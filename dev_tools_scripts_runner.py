@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -15,6 +16,7 @@ class ScriptInfo:
     filename: str
     title: str
     description: str
+    aliases: tuple[str, ...] = ()
 
 
 # Add new scripts here as they're placed in scripts/dev_tools/ — no other
@@ -29,6 +31,7 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
             "static analysis, tests, and optional Docker/E2E checks. Accepts all "
             "of its own flags unchanged, e.g. --profile, --fix, --doctor."
         ),
+        aliases=("check", "quality"),
     ),
     ScriptInfo(
         key="2",
@@ -38,6 +41,17 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
             "Auto-formats Python, frontend/contracts, and Go code. Accepts "
             "optional targets: python, frontend, go, or all."
         ),
+        aliases=("format", "fmt"),
+    ),
+    ScriptInfo(
+        key="3",
+        filename="ship_main.py",
+        title="ship-main",
+        description=(
+            "Formats, commits, runs the quick gate, fast-forwards from origin/main, "
+            "and pushes main. Requires --message."
+        ),
+        aliases=("ship", "push-main", "publish"),
     ),
 ]
 
@@ -47,11 +61,13 @@ DEFAULT_SCRIPT_KEY = "1"
 def find_script(choice: str) -> ScriptInfo | None:
     normalized = choice.strip().lower()
     for script in AVAILABLE_SCRIPTS:
-        if normalized in {
+        choices = {
             script.key,
             script.title.lower(),
             script.filename.lower(),
-        }:
+            *script.aliases,
+        }
+        if normalized in choices:
             return script
     return None
 
@@ -67,9 +83,7 @@ def default_script() -> ScriptInfo:
 def print_menu() -> None:
     print("\nCountry Decision Atlas — script orchestrator")
     print("=" * 46)
-    print(
-        "Choose which script to run. Press Enter to run the default script.\n"
-    )
+    print("Choose a workflow. Press Enter to run the default full check.\n")
 
     for script in AVAILABLE_SCRIPTS:
         default_marker = (
@@ -77,10 +91,14 @@ def print_menu() -> None:
         )
         print(f"{script.key}. {script.title}{default_marker}")
         print(f"   {script.description}")
+        if script.aliases:
+            print(f"   aliases: {', '.join(script.aliases)}")
 
     print(
-        "\nYou can type either the number or the script name, "
-        f"for example: {DEFAULT_SCRIPT_KEY} or {default_script().title}."
+        "\nExamples:\n"
+        "  python dev_tools_scripts_runner.py --profile quick\n"
+        "  python dev_tools_scripts_runner.py format-code\n"
+        '  python dev_tools_scripts_runner.py ship-main --message "docs: update notes"'
     )
 
 

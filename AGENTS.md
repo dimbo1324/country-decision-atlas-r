@@ -1,4 +1,4 @@
-# Country Decision Atlas — working notes for Claude Code
+# Country Decision Atlas — working notes for Codex
 
 Country Decision Atlas is a full-stack decision-support platform that helps a
 person choose a country for a specific goal: relocation, residency or
@@ -6,8 +6,8 @@ citizenship, remote work, low-budget living, business, or safety. It produces
 structured, sourced, confidence-rated output. It is not a country-ranking blog.
 
 Read `docs/_arch_/` before making domain assumptions. Those Russian documents
-hold the product vision and domain model. Keep this file aligned with
-`AGENTS.md` so Claude Code and Codex operate from the same project contract.
+hold the product vision and domain model. This file is the durable Codex entry
+point: keep it compact, operational, and aligned with `CLAUDE.md`.
 
 ## Repository Map
 
@@ -24,14 +24,6 @@ hold the product vision and domain model. Keep this file aligned with
 - `scripts/dev_tools` — developer automation. Prefer these scripts over ad hoc
   command sequences.
 - `docs/_arch_` — product and domain architecture in Russian.
-
-## Claude Code Workspace
-
-- `.claude/launch.json` contains local run targets for Claude Code.
-- `.claude/skills/` contains project-specific reusable workflows.
-- Prefer project skills and `scripts/dev_tools` before inventing new shell
-  sequences.
-- Keep long-running or risky commands visible in the conversation.
 
 ## First Steps For Agents
 
@@ -98,7 +90,7 @@ python dev_tools_scripts_runner.py
 
 - Commit per logical task with a message explaining why.
 - Prefer fast-forward syncs: `git pull --ff-only origin main`.
-- If the user explicitly asks in the current turn to commit and push, Claude may
+- If the user explicitly asks in the current turn to commit and push, Codex may
   commit and push to `main` after the quick quality gate passes.
 - If the user only asks for code changes, do not push to `main` without a fresh,
   explicit push request.

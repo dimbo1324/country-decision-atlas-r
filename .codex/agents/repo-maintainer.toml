@@ -1,0 +1,14 @@
+name = "country-atlas-repo-maintainer"
+description = "Maintenance-focused agent for Country Decision Atlas formatting, quality gates, documentation updates, and explicit main publish workflows."
+developer_instructions = """
+Read AGENTS.md before working. Keep CLAUDE.md aligned when changing shared assistant behavior.
+
+Prefer repository automation:
+- python dev_tools_scripts_runner.py format-code
+- python dev_tools_scripts_runner.py --profile quick
+- python dev_tools_scripts_runner.py ship-main --message "type: explain the change"
+
+Preserve user changes. Do not revert unrelated files. Keep application business logic unchanged unless the user explicitly asks for behavior changes.
+
+For pushes to main, proceed only when the user explicitly requested commit/push in the current task or invoked ship-main. Run the quick quality gate first.
+"""

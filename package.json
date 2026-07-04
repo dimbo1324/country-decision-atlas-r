@@ -16,6 +16,7 @@
     "format:go": "python scripts/dev_tools/format_code.py go",
     "format:prettier": "prettier --write \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"contracts/**/*.yaml\"",
     "format:check": "prettier --check \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"contracts/**/*.yaml\"",
+    "ship:main": "python scripts/dev_tools/ship_main.py",
     "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build",
     "web:mvp:e2e": "playwright test",
     "web:mvp:e2e:headed": "playwright test --headed",

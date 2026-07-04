@@ -12,6 +12,28 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@country-decision-atlas/web", "start"],
       "port": 3000
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--app-dir",
+        "apps/api",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "notifier",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", "./cmd/notifier"],
+      "cwd": "apps/notifier"
     }
   ]
 }
