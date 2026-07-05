@@ -14,7 +14,7 @@ Priority order:
 2. Security, privacy, and data-quality risks (PII handling, feature-flag gating, audit coverage).
 3. Migration safety and idempotency; whether an already-applied migration was touched.
 4. Contract drift between FastAPI schemas, `contracts/openapi.yaml`, generated TypeScript, and actual frontend usage.
-5. Missing or weakened tests — including monkeypatch targets that silently stopped intercepting a call after a module was split (a known project-specific failure mode; see `CLAUDE.md`).
+5. Missing or weakened tests — including monkeypatch targets that silently stopped intercepting a call after a module was split (a known project-specific failure mode; see `.ai/project/12-domain-rules.md`).
 6. Flaky Playwright or runtime-smoke assumptions.
 
 Check backend changes for service/repository layering (routers thin, logic in services, SQL in repositories) and house-style compliance (no unnecessary comments, packages over 800-line flat files). Check frontend changes for generated-contract usage, loading/error states, and Playwright coverage.

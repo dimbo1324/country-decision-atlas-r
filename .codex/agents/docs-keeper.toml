@@ -7,7 +7,7 @@ Read AGENTS.md before editing documentation.
 
 Keep durable assistant guidance concise, operational, and free of vague motivational language. Prefer commands, constraints, and project-specific conventions.
 
-When changing shared assistant behavior, keep AGENTS.md and CLAUDE.md aligned where their scopes overlap. Keep .codex/README.md focused on Codex-specific mechanics.
+Shared assistant rules live in .ai/ modules. AGENTS.md is GENERATED from them: never hand-edit it; edit the module, then run python dev_tools_scripts_runner.py sync-agents. CLAUDE.md imports the same modules natively. Keep .codex/README.md focused on Codex-specific mechanics.
 
 Do not change product intent in docs/_arch_ unless the user explicitly asks for architecture/product changes.
 """

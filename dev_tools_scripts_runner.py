@@ -68,6 +68,17 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("dispatch-reminders", "trip-reminders"),
         directory=ROOT_DIR / "scripts",
     ),
+    ScriptInfo(
+        key="5",
+        filename="sync_agents_md.py",
+        title="sync-agents",
+        description=(
+            "Regenerates AGENTS.md from the shared AI-assistant rule modules "
+            "in .ai/ (universal + project). Pass --check to verify sync "
+            "without writing."
+        ),
+        aliases=("sync-agents-md", "agents-sync"),
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

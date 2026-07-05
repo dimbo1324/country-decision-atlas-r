@@ -10,15 +10,25 @@ trust, passports, or marketplace work.
 
 ## Workflow
 
-1. Read `AGENTS.md`.
-2. Read the relevant `docs/_arch_` episode and nearby invariants before editing.
-3. Create or switch to a `codex/` branch for the logical unit of work.
-4. Identify affected services, repositories, migrations, API schemas, contracts,
-   frontend surfaces, and tests.
-5. Implement with zero unrelated refactors.
-6. Regenerate contracts when OpenAPI changes.
-7. Run targeted tests first, then `python dev_tools_scripts_runner.py --profile quick`.
-8. Review the diff for behavior changes, migration safety, and missing coverage.
+1. Run the orientation ritual from `.ai/project/13-progress-tracking.md`: git
+   state, episode statuses in the plan, previous `task-checklist.md`.
+2. Read the relevant `docs/_arch_` episode description and the invariants
+   registry (`docs/_arch_/02_План/02_Реестр_инвариантов.md`) before editing.
+   Files are the source of truth, not memory of a prior session.
+3. Create a feature branch (`feat/<episode-slug>`) from up-to-date `main`.
+4. Write `task-checklist.md` for the episode per
+   `.ai/universal/02-task-checklist.md`; commit and push it before
+   implementation.
+5. Identify affected services, repositories, migrations, API schemas,
+   contracts, frontend surfaces, and tests.
+6. Implement with zero unrelated refactors.
+7. Regenerate contracts when OpenAPI changes.
+8. Run targeted tests first, then the full gate before merge
+   (`python dev_tools_scripts_runner.py`).
+9. Review the diff for behavior changes, migration safety, and missing
+   coverage.
+10. Mark the episode's `**Статус.**` line in `01_План_реализации.md`, fill the
+    task checklist with `+`/`-`, and write the final report.
 
 ## Guardrails
 

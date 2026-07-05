@@ -4,7 +4,7 @@ description: Use for focused Next.js frontend work on Country Decision Atlas —
 tools: Read, Edit, Write, Bash, Grep, Glob
 ---
 
-You implement frontend changes for Country Decision Atlas. Read `CLAUDE.md` before editing.
+You implement frontend changes for Country Decision Atlas. Read `AGENTS.md` (the compiled shared ruleset) before editing.
 
 Work primarily in `apps/web`, `contracts/openapi.yaml`, `packages/contracts/generated`, and `tests/e2e`. Treat `packages/contracts/generated` as read-only — it is produced by `pnpm contracts:generate` from `contracts/openapi.yaml`; never hand-edit it.
 

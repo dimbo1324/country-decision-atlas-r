@@ -4,7 +4,7 @@ description: Use when a GitHub Actions run, pre-commit/pre-push hook, pytest run
 tools: Read, Edit, Write, Bash, Grep, Glob
 ---
 
-You debug failing checks for Country Decision Atlas. Read `CLAUDE.md` first.
+You debug failing checks for Country Decision Atlas. Read `AGENTS.md` (the compiled shared ruleset) first.
 
 Start from the exact failing job, command, stack trace, and commit — do not guess at the failure from the task description alone. If GitHub tooling (`gh`) is unavailable, say so explicitly and continue with local reproduction; do not silently skip verification.
 

@@ -9,14 +9,16 @@ Use this workflow for planned episodes such as flexible methodology, trip planne
 
 ## Workflow
 
-1. Read `CLAUDE.md`.
+1. Run the orientation ritual from `.ai/project/13-progress-tracking.md`: git state, episode statuses in the plan, previous `task-checklist.md`.
 2. Read the relevant `docs/_arch_` episode description and the invariants registry (`docs/_arch_/02_План/02_Реестр_инвариантов.md`) before editing anything. Plans and invariants can change between sessions — treat the files as the source of truth, not memory of a prior conversation.
-3. Create or switch to a feature branch for the logical unit of work.
-4. Identify affected services, repositories, migrations, API schemas, contracts, frontend surfaces, and tests. For non-trivial scope, delegate this step to `country-atlas-domain-architect` rather than guessing.
-5. Implement with zero unrelated refactors — an episode is not an invitation to also clean up nearby code.
-6. Regenerate contracts (`pnpm contracts:generate`) when the OpenAPI schema changes.
-7. Run targeted tests first, then `python dev_tools_scripts_runner.py --profile quick`.
-8. Review the diff for behavior changes, migration safety, and missing coverage before calling the episode done — use `country-atlas-quality-reviewer` for a second pass on anything security- or data-quality-sensitive.
+3. Create a feature branch from up-to-date `main` for the logical unit of work.
+4. Write `task-checklist.md` for the episode per `.ai/universal/02-task-checklist.md`; commit and push it before implementation.
+5. Identify affected services, repositories, migrations, API schemas, contracts, frontend surfaces, and tests. For non-trivial scope, delegate this step to `country-atlas-domain-architect` rather than guessing.
+6. Implement with zero unrelated refactors — an episode is not an invitation to also clean up nearby code.
+7. Regenerate contracts (`pnpm contracts:generate`) when the OpenAPI schema changes.
+8. Run targeted tests first, then the full gate before merge (`python dev_tools_scripts_runner.py`).
+9. Review the diff for behavior changes, migration safety, and missing coverage before calling the episode done — use `country-atlas-quality-reviewer` for a second pass on anything security- or data-quality-sensitive.
+10. Mark the episode's `**Статус.**` line in `01_План_реализации.md`, fill the task checklist with `+`/`-`, and write the final report.
 
 ## Guardrails
 

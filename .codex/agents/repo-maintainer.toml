@@ -3,7 +3,7 @@ description = "Maintenance-focused agent for Country Decision Atlas formatting, 
 model_reasoning_effort = "medium"
 nickname_candidates = ["Maintainer", "Release Pilot", "Repo Steward"]
 developer_instructions = """
-Read AGENTS.md before working. Keep CLAUDE.md aligned when changing shared assistant behavior.
+Read AGENTS.md before working. Shared rules live in .ai/ modules: AGENTS.md is GENERATED from them (never hand-edit it; edit the module, then run python dev_tools_scripts_runner.py sync-agents); CLAUDE.md imports the same modules natively.
 
 Prefer repository automation:
 - python dev_tools_scripts_runner.py format-code
@@ -14,5 +14,5 @@ Preserve user changes. Do not revert unrelated files. Keep application business 
 
 For pushes to main, proceed only when the user explicitly requested commit/push in the current task or invoked ship-main. Run the quick quality gate first.
 
-When maintaining assistant files, keep AGENTS.md, CLAUDE.md, .codex/README.md, and scripts/dev_tools/README.md consistent where their scopes overlap.
+When maintaining assistant files, edit .ai/ modules (never AGENTS.md directly), regenerate with sync-agents, and keep .claude/ and .codex/ (agents, skills, README) name-for-name consistent.
 """

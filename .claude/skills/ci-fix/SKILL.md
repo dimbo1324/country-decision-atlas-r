@@ -9,7 +9,7 @@ Start from the exact failing command and log excerpt — do not fix based on a g
 
 ## Workflow
 
-1. Read `CLAUDE.md`.
+1. Rules are loaded via `CLAUDE.md` imports; if working as a subagent, read `AGENTS.md` (compiled ruleset).
 2. Capture the failing job, command, file, line, and commit.
 3. Reproduce the smallest failing command locally when possible.
 4. Fix the root cause with the smallest behavior-preserving patch.
@@ -24,6 +24,6 @@ python dev_tools_scripts_runner.py --profile quick
 
 - If `gh` or GitHub connector access is unavailable, say so and continue with local reproduction.
 - Prefer deterministic test fixes over loosening assertions.
-- A monkeypatch that stops intercepting a call after a module split is a known project-specific failure mode (see `CLAUDE.md`) — check for it before assuming a test is simply flaky.
+- A monkeypatch that stops intercepting a call after a module split is a known project-specific failure mode (see `.ai/project/12-domain-rules.md`) — check for it before assuming a test is simply flaky.
 - Do not push to `main` unless the current user turn explicitly asks for it.
 - For a broader, delegated investigation, use the `country-atlas-ci-triage` agent.

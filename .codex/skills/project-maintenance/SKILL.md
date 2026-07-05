@@ -33,11 +33,16 @@ Commit and push an explicitly requested change:
 python dev_tools_scripts_runner.py ship-main --message "type: explain the change"
 ```
 
+Regenerate the Codex entry after editing rule modules in `.ai/`:
+
+```powershell
+python dev_tools_scripts_runner.py sync-agents
+```
+
 ## Rules
 
-- Read `AGENTS.md` before project-wide assumptions.
-- Keep `AGENTS.md`, `CLAUDE.md`, and `.codex/README.md` aligned where their
-  scopes overlap.
+- `AGENTS.md` is GENERATED from `.ai/` modules — never hand-edit it; edit the
+  module and run `sync-agents`. `CLAUDE.md` imports the same modules natively.
 - Preserve user changes and never revert unrelated work.
 - Do not push unless the user explicitly requested a push in the current task
   or directly invoked `ship-main`.

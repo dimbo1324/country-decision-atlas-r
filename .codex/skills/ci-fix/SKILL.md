@@ -25,4 +25,6 @@ python dev_tools_scripts_runner.py --profile quick
 - If `gh` or GitHub connector access is unavailable, say so and continue with
   local reproduction.
 - Prefer deterministic test fixes over loosening assertions.
+- A monkeypatch that stops intercepting a call after a module split is a known
+  project-specific failure mode (see `.ai/project/12-domain-rules.md`).
 - Do not push to `main` unless the current user turn explicitly asks for it.
