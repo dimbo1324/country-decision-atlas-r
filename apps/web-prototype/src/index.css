@@ -85,6 +85,23 @@
     box-shadow: 0 0 0 1px rgb(216 170 78 / 0.05);
   }
 
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(239 230 212 / 0.18) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgb(239 230 212 / 0.18);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   .text-shimmer {
     background: linear-gradient(
       105deg,
