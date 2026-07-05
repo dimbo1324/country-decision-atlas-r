@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Crimson Text", Georgia, serif;
+  --font-quote: "IM Fell English", Georgia, serif;
+  --font-mono: "Courier New", ui-monospace, monospace;
+
+  --color-bg: #0c0e16;
+  --color-bg2: #13161f;
+  --color-bg3: #0e1018;
+  --color-bg4: #191c27;
+
+  --color-c1: #efe6d4;
+  --color-c2: #c0b6a0;
+  --color-c3: #827a6a;
+  --color-c4: #494436;
+  --color-c5: #2a2832;
+
+  --color-gold: #d8aa4e;
+  --color-gold2: #9c742c;
+  --color-gold3: #f4d089;
+
+  --color-blue: #5f93bd;
+  --color-blue2: #3a6088;
+  --color-blue3: #92bce0;
+
+  --color-terra: #c47553;
+  --color-terra2: #8a4e34;
+  --color-terra3: #e29a78;
+
+  --color-sage: #7e9876;
+  --color-sage2: #52684c;
+  --color-sage3: #aac49e;
+
+  --color-plum: #90709a;
+  --color-plum2: #5e4660;
+  --color-plum3: #b89cc0;
+
+  --ease-arrive: cubic-bezier(0.22, 0.68, 0, 1.1);
+  --ease-spring: cubic-bezier(0.34, 1.46, 0.64, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    overflow-anchor: none;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-c1);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-gold) 35%, transparent);
+    color: var(--color-c1);
+  }
+}
+
+@layer utilities {
+  .border-warm {
+    border-color: rgb(239 230 212 / 0.09);
+  }
+
+  .border-warm-hi {
+    border-color: rgb(239 230 212 / 0.26);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 0 1px rgb(216 170 78 / 0.05);
+  }
+
+  .text-shimmer {
+    background: linear-gradient(
+      105deg,
+      var(--color-c1) 30%,
+      var(--color-gold3) 45%,
+      var(--color-c1) 60%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 7s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-shimmer {
+      animation: none;
+    }
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% center;
+  }
+}
