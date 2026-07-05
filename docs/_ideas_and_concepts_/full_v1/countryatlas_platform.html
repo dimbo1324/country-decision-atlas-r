@@ -50,6 +50,7 @@
       }
       html {
         scroll-behavior: smooth;
+        overflow-anchor: none;
       }
       body {
         background: var(--bg);
@@ -57,6 +58,7 @@
         font-family: "Crimson Text", Georgia, serif;
         overflow-x: hidden;
         line-height: 1.6;
+        overflow-anchor: none;
       }
       canvas.bgfx {
         position: fixed;
@@ -518,7 +520,6 @@
         width: 100%;
         height: 300px;
         max-height: 42vh;
-        background: transparent !important;
         transform: translateZ(0);
       }
 
@@ -2484,8 +2485,6 @@
         return st;
       }
       function fit(cv) {
-        // Stable CSS-pixel sizing. Do not derive layout from the canvas intrinsic size.
-        // This prevents the horizontal deck from reflowing while charts are redrawn.
         const dpr = Math.min(window.devicePixelRatio || 1, 1.35);
         const rect = cv.getBoundingClientRect();
         const fallbackH = +cv.getAttribute("height") || 300;
@@ -2623,7 +2622,6 @@
         const padB = 30,
           padT = 20,
           bw = (W - 40) / velo.cur.length;
-        // baseline band (optimal zone)
         x.fillStyle = "rgba(95,147,189,.05)";
         x.fillRect(
           20,
@@ -2858,9 +2856,6 @@
       ];
       let chartLastFrame = 0;
       function loop(ts) {
-        // Pause all chart work when tab is hidden and throttle to ~30 FPS.
-        // During the horizontal deck, draw only the active slide canvas.
-        // This removes the heavy multi-canvas render pressure that caused lag.
         if (!document.hidden && ts - chartLastFrame >= 33) {
           chartLastFrame = ts;
           const id = deckCanvasByIndex[activeDeckIndex] || "cvRadar";
@@ -2940,138 +2935,151 @@
         )
         .join("");
 
-      /* HORIZONTAL DECK */
+      /* ═══════════ HORIZONTAL DECK — robust engine ═══════════
+         Root cause of the previous "infinite render" bug: progress was derived
+         from a scrollY value CACHED once at load/resize (`deckStart`). Any later
+         layout shift (web font swap, dynamic content, even a debounced resize
+         firing slightly late) made that cached number stale, so the computed
+         progress drifted out of sync with reality — visually this looked like
+         the deck jittering/rendering endlessly back and forth on every scroll
+         tick, because each frame "corrected" against a wrong baseline.
+         Fix: never cache a scroll offset. Every tick, ask the browser directly
+         "where is #deck right now" via getBoundingClientRect() and derive
+         progress from that. This is self-healing — any prior layout shift is
+         automatically absorbed on the very next frame, so there is nothing to
+         go out of sync. */
       const SLIDES = 5,
         deckOuter = document.getElementById("deck"),
-        deckPin = document.getElementById("deckPin"),
         track = document.getElementById("deckTrack"),
         hudCur = document.getElementById("hudCur"),
         hudDots = document.getElementById("hudDots"),
         deckHint = document.getElementById("deckHint"),
         exitHint = document.getElementById("exitHint");
 
+      const isMobile = matchMedia("(max-width:820px)").matches,
+        reduced = matchMedia("(prefers-reduced-motion:reduce)").matches;
+
       let activeDeckIndex = 0;
-      let deckStart = 0;
-      let deckDistance = 1;
-      let deckNeedsUpdate = true;
+      let deckDistance = 1; // horizontal travel distance in px (SLIDES-1 viewports)
+      let lastMeasuredWidth = 0;
+      let deckTickScheduled = false;
       let deckResizeTimer = 0;
 
       for (let i = 0; i < SLIDES; i++) {
         const d = document.createElement("div");
         d.className = "hud-dot" + (i === 0 ? " on" : "");
         d.onclick = () => {
-          if (isMobile || reduced) return;
-          window.scrollTo({
-            top: deckStart + deckDistance * (i / Math.max(1, SLIDES - 1)),
-            behavior: "smooth",
-          });
+          if (isMobile || reduced || !deckOuter) return;
+          // Compute the jump target fresh, relative to the section's current
+          // position — no stale cache involved.
+          const rect = deckOuter.getBoundingClientRect();
+          const total = Math.max(1, rect.height - innerHeight);
+          const targetTop = -(i / Math.max(1, SLIDES - 1)) * total;
+          const delta = targetTop - rect.top;
+          scrollTo({ top: scrollY + delta, behavior: "smooth" });
         };
         hudDots.appendChild(d);
       }
 
-      const isMobile = matchMedia("(max-width:820px)").matches,
-        reduced = matchMedia("(prefers-reduced-motion:reduce)").matches;
-
-      function refreshDeckMetrics() {
+      function measureDeck() {
+        // The only input that changes the horizontal travel distance is
+        // viewport WIDTH (slide width = 100vw). Height-only changes (e.g. a
+        // mobile browser toolbar show/hide) must not trigger a recompute —
+        // recomputing on those was a secondary source of jitter.
         if (!deckOuter || !track) return;
         if (isMobile || reduced) {
           deckOuter.style.height = "";
           track.style.transform = "";
           return;
         }
-
-        // The old GSAP pinning path could trigger pin-spacer refresh loops when
-        // canvases changed intrinsic size. This native sticky path keeps the layout
-        // height deterministic: one viewport for the pinned frame + horizontal travel.
-        track.style.transform = "translate3d(0, 0, 0)";
+        if (innerWidth === lastMeasuredWidth) return;
+        lastMeasuredWidth = innerWidth;
         deckDistance = Math.max(1, Math.round(track.scrollWidth - innerWidth));
         deckOuter.style.height = `${Math.round(innerHeight + deckDistance)}px`;
-
-        const r = deckOuter.getBoundingClientRect();
-        deckStart = Math.round(scrollY + r.top);
-        requestDeckUpdate();
-      }
-
-      function requestDeckUpdate() {
-        if (isMobile || reduced) return;
-        if (deckNeedsUpdate) return;
-        deckNeedsUpdate = true;
-        requestAnimationFrame(updateDeck);
       }
 
       function updateDeck() {
-        if (isMobile || reduced) return;
-        deckNeedsUpdate = false;
-
-        const raw = (scrollY - deckStart) / Math.max(1, deckDistance);
-        const p = clamp(raw, 0, 1);
-        const x = -Math.round(p * deckDistance * 100) / 100;
+        deckTickScheduled = false;
+        if (isMobile || reduced || !deckOuter) return;
+        const rect = deckOuter.getBoundingClientRect(); // always fresh, never cached
+        const total = Math.max(1, rect.height - innerHeight);
+        const p = clamp(-rect.top / total, 0, 1);
+        const x = -Math.round(p * deckDistance);
         track.style.transform = `translate3d(${x}px, 0, 0)`;
 
         const idx = clamp(Math.round(p * (SLIDES - 1)), 0, SLIDES - 1);
-        activeDeckIndex = idx;
-        hudCur.textContent = String(idx + 1).padStart(2, "0");
-        document
-          .querySelectorAll(".hud-dot")
-          .forEach((d, i) => d.classList.toggle("on", i === idx));
+        if (idx !== activeDeckIndex) {
+          activeDeckIndex = idx;
+          hudCur.textContent = String(idx + 1).padStart(2, "0");
+          document
+            .querySelectorAll(".hud-dot")
+            .forEach((d, i) => d.classList.toggle("on", i === idx));
+        }
         if (p > 0.02) deckHint.classList.add("gone");
         exitHint.classList.toggle("show", p > 0.86);
       }
 
-      addEventListener(
-        "scroll",
-        () => {
-          requestDeckUpdate();
-        },
-        { passive: true },
-      );
+      function requestDeckTick() {
+        if (isMobile || reduced) return;
+        if (deckTickScheduled) return;
+        deckTickScheduled = true;
+        requestAnimationFrame(updateDeck);
+      }
 
+      addEventListener("scroll", requestDeckTick, { passive: true });
       addEventListener("resize", () => {
         clearTimeout(deckResizeTimer);
-        deckResizeTimer = setTimeout(refreshDeckMetrics, 120);
+        deckResizeTimer = setTimeout(() => {
+          measureDeck();
+          requestDeckTick();
+        }, 150);
       });
 
       if (!isMobile && !reduced) {
-        deckNeedsUpdate = false;
-        requestAnimationFrame(refreshDeckMetrics);
-        addEventListener("load", refreshDeckMetrics);
+        measureDeck();
+        requestDeckTick();
+        addEventListener("load", () => {
+          measureDeck();
+          requestDeckTick();
+        });
         if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(refreshDeckMetrics).catch(() => {});
+          document.fonts.ready
+            .then(() => {
+              measureDeck();
+              requestDeckTick();
+            })
+            .catch(() => {});
         }
 
         addEventListener("keydown", (e) => {
-          const inDeck =
-            scrollY >= deckStart && scrollY <= deckStart + deckDistance;
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          const rect = deckOuter.getBoundingClientRect();
+          const total = Math.max(1, rect.height - innerHeight);
+          const inDeck = rect.top <= 0 && rect.top >= -total;
           if (!inDeck) return;
-          const step = deckDistance / Math.max(1, SLIDES - 1);
-          if (e.key === "ArrowRight") {
-            e.preventDefault();
-            scrollTo({
-              top: clamp(scrollY + step, deckStart, deckStart + deckDistance),
-              behavior: "smooth",
-            });
-          }
-          if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            scrollTo({
-              top: clamp(scrollY - step, deckStart, deckStart + deckDistance),
-              behavior: "smooth",
-            });
-          }
+          e.preventDefault();
+          const step = total / Math.max(1, SLIDES - 1);
+          const delta = e.key === "ArrowRight" ? step : -step;
+          scrollTo({ top: scrollY + delta, behavior: "smooth" });
         });
       }
 
       /* PROGRESS RAIL + TOPBAR hide */
       let lastY = 0;
-      addEventListener("scroll", () => {
-        const h = document.documentElement.scrollHeight - innerHeight;
-        document.getElementById("rail").style.width = (scrollY / h) * 100 + "%";
-        const tb = document.getElementById("topbar");
-        if (scrollY > lastY && scrollY > 200)
-          tb.style.transform = "translateY(-100%)";
-        else tb.style.transform = "";
-        lastY = scrollY;
-      });
+      addEventListener(
+        "scroll",
+        () => {
+          const h = document.documentElement.scrollHeight - innerHeight;
+          document.getElementById("rail").style.width =
+            (scrollY / Math.max(1, h)) * 100 + "%";
+          const tb = document.getElementById("topbar");
+          if (scrollY > lastY && scrollY > 200)
+            tb.style.transform = "translateY(-100%)";
+          else tb.style.transform = "";
+          lastY = scrollY;
+        },
+        { passive: true },
+      );
 
       /* REVEAL + COUNTUP */
       function countUp(el) {
@@ -3109,7 +3117,9 @@
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
       document.querySelectorAll(".intro [data-count]").forEach(countUp);
 
-      /* BG TEXTURE + DUST */
+      /* BG TEXTURE + DUST — resize handlers are debounced so a burst of
+         resize events (e.g. an embedding panel settling its size right after
+         load) cannot trigger a stampede of expensive per-pixel redraws. */
       const tex = document.getElementById("tex"),
         tx = tex.getContext("2d");
       function drawTex() {
@@ -3117,16 +3127,24 @@
           H = innerHeight;
         tex.width = W;
         tex.height = H;
-        const im = tx.createImageData(W, H),
+        const NW = Math.ceil(W / 4),
+          NH = Math.ceil(H / 4);
+        const noise = document.createElement("canvas");
+        noise.width = NW;
+        noise.height = NH;
+        const nx = noise.getContext("2d");
+        const im = nx.createImageData(NW, NH),
           d = im.data;
         for (let i = 0; i < d.length; i += 4) {
           const v = Math.random() * 255,
-            b = v > 226 ? v : 0;
+            b = v > 218 ? v : 0;
           d[i] = d[i + 1] = d[i + 2] = b;
-          d[i + 3] = b ? Math.floor(((b - 226) / 29) * 7) : 0;
+          d[i + 3] = b ? Math.floor(((b - 218) / 37) * 10) : 0;
         }
-        tx.putImageData(im, 0, 0);
-        for (let i = 0; i < Math.floor(W / 2.6); i++) {
+        nx.putImageData(im, 0, 0);
+        tx.imageSmoothingEnabled = false;
+        tx.drawImage(noise, 0, 0, NW, NH, 0, 0, W, H);
+        for (let i = 0; i < 160; i++) {
           const px = Math.random() * W,
             py = Math.random() * H,
             len = Math.random() * 220 + 20,
@@ -3167,7 +3185,12 @@
         }
       }
       drawTex();
-      addEventListener("resize", drawTex);
+      let texResizeTimer = 0;
+      addEventListener("resize", () => {
+        clearTimeout(texResizeTimer);
+        texResizeTimer = setTimeout(drawTex, 250);
+      });
+
       const dust = document.getElementById("dust"),
         dc = dust.getContext("2d");
       let parts = [];
@@ -3177,7 +3200,7 @@
         dust.width = W;
         dust.height = H;
         parts = [];
-        const n = Math.floor(W / 34);
+        const n = Math.min(70, Math.floor(W / 50));
         for (let i = 0; i < n; i++)
           parts.push({
             x: Math.random() * W,
@@ -3191,7 +3214,6 @@
       }
       let dustLastFrame = 0;
       function animD(ts) {
-        // Background dust is decorative; 20 FPS is visually enough and much cheaper.
         if (!document.hidden && ts - dustLastFrame >= 50) {
           dustLastFrame = ts;
           const W = dust.width,
@@ -3217,7 +3239,11 @@
       }
       initD();
       requestAnimationFrame(animD);
-      addEventListener("resize", initD);
+      let dustResizeTimer = 0;
+      addEventListener("resize", () => {
+        clearTimeout(dustResizeTimer);
+        dustResizeTimer = setTimeout(initD, 250);
+      });
     </script>
   </body>
 </html>
