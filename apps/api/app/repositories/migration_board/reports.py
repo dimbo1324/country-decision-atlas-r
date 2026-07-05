@@ -167,3 +167,18 @@ def count_reports_created_today(
         (user_id,),
     )
     return int(row["total"]) if row else 0
+
+
+def count_resolved_reports_for_post(
+    connection: Connection[Any], post_id: str
+) -> int:
+    row = fetch_one(
+        connection,
+        """
+        SELECT COUNT(*) AS total
+        FROM migration_board_reports
+        WHERE post_id::text = %s AND status = 'resolved'
+        """,
+        (post_id,),
+    )
+    return int(row["total"]) if row else 0

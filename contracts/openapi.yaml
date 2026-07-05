@@ -7119,6 +7119,181 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/capabilities:
+    get:
+      tags:
+      - admin-capabilities
+      summary: List Capability Grants
+      operationId: list_capability_grants_api_v1_admin_capabilities_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+      - name: capability
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Capability
+      - name: active_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Active Only
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityGrantListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - admin-capabilities
+      summary: Grant Capability
+      operationId: grant_capability_api_v1_admin_capabilities_post
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CapabilityGrantCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityGrantResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/capabilities/{capability_id}:
+    delete:
+      tags:
+      - admin-capabilities
+      summary: Revoke Capability
+      operationId: revoke_capability_api_v1_admin_capabilities__capability_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: capability_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Capability Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/moderation/actions:
+    get:
+      tags:
+      - admin-moderation
+      summary: List Moderation Actions
+      operationId: list_moderation_actions_api_v1_admin_moderation_actions_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: entity_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Type
+      - name: action
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Action
+      - name: changed_by
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Changed By
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerationActionListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
     AIAskRequest:
@@ -19112,6 +19287,161 @@ components:
           default: 0
       type: object
       title: WhatChangedSummary
+    CapabilityGrant:
+      properties:
+        id:
+          type: string
+          title: Id
+        user_id:
+          type: string
+          title: User Id
+        capability:
+          type: string
+          title: Capability
+        granted_by:
+          type: string
+          title: Granted By
+        granted_at:
+          type: string
+          format: date-time
+          title: Granted At
+        revoked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Revoked At
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - id
+      - user_id
+      - capability
+      - granted_by
+      - granted_at
+      title: CapabilityGrant
+    CapabilityGrantCreate:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        capability:
+          type: string
+          title: Capability
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - user_id
+      - capability
+      title: CapabilityGrantCreate
+    CapabilityGrantListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CapabilityGrant'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: CapabilityGrantListResponse
+    CapabilityGrantResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/CapabilityGrant'
+      type: object
+      required:
+      - item
+      title: CapabilityGrantResponse
+    ModerationActionEntry:
+      properties:
+        id:
+          type: string
+          title: Id
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        action:
+          type: string
+          title: Action
+        changed_by:
+          type: string
+          title: Changed By
+        changed_at:
+          type: string
+          format: date-time
+          title: Changed At
+        changes:
+          additionalProperties: true
+          type: object
+          title: Changes
+      type: object
+      required:
+      - id
+      - entity_type
+      - entity_id
+      - action
+      - changed_by
+      - changed_at
+      - changes
+      title: ModerationActionEntry
+    ModerationActionListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ModerationActionEntry'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+        anomalies:
+          items:
+            $ref: '#/components/schemas/ModeratorAnomaly'
+          type: array
+          title: Anomalies
+      type: object
+      required:
+      - items
+      - total
+      - anomalies
+      title: ModerationActionListResponse
+    ModeratorAnomaly:
+      properties:
+        changed_by:
+          type: string
+          title: Changed By
+        total_actions:
+          type: integer
+          title: Total Actions
+        reject_like_actions:
+          type: integer
+          title: Reject Like Actions
+        reject_rate:
+          type: number
+          title: Reject Rate
+      type: object
+      required:
+      - changed_by
+      - total_actions
+      - reject_like_actions
+      - reject_rate
+      title: ModeratorAnomaly
   securitySchemes:
     BearerAuth:
       type: http

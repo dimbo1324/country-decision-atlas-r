@@ -18,9 +18,15 @@ from unittest.mock import MagicMock
 CONNECTION = cast(Connection[Any], MagicMock())
 MIGRATION = Path("database/migrations/046_flexible_methodology_v1.sql")
 MIGRATION_SQL = MIGRATION.read_text(encoding="utf-8")
-METHODOLOGY_SEED_SQL = MIGRATION_SQL + Path(
-    "database/migrations/047_trip_planner_v1.sql"
-).read_text(encoding="utf-8")
+METHODOLOGY_SEED_SQL = (
+    MIGRATION_SQL
+    + Path("database/migrations/047_trip_planner_v1.sql").read_text(
+        encoding="utf-8"
+    )
+    + Path("database/migrations/048_rights_capabilities.sql").read_text(
+        encoding="utf-8"
+    )
+)
 NOW = datetime(2026, 7, 4, tzinfo=UTC)
 
 
@@ -52,6 +58,7 @@ def _rows(**overrides: float) -> list[dict[str, Any]]:
         methodology_config.BOARD_MAX_ACTIVE_POSTS: 5.0,
         methodology_config.BOARD_MAX_CONTACT_REQUESTS_PER_DAY: 20.0,
         methodology_config.BOARD_MAX_REPORTS_PER_DAY: 20.0,
+        methodology_config.BOARD_AUTO_HIDE_REPORT_THRESHOLD: 3.0,
         methodology_config.FLOWS_K_ANONYMITY: 20.0,
         methodology_config.TRIP_WARNING_HIGH_IMPACT_MIN_RANK: 3.0,
         methodology_config.TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK: 3.0,

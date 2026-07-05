@@ -2884,6 +2884,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Capability Grants */
+        get: operations["list_capability_grants_api_v1_admin_capabilities_get"];
+        put?: never;
+        /** Grant Capability */
+        post: operations["grant_capability_api_v1_admin_capabilities_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/capabilities/{capability_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Capability */
+        delete: operations["revoke_capability_api_v1_admin_capabilities__capability_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/moderation/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Moderation Actions */
+        get: operations["list_moderation_actions_api_v1_admin_moderation_actions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -8993,6 +9045,88 @@ export interface components {
              * @default 0
              */
             sources: number;
+        };
+        /** CapabilityGrant */
+        CapabilityGrant: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string;
+            /** Capability */
+            capability: string;
+            /** Granted By */
+            granted_by: string;
+            /**
+             * Granted At
+             * Format: date-time
+             */
+            granted_at: string;
+            /** Revoked At */
+            revoked_at?: string | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** CapabilityGrantCreate */
+        CapabilityGrantCreate: {
+            /** User Id */
+            user_id: string;
+            /** Capability */
+            capability: string;
+            /** Note */
+            note?: string | null;
+        };
+        /** CapabilityGrantListResponse */
+        CapabilityGrantListResponse: {
+            /** Items */
+            items: components["schemas"]["CapabilityGrant"][];
+            /** Total */
+            total: number;
+        };
+        /** CapabilityGrantResponse */
+        CapabilityGrantResponse: {
+            item: components["schemas"]["CapabilityGrant"];
+        };
+        /** ModerationActionEntry */
+        ModerationActionEntry: {
+            /** Id */
+            id: string;
+            /** Entity Type */
+            entity_type: string;
+            /** Entity Id */
+            entity_id: string;
+            /** Action */
+            action: string;
+            /** Changed By */
+            changed_by: string;
+            /**
+             * Changed At
+             * Format: date-time
+             */
+            changed_at: string;
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            };
+        };
+        /** ModerationActionListResponse */
+        ModerationActionListResponse: {
+            /** Items */
+            items: components["schemas"]["ModerationActionEntry"][];
+            /** Total */
+            total: number;
+            /** Anomalies */
+            anomalies: components["schemas"]["ModeratorAnomaly"][];
+        };
+        /** ModeratorAnomaly */
+        ModeratorAnomaly: {
+            /** Changed By */
+            changed_by: string;
+            /** Total Actions */
+            total_actions: number;
+            /** Reject Like Actions */
+            reject_like_actions: number;
+            /** Reject Rate */
+            reject_rate: number;
         };
     };
     responses: never;
@@ -15649,6 +15783,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HomeOverviewResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_capability_grants_api_v1_admin_capabilities_get: {
+        parameters: {
+            query?: {
+                user_id?: string | null;
+                capability?: string | null;
+                active_only?: boolean;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CapabilityGrantListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    grant_capability_api_v1_admin_capabilities_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CapabilityGrantCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CapabilityGrantResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_capability_api_v1_admin_capabilities__capability_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                capability_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_moderation_actions_api_v1_admin_moderation_actions_get: {
+        parameters: {
+            query?: {
+                entity_type?: string | null;
+                action?: string | null;
+                changed_by?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerationActionListResponse"];
                 };
             };
             /** @description Validation Error */

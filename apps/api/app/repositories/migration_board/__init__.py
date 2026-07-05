@@ -39,6 +39,7 @@ from app.repositories.migration_board.posts import (
 )
 from app.repositories.migration_board.reports import (
     count_reports_created_today as count_reports_created_today,
+    count_resolved_reports_for_post as count_resolved_reports_for_post,
     create_report as create_report,
     existing_pending_report_exists as existing_pending_report_exists,
     get_report_by_id as get_report_by_id,

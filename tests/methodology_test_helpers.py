@@ -32,6 +32,7 @@ def methodology_config() -> MethodologyConfig:
             max_active_posts=5,
             max_contact_requests_per_day=20,
             max_reports_per_day=20,
+            auto_hide_report_threshold=3,
         ),
         flows_k_anonymity=20,
         trip_warnings=TripWarningThresholds(

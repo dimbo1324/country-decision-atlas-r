@@ -4,6 +4,7 @@ import pytest
 from app.api.v1 import admin_migration_board, migration_board
 from app.core.auth import CurrentUser, get_current_active_user
 from app.core.database import get_connection
+from app.repositories import capabilities as capabilities_repository
 from app.services import migration_board as migration_board_service
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -153,7 +154,12 @@ def test_authenticated_user_can_create_post(
     CONNECTION.commit.assert_called()
 
 
-def test_regular_user_cannot_approve_post() -> None:
+def test_regular_user_cannot_approve_post(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_repository, "has_active_grant", lambda *_a, **_kw: False
+    )
     response = _client(USER).post(
         "/api/v1/admin/migration-board/posts/post-1/approve"
     )

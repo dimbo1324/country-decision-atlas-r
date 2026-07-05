@@ -1,6 +1,12 @@
 from app.core.auth import CurrentUser
 from app.core.database import get_connection
-from app.core.rbac import require_moderator, require_roles
+from app.core.rbac import (
+    ADMIN,
+    EDITOR,
+    OWNER,
+    require_capability,
+    require_capability_or_roles,
+)
 from app.schemas.common import ErrorResponse
 from app.schemas.community import (
     CommunityAnswer,
@@ -20,6 +26,7 @@ from app.services import (
     data_error_reports as data_error_reports_service,
     user_story_ratings as user_story_ratings_service,
 )
+from app.services.capabilities import MODERATOR_COMMUNITY
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -29,8 +36,9 @@ router = APIRouter(prefix="/admin/community", tags=["admin-community"])
 
 _RESPONSES: dict[int | str, dict[str, Any]] = {401: {"model": ErrorResponse}}
 
-require_moderator_or_editor = require_roles(
-    "moderator", "editor", "admin", "owner"
+require_moderator = require_capability(MODERATOR_COMMUNITY)
+require_moderator_or_editor = require_capability_or_roles(
+    MODERATOR_COMMUNITY, EDITOR, ADMIN, OWNER
 )
 
 

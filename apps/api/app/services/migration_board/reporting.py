@@ -1,6 +1,7 @@
 from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories import migration_board as repository
+from app.services import capabilities as capabilities_service
 from app.services.migration_board import helpers
 from psycopg import Connection
 from typing import Any
@@ -82,7 +83,7 @@ def resolve_report(
     resolution_note: str | None,
     hide_related_post: bool,
 ) -> dict[str, Any]:
-    return _review_report(
+    report = _review_report(
         connection,
         current_user=current_user,
         report_id=report_id,
@@ -90,6 +91,10 @@ def resolve_report(
         resolution_note=resolution_note,
         hide_related_post=hide_related_post,
     )
+    post_id = report.get("post_id")
+    if post_id:
+        _maybe_auto_hide_for_reports(connection, current_user, post_id)
+    return report
 
 
 def dismiss_report(
@@ -190,6 +195,14 @@ def _review_report(
     report = repository.get_report_by_id(connection, report_id)
     if report is None:
         raise api_error(404, "report_not_found", "Report was not found.", {})
+    involved_user_ids = [report.get("reporter_user_id")]
+    if report.get("post_id"):
+        related_post = repository.get_post_by_id(connection, report["post_id"])
+        if related_post is not None:
+            involved_user_ids.append(related_post.get("user_id"))
+    capabilities_service.assert_no_moderation_conflict(
+        current_user, involved_user_ids
+    )
     updated = repository.update_report_status(
         connection,
         report_id=report_id,
@@ -216,3 +229,37 @@ def _review_report(
         {"status": {"old": report["status"], "new": status}},
     )
     return helpers._report(updated)
+
+
+def _maybe_auto_hide_for_reports(
+    connection: Connection[Any], current_user: CurrentUser, post_id: str
+) -> None:
+    threshold = helpers.auto_hide_report_threshold(connection)
+    resolved_count = repository.count_resolved_reports_for_post(
+        connection, post_id
+    )
+    if resolved_count < threshold:
+        return
+    post = repository.get_post_by_id(connection, post_id)
+    if post is None or post["moderation_status"] == "hidden":
+        return
+    updated = repository.hide_post(
+        connection,
+        post_id=post_id,
+        moderator_user_id=current_user.id,
+        reason="Auto-hidden: resolved report threshold reached.",
+    )
+    if updated is None:
+        return
+    helpers._audit(
+        connection,
+        updated,
+        "hidden",
+        current_user,
+        {
+            "auto": True,
+            "reason": "resolved_report_threshold",
+            "resolved_report_count": resolved_count,
+            "threshold": threshold,
+        },
+    )

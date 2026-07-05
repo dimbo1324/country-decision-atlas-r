@@ -1,4 +1,4 @@
-"""Role-based access control primitives: role matching and required-role enforcement."""
+"""Role-based access control primitives: role matching, required-role, and required-capability enforcement."""
 
 import pytest
 from app.core.auth import CurrentUser
@@ -11,14 +11,18 @@ from app.core.rbac import (
     has_any_role,
     has_role,
     require_admin,
+    require_capability,
+    require_capability_or_roles,
     require_editor,
     require_moderator,
     require_owner,
     require_roles,
     require_user,
 )
+from app.services import capabilities as capabilities_service
 from fastapi import HTTPException
 from typing import Any, cast
+from unittest.mock import MagicMock
 
 
 def _user(role: str) -> CurrentUser:
@@ -96,3 +100,86 @@ def test_require_roles_custom_role_set() -> None:
     assert require_moderator_or_editor(_user("editor")) is not None
     with pytest.raises(HTTPException):
         require_moderator_or_editor(_user("user"))
+
+
+def test_require_capability_allows_when_has_capability_true(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_service, "has_capability", lambda *_a, **_kw: True
+    )
+    dependency = require_capability("moderator.board")
+    user = _user("user")
+
+    result = dependency(connection=MagicMock(), current_user=user)
+
+    assert result is user
+
+
+def test_require_capability_denies_when_has_capability_false(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_service, "has_capability", lambda *_a, **_kw: False
+    )
+    dependency = require_capability("moderator.board")
+
+    with pytest.raises(HTTPException) as exc_info:
+        dependency(connection=MagicMock(), current_user=_user("user"))
+
+    assert exc_info.value.status_code == 403
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "insufficient_capability"
+    assert (
+        detail["error"]["details"]["required_capability"] == "moderator.board"
+    )
+    assert detail["error"]["details"]["role"] == "user"
+
+
+@pytest.mark.parametrize("role", [MODERATOR, EDITOR, ADMIN, OWNER])
+def test_require_capability_or_roles_allows_listed_roles_without_db_lookup(
+    role: str,
+) -> None:
+    dependency = require_capability_or_roles(
+        "moderator.community", EDITOR, ADMIN, OWNER
+    )
+    user = _user(role)
+
+    result = dependency(connection=MagicMock(), current_user=user)
+
+    assert result is user
+
+
+def test_require_capability_or_roles_allows_capability_grant(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_service, "has_capability", lambda *_a, **_kw: True
+    )
+    dependency = require_capability_or_roles(
+        "moderator.community", EDITOR, ADMIN, OWNER
+    )
+    user = _user("user")
+
+    result = dependency(connection=MagicMock(), current_user=user)
+
+    assert result is user
+
+
+def test_require_capability_or_roles_denies_without_role_or_grant(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_service, "has_capability", lambda *_a, **_kw: False
+    )
+    dependency = require_capability_or_roles(
+        "moderator.community", EDITOR, ADMIN, OWNER
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        dependency(connection=MagicMock(), current_user=_user("user"))
+
+    assert exc_info.value.status_code == 403
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "insufficient_capability"
+    assert detail["error"]["details"]["allowed_roles"] == [EDITOR, ADMIN, OWNER]

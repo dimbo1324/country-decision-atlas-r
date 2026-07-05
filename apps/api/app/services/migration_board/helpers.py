@@ -102,6 +102,12 @@ def max_reports_per_day(connection: Connection[Any]) -> int:
     return get_active_methodology_config(connection).board.max_reports_per_day
 
 
+def auto_hide_report_threshold(connection: Connection[Any]) -> int:
+    return get_active_methodology_config(
+        connection
+    ).board.auto_hide_report_threshold
+
+
 def _reject_public_pii(title: str, summary: str) -> None:
     text = f"{title}\n{summary}"
     if any(pattern.search(text) for pattern in PII_PATTERNS):

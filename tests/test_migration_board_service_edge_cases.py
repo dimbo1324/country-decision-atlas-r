@@ -535,7 +535,7 @@ class TestModeration:
         with pytest.raises(HTTPException) as exc_info:
             service.approve_post(
                 CONNECTION,
-                current_user=USER,
+                current_user=STRANGER,
                 post_id="22222222-2222-2222-2222-222222222222",
             )
         _assert_error(exc_info, "acknowledgements_required")
@@ -566,7 +566,7 @@ class TestModeration:
         with pytest.raises(HTTPException) as exc_info:
             service.reject_post(
                 CONNECTION,
-                current_user=USER,
+                current_user=STRANGER,
                 post_id="22222222-2222-2222-2222-222222222222",
                 reason="not relevant",
             )
@@ -585,6 +585,82 @@ class TestModeration:
                 CONNECTION, current_user=USER, post_id="missing", reason="spam"
             )
         assert exc_info.value.status_code == 404
+
+    def test_approve_rejects_moderator_who_authored_post(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.approve_post(
+                CONNECTION,
+                current_user=USER,
+                post_id="22222222-2222-2222-2222-222222222222",
+            )
+        assert exc_info.value.status_code == 403
+        _assert_error(exc_info, "moderation_conflict_of_interest")
+
+    def test_reject_rejects_moderator_who_authored_post(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.reject_post(
+                CONNECTION,
+                current_user=USER,
+                post_id="22222222-2222-2222-2222-222222222222",
+                reason="not relevant",
+            )
+        assert exc_info.value.status_code == 403
+        _assert_error(exc_info, "moderation_conflict_of_interest")
+
+    def test_hide_rejects_moderator_who_authored_post(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.hide_post(
+                CONNECTION,
+                current_user=USER,
+                post_id="22222222-2222-2222-2222-222222222222",
+                reason="spam",
+            )
+        assert exc_info.value.status_code == 403
+        _assert_error(exc_info, "moderation_conflict_of_interest")
+
+    def test_approve_allows_moderator_who_is_not_the_author(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+        monkeypatch.setattr(
+            repository,
+            "publish_post",
+            lambda *_a, **_kw: _post(status="published"),
+        )
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
+
+        result = service.approve_post(
+            CONNECTION,
+            current_user=STRANGER,
+            post_id="22222222-2222-2222-2222-222222222222",
+        )
+        assert result["status"] == "published"
 
 
 class TestContactRequestLifecycle:
@@ -920,10 +996,16 @@ class TestReports:
         monkeypatch.setattr(
             migration_board_helpers, "_audit", lambda *_a, **_kw: None
         )
+        monkeypatch.setattr(
+            migration_board_helpers, "auto_hide_report_threshold", lambda *_: 3
+        )
+        monkeypatch.setattr(
+            repository, "count_resolved_reports_for_post", lambda *_a, **_kw: 0
+        )
 
         service.resolve_report(
             CONNECTION,
-            current_user=USER,
+            current_user=STRANGER,
             report_id="report-1",
             resolution_note="removed",
             hide_related_post=True,
@@ -969,6 +1051,226 @@ class TestReports:
             report_id="report-1",
             resolution_note=None,
         )
+        assert hide_called is False
+
+    def test_review_report_rejects_reporter_reviewing_own_report(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_report_by_id",
+            lambda *_a, **_kw: {
+                "id": "report-1",
+                "status": "pending",
+                "reporter_user_id": USER.id,
+                "post_id": None,
+            },
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.dismiss_report(
+                CONNECTION,
+                current_user=USER,
+                report_id="report-1",
+                resolution_note=None,
+            )
+        assert exc_info.value.status_code == 403
+        _assert_error(exc_info, "moderation_conflict_of_interest")
+
+    def test_review_report_rejects_moderator_who_authored_related_post(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_report_by_id",
+            lambda *_a, **_kw: {
+                "id": "report-1",
+                "status": "pending",
+                "reporter_user_id": OTHER_ID,
+                "post_id": "22222222-2222-2222-2222-222222222222",
+            },
+        )
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.dismiss_report(
+                CONNECTION,
+                current_user=USER,
+                report_id="report-1",
+                resolution_note=None,
+            )
+        assert exc_info.value.status_code == 403
+        _assert_error(exc_info, "moderation_conflict_of_interest")
+
+    def test_resolve_report_auto_hides_post_when_threshold_reached(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_report_by_id",
+            lambda *_a, **_kw: {"id": "report-1", "status": "pending"},
+        )
+        monkeypatch.setattr(
+            repository,
+            "update_report_status",
+            lambda *_a, **_kw: {
+                "id": "report-1",
+                "post_id": "22222222-2222-2222-2222-222222222222",
+                "status": "resolved",
+                "reason": "spam",
+                "created_at": "2026-01-01T00:00:00Z",
+                "reviewed_at": "2026-01-02T00:00:00Z",
+                "resolution_note": "confirmed",
+            },
+        )
+        monkeypatch.setattr(
+            migration_board_helpers, "auto_hide_report_threshold", lambda *_: 3
+        )
+        monkeypatch.setattr(
+            repository, "count_resolved_reports_for_post", lambda *_a, **_kw: 3
+        )
+        monkeypatch.setattr(
+            repository, "get_post_by_id", lambda *_a, **_kw: _post()
+        )
+        monkeypatch.setattr(
+            repository,
+            "hide_post",
+            lambda *_a, **kwargs: {
+                **_post(),
+                **kwargs,
+                "moderation_status": "hidden",
+            },
+        )
+        audited: list[tuple[Any, ...]] = []
+        monkeypatch.setattr(
+            migration_board_helpers,
+            "_audit",
+            lambda *args: audited.append(args),
+        )
+
+        service.resolve_report(
+            CONNECTION,
+            current_user=STRANGER,
+            report_id="report-1",
+            resolution_note="confirmed",
+            hide_related_post=False,
+        )
+
+        auto_hide_audits = [
+            call
+            for call in audited
+            if call[2] == "hidden" and call[4].get("auto")
+        ]
+        assert len(auto_hide_audits) == 1
+        assert auto_hide_audits[0][4]["resolved_report_count"] == 3
+        assert auto_hide_audits[0][4]["threshold"] == 3
+
+    def test_resolve_report_does_not_auto_hide_below_threshold(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_report_by_id",
+            lambda *_a, **_kw: {"id": "report-1", "status": "pending"},
+        )
+        monkeypatch.setattr(
+            repository,
+            "update_report_status",
+            lambda *_a, **_kw: {
+                "id": "report-1",
+                "post_id": "22222222-2222-2222-2222-222222222222",
+                "status": "resolved",
+                "reason": "spam",
+                "created_at": "2026-01-01T00:00:00Z",
+                "reviewed_at": "2026-01-02T00:00:00Z",
+                "resolution_note": "confirmed",
+            },
+        )
+        monkeypatch.setattr(
+            migration_board_helpers, "auto_hide_report_threshold", lambda *_: 3
+        )
+        monkeypatch.setattr(
+            repository, "count_resolved_reports_for_post", lambda *_a, **_kw: 2
+        )
+        hide_called = False
+
+        def fake_hide(*_a: Any, **_kw: Any) -> None:
+            nonlocal hide_called
+            hide_called = True
+
+        monkeypatch.setattr(repository, "hide_post", fake_hide)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
+
+        service.resolve_report(
+            CONNECTION,
+            current_user=STRANGER,
+            report_id="report-1",
+            resolution_note="confirmed",
+            hide_related_post=False,
+        )
+
+        assert hide_called is False
+
+    def test_resolve_report_auto_hide_skips_already_hidden_post(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_report_by_id",
+            lambda *_a, **_kw: {"id": "report-1", "status": "pending"},
+        )
+        monkeypatch.setattr(
+            repository,
+            "update_report_status",
+            lambda *_a, **_kw: {
+                "id": "report-1",
+                "post_id": "22222222-2222-2222-2222-222222222222",
+                "status": "resolved",
+                "reason": "spam",
+                "created_at": "2026-01-01T00:00:00Z",
+                "reviewed_at": "2026-01-02T00:00:00Z",
+                "resolution_note": "confirmed",
+            },
+        )
+        monkeypatch.setattr(
+            migration_board_helpers, "auto_hide_report_threshold", lambda *_: 3
+        )
+        monkeypatch.setattr(
+            repository, "count_resolved_reports_for_post", lambda *_a, **_kw: 5
+        )
+        monkeypatch.setattr(
+            repository,
+            "get_post_by_id",
+            lambda *_a, **_kw: _post(moderation_status="hidden"),
+        )
+        hide_called = False
+
+        def fake_hide(*_a: Any, **_kw: Any) -> None:
+            nonlocal hide_called
+            hide_called = True
+
+        monkeypatch.setattr(repository, "hide_post", fake_hide)
+        monkeypatch.setattr(
+            migration_board_helpers, "_audit", lambda *_a, **_kw: None
+        )
+
+        service.resolve_report(
+            CONNECTION,
+            current_user=STRANGER,
+            report_id="report-1",
+            resolution_note="confirmed",
+            hide_related_post=False,
+        )
+
         assert hide_called is False
 
 

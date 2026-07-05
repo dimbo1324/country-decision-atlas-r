@@ -1,6 +1,7 @@
 from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories import migration_board as repository
+from app.services import capabilities as capabilities_service
 from app.services.migration_board import helpers
 from psycopg import Connection
 from typing import Any
@@ -42,6 +43,9 @@ def approve_post(
         raise api_error(
             404, "post_not_found", "Migration board post was not found.", {}
         )
+    capabilities_service.assert_no_moderation_conflict(
+        current_user, [post["user_id"]]
+    )
     helpers._require_submit_ready(post)
     updated = repository.publish_post(
         connection, post_id=post_id, moderator_user_id=current_user.id
@@ -74,6 +78,9 @@ def reject_post(
         raise api_error(
             404, "post_not_found", "Migration board post was not found.", {}
         )
+    capabilities_service.assert_no_moderation_conflict(
+        current_user, [post["user_id"]]
+    )
     updated = repository.reject_post(
         connection,
         post_id=post_id,
@@ -108,6 +115,9 @@ def hide_post(
         raise api_error(
             404, "post_not_found", "Migration board post was not found.", {}
         )
+    capabilities_service.assert_no_moderation_conflict(
+        current_user, [post["user_id"]]
+    )
     updated = repository.hide_post(
         connection,
         post_id=post_id,
