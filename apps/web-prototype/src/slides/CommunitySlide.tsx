@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { SlideSection } from "@/components/shell/SlideSection";
 import { Kicker } from "@/components/ui/Kicker";
 import { Card } from "@/components/ui/Card";
 import { Drawer } from "@/components/ui/Drawer";
-import { CATALOG_COUNTRIES, type CatalogCountry } from "@/data/fixtures";
+import { Counter } from "@/components/ui/Counter";
+import type { CatalogCountry, Dataset } from "@/data/generator";
 
 function driftIcon(value: number) {
   if (value > 1.5)
@@ -32,8 +33,16 @@ function driftIcon(value: number) {
   );
 }
 
-export function CommunitySlide() {
+interface CommunitySlideProps {
+  dataset: Dataset;
+}
+
+export function CommunitySlide({ dataset }: CommunitySlideProps) {
   const [selected, setSelected] = useState<CatalogCountry | null>(null);
+
+  useEffect(() => {
+    setSelected(null);
+  }, [dataset.version]);
 
   return (
     <SlideSection className="gap-10">
@@ -53,7 +62,7 @@ export function CommunitySlide() {
       </div>
 
       <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {CATALOG_COUNTRIES.map((country) => (
+        {dataset.catalog.map((country) => (
           <Card
             key={country.slug}
             accent="plum"
@@ -83,10 +92,14 @@ export function CommunitySlide() {
             </h3>
             <div className="flex items-baseline gap-2">
               <span className="font-display text-gold3 text-2xl font-bold">
-                {country.ciiScore}
+                <Counter
+                  key={`${dataset.version}-${country.slug}`}
+                  value={country.ciiScore}
+                  active
+                />
               </span>
               <span className="font-mono text-c3 text-[9px] tracking-[0.15em] uppercase">
-                CII · {Math.round(country.confidence * 100)}% conf.
+                CII · дост. {Math.round(country.confidence * 100)}%
               </span>
             </div>
           </Card>
@@ -108,7 +121,7 @@ export function CommunitySlide() {
                   {selected.ciiScore}
                 </div>
                 <div className="font-mono text-c3 text-[9px] tracking-[0.2em] uppercase">
-                  CII Score
+                  Балл CII
                 </div>
               </div>
               <div>
@@ -116,7 +129,7 @@ export function CommunitySlide() {
                   {Math.round(selected.confidence * 100)}%
                 </div>
                 <div className="font-mono text-c3 text-[9px] tracking-[0.2em] uppercase">
-                  Confidence
+                  Достоверность
                 </div>
               </div>
             </div>
@@ -127,7 +140,7 @@ export function CommunitySlide() {
 
             <div>
               <div className="font-mono text-c3 mb-2 text-[9px] tracking-[0.2em] uppercase">
-                Country Drift
+                Дрейф страны
               </div>
               <div className="border-warm flex items-center gap-2 border p-3">
                 {driftIcon(selected.driftValue)}

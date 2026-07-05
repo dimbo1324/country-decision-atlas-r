@@ -2,17 +2,21 @@ import { SlideSection } from "@/components/shell/SlideSection";
 import { Kicker } from "@/components/ui/Kicker";
 import { ChartFrame, MetricStat } from "@/components/ui/ChartFrame";
 import { RadarChart } from "@/components/charts/RadarChart";
-import { CII_AXES, CII_COUNTRIES } from "@/data/fixtures";
+import { CII_AXES, type Dataset } from "@/data/generator";
 
 interface CiiSlideProps {
   active: boolean;
+  dataset: Dataset;
 }
 
-export function CiiSlide({ active }: CiiSlideProps) {
+export function CiiSlide({ active, dataset }: CiiSlideProps) {
+  const [countryA, countryB] = dataset.ciiSeries;
+  const [catalogA] = dataset.catalog;
+
   return (
     <SlideSection className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
       <div className="flex flex-col gap-6">
-        <Kicker accent="gold">Country Intelligence Index</Kicker>
+        <Kicker accent="gold">Индекс странового интеллекта (CII)</Kicker>
         <h2 className="font-display text-4xl leading-tight font-bold sm:text-5xl">
           Восемь измерений
           <br />
@@ -21,34 +25,35 @@ export function CiiSlide({ active }: CiiSlideProps) {
         <p className="text-c2 max-w-md text-base leading-relaxed">
           Политическая стабильность, верховенство закона, экономическая свобода,
           стоимость жизни, доступность ВНЖ, качество жизни, цифровая
-          инфраструктура и Country Drift — сведённые в единый живой профиль по
-          методологии OECD.
+          инфраструктура и дрейф страны — сведённые в единый живой профиль по
+          методологии ОЭСР.
         </p>
         <div className="flex gap-10">
           <MetricStat
-            value="91"
-            label={`CII · ${CII_COUNTRIES.a.name}`}
+            value={String(catalogA.ciiScore)}
+            label={`CII · ${countryA.name}`}
           />
           <MetricStat
-            value="0.96"
-            label="Confidence"
+            value={catalogA.confidence.toFixed(2)}
+            label="Достоверность"
           />
         </div>
       </div>
 
-      <ChartFrame title={`${CII_COUNTRIES.a.name} vs ${CII_COUNTRIES.b.name}`}>
+      <ChartFrame title={`${countryA.name} и ${countryB.name}`}>
         <RadarChart
+          key={dataset.version}
           axes={CII_AXES}
           active={active}
           series={[
             {
-              label: CII_COUNTRIES.a.name,
-              values: CII_COUNTRIES.a.values,
+              label: countryA.name,
+              values: countryA.values,
               colorVar: "--color-gold",
             },
             {
-              label: CII_COUNTRIES.b.name,
-              values: CII_COUNTRIES.b.values,
+              label: countryB.name,
+              values: countryB.values,
               colorVar: "--color-blue3",
             },
           ]}

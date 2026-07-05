@@ -2,17 +2,24 @@ import { SlideSection } from "@/components/shell/SlideSection";
 import { Kicker } from "@/components/ui/Kicker";
 import { ChartFrame, MetricStat } from "@/components/ui/ChartFrame";
 import { SparklineChart } from "@/components/charts/SparklineChart";
-import { LEGAL_VELOCITY_TIMELINE } from "@/data/fixtures";
+import type { Dataset } from "@/data/generator";
 
 interface VelocitySlideProps {
   active: boolean;
+  dataset: Dataset;
 }
 
-export function VelocitySlide({ active }: VelocitySlideProps) {
+export function VelocitySlide({ active, dataset }: VelocitySlideProps) {
+  const timeline = dataset.legalVelocityTimeline;
+  const avgSignal = (
+    timeline.reduce((sum, value) => sum + value, 0) / timeline.length
+  ).toFixed(1);
+  const delta = (timeline[timeline.length - 1] - timeline[0]).toFixed(1);
+
   return (
     <SlideSection className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
       <div className="flex flex-col gap-6">
-        <Kicker accent="blue">Legal Velocity Index</Kicker>
+        <Kicker accent="blue">Индекс скорости права (LVI)</Kicker>
         <h2 className="font-display text-4xl leading-tight font-bold sm:text-5xl">
           Скорость
           <br />
@@ -25,19 +32,20 @@ export function VelocitySlide({ active }: VelocitySlideProps) {
         </p>
         <div className="flex gap-10">
           <MetricStat
-            value="6.4"
+            value={avgSignal}
             label="Сигналов / квартал"
           />
           <MetricStat
-            value="+2"
+            value={`${Number(delta) >= 0 ? "+" : ""}${delta}`}
             label="За 24 мес"
           />
         </div>
       </div>
 
-      <ChartFrame title="Legal Velocity · 24 месяца">
+      <ChartFrame title="Скорость права · 24 месяца">
         <SparklineChart
-          values={LEGAL_VELOCITY_TIMELINE}
+          key={dataset.version}
+          values={timeline}
           active={active}
           colorVar="--color-blue3"
         />

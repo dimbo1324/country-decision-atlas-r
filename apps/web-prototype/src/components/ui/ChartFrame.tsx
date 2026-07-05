@@ -28,7 +28,7 @@ export function ChartFrame({
         {live && (
           <span className="font-mono text-gold3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase">
             <span className="bg-gold h-1.5 w-1.5 animate-pulse rounded-full" />
-            Live
+            Онлайн
           </span>
         )}
       </div>

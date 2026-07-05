@@ -17,7 +17,7 @@ const STATS = [
 export function HeroSlide({ active }: HeroSlideProps) {
   return (
     <SlideSection className="items-center text-center">
-      <Kicker>Intelligence Platform · Est. MMXXVI · Live</Kicker>
+      <Kicker>Аналитическая платформа · Осн. MMXXVI · Онлайн</Kicker>
       <h1 className="text-shimmer font-display text-6xl font-bold sm:text-7xl lg:text-8xl">
         CountryAtlas
       </h1>
@@ -61,8 +61,8 @@ export function HeroSlide({ active }: HeroSlideProps) {
       </div>
 
       <p className="font-quote text-c4 mt-10 text-xs italic">
-        Это не юридическая консультация. Данные носят справочный характер · last
-        verified 2026-07
+        Это не юридическая консультация. Данные носят справочный характер ·
+        обновлено 07.2026
       </p>
     </SlideSection>
   );

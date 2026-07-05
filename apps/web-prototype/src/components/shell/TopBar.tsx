@@ -7,9 +7,17 @@ interface TopBarProps {
   slides: SlideDef[];
   activeIndex: number;
   onNavigate: (index: number) => void;
+  isRunning: boolean;
+  onRunAnalysis: () => void;
 }
 
-export function TopBar({ slides, activeIndex, onNavigate }: TopBarProps) {
+export function TopBar({
+  slides,
+  activeIndex,
+  onNavigate,
+  isRunning,
+  onRunAnalysis,
+}: TopBarProps) {
   return (
     <header className="border-warm fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b bg-black/40 px-8 py-4 backdrop-blur-md">
       <div className="flex items-center gap-3">
@@ -46,7 +54,14 @@ export function TopBar({ slides, activeIndex, onNavigate }: TopBarProps) {
         ))}
       </nav>
 
-      <Button variant="primary">Запустить анализ</Button>
+      <Button
+        variant="primary"
+        onClick={onRunAnalysis}
+        disabled={isRunning}
+        className={isRunning ? "cursor-wait opacity-60" : undefined}
+      >
+        {isRunning ? "Пересчёт…" : "Запустить анализ"}
+      </Button>
     </header>
   );
 }
