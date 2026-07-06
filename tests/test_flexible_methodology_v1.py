@@ -26,6 +26,9 @@ METHODOLOGY_SEED_SQL = (
     + Path("database/migrations/048_rights_capabilities.sql").read_text(
         encoding="utf-8"
     )
+    + Path("database/migrations/049_author_metrics_v1.sql").read_text(
+        encoding="utf-8"
+    )
 )
 NOW = datetime(2026, 7, 4, tzinfo=UTC)
 
@@ -63,6 +66,8 @@ def _rows(**overrides: float) -> list[dict[str, Any]]:
         methodology_config.TRIP_WARNING_HIGH_IMPACT_MIN_RANK: 3.0,
         methodology_config.TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK: 3.0,
         methodology_config.TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK: 2.0,
+        methodology_config.AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH: 120.0,
+        methodology_config.AUTHOR_METRICS_MIN_COUNTRY_COVERAGE: 5.0,
     }
     values.update(overrides)
     return [_row(param_key, value) for param_key, value in values.items()]

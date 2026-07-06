@@ -7294,6 +7294,570 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/authors/{user_id}/metrics:
+    get:
+      tags:
+      - author-metrics
+      summary: List Author Public Metrics
+      operationId: list_author_public_metrics_api_v1_authors__user_id__metrics_get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicAuthorMetricListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/authors/{user_id}/reputation:
+    get:
+      tags:
+      - author-metrics
+      summary: Get Author Reputation
+      operationId: get_author_reputation_api_v1_authors__user_id__reputation_get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorReputationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/countries/{country_slug}/author-metrics:
+    get:
+      tags:
+      - author-metrics
+      summary: List Country Author Metrics
+      operationId: list_country_author_metrics_api_v1_countries__country_slug__author_metrics_get
+      parameters:
+      - name: country_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Country Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryAuthorMetricsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/author-metrics:
+    get:
+      tags:
+      - author-metrics
+      summary: List My Author Metrics
+      operationId: list_my_author_metrics_api_v1_me_author_metrics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAuthorMetricListResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - author-metrics
+      summary: Create My Author Metric
+      operationId: create_my_author_metric_api_v1_me_author_metrics_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorMetricRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAuthorMetricDefinition'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/author-metrics/{definition_id}:
+    get:
+      tags:
+      - author-metrics
+      summary: Get My Author Metric
+      operationId: get_my_author_metric_api_v1_me_author_metrics__definition_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAuthorMetricDefinition'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - author-metrics
+      summary: Update My Author Metric
+      operationId: update_my_author_metric_api_v1_me_author_metrics__definition_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthorMetricRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAuthorMetricDefinition'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/author-metrics/{definition_id}/submit:
+    post:
+      tags:
+      - author-metrics
+      summary: Submit My Author Metric
+      operationId: submit_my_author_metric_api_v1_me_author_metrics__definition_id__submit_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitAuthorMetricResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/author-metrics/{definition_id}/archive:
+    post:
+      tags:
+      - author-metrics
+      summary: Archive My Author Metric
+      operationId: archive_my_author_metric_api_v1_me_author_metrics__definition_id__archive_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveAuthorMetricResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/author-metrics/{definition_id}/values:
+    get:
+      tags:
+      - author-metrics
+      summary: List My Author Metric Values
+      operationId: list_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorMetricValueListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - author-metrics
+      summary: Bulk Upsert My Author Metric Values
+      operationId: bulk_upsert_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_put
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkUpsertAuthorMetricValuesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorMetricValueListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/author-metrics/{definition_id}/fork:
+    post:
+      tags:
+      - author-metrics
+      summary: Fork Author Metric
+      operationId: fork_author_metric_api_v1_author_metrics__definition_id__fork_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForkAuthorMetricRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAuthorMetricDefinition'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/subscriptions:
+    get:
+      tags:
+      - author-metrics
+      summary: List My Subscriptions
+      operationId: list_my_subscriptions_api_v1_me_subscriptions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - author-metrics
+      summary: Create My Subscription
+      operationId: create_my_subscription_api_v1_me_subscriptions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/me/subscriptions/{subscription_id}:
+    delete:
+      tags:
+      - author-metrics
+      summary: Delete My Subscription
+      operationId: delete_my_subscription_api_v1_me_subscriptions__subscription_id__delete
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: subscription_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Subscription Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/subscriptions/feed:
+    get:
+      tags:
+      - author-metrics
+      summary: Get My Subscriptions Feed
+      operationId: get_my_subscriptions_feed_api_v1_me_subscriptions_feed_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionFeedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/author-metrics:
+    get:
+      tags:
+      - admin-author-metrics
+      summary: List Author Metrics For Admin
+      operationId: list_author_metrics_for_admin_api_v1_admin_author_metrics_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAuthorMetricListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/author-metrics/{definition_id}:
+    get:
+      tags:
+      - admin-author-metrics
+      summary: Get Author Metric For Admin
+      operationId: get_author_metric_for_admin_api_v1_admin_author_metrics__definition_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAuthorMetricDefinition'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/author-metrics/{definition_id}/approve:
+    post:
+      tags:
+      - admin-author-metrics
+      summary: Approve Author Metric
+      operationId: approve_author_metric_api_v1_admin_author_metrics__definition_id__approve_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerateAuthorMetricResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/author-metrics/{definition_id}/reject:
+    post:
+      tags:
+      - admin-author-metrics
+      summary: Reject Author Metric
+      operationId: reject_author_metric_api_v1_admin_author_metrics__definition_id__reject_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: definition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Definition Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerateAuthorMetricRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerateAuthorMetricResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
     AIAskRequest:
@@ -19442,6 +20006,896 @@ components:
       - reject_like_actions
       - reject_rate
       title: ModeratorAnomaly
+    AdminAuthorMetricDefinition:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        methodology_en:
+          type: string
+          title: Methodology En
+        methodology_ru:
+          type: string
+          title: Methodology Ru
+        polarity:
+          type: string
+          title: Polarity
+        scale_min:
+          type: number
+          title: Scale Min
+        scale_max:
+          type: number
+          title: Scale Max
+        license:
+          type: string
+          title: License
+        author:
+          $ref: '#/components/schemas/AuthorRef'
+        forked_from_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Forked From Id
+        version:
+          type: integer
+          title: Version
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        status:
+          type: string
+          title: Status
+        visibility:
+          type: string
+          title: Visibility
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        submitted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Submitted At
+        archived_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Archived At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        moderation_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderation Reason
+        author_user_id:
+          type: string
+          title: Author User Id
+        moderated_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderated By
+        moderated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Moderated At
+      type: object
+      required:
+      - id
+      - slug
+      - name_en
+      - name_ru
+      - methodology_en
+      - methodology_ru
+      - polarity
+      - scale_min
+      - scale_max
+      - license
+      - author
+      - version
+      - status
+      - visibility
+      - created_at
+      - updated_at
+      - author_user_id
+      title: AdminAuthorMetricDefinition
+    AdminAuthorMetricListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AdminAuthorMetricDefinition'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: AdminAuthorMetricListResponse
+    ArchiveAuthorMetricResponse:
+      properties:
+        definition:
+          $ref: '#/components/schemas/MyAuthorMetricDefinition'
+      type: object
+      required:
+      - definition
+      title: ArchiveAuthorMetricResponse
+    AuthorMetricDefinitionBase:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        methodology_en:
+          type: string
+          title: Methodology En
+        methodology_ru:
+          type: string
+          title: Methodology Ru
+        polarity:
+          type: string
+          title: Polarity
+        scale_min:
+          type: number
+          title: Scale Min
+        scale_max:
+          type: number
+          title: Scale Max
+        license:
+          type: string
+          title: License
+        author:
+          $ref: '#/components/schemas/AuthorRef'
+        forked_from_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Forked From Id
+        version:
+          type: integer
+          title: Version
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+      type: object
+      required:
+      - id
+      - slug
+      - name_en
+      - name_ru
+      - methodology_en
+      - methodology_ru
+      - polarity
+      - scale_min
+      - scale_max
+      - license
+      - author
+      - version
+      title: AuthorMetricDefinitionBase
+    AuthorMetricValueItem:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        value:
+          type: number
+          title: Value
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        is_personal_experience:
+          type: boolean
+          title: Is Personal Experience
+          default: false
+        note:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Note
+        valid_as_of:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Valid As Of
+      additionalProperties: false
+      type: object
+      required:
+      - country_slug
+      - value
+      title: AuthorMetricValueItem
+    AuthorMetricValueListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AuthorMetricValueResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: AuthorMetricValueListResponse
+    AuthorMetricValueResponse:
+      properties:
+        country_id:
+          type: string
+          title: Country Id
+        country_slug:
+          type: string
+          title: Country Slug
+        country_name:
+          type: string
+          title: Country Name
+        value:
+          type: number
+          title: Value
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        is_personal_experience:
+          type: boolean
+          title: Is Personal Experience
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        valid_as_of:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Valid As Of
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - country_id
+      - country_slug
+      - country_name
+      - value
+      - is_personal_experience
+      - updated_at
+      title: AuthorMetricValueResponse
+    AuthorRef:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        display_name:
+          type: string
+          title: Display Name
+      type: object
+      required:
+      - user_id
+      - display_name
+      title: AuthorRef
+    AuthorReputationResponse:
+      properties:
+        author_user_id:
+          type: string
+          title: Author User Id
+        coverage_score:
+          type: number
+          title: Coverage Score
+        freshness_score:
+          type: number
+          title: Freshness Score
+        sourcing_score:
+          type: number
+          title: Sourcing Score
+        subscriber_count:
+          type: integer
+          title: Subscriber Count
+        published_metric_count:
+          type: integer
+          title: Published Metric Count
+        computed_at:
+          type: string
+          format: date-time
+          title: Computed At
+        methodology_version:
+          type: string
+          title: Methodology Version
+      type: object
+      required:
+      - author_user_id
+      - coverage_score
+      - freshness_score
+      - sourcing_score
+      - subscriber_count
+      - published_metric_count
+      - computed_at
+      - methodology_version
+      title: AuthorReputationResponse
+    BulkUpsertAuthorMetricValuesRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AuthorMetricValueItem'
+          type: array
+          maxItems: 300
+          minItems: 1
+          title: Items
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: BulkUpsertAuthorMetricValuesRequest
+    CountryAuthorMetricEntry:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        methodology_en:
+          type: string
+          title: Methodology En
+        methodology_ru:
+          type: string
+          title: Methodology Ru
+        polarity:
+          type: string
+          title: Polarity
+        scale_min:
+          type: number
+          title: Scale Min
+        scale_max:
+          type: number
+          title: Scale Max
+        license:
+          type: string
+          title: License
+        author:
+          $ref: '#/components/schemas/AuthorRef'
+        forked_from_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Forked From Id
+        version:
+          type: integer
+          title: Version
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        value:
+          type: number
+          title: Value
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        is_personal_experience:
+          type: boolean
+          title: Is Personal Experience
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        valid_as_of:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Valid As Of
+        value_updated_at:
+          type: string
+          format: date-time
+          title: Value Updated At
+      type: object
+      required:
+      - id
+      - slug
+      - name_en
+      - name_ru
+      - methodology_en
+      - methodology_ru
+      - polarity
+      - scale_min
+      - scale_max
+      - license
+      - author
+      - version
+      - value
+      - is_personal_experience
+      - value_updated_at
+      title: CountryAuthorMetricEntry
+    CountryAuthorMetricsResponse:
+      properties:
+        country_slug:
+          type: string
+          title: Country Slug
+        items:
+          items:
+            $ref: '#/components/schemas/CountryAuthorMetricEntry'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - country_slug
+      - items
+      - total
+      title: CountryAuthorMetricsResponse
+    CreateAuthorMetricRequest:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 2
+          title: Slug
+        name_en:
+          type: string
+          maxLength: 140
+          minLength: 3
+          title: Name En
+        name_ru:
+          type: string
+          maxLength: 140
+          minLength: 3
+          title: Name Ru
+        methodology_en:
+          type: string
+          maxLength: 4000
+          title: Methodology En
+          default: ''
+        methodology_ru:
+          type: string
+          maxLength: 4000
+          title: Methodology Ru
+          default: ''
+        polarity:
+          type: string
+          title: Polarity
+          default: higher_is_better
+        scale_min:
+          type: number
+          title: Scale Min
+          default: 0
+        scale_max:
+          type: number
+          title: Scale Max
+          default: 100
+        license:
+          type: string
+          title: License
+          default: platform
+        visibility:
+          type: string
+          title: Visibility
+          default: private
+      additionalProperties: false
+      type: object
+      required:
+      - slug
+      - name_en
+      - name_ru
+      title: CreateAuthorMetricRequest
+    CreateSubscriptionRequest:
+      properties:
+        metric_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Id
+        author_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author User Id
+      additionalProperties: false
+      type: object
+      title: CreateSubscriptionRequest
+    FeedEntryResponse:
+      properties:
+        metric_id:
+          type: string
+          title: Metric Id
+        metric_slug:
+          type: string
+          title: Metric Slug
+        metric_name_en:
+          type: string
+          title: Metric Name En
+        metric_name_ru:
+          type: string
+          title: Metric Name Ru
+        author:
+          $ref: '#/components/schemas/AuthorRef'
+        country_id:
+          type: string
+          title: Country Id
+        country_slug:
+          type: string
+          title: Country Slug
+        country_name:
+          type: string
+          title: Country Name
+        value:
+          type: number
+          title: Value
+        value_updated_at:
+          type: string
+          format: date-time
+          title: Value Updated At
+      type: object
+      required:
+      - metric_id
+      - metric_slug
+      - metric_name_en
+      - metric_name_ru
+      - author
+      - country_id
+      - country_slug
+      - country_name
+      - value
+      - value_updated_at
+      title: FeedEntryResponse
+    ForkAuthorMetricRequest:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 2
+          title: Slug
+      additionalProperties: false
+      type: object
+      required:
+      - slug
+      title: ForkAuthorMetricRequest
+    ModerateAuthorMetricRequest:
+      properties:
+        moderation_reason:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Moderation Reason
+      additionalProperties: false
+      type: object
+      title: ModerateAuthorMetricRequest
+    ModerateAuthorMetricResponse:
+      properties:
+        definition:
+          $ref: '#/components/schemas/AdminAuthorMetricDefinition'
+      type: object
+      required:
+      - definition
+      title: ModerateAuthorMetricResponse
+    MyAuthorMetricDefinition:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        methodology_en:
+          type: string
+          title: Methodology En
+        methodology_ru:
+          type: string
+          title: Methodology Ru
+        polarity:
+          type: string
+          title: Polarity
+        scale_min:
+          type: number
+          title: Scale Min
+        scale_max:
+          type: number
+          title: Scale Max
+        license:
+          type: string
+          title: License
+        author:
+          $ref: '#/components/schemas/AuthorRef'
+        forked_from_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Forked From Id
+        version:
+          type: integer
+          title: Version
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        status:
+          type: string
+          title: Status
+        visibility:
+          type: string
+          title: Visibility
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        submitted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Submitted At
+        archived_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Archived At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        moderation_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderation Reason
+      type: object
+      required:
+      - id
+      - slug
+      - name_en
+      - name_ru
+      - methodology_en
+      - methodology_ru
+      - polarity
+      - scale_min
+      - scale_max
+      - license
+      - author
+      - version
+      - status
+      - visibility
+      - created_at
+      - updated_at
+      title: MyAuthorMetricDefinition
+    MyAuthorMetricListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MyAuthorMetricDefinition'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: MyAuthorMetricListResponse
+    PublicAuthorMetricListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AuthorMetricDefinitionBase'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: PublicAuthorMetricListResponse
+    SubmitAuthorMetricResponse:
+      properties:
+        definition:
+          $ref: '#/components/schemas/MyAuthorMetricDefinition'
+      type: object
+      required:
+      - definition
+      title: SubmitAuthorMetricResponse
+    SubscriptionFeedResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedEntryResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: SubscriptionFeedResponse
+    SubscriptionListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/SubscriptionResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: SubscriptionListResponse
+    SubscriptionResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        metric_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Id
+        metric_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Slug
+        metric_name_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Name En
+        author_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author User Id
+        author_display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Display Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - created_at
+      title: SubscriptionResponse
+    UpdateAuthorMetricRequest:
+      properties:
+        name_en:
+          anyOf:
+          - type: string
+            maxLength: 140
+            minLength: 3
+          - type: 'null'
+          title: Name En
+        name_ru:
+          anyOf:
+          - type: string
+            maxLength: 140
+            minLength: 3
+          - type: 'null'
+          title: Name Ru
+        methodology_en:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Methodology En
+        methodology_ru:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Methodology Ru
+        polarity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Polarity
+        scale_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Scale Min
+        scale_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Scale Max
+        license:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License
+        visibility:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Visibility
+      additionalProperties: false
+      type: object
+      title: UpdateAuthorMetricRequest
+
   securitySchemes:
     BearerAuth:
       type: http

@@ -207,6 +207,11 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_trips_with_invalid_share_state",
         "list_reminders_with_invalid_trip_or_item",
         "list_trip_waypoints_with_invalid_position",
+        "list_published_author_metrics_without_methodology",
+        "list_author_metric_values_missing_source_or_experience",
+        "list_author_metric_values_out_of_scale",
+        "list_published_author_metrics_with_pii",
+        "list_author_metrics_with_dangling_fork_lineage",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     monkeypatch.setattr(

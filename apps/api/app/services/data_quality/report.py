@@ -5,6 +5,9 @@ from app.schemas.data_quality import (
 )
 from app.services.data_quality.ai_checks import _append_ai_foundation_checks
 from app.services.data_quality.auth_checks import _append_auth_watchlist_checks
+from app.services.data_quality.author_metrics_checks import (
+    _append_author_metrics_checks,
+)
 from app.services.data_quality.cii_checks import _append_cii_checks
 from app.services.data_quality.content_checks import _append_content_checks
 from app.services.data_quality.country_drift_checks import (
@@ -79,6 +82,7 @@ def build_data_quality_report(connection: Connection[Any]) -> DataQualityReport:
     _append_auth_watchlist_checks(connection, issues, checks)
     _append_migration_board_checks(connection, issues, checks)
     _append_trip_planner_checks(connection, issues, checks)
+    _append_author_metrics_checks(connection, issues, checks)
 
     from app.services import data_quality as data_quality_facade
 

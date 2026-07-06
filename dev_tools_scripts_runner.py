@@ -79,6 +79,19 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         ),
         aliases=("sync-agents-md", "agents-sync"),
     ),
+    ScriptInfo(
+        key="6",
+        filename="recompute_author_reputation.py",
+        title="recompute-author-reputation",
+        description=(
+            "Recomputes derived author reputation (coverage/freshness/sourcing "
+            "scores, subscriber and published-metric counts) for one author or "
+            "all authors with published metrics. Accepts --all or --author, and "
+            "--dry-run."
+        ),
+        aliases=("author-reputation", "recompute-reputation"),
+        directory=ROOT_DIR / "scripts",
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

@@ -34,6 +34,8 @@ TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK = (
 TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK = (
     "trip.warning.missing_pair_severity_rank"
 )
+AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH = "author_metrics.min_methodology_length"
+AUTHOR_METRICS_MIN_COUNTRY_COVERAGE = "author_metrics.min_country_coverage"
 
 REQUIRED_NUMERIC_KEYS = (
     SCORE_LABEL_WEAK_BELOW,
@@ -54,6 +56,8 @@ REQUIRED_NUMERIC_KEYS = (
     TRIP_WARNING_HIGH_IMPACT_MIN_RANK,
     TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK,
     TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK,
+    AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH,
+    AUTHOR_METRICS_MIN_COUNTRY_COVERAGE,
 )
 
 
@@ -117,6 +121,12 @@ class TripWarningThresholds:
 
 
 @dataclass(frozen=True)
+class AuthorMetricsThresholds:
+    min_methodology_length: int
+    min_country_coverage: int
+
+
+@dataclass(frozen=True)
 class MethodologyConfig:
     version: str
     parameters: dict[str, MethodologyParameter]
@@ -125,6 +135,7 @@ class MethodologyConfig:
     board: BoardLimits
     flows_k_anonymity: int
     trip_warnings: TripWarningThresholds
+    author_metrics: AuthorMetricsThresholds
 
 
 _cached_config: MethodologyConfig | None = None
@@ -222,6 +233,14 @@ def build_methodology_config(
             parameters, TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK
         ),
     )
+    author_metrics = AuthorMetricsThresholds(
+        min_methodology_length=_positive_int(
+            parameters, AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH
+        ),
+        min_country_coverage=_positive_int(
+            parameters, AUTHOR_METRICS_MIN_COUNTRY_COVERAGE
+        ),
+    )
     _validate_thresholds(score_labels, decision)
     return MethodologyConfig(
         version=version,
@@ -231,6 +250,7 @@ def build_methodology_config(
         board=board,
         flows_k_anonymity=flows_k_anonymity,
         trip_warnings=trip_warnings,
+        author_metrics=author_metrics,
     )
 
 

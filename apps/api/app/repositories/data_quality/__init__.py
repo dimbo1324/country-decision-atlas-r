@@ -39,6 +39,13 @@ from app.repositories.data_quality.auth import (
     list_users_with_invalid_role as list_users_with_invalid_role,
     list_users_with_invalid_status as list_users_with_invalid_status,
 )
+from app.repositories.data_quality.author_metrics import (
+    list_author_metric_values_missing_source_or_experience as list_author_metric_values_missing_source_or_experience,
+    list_author_metric_values_out_of_scale as list_author_metric_values_out_of_scale,
+    list_author_metrics_with_dangling_fork_lineage as list_author_metrics_with_dangling_fork_lineage,
+    list_published_author_metrics_with_pii as list_published_author_metrics_with_pii,
+    list_published_author_metrics_without_methodology as list_published_author_metrics_without_methodology,
+)
 from app.repositories.data_quality.cii import (
     list_cii_metric_definitions_without_polarity as list_cii_metric_definitions_without_polarity,
     list_cii_metric_weights_with_invalid_sum as list_cii_metric_weights_with_invalid_sum,

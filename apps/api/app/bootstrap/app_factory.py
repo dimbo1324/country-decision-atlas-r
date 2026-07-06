@@ -3,6 +3,7 @@ import time
 from app.api.v1 import (
     admin,
     admin_ai,
+    admin_author_metrics,
     admin_capabilities,
     admin_community,
     admin_migration_board,
@@ -12,6 +13,7 @@ from app.api.v1 import (
     ai,
     analytics,
     auth,
+    author_metrics,
     community,
     countries,
     country_drift,
@@ -263,6 +265,8 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(weight_profiles.router, prefix="/api/v1")
     app.include_router(trip_planner.router, prefix="/api/v1")
     app.include_router(trip_planner.shared_router, prefix="/api/v1")
+    app.include_router(author_metrics.router, prefix="/api/v1")
+    app.include_router(admin_author_metrics.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

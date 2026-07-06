@@ -1,6 +1,7 @@
 """Reusable methodology configuration fixtures for unit tests."""
 
 from app.services.methodology_config import (
+    AuthorMetricsThresholds,
     BoardLimits,
     ConfidenceThresholds,
     DecisionThresholds,
@@ -39,6 +40,10 @@ def methodology_config() -> MethodologyConfig:
             high_impact_min_rank=3,
             restrictive_pair_severity_rank=3,
             missing_pair_severity_rank=2,
+        ),
+        author_metrics=AuthorMetricsThresholds(
+            min_methodology_length=120,
+            min_country_coverage=5,
         ),
     )
 

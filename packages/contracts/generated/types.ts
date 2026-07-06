@@ -2936,6 +2936,282 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/authors/{user_id}/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Author Public Metrics */
+        get: operations["list_author_public_metrics_api_v1_authors__user_id__metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/authors/{user_id}/reputation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Author Reputation */
+        get: operations["get_author_reputation_api_v1_authors__user_id__reputation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/countries/{country_slug}/author-metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Country Author Metrics */
+        get: operations["list_country_author_metrics_api_v1_countries__country_slug__author_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/author-metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Author Metrics */
+        get: operations["list_my_author_metrics_api_v1_me_author_metrics_get"];
+        put?: never;
+        /** Create My Author Metric */
+        post: operations["create_my_author_metric_api_v1_me_author_metrics_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/author-metrics/{definition_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Author Metric */
+        get: operations["get_my_author_metric_api_v1_me_author_metrics__definition_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update My Author Metric */
+        patch: operations["update_my_author_metric_api_v1_me_author_metrics__definition_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/author-metrics/{definition_id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit My Author Metric */
+        post: operations["submit_my_author_metric_api_v1_me_author_metrics__definition_id__submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/author-metrics/{definition_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive My Author Metric */
+        post: operations["archive_my_author_metric_api_v1_me_author_metrics__definition_id__archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/author-metrics/{definition_id}/values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Author Metric Values */
+        get: operations["list_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_get"];
+        /** Bulk Upsert My Author Metric Values */
+        put: operations["bulk_upsert_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/author-metrics/{definition_id}/fork": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Fork Author Metric */
+        post: operations["fork_author_metric_api_v1_author_metrics__definition_id__fork_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscriptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Subscriptions */
+        get: operations["list_my_subscriptions_api_v1_me_subscriptions_get"];
+        put?: never;
+        /** Create My Subscription */
+        post: operations["create_my_subscription_api_v1_me_subscriptions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscriptions/{subscription_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete My Subscription */
+        delete: operations["delete_my_subscription_api_v1_me_subscriptions__subscription_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscriptions/feed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Subscriptions Feed */
+        get: operations["get_my_subscriptions_feed_api_v1_me_subscriptions_feed_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/author-metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Author Metrics For Admin */
+        get: operations["list_author_metrics_for_admin_api_v1_admin_author_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/author-metrics/{definition_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Author Metric For Admin */
+        get: operations["get_author_metric_for_admin_api_v1_admin_author_metrics__definition_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/author-metrics/{definition_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve Author Metric */
+        post: operations["approve_author_metric_api_v1_admin_author_metrics__definition_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/author-metrics/{definition_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Author Metric */
+        post: operations["reject_author_metric_api_v1_admin_author_metrics__definition_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9127,6 +9403,457 @@ export interface components {
             reject_like_actions: number;
             /** Reject Rate */
             reject_rate: number;
+        };
+        /** AdminAuthorMetricDefinition */
+        AdminAuthorMetricDefinition: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Methodology En */
+            methodology_en: string;
+            /** Methodology Ru */
+            methodology_ru: string;
+            /** Polarity */
+            polarity: string;
+            /** Scale Min */
+            scale_min: number;
+            /** Scale Max */
+            scale_max: number;
+            /** License */
+            license: string;
+            author: components["schemas"]["AuthorRef"];
+            /** Forked From Id */
+            forked_from_id?: string | null;
+            /** Version */
+            version: number;
+            /** Published At */
+            published_at?: string | null;
+            /** Status */
+            status: string;
+            /** Visibility */
+            visibility: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Archived At */
+            archived_at?: string | null;
+            /** Rejected At */
+            rejected_at?: string | null;
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+            /** Author User Id */
+            author_user_id: string;
+            /** Moderated By */
+            moderated_by?: string | null;
+            /** Moderated At */
+            moderated_at?: string | null;
+        };
+        /** AdminAuthorMetricListResponse */
+        AdminAuthorMetricListResponse: {
+            /** Items */
+            items: components["schemas"]["AdminAuthorMetricDefinition"][];
+            /** Total */
+            total: number;
+        };
+        /** ArchiveAuthorMetricResponse */
+        ArchiveAuthorMetricResponse: {
+            definition: components["schemas"]["MyAuthorMetricDefinition"];
+        };
+        /** AuthorMetricDefinitionBase */
+        AuthorMetricDefinitionBase: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Methodology En */
+            methodology_en: string;
+            /** Methodology Ru */
+            methodology_ru: string;
+            /** Polarity */
+            polarity: string;
+            /** Scale Min */
+            scale_min: number;
+            /** Scale Max */
+            scale_max: number;
+            /** License */
+            license: string;
+            author: components["schemas"]["AuthorRef"];
+            /** Forked From Id */
+            forked_from_id?: string | null;
+            /** Version */
+            version: number;
+            /** Published At */
+            published_at?: string | null;
+        };
+        /** AuthorMetricValueItem */
+        AuthorMetricValueItem: {
+            /** Country Slug */
+            country_slug: string;
+            /** Value */
+            value: number;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Is Personal Experience
+             * @default false
+             */
+            is_personal_experience: boolean;
+            /** Note */
+            note?: string | null;
+            /** Valid As Of */
+            valid_as_of?: string | null;
+        };
+        /** AuthorMetricValueListResponse */
+        AuthorMetricValueListResponse: {
+            /** Items */
+            items: components["schemas"]["AuthorMetricValueResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** AuthorMetricValueResponse */
+        AuthorMetricValueResponse: {
+            /** Country Id */
+            country_id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Country Name */
+            country_name: string;
+            /** Value */
+            value: number;
+            /** Source Url */
+            source_url?: string | null;
+            /** Is Personal Experience */
+            is_personal_experience: boolean;
+            /** Note */
+            note?: string | null;
+            /** Valid As Of */
+            valid_as_of?: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** AuthorRef */
+        AuthorRef: {
+            /** User Id */
+            user_id: string;
+            /** Display Name */
+            display_name: string;
+        };
+        /** AuthorReputationResponse */
+        AuthorReputationResponse: {
+            /** Author User Id */
+            author_user_id: string;
+            /** Coverage Score */
+            coverage_score: number;
+            /** Freshness Score */
+            freshness_score: number;
+            /** Sourcing Score */
+            sourcing_score: number;
+            /** Subscriber Count */
+            subscriber_count: number;
+            /** Published Metric Count */
+            published_metric_count: number;
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Methodology Version */
+            methodology_version: string;
+        };
+        /** BulkUpsertAuthorMetricValuesRequest */
+        BulkUpsertAuthorMetricValuesRequest: {
+            /** Items */
+            items: components["schemas"]["AuthorMetricValueItem"][];
+        };
+        /** CountryAuthorMetricEntry */
+        CountryAuthorMetricEntry: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Methodology En */
+            methodology_en: string;
+            /** Methodology Ru */
+            methodology_ru: string;
+            /** Polarity */
+            polarity: string;
+            /** Scale Min */
+            scale_min: number;
+            /** Scale Max */
+            scale_max: number;
+            /** License */
+            license: string;
+            author: components["schemas"]["AuthorRef"];
+            /** Forked From Id */
+            forked_from_id?: string | null;
+            /** Version */
+            version: number;
+            /** Published At */
+            published_at?: string | null;
+            /** Value */
+            value: number;
+            /** Source Url */
+            source_url?: string | null;
+            /** Is Personal Experience */
+            is_personal_experience: boolean;
+            /** Note */
+            note?: string | null;
+            /** Valid As Of */
+            valid_as_of?: string | null;
+            /**
+             * Value Updated At
+             * Format: date-time
+             */
+            value_updated_at: string;
+        };
+        /** CountryAuthorMetricsResponse */
+        CountryAuthorMetricsResponse: {
+            /** Country Slug */
+            country_slug: string;
+            /** Items */
+            items: components["schemas"]["CountryAuthorMetricEntry"][];
+            /** Total */
+            total: number;
+        };
+        /** CreateAuthorMetricRequest */
+        CreateAuthorMetricRequest: {
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /**
+             * Methodology En
+             * @default
+             */
+            methodology_en: string;
+            /**
+             * Methodology Ru
+             * @default
+             */
+            methodology_ru: string;
+            /**
+             * Polarity
+             * @default higher_is_better
+             */
+            polarity: string;
+            /**
+             * Scale Min
+             * @default 0
+             */
+            scale_min: number;
+            /**
+             * Scale Max
+             * @default 100
+             */
+            scale_max: number;
+            /**
+             * License
+             * @default platform
+             */
+            license: string;
+            /**
+             * Visibility
+             * @default private
+             */
+            visibility: string;
+        };
+        /** CreateSubscriptionRequest */
+        CreateSubscriptionRequest: {
+            /** Metric Id */
+            metric_id?: string | null;
+            /** Author User Id */
+            author_user_id?: string | null;
+        };
+        /** FeedEntryResponse */
+        FeedEntryResponse: {
+            /** Metric Id */
+            metric_id: string;
+            /** Metric Slug */
+            metric_slug: string;
+            /** Metric Name En */
+            metric_name_en: string;
+            /** Metric Name Ru */
+            metric_name_ru: string;
+            author: components["schemas"]["AuthorRef"];
+            /** Country Id */
+            country_id: string;
+            /** Country Slug */
+            country_slug: string;
+            /** Country Name */
+            country_name: string;
+            /** Value */
+            value: number;
+            /**
+             * Value Updated At
+             * Format: date-time
+             */
+            value_updated_at: string;
+        };
+        /** ForkAuthorMetricRequest */
+        ForkAuthorMetricRequest: {
+            /** Slug */
+            slug: string;
+        };
+        /** ModerateAuthorMetricRequest */
+        ModerateAuthorMetricRequest: {
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+        };
+        /** ModerateAuthorMetricResponse */
+        ModerateAuthorMetricResponse: {
+            definition: components["schemas"]["AdminAuthorMetricDefinition"];
+        };
+        /** MyAuthorMetricDefinition */
+        MyAuthorMetricDefinition: {
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Methodology En */
+            methodology_en: string;
+            /** Methodology Ru */
+            methodology_ru: string;
+            /** Polarity */
+            polarity: string;
+            /** Scale Min */
+            scale_min: number;
+            /** Scale Max */
+            scale_max: number;
+            /** License */
+            license: string;
+            author: components["schemas"]["AuthorRef"];
+            /** Forked From Id */
+            forked_from_id?: string | null;
+            /** Version */
+            version: number;
+            /** Published At */
+            published_at?: string | null;
+            /** Status */
+            status: string;
+            /** Visibility */
+            visibility: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Archived At */
+            archived_at?: string | null;
+            /** Rejected At */
+            rejected_at?: string | null;
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+        };
+        /** MyAuthorMetricListResponse */
+        MyAuthorMetricListResponse: {
+            /** Items */
+            items: components["schemas"]["MyAuthorMetricDefinition"][];
+            /** Total */
+            total: number;
+        };
+        /** PublicAuthorMetricListResponse */
+        PublicAuthorMetricListResponse: {
+            /** Items */
+            items: components["schemas"]["AuthorMetricDefinitionBase"][];
+            /** Total */
+            total: number;
+        };
+        /** SubmitAuthorMetricResponse */
+        SubmitAuthorMetricResponse: {
+            definition: components["schemas"]["MyAuthorMetricDefinition"];
+        };
+        /** SubscriptionFeedResponse */
+        SubscriptionFeedResponse: {
+            /** Items */
+            items: components["schemas"]["FeedEntryResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** SubscriptionListResponse */
+        SubscriptionListResponse: {
+            /** Items */
+            items: components["schemas"]["SubscriptionResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** SubscriptionResponse */
+        SubscriptionResponse: {
+            /** Id */
+            id: string;
+            /** Metric Id */
+            metric_id?: string | null;
+            /** Metric Slug */
+            metric_slug?: string | null;
+            /** Metric Name En */
+            metric_name_en?: string | null;
+            /** Author User Id */
+            author_user_id?: string | null;
+            /** Author Display Name */
+            author_display_name?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** UpdateAuthorMetricRequest */
+        UpdateAuthorMetricRequest: {
+            /** Name En */
+            name_en?: string | null;
+            /** Name Ru */
+            name_ru?: string | null;
+            /** Methodology En */
+            methodology_en?: string | null;
+            /** Methodology Ru */
+            methodology_ru?: string | null;
+            /** Polarity */
+            polarity?: string | null;
+            /** Scale Min */
+            scale_min?: number | null;
+            /** Scale Max */
+            scale_max?: number | null;
+            /** License */
+            license?: string | null;
+            /** Visibility */
+            visibility?: string | null;
         };
     };
     responses: never;
@@ -15915,6 +16642,624 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ModerationActionListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_author_public_metrics_api_v1_authors__user_id__metrics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicAuthorMetricListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_author_reputation_api_v1_authors__user_id__reputation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorReputationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_country_author_metrics_api_v1_countries__country_slug__author_metrics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                country_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryAuthorMetricsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_author_metrics_api_v1_me_author_metrics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAuthorMetricListResponse"];
+                };
+            };
+        };
+    };
+    create_my_author_metric_api_v1_me_author_metrics_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAuthorMetricRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAuthorMetricDefinition"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_author_metric_api_v1_me_author_metrics__definition_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAuthorMetricDefinition"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_my_author_metric_api_v1_me_author_metrics__definition_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAuthorMetricRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAuthorMetricDefinition"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_my_author_metric_api_v1_me_author_metrics__definition_id__submit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmitAuthorMetricResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_my_author_metric_api_v1_me_author_metrics__definition_id__archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArchiveAuthorMetricResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorMetricValueListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bulk_upsert_my_author_metric_values_api_v1_me_author_metrics__definition_id__values_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkUpsertAuthorMetricValuesRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorMetricValueListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    fork_author_metric_api_v1_author_metrics__definition_id__fork_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForkAuthorMetricRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAuthorMetricDefinition"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_subscriptions_api_v1_me_subscriptions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionListResponse"];
+                };
+            };
+        };
+    };
+    create_my_subscription_api_v1_me_subscriptions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSubscriptionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_subscription_api_v1_me_subscriptions__subscription_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                subscription_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_subscriptions_feed_api_v1_me_subscriptions_feed_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionFeedResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_author_metrics_for_admin_api_v1_admin_author_metrics_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAuthorMetricListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_author_metric_for_admin_api_v1_admin_author_metrics__definition_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAuthorMetricDefinition"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_author_metric_api_v1_admin_author_metrics__definition_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerateAuthorMetricResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_author_metric_api_v1_admin_author_metrics__definition_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                definition_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerateAuthorMetricRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerateAuthorMetricResponse"];
                 };
             };
             /** @description Validation Error */
