@@ -53,5 +53,4 @@ class DataErrorReportListResponse(BaseModel):
 
 class DataErrorReportStatusUpdateRequest(BaseModel):
     status: DataErrorReportStatus
-    reviewed_by: str | None = Field(default=None, max_length=200)
     resolution_note: str | None = Field(default=None, max_length=2000)

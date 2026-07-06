@@ -1,9 +1,13 @@
 """Flexible methodology v1: migration, typed config, public parameter API, and DQ guardrails."""
 
 import pytest
+import re
 from app.api.v1 import methodology as methodology_api
 from app.core.database import get_connection
 from app.repositories import data_quality as data_quality_repository
+from app.repositories.data_quality.methodology_config import (
+    REQUIRED_NUMERIC_PARAMETER_SQL,
+)
 from app.services import data_quality, methodology_config
 from datetime import UTC, datetime
 from fastapi import FastAPI
@@ -119,6 +123,26 @@ def test_methodology_config_rejects_unordered_thresholds() -> None:
         methodology_config.build_methodology_config("v1.0", rows)
 
 
+def test_methodology_config_rejects_weakness_at_or_above_strength() -> None:
+    rows = _rows(
+        **{
+            methodology_config.STRENGTH_MIN_SCORE: 50.0,
+            methodology_config.WEAKNESS_MAX_SCORE: 50.0,
+        }
+    )
+
+    with pytest.raises(methodology_config.MethodologyConfigError):
+        methodology_config.build_methodology_config("v1.0", rows)
+
+
+def test_dq_required_parameter_keys_match_runtime_required_keys() -> None:
+    sql_keys = set(
+        re.findall(r"'([a-z0-9_.]+)'", REQUIRED_NUMERIC_PARAMETER_SQL)
+    )
+
+    assert sql_keys == set(methodology_config.REQUIRED_NUMERIC_KEYS)
+
+
 def test_public_parameters_endpoint_returns_active_version(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -160,6 +184,30 @@ def test_methodology_dq_detects_missing_required_parameter(
 
     assert report.valid is False
     assert "methodology_parameter_missing" in {
+        issue.code for issue in report.issues
+    }
+
+
+def test_methodology_dq_detects_inverted_strength_weakness(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_invalid_methodology_threshold_order",
+        lambda *_: [
+            {
+                "version": "v1.0",
+                "strength_min_score": 40,
+                "weakness_max_score": 60,
+            }
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert report.valid is False
+    assert "methodology_threshold_order_invalid" in {
         issue.code for issue in report.issues
     }
 

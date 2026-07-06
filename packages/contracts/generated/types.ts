@@ -4086,8 +4086,6 @@ export interface components {
              * @enum {string}
              */
             status: "pending" | "review" | "published" | "rejected" | "archived";
-            /** Moderated By */
-            moderated_by?: string | null;
         };
         /** CommunityVoteCreate */
         CommunityVoteCreate: {
@@ -5390,8 +5388,6 @@ export interface components {
              * @enum {string}
              */
             status: "pending" | "review" | "resolved" | "rejected" | "archived";
-            /** Reviewed By */
-            reviewed_by?: string | null;
             /** Resolution Note */
             resolution_note?: string | null;
         };
@@ -9072,8 +9068,6 @@ export interface components {
              * @enum {string}
              */
             status: "pending" | "review" | "published" | "rejected" | "archived";
-            /** Reviewed By */
-            reviewed_by?: string | null;
         };
         /** UserStoryResponse */
         UserStoryResponse: {

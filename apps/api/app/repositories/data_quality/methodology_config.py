@@ -18,10 +18,13 @@ REQUIRED_NUMERIC_PARAMETER_SQL = """
         ('board.max_active_posts', 1::numeric, 1000::numeric),
         ('board.max_contact_requests_per_day', 1::numeric, 1000::numeric),
         ('board.max_reports_per_day', 1::numeric, 1000::numeric),
+        ('board.auto_hide_report_threshold', 1::numeric, 1000::numeric),
         ('flows.k_anonymity', 1::numeric, 100000::numeric),
         ('trip.warning.high_impact_min_rank', 1::numeric, 4::numeric),
         ('trip.warning.restrictive_pair_severity_rank', 1::numeric, 4::numeric),
-        ('trip.warning.missing_pair_severity_rank', 1::numeric, 4::numeric)
+        ('trip.warning.missing_pair_severity_rank', 1::numeric, 4::numeric),
+        ('author_metrics.min_methodology_length', 1::numeric, 10000::numeric),
+        ('author_metrics.min_country_coverage', 1::numeric, 1000::numeric)
 """
 
 
@@ -125,6 +128,12 @@ def list_invalid_methodology_threshold_order(
                     WHERE mp.param_key = 'score_label.strong_below'
                 ) AS strong_below,
                 MAX(mp.value_numeric) FILTER (
+                    WHERE mp.param_key = 'strength.min_score'
+                ) AS strength_min_score,
+                MAX(mp.value_numeric) FILTER (
+                    WHERE mp.param_key = 'weakness.max_score'
+                ) AS weakness_max_score,
+                MAX(mp.value_numeric) FILTER (
                     WHERE mp.param_key = 'confidence.medium_min_average'
                 ) AS confidence_medium,
                 MAX(mp.value_numeric) FILTER (
@@ -148,6 +157,7 @@ def list_invalid_methodology_threshold_order(
             weak_below < limited_below
             AND limited_below < moderate_below
             AND moderate_below < strong_below
+            AND weakness_max_score < strength_min_score
             AND confidence_medium < confidence_high
             AND recommendation_tie < recommendation_medium
         )

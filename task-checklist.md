@@ -64,61 +64,79 @@
 ## 2. Исправления
 
 ```text
-[ ] Эп.1: services/data_quality/methodology_config_checks.py +
-    repositories/data_quality/methodology_config.py — список обязательных
-    параметров генерируется из REQUIRED_NUMERIC_KEYS (единый источник истины)
-[ ] Эп.1: methodology_config.py — _validate_thresholds проверяет
-    strength_min_score > weakness_max_score
-[ ] Эп.2: repositories/trip_planner/waypoints.py + services — реордер через
-    двухфазную запись (временное смещение позиций) без падения UNIQUE
-[ ] Эп.2: repositories/trip_planner/checklist.py — аналогичная защита для
-    checklist items, если применимо к их reorder-паттерну
-[ ] Эп.3: api/v1/admin_community.py — moderated_by/reviewed_by выводятся из
-    current_user.id, убраны из тел запросов (CommunityStatusUpdateRequest,
-    DataErrorReportStatusUpdateRequest, UserStoryRatingStatusUpdateRequest)
-[ ] Эп.4: schemas/author_metrics.py — BulkUpsertAuthorMetricValuesRequest
-    отклоняет дублирующийся country_slug (422)
-[ ] Эп.4: services/author_metrics/values.py — resolve country_slug в первом
-    проходе (validate-then-write по конструкции, а не по случайности)
+[+] Эп.1: repositories/data_quality/methodology_config.py — добавлены
+    недостающие ключи (board.auto_hide_report_threshold, оба author_metrics)
+    в REQUIRED_NUMERIC_PARAMETER_SQL; guard-тест на set-равенство с
+    REQUIRED_NUMERIC_KEYS вместо полной генерации (см. §3)
+[+] Эп.1: methodology_config.py — _validate_thresholds проверяет
+    weakness_max_score < strength_min_score; аналогичная проверка добавлена
+    в DQ-запрос list_invalid_methodology_threshold_order
+[+] Эп.2: repositories/trip_planner/waypoints.py — reorder_waypoints делает
+    двухфазную запись (staging-смещение +10_000_000, затем финальные позиции)
+    без падения UNIQUE(trip_id, position); set_waypoint_position удалена как
+    мёртвый код после рефакторинга
+[+] Эп.2: services/trip_planner/waypoints.py — update_waypoint ловит
+    UniqueViolation на одиночном PATCH position -> 409 (checklist items не
+    имеют UNIQUE-констрейнта на позицию, фикс не применим)
+[+] Эп.3: api/v1/admin_community.py — moderated_by/reviewed_by выводятся из
+    current_user.id на всех 4 эндпоинтах, убраны из тел запросов
+    (CommunityStatusUpdateRequest, DataErrorReportStatusUpdateRequest,
+    UserStoryRatingStatusUpdateRequest)
+[+] Эп.4: services/author_metrics/values.py — bulk_upsert_values отклоняет
+    дублирующийся country_slug (422 duplicate_country_slug) до любых записей;
+    resolve country_slug перенесён в первый проход (validate-then-write по
+    конструкции)
 ```
 
 ## 3. Тесты
 
 ```text
-[ ] Регрессионный тест на дублирующийся country_slug в bulk-upsert (422)
-[ ] Тест на реордер waypoints, не являющийся чистым добавлением в конец
-[ ] Тест: moderated_by/reviewed_by в ответе — это id аутентифицированного
-    модератора, а не то, что прислал клиент
-[ ] Тест: DQ-проверка обязательных параметров реагирует на любой ключ из
-    REQUIRED_NUMERIC_KEYS, не только на захардкоженный список
-[ ] Тест: strength_min_score <= weakness_max_score -> MethodologyConfigError
-[ ] Все существующие тесты по затронутым доменам зелёные
+[+] Регрессионный тест на дублирующийся country_slug в bulk-upsert (422)
+[+] Тест на реордер waypoints через staging-offset + тест на 409 при
+    одиночном конфликте позиции
+[+] Тест: moderated_by/reviewed_by в вызове репозитория — id
+    аутентифицированного модератора, а не то, что прислал клиент (все 4
+    эндпоинта: questions/answers/data-error-reports/user-story-ratings)
+[+] Тест: set-равенство между REQUIRED_NUMERIC_PARAMETER_SQL и
+    REQUIRED_NUMERIC_KEYS (предотвращает будущий дрейф списков)
+[+] Тест: weakness_max_score >= strength_min_score -> MethodologyConfigError
+    + DQ-тест на детект инверсии
+[+] Тест: fork отклоняет опубликованное, но приватное определение
+[+] Все существующие тесты по затронутым доменам зелёные
 ```
 
 ## 4. Contracts
 
 ```text
-[ ] Если тела запросов схем изменились (community/data-error/user-story) —
-    contracts/openapi.yaml обновлён вручную + pnpm contracts:generate
+[+] CommunityStatusUpdateRequest/DataErrorReportStatusUpdateRequest/
+    UserStoryRatingStatusUpdateRequest — moderated_by/reviewed_by убраны из
+    contracts/openapi.yaml вручную (сверено побайтово с app.openapi()),
+    pnpm contracts:generate выполнен, types.ts обновлён
 ```
 
 ## 5. Полный quality gate
 
 ```text
-[ ] python -m pytest
-[ ] python -m mypy apps packages scripts tests
-[ ] python -m ruff check . / ruff format --check .
-[ ] python -m sqlfluff lint database --dialect postgres
-[ ] pnpm contracts:generate (без незакоммиченного дифа)
-[ ] pnpm quality
-[ ] python dev_tools_scripts_runner.py (полный гейт)
+[+] python -m pytest — весь набор зелёный
+[+] python -m mypy apps packages scripts tests — 503 файла, чисто
+[+] python -m ruff check . / ruff format --check . — чисто
+[+] python -m sqlfluff lint database --dialect postgres — чисто
+[+] pnpm contracts:generate (без незакоммиченного дифа)
+[+] pnpm quality — чисто
+[+] python dev_tools_scripts_runner.py (полный гейт) — 77 OK / 3 WARN
+    (кэш-директории) / 0 FAIL / 1 SKIP (protoc regen, ожидаемо). Docker в
+    этот раз был доступен — прогнана полная цепочка миграций на чистой БД
+    (включая идемпотентный повторный прогон), runtime-смоуки, включая
+    admin-community/community эндпоинты, которые правились в этой задаче,
+    и Playwright E2E. Это закрывает ранее задокументированный пробел
+    Эпизода 4 («миграция 049 не проверялась на чистой БД»).
 ```
 
 ## 6. Closeout
 
 ```text
-[ ] Чек-лист заполнен +/- перед финальным коммитом
-[ ] Финальный отчёт написан
+[+] Чек-лист заполнен +/- перед финальным коммитом
+[+] Финальный отчёт написан
 [ ] Merge --ff-only в main выполнен (после подтверждения владельца)
 [ ] Push в origin/main выполнен (после подтверждения владельца)
 ```

@@ -97,4 +97,3 @@ class CommunityVoteCreate(BaseModel):
 
 class CommunityStatusUpdateRequest(BaseModel):
     status: CommunityModerationStatus
-    moderated_by: str | None = Field(default=None, max_length=200)

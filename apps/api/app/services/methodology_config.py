@@ -329,6 +329,10 @@ def _validate_thresholds(
         raise MethodologyConfigError(
             "Score label thresholds must be strictly increasing."
         )
+    if decision.weakness_max_score >= decision.strength_min_score:
+        raise MethodologyConfigError(
+            "weakness.max_score must be strictly below strength.min_score."
+        )
     confidence = decision.confidence
     if not (
         1 <= confidence.medium_min_average < confidence.high_min_average <= 3

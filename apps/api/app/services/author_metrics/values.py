@@ -44,6 +44,16 @@ def bulk_upsert_values(
             "Values cannot be set on an archived definition.",
             {},
         )
+    slugs = [item.country_slug for item in items]
+    duplicate_slugs = {slug for slug in slugs if slugs.count(slug) > 1}
+    if duplicate_slugs:
+        raise api_error(
+            422,
+            "duplicate_country_slug",
+            "Each country_slug may appear at most once per bulk-upsert request.",
+            {"duplicate_country_slugs": sorted(duplicate_slugs)},
+        )
+    resolved_countries = []
     for item in items:
         helpers._require_value_source_or_experience(
             source_url=item.source_url,
@@ -54,7 +64,6 @@ def bulk_upsert_values(
             scale_min=definition["scale_min"],
             scale_max=definition["scale_max"],
         )
-    for item in items:
         country = countries_repository.get_active_country_by_slug(
             connection, item.country_slug
         )
@@ -65,6 +74,8 @@ def bulk_upsert_values(
                 "Country was not found.",
                 {"country_slug": item.country_slug},
             )
+        resolved_countries.append((item, country))
+    for item, country in resolved_countries:
         repository.upsert_value(
             connection,
             metric_id=definition_id,

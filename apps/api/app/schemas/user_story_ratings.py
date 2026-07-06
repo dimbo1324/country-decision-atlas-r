@@ -52,4 +52,3 @@ class UserStoryRatingListResponse(BaseModel):
 
 class UserStoryRatingStatusUpdateRequest(BaseModel):
     status: UserStoryRatingStatus
-    reviewed_by: str | None = Field(default=None, max_length=200)

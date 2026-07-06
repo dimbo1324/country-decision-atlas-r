@@ -13,7 +13,7 @@ from app.schemas.trip_planner import TripCreateRequest
 from app.services import trip_planner as service
 from app.services.trip_planner import helpers, reminders, sharing, warnings
 from datetime import UTC, date, datetime
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 from pathlib import Path
 from psycopg import Connection
@@ -232,6 +232,93 @@ def test_warning_engine_combines_pair_and_high_impact_signal(
         "legal_signal_high_impact",
     }
     assert all(item.severity in {"medium", "high"} for item in result.items)
+
+
+def test_reorder_waypoints_stages_through_offset_positions(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _disable_feature_gate(monkeypatch)
+    monkeypatch.setattr(helpers, "get_owned_trip_or_404", lambda *_a: _trip())
+    other_id = "66666666-6666-6666-6666-666666666666"
+    monkeypatch.setattr(
+        repository,
+        "list_waypoints",
+        lambda *_a: [
+            _waypoint(id=WAYPOINT_ID, position=1),
+            _waypoint(id=other_id, position=2),
+        ],
+    )
+    captured_positions: list[int] = []
+
+    def fake_reorder(
+        _connection: Any, *, trip_id: str, ordered_waypoint_ids: list[str]
+    ) -> None:
+        assert trip_id == TRIP_ID
+        captured_positions.extend(range(1, len(ordered_waypoint_ids) + 1))
+
+    monkeypatch.setattr(repository, "reorder_waypoints", fake_reorder)
+
+    from app.schemas.trip_planner import TripWaypointReorderRequest
+
+    service.reorder_waypoints(
+        CONNECTION,
+        user_id=USER_ID,
+        trip_id=TRIP_ID,
+        payload=TripWaypointReorderRequest(
+            waypoint_ids=[other_id, WAYPOINT_ID]
+        ),
+    )
+
+    assert captured_positions == [1, 2]
+
+
+def test_repository_reorder_waypoints_writes_staging_offset_before_final() -> (
+    None
+):
+    connection = MagicMock()
+    from app.repositories.trip_planner.waypoints import reorder_waypoints
+
+    reorder_waypoints(
+        cast(Connection[Any], connection),
+        trip_id=TRIP_ID,
+        ordered_waypoint_ids=["a", "b"],
+    )
+
+    written_positions = [
+        call.args[1][0] for call in connection.execute.call_args_list
+    ]
+    assert written_positions == [10_000_001, 10_000_002, 1, 2]
+
+
+def test_update_waypoint_position_conflict_returns_409(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from app.schemas.trip_planner import TripWaypointUpdateRequest
+    from psycopg import errors as psycopg_errors
+
+    _disable_feature_gate(monkeypatch)
+    monkeypatch.setattr(helpers, "get_owned_trip_or_404", lambda *_a: _trip())
+    monkeypatch.setattr(
+        repository, "get_waypoint_for_trip", lambda *_a, **_kw: _waypoint()
+    )
+
+    def fake_update(*_a: Any, **_kw: Any) -> Any:
+        raise psycopg_errors.UniqueViolation("duplicate key")
+
+    monkeypatch.setattr(repository, "update_waypoint", fake_update)
+
+    with pytest.raises(HTTPException) as exc_info:
+        service.update_waypoint(
+            CONNECTION,
+            user_id=USER_ID,
+            trip_id=TRIP_ID,
+            waypoint_id=WAYPOINT_ID,
+            payload=TripWaypointUpdateRequest(position=2),
+        )
+
+    assert exc_info.value.status_code == 409
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "waypoint_position_conflict"
 
 
 def test_shared_trip_projection_omits_private_fields(

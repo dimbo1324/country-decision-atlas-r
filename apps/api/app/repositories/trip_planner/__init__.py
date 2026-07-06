@@ -47,6 +47,6 @@ from app.repositories.trip_planner.waypoints import (
     get_waypoint_for_trip as get_waypoint_for_trip,
     list_waypoints as list_waypoints,
     next_waypoint_position as next_waypoint_position,
-    set_waypoint_position as set_waypoint_position,
+    reorder_waypoints as reorder_waypoints,
     update_waypoint as update_waypoint,
 )

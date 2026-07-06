@@ -65,10 +65,10 @@ def update_question_status(
     question_id: str,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[CurrentUser, Depends(require_moderator)],
+    current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_question_status(
-        connection, question_id, payload.status, payload.moderated_by
+        connection, question_id, payload.status, current_user.id
     )
     connection.commit()
     return row
@@ -97,10 +97,10 @@ def update_answer_status(
     answer_id: str,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[CurrentUser, Depends(require_moderator)],
+    current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_answer_status(
-        connection, answer_id, payload.status, payload.moderated_by
+        connection, answer_id, payload.status, current_user.id
     )
     connection.commit()
     return row
@@ -131,13 +131,13 @@ def update_data_error_report_status(
     report_id: str,
     payload: DataErrorReportStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[CurrentUser, Depends(require_moderator_or_editor)],
+    current_user: Annotated[CurrentUser, Depends(require_moderator_or_editor)],
 ) -> dict[str, Any]:
     row = data_error_reports_service.update_data_error_report_status(
         connection,
         report_id,
         payload.status,
-        payload.reviewed_by,
+        current_user.id,
         payload.resolution_note,
     )
     connection.commit()
@@ -169,10 +169,10 @@ def update_user_story_rating_status(
     rating_id: str,
     payload: UserStoryRatingStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
-    _: Annotated[CurrentUser, Depends(require_moderator)],
+    current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = user_story_ratings_service.update_user_story_rating_status(
-        connection, rating_id, payload.status, payload.reviewed_by
+        connection, rating_id, payload.status, current_user.id
     )
     connection.commit()
     return row

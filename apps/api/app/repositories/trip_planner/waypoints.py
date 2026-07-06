@@ -175,18 +175,30 @@ def delete_waypoint(
     return row is not None
 
 
-def set_waypoint_position(
+_REORDER_STAGING_OFFSET = 10_000_000
+
+
+def reorder_waypoints(
     connection: Connection[Any],
     *,
-    waypoint_id: str,
     trip_id: str,
-    position: int,
+    ordered_waypoint_ids: list[str],
 ) -> None:
-    connection.execute(
-        """
-        UPDATE trip_waypoints
-        SET position = %s
-        WHERE id::text = %s AND trip_id::text = %s
-        """,
-        (position, waypoint_id, trip_id),
-    )
+    for offset, waypoint_id in enumerate(ordered_waypoint_ids, start=1):
+        connection.execute(
+            """
+            UPDATE trip_waypoints
+            SET position = %s
+            WHERE id::text = %s AND trip_id::text = %s
+            """,
+            (_REORDER_STAGING_OFFSET + offset, waypoint_id, trip_id),
+        )
+    for index, waypoint_id in enumerate(ordered_waypoint_ids, start=1):
+        connection.execute(
+            """
+            UPDATE trip_waypoints
+            SET position = %s
+            WHERE id::text = %s AND trip_id::text = %s
+            """,
+            (index, waypoint_id, trip_id),
+        )

@@ -475,6 +475,42 @@ class TestValues:
         assert result["total"] == 1
         assert result["items"][0]["country_slug"] == "uruguay"
 
+    def test_bulk_upsert_rejects_duplicate_country_slug(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_definition_for_author", lambda *_a: _definition()
+        )
+        upsert_calls: list[Any] = []
+        monkeypatch.setattr(
+            repository,
+            "upsert_value",
+            lambda *_a, **_kw: upsert_calls.append(1),
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.bulk_upsert_values(
+                CONNECTION,
+                current_user=AUTHOR,
+                definition_id="d-1",
+                items=[
+                    AuthorMetricValueItem(
+                        country_slug="uruguay",
+                        value=10.0,
+                        is_personal_experience=True,
+                    ),
+                    AuthorMetricValueItem(
+                        country_slug="uruguay",
+                        value=90.0,
+                        is_personal_experience=True,
+                    ),
+                ],
+            )
+        assert exc_info.value.status_code == 422
+        _assert_error(exc_info, "duplicate_country_slug")
+        assert upsert_calls == []
+
 
 class TestForks:
     def test_fork_rejects_unpublished_source(
@@ -483,6 +519,25 @@ class TestForks:
         _enable_features(monkeypatch)
         monkeypatch.setattr(
             repository, "get_definition_by_id", lambda *_a: _definition()
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.fork_definition(
+                CONNECTION,
+                current_user=AUTHOR,
+                source_definition_id="d-1",
+                slug="my-fork",
+            )
+        assert exc_info.value.status_code == 404
+
+    def test_fork_rejects_published_but_private_source(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository,
+            "get_definition_by_id",
+            lambda *_a: _definition(status="published", visibility="private"),
         )
 
         with pytest.raises(HTTPException) as exc_info:

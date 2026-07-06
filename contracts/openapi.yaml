@@ -9534,12 +9534,6 @@ components:
           - rejected
           - archived
           title: Status
-        moderated_by:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Moderated By
       type: object
       required:
       - status
@@ -12123,12 +12117,6 @@ components:
           - rejected
           - archived
           title: Status
-        reviewed_by:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Reviewed By
         resolution_note:
           anyOf:
           - type: string
@@ -19439,12 +19427,6 @@ components:
           - rejected
           - archived
           title: Status
-        reviewed_by:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Reviewed By
       type: object
       required:
       - status

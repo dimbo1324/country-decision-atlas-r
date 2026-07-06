@@ -8,7 +8,7 @@ from app.schemas.trip_planner import (
     TripWaypointUpdateRequest,
 )
 from app.services.trip_planner import helpers
-from psycopg import Connection
+from psycopg import Connection, errors as psycopg_errors
 from typing import Any
 
 
@@ -114,22 +114,30 @@ def update_waypoint(
         country_id = helpers.country_by_slug_or_404(
             connection, payload.country_slug
         )["id"]
-    row = repository.update_waypoint(
-        connection,
-        waypoint_id=waypoint_id,
-        trip_id=trip_id,
-        position=payload.position or current["position"],
-        country_id=country_id,
-        city=payload.city
-        if "city" in payload.model_fields_set
-        else current.get("city"),
-        kind=payload.kind or current["kind"],
-        planned_from=planned_from,
-        planned_to=planned_to,
-        notes=payload.notes
-        if "notes" in payload.model_fields_set
-        else current.get("notes"),
-    )
+    try:
+        row = repository.update_waypoint(
+            connection,
+            waypoint_id=waypoint_id,
+            trip_id=trip_id,
+            position=payload.position or current["position"],
+            country_id=country_id,
+            city=payload.city
+            if "city" in payload.model_fields_set
+            else current.get("city"),
+            kind=payload.kind or current["kind"],
+            planned_from=planned_from,
+            planned_to=planned_to,
+            notes=payload.notes
+            if "notes" in payload.model_fields_set
+            else current.get("notes"),
+        )
+    except psycopg_errors.UniqueViolation as exc:
+        raise api_error(
+            409,
+            "waypoint_position_conflict",
+            "Another waypoint already occupies that position.",
+            {},
+        ) from exc
     if row is None:
         raise api_error(
             404, "waypoint_not_found", "Trip waypoint was not found.", {}
@@ -173,11 +181,7 @@ def reorder_waypoints(
             "Reorder payload must include every waypoint exactly once.",
             {},
         )
-    for index, item_id in enumerate(requested, start=1):
-        repository.set_waypoint_position(
-            connection,
-            waypoint_id=item_id,
-            trip_id=trip_id,
-            position=index,
-        )
+    repository.reorder_waypoints(
+        connection, trip_id=trip_id, ordered_waypoint_ids=requested
+    )
     return list_waypoints(connection, user_id=user_id, trip_id=trip_id)
