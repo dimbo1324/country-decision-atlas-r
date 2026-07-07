@@ -212,6 +212,9 @@ def install_clean_report_fakes(monkeypatch: Any) -> None:
         "list_author_metric_values_out_of_scale",
         "list_published_author_metrics_with_pii",
         "list_author_metrics_with_dangling_fork_lineage",
+        "list_published_proposals_without_curator",
+        "list_published_proposals_with_inactive_country",
+        "list_proposals_with_non_editor_curator",
     ]:
         monkeypatch.setattr(data_quality_repository, name, lambda *_: [])
     monkeypatch.setattr(

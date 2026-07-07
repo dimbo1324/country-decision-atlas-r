@@ -29,6 +29,7 @@ def list_indexable_countries(
         JOIN countries c ON c.id = cc.country_id
         WHERE cc.status = 'published'
           AND c.is_active = TRUE
+          AND c.is_demo = FALSE
         """,
     )
 
@@ -51,6 +52,7 @@ def list_indexable_routes(connection: Connection[Any]) -> list[dict[str, Any]]:
         FROM routes r
         JOIN countries c ON c.id = r.country_id
         WHERE r.status = 'published'
+          AND c.is_demo = FALSE
         """,
     )
 
@@ -75,6 +77,7 @@ def list_indexable_route_checklist_items(
         JOIN countries c ON c.id = r.country_id
         WHERE rci.status = 'published'
           AND r.status = 'published'
+          AND c.is_demo = FALSE
         """,
     )
 
@@ -97,6 +100,7 @@ def list_indexable_legal_signals(
         FROM legal_signals ls
         JOIN countries c ON c.id = ls.country_id
         WHERE ls.status = 'published'
+          AND c.is_demo = FALSE
         """,
     )
 
@@ -114,6 +118,7 @@ def list_indexable_sources(connection: Connection[Any]) -> list[dict[str, Any]]:
         FROM sources s
         LEFT JOIN countries c ON c.id = s.country_id
         WHERE s.status = 'published'
+          AND (c.id IS NULL OR c.is_demo = FALSE)
         """,
     )
 
@@ -133,6 +138,7 @@ def list_indexable_evidence_items(
         FROM evidence_items ei
         LEFT JOIN countries c ON c.id = ei.country_id
         WHERE ei.status = 'published'
+          AND (c.id IS NULL OR c.is_demo = FALSE)
         """,
     )
 
@@ -154,6 +160,8 @@ def list_indexable_country_pairs(
         JOIN countries oc ON oc.id = cpc.origin_country_id
         JOIN countries dc ON dc.id = cpc.destination_country_id
         WHERE cpc.status = 'published'
+          AND oc.is_demo = FALSE
+          AND dc.is_demo = FALSE
         """,
     )
 

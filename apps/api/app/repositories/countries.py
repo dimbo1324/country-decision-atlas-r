@@ -67,7 +67,7 @@ def list_countries(
         connection,
         COUNTRY_SELECT
         + """
-        WHERE c.is_active = TRUE
+        WHERE c.is_active = TRUE AND c.is_demo = FALSE
         ORDER BY c.name
         LIMIT %s OFFSET %s
         """,
@@ -85,7 +85,7 @@ def list_countries(
 def count_countries(connection: Connection[Any]) -> int:
     row = fetch_one(
         connection,
-        "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE",
+        "SELECT COUNT(*) AS total FROM countries WHERE is_active = TRUE AND is_demo = FALSE",
     )
     return int(row["total"]) if row else 0
 
@@ -93,7 +93,7 @@ def count_countries(connection: Connection[Any]) -> int:
 def list_active_country_slugs(connection: Connection[Any]) -> list[str]:
     rows = fetch_all(
         connection,
-        "SELECT slug FROM countries WHERE is_active = TRUE ORDER BY slug",
+        "SELECT slug FROM countries WHERE is_active = TRUE AND is_demo = FALSE ORDER BY slug",
     )
     return [str(row["slug"]) for row in rows]
 
@@ -108,7 +108,7 @@ def get_country(
         connection,
         COUNTRY_SELECT
         + """
-        WHERE c.id::text = %s OR c.slug = %s
+        WHERE (c.id::text = %s OR c.slug = %s) AND c.is_demo = FALSE
         """,
         (
             requested_locale,

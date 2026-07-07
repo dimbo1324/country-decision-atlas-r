@@ -87,7 +87,7 @@ def get_country_drift(
     locale: str | None = Query(None),  # noqa: ARG001
 ) -> CountryDriftResponse:
     country = country_drift_repo.get_country_for_drift(connection, country_slug)
-    if country is None:
+    if country is None or country.get("is_demo"):
         raise api_error(
             404,
             "country_drift_country_not_found",

@@ -181,7 +181,7 @@ def list_decision_countries(
             {resolved_locale_sql} AS resolved_locale,
             {status_sql} AS translation_status
         FROM countries
-        WHERE slug = ANY(%s) AND is_active = TRUE
+        WHERE slug = ANY(%s) AND is_active = TRUE AND is_demo = FALSE
         ORDER BY slug
         """,
         (country_slugs,),

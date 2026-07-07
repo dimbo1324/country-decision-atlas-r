@@ -45,6 +45,8 @@ def get_country_pair_compatibility(
         WHERE oc.slug = %s
           AND dc.slug = %s
           AND cpc.status = 'published'
+          AND oc.is_demo = FALSE
+          AND dc.is_demo = FALSE
         """,
         (origin_slug, destination_slug),
     )
@@ -63,6 +65,8 @@ def list_destination_compatibility(
         JOIN countries dc ON dc.id = cpc.destination_country_id
         WHERE oc.slug = %s
           AND cpc.status = 'published'
+          AND oc.is_demo = FALSE
+          AND dc.is_demo = FALSE
         ORDER BY dc.slug
         """,
         (origin_slug,),

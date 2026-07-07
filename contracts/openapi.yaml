@@ -7858,6 +7858,782 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals:
+    post:
+      tags:
+      - country-contribution
+      summary: Create My Country Proposal
+      operationId: create_my_country_proposal_api_v1_me_country_proposals_post
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryProposalCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - country-contribution
+      summary: List My Country Proposals
+      operationId: list_my_country_proposals_api_v1_me_country_proposals_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}:
+    get:
+      tags:
+      - country-contribution
+      summary: Get My Country Proposal
+      operationId: get_my_country_proposal_api_v1_me_country_proposals__proposal_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - country-contribution
+      summary: Patch My Country Proposal
+      operationId: patch_my_country_proposal_api_v1_me_country_proposals__proposal_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryProposalPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/submit:
+    post:
+      tags:
+      - country-contribution
+      summary: Submit My Country Proposal
+      operationId: submit_my_country_proposal_api_v1_me_country_proposals__proposal_id__submit_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/card/{locale}:
+    put:
+      tags:
+      - country-contribution
+      summary: Upsert My Country Proposal Card
+      operationId: upsert_my_country_proposal_card_api_v1_me_country_proposals__proposal_id__card__locale__put
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: locale
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Locale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryCardUpsert'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/sources:
+    post:
+      tags:
+      - country-contribution
+      summary: Create My Country Proposal Source
+      operationId: create_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorSourceCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/sources/{source_id}:
+    patch:
+      tags:
+      - country-contribution
+      summary: Patch My Country Proposal Source
+      operationId: patch_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources__source_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorSourcePatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/evidence-items:
+    post:
+      tags:
+      - country-contribution
+      summary: Create My Country Proposal Evidence Item
+      operationId: create_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorEvidenceItemCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/evidence-items/{evidence_item_id}:
+    patch:
+      tags:
+      - country-contribution
+      summary: Patch My Country Proposal Evidence Item
+      operationId: patch_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items__evidence_item_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: evidence_item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Evidence Item Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorEvidenceItemPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/legal-signals:
+    post:
+      tags:
+      - country-contribution
+      summary: Create My Country Proposal Legal Signal
+      operationId: create_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorLegalSignalCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/legal-signals/{signal_id}:
+    patch:
+      tags:
+      - country-contribution
+      summary: Patch My Country Proposal Legal Signal
+      operationId: patch_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals__signal_id__patch
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Signal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorLegalSignalPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/timeline-events:
+    post:
+      tags:
+      - country-contribution
+      summary: Create My Country Proposal Timeline Event
+      operationId: create_my_country_proposal_timeline_event_api_v1_me_country_proposals__proposal_id__timeline_events_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContributorTimelineEventCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/country-proposals/{proposal_id}/metric-values:
+    put:
+      tags:
+      - country-contribution
+      summary: Upsert My Country Proposal Metric Values
+      operationId: upsert_my_country_proposal_metric_values_api_v1_me_country_proposals__proposal_id__metric_values_put
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryMetricValuesUpsert'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals:
+    get:
+      tags:
+      - admin-country-contribution
+      summary: List Country Proposals For Curation
+      operationId: list_country_proposals_for_curation_api_v1_admin_country_proposals_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}:
+    get:
+      tags:
+      - admin-country-contribution
+      summary: Get Country Proposal For Curation
+      operationId: get_country_proposal_for_curation_api_v1_admin_country_proposals__proposal_id__get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/assign-curator:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Assign Country Proposal Curator
+      operationId: assign_country_proposal_curator_api_v1_admin_country_proposals__proposal_id__assign_curator_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/readiness-check:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Run Country Proposal Readiness Check
+      operationId: run_country_proposal_readiness_check_api_v1_admin_country_proposals__proposal_id__readiness_check_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Run Country Proposal Readiness Check Api V1 Admin Country
+                  Proposals  Proposal Id  Readiness Check Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/scenario-scores:
+    put:
+      tags:
+      - admin-country-contribution
+      summary: Upsert Country Proposal Scenario Scores
+      operationId: upsert_country_proposal_scenario_scores_api_v1_admin_country_proposals__proposal_id__scenario_scores_put
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScenarioScoresUpsert'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/publish:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Publish Country Proposal
+      operationId: publish_country_proposal_api_v1_admin_country_proposals__proposal_id__publish_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/reject:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Reject Country Proposal
+      operationId: reject_country_proposal_api_v1_admin_country_proposals__proposal_id__reject_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationReasonPayload'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/request-changes:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Request Country Proposal Changes
+      operationId: request_country_proposal_changes_api_v1_admin_country_proposals__proposal_id__request_changes_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationReasonPayload'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/country-proposals/{proposal_id}/archive:
+    post:
+      tags:
+      - admin-country-contribution
+      summary: Archive Country Proposal
+      operationId: archive_country_proposal_api_v1_admin_country_proposals__proposal_id__archive_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
     AIAskRequest:
@@ -20878,6 +21654,733 @@ components:
       type: object
       title: UpdateAuthorMetricRequest
 
+    ContributorEvidenceItemCreate:
+      properties:
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          default: medium
+      type: object
+      title: ContributorEvidenceItemCreate
+    ContributorEvidenceItemPatch:
+      properties:
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        legal_signal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Legal Signal Id
+        claim:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim
+        excerpt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Excerpt
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+      type: object
+      title: ContributorEvidenceItemPatch
+    ContributorLegalSignalCreate:
+      properties:
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        title_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title En
+        title_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Ru
+        summary_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary En
+        summary_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Ru
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        legal_status:
+          $ref: '#/components/schemas/LegalStatus'
+          default: unknown
+        affected_groups:
+          items:
+            type: string
+          type: array
+          title: Affected Groups
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        effective_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Effective Date
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          default: medium
+      type: object
+      title: ContributorLegalSignalCreate
+    ContributorLegalSignalPatch:
+      properties:
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        title_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title En
+        title_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Ru
+        summary_en:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary En
+        summary_ru:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Ru
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        impact_direction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Direction
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        legal_status:
+          anyOf:
+          - $ref: '#/components/schemas/LegalStatus'
+          - type: 'null'
+        affected_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Affected Groups
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        effective_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Effective Date
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+      type: object
+      title: ContributorLegalSignalPatch
+    ContributorSourceCreate:
+      properties:
+        title:
+          type: string
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+          default: en
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          default: medium
+        published_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - title
+      title: ContributorSourceCreate
+    ContributorSourcePatch:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        published_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published At
+        last_checked_at:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Checked At
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      title: ContributorSourcePatch
+    ContributorTimelineEventCreate:
+      properties:
+        legal_signal_id:
+          type: string
+          format: uuid
+          title: Legal Signal Id
+        event_date:
+          type: string
+          format: date
+          title: Event Date
+        event_type:
+          type: string
+          title: Event Type
+        impact_direction:
+          type: string
+          title: Impact Direction
+        impact_level:
+          type: string
+          title: Impact Level
+        title:
+          type: string
+          title: Title
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        source_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Id
+        evidence_item_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Evidence Item Id
+        affected_groups:
+          items:
+            type: string
+          type: array
+          title: Affected Groups
+      type: object
+      required:
+      - legal_signal_id
+      - event_date
+      - event_type
+      - impact_direction
+      - impact_level
+      - title
+      title: ContributorTimelineEventCreate
+    CountryCardUpsert:
+      properties:
+        executive_summary:
+          type: string
+          title: Executive Summary
+        migration_overview:
+          type: string
+          title: Migration Overview
+        tax_overview:
+          type: string
+          title: Tax Overview
+        cost_of_living_overview:
+          type: string
+          title: Cost Of Living Overview
+        business_overview:
+          type: string
+          title: Business Overview
+        safety_overview:
+          type: string
+          title: Safety Overview
+        legal_signals_summary:
+          type: string
+          title: Legal Signals Summary
+        risk_summary:
+          type: string
+          title: Risk Summary
+        source_summary:
+          type: string
+          title: Source Summary
+      type: object
+      required:
+      - executive_summary
+      - migration_overview
+      - tax_overview
+      - cost_of_living_overview
+      - business_overview
+      - safety_overview
+      - legal_signals_summary
+      - risk_summary
+      - source_summary
+      title: CountryCardUpsert
+    CountryMetricValueEntry:
+      properties:
+        metric_slug:
+          type: string
+          title: Metric Slug
+        raw_value:
+          type: number
+          title: Raw Value
+        normalized_value:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Normalized Value
+        data_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Data Year
+        source_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Name
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        reliability:
+          type: string
+          title: Reliability
+          default: medium
+      type: object
+      required:
+      - metric_slug
+      - raw_value
+      - normalized_value
+      title: CountryMetricValueEntry
+    CountryMetricValuesUpsert:
+      properties:
+        values:
+          items:
+            $ref: '#/components/schemas/CountryMetricValueEntry'
+          type: array
+          minItems: 1
+          title: Values
+      type: object
+      required:
+      - values
+      title: CountryMetricValuesUpsert
+    CountryProposal:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        proposer_user_id:
+          type: string
+          format: uuid
+          title: Proposer User Id
+        country_id:
+          type: string
+          format: uuid
+          title: Country Id
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        iso2:
+          type: string
+          title: Iso2
+        iso3:
+          type: string
+          title: Iso3
+        justification:
+          type: string
+          title: Justification
+        status:
+          type: string
+          title: Status
+        curator_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Curator User Id
+        readiness_snapshot:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Readiness Snapshot
+        moderated_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Moderated By
+        moderated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Moderated At
+        moderation_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Moderation Reason
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        country_is_active:
+          type: boolean
+          title: Country Is Active
+        country_is_demo:
+          type: boolean
+          title: Country Is Demo
+      type: object
+      required:
+      - id
+      - proposer_user_id
+      - country_id
+      - slug
+      - name_en
+      - name_ru
+      - iso2
+      - iso3
+      - justification
+      - status
+      - created_at
+      - updated_at
+      - country_is_active
+      - country_is_demo
+      title: CountryProposal
+    CountryProposalCreate:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name_en:
+          type: string
+          title: Name En
+        name_ru:
+          type: string
+          title: Name Ru
+        iso2:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Iso2
+        iso3:
+          type: string
+          maxLength: 3
+          minLength: 3
+          title: Iso3
+        justification:
+          type: string
+          minLength: 20
+          title: Justification
+      type: object
+      required:
+      - slug
+      - name_en
+      - name_ru
+      - iso2
+      - iso3
+      - justification
+      title: CountryProposalCreate
+    CountryProposalListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CountryProposal'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: CountryProposalListResponse
+    CountryProposalPatch:
+      properties:
+        justification:
+          type: string
+          minLength: 20
+          title: Justification
+      type: object
+      required:
+      - justification
+      title: CountryProposalPatch
+    CountryProposalResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/CountryProposal'
+      type: object
+      required:
+      - item
+      title: CountryProposalResponse
+    GenericItemResponse:
+      properties:
+        item:
+          additionalProperties: true
+          type: object
+          title: Item
+      type: object
+      required:
+      - item
+      title: GenericItemResponse
+    GenericListResponse:
+      properties:
+        items:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: GenericListResponse
+    ModerationReasonPayload:
+      properties:
+        reason:
+          type: string
+          minLength: 5
+          title: Reason
+      type: object
+      required:
+      - reason
+      title: ModerationReasonPayload
+    ScenarioBreakdownEntry:
+      properties:
+        criterion:
+          type: string
+          title: Criterion
+        score:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Score
+        weight:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Weight
+        explanation_en:
+          type: string
+          title: Explanation En
+        explanation_ru:
+          type: string
+          title: Explanation Ru
+        source_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          minItems: 1
+          title: Source Ids
+        confidence:
+          type: string
+          title: Confidence
+          default: medium
+      type: object
+      required:
+      - criterion
+      - score
+      - weight
+      - explanation_en
+      - explanation_ru
+      - source_ids
+      title: ScenarioBreakdownEntry
+    ScenarioScoresUpsert:
+      properties:
+        scenario_slug:
+          type: string
+          title: Scenario Slug
+        breakdowns:
+          items:
+            $ref: '#/components/schemas/ScenarioBreakdownEntry'
+          type: array
+          maxItems: 7
+          minItems: 7
+          title: Breakdowns
+      type: object
+      required:
+      - scenario_slug
+      - breakdowns
+      title: ScenarioScoresUpsert
   securitySchemes:
     BearerAuth:
       type: http

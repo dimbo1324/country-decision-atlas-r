@@ -92,6 +92,17 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("author-reputation", "recompute-reputation"),
         directory=ROOT_DIR / "scripts",
     ),
+    ScriptInfo(
+        key="7",
+        filename="restore_demo_countries.py",
+        title="restore-demo-countries",
+        description=(
+            "Idempotently restores the conserved demo country dataset (russia, "
+            "uruguay, argentina) from database/fixtures/demo_countries/ JSON "
+            "fixtures. Accepts --dry-run."
+        ),
+        aliases=("restore-demo", "demo-countries"),
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

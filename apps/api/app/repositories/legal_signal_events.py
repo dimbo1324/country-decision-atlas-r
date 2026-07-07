@@ -12,7 +12,7 @@ def _filters(
     year_from: int | None,
     year_to: int | None,
 ) -> tuple[str, tuple[Any, ...]]:
-    filters = ["ls.status = 'published'"]
+    filters = ["ls.status = 'published'", "c.is_demo = FALSE"]
     params: list[Any] = []
     for value, expression in [
         (country_slug, "c.slug = %s"),
@@ -147,7 +147,7 @@ def count_timeline_events(
 def list_timeline_years(
     connection: Connection[Any], country_slug: str | None = None
 ) -> list[int]:
-    where_sql = "WHERE ls.status = 'published'"
+    where_sql = "WHERE ls.status = 'published' AND c.is_demo = FALSE"
     params: tuple[Any, ...] = ()
     if country_slug:
         where_sql += " AND c.slug = %s"
@@ -171,7 +171,7 @@ def country_exists(connection: Connection[Any], country_slug: str) -> bool:
     return (
         fetch_one(
             connection,
-            "SELECT 1 AS found FROM countries WHERE slug = %s AND is_active = TRUE",
+            "SELECT 1 AS found FROM countries WHERE slug = %s AND is_active = TRUE AND is_demo = FALSE",
             (country_slug,),
         )
         is not None

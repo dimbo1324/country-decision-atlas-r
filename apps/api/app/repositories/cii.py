@@ -25,6 +25,7 @@ def get_country_cii(
         FROM country_cii_scores ccs
         JOIN countries c ON c.id = ccs.country_id
         WHERE c.slug = %s
+          AND c.is_demo = FALSE
           AND ccs.version = %s
           AND ccs.scenario_slug = %s
         """,
@@ -55,7 +56,7 @@ def get_cii_for_countries(
             ON ccs.country_id = c.id
            AND ccs.version = %s
            AND ccs.scenario_slug = %s
-        WHERE c.slug = ANY(%s)
+        WHERE c.slug = ANY(%s) AND c.is_demo = FALSE
         ORDER BY c.slug
         """,
         (version, scenario_slug, country_slugs),
@@ -99,6 +100,7 @@ def get_cii_metric_values_for_countries(
         JOIN countries c ON c.id = cmv.country_id
         JOIN cii_metric_definitions m ON m.id = cmv.metric_id
         WHERE c.slug = ANY(%s)
+          AND c.is_demo = FALSE
           AND m.is_active = TRUE
         ORDER BY c.slug, m.display_order
         """,
@@ -151,7 +153,7 @@ def list_matrix_countries(
             AND t_name.entity_id = c.id
             AND t_name.field_name = 'name'
             AND t_name.locale_id = l.id
-        WHERE c.slug = ANY(%s)
+        WHERE c.slug = ANY(%s) AND c.is_demo = FALSE
         ORDER BY c.slug
         """,
         (locale, country_slugs),

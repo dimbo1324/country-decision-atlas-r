@@ -3212,6 +3212,365 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/country-proposals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Country Proposals */
+        get: operations["list_my_country_proposals_api_v1_me_country_proposals_get"];
+        put?: never;
+        /** Create My Country Proposal */
+        post: operations["create_my_country_proposal_api_v1_me_country_proposals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Country Proposal */
+        get: operations["get_my_country_proposal_api_v1_me_country_proposals__proposal_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch My Country Proposal */
+        patch: operations["patch_my_country_proposal_api_v1_me_country_proposals__proposal_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit My Country Proposal */
+        post: operations["submit_my_country_proposal_api_v1_me_country_proposals__proposal_id__submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/card/{locale}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Upsert My Country Proposal Card */
+        put: operations["upsert_my_country_proposal_card_api_v1_me_country_proposals__proposal_id__card__locale__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create My Country Proposal Source */
+        post: operations["create_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/sources/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch My Country Proposal Source */
+        patch: operations["patch_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources__source_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/evidence-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create My Country Proposal Evidence Item */
+        post: operations["create_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/evidence-items/{evidence_item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch My Country Proposal Evidence Item */
+        patch: operations["patch_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items__evidence_item_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/legal-signals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create My Country Proposal Legal Signal */
+        post: operations["create_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/legal-signals/{signal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch My Country Proposal Legal Signal */
+        patch: operations["patch_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals__signal_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/timeline-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create My Country Proposal Timeline Event */
+        post: operations["create_my_country_proposal_timeline_event_api_v1_me_country_proposals__proposal_id__timeline_events_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/country-proposals/{proposal_id}/metric-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Upsert My Country Proposal Metric Values */
+        put: operations["upsert_my_country_proposal_metric_values_api_v1_me_country_proposals__proposal_id__metric_values_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Country Proposals For Curation */
+        get: operations["list_country_proposals_for_curation_api_v1_admin_country_proposals_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Country Proposal For Curation */
+        get: operations["get_country_proposal_for_curation_api_v1_admin_country_proposals__proposal_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/assign-curator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Assign Country Proposal Curator */
+        post: operations["assign_country_proposal_curator_api_v1_admin_country_proposals__proposal_id__assign_curator_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/readiness-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Country Proposal Readiness Check */
+        post: operations["run_country_proposal_readiness_check_api_v1_admin_country_proposals__proposal_id__readiness_check_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/scenario-scores": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Upsert Country Proposal Scenario Scores */
+        put: operations["upsert_country_proposal_scenario_scores_api_v1_admin_country_proposals__proposal_id__scenario_scores_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Country Proposal */
+        post: operations["publish_country_proposal_api_v1_admin_country_proposals__proposal_id__publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Country Proposal */
+        post: operations["reject_country_proposal_api_v1_admin_country_proposals__proposal_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/request-changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request Country Proposal Changes */
+        post: operations["request_country_proposal_changes_api_v1_admin_country_proposals__proposal_id__request_changes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/country-proposals/{proposal_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive Country Proposal */
+        post: operations["archive_country_proposal_api_v1_admin_country_proposals__proposal_id__archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9848,6 +10207,361 @@ export interface components {
             license?: string | null;
             /** Visibility */
             visibility?: string | null;
+        };
+        /** ContributorEvidenceItemCreate */
+        ContributorEvidenceItemCreate: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Url */
+            url?: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+        };
+        /** ContributorEvidenceItemPatch */
+        ContributorEvidenceItemPatch: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Legal Signal Id */
+            legal_signal_id?: string | null;
+            /** Claim */
+            claim?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Url */
+            url?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+        };
+        /** ContributorLegalSignalCreate */
+        ContributorLegalSignalCreate: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Title En */
+            title_en?: string | null;
+            /** Title Ru */
+            title_ru?: string | null;
+            /** Summary En */
+            summary_en?: string | null;
+            /** Summary Ru */
+            summary_ru?: string | null;
+            /** Signal Type */
+            signal_type?: string | null;
+            /** Impact Direction */
+            impact_direction?: string | null;
+            /** Impact Level */
+            impact_level?: string | null;
+            /** @default unknown */
+            legal_status: components["schemas"]["LegalStatus"];
+            /** Affected Groups */
+            affected_groups?: string[];
+            /** Published Date */
+            published_date?: string | null;
+            /** Effective Date */
+            effective_date?: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+        };
+        /** ContributorLegalSignalPatch */
+        ContributorLegalSignalPatch: {
+            /** Source Id */
+            source_id?: string | null;
+            /** Title En */
+            title_en?: string | null;
+            /** Title Ru */
+            title_ru?: string | null;
+            /** Summary En */
+            summary_en?: string | null;
+            /** Summary Ru */
+            summary_ru?: string | null;
+            /** Signal Type */
+            signal_type?: string | null;
+            /** Impact Direction */
+            impact_direction?: string | null;
+            /** Impact Level */
+            impact_level?: string | null;
+            legal_status?: components["schemas"]["LegalStatus"] | null;
+            /** Affected Groups */
+            affected_groups?: string[] | null;
+            /** Published Date */
+            published_date?: string | null;
+            /** Effective Date */
+            effective_date?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+        };
+        /** ContributorSourceCreate */
+        ContributorSourceCreate: {
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /**
+             * Language
+             * @default en
+             */
+            language: string | null;
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** ContributorSourcePatch */
+        ContributorSourcePatch: {
+            /** Title */
+            title?: string | null;
+            /** Url */
+            url?: string | null;
+            /** Source Type */
+            source_type?: string | null;
+            /** Publisher */
+            publisher?: string | null;
+            /** Language */
+            language?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Published At */
+            published_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** ContributorTimelineEventCreate */
+        ContributorTimelineEventCreate: {
+            /**
+             * Legal Signal Id
+             * Format: uuid
+             */
+            legal_signal_id: string;
+            /**
+             * Event Date
+             * Format: date
+             */
+            event_date: string;
+            /** Event Type */
+            event_type: string;
+            /** Impact Direction */
+            impact_direction: string;
+            /** Impact Level */
+            impact_level: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary?: string | null;
+            /** Source Id */
+            source_id?: string | null;
+            /** Evidence Item Id */
+            evidence_item_id?: string | null;
+            /** Affected Groups */
+            affected_groups?: string[];
+        };
+        /** CountryCardUpsert */
+        CountryCardUpsert: {
+            /** Executive Summary */
+            executive_summary: string;
+            /** Migration Overview */
+            migration_overview: string;
+            /** Tax Overview */
+            tax_overview: string;
+            /** Cost Of Living Overview */
+            cost_of_living_overview: string;
+            /** Business Overview */
+            business_overview: string;
+            /** Safety Overview */
+            safety_overview: string;
+            /** Legal Signals Summary */
+            legal_signals_summary: string;
+            /** Risk Summary */
+            risk_summary: string;
+            /** Source Summary */
+            source_summary: string;
+        };
+        /** CountryMetricValueEntry */
+        CountryMetricValueEntry: {
+            /** Metric Slug */
+            metric_slug: string;
+            /** Raw Value */
+            raw_value: number;
+            /** Normalized Value */
+            normalized_value: number;
+            /** Data Year */
+            data_year?: number | null;
+            /** Source Name */
+            source_name?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Reliability
+             * @default medium
+             */
+            reliability: string;
+        };
+        /** CountryMetricValuesUpsert */
+        CountryMetricValuesUpsert: {
+            /** Values */
+            values: components["schemas"]["CountryMetricValueEntry"][];
+        };
+        /** CountryProposal */
+        CountryProposal: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Proposer User Id
+             * Format: uuid
+             */
+            proposer_user_id: string;
+            /**
+             * Country Id
+             * Format: uuid
+             */
+            country_id: string;
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Iso2 */
+            iso2: string;
+            /** Iso3 */
+            iso3: string;
+            /** Justification */
+            justification: string;
+            /** Status */
+            status: string;
+            /** Curator User Id */
+            curator_user_id?: string | null;
+            /** Readiness Snapshot */
+            readiness_snapshot?: {
+                [key: string]: unknown;
+            } | null;
+            /** Moderated By */
+            moderated_by?: string | null;
+            /** Moderated At */
+            moderated_at?: string | null;
+            /** Moderation Reason */
+            moderation_reason?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Published At */
+            published_at?: string | null;
+            /** Country Is Active */
+            country_is_active: boolean;
+            /** Country Is Demo */
+            country_is_demo: boolean;
+        };
+        /** CountryProposalCreate */
+        CountryProposalCreate: {
+            /** Slug */
+            slug: string;
+            /** Name En */
+            name_en: string;
+            /** Name Ru */
+            name_ru: string;
+            /** Iso2 */
+            iso2: string;
+            /** Iso3 */
+            iso3: string;
+            /** Justification */
+            justification: string;
+        };
+        /** CountryProposalListResponse */
+        CountryProposalListResponse: {
+            /** Items */
+            items: components["schemas"]["CountryProposal"][];
+            /** Total */
+            total: number;
+        };
+        /** CountryProposalPatch */
+        CountryProposalPatch: {
+            /** Justification */
+            justification: string;
+        };
+        /** CountryProposalResponse */
+        CountryProposalResponse: {
+            item: components["schemas"]["CountryProposal"];
+        };
+        /** GenericItemResponse */
+        GenericItemResponse: {
+            /** Item */
+            item: {
+                [key: string]: unknown;
+            };
+        };
+        /** GenericListResponse */
+        GenericListResponse: {
+            /** Items */
+            items: {
+                [key: string]: unknown;
+            }[];
+            /** Total */
+            total: number;
+        };
+        /** ModerationReasonPayload */
+        ModerationReasonPayload: {
+            /** Reason */
+            reason: string;
+        };
+        /** ScenarioBreakdownEntry */
+        ScenarioBreakdownEntry: {
+            /** Criterion */
+            criterion: string;
+            /** Score */
+            score: number;
+            /** Weight */
+            weight: number;
+            /** Explanation En */
+            explanation_en: string;
+            /** Explanation Ru */
+            explanation_ru: string;
+            /** Source Ids */
+            source_ids: string[];
+            /**
+             * Confidence
+             * @default medium
+             */
+            confidence: string;
+        };
+        /** ScenarioScoresUpsert */
+        ScenarioScoresUpsert: {
+            /** Scenario Slug */
+            scenario_slug: string;
+            /** Breakdowns */
+            breakdowns: components["schemas"]["ScenarioBreakdownEntry"][];
         };
     };
     responses: never;
@@ -17254,6 +17968,782 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ModerateAuthorMetricResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_country_proposals_api_v1_me_country_proposals_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_country_proposal_api_v1_me_country_proposals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryProposalCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_country_proposal_api_v1_me_country_proposals__proposal_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_my_country_proposal_api_v1_me_country_proposals__proposal_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryProposalPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_my_country_proposal_api_v1_me_country_proposals__proposal_id__submit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upsert_my_country_proposal_card_api_v1_me_country_proposals__proposal_id__card__locale__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+                locale: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryCardUpsert"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorSourceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_my_country_proposal_source_api_v1_me_country_proposals__proposal_id__sources__source_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorSourcePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorEvidenceItemCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_my_country_proposal_evidence_item_api_v1_me_country_proposals__proposal_id__evidence_items__evidence_item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+                evidence_item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorEvidenceItemPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorLegalSignalCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_my_country_proposal_legal_signal_api_v1_me_country_proposals__proposal_id__legal_signals__signal_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+                signal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorLegalSignalPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_my_country_proposal_timeline_event_api_v1_me_country_proposals__proposal_id__timeline_events_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributorTimelineEventCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upsert_my_country_proposal_metric_values_api_v1_me_country_proposals__proposal_id__metric_values_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CountryMetricValuesUpsert"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_country_proposals_for_curation_api_v1_admin_country_proposals_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_country_proposal_for_curation_api_v1_admin_country_proposals__proposal_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assign_country_proposal_curator_api_v1_admin_country_proposals__proposal_id__assign_curator_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_country_proposal_readiness_check_api_v1_admin_country_proposals__proposal_id__readiness_check_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upsert_country_proposal_scenario_scores_api_v1_admin_country_proposals__proposal_id__scenario_scores_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScenarioScoresUpsert"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenericItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_country_proposal_api_v1_admin_country_proposals__proposal_id__publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_country_proposal_api_v1_admin_country_proposals__proposal_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationReasonPayload"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    request_country_proposal_changes_api_v1_admin_country_proposals__proposal_id__request_changes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationReasonPayload"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_country_proposal_api_v1_admin_country_proposals__proposal_id__archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CountryProposalResponse"];
                 };
             };
             /** @description Validation Error */

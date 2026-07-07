@@ -87,7 +87,7 @@ def list_country_platform_metrics(
             "Self-computed intelligence feature is disabled.",
         )
     country = pm_repo.get_country_by_slug(connection, country_slug)
-    if country is None:
+    if country is None or country.get("is_demo"):
         raise api_error(
             404,
             "country_not_found",
@@ -139,7 +139,7 @@ def get_country_platform_metric(
             "Self-computed intelligence feature is disabled.",
         )
     country = pm_repo.get_country_by_slug(connection, country_slug)
-    if country is None:
+    if country is None or country.get("is_demo"):
         raise api_error(
             404,
             "country_not_found",

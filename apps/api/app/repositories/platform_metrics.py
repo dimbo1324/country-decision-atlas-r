@@ -41,7 +41,8 @@ def get_country_by_slug(
             slug,
             name,
             iso2,
-            iso3
+            iso3,
+            is_demo
         FROM countries
         WHERE slug = %s
           AND is_active = TRUE

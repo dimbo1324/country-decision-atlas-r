@@ -164,6 +164,7 @@ def get_country_trust_score(
         JOIN countries c ON c.id = cts.country_id
         WHERE c.slug = %s
           AND c.is_active = TRUE
+          AND c.is_demo = FALSE
         """,
         (country_slug,),
     )
@@ -201,6 +202,7 @@ def list_country_trust_scores(
             JOIN countries c ON c.id = cts.country_id
             WHERE c.slug = ANY(%s)
               AND c.is_active = TRUE
+              AND c.is_demo = FALSE
             ORDER BY c.slug
             """,
             (country_slugs,),
@@ -231,7 +233,7 @@ def list_country_trust_scores(
             cts.input_summary
         FROM country_trust_scores cts
         JOIN countries c ON c.id = cts.country_id
-        WHERE c.is_active = TRUE
+        WHERE c.is_active = TRUE AND c.is_demo = FALSE
         ORDER BY c.slug
         """,
     )

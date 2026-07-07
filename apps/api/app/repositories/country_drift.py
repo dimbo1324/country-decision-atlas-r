@@ -63,7 +63,8 @@ def get_country_for_drift(
         SELECT
             id::text AS id,
             slug,
-            name
+            name,
+            is_demo
         FROM countries
         WHERE slug = %s
           AND is_active = TRUE

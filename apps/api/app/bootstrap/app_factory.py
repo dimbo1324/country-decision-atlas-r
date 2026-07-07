@@ -6,6 +6,7 @@ from app.api.v1 import (
     admin_author_metrics,
     admin_capabilities,
     admin_community,
+    admin_country_contribution,
     admin_migration_board,
     admin_moderation,
     admin_translation_jobs,
@@ -16,6 +17,7 @@ from app.api.v1 import (
     author_metrics,
     community,
     countries,
+    country_contribution,
     country_drift,
     country_pairs,
     data_journal,
@@ -267,6 +269,8 @@ def _register_api_routes(app: FastAPI) -> None:
     app.include_router(trip_planner.shared_router, prefix="/api/v1")
     app.include_router(author_metrics.router, prefix="/api/v1")
     app.include_router(admin_author_metrics.router, prefix="/api/v1")
+    app.include_router(country_contribution.router, prefix="/api/v1")
+    app.include_router(admin_country_contribution.router, prefix="/api/v1")
     app.include_router(home.router, prefix="/api/v1")
 
 

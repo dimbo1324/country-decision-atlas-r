@@ -90,6 +90,11 @@ from app.repositories.data_quality.content import (
     list_timeline_events_without_traceability as list_timeline_events_without_traceability,
     list_unplanned_future_timeline_events as list_unplanned_future_timeline_events,
 )
+from app.repositories.data_quality.country_contribution import (
+    list_proposals_with_non_editor_curator as list_proposals_with_non_editor_curator,
+    list_published_proposals_with_inactive_country as list_published_proposals_with_inactive_country,
+    list_published_proposals_without_curator as list_published_proposals_without_curator,
+)
 from app.repositories.data_quality.country_drift import (
     list_active_countries_missing_drift_snapshots as list_active_countries_missing_drift_snapshots,
     list_drift_changed_events_missing_payload_fields as list_drift_changed_events_missing_payload_fields,
