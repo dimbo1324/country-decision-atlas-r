@@ -1,142 +1,224 @@
-# Чек-лист задачи: аудит и исправление эпизодов 1–4
+# Чек-лист задачи: Эпизод 5 — `feat/country-contribution-v1` (контрибуция стран)
 
-Цель: аудит `feat/flexible-methodology-v1`, `feat/trip-planner-v1`,
-`feat/rights-capabilities-v1`, `feat/author-metrics-v1` силами 4 параллельных
-`country-atlas-quality-reviewer` агентов; исправление найденных багов и
-уязвимостей высокой критичности в отдельной ветке.
+Цель: открыть контент-ядро сообществу — пайплайн предложения и наполнения
+стран под кураторством редактора, решить судьбу тестовых стран (RU/UY/AR).
+Полная реализация по плану (`docs/_arch_/02_План/01_План_реализации.md`,
+раздел «Эпизод 5»), миграция 050.
 
-## 0. Аудит
+## 0. Развилки, решённые владельцем перед стартом
 
 ```text
-[+] 4 параллельных агента-ревьюера запущены (по одному на эпизод)
-[+] Отчёты собраны и приоритизированы (critical/high/medium/low)
-[+] Сводка представлена владельцу
+[+] Сценарные скоринги страны (country_scores/country_score_breakdowns —
+    5 сценариев × 7 критериев, объяснения+источники) сегодня не имеют вообще
+    никакого API записи (только ручные SQL-миграции RU/UY/Argentina).
+    Решение владельца: заполняет ТОЛЬКО куратор-редактор через новый
+    editor-gated эндпоинт — не контрибутор.
+[+] Значения CII-метрик страны (country_metric_values, 6 показателей) —
+    тоже нет CRUD сегодня, но объём на порядок меньше. Решение владельца:
+    заполняет контрибутор (часть наполнения по плану).
 ```
 
-## 1. Найденные проблемы (сводка)
+## 1. Архитектурные решения (зафиксированы здесь, не в коде — код без комментариев)
 
 ```text
-Эпизод 1 (methodology):
-[+] HIGH — DQ-проверка обязательных параметров не покрывает все ключи из
-    REQUIRED_NUMERIC_KEYS (board.auto_hide_report_threshold, оба параметра
-    author_metrics) — отчёт качества остаётся зелёным при сломанном конфиге
-[+] MEDIUM — нет кросс-проверки strength_min_score > weakness_max_score
-[-] LOW — потокобезопасность in-process кеша конфигурации — не трогаем
-    (assignment атомарен в CPython, риск чисто теоретический)
-[-] LOW — clear_methodology_config_cache не вызывается нигде в проде —
-    не трогаем (нет admin-эндпоинта записи параметров, дремлющий риск)
-
-Эпизод 2 (trip planner):
-[+] HIGH — reorder_waypoints ломается почти на любой непоследовательной
-    перестановке (UNIQUE(trip_id, position) не DEFERRABLE, построчная запись)
-[+] MEDIUM — та же экспозиция на одиночном PATCH position для waypoint/
-    checklist item
-
-Эпизод 3 (rights/capabilities):
-[+] HIGH — moderated_by/reviewed_by в admin_community.py берутся из тела
-    запроса клиента, а не из current_user.id — подделываемый audit-трейл
-[-] HIGH — assert_no_moderation_conflict не применяется в модерации
-    сообщества — ОЦЕНЕНО, НЕ ПРИМЕНИМО в текущем виде: контент сообщества
-    авторизуется анонимными/telegram-идентичностями (created_by_identity_type/
-    _id), не platform user_id; сравнивать current_user.id не с чем без
-    более крупного редизайна (привязка реального user_id к контенту
-    сообщества) — вне рамок этого фикс-прохода, зафиксировано как открытый
-    вопрос для будущего эпизода
-[-] MEDIUM — CONTRIBUTOR_COUNTRIES объявлена, но нигде не используется —
-    НЕ БАГ: заготовка под Эпизод 5 (feat/country-contribution-v1), не трогаем
-[-] LOW — re-grant после revoke теряет историю строки в user_capabilities
-    (audit_events сохраняет действия отдельно) — не трогаем, решение владельца
-
-Эпизод 4 (author metrics):
-[+] HIGH — bulk_upsert_values позволяет дублирующийся country_slug в одном
-    запросе — тихая перезапись последним значением без ошибки
-[+] MEDIUM — двухпроходная валидация не resolve'ит country_slug в первом
-    проходе — validate-then-write работает только благодаря транзакции,
-    не по конструкции
-[-] LOW — формула coverage_score (плоское усреднение) — продуктовый вопрос,
-    не баг, не трогаем
-[-] LOW — author_metrics_enabled включён по умолчанию — соответствует
-    паттерну ВСЕХ существующих флагов в проекте, не отклонение, не трогаем
-[-] LOW — миграция 049 не проверялась на чистой БД (Docker недоступен) —
-    уже задокументировано в предыдущем отчёте, вне рамок этого фикса
+[ ] countries.is_active переиспользуется как единственный переключатель
+    видимости черновика-предложения (draft/review страна создаётся с
+    is_active=FALSE — это автоматически скрывает её везде, где уже
+    сегодня фильтруется `is_active = TRUE`, без правок в ~20 файлах).
+    ВАЖНО: evaluate_country_onboarding() возвращает mvp_ready=False для
+    is_active=FALSE — поэтому на публикации is_active флипается в TRUE
+    ДО финального прогона гейта (гейт должен видеть страну как активную).
+[ ] countries.is_demo — НОВЫЙ отдельный флаг, TRUE только у russia/uruguay/
+    argentina. НЕ переиспользует is_active (демо-страны обязаны оставаться
+    is_active=TRUE, иначе они провалят onboarding-гейт как «первые пациенты»
+    пайплайна — прямое требование плана). Скрытие демо со всех публичных
+    поверхностей реализуется явным добавлением `AND is_demo = FALSE` в
+    публичные read-репозитории (список ниже, п.8) — точечно, не через
+    is_active.
+[ ] Контрибуторские правки (card/sources/evidence/legal-signals/timeline
+    events/CII-значения) идут через НОВЫЕ выделенные `/me/country-
+    proposals/{id}/...` эндпоинты нового пакета `country_contribution`,
+    переиспользующие существующие сервисные функции admin_content.py
+    (create_source/patch_source/create_evidence_item/patch_evidence_item/
+    create_legal_signal/patch_legal_signal) через обёртку с проверкой
+    владения (proposer_user_id == current_user AND статус='draft') и
+    принудительным status='draft' на входе (контрибутор никогда не может
+    сам выставить published/review — это ломало бы кураторский гейт).
+    НЕ трогаем /admin/sources и т.п. — существующее поведение редактора
+    не меняется.
+[ ] country_cards (карточка) и country_metric_values (CII) не имеют вообще
+    никакого API записи сегодня — новые repository/service функции
+    добавляются в country_contribution (card) и admin_content.py
+    (create_country_profile, естественное соседство с patch_country_profile,
+    но НЕ подключается в admin.py — только через новый эндпоинт контрибуции,
+    чтобы не расширять публичный контракт /admin без необходимости).
+[ ] Публикация страны — жёсткий гейт на уровне сервиса (инвариант 25):
+    curator_user_id IS NOT NULL И свежий evaluate_country_onboarding(...)
+    .mvp_ready is True, иначе 409/422. Не полагаемся только на readiness_
+    snapshot (может быть устаревшим) — на publish гейт прогоняется заново.
+[ ] Фича-флаг country_contribution_enabled: default_enabled=TRUE, по
+    прецеденту ВСЕХ существующих флагов проекта (флаг ≠ право; реальный
+    доступ контролирует invite-only грант contributor.countries).
+[ ] Никаких новых methodology_parameters — валидация полей (justification
+    непустая и т.п.) — обычные Pydantic/CHECK-ограничения, не тюнингуемые
+    пороги (не тот случай, что author_metrics).
 ```
 
-## 2. Исправления
+## 2. Миграция 050
 
 ```text
-[+] Эп.1: repositories/data_quality/methodology_config.py — добавлены
-    недостающие ключи (board.auto_hide_report_threshold, оба author_metrics)
-    в REQUIRED_NUMERIC_PARAMETER_SQL; guard-тест на set-равенство с
-    REQUIRED_NUMERIC_KEYS вместо полной генерации (см. §3)
-[+] Эп.1: methodology_config.py — _validate_thresholds проверяет
-    weakness_max_score < strength_min_score; аналогичная проверка добавлена
-    в DQ-запрос list_invalid_methodology_threshold_order
-[+] Эп.2: repositories/trip_planner/waypoints.py — reorder_waypoints делает
-    двухфазную запись (staging-смещение +10_000_000, затем финальные позиции)
-    без падения UNIQUE(trip_id, position); set_waypoint_position удалена как
-    мёртвый код после рефакторинга
-[+] Эп.2: services/trip_planner/waypoints.py — update_waypoint ловит
-    UniqueViolation на одиночном PATCH position -> 409 (checklist items не
-    имеют UNIQUE-констрейнта на позицию, фикс не применим)
-[+] Эп.3: api/v1/admin_community.py — moderated_by/reviewed_by выводятся из
-    current_user.id на всех 4 эндпоинтах, убраны из тел запросов
-    (CommunityStatusUpdateRequest, DataErrorReportStatusUpdateRequest,
-    UserStoryRatingStatusUpdateRequest)
-[+] Эп.4: services/author_metrics/values.py — bulk_upsert_values отклоняет
-    дублирующийся country_slug (422 duplicate_country_slug) до любых записей;
-    resolve country_slug перенесён в первый проход (validate-then-write по
-    конструкции)
+[ ] ALTER TABLE countries ADD COLUMN is_demo BOOLEAN NOT NULL DEFAULT FALSE
+[ ] CREATE TABLE country_proposals (id, proposer_user_id, country_id UNIQUE,
+    slug UNIQUE, name_en, name_ru, iso2, iso3, justification, status
+    (стандартный CHECK draft/review/published/archived/rejected),
+    curator_user_id, readiness_snapshot JSONB, moderated_by, moderated_at,
+    moderation_reason, created_at/updated_at/published_at) + индексы
+    (status, proposer, curator) + updated_at trigger
+[ ] UPDATE countries SET is_demo = TRUE WHERE slug IN
+    ('russia','uruguay','argentina') — БЕЗ удаления/деактивации
+[ ] feature_flags + feature_access_rules: country_contribution_enabled
+[ ] sqlfluff-чисто, идемпотентно (IF NOT EXISTS/ON CONFLICT)
 ```
 
-## 3. Тесты
+## 3. Репозитории (`repositories/country_contribution/`)
 
 ```text
-[+] Регрессионный тест на дублирующийся country_slug в bulk-upsert (422)
-[+] Тест на реордер waypoints через staging-offset + тест на 409 при
-    одиночном конфликте позиции
-[+] Тест: moderated_by/reviewed_by в вызове репозитория — id
-    аутентифицированного модератора, а не то, что прислал клиент (все 4
-    эндпоинта: questions/answers/data-error-reports/user-story-ratings)
-[+] Тест: set-равенство между REQUIRED_NUMERIC_PARAMETER_SQL и
-    REQUIRED_NUMERIC_KEYS (предотвращает будущий дрейф списков)
-[+] Тест: weakness_max_score >= strength_min_score -> MethodologyConfigError
-    + DQ-тест на детект инверсии
-[+] Тест: fork отклоняет опубликованное, но приватное определение
-[+] Все существующие тесты по затронутым доменам зелёные
+[ ] proposals.py — CRUD country_proposals, создание countries-строки
+    (is_active=FALSE, is_demo=FALSE) + translations(ru) в одной транзакции,
+    флип is_active при публикации
+[ ] content.py — create_country_card (country_cards), create/list
+    legal_signal_events (timeline), upsert country_metric_values (CII)
+[ ] scores.py — upsert country_scores + country_score_breakdowns
+    (curator only)
+[ ] __init__.py re-export
 ```
 
-## 4. Contracts
+## 4. Сервисы (`services/country_contribution/`)
 
 ```text
-[+] CommunityStatusUpdateRequest/DataErrorReportStatusUpdateRequest/
-    UserStoryRatingStatusUpdateRequest — moderated_by/reviewed_by убраны из
-    contracts/openapi.yaml вручную (сверено побайтово с app.openapi()),
-    pnpm contracts:generate выполнен, types.ts обновлён
+[ ] helpers.py — FEATURE_KEY, ensure_feature_enabled, get_owner_proposal_
+    or_404, get_proposal_or_404, _require_draft_editable, response shaping
+    (_mine/_admin/_public), _audit
+[ ] proposals.py — create/patch/list/get (contributor), submit_for_review
+[ ] content.py — контрибуторские card/sources/evidence/legal-signals/
+    timeline-events/CII-values (ownership-gated обёртки над admin_content +
+    новыми repo-функциями)
+[ ] curation.py — list/get для куратора, assign_curator (self-assign,
+    editor+), run_readiness_check (evaluate_country_onboarding), publish
+    (жёсткий гейт), reject, request_changes
+[ ] scores.py — curator-only upsert сценарного скоринга (7 критериев,
+    вес суммируется в 1, score_label через существующий services/
+    score_labels.py, overall confidence = минимум из breakdown-конфиденсов)
+[ ] __init__.py re-export
 ```
 
-## 5. Полный quality gate
+## 5. API
 
 ```text
-[+] python -m pytest — весь набор зелёный
-[+] python -m mypy apps packages scripts tests — 503 файла, чисто
-[+] python -m ruff check . / ruff format --check . — чисто
-[+] python -m sqlfluff lint database --dialect postgres — чисто
-[+] pnpm contracts:generate (без незакоммиченного дифа)
-[+] pnpm quality — чисто
-[+] python dev_tools_scripts_runner.py (полный гейт) — 77 OK / 3 WARN
-    (кэш-директории) / 0 FAIL / 1 SKIP (protoc regen, ожидаемо). Docker в
-    этот раз был доступен — прогнана полная цепочка миграций на чистой БД
-    (включая идемпотентный повторный прогон), runtime-смоуки, включая
-    admin-community/community эндпоинты, которые правились в этой задаче,
-    и Playwright E2E. Это закрывает ранее задокументированный пробел
-    Эпизода 4 («миграция 049 не проверялась на чистой БД»).
+[ ] api/v1/country_contribution.py — /me/country-proposals (CRUD,
+    submit) + /me/country-proposals/{id}/card|sources|evidence-items|
+    legal-signals|timeline-events|metric-values, require_capability
+    (CONTRIBUTOR_COUNTRIES)
+[ ] api/v1/admin_country_contribution.py — /admin/country-proposals
+    (list/get, require_editor), assign-curator, readiness-check,
+    scenario-scores, publish, reject, request-changes
+[ ] Атрибуция контрибутора на публичной странице страны («данные при
+    участии …») — минимальное поле в существующем country read-model
 ```
 
-## 6. Closeout
+## 6. Data quality
 
 ```text
-[+] Чек-лист заполнен +/- перед финальным коммитом
-[+] Финальный отчёт написан
-[ ] Merge --ff-only в main выполнен (после подтверждения владельца)
-[ ] Push в origin/main выполнен (после подтверждения владельца)
+[ ] services/data_quality/country_contribution_checks.py +
+    repositories/data_quality/country_contribution.py:
+    - published-предложение без curator_user_id (critical, инвариант 25)
+    - published-предложение, чья countries.is_active = FALSE (critical,
+      рассинхрон)
+    - curator_user_id указывает на пользователя не editor/admin/owner (high)
+[ ] Подключение в services/data_quality/report.py (_append_*_checks)
+```
+
+## 7. Демо-набор и публичные поверхности
+
+```text
+[ ] Аудит всех публичных read-путей на `FROM countries` (countries.py/
+    country_read_model.py, decision_engine.py, search, home.py,
+    country_pairs.py, cii.py, country_drift.py, platform_metrics.py,
+    trust.py, legal_signal_events.py) — добавить `AND is_demo = FALSE`
+    туда, где сегодня уже фильтруется is_active = TRUE для публичного
+    ответа; admin/DQ/onboarding-пути не трогать (должны видеть всё)
+[ ] Тест-инвариант: ни один публичный эндпоинт не возвращает demo-страну
+```
+
+## 8. Фикстуры и restore-инструмент
+
+```text
+[ ] scripts/dev_tools/export_demo_countries.py — дамп is_demo=TRUE стран +
+    связанных таблиц (country_cards, country_profiles, sources,
+    evidence_items, legal_signals, legal_signal_events, country_metric_
+    values, country_cii_scores, country_scores+breakdowns, routes+
+    children+checklist_items, country_pair_compatibility) в
+    database/fixtures/demo_countries/*.json
+[ ] scripts/dev_tools/restore_demo_countries.py — идемпотентное
+    восстановление (upsert по natural key), --dry-run, сводка
+[ ] Регистрация restore-скрипта в dev_tools_scripts_runner.py (ScriptInfo)
+[ ] Прогон экспорта против реальной БД (Docker) для генерации фикстур
+```
+
+## 9. Контракты
+
+```text
+[ ] contracts/openapi.yaml — новые схемы/эндпоинты
+[ ] pnpm contracts:generate — commit обновлённого types.ts
+```
+
+## 10. Тесты (~50-70 с учётом расширенного объёма)
+
+```text
+[ ] Миграция: схема применяется, идемпотентна
+[ ] Contributor: создание proposal (countries+translations+proposal
+    транзакционно), scoping (нельзя писать в чужую/демо страну), lock
+    после submit, PII/статус-инъекция невозможна (payload.status
+    игнорируется)
+[ ] Curator: self-assign, readiness-check зелёный/красный, publish без
+    curator_user_id -> 409, publish с красным гейтом -> 422, publish
+    флипает is_active, reject/request_changes
+[ ] Scenario scores: 7 критериев, вес=1 валидация, score_label,
+    confidence=min
+[ ] DQ: 3 новые проверки (позитив/негатив)
+[ ] Demo conservation: is_demo=TRUE на RU/UY/AR не удаляет данные;
+    invisibility-тест по каждой публичной поверхности из §7
+[ ] restore_demo_countries.py: идемпотентность, восстановленный набор
+    проходит onboarding-гейт
+[ ] Acceptance E2E: proposal -> наполнение (card/sources/evidence/signals/
+    timeline/CII) -> curator scenario scores -> readiness-check ->
+    publish -> появляется в /countries, /decision/run, /search
+[ ] Rights-инвариант: deny-by-default на каждом новом роутере
+```
+
+## 11. Документация
+
+```text
+[ ] Статус-строка под Эпизодом 5 в 01_План_реализации.md
+[ ] 02_Текущее_состояние_системы.md — карта доменов, инвентаризация п.6
+```
+
+## 12. Quality gate
+
+```text
+[ ] python -m pytest
+[ ] python -m ruff check / format --check
+[ ] python -m mypy apps packages scripts tests
+[ ] python -m sqlfluff lint database --dialect postgres
+[ ] pnpm contracts:generate (без диффа) / pnpm quality
+[ ] python dev_tools_scripts_runner.py (полный гейт)
+```
+
+## 13. Завершение
+
+```text
+[ ] Чек-лист заполнен +/-
+[ ] Финальный отчёт
+[ ] Merge --ff-only в main и push — ТОЛЬКО после явного подтверждения
+    владельца
 ```
