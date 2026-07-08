@@ -15,6 +15,7 @@ if str(ROOT_DIR) not in sys.path:
 import psycopg  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from scripts.dev_tools._demo_countries_fixture_spec import (  # noqa: E402
+    DEMO_SLUGS,
     EXTERNAL_LOOKUPS,
     FIXTURES_DIR,
     TABLE_SPECS,
@@ -148,12 +149,40 @@ def _upsert_table(
     return len(rows)
 
 
+def _ensure_demo_countries_visible(
+    connection: psycopg.Connection[dict[str, Any]], *, dry_run: bool
+) -> dict[str, int]:
+    """Flip is_demo off for a database that already has the demo content.
+
+    Migrations 002 onward seed russia/uruguay/argentina's full dependent
+    content (profiles, cards, sources, scores, routes, ...) directly via
+    same-migration subqueries against countries.slug, so on any freshly
+    migrated database that content already exists and is internally
+    consistent. Re-inserting it from the exported JSON fixtures would be
+    redundant and, worse, collide with those already-seeded rows on their
+    natural-key constraints (e.g. country_profiles.country_id UNIQUE,
+    country_scores UNIQUE (country_id, scenario_id)) since those rows keep
+    whatever surrogate id the fresh migration run assigned them, not the
+    id captured in the fixture. Visibility only needs the flag flipped.
+    """
+    if dry_run:
+        return {"countries": len(DEMO_SLUGS)}
+    cursor = connection.execute(
+        "UPDATE countries SET is_demo = FALSE, is_active = TRUE WHERE slug = ANY(%s)",
+        (list(DEMO_SLUGS),),
+    )
+    return {"countries": cursor.rowcount}
+
+
 def restore_demo_countries(
     connection: psycopg.Connection[dict[str, Any]],
     *,
     dry_run: bool,
     visible: bool = False,
 ) -> dict[str, int]:
+    if visible:
+        return _ensure_demo_countries_visible(connection, dry_run=dry_run)
+
     countries_spec = next(
         spec for spec in TABLE_SPECS if spec.name == "countries"
     )
@@ -164,8 +193,6 @@ def restore_demo_countries(
     for spec in TABLE_SPECS:
         rows = country_rows if spec is countries_spec else _load_rows(spec)
         rows = [_remap_row(row, remap) for row in rows]
-        if visible and spec.name == "countries":
-            rows = [{**row, "is_demo": False} for row in rows]
         counts[spec.name] = _upsert_table(
             connection, spec, rows, dry_run=dry_run
         )
@@ -185,12 +212,13 @@ def main() -> int:
         action="store_true",
         default=False,
         help=(
-            "Restore countries with is_demo=FALSE instead of TRUE. For "
-            "CI/dev/full-gate provisioning of a fresh database, where the "
-            "demo dataset needs to be publicly visible so smoke checks and "
-            "E2E have content to assert against. Omit this flag for normal "
-            "restores, which keep the demo set hidden per the Episode 5 "
-            "decision (is_demo=TRUE)."
+            "For CI/dev/full-gate provisioning of a fresh database: just "
+            "flip is_demo=FALSE and is_active=TRUE for russia/uruguay/"
+            "argentina (their dependent content is already seeded by "
+            "migrations 002+; re-inserting it from fixtures would collide "
+            "with those rows' own ids). Omit this flag for the full "
+            "fixture-based disaster-recovery restore, which keeps the "
+            "demo set hidden per the Episode 5 decision (is_demo=TRUE)."
         ),
     )
     args = parser.parse_args()

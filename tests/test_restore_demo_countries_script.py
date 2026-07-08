@@ -7,8 +7,11 @@ from typing import Any
 
 
 class _FakeCursor:
-    def __init__(self, rows: list[dict[str, Any]] | None = None) -> None:
+    def __init__(
+        self, rows: list[dict[str, Any]] | None = None, rowcount: int = 0
+    ) -> None:
         self._rows = rows or []
+        self.rowcount = rowcount
 
     def fetchall(self) -> list[dict[str, Any]]:
         return self._rows
@@ -19,15 +22,19 @@ class _FakeConnection:
         self,
         column_type_rows: list[dict[str, Any]],
         lookup_rows_by_table: dict[str, list[dict[str, Any]]] | None = None,
+        update_rowcount: int = 0,
     ) -> None:
         self.column_type_rows = column_type_rows
         self.lookup_rows_by_table = lookup_rows_by_table or {}
+        self.update_rowcount = update_rowcount
         self.executed: list[tuple[str, Any]] = []
 
     def execute(self, query: str, params: Any = ()) -> _FakeCursor:
         self.executed.append((query, params))
         if "information_schema.columns" in query:
             return _FakeCursor(self.column_type_rows)
+        if query.strip().startswith("UPDATE countries"):
+            return _FakeCursor(rowcount=self.update_rowcount)
         match = re.search(r"FROM (\w+) WHERE", query)
         if match:
             return _FakeCursor(
@@ -92,41 +99,38 @@ def test_upsert_table_empty_rows_is_a_noop() -> None:
     assert conn.executed == []
 
 
-def test_restore_demo_countries_visible_overrides_is_demo_to_false(
-    monkeypatch: Any,
-) -> None:
-    captured_rows: dict[str, list[dict[str, Any]]] = {}
+def test_restore_demo_countries_visible_flips_is_demo_and_is_active_via_update() -> (
+    None
+):
+    conn = _FakeConnection(_column_type_rows(), update_rowcount=3)
 
-    def fake_load_rows(spec: TableSpec) -> list[dict[str, Any]]:
-        if spec.name == "countries":
-            return [{"id": "c1", "slug": "russia", "is_demo": True}]
-        return []
-
-    def fake_upsert_table(
-        _connection: Any,
-        spec: TableSpec,
-        rows: list[dict[str, Any]],
-        **_kwargs: Any,
-    ) -> int:
-        captured_rows[spec.name] = rows
-        return len(rows)
-
-    monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
-    monkeypatch.setattr(restore_script, "_load_json_fixture", lambda _name: [])
-    monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
-
-    restore_script.restore_demo_countries(
-        _FakeConnection(_column_type_rows()),  # type: ignore[arg-type]
+    result = restore_script.restore_demo_countries(
+        conn,  # type: ignore[arg-type]
         dry_run=False,
         visible=True,
     )
 
-    assert captured_rows["countries"] == [
-        {"id": "c1", "slug": "russia", "is_demo": False}
-    ]
+    update_calls = [q for q, _ in conn.executed if "UPDATE countries" in q]
+    assert len(update_calls) == 1
+    assert "is_demo = FALSE" in update_calls[0]
+    assert "is_active = TRUE" in update_calls[0]
+    assert result == {"countries": 3}
 
 
-def test_restore_demo_countries_default_keeps_is_demo_true(
+def test_restore_demo_countries_visible_dry_run_does_not_touch_db() -> None:
+    conn = _FakeConnection(_column_type_rows())
+
+    result = restore_script.restore_demo_countries(
+        conn,  # type: ignore[arg-type]
+        dry_run=True,
+        visible=True,
+    )
+
+    assert conn.executed == []
+    assert result == {"countries": 3}
+
+
+def test_restore_demo_countries_default_uses_fixture_upsert_not_update(
     monkeypatch: Any,
 ) -> None:
     captured_rows: dict[str, list[dict[str, Any]]] = {}
@@ -148,15 +152,17 @@ def test_restore_demo_countries_default_keeps_is_demo_true(
     monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
     monkeypatch.setattr(restore_script, "_load_json_fixture", lambda _name: [])
     monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
+    conn = _FakeConnection(_column_type_rows())
 
     restore_script.restore_demo_countries(
-        _FakeConnection(_column_type_rows()),  # type: ignore[arg-type]
+        conn,  # type: ignore[arg-type]
         dry_run=False,
     )
 
     assert captured_rows["countries"] == [
         {"id": "c1", "slug": "russia", "is_demo": True}
     ]
+    assert all("UPDATE countries" not in q for q, _ in conn.executed)
 
 
 def test_join_table_without_extra_columns_does_nothing_on_conflict() -> None:
