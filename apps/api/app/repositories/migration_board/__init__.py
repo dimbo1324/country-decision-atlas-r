@@ -46,3 +46,14 @@ from app.repositories.migration_board.reports import (
     list_reports_for_moderation as list_reports_for_moderation,
     update_report_status as update_report_status,
 )
+from app.repositories.migration_board.threads import (
+    close_thread as close_thread,
+    count_messages_created_since as count_messages_created_since,
+    create_message as create_message,
+    create_thread_for_contact_request as create_thread_for_contact_request,
+    freeze_threads_between_users as freeze_threads_between_users,
+    get_thread_by_id as get_thread_by_id,
+    get_thread_for_contact_request as get_thread_for_contact_request,
+    list_messages as list_messages,
+    list_my_threads as list_my_threads,
+)

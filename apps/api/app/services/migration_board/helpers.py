@@ -17,6 +17,7 @@ MATCHING_FEATURE_KEY = "companion_matching_enabled"
 CONTACT_FEATURE_KEY = "contact_requests_enabled"
 PUBLIC_LISTING_FEATURE_KEY = "migration_board_public_listing_enabled"
 MODERATION_FEATURE_KEY = "migration_board_moderation_enabled"
+THREADS_FEATURE_KEY = "community_threads_enabled"
 ALLOWED_TAGS = {
     "pets",
     "children",
@@ -106,6 +107,12 @@ def auto_hide_report_threshold(connection: Connection[Any]) -> int:
     return get_active_methodology_config(
         connection
     ).board.auto_hide_report_threshold
+
+
+def max_thread_messages_per_day(connection: Connection[Any]) -> int:
+    return get_active_methodology_config(
+        connection
+    ).board.max_thread_messages_per_day
 
 
 def _reject_public_pii(title: str, summary: str) -> None:
@@ -253,6 +260,39 @@ def _report(row: dict[str, Any]) -> dict[str, Any]:
         "created_at": row["created_at"],
         "reviewed_at": row.get("reviewed_at"),
         "resolution_note": row.get("resolution_note"),
+    }
+
+
+def _thread(row: dict[str, Any], current_user_id: str) -> dict[str, Any]:
+    is_requester = row["from_user_id"] == current_user_id
+    counterpart_display_name = (
+        row.get(
+            "to_user_display_name" if is_requester else "from_user_display_name"
+        )
+        or "Member"
+    )
+    return {
+        "id": row["id"],
+        "contact_request_id": row["contact_request_id"],
+        "post_id": row["post_id"],
+        "post_title": row["post_title"],
+        "counterpart_display_name": counterpart_display_name,
+        "status": row["status"],
+        "closed_by_user_id": row.get("closed_by_user_id"),
+        "closed_at": row.get("closed_at"),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def _thread_message(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "thread_id": row["thread_id"],
+        "sender_user_id": row["sender_user_id"],
+        "sender_display_name": row.get("sender_display_name") or "Member",
+        "body": row["body"],
+        "created_at": row["created_at"],
     }
 
 

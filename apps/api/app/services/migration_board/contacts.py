@@ -108,7 +108,7 @@ def accept_contact_request(
     request_id: str,
     response_note: str | None,
 ) -> dict[str, Any]:
-    return _change_contact_request(
+    request = _change_contact_request(
         connection,
         current_user=current_user,
         request_id=request_id,
@@ -117,6 +117,8 @@ def accept_contact_request(
         expected_user_field="to_user_id",
         action="accepted",
     )
+    repository.create_thread_for_contact_request(connection, request["id"])
+    return request
 
 
 def decline_contact_request(
@@ -170,6 +172,9 @@ def block_user(
         blocker_user_id=current_user.id,
         blocked_user_id=blocked_user_id,
         reason=reason,
+    )
+    repository.freeze_threads_between_users(
+        connection, user_a_id=current_user.id, user_b_id=blocked_user_id
     )
     helpers._audit(
         connection,

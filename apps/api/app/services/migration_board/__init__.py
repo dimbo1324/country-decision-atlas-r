@@ -25,6 +25,7 @@ from app.services.migration_board.helpers import (
     MODERATION_FEATURE_KEY as MODERATION_FEATURE_KEY,
     PII_PATTERNS as PII_PATTERNS,
     PUBLIC_LISTING_FEATURE_KEY as PUBLIC_LISTING_FEATURE_KEY,
+    THREADS_FEATURE_KEY as THREADS_FEATURE_KEY,
     _public_post as _public_post,
     _reject_public_pii as _reject_public_pii,
     _require_submit_ready as _require_submit_ready,
@@ -65,4 +66,11 @@ from app.services.migration_board.reporting import (
     report_contact_request as report_contact_request,
     report_post as report_post,
     resolve_report as resolve_report,
+)
+from app.services.migration_board.threads import (
+    close_thread as close_thread,
+    get_thread_messages_for_moderation as get_thread_messages_for_moderation,
+    list_my_threads as list_my_threads,
+    list_thread_messages as list_thread_messages,
+    send_thread_message as send_thread_message,
 )
