@@ -142,13 +142,22 @@
 ## 7. Тесты (~20-30 по плану)
 
 ```text
-[ ] test_community_threads_mig.py
-[ ] test_community_threads_service.py (автосоздание, ownership, лимит,
-    close, freeze-on-block, moderator access + audit на каждый вызов)
-[ ] test_community_threads_api.py (RBAC, polling, 403/404/409)
+[+] test_community_threads_mig.py (5 тестов: таблицы, lifecycle-констрейнты,
+    polling-индекс, сид параметра методологии, сид feature flag)
+[+] test_community_threads_service.py (19 тестов: counterpart-имя,
+    ownership на чтении/отправке/закрытии, thread_not_open, empty body,
+    дневной лимит, close→409 если уже не open, moderator report-гейт +
+    conflict-of-interest + audit на КАЖДЫЙ вызов, автосоздание треда в
+    accept_contact_request, freeze_threads_between_users в block_user)
+[+] test_community_threads_api.py (10 тестов: 401 без auth, polling
+    after/limit прокидываются, 404/409/422 из сервиса корректно всплывают,
+    RBAC на admin-эндпоинте — 403 без capability, 422 без report_id)
 [+] test_community_threads_dq.py (4 теста: регистрация обеих проверок +
     открытый тред без активного контакта + сообщение после закрытия +
     сообщение после блокировки; полный набор DQ-тестов зелёный, 24 passed)
+
+Итого 38 новых тестов; полный `pytest tests/` зелёный за вычетом уже
+известного (не связанного с этой секцией) контрактного разрыва — см. §9.
 ```
 
 ## 8. Документация
