@@ -13,6 +13,7 @@ ModerationStatus = str
 ContactRequestStatus = str
 ReportReason = str
 ReportStatus = str
+ThreadStatus = str
 
 
 class MigrationBoardAuthorSafe(BaseModel):
@@ -274,3 +275,45 @@ class BlockedUserResponse(BaseModel):
 class BlockedUserListResponse(BaseModel):
     items: list[BlockedUserResponse]
     total: int
+
+
+class ThreadResponse(BaseModel):
+    id: str
+    contact_request_id: str
+    post_id: str
+    post_title: str
+    counterpart_display_name: str
+    status: ThreadStatus
+    closed_by_user_id: str | None = None
+    closed_at: datetime | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ThreadListResponse(BaseModel):
+    items: list[ThreadResponse]
+    total: int
+
+
+class ThreadMessageResponse(BaseModel):
+    id: str
+    thread_id: str
+    sender_user_id: str
+    sender_display_name: str
+    body: str
+    created_at: datetime
+
+
+class ThreadMessageListResponse(BaseModel):
+    items: list[ThreadMessageResponse]
+    total: int
+
+
+class SendThreadMessageRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    body: str = Field(min_length=1, max_length=4000)
+
+
+class CloseThreadResponse(BaseModel):
+    thread: ThreadResponse

@@ -9,6 +9,7 @@ from app.schemas.migration_board import (
     ModerateMigrationBoardPostResponse,
     ReviewMigrationBoardReportRequest,
     ReviewMigrationBoardReportResponse,
+    ThreadMessageListResponse,
 )
 from app.services import migration_board as service
 from app.services.capabilities import MODERATOR_BOARD
@@ -162,3 +163,23 @@ def dismiss_migration_board_report(
     )
     connection.commit()
     return {"report": report}
+
+
+@router.get(
+    "/threads/{thread_id}/messages",
+    response_model=ThreadMessageListResponse,
+)
+def get_migration_board_thread_messages_for_admin(
+    thread_id: str,
+    report_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[
+        CurrentUser, Depends(require_capability(MODERATOR_BOARD))
+    ],
+) -> dict[str, Any]:
+    return service.get_thread_messages_for_moderation(
+        connection,
+        current_user=current_user,
+        thread_id=thread_id,
+        report_id=report_id,
+    )

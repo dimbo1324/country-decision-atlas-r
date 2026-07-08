@@ -6,6 +6,7 @@ from app.schemas.migration_board import (
     BlockedUserListResponse,
     BlockedUserResponse,
     BlockUserRequest,
+    CloseThreadResponse,
     CompanionMatchesResponse,
     ContactRequestActionRequest,
     ContactRequestActionResponse,
@@ -19,10 +20,15 @@ from app.schemas.migration_board import (
     MigrationBoardReportResponse,
     MyMigrationBoardPost,
     MyMigrationBoardPostListResponse,
+    SendThreadMessageRequest,
     SubmitMigrationBoardPostResponse,
+    ThreadListResponse,
+    ThreadMessageListResponse,
+    ThreadMessageResponse,
     UpdateMigrationBoardPostRequest,
 )
 from app.services import auth as auth_service, migration_board as service
+from datetime import datetime
 from fastapi import APIRouter, Depends, Query, Security, status
 from fastapi.security import HTTPAuthorizationCredentials
 from psycopg import Connection
@@ -414,3 +420,68 @@ def list_board_blocks(
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     return service.list_blocked_users(connection, current_user)
+
+
+@router.get("/me/threads", response_model=ThreadListResponse)
+def list_my_threads(
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[CurrentUser, Depends(require_user)],
+) -> dict[str, Any]:
+    return service.list_my_threads(connection, current_user)
+
+
+@router.get(
+    "/me/threads/{thread_id}/messages",
+    response_model=ThreadMessageListResponse,
+)
+def list_thread_messages(
+    thread_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[CurrentUser, Depends(require_user)],
+    after: datetime | None = None,
+    limit: int = Query(50, ge=1, le=200),
+) -> dict[str, Any]:
+    return service.list_thread_messages(
+        connection,
+        current_user=current_user,
+        thread_id=thread_id,
+        after=after,
+        limit=limit,
+    )
+
+
+@router.post(
+    "/me/threads/{thread_id}/messages",
+    response_model=ThreadMessageResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def send_thread_message(
+    thread_id: str,
+    payload: SendThreadMessageRequest,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[CurrentUser, Depends(require_user)],
+) -> dict[str, Any]:
+    message = service.send_thread_message(
+        connection,
+        current_user=current_user,
+        thread_id=thread_id,
+        body=payload.body,
+    )
+    connection.commit()
+    return message
+
+
+@router.post(
+    "/me/threads/{thread_id}/close",
+    response_model=CloseThreadResponse,
+)
+def close_thread(
+    thread_id: str,
+    connection: Annotated[Connection[Any], Depends(get_connection)],
+    current_user: Annotated[CurrentUser, Depends(require_user)],
+) -> dict[str, Any]:
+    thread = service.close_thread(
+        connection, current_user=current_user, thread_id=thread_id
+    )
+    connection.commit()
+    return {"thread": thread}
