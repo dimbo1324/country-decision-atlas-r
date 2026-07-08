@@ -1,6 +1,6 @@
 [
   {
-    "id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "slug": "russia",
     "iso2": "RU",
     "iso3": "RUS",
@@ -11,12 +11,12 @@
     "capital": "Moscow",
     "currency_code": "RUB",
     "is_active": true,
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "is_demo": true
   },
   {
-    "id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "slug": "uruguay",
     "iso2": "UY",
     "iso3": "URY",
@@ -27,12 +27,12 @@
     "capital": "Montevideo",
     "currency_code": "UYU",
     "is_active": true,
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "is_demo": true
   },
   {
-    "id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "slug": "argentina",
     "iso2": "AR",
     "iso3": "ARG",
@@ -43,8 +43,8 @@
     "capital": "Buenos Aires",
     "currency_code": "ARS",
     "is_active": true,
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "is_demo": true
   }
 ]

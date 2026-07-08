@@ -1,0 +1,42 @@
+[
+  {
+    "id": "d2f45029-75cc-4cd6-872e-e9ed81afbe10",
+    "slug": "residence"
+  },
+  {
+    "id": "82b17d46-1f59-44c9-9ead-93a09c7f40b9",
+    "slug": "citizenship"
+  },
+  {
+    "id": "cf7f66b6-5ca8-46a5-a110-23c522bd5b07",
+    "slug": "digital-nomad"
+  },
+  {
+    "id": "d5516610-6f21-4b6e-a5ec-cca571fa6881",
+    "slug": "business"
+  },
+  {
+    "id": "ae468077-e686-42db-8ec6-3fe358e5caef",
+    "slug": "family-relocation"
+  },
+  {
+    "id": "35631fe0-ef05-4d55-832a-dd25b1d59b45",
+    "slug": "relocation_residence"
+  },
+  {
+    "id": "64c30f40-9be8-451b-9dc3-e087e91d1f1f",
+    "slug": "permanent_residence_citizenship"
+  },
+  {
+    "id": "48f6d7ff-5555-4009-862d-419be1f3fe15",
+    "slug": "low_budget_living"
+  },
+  {
+    "id": "71de5535-78a9-4f95-a3a3-599bf680a7ba",
+    "slug": "business_self_employment"
+  },
+  {
+    "id": "93e12acb-2f66-4d67-ab18-952ddefdbec1",
+    "slug": "safety_political_risk"
+  }
+]

@@ -1,7 +1,7 @@
 [
   {
-    "id": "a29b63d3-6f78-4e24-a615-b2644e4763c2",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "f827beb1-c2b3-4622-80ce-4bbde9deecde",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "locale": "ru",
     "executive_summary": "Россия остается вариантом с высокой процедурной нагрузкой для релокации и долгосрочного статуса. Самые сильные публичные источники относятся к налогам, ЦБ, визам и правовым актам, но профиль указывает на необходимость проверки процедур, банковских вопросов и политического риска.",
     "migration_overview": "Вопросы краткого въезда и проживания нужно разделять. Портал МИД по электронной визе помогает с въездным контекстом, а источники по статусу иностранцев и госуслугам задают рамку проживания и соблюдения статуса.",
@@ -13,12 +13,12 @@
     "risk_summary": "Основные риски связаны со сложностью процедур, неопределенностью финансовой доступности и повышенным внешним governance-рискoм. Нельзя воспринимать скоринг как юридическую консультацию.",
     "source_summary": "База источников теперь сочетает официальные российские налоговые, банковские, сервисные и правовые материалы с данными World Bank, Freedom House и WJP. Этого достаточно для скрининга, но перед действием нужна экспертная проверка.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "18f30d58-6a5b-45de-ba82-4683d83ff5f8",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "ca1cf1a4-1186-4d1e-8d4b-b971628e9cdf",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "locale": "en",
     "executive_summary": "Russia remains a high-friction option for relocation and long-term status. The strongest public sources are official tax, central-bank, visa and legal references, but the source-backed profile points to heavy procedure review, banking checks and elevated political-risk screening.",
     "migration_overview": "Short entry and residence questions should be separated. The MFA e-visa portal helps with entry context, while foreign-citizen and public-service sources frame residence and status compliance.",
@@ -30,12 +30,12 @@
     "risk_summary": "Primary risks are legal-process complexity, financial-operability uncertainty and elevated external governance risk. Users should avoid treating any single score as legal advice.",
     "source_summary": "Source base now combines official Russian tax, central-bank, public-services and legal references with World Bank, Freedom House and WJP datasets. It is suitable for screening, with expert review still required before action.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "db452b86-8063-44ef-8439-a407a9fda8aa",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "ebec3f89-c70f-4c76-bb33-5761f9b8c4a0",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "locale": "ru",
     "executive_summary": "Уругвай выглядит более сильным вариантом для резиденции, долгосрочного планирования и релокации с учетом рисков. Профиль поддержан официальными процедурами резиденции, миграционным законом, налоговыми источниками, материалами ЦБ и внешними наборами данных.",
     "migration_overview": "Проверку резиденции можно начинать с официальных страниц временной и постоянной резиденции, затем сверять с миграционным законом и материалами миграционного органа.",
@@ -47,12 +47,12 @@
     "risk_summary": "Главные риски: обычные задержки процедур, индивидуальный налоговый режим и необходимость отличать архивные бизнес-данные от текущих требований подачи.",
     "source_summary": "База источников теперь сочетает официальные материалы правительства, IMPO, DGI, центрального банка, World Bank, Freedom House и WJP. Она сильна для первичного скрининга, но перед подачей нужна официальная или профессиональная проверка.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "56dea36b-2450-4f90-94a9-da933e07961e",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "955a4aec-2b35-41ea-8832-0a395fbcfc00",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "locale": "en",
     "executive_summary": "Uruguay is a comparatively stronger source-backed option for residence, long-term planning and risk-sensitive relocation. The profile is supported by official residence procedures, migration law, tax authority materials, central-bank sources and external datasets.",
     "migration_overview": "Residence screening can start from official temporary and permanent residence procedure pages, then be checked against the migration law and migration authority materials.",
@@ -64,12 +64,12 @@
     "risk_summary": "Primary risks are ordinary process delays, case-specific tax treatment and the need to distinguish archived business data from current filing requirements.",
     "source_summary": "Source base now combines official government, IMPO, DGI, central-bank, World Bank, Freedom House and WJP sources. It is strong for initial screening and still requires official or professional confirmation before filing.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "cdfb51ce-7861-4d72-8b7c-3477e4e170ac",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "ca49d7c8-e098-464b-9351-6b82d66aa0d8",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "locale": "en",
     "executive_summary": "Argentina is included as an onboarding country for initial residence and lifestyle screening. This card is a baseline data entry and does not constitute legal advice.",
     "migration_overview": "Residence planning for Argentina requires verification of current immigration procedures through the Dirección Nacional de Migraciones (DNM). Temporary and permanent residence pathways exist but documentation requirements vary by applicant profile.",
@@ -81,12 +81,12 @@
     "risk_summary": "Primary risks for Argentina include regulatory volatility, currency instability, inflation, and procedural complexity in immigration and tax administration.",
     "source_summary": "Argentina is supported by 10 published sources covering immigration, taxation, banking, business registration, statistical data, and political risk assessment.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "3db8a907-905d-4dc1-a6bc-f07dcb5691a0",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "41a6fdc8-8459-4037-a823-7270554482a0",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "locale": "ru",
     "executive_summary": "Аргентина включена как страна в процессе онбординга для начального скрининга по проживанию и образу жизни. Эта карточка является базовой записью и не является юридической консультацией.",
     "migration_overview": "Планирование проживания в Аргентине требует проверки актуальных иммиграционных процедур через Национальное управление по миграции (DNM). Существуют пути временного и постоянного проживания, однако требования к документам зависят от профиля заявителя.",
@@ -98,7 +98,7 @@
     "risk_summary": "Основные риски для Аргентины включают волатильность регулирования, нестабильность валюты, инфляцию и процессуальную сложность в иммиграционном и налоговом администрировании.",
     "source_summary": "Аргентина поддерживается 10 опубликованными источниками, охватывающими иммиграцию, налогообложение, банкинг, регистрацию бизнеса, статистические данные и оценку политических рисков.",
     "status": "published",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   }
 ]

@@ -1,5 +1,6 @@
 """scripts/dev_tools/restore_demo_countries.py: generic idempotent upsert builder."""
 
+import re
 from scripts.dev_tools import restore_demo_countries as restore_script
 from scripts.dev_tools._demo_countries_fixture_spec import TableSpec
 from typing import Any
@@ -14,14 +15,24 @@ class _FakeCursor:
 
 
 class _FakeConnection:
-    def __init__(self, column_type_rows: list[dict[str, Any]]) -> None:
+    def __init__(
+        self,
+        column_type_rows: list[dict[str, Any]],
+        lookup_rows_by_table: dict[str, list[dict[str, Any]]] | None = None,
+    ) -> None:
         self.column_type_rows = column_type_rows
+        self.lookup_rows_by_table = lookup_rows_by_table or {}
         self.executed: list[tuple[str, Any]] = []
 
     def execute(self, query: str, params: Any = ()) -> _FakeCursor:
         self.executed.append((query, params))
         if "information_schema.columns" in query:
             return _FakeCursor(self.column_type_rows)
+        match = re.search(r"FROM (\w+) WHERE", query)
+        if match:
+            return _FakeCursor(
+                self.lookup_rows_by_table.get(match.group(1), [])
+            )
         return _FakeCursor()
 
 
@@ -101,6 +112,7 @@ def test_restore_demo_countries_visible_overrides_is_demo_to_false(
         return len(rows)
 
     monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
+    monkeypatch.setattr(restore_script, "_load_json_fixture", lambda _name: [])
     monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
 
     restore_script.restore_demo_countries(
@@ -134,6 +146,7 @@ def test_restore_demo_countries_default_keeps_is_demo_true(
         return len(rows)
 
     monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
+    monkeypatch.setattr(restore_script, "_load_json_fixture", lambda _name: [])
     monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
 
     restore_script.restore_demo_countries(
@@ -164,3 +177,167 @@ def test_join_table_without_extra_columns_does_nothing_on_conflict() -> None:
 
     insert_calls = [q for q, _ in conn.executed if "INSERT INTO" in q]
     assert "DO NOTHING" in insert_calls[0]
+
+
+def test_lookup_id_remap_maps_stale_fixture_id_to_existing_db_id() -> None:
+    conn = _FakeConnection(
+        _column_type_rows(),
+        lookup_rows_by_table={
+            "countries": [{"slug": "russia", "id": "existing-id"}]
+        },
+    )
+    fixture_rows = [{"id": "stale-fixture-id", "slug": "russia"}]
+
+    remap = restore_script._lookup_id_remap(
+        conn,  # type: ignore[arg-type]
+        "countries",
+        "slug",
+        fixture_rows,
+    )
+
+    assert remap == {"stale-fixture-id": "existing-id"}
+
+
+def test_lookup_id_remap_empty_when_fixture_id_matches_existing() -> None:
+    conn = _FakeConnection(
+        _column_type_rows(),
+        lookup_rows_by_table={"locales": [{"code": "ru", "id": "same-id"}]},
+    )
+    fixture_rows = [{"id": "same-id", "code": "ru"}]
+
+    remap = restore_script._lookup_id_remap(
+        conn,  # type: ignore[arg-type]
+        "locales",
+        "code",
+        fixture_rows,
+    )
+
+    assert remap == {}
+
+
+def test_lookup_id_remap_empty_when_no_existing_row() -> None:
+    conn = _FakeConnection(_column_type_rows())
+    fixture_rows = [{"id": "fixture-id", "slug": "residence"}]
+
+    remap = restore_script._lookup_id_remap(
+        conn,  # type: ignore[arg-type]
+        "scenarios",
+        "slug",
+        fixture_rows,
+    )
+
+    assert remap == {}
+
+
+def test_lookup_id_remap_empty_when_no_fixture_rows() -> None:
+    conn = _FakeConnection(_column_type_rows())
+
+    remap = restore_script._lookup_id_remap(conn, "countries", "slug", [])  # type: ignore[arg-type]
+
+    assert remap == {}
+    assert conn.executed == []
+
+
+def test_build_id_remap_merges_countries_and_external_lookups(
+    monkeypatch: Any,
+) -> None:
+    conn = _FakeConnection(
+        _column_type_rows(),
+        lookup_rows_by_table={
+            "countries": [{"slug": "russia", "id": "new-country-id"}],
+            "locales": [{"code": "ru", "id": "new-locale-id"}],
+            "scenarios": [{"slug": "residence", "id": "new-scenario-id"}],
+            "cii_metric_definitions": [
+                {"slug": "safety", "id": "new-metric-id"}
+            ],
+        },
+    )
+
+    def fake_load_json_fixture(name: str) -> list[dict[str, Any]]:
+        sidecars = {
+            "_lookup_locales": [{"id": "old-locale-id", "code": "ru"}],
+            "_lookup_scenarios": [
+                {"id": "old-scenario-id", "slug": "residence"}
+            ],
+            "_lookup_cii_metric_definitions": [
+                {"id": "old-metric-id", "slug": "safety"}
+            ],
+        }
+        return sidecars.get(name, [])
+
+    monkeypatch.setattr(
+        restore_script, "_load_json_fixture", fake_load_json_fixture
+    )
+
+    remap = restore_script._build_id_remap(
+        conn,  # type: ignore[arg-type]
+        [{"id": "old-country-id", "slug": "russia"}],
+    )
+
+    assert remap == {
+        "old-country-id": "new-country-id",
+        "old-locale-id": "new-locale-id",
+        "old-scenario-id": "new-scenario-id",
+        "old-metric-id": "new-metric-id",
+    }
+
+
+def test_remap_row_replaces_matching_string_values() -> None:
+    remap = {"old-id": "new-id"}
+    row = {"id": "row-1", "country_id": "old-id", "slug": "russia"}
+
+    result = restore_script._remap_row(row, remap)
+
+    assert result == {"id": "row-1", "country_id": "new-id", "slug": "russia"}
+
+
+def test_remap_row_returns_row_unchanged_when_remap_empty() -> None:
+    row = {"id": "row-1", "country_id": "old-id"}
+
+    result = restore_script._remap_row(row, {})
+
+    assert result == row
+
+
+def test_restore_demo_countries_remaps_dependent_table_country_id_reference(
+    monkeypatch: Any,
+) -> None:
+    captured_rows: dict[str, list[dict[str, Any]]] = {}
+
+    def fake_load_rows(spec: TableSpec) -> list[dict[str, Any]]:
+        if spec.name == "countries":
+            return [{"id": "stale-id", "slug": "russia", "is_demo": True}]
+        if spec.name == "sources":
+            return [{"id": "source-1", "country_id": "stale-id"}]
+        return []
+
+    def fake_upsert_table(
+        _connection: Any,
+        spec: TableSpec,
+        rows: list[dict[str, Any]],
+        **_kwargs: Any,
+    ) -> int:
+        captured_rows[spec.name] = rows
+        return len(rows)
+
+    monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
+    monkeypatch.setattr(restore_script, "_load_json_fixture", lambda _name: [])
+    monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
+    conn = _FakeConnection(
+        _column_type_rows(),
+        lookup_rows_by_table={
+            "countries": [{"slug": "russia", "id": "existing-id"}]
+        },
+    )
+
+    restore_script.restore_demo_countries(
+        conn,  # type: ignore[arg-type]
+        dry_run=False,
+    )
+
+    assert captured_rows["countries"] == [
+        {"id": "existing-id", "slug": "russia", "is_demo": True}
+    ]
+    assert captured_rows["sources"] == [
+        {"id": "source-1", "country_id": "existing-id"}
+    ]

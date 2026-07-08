@@ -1,35 +1,35 @@
 [
   {
-    "id": "3a20c8b8-f081-4bf0-bb15-3fecc80cb364",
+    "id": "47c0b8b6-0cec-4e78-895c-55d7b47aebfd",
     "entity_type": "country",
-    "entity_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "entity_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "field_name": "name",
-    "locale_id": "cd685d7d-c9c2-438d-bcdc-ac40b35a0703",
+    "locale_id": "3ecbd7ac-7c7e-40b8-b418-66b42eb9983f",
     "translated_value": "Россия",
     "status": "approved",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "f71b9cc4-402c-4129-8f83-13664fde6cab",
+    "id": "f4c9d968-6f79-493c-b5c5-45326f5a8474",
     "entity_type": "country",
-    "entity_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "entity_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "field_name": "name",
-    "locale_id": "cd685d7d-c9c2-438d-bcdc-ac40b35a0703",
+    "locale_id": "3ecbd7ac-7c7e-40b8-b418-66b42eb9983f",
     "translated_value": "Уругвай",
     "status": "approved",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "703b34ef-3ecf-4819-96f8-e962853fc60a",
+    "id": "64b13c38-6b78-4130-bf19-96055dc3de93",
     "entity_type": "country",
-    "entity_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "entity_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "field_name": "name",
-    "locale_id": "cd685d7d-c9c2-438d-bcdc-ac40b35a0703",
+    "locale_id": "3ecbd7ac-7c7e-40b8-b418-66b42eb9983f",
     "translated_value": "Аргентина",
     "status": "approved",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   }
 ]

@@ -1,8 +1,8 @@
 [
   {
-    "id": "e16f4996-194d-49a0-b94f-ad14e11cbe56",
-    "origin_country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
-    "destination_country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "0ddef089-40de-43ec-97d0-98952cb94859",
+    "origin_country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
+    "destination_country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "status": "published",
     "visa_note": "Argentina and Uruguay are neighbouring Mercosur member states; Uruguay's published residence procedure does not state a nationality-based bar for Argentine citizens.",
     "tax_treaty_note": "No confirmed bilateral tax treaty text is present in the currently seeded sources; verify current treaty status with a qualified tax advisor.",
@@ -16,13 +16,13 @@
     "confidence": "low",
     "freshness_status": "current",
     "last_verified_at": "2026-06-01 00:00:00+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "be7dd16e-3616-4c78-9295-c6b73b1a90eb",
-    "origin_country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
-    "destination_country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "114ed457-0d6e-44c8-8b1e-5b749d30fd9a",
+    "origin_country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
+    "destination_country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "status": "published",
     "visa_note": "Uruguay's published temporary and permanent residence procedures do not state a nationality-based bar for Russian citizens, but no dedicated Russia-Uruguay bilateral agreement is present in the currently seeded sources.",
     "tax_treaty_note": "No confirmed bilateral tax treaty between Russia and Uruguay is present in the currently seeded sources; verify current treaty status with a qualified tax advisor.",
@@ -36,13 +36,13 @@
     "confidence": "low",
     "freshness_status": "current",
     "last_verified_at": "2026-06-01 00:00:00+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "f7ff6fcf-9eef-432b-b56e-f40932f5f01b",
-    "origin_country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
-    "destination_country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "0dfbc0a3-30b8-4c0a-9a90-15c4685dc8d6",
+    "origin_country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
+    "destination_country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "status": "published",
     "visa_note": "Argentina and Uruguay are neighbouring Mercosur member states; Argentina's published DNM residence procedure does not state a nationality-based bar for Uruguayan citizens.",
     "tax_treaty_note": "No confirmed bilateral tax treaty text is present in the currently seeded sources; verify current treaty status with a qualified tax advisor.",
@@ -56,13 +56,13 @@
     "confidence": "low",
     "freshness_status": "current",
     "last_verified_at": "2026-06-01 00:00:00+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "5e6e2efd-61d6-40e1-9e7b-f86da44e8e0e",
-    "origin_country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
-    "destination_country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "607cb9f1-a8bc-4ac5-9f8f-63cc296bfb09",
+    "origin_country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
+    "destination_country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "status": "published",
     "visa_note": "Argentina's published DNM residence procedure does not state a nationality-based bar for Russian citizens, but no dedicated Russia-Argentina bilateral agreement is present in the currently seeded sources.",
     "tax_treaty_note": "No confirmed bilateral tax treaty between Russia and Argentina is present in the currently seeded sources; verify current treaty status with a qualified tax advisor.",
@@ -76,7 +76,7 @@
     "confidence": "low",
     "freshness_status": "current",
     "last_verified_at": "2026-06-01 00:00:00+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   }
 ]

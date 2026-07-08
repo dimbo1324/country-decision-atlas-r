@@ -1,0 +1,26 @@
+[
+  {
+    "id": "9931592f-aa49-4db9-a1f0-f240f39fd89a",
+    "slug": "rule_of_law"
+  },
+  {
+    "id": "3cb1688f-ab80-492b-b2af-23821245af2a",
+    "slug": "economic_freedom"
+  },
+  {
+    "id": "7ba1c51f-67ce-4896-8519-7fb5c82e385f",
+    "slug": "political_stability"
+  },
+  {
+    "id": "2a0e6462-a2bf-45a3-9d1c-7c23993a2e0d",
+    "slug": "safety"
+  },
+  {
+    "id": "7901a505-57ae-4bb3-bfc5-429b541639ac",
+    "slug": "corruption"
+  },
+  {
+    "id": "88834dd3-c2b0-4594-b479-567095797985",
+    "slug": "digital_access"
+  }
+]

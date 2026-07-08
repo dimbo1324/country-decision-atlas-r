@@ -15,6 +15,7 @@ if str(ROOT_DIR) not in sys.path:
 import psycopg  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from scripts.dev_tools._demo_countries_fixture_spec import (  # noqa: E402
+    EXTERNAL_LOOKUPS,
     FIXTURES_DIR,
     TABLE_SPECS,
     TableSpec,
@@ -35,14 +36,75 @@ def _column_types(
     return {row["column_name"]: row["udt_name"] for row in cursor.fetchall()}
 
 
-def _load_rows(spec: TableSpec) -> list[dict[str, Any]]:
-    fixture_path = FIXTURES_DIR / f"{spec.name}.json"
+def _load_json_fixture(name: str) -> list[dict[str, Any]]:
+    fixture_path = FIXTURES_DIR / f"{name}.json"
     if not fixture_path.exists():
         return []
     rows: list[dict[str, Any]] = json.loads(
         fixture_path.read_text(encoding="utf-8")
     )
     return rows
+
+
+def _load_rows(spec: TableSpec) -> list[dict[str, Any]]:
+    return _load_json_fixture(spec.name)
+
+
+def _lookup_id_remap(
+    connection: psycopg.Connection[dict[str, Any]],
+    table: str,
+    natural_key: str,
+    fixture_rows: list[dict[str, Any]],
+) -> dict[str, str]:
+    """Map a fixture-exported id to whatever id its natural key has now.
+
+    `countries.id`, `locales.id`, `scenarios.id`, and
+    `cii_metric_definitions.id` all come from `gen_random_uuid()` with no
+    fixed seed, so a fixture exported from one database instance embeds ids
+    that a different fresh instance will never reproduce. `natural_key`
+    (slug/code) is the stable column used to find the current row instead.
+    """
+    keys = [row[natural_key] for row in fixture_rows]
+    if not keys:
+        return {}
+    cursor = connection.execute(
+        f"SELECT {natural_key}, id::text AS id FROM {table} WHERE {natural_key} = ANY(%s)",
+        (keys,),
+    )
+    existing_by_key = {row[natural_key]: row["id"] for row in cursor.fetchall()}
+    remap: dict[str, str] = {}
+    for row in fixture_rows:
+        existing_id = existing_by_key.get(row[natural_key])
+        fixture_id = str(row["id"])
+        if existing_id is not None and existing_id != fixture_id:
+            remap[fixture_id] = existing_id
+    return remap
+
+
+def _build_id_remap(
+    connection: psycopg.Connection[dict[str, Any]],
+    country_rows: list[dict[str, Any]],
+) -> dict[str, str]:
+    remap = dict(
+        _lookup_id_remap(connection, "countries", "slug", country_rows)
+    )
+    for lookup in EXTERNAL_LOOKUPS:
+        lookup_rows = _load_json_fixture(f"_lookup_{lookup.table}")
+        remap.update(
+            _lookup_id_remap(
+                connection, lookup.table, lookup.natural_key, lookup_rows
+            )
+        )
+    return remap
+
+
+def _remap_row(row: dict[str, Any], remap: dict[str, str]) -> dict[str, Any]:
+    if not remap:
+        return row
+    return {
+        key: remap.get(value, value) if isinstance(value, str) else value
+        for key, value in row.items()
+    }
 
 
 def _param_value(value: Any) -> Any:
@@ -92,9 +154,16 @@ def restore_demo_countries(
     dry_run: bool,
     visible: bool = False,
 ) -> dict[str, int]:
+    countries_spec = next(
+        spec for spec in TABLE_SPECS if spec.name == "countries"
+    )
+    country_rows = _load_rows(countries_spec)
+    remap = _build_id_remap(connection, country_rows)
+
     counts: dict[str, int] = {}
     for spec in TABLE_SPECS:
-        rows = _load_rows(spec)
+        rows = country_rows if spec is countries_spec else _load_rows(spec)
+        rows = [_remap_row(row, remap) for row in rows]
         if visible and spec.name == "countries":
             rows = [{**row, "is_demo": False} for row in rows]
         counts[spec.name] = _upsert_table(

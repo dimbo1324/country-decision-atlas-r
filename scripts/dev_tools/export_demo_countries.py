@@ -15,9 +15,18 @@ import psycopg  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from scripts.dev_tools._demo_countries_fixture_spec import (  # noqa: E402
     DEMO_SLUGS,
+    EXTERNAL_LOOKUPS,
     FIXTURES_DIR,
     TABLE_SPECS,
 )
+
+
+def _write_fixture(name: str, rows: list[dict[str, object]]) -> None:
+    target = FIXTURES_DIR / f"{name}.json"
+    target.write_text(
+        json.dumps(rows, indent=2, default=str, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 def export_demo_countries(
@@ -30,12 +39,15 @@ def export_demo_countries(
             spec.select_sql, {"slugs": list(DEMO_SLUGS)}
         )
         rows = cursor.fetchall()
-        target = FIXTURES_DIR / f"{spec.name}.json"
-        target.write_text(
-            json.dumps(rows, indent=2, default=str, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
+        _write_fixture(spec.name, rows)
         counts[spec.name] = len(rows)
+    for lookup in EXTERNAL_LOOKUPS:
+        cursor = connection.execute(
+            f"SELECT id, {lookup.natural_key} FROM {lookup.table}"
+        )
+        rows = cursor.fetchall()
+        _write_fixture(f"_lookup_{lookup.table}", rows)
+        counts[f"_lookup_{lookup.table}"] = len(rows)
     return counts
 
 

@@ -1,7 +1,7 @@
 [
   {
-    "id": "bd148644-e4f6-4275-af3a-26cd46a0e994",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "e2c5dc5c-cf0f-44d1-887e-9362a42c3a0b",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "route_type": "business",
     "slug": "professional-income-tax-self-employment",
     "title": "Professional income tax self-employment route",
@@ -33,12 +33,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "2c671ee4-8a55-48a9-a76f-6baaeb7f879d",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "5a4da263-41d7-4fcd-aaa0-d11ba6a639f9",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "route_type": "citizenship",
     "slug": "citizenship-law-review",
     "title": "Citizenship law review",
@@ -70,12 +70,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "c2cd9191-54d7-4013-ad1a-94cc728a971d",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "ec765e57-8d81-42a3-b182-637bae41e120",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "route_type": "permanent_residence",
     "slug": "permanent-residence-status-review",
     "title": "Permanent residence status review",
@@ -107,12 +107,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "1f6cdee4-d252-42f2-80b0-5d1a6b661a53",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "0228b823-c128-4830-ac84-1f2ba06a93de",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "route_type": "business",
     "slug": "tax-administration-business-check",
     "title": "Tax administration business check",
@@ -144,12 +144,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "85cba25d-67a4-4a6f-b854-71c44517a4ad",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "52608e51-4377-47e6-9d44-3c06b2755acc",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "route_type": "permanent_residence",
     "slug": "migration-law-residence-baseline",
     "title": "Migration law residence baseline",
@@ -181,12 +181,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "c345efca-ea51-4bf1-bfb4-d53f7b5df24e",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "bec12eec-9dea-40ff-b810-3e5d96bd5c92",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "route_type": "temporary_residence",
     "slug": "temporary-legal-residence",
     "title": "Temporary legal residence",
@@ -218,12 +218,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "bf74e28e-96e8-440f-8f2e-b1f21113f153",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "2292d89e-b55c-4c41-a22a-144309250e68",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "route_type": "business",
     "slug": "monotributo-self-employment",
     "title": "Monotributo self-employment route",
@@ -255,12 +255,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "c4c76ade-b743-49fd-935c-0b9fb14052e5",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "fb1588f0-225e-4dfb-b8b2-6a2db99af6fb",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "route_type": "citizenship",
     "slug": "citizenship-two-year-residence-review",
     "title": "Citizenship residence-period review",
@@ -292,12 +292,12 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   },
   {
-    "id": "8fd0aa3f-c30a-4714-ad7f-3b88ef9bf266",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "9080b478-5101-46f1-bf99-75f83e2b3849",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "route_type": "temporary_residence",
     "slug": "temporary-residence-dnm",
     "title": "Temporary residence through DNM",
@@ -329,7 +329,7 @@
     "requires_criminal_record_check": "unknown",
     "status": "published",
     "legal_status": "effective",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00"
   }
 ]

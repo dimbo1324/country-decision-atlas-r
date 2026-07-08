@@ -1,7 +1,7 @@
 [
   {
-    "id": "6ab31050-c63c-4c54-935f-68760a0d0525",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "f26e8e12-328b-4125-88af-a901ef93f2f8",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "22.86",
     "confidence": "high",
@@ -74,16 +74,16 @@
         "weighted_score": 0.0609
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
   },
   {
-    "id": "d85e3776-8501-425c-8544-ffa989486169",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "3fd5e063-23e4-40f3-a1ec-13aea608698d",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "24.88",
     "confidence": "high",
@@ -156,16 +156,16 @@
         "weighted_score": 0.3045
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
   },
   {
-    "id": "67ebf9a0-9608-41c6-a2b9-fad9f5c2f254",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "dc1ec3fa-558e-4ab6-8b1b-f2409a4ff6ec",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "23.08",
     "confidence": "high",
@@ -238,16 +238,16 @@
         "weighted_score": 0.1522
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
   },
   {
-    "id": "3a95d6c2-93c9-4701-a665-ced8cca0d376",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "d5d2efb9-3260-4c6c-9c70-ff1a9df79a14",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "27.56",
     "confidence": "high",
@@ -320,16 +320,16 @@
         "weighted_score": 0.3045
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
   },
   {
-    "id": "29acbf96-9bde-431a-b45f-0d3ceeb844a2",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "14b370c6-e351-4be3-8e00-df703273ec0e",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "29.38",
     "confidence": "high",
@@ -402,16 +402,16 @@
         "weighted_score": 0.4567
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
   },
   {
-    "id": "422edb8a-1ebe-4fec-938b-962cb2ec3eec",
-    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "id": "aea70d71-1966-486c-b0db-df12a9b20028",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
     "overall_score": "25.76",
     "confidence": "high",
@@ -484,16 +484,16 @@
         "weighted_score": 0.5075
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": ""
   },
   {
-    "id": "e28da417-b911-4248-837b-4e95fbaa2206",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "701d7128-8954-4c55-895a-ce48ccb0b6a4",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "70.12",
     "confidence": "high",
@@ -566,16 +566,16 @@
         "weighted_score": 0.0825
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
   },
   {
-    "id": "88bbc7b2-4ff2-4aa8-bb79-3836be7633a2",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "103cd98b-042f-4bbb-b094-d1e67a6f6101",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "69.11",
     "confidence": "high",
@@ -648,16 +648,16 @@
         "weighted_score": 0.4127
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
   },
   {
-    "id": "928f96fc-6caf-4ffe-a05d-759774390ed1",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "789d3c49-8c83-4159-b601-8bcb673e12a7",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "70.80",
     "confidence": "high",
@@ -730,16 +730,16 @@
         "weighted_score": 0.2064
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
   },
   {
-    "id": "d1b42509-9d88-4c33-9af2-93b550ab7501",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "34264354-0822-4e53-b908-72eaa8b5abea",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "69.04",
     "confidence": "high",
@@ -812,16 +812,16 @@
         "weighted_score": 0.4127
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
   },
   {
-    "id": "ad58722a-f27e-4dea-80f5-2614f23e4b2e",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "7070ecb4-b266-4b71-bef5-a943da196553",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "69.17",
     "confidence": "high",
@@ -894,16 +894,16 @@
         "weighted_score": 0.6191
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
   },
   {
-    "id": "b8483108-b505-4f98-971d-99dea625cb0e",
-    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "id": "ff3838a1-29f9-4e07-886c-88844a2e53d0",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
     "version": "v1.0",
     "overall_score": "68.82",
     "confidence": "high",
@@ -976,16 +976,16 @@
         "weighted_score": 0.688
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": ""
   },
   {
-    "id": "79e8fe4b-4010-42d4-a68a-4b1fbba6ba7b",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "e09707c0-1656-4daf-8704-77d35b2be97d",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "40.05",
     "confidence": "high",
@@ -1058,16 +1058,16 @@
         "weighted_score": 0.0844
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
   },
   {
-    "id": "8458f70a-63f1-4a35-a02d-779a5505df2d",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "c00c0e89-b61e-496e-a411-4cb323c03d55",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "42.67",
     "confidence": "high",
@@ -1140,16 +1140,16 @@
         "weighted_score": 0.422
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
   },
   {
-    "id": "4b4a94db-d3bb-4e5b-86a2-483593469f9c",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "288ebdfe-74c1-438e-8d52-9e00f547288a",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "39.42",
     "confidence": "high",
@@ -1222,16 +1222,16 @@
         "weighted_score": 0.211
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
   },
   {
-    "id": "9dcb4953-e4f7-4d24-9def-97c1d0eae3d0",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "09b29051-e7ea-409e-9fef-22e7d96c895c",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "43.03",
     "confidence": "high",
@@ -1304,16 +1304,16 @@
         "weighted_score": 0.422
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
   },
   {
-    "id": "abac76a2-d573-4ce3-a120-6657a91794f6",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "5f918528-122f-45f7-990c-075644146949",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "43.51",
     "confidence": "high",
@@ -1386,16 +1386,16 @@
         "weighted_score": 0.6329
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
   },
   {
-    "id": "02a404cc-62d3-4bf5-a371-893e1156206e",
-    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "id": "a4c319f3-9a6a-4afc-85e2-b2d3a52af4a3",
+    "country_id": "efa081b1-89d0-4993-a27a-b030f28693f9",
     "version": "v1.0",
     "overall_score": "43.81",
     "confidence": "high",
@@ -1468,9 +1468,9 @@
         "weighted_score": 0.7034
       }
     ],
-    "calculated_at": "2026-07-08 07:59:01.567718+00:00",
-    "created_at": "2026-07-08 07:59:01.567718+00:00",
-    "updated_at": "2026-07-08 07:59:01.567718+00:00",
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 11:36:57.023028+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": ""

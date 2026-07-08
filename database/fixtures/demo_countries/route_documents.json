@@ -1,7 +1,7 @@
 [
   {
-    "id": "51fd5c07-42f4-40db-bbb5-b14c093228f6",
-    "route_id": "bd148644-e4f6-4275-af3a-26cd46a0e994",
+    "id": "1cf0d016-89c3-4232-bd03-296c163cf8af",
+    "route_id": "e2c5dc5c-cf0f-44d1-887e-9362a42c3a0b",
     "name": "Activity and income records",
     "name_ru": "Сведения о деятельности и доходах",
     "is_mandatory": false,
@@ -10,8 +10,8 @@
     "display_order": 2
   },
   {
-    "id": "b1eeee2a-dba1-4019-85c1-892c6eedb0d4",
-    "route_id": "bd148644-e4f6-4275-af3a-26cd46a0e994",
+    "id": "3c67c1cc-ceaa-41a3-b21e-f4486a1e7d22",
+    "route_id": "e2c5dc5c-cf0f-44d1-887e-9362a42c3a0b",
     "name": "Taxpayer registration data",
     "name_ru": "Данные налоговой регистрации",
     "is_mandatory": true,
@@ -20,8 +20,8 @@
     "display_order": 1
   },
   {
-    "id": "18508285-c766-444d-95c7-a071dfad3815",
-    "route_id": "2c671ee4-8a55-48a9-a76f-6baaeb7f879d",
+    "id": "6f700701-2689-4f2b-8744-8fde045b2e46",
+    "route_id": "5a4da263-41d7-4fcd-aaa0-d11ba6a639f9",
     "name": "Residence and nationality records",
     "name_ru": "Документы проживания и гражданского статуса",
     "is_mandatory": true,
@@ -30,8 +30,8 @@
     "display_order": 2
   },
   {
-    "id": "f8e95749-ef52-417f-8404-c8602bd12e12",
-    "route_id": "2c671ee4-8a55-48a9-a76f-6baaeb7f879d",
+    "id": "96535a9d-4072-4993-9ae3-8f595354d320",
+    "route_id": "5a4da263-41d7-4fcd-aaa0-d11ba6a639f9",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,
@@ -40,8 +40,8 @@
     "display_order": 1
   },
   {
-    "id": "3ae34217-1361-415e-ab53-8928d8f51ac5",
-    "route_id": "c2cd9191-54d7-4013-ad1a-94cc728a971d",
+    "id": "66c6a180-14a2-4f88-ad6f-2ba978157bf6",
+    "route_id": "ec765e57-8d81-42a3-b182-637bae41e120",
     "name": "Residence-status filing package",
     "name_ru": "Пакет подачи по статусу проживания",
     "is_mandatory": true,
@@ -50,8 +50,8 @@
     "display_order": 2
   },
   {
-    "id": "824225b3-1911-4e6b-a7cc-5334faaa0b6e",
-    "route_id": "c2cd9191-54d7-4013-ad1a-94cc728a971d",
+    "id": "5fed79c7-baa7-474c-9369-e77b950c65ce",
+    "route_id": "ec765e57-8d81-42a3-b182-637bae41e120",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,
@@ -60,8 +60,8 @@
     "display_order": 1
   },
   {
-    "id": "c9b7aedd-606b-488a-9726-1c556019d601",
-    "route_id": "1f6cdee4-d252-42f2-80b0-5d1a6b661a53",
+    "id": "822681d3-c2a6-4c06-a2fb-aead9b027372",
+    "route_id": "0228b823-c128-4830-ac84-1f2ba06a93de",
     "name": "Business activity records",
     "name_ru": "Сведения о предпринимательской деятельности",
     "is_mandatory": false,
@@ -70,8 +70,8 @@
     "display_order": 2
   },
   {
-    "id": "01540eff-bc8a-4ce6-9d27-6bbaa6f7f7ac",
-    "route_id": "1f6cdee4-d252-42f2-80b0-5d1a6b661a53",
+    "id": "6ae0d89d-641c-4283-a65e-eac236e21d3d",
+    "route_id": "0228b823-c128-4830-ac84-1f2ba06a93de",
     "name": "Tax registration records",
     "name_ru": "Документы налоговой регистрации",
     "is_mandatory": true,
@@ -80,8 +80,8 @@
     "display_order": 1
   },
   {
-    "id": "f030856a-ea24-42c3-8556-24c0d69af8b3",
-    "route_id": "85cba25d-67a4-4a6f-b854-71c44517a4ad",
+    "id": "d92e5800-e283-4d71-9300-105147314ba4",
+    "route_id": "52608e51-4377-47e6-9d44-3c06b2755acc",
     "name": "Residence basis records",
     "name_ru": "Документы основания резиденции",
     "is_mandatory": true,
@@ -90,8 +90,8 @@
     "display_order": 2
   },
   {
-    "id": "ba4cc85f-0a7d-4ee3-b816-2834e2f90c36",
-    "route_id": "85cba25d-67a4-4a6f-b854-71c44517a4ad",
+    "id": "bb18f394-fcdc-48b8-9ec7-d5098cd1a794",
+    "route_id": "52608e51-4377-47e6-9d44-3c06b2755acc",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,
@@ -100,8 +100,8 @@
     "display_order": 1
   },
   {
-    "id": "69f2f370-8de7-42c2-83d7-9fdf4f04ac84",
-    "route_id": "c345efca-ea51-4bf1-bfb4-d53f7b5df24e",
+    "id": "1ca8f962-2cad-4534-8cee-6327b8bf8162",
+    "route_id": "bec12eec-9dea-40ff-b810-3e5d96bd5c92",
     "name": "Temporary residence application package",
     "name_ru": "Пакет заявления на временную резиденцию",
     "is_mandatory": true,
@@ -110,8 +110,8 @@
     "display_order": 2
   },
   {
-    "id": "535c9497-bdb2-40a9-9222-cd1dcef6ca1c",
-    "route_id": "c345efca-ea51-4bf1-bfb4-d53f7b5df24e",
+    "id": "fba8d2d3-2d08-4560-9bb1-c06760d10b00",
+    "route_id": "bec12eec-9dea-40ff-b810-3e5d96bd5c92",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,
@@ -120,8 +120,8 @@
     "display_order": 1
   },
   {
-    "id": "4c886ab7-1069-4753-947a-46f9f0dae124",
-    "route_id": "bf74e28e-96e8-440f-8f2e-b1f21113f153",
+    "id": "224b4c85-920c-4b8f-8264-a864a3cfb083",
+    "route_id": "2292d89e-b55c-4c41-a22a-144309250e68",
     "name": "Activity and category records",
     "name_ru": "Сведения о деятельности и категории",
     "is_mandatory": false,
@@ -130,8 +130,8 @@
     "display_order": 2
   },
   {
-    "id": "091ee6fc-c720-478f-8a1a-dab986b9345e",
-    "route_id": "bf74e28e-96e8-440f-8f2e-b1f21113f153",
+    "id": "50c2e346-52bb-46a3-b569-e8cf748277a7",
+    "route_id": "2292d89e-b55c-4c41-a22a-144309250e68",
     "name": "Tax identification records",
     "name_ru": "Документы налоговой идентификации",
     "is_mandatory": true,
@@ -140,8 +140,8 @@
     "display_order": 1
   },
   {
-    "id": "f7d6600d-9e8f-44ed-9054-711035afc7e7",
-    "route_id": "c4c76ade-b743-49fd-935c-0b9fb14052e5",
+    "id": "71aa9180-bccd-4225-a627-9723f644743c",
+    "route_id": "fb1588f0-225e-4dfb-b8b2-6a2db99af6fb",
     "name": "Residence-period records",
     "name_ru": "Документы срока проживания",
     "is_mandatory": true,
@@ -150,8 +150,8 @@
     "display_order": 2
   },
   {
-    "id": "4e511073-2091-4b9a-bb78-d4f017818e08",
-    "route_id": "c4c76ade-b743-49fd-935c-0b9fb14052e5",
+    "id": "bf8bf937-2e10-47e4-893f-550add2748f6",
+    "route_id": "fb1588f0-225e-4dfb-b8b2-6a2db99af6fb",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,
@@ -160,8 +160,8 @@
     "display_order": 1
   },
   {
-    "id": "ac55d642-6702-49b1-8a41-4b3c1fa4125f",
-    "route_id": "8fd0aa3f-c30a-4714-ad7f-3b88ef9bf266",
+    "id": "72444603-ceed-4dde-ba0d-8916f19aac4d",
+    "route_id": "9080b478-5101-46f1-bf99-75f83e2b3849",
     "name": "Residence application package",
     "name_ru": "Пакет заявления на проживание",
     "is_mandatory": true,
@@ -170,8 +170,8 @@
     "display_order": 2
   },
   {
-    "id": "10cf2a2e-8120-4d53-817d-6a69c5dad8d0",
-    "route_id": "8fd0aa3f-c30a-4714-ad7f-3b88ef9bf266",
+    "id": "86c4a2d7-8f0e-493c-b892-da0ccd94b83a",
+    "route_id": "9080b478-5101-46f1-bf99-75f83e2b3849",
     "name": "Identity document",
     "name_ru": "Документ, удостоверяющий личность",
     "is_mandatory": true,

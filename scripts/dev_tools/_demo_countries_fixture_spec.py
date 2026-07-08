@@ -20,6 +20,28 @@ class TableSpec:
     conflict_columns: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class LookupSpec:
+    """A reference table the demo fixtures point to but don't own.
+
+    `locales`, `scenarios`, and `cii_metric_definitions` all assign their id
+    via `gen_random_uuid()` with no fixed seed, so a fixture exported from one
+    database instance embeds ids (`locale_id`, `scenario_id`, `metric_id`)
+    that a different fresh instance will never reproduce. `natural_key` is
+    the stable column restore can use to find the current row instead.
+    """
+
+    table: str
+    natural_key: str
+
+
+EXTERNAL_LOOKUPS: tuple[LookupSpec, ...] = (
+    LookupSpec("locales", "code"),
+    LookupSpec("scenarios", "slug"),
+    LookupSpec("cii_metric_definitions", "slug"),
+)
+
+
 TABLE_SPECS: tuple[TableSpec, ...] = (
     TableSpec(
         "countries",
