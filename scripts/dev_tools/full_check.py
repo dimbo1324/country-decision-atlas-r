@@ -2019,6 +2019,22 @@ class FullCheck:
             "bootstrap_runtime_read_models.py",
             "OK" if bootstrap_exit == 0 else "FAIL",
         )
+        restore_demo_exit = self.run_streaming(
+            [
+                docker_exe,
+                "compose",
+                "exec",
+                "-T",
+                "api",
+                "python",
+                "scripts/dev_tools/restore_demo_countries.py",
+                "--visible",
+            ]
+        )
+        self.add_stage_result(
+            "restore_demo_countries.py --visible",
+            "OK" if restore_demo_exit == 0 else "FAIL",
+        )
         search_index_exit = self.run_streaming(
             [
                 docker_exe,

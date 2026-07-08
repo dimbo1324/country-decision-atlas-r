@@ -81,6 +81,71 @@ def test_upsert_table_empty_rows_is_a_noop() -> None:
     assert conn.executed == []
 
 
+def test_restore_demo_countries_visible_overrides_is_demo_to_false(
+    monkeypatch: Any,
+) -> None:
+    captured_rows: dict[str, list[dict[str, Any]]] = {}
+
+    def fake_load_rows(spec: TableSpec) -> list[dict[str, Any]]:
+        if spec.name == "countries":
+            return [{"id": "c1", "slug": "russia", "is_demo": True}]
+        return []
+
+    def fake_upsert_table(
+        _connection: Any,
+        spec: TableSpec,
+        rows: list[dict[str, Any]],
+        **_kwargs: Any,
+    ) -> int:
+        captured_rows[spec.name] = rows
+        return len(rows)
+
+    monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
+    monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
+
+    restore_script.restore_demo_countries(
+        _FakeConnection(_column_type_rows()),  # type: ignore[arg-type]
+        dry_run=False,
+        visible=True,
+    )
+
+    assert captured_rows["countries"] == [
+        {"id": "c1", "slug": "russia", "is_demo": False}
+    ]
+
+
+def test_restore_demo_countries_default_keeps_is_demo_true(
+    monkeypatch: Any,
+) -> None:
+    captured_rows: dict[str, list[dict[str, Any]]] = {}
+
+    def fake_load_rows(spec: TableSpec) -> list[dict[str, Any]]:
+        if spec.name == "countries":
+            return [{"id": "c1", "slug": "russia", "is_demo": True}]
+        return []
+
+    def fake_upsert_table(
+        _connection: Any,
+        spec: TableSpec,
+        rows: list[dict[str, Any]],
+        **_kwargs: Any,
+    ) -> int:
+        captured_rows[spec.name] = rows
+        return len(rows)
+
+    monkeypatch.setattr(restore_script, "_load_rows", fake_load_rows)
+    monkeypatch.setattr(restore_script, "_upsert_table", fake_upsert_table)
+
+    restore_script.restore_demo_countries(
+        _FakeConnection(_column_type_rows()),  # type: ignore[arg-type]
+        dry_run=False,
+    )
+
+    assert captured_rows["countries"] == [
+        {"id": "c1", "slug": "russia", "is_demo": True}
+    ]
+
+
 def test_join_table_without_extra_columns_does_nothing_on_conflict() -> None:
     conn = _FakeConnection(
         [

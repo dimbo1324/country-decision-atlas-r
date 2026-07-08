@@ -1,0 +1,1847 @@
+[
+  {
+    "id": "f1f2deb1-1b71-40c6-aeea-86fb38b9ba0d",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "source_quality_score",
+    "score": "52.00",
+    "weight": "0.0500",
+    "weighted_score": "2.6000",
+    "explanation_en": "Russia now has a broader official and dataset-backed source base, but several user-critical topics still need expert interpretation.",
+    "explanation_ru": "У России теперь шире база официальных источников и данных, но несколько критичных тем все еще требуют экспертной интерпретации.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6980403d-1b56-4fd3-835f-053a90898f18",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "legal_stability_score",
+    "score": "25.00",
+    "weight": "0.1000",
+    "weighted_score": "2.5000",
+    "explanation_en": "Legal stability uses primary legal references plus WJP and governance datasets, with external indicators keeping the score cautious.",
+    "explanation_ru": "Правовая стабильность опирается на первичные правовые источники, WJP и governance-данные, а внешние показатели сохраняют осторожность оценки.",
+    "source_ids": [
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+      "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+      "c67b55b4-5d6d-4211-9970-de7e51bac781",
+      "3a9f90e2-eca3-4355-baaa-5b676e122de9"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "b6e8a5d3-4aae-485e-9b5e-9964a85e3f52",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "business_score",
+    "score": "30.00",
+    "weight": "0.1000",
+    "weighted_score": "3.0000",
+    "explanation_en": "Business and self-employment have official tax and central-bank sources, but compliance, account access and residency facts lower screening confidence.",
+    "explanation_ru": "Бизнес и самозанятость имеют официальные налоговые и банковские источники, но комплаенс, доступ к счетам и факты резидентства снижают уверенность.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "470c6e0b-163c-40ce-8abb-dedf954ddce1"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "d19da9d2-c753-45dc-b123-84cb2afb51e4",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "safety_score",
+    "score": "24.00",
+    "weight": "0.1500",
+    "weighted_score": "3.6000",
+    "explanation_en": "Safety scoring is driven by external freedom, rule-of-law and political-stability sources and should be treated as a risk warning layer.",
+    "explanation_ru": "Оценка безопасности опирается на внешние источники по свободам, верховенству права и политической стабильности и должна восприниматься как слой риск-предупреждений.",
+    "source_ids": [
+      "b1be5576-cef2-4df1-8984-f3283296f520"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "14a6ee79-c4e6-4cdd-9f35-eaecb4c2ccd9",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "cost_of_living_score",
+    "score": "50.00",
+    "weight": "0.1500",
+    "weighted_score": "7.5000",
+    "explanation_en": "Cost context is source-backed through GDP and inflation datasets, but city-level budgets and payment access remain practical uncertainties.",
+    "explanation_ru": "Стоимость жизни подтверждается наборами данных по ВВП и инфляции, но городские бюджеты и платежный доступ остаются практическими неопределенностями.",
+    "source_ids": [
+      "4a72a6f4-adb3-4474-a52f-f0bb95bd2c51",
+      "71187fb4-1de4-41fa-b840-c8e240adebbf",
+      "3bfe72d4-14eb-4bbd-abc4-c8be66ae25ae",
+      "66abd4db-c363-418d-966c-781242d26f24"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6c900327-13e8-4f50-b07d-3dcff5cb0a2f",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "legalization_score",
+    "score": "34.00",
+    "weight": "0.2500",
+    "weighted_score": "8.5000",
+    "explanation_en": "Legalization remains constrained by statute-led foreign-citizen rules, public-service procedure checks and separate entry sources.",
+    "explanation_ru": "Легализация ограничена законом о статусе иностранцев, процедурными проверками через госуслуги и отдельными источниками по въезду.",
+    "source_ids": [
+      "d4cf2e93-2613-4c48-b376-19263a0c290a",
+      "1f02c1cc-3106-45fc-befd-0e6ba4b09fd5"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "f8394f75-4464-4820-8c46-b37475507efe",
+    "country_score_id": "e904dc2a-e167-4577-8567-e66b18f1cf16",
+    "criterion": "long_term_status_score",
+    "score": "33.00",
+    "weight": "0.2000",
+    "weighted_score": "6.6000",
+    "explanation_en": "Long-term status requires separate review of residence, citizenship and external governance risk rather than extrapolation from entry eligibility.",
+    "explanation_ru": "Долгосрочный статус требует отдельной проверки проживания, гражданства и внешнего governance-риска, а не вывода из въездных условий.",
+    "source_ids": [
+      "0b6ed9af-2dd4-4842-aa61-3e37cd35b508",
+      "2a096f22-ce0c-4e60-8e9f-1f5d6066c83d",
+      "da2a4a7f-656c-4bf8-b73d-8af098b601ed"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "1e8da6b8-0915-4bdb-9e86-aa226262f699",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "source_quality_score",
+    "score": "52.00",
+    "weight": "0.0500",
+    "weighted_score": "2.6000",
+    "explanation_en": "Russia now has a broader official and dataset-backed source base, but several user-critical topics still need expert interpretation.",
+    "explanation_ru": "У России теперь шире база официальных источников и данных, но несколько критичных тем все еще требуют экспертной интерпретации.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "48ddc17f-4fe4-4579-b1d4-af75f03c8bff",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "legal_stability_score",
+    "score": "30.00",
+    "weight": "0.1000",
+    "weighted_score": "3.0000",
+    "explanation_en": "Legal stability uses primary legal references plus WJP and governance datasets, with external indicators keeping the score cautious.",
+    "explanation_ru": "Правовая стабильность опирается на первичные правовые источники, WJP и governance-данные, а внешние показатели сохраняют осторожность оценки.",
+    "source_ids": [
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+      "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+      "c67b55b4-5d6d-4211-9970-de7e51bac781",
+      "3a9f90e2-eca3-4355-baaa-5b676e122de9"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "7645a7eb-a3e9-4c53-ad16-c15bf3548b35",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "business_score",
+    "score": "32.00",
+    "weight": "0.1000",
+    "weighted_score": "3.2000",
+    "explanation_en": "Business and self-employment have official tax and central-bank sources, but compliance, account access and residency facts lower screening confidence.",
+    "explanation_ru": "Бизнес и самозанятость имеют официальные налоговые и банковские источники, но комплаенс, доступ к счетам и факты резидентства снижают уверенность.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "470c6e0b-163c-40ce-8abb-dedf954ddce1"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "c39a58c8-cc9d-48c0-a3da-13f6eb1d3641",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "safety_score",
+    "score": "31.00",
+    "weight": "0.1500",
+    "weighted_score": "4.6500",
+    "explanation_en": "Safety scoring is driven by external freedom, rule-of-law and political-stability sources and should be treated as a risk warning layer.",
+    "explanation_ru": "Оценка безопасности опирается на внешние источники по свободам, верховенству права и политической стабильности и должна восприниматься как слой риск-предупреждений.",
+    "source_ids": [
+      "b1be5576-cef2-4df1-8984-f3283296f520"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "39e24074-1ec1-4506-92ae-82c157e40ab6",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "cost_of_living_score",
+    "score": "50.00",
+    "weight": "0.1500",
+    "weighted_score": "7.5000",
+    "explanation_en": "Cost context is source-backed through GDP and inflation datasets, but city-level budgets and payment access remain practical uncertainties.",
+    "explanation_ru": "Стоимость жизни подтверждается наборами данных по ВВП и инфляции, но городские бюджеты и платежный доступ остаются практическими неопределенностями.",
+    "source_ids": [
+      "4a72a6f4-adb3-4474-a52f-f0bb95bd2c51",
+      "71187fb4-1de4-41fa-b840-c8e240adebbf",
+      "3bfe72d4-14eb-4bbd-abc4-c8be66ae25ae",
+      "66abd4db-c363-418d-966c-781242d26f24"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "20629f5d-8ea9-41bc-b331-468fdf1b727d",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "legalization_score",
+    "score": "35.00",
+    "weight": "0.2500",
+    "weighted_score": "8.7500",
+    "explanation_en": "Legalization remains constrained by statute-led foreign-citizen rules, public-service procedure checks and separate entry sources.",
+    "explanation_ru": "Легализация ограничена законом о статусе иностранцев, процедурными проверками через госуслуги и отдельными источниками по въезду.",
+    "source_ids": [
+      "d4cf2e93-2613-4c48-b376-19263a0c290a",
+      "1f02c1cc-3106-45fc-befd-0e6ba4b09fd5"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "5ffbccc7-ca05-461e-9fd8-72fa81c9fe7d",
+    "country_score_id": "26a06e71-4126-45ea-8ab4-a1bc072ebd87",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Long-term status requires separate review of residence, citizenship and external governance risk rather than extrapolation from entry eligibility.",
+    "explanation_ru": "Долгосрочный статус требует отдельной проверки проживания, гражданства и внешнего governance-риска, а не вывода из въездных условий.",
+    "source_ids": [
+      "0b6ed9af-2dd4-4842-aa61-3e37cd35b508",
+      "2a096f22-ce0c-4e60-8e9f-1f5d6066c83d",
+      "da2a4a7f-656c-4bf8-b73d-8af098b601ed"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "e7fb5697-aeee-411c-a437-a61eb90a224c",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "source_quality_score",
+    "score": "52.00",
+    "weight": "0.0500",
+    "weighted_score": "2.6000",
+    "explanation_en": "Russia now has a broader official and dataset-backed source base, but several user-critical topics still need expert interpretation.",
+    "explanation_ru": "У России теперь шире база официальных источников и данных, но несколько критичных тем все еще требуют экспертной интерпретации.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "821a7e25-f39b-49e1-8f34-cefd2ec22022",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "legal_stability_score",
+    "score": "32.00",
+    "weight": "0.1000",
+    "weighted_score": "3.2000",
+    "explanation_en": "Legal stability uses primary legal references plus WJP and governance datasets, with external indicators keeping the score cautious.",
+    "explanation_ru": "Правовая стабильность опирается на первичные правовые источники, WJP и governance-данные, а внешние показатели сохраняют осторожность оценки.",
+    "source_ids": [
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+      "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+      "c67b55b4-5d6d-4211-9970-de7e51bac781",
+      "3a9f90e2-eca3-4355-baaa-5b676e122de9"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "528644d3-a21c-47e8-9736-3b3839f63f06",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "business_score",
+    "score": "38.00",
+    "weight": "0.1000",
+    "weighted_score": "3.8000",
+    "explanation_en": "Business and self-employment have official tax and central-bank sources, but compliance, account access and residency facts lower screening confidence.",
+    "explanation_ru": "Бизнес и самозанятость имеют официальные налоговые и банковские источники, но комплаенс, доступ к счетам и факты резидентства снижают уверенность.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "470c6e0b-163c-40ce-8abb-dedf954ddce1"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "756b2e08-a295-4d74-a88f-cba3d7ed90d7",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "safety_score",
+    "score": "35.00",
+    "weight": "0.1500",
+    "weighted_score": "5.2500",
+    "explanation_en": "Safety scoring is driven by external freedom, rule-of-law and political-stability sources and should be treated as a risk warning layer.",
+    "explanation_ru": "Оценка безопасности опирается на внешние источники по свободам, верховенству права и политической стабильности и должна восприниматься как слой риск-предупреждений.",
+    "source_ids": [
+      "b1be5576-cef2-4df1-8984-f3283296f520"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ec948f9f-3e9c-4208-985a-05ee994bb8a9",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "cost_of_living_score",
+    "score": "62.00",
+    "weight": "0.1500",
+    "weighted_score": "9.3000",
+    "explanation_en": "Cost context is source-backed through GDP and inflation datasets, but city-level budgets and payment access remain practical uncertainties.",
+    "explanation_ru": "Стоимость жизни подтверждается наборами данных по ВВП и инфляции, но городские бюджеты и платежный доступ остаются практическими неопределенностями.",
+    "source_ids": [
+      "4a72a6f4-adb3-4474-a52f-f0bb95bd2c51",
+      "71187fb4-1de4-41fa-b840-c8e240adebbf",
+      "3bfe72d4-14eb-4bbd-abc4-c8be66ae25ae",
+      "66abd4db-c363-418d-966c-781242d26f24"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "19f0dc11-cc9e-4941-94a4-3986a7a77ee5",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "legalization_score",
+    "score": "43.00",
+    "weight": "0.2500",
+    "weighted_score": "10.7500",
+    "explanation_en": "Legalization remains constrained by statute-led foreign-citizen rules, public-service procedure checks and separate entry sources.",
+    "explanation_ru": "Легализация ограничена законом о статусе иностранцев, процедурными проверками через госуслуги и отдельными источниками по въезду.",
+    "source_ids": [
+      "d4cf2e93-2613-4c48-b376-19263a0c290a",
+      "1f02c1cc-3106-45fc-befd-0e6ba4b09fd5"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "fceb072b-3e5d-487c-b37d-6120164d4697",
+    "country_score_id": "8c088fcd-396e-41e3-98e8-2f59b2939416",
+    "criterion": "long_term_status_score",
+    "score": "39.00",
+    "weight": "0.2000",
+    "weighted_score": "7.8000",
+    "explanation_en": "Long-term status requires separate review of residence, citizenship and external governance risk rather than extrapolation from entry eligibility.",
+    "explanation_ru": "Долгосрочный статус требует отдельной проверки проживания, гражданства и внешнего governance-риска, а не вывода из въездных условий.",
+    "source_ids": [
+      "0b6ed9af-2dd4-4842-aa61-3e37cd35b508",
+      "2a096f22-ce0c-4e60-8e9f-1f5d6066c83d",
+      "da2a4a7f-656c-4bf8-b73d-8af098b601ed"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "7d20826c-77c0-4873-8fb6-261e10454776",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "source_quality_score",
+    "score": "54.00",
+    "weight": "0.0500",
+    "weighted_score": "2.7000",
+    "explanation_en": "Russia now has a broader official and dataset-backed source base, but several user-critical topics still need expert interpretation.",
+    "explanation_ru": "У России теперь шире база официальных источников и данных, но несколько критичных тем все еще требуют экспертной интерпретации.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "8d9fedcb-cd5b-4344-9194-ae3a4fd9e002",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "legal_stability_score",
+    "score": "31.00",
+    "weight": "0.1000",
+    "weighted_score": "3.1000",
+    "explanation_en": "Legal stability uses primary legal references plus WJP and governance datasets, with external indicators keeping the score cautious.",
+    "explanation_ru": "Правовая стабильность опирается на первичные правовые источники, WJP и governance-данные, а внешние показатели сохраняют осторожность оценки.",
+    "source_ids": [
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+      "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+      "c67b55b4-5d6d-4211-9970-de7e51bac781",
+      "3a9f90e2-eca3-4355-baaa-5b676e122de9"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "8850ccf7-c5ec-4b54-bf6d-fe68a66650c5",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "business_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Business and self-employment have official tax and central-bank sources, but compliance, account access and residency facts lower screening confidence.",
+    "explanation_ru": "Бизнес и самозанятость имеют официальные налоговые и банковские источники, но комплаенс, доступ к счетам и факты резидентства снижают уверенность.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "470c6e0b-163c-40ce-8abb-dedf954ddce1"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "3d203ca0-925f-4598-b5c9-2619b613a14b",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "safety_score",
+    "score": "32.00",
+    "weight": "0.1500",
+    "weighted_score": "4.8000",
+    "explanation_en": "Safety scoring is driven by external freedom, rule-of-law and political-stability sources and should be treated as a risk warning layer.",
+    "explanation_ru": "Оценка безопасности опирается на внешние источники по свободам, верховенству права и политической стабильности и должна восприниматься как слой риск-предупреждений.",
+    "source_ids": [
+      "b1be5576-cef2-4df1-8984-f3283296f520"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "e39e262e-8400-48cd-819a-501b6c70545d",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "cost_of_living_score",
+    "score": "54.00",
+    "weight": "0.1500",
+    "weighted_score": "8.1000",
+    "explanation_en": "Cost context is source-backed through GDP and inflation datasets, but city-level budgets and payment access remain practical uncertainties.",
+    "explanation_ru": "Стоимость жизни подтверждается наборами данных по ВВП и инфляции, но городские бюджеты и платежный доступ остаются практическими неопределенностями.",
+    "source_ids": [
+      "4a72a6f4-adb3-4474-a52f-f0bb95bd2c51",
+      "71187fb4-1de4-41fa-b840-c8e240adebbf",
+      "3bfe72d4-14eb-4bbd-abc4-c8be66ae25ae",
+      "66abd4db-c363-418d-966c-781242d26f24"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "356ad880-9be1-41b1-9ce1-ccb7b052e795",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Legalization remains constrained by statute-led foreign-citizen rules, public-service procedure checks and separate entry sources.",
+    "explanation_ru": "Легализация ограничена законом о статусе иностранцев, процедурными проверками через госуслуги и отдельными источниками по въезду.",
+    "source_ids": [
+      "d4cf2e93-2613-4c48-b376-19263a0c290a",
+      "1f02c1cc-3106-45fc-befd-0e6ba4b09fd5"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "e2de2ff6-4ba7-453c-a527-a9589b4cd9cc",
+    "country_score_id": "3962ec57-1c3e-4acd-a94b-114c2364b8e5",
+    "criterion": "long_term_status_score",
+    "score": "36.00",
+    "weight": "0.2000",
+    "weighted_score": "7.2000",
+    "explanation_en": "Long-term status requires separate review of residence, citizenship and external governance risk rather than extrapolation from entry eligibility.",
+    "explanation_ru": "Долгосрочный статус требует отдельной проверки проживания, гражданства и внешнего governance-риска, а не вывода из въездных условий.",
+    "source_ids": [
+      "0b6ed9af-2dd4-4842-aa61-3e37cd35b508",
+      "2a096f22-ce0c-4e60-8e9f-1f5d6066c83d",
+      "da2a4a7f-656c-4bf8-b73d-8af098b601ed"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "2ad6796d-d565-4095-9538-ff0e27fa499d",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "source_quality_score",
+    "score": "55.00",
+    "weight": "0.0500",
+    "weighted_score": "2.7500",
+    "explanation_en": "Russia now has a broader official and dataset-backed source base, but several user-critical topics still need expert interpretation.",
+    "explanation_ru": "У России теперь шире база официальных источников и данных, но несколько критичных тем все еще требуют экспертной интерпретации.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "9eb31305-b86f-4172-963c-721cdda852a0",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "legal_stability_score",
+    "score": "32.00",
+    "weight": "0.1000",
+    "weighted_score": "3.2000",
+    "explanation_en": "Legal stability uses primary legal references plus WJP and governance datasets, with external indicators keeping the score cautious.",
+    "explanation_ru": "Правовая стабильность опирается на первичные правовые источники, WJP и governance-данные, а внешние показатели сохраняют осторожность оценки.",
+    "source_ids": [
+      "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+      "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+      "c67b55b4-5d6d-4211-9970-de7e51bac781",
+      "3a9f90e2-eca3-4355-baaa-5b676e122de9"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "fb935458-ca30-44e1-97c9-9c5e90ea44a6",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "business_score",
+    "score": "36.00",
+    "weight": "0.1000",
+    "weighted_score": "3.6000",
+    "explanation_en": "Business and self-employment have official tax and central-bank sources, but compliance, account access and residency facts lower screening confidence.",
+    "explanation_ru": "Бизнес и самозанятость имеют официальные налоговые и банковские источники, но комплаенс, доступ к счетам и факты резидентства снижают уверенность.",
+    "source_ids": [
+      "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+      "6317fae7-9d77-4374-9c16-999d6679704e",
+      "2996820c-32c1-41f2-b418-9556315eb15a",
+      "470c6e0b-163c-40ce-8abb-dedf954ddce1"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "592d377d-81b3-4b44-9863-f8bd9e5d7053",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "safety_score",
+    "score": "34.00",
+    "weight": "0.1500",
+    "weighted_score": "5.1000",
+    "explanation_en": "Safety scoring is driven by external freedom, rule-of-law and political-stability sources and should be treated as a risk warning layer.",
+    "explanation_ru": "Оценка безопасности опирается на внешние источники по свободам, верховенству права и политической стабильности и должна восприниматься как слой риск-предупреждений.",
+    "source_ids": [
+      "b1be5576-cef2-4df1-8984-f3283296f520"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "70c2d377-8423-4b46-b98a-b9309211e131",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "cost_of_living_score",
+    "score": "55.00",
+    "weight": "0.1500",
+    "weighted_score": "8.2500",
+    "explanation_en": "Cost context is source-backed through GDP and inflation datasets, but city-level budgets and payment access remain practical uncertainties.",
+    "explanation_ru": "Стоимость жизни подтверждается наборами данных по ВВП и инфляции, но городские бюджеты и платежный доступ остаются практическими неопределенностями.",
+    "source_ids": [
+      "4a72a6f4-adb3-4474-a52f-f0bb95bd2c51",
+      "71187fb4-1de4-41fa-b840-c8e240adebbf",
+      "3bfe72d4-14eb-4bbd-abc4-c8be66ae25ae",
+      "66abd4db-c363-418d-966c-781242d26f24"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "c82aa2d2-d7cd-462d-a105-928b445c16c6",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "legalization_score",
+    "score": "40.00",
+    "weight": "0.2500",
+    "weighted_score": "10.0000",
+    "explanation_en": "Legalization remains constrained by statute-led foreign-citizen rules, public-service procedure checks and separate entry sources.",
+    "explanation_ru": "Легализация ограничена законом о статусе иностранцев, процедурными проверками через госуслуги и отдельными источниками по въезду.",
+    "source_ids": [
+      "d4cf2e93-2613-4c48-b376-19263a0c290a",
+      "1f02c1cc-3106-45fc-befd-0e6ba4b09fd5"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ccac1de5-a886-4dcb-a361-5ca742770e79",
+    "country_score_id": "079fc93b-0345-4447-be2e-da551d2bbb3f",
+    "criterion": "long_term_status_score",
+    "score": "38.00",
+    "weight": "0.2000",
+    "weighted_score": "7.6000",
+    "explanation_en": "Long-term status requires separate review of residence, citizenship and external governance risk rather than extrapolation from entry eligibility.",
+    "explanation_ru": "Долгосрочный статус требует отдельной проверки проживания, гражданства и внешнего governance-риска, а не вывода из въездных условий.",
+    "source_ids": [
+      "0b6ed9af-2dd4-4842-aa61-3e37cd35b508",
+      "2a096f22-ce0c-4e60-8e9f-1f5d6066c83d",
+      "da2a4a7f-656c-4bf8-b73d-8af098b601ed"
+    ],
+    "confidence": "medium",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0424d00e-cfa9-425d-8259-8d38cfec9b1e",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "source_quality_score",
+    "score": "78.00",
+    "weight": "0.0500",
+    "weighted_score": "3.9000",
+    "explanation_en": "Uruguay now has a dense official-source base across residence, tax, banking and law plus external datasets for comparative context.",
+    "explanation_ru": "У Уругвая теперь плотная база официальных источников по резиденции, налогам, банкам и праву, а также внешние наборы данных для сравнения.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+      "828b5f0d-3471-4ec2-89de-760ef7603333"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "08be49f9-34f2-4ec0-9d41-f13f4ce5016f",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "legal_stability_score",
+    "score": "78.00",
+    "weight": "0.1000",
+    "weighted_score": "7.8000",
+    "explanation_en": "Legal stability has primary legal texts and external rule-of-law datasets, supporting a stronger long-term planning score.",
+    "explanation_ru": "Правовая стабильность имеет первичные правовые тексты и внешние индексы верховенства права, что поддерживает более сильную долгосрочную оценку.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "06d04e43-eb09-4412-9d50-3dde4035c6e1"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "491f324f-8128-4bf3-943a-301f1701b531",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "business_score",
+    "score": "64.00",
+    "weight": "0.1000",
+    "weighted_score": "6.4000",
+    "explanation_en": "Business readiness is supported by tax, economy-ministry, central-bank and archived regulation sources, while current filing details need confirmation.",
+    "explanation_ru": "Готовность к бизнесу поддержана налоговыми, экономическими, банковскими и архивными регуляторными источниками, но актуальные детали подачи нужно подтверждать.",
+    "source_ids": [
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+      "56f13030-d91f-4811-8a46-44fdd4265973",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "128c9389-5d76-4f1f-b222-1545232eba27",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "safety_score",
+    "score": "78.00",
+    "weight": "0.1500",
+    "weighted_score": "11.7000",
+    "explanation_en": "Safety and institutional context are supported by freedom, rule-of-law, governance and constitutional sources, giving stronger risk-screening confidence.",
+    "explanation_ru": "Безопасность и институциональный контекст поддержаны источниками по свободам, верховенству права, governance и конституции, что повышает уверенность.",
+    "source_ids": [
+      "b3f114b7-2643-4ada-8d02-3445c402e350"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "656bdd55-d052-4ba8-8433-a7e7e9b9b14e",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "cost_of_living_score",
+    "score": "55.00",
+    "weight": "0.1500",
+    "weighted_score": "8.2500",
+    "explanation_en": "Cost context is backed by World Bank indicators and national statistics, with housing and private services left for city-level verification.",
+    "explanation_ru": "Стоимость жизни подтверждается показателями World Bank и национальной статистикой, а жилье и частные услуги требуют городской проверки.",
+    "source_ids": [
+      "b5e6cc87-ddf2-487f-aaa7-50cc79d4182a",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55",
+      "24e1adbb-ad89-4021-9df0-d07bb699cd8d",
+      "ec6d1188-9159-4e52-ab90-ed8606efd2ca"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "84d2dfd3-9a35-404e-ba1a-e0565b9ea5be",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "long_term_status_score",
+    "score": "70.00",
+    "weight": "0.2000",
+    "weighted_score": "14.0000",
+    "explanation_en": "Long-term status benefits from permanent residence procedure sources, migration law and constitutional context, with case-specific checks still required.",
+    "explanation_ru": "Долгосрочный статус поддержан источниками по постоянной резиденции, миграционным законом и конституционным контекстом, но индивидуальные проверки сохраняются.",
+    "source_ids": [
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "dfa31802-972f-4b14-ac66-bac6e27bf990",
+    "country_score_id": "b0dd34e5-68fe-4101-9014-227e4627f3cd",
+    "criterion": "legalization_score",
+    "score": "74.00",
+    "weight": "0.2500",
+    "weighted_score": "18.5000",
+    "explanation_en": "Legalization has strong traceability through temporary and permanent residence procedures, migration authority materials and migration law.",
+    "explanation_ru": "Легализация хорошо прослеживается через процедуры временной и постоянной резиденции, материалы миграционного органа и миграционный закон.",
+    "source_ids": [
+      "29d2a79c-46ec-4db9-bbde-b7a22addef2f",
+      "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "a4033805-e295-4a8a-a5cd-19009e811c3e",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "source_quality_score",
+    "score": "76.00",
+    "weight": "0.0500",
+    "weighted_score": "3.8000",
+    "explanation_en": "Uruguay now has a dense official-source base across residence, tax, banking and law plus external datasets for comparative context.",
+    "explanation_ru": "У Уругвая теперь плотная база официальных источников по резиденции, налогам, банкам и праву, а также внешние наборы данных для сравнения.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+      "828b5f0d-3471-4ec2-89de-760ef7603333"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "9b9a3478-c6ed-4eba-afaf-372d893ff910",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "legal_stability_score",
+    "score": "72.00",
+    "weight": "0.1000",
+    "weighted_score": "7.2000",
+    "explanation_en": "Legal stability has primary legal texts and external rule-of-law datasets, supporting a stronger long-term planning score.",
+    "explanation_ru": "Правовая стабильность имеет первичные правовые тексты и внешние индексы верховенства права, что поддерживает более сильную долгосрочную оценку.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "06d04e43-eb09-4412-9d50-3dde4035c6e1"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "064f3f7c-2131-4b98-bd2d-1d0d4df66c18",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "business_score",
+    "score": "66.00",
+    "weight": "0.1000",
+    "weighted_score": "6.6000",
+    "explanation_en": "Business readiness is supported by tax, economy-ministry, central-bank and archived regulation sources, while current filing details need confirmation.",
+    "explanation_ru": "Готовность к бизнесу поддержана налоговыми, экономическими, банковскими и архивными регуляторными источниками, но актуальные детали подачи нужно подтверждать.",
+    "source_ids": [
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+      "56f13030-d91f-4811-8a46-44fdd4265973",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "7dc79f2c-e157-418a-b827-3f847330b067",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "safety_score",
+    "score": "68.00",
+    "weight": "0.1500",
+    "weighted_score": "10.2000",
+    "explanation_en": "Safety and institutional context are supported by freedom, rule-of-law, governance and constitutional sources, giving stronger risk-screening confidence.",
+    "explanation_ru": "Безопасность и институциональный контекст поддержаны источниками по свободам, верховенству права, governance и конституции, что повышает уверенность.",
+    "source_ids": [
+      "b3f114b7-2643-4ada-8d02-3445c402e350"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "731b3aca-a8b6-4a56-aa35-7d55068d0cb4",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "cost_of_living_score",
+    "score": "54.00",
+    "weight": "0.1500",
+    "weighted_score": "8.1000",
+    "explanation_en": "Cost context is backed by World Bank indicators and national statistics, with housing and private services left for city-level verification.",
+    "explanation_ru": "Стоимость жизни подтверждается показателями World Bank и национальной статистикой, а жилье и частные услуги требуют городской проверки.",
+    "source_ids": [
+      "b5e6cc87-ddf2-487f-aaa7-50cc79d4182a",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55",
+      "24e1adbb-ad89-4021-9df0-d07bb699cd8d",
+      "ec6d1188-9159-4e52-ab90-ed8606efd2ca"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0e1184cd-0dc7-4ce7-b19f-4515f2880cb1",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "long_term_status_score",
+    "score": "66.00",
+    "weight": "0.2000",
+    "weighted_score": "13.2000",
+    "explanation_en": "Long-term status benefits from permanent residence procedure sources, migration law and constitutional context, with case-specific checks still required.",
+    "explanation_ru": "Долгосрочный статус поддержан источниками по постоянной резиденции, миграционным законом и конституционным контекстом, но индивидуальные проверки сохраняются.",
+    "source_ids": [
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "82ac1311-8751-4dc8-974d-270e21a3e9fd",
+    "country_score_id": "ea3dfe29-455c-4a6e-80db-66ec63997cbf",
+    "criterion": "legalization_score",
+    "score": "70.00",
+    "weight": "0.2500",
+    "weighted_score": "17.5000",
+    "explanation_en": "Legalization has strong traceability through temporary and permanent residence procedures, migration authority materials and migration law.",
+    "explanation_ru": "Легализация хорошо прослеживается через процедуры временной и постоянной резиденции, материалы миграционного органа и миграционный закон.",
+    "source_ids": [
+      "29d2a79c-46ec-4db9-bbde-b7a22addef2f",
+      "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "94670a90-1d8c-427b-b85e-acc0b77d66bf",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "source_quality_score",
+    "score": "76.00",
+    "weight": "0.0500",
+    "weighted_score": "3.8000",
+    "explanation_en": "Uruguay now has a dense official-source base across residence, tax, banking and law plus external datasets for comparative context.",
+    "explanation_ru": "У Уругвая теперь плотная база официальных источников по резиденции, налогам, банкам и праву, а также внешние наборы данных для сравнения.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+      "828b5f0d-3471-4ec2-89de-760ef7603333"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6c261e56-6e26-4215-8efd-26c9fc7eb5c6",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "legal_stability_score",
+    "score": "72.00",
+    "weight": "0.1000",
+    "weighted_score": "7.2000",
+    "explanation_en": "Legal stability has primary legal texts and external rule-of-law datasets, supporting a stronger long-term planning score.",
+    "explanation_ru": "Правовая стабильность имеет первичные правовые тексты и внешние индексы верховенства права, что поддерживает более сильную долгосрочную оценку.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "06d04e43-eb09-4412-9d50-3dde4035c6e1"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "8116c6b2-fade-4277-9a02-172e7de9a03f",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "business_score",
+    "score": "60.00",
+    "weight": "0.1000",
+    "weighted_score": "6.0000",
+    "explanation_en": "Business readiness is supported by tax, economy-ministry, central-bank and archived regulation sources, while current filing details need confirmation.",
+    "explanation_ru": "Готовность к бизнесу поддержана налоговыми, экономическими, банковскими и архивными регуляторными источниками, но актуальные детали подачи нужно подтверждать.",
+    "source_ids": [
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+      "56f13030-d91f-4811-8a46-44fdd4265973",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "f6205104-54c4-4257-b949-bacb79322626",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "safety_score",
+    "score": "70.00",
+    "weight": "0.1500",
+    "weighted_score": "10.5000",
+    "explanation_en": "Safety and institutional context are supported by freedom, rule-of-law, governance and constitutional sources, giving stronger risk-screening confidence.",
+    "explanation_ru": "Безопасность и институциональный контекст поддержаны источниками по свободам, верховенству права, governance и конституции, что повышает уверенность.",
+    "source_ids": [
+      "b3f114b7-2643-4ada-8d02-3445c402e350"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "d614ddb8-4f8c-4516-a6c7-ca2014406773",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "cost_of_living_score",
+    "score": "48.00",
+    "weight": "0.1500",
+    "weighted_score": "7.2000",
+    "explanation_en": "Cost context is backed by World Bank indicators and national statistics, with housing and private services left for city-level verification.",
+    "explanation_ru": "Стоимость жизни подтверждается показателями World Bank и национальной статистикой, а жилье и частные услуги требуют городской проверки.",
+    "source_ids": [
+      "b5e6cc87-ddf2-487f-aaa7-50cc79d4182a",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55",
+      "24e1adbb-ad89-4021-9df0-d07bb699cd8d",
+      "ec6d1188-9159-4e52-ab90-ed8606efd2ca"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "9e0ab644-c3ea-4201-b444-5b7dad7d0542",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "long_term_status_score",
+    "score": "62.00",
+    "weight": "0.2000",
+    "weighted_score": "12.4000",
+    "explanation_en": "Long-term status benefits from permanent residence procedure sources, migration law and constitutional context, with case-specific checks still required.",
+    "explanation_ru": "Долгосрочный статус поддержан источниками по постоянной резиденции, миграционным законом и конституционным контекстом, но индивидуальные проверки сохраняются.",
+    "source_ids": [
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "949d0caa-4337-42ec-a12e-103989347484",
+    "country_score_id": "2cde104a-2c7a-4994-b904-50aaa21a9d89",
+    "criterion": "legalization_score",
+    "score": "66.00",
+    "weight": "0.2500",
+    "weighted_score": "16.5000",
+    "explanation_en": "Legalization has strong traceability through temporary and permanent residence procedures, migration authority materials and migration law.",
+    "explanation_ru": "Легализация хорошо прослеживается через процедуры временной и постоянной резиденции, материалы миграционного органа и миграционный закон.",
+    "source_ids": [
+      "29d2a79c-46ec-4db9-bbde-b7a22addef2f",
+      "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "128d3f9e-0f3f-478c-b867-998cc2b9265a",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "source_quality_score",
+    "score": "77.00",
+    "weight": "0.0500",
+    "weighted_score": "3.8500",
+    "explanation_en": "Uruguay now has a dense official-source base across residence, tax, banking and law plus external datasets for comparative context.",
+    "explanation_ru": "У Уругвая теперь плотная база официальных источников по резиденции, налогам, банкам и праву, а также внешние наборы данных для сравнения.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+      "828b5f0d-3471-4ec2-89de-760ef7603333"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "850819de-704d-433b-be0c-1ffa1969b64e",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "legal_stability_score",
+    "score": "73.00",
+    "weight": "0.1000",
+    "weighted_score": "7.3000",
+    "explanation_en": "Legal stability has primary legal texts and external rule-of-law datasets, supporting a stronger long-term planning score.",
+    "explanation_ru": "Правовая стабильность имеет первичные правовые тексты и внешние индексы верховенства права, что поддерживает более сильную долгосрочную оценку.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "06d04e43-eb09-4412-9d50-3dde4035c6e1"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "533db8f3-46dd-4261-81c9-2c3c6076455a",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "business_score",
+    "score": "64.00",
+    "weight": "0.1000",
+    "weighted_score": "6.4000",
+    "explanation_en": "Business readiness is supported by tax, economy-ministry, central-bank and archived regulation sources, while current filing details need confirmation.",
+    "explanation_ru": "Готовность к бизнесу поддержана налоговыми, экономическими, банковскими и архивными регуляторными источниками, но актуальные детали подачи нужно подтверждать.",
+    "source_ids": [
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+      "56f13030-d91f-4811-8a46-44fdd4265973",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "61964ddc-bccb-44f8-a29c-159d1adb9df4",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "safety_score",
+    "score": "70.00",
+    "weight": "0.1500",
+    "weighted_score": "10.5000",
+    "explanation_en": "Safety and institutional context are supported by freedom, rule-of-law, governance and constitutional sources, giving stronger risk-screening confidence.",
+    "explanation_ru": "Безопасность и институциональный контекст поддержаны источниками по свободам, верховенству права, governance и конституции, что повышает уверенность.",
+    "source_ids": [
+      "b3f114b7-2643-4ada-8d02-3445c402e350"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "3741e5e5-5136-48ca-981f-8a1638fc21dc",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "cost_of_living_score",
+    "score": "55.00",
+    "weight": "0.1500",
+    "weighted_score": "8.2500",
+    "explanation_en": "Cost context is backed by World Bank indicators and national statistics, with housing and private services left for city-level verification.",
+    "explanation_ru": "Стоимость жизни подтверждается показателями World Bank и национальной статистикой, а жилье и частные услуги требуют городской проверки.",
+    "source_ids": [
+      "b5e6cc87-ddf2-487f-aaa7-50cc79d4182a",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55",
+      "24e1adbb-ad89-4021-9df0-d07bb699cd8d",
+      "ec6d1188-9159-4e52-ab90-ed8606efd2ca"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "03d30733-396a-46cc-a673-35ebd21fda9f",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "long_term_status_score",
+    "score": "70.00",
+    "weight": "0.2000",
+    "weighted_score": "14.0000",
+    "explanation_en": "Long-term status benefits from permanent residence procedure sources, migration law and constitutional context, with case-specific checks still required.",
+    "explanation_ru": "Долгосрочный статус поддержан источниками по постоянной резиденции, миграционным законом и конституционным контекстом, но индивидуальные проверки сохраняются.",
+    "source_ids": [
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "08f7154c-ee6e-43e1-b4dc-80346fc9d336",
+    "country_score_id": "aa270d00-f1f0-498f-8ed9-951e1056ebe8",
+    "criterion": "legalization_score",
+    "score": "72.00",
+    "weight": "0.2500",
+    "weighted_score": "18.0000",
+    "explanation_en": "Legalization has strong traceability through temporary and permanent residence procedures, migration authority materials and migration law.",
+    "explanation_ru": "Легализация хорошо прослеживается через процедуры временной и постоянной резиденции, материалы миграционного органа и миграционный закон.",
+    "source_ids": [
+      "29d2a79c-46ec-4db9-bbde-b7a22addef2f",
+      "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ef961810-5bbe-4554-ba14-03f7146a4cdb",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "source_quality_score",
+    "score": "78.00",
+    "weight": "0.0500",
+    "weighted_score": "3.9000",
+    "explanation_en": "Uruguay now has a dense official-source base across residence, tax, banking and law plus external datasets for comparative context.",
+    "explanation_ru": "У Уругвая теперь плотная база официальных источников по резиденции, налогам, банкам и праву, а также внешние наборы данных для сравнения.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+      "828b5f0d-3471-4ec2-89de-760ef7603333"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "3dc8e825-f657-4aea-81b7-5a73c5baf64f",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "legal_stability_score",
+    "score": "74.00",
+    "weight": "0.1000",
+    "weighted_score": "7.4000",
+    "explanation_en": "Legal stability has primary legal texts and external rule-of-law datasets, supporting a stronger long-term planning score.",
+    "explanation_ru": "Правовая стабильность имеет первичные правовые тексты и внешние индексы верховенства права, что поддерживает более сильную долгосрочную оценку.",
+    "source_ids": [
+      "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "06d04e43-eb09-4412-9d50-3dde4035c6e1"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6e3fec01-844a-4e06-9ed9-8bc47ddf699b",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "business_score",
+    "score": "66.00",
+    "weight": "0.1000",
+    "weighted_score": "6.6000",
+    "explanation_en": "Business readiness is supported by tax, economy-ministry, central-bank and archived regulation sources, while current filing details need confirmation.",
+    "explanation_ru": "Готовность к бизнесу поддержана налоговыми, экономическими, банковскими и архивными регуляторными источниками, но актуальные детали подачи нужно подтверждать.",
+    "source_ids": [
+      "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+      "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+      "56f13030-d91f-4811-8a46-44fdd4265973",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "fd120b84-fc34-4a9e-b70b-2acf3edeb821",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "safety_score",
+    "score": "72.00",
+    "weight": "0.1500",
+    "weighted_score": "10.8000",
+    "explanation_en": "Safety and institutional context are supported by freedom, rule-of-law, governance and constitutional sources, giving stronger risk-screening confidence.",
+    "explanation_ru": "Безопасность и институциональный контекст поддержаны источниками по свободам, верховенству права, governance и конституции, что повышает уверенность.",
+    "source_ids": [
+      "b3f114b7-2643-4ada-8d02-3445c402e350"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6bea84b6-7fbd-48f6-95a1-e74121e2e283",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "cost_of_living_score",
+    "score": "56.00",
+    "weight": "0.1500",
+    "weighted_score": "8.4000",
+    "explanation_en": "Cost context is backed by World Bank indicators and national statistics, with housing and private services left for city-level verification.",
+    "explanation_ru": "Стоимость жизни подтверждается показателями World Bank и национальной статистикой, а жилье и частные услуги требуют городской проверки.",
+    "source_ids": [
+      "b5e6cc87-ddf2-487f-aaa7-50cc79d4182a",
+      "99ce06b7-966f-4a40-9d45-28eb2a4c3e55",
+      "24e1adbb-ad89-4021-9df0-d07bb699cd8d",
+      "ec6d1188-9159-4e52-ab90-ed8606efd2ca"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0cb39cb6-3b1d-4f99-a379-1ea3db92575c",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "long_term_status_score",
+    "score": "72.00",
+    "weight": "0.2000",
+    "weighted_score": "14.4000",
+    "explanation_en": "Long-term status benefits from permanent residence procedure sources, migration law and constitutional context, with case-specific checks still required.",
+    "explanation_ru": "Долгосрочный статус поддержан источниками по постоянной резиденции, миграционным законом и конституционным контекстом, но индивидуальные проверки сохраняются.",
+    "source_ids": [
+      "4398f54b-9519-49d2-a624-ce610c2d61ec",
+      "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "febcb05e-a0bd-46fc-a15e-d6cb392af5d0",
+    "country_score_id": "b68d3f9e-449d-4ae8-a476-5ebe93f9a3c5",
+    "criterion": "legalization_score",
+    "score": "78.00",
+    "weight": "0.2500",
+    "weighted_score": "19.5000",
+    "explanation_en": "Legalization has strong traceability through temporary and permanent residence procedures, migration authority materials and migration law.",
+    "explanation_ru": "Легализация хорошо прослеживается через процедуры временной и постоянной резиденции, материалы миграционного органа и миграционный закон.",
+    "source_ids": [
+      "29d2a79c-46ec-4db9-bbde-b7a22addef2f",
+      "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "9a52cdfa-9518-485a-9b86-944251eaa03e",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Screening proxy based on the CII rule-of-law metric and official DNM residence guidance. Current requirements must be verified for the applicant profile.",
+    "explanation_ru": "Скрининговый показатель основан на метрике CII верховенства права и официальных материалах DNM о резидентстве. Актуальные требования необходимо проверять для конкретного профиля заявителя.",
+    "source_ids": [
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "fb8c5dd5-4f26-440f-a542-987bccb7665e",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law and political-stability metrics with official immigration guidance. It does not predict an individual residence or citizenship outcome.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права и политической стабильности с официальными иммиграционными материалами. Он не прогнозирует индивидуальный результат получения резидентства или гражданства.",
+    "source_ids": [
+      "c574f6ae-f429-4d96-a282-366c2cc43faf",
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "b557cde1-a519-4991-b350-03bde32697e3",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "cost_of_living_score",
+    "score": "44.80",
+    "weight": "0.1500",
+    "weighted_score": "6.7200",
+    "explanation_en": "Screening proxy using the CII economic-freedom metric and official INDEC country data. It is not a city-level household budget and current prices require separate verification.",
+    "explanation_ru": "Скрининговый показатель использует метрику CII экономической свободы и официальные данные INDEC. Это не городской бюджет домохозяйства; актуальные цены требуют отдельной проверки.",
+    "source_ids": [
+      "e3b8c2ce-a7ec-4aa0-acad-440aee22823d",
+      "3a147be9-beb8-4bec-b954-568d49977499"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "23a09616-b8d8-4054-ba1a-1e0c81c34756",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "safety_score",
+    "score": "42.50",
+    "weight": "0.1500",
+    "weighted_score": "6.3750",
+    "explanation_en": "Screening proxy combining the CII safety and political-stability metrics. Local conditions vary and current official travel guidance remains necessary.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII безопасности и политической стабильности. Локальные условия различаются, поэтому необходимо проверять актуальные официальные рекомендации для поездок.",
+    "source_ids": [
+      "b4dc9aba-2769-44c5-91b0-c14c126f85bf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "4e6ddda5-bfac-4c66-ace2-c3827b9be87c",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "business_score",
+    "score": "56.40",
+    "weight": "0.1000",
+    "weighted_score": "5.6400",
+    "explanation_en": "Screening proxy combining the CII economic-freedom and digital-access metrics with official AFIP and IGJ registration materials.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII экономической свободы и цифрового доступа с официальными материалами AFIP и IGJ о регистрации.",
+    "source_ids": [
+      "bb8dae7b-d456-4f5e-8e3f-bfe679a93282",
+      "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+      "370f9a40-2418-407d-b09a-e073942befdf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "7602474f-9851-4f30-a822-de147bc1f143",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "legal_stability_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law, political-stability, and corruption metrics. It represents country-level context rather than legal certainty for a particular case.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права, политической стабильности и коррупции. Он отражает контекст страны, а не юридическую определённость по конкретному делу.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "13c4ba9f-c274-489d-9952-591aea27bee6",
+    "country_score_id": "c7766f4f-0019-4fdc-a886-af8aea0bbec4",
+    "criterion": "source_quality_score",
+    "score": "47.13",
+    "weight": "0.0500",
+    "weighted_score": "2.3565",
+    "explanation_en": "Screening proxy reflecting the six source-attributed CII metric values used by the v1.0 calculation. Source freshness and methodology still require periodic review.",
+    "explanation_ru": "Скрининговый показатель отражает шесть значений метрик CII с указанными источниками, использованных расчётом v1.0. Актуальность источников и методология требуют периодической проверки.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "3b1b1aa6-b4fa-4afc-933f-55cc05900914",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Screening proxy based on the CII rule-of-law metric and official DNM residence guidance. Current requirements must be verified for the applicant profile.",
+    "explanation_ru": "Скрининговый показатель основан на метрике CII верховенства права и официальных материалах DNM о резидентстве. Актуальные требования необходимо проверять для конкретного профиля заявителя.",
+    "source_ids": [
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ee64455d-bb73-4c14-ad65-3d77291f4bbb",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law and political-stability metrics with official immigration guidance. It does not predict an individual residence or citizenship outcome.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права и политической стабильности с официальными иммиграционными материалами. Он не прогнозирует индивидуальный результат получения резидентства или гражданства.",
+    "source_ids": [
+      "c574f6ae-f429-4d96-a282-366c2cc43faf",
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "4ff7300b-a556-4c93-8cf4-3d0b2172f465",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "cost_of_living_score",
+    "score": "44.80",
+    "weight": "0.1500",
+    "weighted_score": "6.7200",
+    "explanation_en": "Screening proxy using the CII economic-freedom metric and official INDEC country data. It is not a city-level household budget and current prices require separate verification.",
+    "explanation_ru": "Скрининговый показатель использует метрику CII экономической свободы и официальные данные INDEC. Это не городской бюджет домохозяйства; актуальные цены требуют отдельной проверки.",
+    "source_ids": [
+      "e3b8c2ce-a7ec-4aa0-acad-440aee22823d",
+      "3a147be9-beb8-4bec-b954-568d49977499"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "2e94a7d8-c257-4a9e-90d9-c23bc5de8390",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "safety_score",
+    "score": "42.50",
+    "weight": "0.1500",
+    "weighted_score": "6.3750",
+    "explanation_en": "Screening proxy combining the CII safety and political-stability metrics. Local conditions vary and current official travel guidance remains necessary.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII безопасности и политической стабильности. Локальные условия различаются, поэтому необходимо проверять актуальные официальные рекомендации для поездок.",
+    "source_ids": [
+      "b4dc9aba-2769-44c5-91b0-c14c126f85bf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "f9f7278e-c995-4220-93ea-1295571f85ad",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "business_score",
+    "score": "56.40",
+    "weight": "0.1000",
+    "weighted_score": "5.6400",
+    "explanation_en": "Screening proxy combining the CII economic-freedom and digital-access metrics with official AFIP and IGJ registration materials.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII экономической свободы и цифрового доступа с официальными материалами AFIP и IGJ о регистрации.",
+    "source_ids": [
+      "bb8dae7b-d456-4f5e-8e3f-bfe679a93282",
+      "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+      "370f9a40-2418-407d-b09a-e073942befdf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "5cfbd886-8903-47fd-9464-1887ccc11649",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "legal_stability_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law, political-stability, and corruption metrics. It represents country-level context rather than legal certainty for a particular case.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права, политической стабильности и коррупции. Он отражает контекст страны, а не юридическую определённость по конкретному делу.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "945f4e4f-b719-4bcf-a68d-37608e98088d",
+    "country_score_id": "899f948b-3ea5-4c8e-ac65-0fd539fb557a",
+    "criterion": "source_quality_score",
+    "score": "47.13",
+    "weight": "0.0500",
+    "weighted_score": "2.3565",
+    "explanation_en": "Screening proxy reflecting the six source-attributed CII metric values used by the v1.0 calculation. Source freshness and methodology still require periodic review.",
+    "explanation_ru": "Скрининговый показатель отражает шесть значений метрик CII с указанными источниками, использованных расчётом v1.0. Актуальность источников и методология требуют периодической проверки.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "2ab22c64-1a04-4681-bf19-427cb7fff799",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Screening proxy based on the CII rule-of-law metric and official DNM residence guidance. Current requirements must be verified for the applicant profile.",
+    "explanation_ru": "Скрининговый показатель основан на метрике CII верховенства права и официальных материалах DNM о резидентстве. Актуальные требования необходимо проверять для конкретного профиля заявителя.",
+    "source_ids": [
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "d3147b78-0c89-472a-b7cb-45bcb14353fa",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law and political-stability metrics with official immigration guidance. It does not predict an individual residence or citizenship outcome.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права и политической стабильности с официальными иммиграционными материалами. Он не прогнозирует индивидуальный результат получения резидентства или гражданства.",
+    "source_ids": [
+      "c574f6ae-f429-4d96-a282-366c2cc43faf",
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0b508033-49b8-4069-ad77-b88db427cfb2",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "cost_of_living_score",
+    "score": "44.80",
+    "weight": "0.1500",
+    "weighted_score": "6.7200",
+    "explanation_en": "Screening proxy using the CII economic-freedom metric and official INDEC country data. It is not a city-level household budget and current prices require separate verification.",
+    "explanation_ru": "Скрининговый показатель использует метрику CII экономической свободы и официальные данные INDEC. Это не городской бюджет домохозяйства; актуальные цены требуют отдельной проверки.",
+    "source_ids": [
+      "e3b8c2ce-a7ec-4aa0-acad-440aee22823d",
+      "3a147be9-beb8-4bec-b954-568d49977499"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "498925a3-f068-4afd-a7c8-cd95f3e744f2",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "safety_score",
+    "score": "42.50",
+    "weight": "0.1500",
+    "weighted_score": "6.3750",
+    "explanation_en": "Screening proxy combining the CII safety and political-stability metrics. Local conditions vary and current official travel guidance remains necessary.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII безопасности и политической стабильности. Локальные условия различаются, поэтому необходимо проверять актуальные официальные рекомендации для поездок.",
+    "source_ids": [
+      "b4dc9aba-2769-44c5-91b0-c14c126f85bf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "f9425087-195f-4988-b9ef-c0760142ff56",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "business_score",
+    "score": "56.40",
+    "weight": "0.1000",
+    "weighted_score": "5.6400",
+    "explanation_en": "Screening proxy combining the CII economic-freedom and digital-access metrics with official AFIP and IGJ registration materials.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII экономической свободы и цифрового доступа с официальными материалами AFIP и IGJ о регистрации.",
+    "source_ids": [
+      "bb8dae7b-d456-4f5e-8e3f-bfe679a93282",
+      "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+      "370f9a40-2418-407d-b09a-e073942befdf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "e7a33af9-fc98-41ca-ba79-78715fb4bea0",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "legal_stability_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law, political-stability, and corruption metrics. It represents country-level context rather than legal certainty for a particular case.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права, политической стабильности и коррупции. Он отражает контекст страны, а не юридическую определённость по конкретному делу.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "4a683f72-3c91-4c7c-beac-ae2836de82e1",
+    "country_score_id": "e7cb60ca-925f-47a3-b05d-5aa8b36aa76d",
+    "criterion": "source_quality_score",
+    "score": "47.13",
+    "weight": "0.0500",
+    "weighted_score": "2.3565",
+    "explanation_en": "Screening proxy reflecting the six source-attributed CII metric values used by the v1.0 calculation. Source freshness and methodology still require periodic review.",
+    "explanation_ru": "Скрининговый показатель отражает шесть значений метрик CII с указанными источниками, использованных расчётом v1.0. Актуальность источников и методология требуют периодической проверки.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0f01b3ec-9e4d-4a69-96c2-026b962890b7",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Screening proxy based on the CII rule-of-law metric and official DNM residence guidance. Current requirements must be verified for the applicant profile.",
+    "explanation_ru": "Скрининговый показатель основан на метрике CII верховенства права и официальных материалах DNM о резидентстве. Актуальные требования необходимо проверять для конкретного профиля заявителя.",
+    "source_ids": [
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ca01ad3c-8cd7-4fc9-80b3-98270a85cade",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law and political-stability metrics with official immigration guidance. It does not predict an individual residence or citizenship outcome.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права и политической стабильности с официальными иммиграционными материалами. Он не прогнозирует индивидуальный результат получения резидентства или гражданства.",
+    "source_ids": [
+      "c574f6ae-f429-4d96-a282-366c2cc43faf",
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "a340002d-91c6-43fa-8cd2-0a58f51d3402",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "cost_of_living_score",
+    "score": "44.80",
+    "weight": "0.1500",
+    "weighted_score": "6.7200",
+    "explanation_en": "Screening proxy using the CII economic-freedom metric and official INDEC country data. It is not a city-level household budget and current prices require separate verification.",
+    "explanation_ru": "Скрининговый показатель использует метрику CII экономической свободы и официальные данные INDEC. Это не городской бюджет домохозяйства; актуальные цены требуют отдельной проверки.",
+    "source_ids": [
+      "e3b8c2ce-a7ec-4aa0-acad-440aee22823d",
+      "3a147be9-beb8-4bec-b954-568d49977499"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "80925282-3873-493a-9bba-781dbf47c1ab",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "safety_score",
+    "score": "42.50",
+    "weight": "0.1500",
+    "weighted_score": "6.3750",
+    "explanation_en": "Screening proxy combining the CII safety and political-stability metrics. Local conditions vary and current official travel guidance remains necessary.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII безопасности и политической стабильности. Локальные условия различаются, поэтому необходимо проверять актуальные официальные рекомендации для поездок.",
+    "source_ids": [
+      "b4dc9aba-2769-44c5-91b0-c14c126f85bf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ad2724d4-24e3-4365-a547-2c3c1190cc25",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "business_score",
+    "score": "56.40",
+    "weight": "0.1000",
+    "weighted_score": "5.6400",
+    "explanation_en": "Screening proxy combining the CII economic-freedom and digital-access metrics with official AFIP and IGJ registration materials.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII экономической свободы и цифрового доступа с официальными материалами AFIP и IGJ о регистрации.",
+    "source_ids": [
+      "bb8dae7b-d456-4f5e-8e3f-bfe679a93282",
+      "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+      "370f9a40-2418-407d-b09a-e073942befdf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "01ced616-793d-476f-87a3-166189c10e48",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "legal_stability_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law, political-stability, and corruption metrics. It represents country-level context rather than legal certainty for a particular case.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права, политической стабильности и коррупции. Он отражает контекст страны, а не юридическую определённость по конкретному делу.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "d2736cd2-0ff2-46da-b7b4-d4fc59d18227",
+    "country_score_id": "dc2c79d4-892c-4ff1-98de-4fc3423c2dce",
+    "criterion": "source_quality_score",
+    "score": "47.13",
+    "weight": "0.0500",
+    "weighted_score": "2.3565",
+    "explanation_en": "Screening proxy reflecting the six source-attributed CII metric values used by the v1.0 calculation. Source freshness and methodology still require periodic review.",
+    "explanation_ru": "Скрининговый показатель отражает шесть значений метрик CII с указанными источниками, использованных расчётом v1.0. Актуальность источников и методология требуют периодической проверки.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "99d7586c-f269-41ec-9fa0-7c097896f4c3",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "legalization_score",
+    "score": "38.00",
+    "weight": "0.2500",
+    "weighted_score": "9.5000",
+    "explanation_en": "Screening proxy based on the CII rule-of-law metric and official DNM residence guidance. Current requirements must be verified for the applicant profile.",
+    "explanation_ru": "Скрининговый показатель основан на метрике CII верховенства права и официальных материалах DNM о резидентстве. Актуальные требования необходимо проверять для конкретного профиля заявителя.",
+    "source_ids": [
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "78654919-0cbd-4170-9a7e-bdcee0245a1a",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "long_term_status_score",
+    "score": "34.00",
+    "weight": "0.2000",
+    "weighted_score": "6.8000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law and political-stability metrics with official immigration guidance. It does not predict an individual residence or citizenship outcome.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права и политической стабильности с официальными иммиграционными материалами. Он не прогнозирует индивидуальный результат получения резидентства или гражданства.",
+    "source_ids": [
+      "c574f6ae-f429-4d96-a282-366c2cc43faf",
+      "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "c7c31601-a672-4800-a388-bea747d60de9",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "cost_of_living_score",
+    "score": "44.80",
+    "weight": "0.1500",
+    "weighted_score": "6.7200",
+    "explanation_en": "Screening proxy using the CII economic-freedom metric and official INDEC country data. It is not a city-level household budget and current prices require separate verification.",
+    "explanation_ru": "Скрининговый показатель использует метрику CII экономической свободы и официальные данные INDEC. Это не городской бюджет домохозяйства; актуальные цены требуют отдельной проверки.",
+    "source_ids": [
+      "e3b8c2ce-a7ec-4aa0-acad-440aee22823d",
+      "3a147be9-beb8-4bec-b954-568d49977499"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "d564f18b-a645-483e-9c45-6a42d4cbfcb4",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "safety_score",
+    "score": "42.50",
+    "weight": "0.1500",
+    "weighted_score": "6.3750",
+    "explanation_en": "Screening proxy combining the CII safety and political-stability metrics. Local conditions vary and current official travel guidance remains necessary.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII безопасности и политической стабильности. Локальные условия различаются, поэтому необходимо проверять актуальные официальные рекомендации для поездок.",
+    "source_ids": [
+      "b4dc9aba-2769-44c5-91b0-c14c126f85bf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "1da9987e-9bf7-4e27-9602-f6dbe8b526c2",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "business_score",
+    "score": "56.40",
+    "weight": "0.1000",
+    "weighted_score": "5.6400",
+    "explanation_en": "Screening proxy combining the CII economic-freedom and digital-access metrics with official AFIP and IGJ registration materials.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII экономической свободы и цифрового доступа с официальными материалами AFIP и IGJ о регистрации.",
+    "source_ids": [
+      "bb8dae7b-d456-4f5e-8e3f-bfe679a93282",
+      "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+      "370f9a40-2418-407d-b09a-e073942befdf"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "5f06f968-78e7-492e-8de5-feb6c8f40077",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "legal_stability_score",
+    "score": "35.00",
+    "weight": "0.1000",
+    "weighted_score": "3.5000",
+    "explanation_en": "Screening proxy combining the CII rule-of-law, political-stability, and corruption metrics. It represents country-level context rather than legal certainty for a particular case.",
+    "explanation_ru": "Скрининговый показатель сочетает метрики CII верховенства права, политической стабильности и коррупции. Он отражает контекст страны, а не юридическую определённость по конкретному делу.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "5c35eb6d-e64b-4782-9636-b2ddc531f7ef",
+    "country_score_id": "136ba486-738e-42d3-a1c9-e81164d2bf60",
+    "criterion": "source_quality_score",
+    "score": "47.13",
+    "weight": "0.0500",
+    "weighted_score": "2.3565",
+    "explanation_en": "Screening proxy reflecting the six source-attributed CII metric values used by the v1.0 calculation. Source freshness and methodology still require periodic review.",
+    "explanation_ru": "Скрининговый показатель отражает шесть значений метрик CII с указанными источниками, использованных расчётом v1.0. Актуальность источников и методология требуют периодической проверки.",
+    "source_ids": [
+      "b9ec4f4e-52d5-41d0-a8d6-c2eaab6eb293"
+    ],
+    "confidence": "high",
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  }
+]

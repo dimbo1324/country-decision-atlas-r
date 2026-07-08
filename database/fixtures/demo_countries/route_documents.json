@@ -1,0 +1,182 @@
+[
+  {
+    "id": "51fd5c07-42f4-40db-bbb5-b14c093228f6",
+    "route_id": "bd148644-e4f6-4275-af3a-26cd46a0e994",
+    "name": "Activity and income records",
+    "name_ru": "Сведения о деятельности и доходах",
+    "is_mandatory": false,
+    "note": "Category and income treatment require tax review.",
+    "note_ru": "Категория и учет доходов требуют налоговой проверки.",
+    "display_order": 2
+  },
+  {
+    "id": "b1eeee2a-dba1-4019-85c1-892c6eedb0d4",
+    "route_id": "bd148644-e4f6-4275-af3a-26cd46a0e994",
+    "name": "Taxpayer registration data",
+    "name_ru": "Данные налоговой регистрации",
+    "is_mandatory": true,
+    "note": "Verify registration eligibility in the official tax portal.",
+    "note_ru": "Проверьте право на регистрацию на официальном налоговом портале.",
+    "display_order": 1
+  },
+  {
+    "id": "18508285-c766-444d-95c7-a071dfad3815",
+    "route_id": "2c671ee4-8a55-48a9-a76f-6baaeb7f879d",
+    "name": "Residence and nationality records",
+    "name_ru": "Документы проживания и гражданского статуса",
+    "is_mandatory": true,
+    "note": "The full package must be reviewed case by case.",
+    "note_ru": "Полный пакет нужно проверять индивидуально.",
+    "display_order": 2
+  },
+  {
+    "id": "f8e95749-ef52-417f-8404-c8602bd12e12",
+    "route_id": "2c671ee4-8a55-48a9-a76f-6baaeb7f879d",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Confirm accepted identity records before filing.",
+    "note_ru": "Проверьте допустимые документы до подачи.",
+    "display_order": 1
+  },
+  {
+    "id": "3ae34217-1361-415e-ab53-8928d8f51ac5",
+    "route_id": "c2cd9191-54d7-4013-ad1a-94cc728a971d",
+    "name": "Residence-status filing package",
+    "name_ru": "Пакет подачи по статусу проживания",
+    "is_mandatory": true,
+    "note": "Use the official procedure to confirm the exact package.",
+    "note_ru": "Используйте официальную процедуру для проверки точного пакета.",
+    "display_order": 2
+  },
+  {
+    "id": "824225b3-1911-4e6b-a7cc-5334faaa0b6e",
+    "route_id": "c2cd9191-54d7-4013-ad1a-94cc728a971d",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Verify accepted identity formats in the current procedure.",
+    "note_ru": "Проверьте допустимые форматы документа в актуальной процедуре.",
+    "display_order": 1
+  },
+  {
+    "id": "c9b7aedd-606b-488a-9726-1c556019d601",
+    "route_id": "1f6cdee4-d252-42f2-80b0-5d1a6b661a53",
+    "name": "Business activity records",
+    "name_ru": "Сведения о предпринимательской деятельности",
+    "is_mandatory": false,
+    "note": "The exact package depends on the tax or business scenario.",
+    "note_ru": "Точный пакет зависит от налогового или бизнес-сценария.",
+    "display_order": 2
+  },
+  {
+    "id": "01540eff-bc8a-4ce6-9d27-6bbaa6f7f7ac",
+    "route_id": "1f6cdee4-d252-42f2-80b0-5d1a6b661a53",
+    "name": "Tax registration records",
+    "name_ru": "Документы налоговой регистрации",
+    "is_mandatory": true,
+    "note": "Confirm registration requirements with the tax authority.",
+    "note_ru": "Проверьте требования регистрации в налоговом органе.",
+    "display_order": 1
+  },
+  {
+    "id": "f030856a-ea24-42c3-8556-24c0d69af8b3",
+    "route_id": "85cba25d-67a4-4a6f-b854-71c44517a4ad",
+    "name": "Residence basis records",
+    "name_ru": "Документы основания резиденции",
+    "is_mandatory": true,
+    "note": "The statutory baseline must be paired with current procedure review.",
+    "note_ru": "Правовую основу нужно связать с актуальной процедурой.",
+    "display_order": 2
+  },
+  {
+    "id": "ba4cc85f-0a7d-4ee3-b816-2834e2f90c36",
+    "route_id": "85cba25d-67a4-4a6f-b854-71c44517a4ad",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Confirm identity and status records before filing.",
+    "note_ru": "Проверьте документы личности и статуса до подачи.",
+    "display_order": 1
+  },
+  {
+    "id": "69f2f370-8de7-42c2-83d7-9fdf4f04ac84",
+    "route_id": "c345efca-ea51-4bf1-bfb4-d53f7b5df24e",
+    "name": "Temporary residence application package",
+    "name_ru": "Пакет заявления на временную резиденцию",
+    "is_mandatory": true,
+    "note": "Use the procedure page for the current filing package.",
+    "note_ru": "Используйте страницу процедуры для актуального пакета подачи.",
+    "display_order": 2
+  },
+  {
+    "id": "535c9497-bdb2-40a9-9222-cd1dcef6ca1c",
+    "route_id": "c345efca-ea51-4bf1-bfb4-d53f7b5df24e",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Confirm accepted identity formats in the current procedure.",
+    "note_ru": "Проверьте допустимые документы в актуальной процедуре.",
+    "display_order": 1
+  },
+  {
+    "id": "4c886ab7-1069-4753-947a-46f9f0dae124",
+    "route_id": "bf74e28e-96e8-440f-8f2e-b1f21113f153",
+    "name": "Activity and category records",
+    "name_ru": "Сведения о деятельности и категории",
+    "is_mandatory": false,
+    "note": "Category eligibility must be checked in the current AFIP rules.",
+    "note_ru": "Право на категорию нужно проверять по действующим правилам AFIP.",
+    "display_order": 2
+  },
+  {
+    "id": "091ee6fc-c720-478f-8a1a-dab986b9345e",
+    "route_id": "bf74e28e-96e8-440f-8f2e-b1f21113f153",
+    "name": "Tax identification records",
+    "name_ru": "Документы налоговой идентификации",
+    "is_mandatory": true,
+    "note": "Verify CUIT or CUIL requirements through AFIP.",
+    "note_ru": "Проверьте требования CUIT или CUIL через AFIP.",
+    "display_order": 1
+  },
+  {
+    "id": "f7d6600d-9e8f-44ed-9054-711035afc7e7",
+    "route_id": "c4c76ade-b743-49fd-935c-0b9fb14052e5",
+    "name": "Residence-period records",
+    "name_ru": "Документы срока проживания",
+    "is_mandatory": true,
+    "note": "Residence-period evidence must be checked in the current process.",
+    "note_ru": "Подтверждение срока проживания нужно проверять в актуальном процессе.",
+    "display_order": 2
+  },
+  {
+    "id": "4e511073-2091-4b9a-bb78-d4f017818e08",
+    "route_id": "c4c76ade-b743-49fd-935c-0b9fb14052e5",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Confirm accepted identity and civil records before filing.",
+    "note_ru": "Проверьте документы личности и гражданского состояния до подачи.",
+    "display_order": 1
+  },
+  {
+    "id": "ac55d642-6702-49b1-8a41-4b3c1fa4125f",
+    "route_id": "8fd0aa3f-c30a-4714-ad7f-3b88ef9bf266",
+    "name": "Residence application package",
+    "name_ru": "Пакет заявления на проживание",
+    "is_mandatory": true,
+    "note": "DNM procedure should define the current package.",
+    "note_ru": "Актуальный пакет должна определять процедура DNM.",
+    "display_order": 2
+  },
+  {
+    "id": "10cf2a2e-8120-4d53-817d-6a69c5dad8d0",
+    "route_id": "8fd0aa3f-c30a-4714-ad7f-3b88ef9bf266",
+    "name": "Identity document",
+    "name_ru": "Документ, удостоверяющий личность",
+    "is_mandatory": true,
+    "note": "Confirm accepted identity formats in the DNM procedure.",
+    "note_ru": "Проверьте допустимые документы в процедуре DNM.",
+    "display_order": 1
+  }
+]

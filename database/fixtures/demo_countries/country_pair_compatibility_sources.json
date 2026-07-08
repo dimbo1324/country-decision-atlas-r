@@ -1,0 +1,34 @@
+[
+  {
+    "country_pair_id": "e16f4996-194d-49a0-b94f-ad14e11cbe56",
+    "source_id": "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+  },
+  {
+    "country_pair_id": "e16f4996-194d-49a0-b94f-ad14e11cbe56",
+    "source_id": "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+  },
+  {
+    "country_pair_id": "be7dd16e-3616-4c78-9295-c6b73b1a90eb",
+    "source_id": "8997ef8c-5c18-4298-8b86-f8169e75f46b"
+  },
+  {
+    "country_pair_id": "be7dd16e-3616-4c78-9295-c6b73b1a90eb",
+    "source_id": "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019"
+  },
+  {
+    "country_pair_id": "f7ff6fcf-9eef-432b-b56e-f40932f5f01b",
+    "source_id": "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+  },
+  {
+    "country_pair_id": "f7ff6fcf-9eef-432b-b56e-f40932f5f01b",
+    "source_id": "9048a6f2-858b-46e6-8114-4bfdcb967a2e"
+  },
+  {
+    "country_pair_id": "5e6e2efd-61d6-40e1-9e7b-f86da44e8e0e",
+    "source_id": "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e"
+  },
+  {
+    "country_pair_id": "5e6e2efd-61d6-40e1-9e7b-f86da44e8e0e",
+    "source_id": "9048a6f2-858b-46e6-8114-4bfdcb967a2e"
+  }
+]

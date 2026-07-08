@@ -1,0 +1,514 @@
+[
+  {
+    "id": "c5923b97-57a4-4b52-9292-be265efa1440",
+    "legal_signal_id": "081dd636-5961-41ed-9a71-3bec5ff94d5e",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "negative",
+    "impact_level": "high",
+    "title": "Rule-of-law indicators reduce legal-stability score",
+    "summary": "Comparative rule-of-law data supports a conservative legal-stability assessment for Russia.",
+    "source_id": "c67b55b4-5d6d-4211-9970-de7e51bac781",
+    "evidence_item_id": "bdcd7468-b708-40ce-8bc7-b26485897873",
+    "affected_groups": [
+      "long_term_relocators",
+      "investors",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "9e8f7dcb-2e69-4f2a-870b-52be64f55aac",
+    "legal_signal_id": "0ac95eef-4e0c-4480-b29e-e2efb27b820f",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "negative",
+    "impact_level": "high",
+    "title": "Political and civil-liberties risk affects long-term fit",
+    "summary": "Institutional risk indicators make Russia a high-risk context for safety, freedom, and long-term predictability in this MVP model.",
+    "source_id": "b1be5576-cef2-4df1-8984-f3283296f520",
+    "evidence_item_id": "5c504efc-e371-44d1-ab78-ba325e93c8be",
+    "affected_groups": [
+      "families",
+      "entrepreneurs",
+      "students"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "be2b6489-33a9-4aa3-81f5-c9231d767351",
+    "legal_signal_id": "d5db8e1c-d221-4c4b-914f-4c2f802e8bb5",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "negative",
+    "impact_level": "high",
+    "title": "Banking access and payment rails are major planning constraints",
+    "summary": "Central-bank and financial-system context make banking and payment reliability a material constraint for business or relocation planning.",
+    "source_id": "2996820c-32c1-41f2-b418-9556315eb15a",
+    "evidence_item_id": "98595c82-ea2d-4733-a0fd-8ce21416ab76",
+    "affected_groups": [
+      "entrepreneurs",
+      "remote_workers",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "278ee4e4-b030-49ca-b974-1c61654d9432",
+    "legal_signal_id": "016e33c5-b8ee-43c1-b034-e92996fe9104",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "uncertain",
+    "impact_level": "medium",
+    "title": "Tax-residency review is required before planning",
+    "summary": "Russia-related tax exposure depends on residence, income source, and current rule interpretation, so the MVP score treats it as a review-heavy area.",
+    "source_id": "470c6e0b-163c-40ce-8abb-dedf954ddce1",
+    "evidence_item_id": "8749aa5b-aa5e-4dff-9634-1c6052346240",
+    "affected_groups": [
+      "remote_workers",
+      "entrepreneurs",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "cd53f31f-9bce-4001-b38e-367e4fc65a8a",
+    "legal_signal_id": "d7165891-5e69-4542-a1c8-623d4b69a8b8",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Electronic visa process is useful but narrow",
+    "summary": "Official e-visa infrastructure supports entry screening, but it should not be read as a residence or long-term legalization pathway.",
+    "source_id": "d4cf2e93-2613-4c48-b376-19263a0c290a",
+    "evidence_item_id": "402332ef-5f61-4735-8935-dde3b5c070bb",
+    "affected_groups": [
+      "relocators",
+      "short_term_visitors"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "910b1157-472d-4329-9c33-25bcf58748f2",
+    "legal_signal_id": "2acfd243-b860-49c8-837f-5f24eda0d624",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "high",
+    "title": "Rule-of-law indicators support stability score",
+    "summary": "Comparative rule-of-law data supports Uruguay as a stronger legal-stability candidate in the MVP country set.",
+    "source_id": "06d04e43-eb09-4412-9d50-3dde4035c6e1",
+    "evidence_item_id": "31bb41b0-cddc-47ff-aea5-e51f42adbee2",
+    "affected_groups": [
+      "families",
+      "long_term_relocators",
+      "entrepreneurs"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "1c925654-fb5b-43b3-a745-04e277a0712c",
+    "legal_signal_id": "22edaa6c-b0a3-4525-9d76-85760261dd68",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Banking system is institutionally stable but onboarding can matter",
+    "summary": "Central-bank context supports higher financial-system confidence, while practical onboarding may still create friction.",
+    "source_id": "86e4c407-0128-4b85-bb26-dafcdfdf9f40",
+    "evidence_item_id": "aeccb680-7f6f-48df-a74e-e69e182420c4",
+    "affected_groups": [
+      "entrepreneurs",
+      "remote_workers",
+      "investors"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "669223f7-3acb-4817-8e96-06cebc3a3a03",
+    "legal_signal_id": "5d18efa9-0897-4f19-beef-3e83fb61b5b9",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Tax residence is a planning opportunity and review area",
+    "summary": "Tax-residence guidance can be relevant for internationally mobile users, but it remains a professional-advice topic.",
+    "source_id": "8997ef8c-5c18-4298-8b86-f8169e75f46b",
+    "evidence_item_id": "819f4844-fc79-4674-bc71-8de13f15f52a",
+    "affected_groups": [
+      "remote_workers",
+      "entrepreneurs",
+      "investors"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "b2350a2e-6880-4fe8-bf89-ac5fea38809e",
+    "legal_signal_id": "74f2e6e2-c777-484c-9e06-d6bd7056d1e9",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Permanent legal residence has an official procedure path",
+    "summary": "The official procedure page supports a more structured long-term-status assessment, while individual timing still requires verification.",
+    "source_id": "fc2d1621-9fbd-420c-ab79-1fa2cc8ee019",
+    "evidence_item_id": "1de188c0-97d9-4255-88e2-505a54649cbf",
+    "affected_groups": [
+      "long_term_relocators",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "3f9d9c5a-92b9-4c69-9824-f1404f7fdca6",
+    "legal_signal_id": "29f86a32-d8e5-4cd7-9ee7-4aba8501868b",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-18",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "high",
+    "title": "Residence categories are publicly documented",
+    "summary": "Official public information on residence categories supports Uruguay as a comparatively legible residence-planning jurisdiction.",
+    "source_id": "602fc2e9-185c-4f09-9cf9-eb313a116e27",
+    "evidence_item_id": "322a2d59-8b5b-46cd-95a5-4c1cd7ff975c",
+    "affected_groups": [
+      "residence_applicants",
+      "families",
+      "remote_workers"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "7700fa6e-e538-4840-93fd-c2396ceb673e",
+    "legal_signal_id": "0e49cddd-32fe-4d36-88b2-8c4b242ff9b9",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2002-07-25",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "high",
+    "title": "Foreign-citizen status remains statute-led",
+    "summary": "The legal-status law is the main baseline for residence and stay analysis, so relocation screening should treat procedure and status maintenance as document-heavy.",
+    "source_id": "4ea681fa-16ef-4e71-8f10-296d9a7ddc0a",
+    "evidence_item_id": "7b972b36-ac96-4658-bcf2-5ef860121d1a",
+    "affected_groups": [
+      "relocators",
+      "long_term_residents"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "ff815c8f-d6e0-4e8f-b7fe-19395b50cffa",
+    "legal_signal_id": "a23d09af-a065-4467-90b0-fb22e11a4841",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2023-04-28",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "high",
+    "title": "Citizenship pathway needs separate legal review",
+    "summary": "The citizenship law creates a separate decision layer after residence planning, making long-term status less suitable for quick self-service assumptions.",
+    "source_id": "be4700ca-02a6-49c6-a84f-cd35cbb1227c",
+    "evidence_item_id": "9cb0d96c-468c-4f06-b4d4-5267bd93924f",
+    "affected_groups": [
+      "long_term_residents",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "444bd223-d5b5-4f7b-9b64-2aaeb539a563",
+    "legal_signal_id": "a2b0e673-fcb8-42a5-9134-6e3800fa744d",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Professional income tax has official digital guidance",
+    "summary": "The official self-employed tax portal improves source visibility for small-scale independent work, while eligibility still requires case-specific tax review.",
+    "source_id": "5057fde6-f3cb-4146-bdb2-69b9bca4b34d",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "freelancers",
+      "self_employed"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "6c7d731c-c9f6-4ced-a407-b39b5c5620a9",
+    "legal_signal_id": "f03abd27-46cd-4355-ae58-3c1414820f6b",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Payment-system context should be checked before relocation",
+    "summary": "Central-bank payment-system materials are relevant for banking readiness, especially where card access, transfers and account usability affect daily life.",
+    "source_id": "ae9d739c-8a7e-45a5-bec9-989ac42fbf70",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "relocators",
+      "remote_workers",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "25b1ed01-dd50-4a21-82aa-57af2eeefb9a",
+    "legal_signal_id": "7fd8973e-67f8-4872-8358-b241d8255805",
+    "country_id": "d6b2a039-3ad3-4f5c-af6f-6366ea03528b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "negative",
+    "impact_level": "high",
+    "title": "Political-stability dataset adds external risk context",
+    "summary": "World Bank governance data gives an external dataset for risk scoring, but it should complement legal and practical checks rather than replace them.",
+    "source_id": "66abd4db-c363-418d-966c-781242d26f24",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "risk_sensitive_users",
+      "families",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "27ae07e4-4075-465f-9cab-47bc6103d57a",
+    "legal_signal_id": "271dfd35-11e4-4f5e-aaa4-6532e30433d0",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Temporary legal residence has an official procedure page",
+    "summary": "The official temporary residence procedure improves first-step relocation clarity and gives users a concrete source for eligibility and filing review.",
+    "source_id": "d1d86ad0-1334-42f4-9d00-5cced66954a8",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "relocators",
+      "remote_workers"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "e8f2329e-504e-4f38-af65-a3199d4e4774",
+    "legal_signal_id": "bb5dc967-d2a9-4aae-8764-0a53de1b9c4a",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2008-01-06",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Migration law provides a stable statutory baseline",
+    "summary": "The official migration law is a primary anchor for residence analysis and supports stronger confidence than a procedure-only source set.",
+    "source_id": "31ad5d30-cef6-49fd-9ae3-36e9d8693f29",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "relocators",
+      "long_term_residents",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "39735e19-2271-4f46-8c46-8f62fdf19ea4",
+    "legal_signal_id": "2e23d355-47cd-4e3d-9f72-89ec7143c753",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Tax administration has a dedicated official source",
+    "summary": "The DGI source strengthens tax due-diligence coverage for residence, freelance and company planning.",
+    "source_id": "36d7e5ec-a009-4b4a-a8c5-94b04415f410",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "tax_residents",
+      "freelancers",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "35607f49-480f-4112-81cc-4b48bbc0d3c0",
+    "legal_signal_id": "43904dd3-f197-4a09-9b50-604c340632d5",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "2026-06-19",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Financial services supervision supports banking checks",
+    "summary": "The central-bank supervisor source gives a public reference point for financial-sector oversight and account-readiness research.",
+    "source_id": "56f13030-d91f-4811-8a46-44fdd4265973",
+    "evidence_item_id": null,
+    "affected_groups": [
+      "relocators",
+      "remote_workers",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "0d4b081c-3c9a-4549-896e-ccbc8616a375",
+    "legal_signal_id": "cd86dd6b-502d-4de6-9132-a261f05985b8",
+    "country_id": "0ed85686-1904-4348-abd1-13bc80c7365b",
+    "event_date": "1967-02-15",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Constitutional text anchors rule-of-law context",
+    "summary": "The official constitutional text adds a primary legal source for legal-stability screening, alongside rule-of-law and freedom datasets.",
+    "source_id": "4398f54b-9519-49d2-a624-ce610c2d61ec",
+    "evidence_item_id": "02654af9-4cc2-411d-843a-734de9982fe1",
+    "affected_groups": [
+      "risk_sensitive_users",
+      "families",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "be3b54e1-30cd-455f-9fcf-6b6a85421687",
+    "legal_signal_id": "1e55429d-570d-4146-bcf9-b25a0ecd1fed",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Temporary residence for foreigners requires DNM processing",
+    "summary": "Temporary and permanent residence in Argentina is processed through the Dirección Nacional de Migraciones. Documentation requirements are substantial and procedurally complex.",
+    "source_id": "8bdb38f9-b4d5-4f4a-9e0c-e702f5de799e",
+    "evidence_item_id": "ee96e67e-beb1-4357-acaf-eabd84a2d816",
+    "affected_groups": [
+      "relocators",
+      "remote_workers",
+      "long_term_residents"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "f600f7ed-ca08-4ef6-8e26-e32cb55332e9",
+    "legal_signal_id": "5ef095b8-f803-4798-9e3e-86a6fd8181c8",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Argentine citizenship requires two years of legal residence",
+    "summary": "Foreign nationals may apply for Argentine citizenship after two years of legal residence. The Cancillería manages nationality-related procedures and documentation.",
+    "source_id": "c574f6ae-f429-4d96-a282-366c2cc43faf",
+    "evidence_item_id": "8ea9d8cd-7fb4-4af1-9725-efc31d7c1242",
+    "affected_groups": [
+      "long_term_residents",
+      "families"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "085a068b-85bf-418a-9f2c-aa43c439122f",
+    "legal_signal_id": "62cad909-576b-4c98-af34-baacd72a9474",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "negative",
+    "impact_level": "high",
+    "title": "Political stability and regulatory volatility pose elevated risk",
+    "summary": "Argentina faces recurring political instability and significant regulatory volatility. External datasets consistently rate governance and political risk as elevated, requiring ongoing monitoring for long-term relocation decisions.",
+    "source_id": "3a147be9-beb8-4bec-b954-568d49977499",
+    "evidence_item_id": "cb86871a-6676-4d87-90bb-391707847803",
+    "affected_groups": [
+      "risk_sensitive_users",
+      "families",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "5a10ed07-1942-4c68-a45b-bf13245ad893",
+    "legal_signal_id": "6cf7128a-803d-4cc0-90af-db631d3c9fe5",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "high",
+    "title": "Banking access for foreigners subject to BCRA regulatory conditions",
+    "summary": "The BCRA regulates banking and financial services access in Argentina. Foreigners may face restrictions on account opening and currency exchange under current regulatory conditions.",
+    "source_id": "721f0f0a-a142-4c6e-92f7-7bd6ee6399a1",
+    "evidence_item_id": "8fbd235e-5c3f-4003-b4d5-6e9ebe938cbf",
+    "affected_groups": [
+      "relocators",
+      "remote_workers",
+      "business_owners"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "46047a5c-7853-4618-83b6-b89114c87222",
+    "legal_signal_id": "ecfe6141-10ae-4a56-aade-54f82c3012c9",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "mixed",
+    "impact_level": "medium",
+    "title": "Business registration requires IGJ enrollment and AFIP CUIT",
+    "summary": "Companies operating in Argentina must register with the IGJ and obtain a CUIT from AFIP. Procedural complexity and bureaucratic requirements should be verified before committing to business formation.",
+    "source_id": "370f9a40-2418-407d-b09a-e073942befdf",
+    "evidence_item_id": "56776043-c63b-419b-9cb6-394eb5965b75",
+    "affected_groups": [
+      "business_owners",
+      "self_employed"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  },
+  {
+    "id": "c78b5d2a-f598-4f8f-a82a-6be56ea39fc6",
+    "legal_signal_id": "6a4b97a6-da80-4f70-8d7a-a3376d1d5b01",
+    "country_id": "2b07e3ef-9f9c-4e32-8e1b-41c36ce7b990",
+    "event_date": "2024-01-01",
+    "event_type": "confirmed",
+    "impact_direction": "positive",
+    "impact_level": "medium",
+    "title": "Monotributo simplified tax regime available for freelancers",
+    "summary": "The AFIP monotributo is a simplified tax regime for small contributors and self-employed individuals. Foreign residents with CUIL or CUIT can enroll, though category and eligibility verification is required.",
+    "source_id": "9048a6f2-858b-46e6-8114-4bfdcb967a2e",
+    "evidence_item_id": "9b3473be-1935-4f0c-a86e-179e6ed7e485",
+    "affected_groups": [
+      "freelancers",
+      "self_employed",
+      "remote_workers"
+    ],
+    "created_at": "2026-07-08 07:59:01.567718+00:00",
+    "updated_at": "2026-07-08 07:59:01.567718+00:00"
+  }
+]

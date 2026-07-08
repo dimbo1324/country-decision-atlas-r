@@ -87,11 +87,16 @@ def _upsert_table(
 
 
 def restore_demo_countries(
-    connection: psycopg.Connection[dict[str, Any]], *, dry_run: bool
+    connection: psycopg.Connection[dict[str, Any]],
+    *,
+    dry_run: bool,
+    visible: bool = False,
 ) -> dict[str, int]:
     counts: dict[str, int] = {}
     for spec in TABLE_SPECS:
         rows = _load_rows(spec)
+        if visible and spec.name == "countries":
+            rows = [{**row, "is_demo": False} for row in rows]
         counts[spec.name] = _upsert_table(
             connection, spec, rows, dry_run=dry_run
         )
@@ -106,6 +111,19 @@ def main() -> int:
         )
     )
     parser.add_argument("--dry-run", action="store_true", default=False)
+    parser.add_argument(
+        "--visible",
+        action="store_true",
+        default=False,
+        help=(
+            "Restore countries with is_demo=FALSE instead of TRUE. For "
+            "CI/dev/full-gate provisioning of a fresh database, where the "
+            "demo dataset needs to be publicly visible so smoke checks and "
+            "E2E have content to assert against. Omit this flag for normal "
+            "restores, which keep the demo set hidden per the Episode 5 "
+            "decision (is_demo=TRUE)."
+        ),
+    )
     args = parser.parse_args()
 
     settings = get_settings()
@@ -113,7 +131,9 @@ def main() -> int:
         with psycopg.connect(
             settings.database_url, row_factory=psycopg.rows.dict_row
         ) as conn:
-            counts = restore_demo_countries(conn, dry_run=args.dry_run)
+            counts = restore_demo_countries(
+                conn, dry_run=args.dry_run, visible=args.visible
+            )
             if not args.dry_run:
                 conn.commit()
     except psycopg.OperationalError as exc:
@@ -122,7 +142,13 @@ def main() -> int:
 
     print(
         json.dumps(
-            {"dry_run": args.dry_run, "restored": counts}, indent=2, default=str
+            {
+                "dry_run": args.dry_run,
+                "visible": args.visible,
+                "restored": counts,
+            },
+            indent=2,
+            default=str,
         )
     )
     return 0
