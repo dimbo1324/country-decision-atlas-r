@@ -37,6 +37,13 @@ dev = [
 alerts = [
   "confluent-kafka>=2.0,<3.0",
 ]
+synthetic-data = [
+  "reportlab>=4.2,<5.0",
+  "Pillow>=10.3,<11.0",
+  "python-docx>=1.1,<2.0",
+  "openpyxl>=3.1,<4.0",
+  "pypdf>=4.3,<5.0",
+]
 
 [tool.setuptools.packages.find]
 where = [
@@ -139,6 +146,10 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["app.integrations.notifier_grpc.generated.*"]
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["reportlab", "reportlab.*", "docx", "docx.*", "openpyxl", "openpyxl.*", "PIL", "PIL.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "-q --strict-markers --strict-config"
