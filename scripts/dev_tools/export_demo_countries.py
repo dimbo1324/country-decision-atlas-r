@@ -26,6 +26,7 @@ def _write_fixture(name: str, rows: list[dict[str, object]]) -> None:
     target.write_text(
         json.dumps(rows, indent=2, default=str, ensure_ascii=False) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
 
 

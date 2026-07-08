@@ -14,41 +14,7 @@
     "source_summary": "База источников теперь сочетает официальные российские налоговые, банковские, сервисные и правовые материалы с данными World Bank, Freedom House и WJP. Этого достаточно для скрининга, но перед действием нужна экспертная проверка.",
     "status": "published",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
-  },
-  {
-    "id": "ca1cf1a4-1186-4d1e-8d4b-b971628e9cdf",
-    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
-    "locale": "en",
-    "executive_summary": "Russia remains a high-friction option for relocation and long-term status. The strongest public sources are official tax, central-bank, visa and legal references, but the source-backed profile points to heavy procedure review, banking checks and elevated political-risk screening.",
-    "migration_overview": "Short entry and residence questions should be separated. The MFA e-visa portal helps with entry context, while foreign-citizen and public-service sources frame residence and status compliance.",
-    "tax_overview": "Tax screening should start with the FTS sources for personal income tax and professional income tax. The available official sources improve transparency, but user-specific residency and business facts remain decisive.",
-    "cost_of_living_overview": "Cost-of-living context is supported by World Bank GDP and inflation indicators, with local conditions requiring city-level verification before budgeting.",
-    "business_overview": "Business and self-employment planning has official tax and banking sources, but financial access and compliance checks should be completed before relying on a business route.",
-    "safety_overview": "Safety and political-risk screening should include Freedom House, WJP and World Bank governance data. The decision score treats these as risk inputs, not as personal safety guarantees.",
-    "legal_signals_summary": "The most important signals are residence-law complexity, separate citizenship review, self-employed tax source availability, payment-system review and external political-risk data.",
-    "risk_summary": "Primary risks are legal-process complexity, financial-operability uncertainty and elevated external governance risk. Users should avoid treating any single score as legal advice.",
-    "source_summary": "Source base now combines official Russian tax, central-bank, public-services and legal references with World Bank, Freedom House and WJP datasets. It is suitable for screening, with expert review still required before action.",
-    "status": "published",
-    "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
-  },
-  {
-    "id": "ebec3f89-c70f-4c76-bb33-5761f9b8c4a0",
-    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
-    "locale": "ru",
-    "executive_summary": "Уругвай выглядит более сильным вариантом для резиденции, долгосрочного планирования и релокации с учетом рисков. Профиль поддержан официальными процедурами резиденции, миграционным законом, налоговыми источниками, материалами ЦБ и внешними наборами данных.",
-    "migration_overview": "Проверку резиденции можно начинать с официальных страниц временной и постоянной резиденции, затем сверять с миграционным законом и материалами миграционного органа.",
-    "tax_overview": "Налоговая проверка опирается на DGI и Министерство экономики. Это повышает практическую прослеживаемость для резидентов, фрилансеров и владельцев бизнеса, но индивидуальные факты резидентства остаются важными.",
-    "cost_of_living_overview": "Планирование расходов поддержано показателями World Bank по ВВП на душу населения и инфляции, а также статистическими источниками Уругвая. Жилье и частные услуги нужно проверять по конкретному городу.",
-    "business_overview": "Бизнес-скрининг опирается на налоговые, банковские и архивные источники по регулированию бизнеса. Скоринг считает Уругвай более понятным вариантом, чем Россия, но не вариантом без документов.",
-    "safety_overview": "Контекст безопасности и институтов поддержан Freedom House, WJP, данными World Bank и конституционными источниками. Это повышает уверенность для пользователей, чувствительных к риску.",
-    "legal_signals_summary": "Самые сильные сигналы: официальная процедура временной резиденции, миграционный закон, ясность налогового органа, источник по финансовому надзору и конституционный правовой контекст.",
-    "risk_summary": "Главные риски: обычные задержки процедур, индивидуальный налоговый режим и необходимость отличать архивные бизнес-данные от текущих требований подачи.",
-    "source_summary": "База источников теперь сочетает официальные материалы правительства, IMPO, DGI, центрального банка, World Bank, Freedom House и WJP. Она сильна для первичного скрининга, но перед подачей нужна официальная или профессиональная проверка.",
-    "status": "published",
-    "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
   },
   {
     "id": "955a4aec-2b35-41ea-8832-0a395fbcfc00",
@@ -65,7 +31,7 @@
     "source_summary": "Source base now combines official government, IMPO, DGI, central-bank, World Bank, Freedom House and WJP sources. It is strong for initial screening and still requires official or professional confirmation before filing.",
     "status": "published",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
   },
   {
     "id": "ca49d7c8-e098-464b-9351-6b82d66aa0d8",
@@ -82,7 +48,41 @@
     "source_summary": "Argentina is supported by 10 published sources covering immigration, taxation, banking, business registration, statistical data, and political risk assessment.",
     "status": "published",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
+  },
+  {
+    "id": "ca1cf1a4-1186-4d1e-8d4b-b971628e9cdf",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
+    "locale": "en",
+    "executive_summary": "Russia remains a high-friction option for relocation and long-term status. The strongest public sources are official tax, central-bank, visa and legal references, but the source-backed profile points to heavy procedure review, banking checks and elevated political-risk screening.",
+    "migration_overview": "Short entry and residence questions should be separated. The MFA e-visa portal helps with entry context, while foreign-citizen and public-service sources frame residence and status compliance.",
+    "tax_overview": "Tax screening should start with the FTS sources for personal income tax and professional income tax. The available official sources improve transparency, but user-specific residency and business facts remain decisive.",
+    "cost_of_living_overview": "Cost-of-living context is supported by World Bank GDP and inflation indicators, with local conditions requiring city-level verification before budgeting.",
+    "business_overview": "Business and self-employment planning has official tax and banking sources, but financial access and compliance checks should be completed before relying on a business route.",
+    "safety_overview": "Safety and political-risk screening should include Freedom House, WJP and World Bank governance data. The decision score treats these as risk inputs, not as personal safety guarantees.",
+    "legal_signals_summary": "The most important signals are residence-law complexity, separate citizenship review, self-employed tax source availability, payment-system review and external political-risk data.",
+    "risk_summary": "Primary risks are legal-process complexity, financial-operability uncertainty and elevated external governance risk. Users should avoid treating any single score as legal advice.",
+    "source_summary": "Source base now combines official Russian tax, central-bank, public-services and legal references with World Bank, Freedom House and WJP datasets. It is suitable for screening, with expert review still required before action.",
+    "status": "published",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
+  },
+  {
+    "id": "ebec3f89-c70f-4c76-bb33-5761f9b8c4a0",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
+    "locale": "ru",
+    "executive_summary": "Уругвай выглядит более сильным вариантом для резиденции, долгосрочного планирования и релокации с учетом рисков. Профиль поддержан официальными процедурами резиденции, миграционным законом, налоговыми источниками, материалами ЦБ и внешними наборами данных.",
+    "migration_overview": "Проверку резиденции можно начинать с официальных страниц временной и постоянной резиденции, затем сверять с миграционным законом и материалами миграционного органа.",
+    "tax_overview": "Налоговая проверка опирается на DGI и Министерство экономики. Это повышает практическую прослеживаемость для резидентов, фрилансеров и владельцев бизнеса, но индивидуальные факты резидентства остаются важными.",
+    "cost_of_living_overview": "Планирование расходов поддержано показателями World Bank по ВВП на душу населения и инфляции, а также статистическими источниками Уругвая. Жилье и частные услуги нужно проверять по конкретному городу.",
+    "business_overview": "Бизнес-скрининг опирается на налоговые, банковские и архивные источники по регулированию бизнеса. Скоринг считает Уругвай более понятным вариантом, чем Россия, но не вариантом без документов.",
+    "safety_overview": "Контекст безопасности и институтов поддержан Freedom House, WJP, данными World Bank и конституционными источниками. Это повышает уверенность для пользователей, чувствительных к риску.",
+    "legal_signals_summary": "Самые сильные сигналы: официальная процедура временной резиденции, миграционный закон, ясность налогового органа, источник по финансовому надзору и конституционный правовой контекст.",
+    "risk_summary": "Главные риски: обычные задержки процедур, индивидуальный налоговый режим и необходимость отличать архивные бизнес-данные от текущих требований подачи.",
+    "source_summary": "База источников теперь сочетает официальные материалы правительства, IMPO, DGI, центрального банка, World Bank, Freedom House и WJP. Она сильна для первичного скрининга, но перед подачей нужна официальная или профессиональная проверка.",
+    "status": "published",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
   },
   {
     "id": "41a6fdc8-8459-4037-a823-7270554482a0",
@@ -99,6 +99,6 @@
     "source_summary": "Аргентина поддерживается 10 опубликованными источниками, охватывающими иммиграцию, налогообложение, банкинг, регистрацию бизнеса, статистические данные и оценку политических рисков.",
     "status": "published",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00"
+    "updated_at": "2026-07-08 12:02:26.543596+00:00"
   }
 ]

@@ -1,5 +1,169 @@
 [
   {
+    "id": "aea70d71-1966-486c-b0db-df12a9b20028",
+    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
+    "version": "v1.0",
+    "overall_score": "25.76",
+    "confidence": "high",
+    "drift": null,
+    "metric_scores": [
+      {
+        "slug": "rule_of_law",
+        "score": 20.0,
+        "weight": 0.1667,
+        "name_en": "Rule of Law",
+        "name_ru": "Верховенство права",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "World Bank WGI 2023",
+        "weighted_score": 0.4994
+      },
+      {
+        "slug": "economic_freedom",
+        "score": 54.2,
+        "weight": 0.1667,
+        "name_en": "Economic Freedom",
+        "name_ru": "Экономическая свобода",
+        "data_year": 2024,
+        "reliability": "high",
+        "source_name": "Heritage Foundation Index 2024",
+        "weighted_score": 0.6656
+      },
+      {
+        "slug": "political_stability",
+        "score": 13.0,
+        "weight": 0.1667,
+        "name_en": "Political Stability",
+        "name_ru": "Политическая стабильность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "World Bank WGI 2023",
+        "weighted_score": 0.4276
+      },
+      {
+        "slug": "safety",
+        "score": 38.0,
+        "weight": 0.1667,
+        "name_en": "Physical Safety",
+        "name_ru": "Физическая безопасность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Global Peace Index 2023 (inverted)",
+        "weighted_score": 0.6064
+      },
+      {
+        "slug": "corruption",
+        "score": 26.0,
+        "weight": 0.1667,
+        "name_en": "Anti-Corruption",
+        "name_ru": "Антикоррупционность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Transparency International CPI 2023",
+        "weighted_score": 0.5431
+      },
+      {
+        "slug": "digital_access",
+        "score": 21.0,
+        "weight": 0.1667,
+        "name_en": "Digital Access",
+        "name_ru": "Цифровой доступ",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Freedom House: Freedom on the Net 2023",
+        "weighted_score": 0.5075
+      }
+    ],
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
+    "formula_version": "cii-v1.0",
+    "aggregation_method": "geometric",
+    "scenario_slug": ""
+  },
+  {
+    "id": "ff3838a1-29f9-4e07-886c-88844a2e53d0",
+    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
+    "version": "v1.0",
+    "overall_score": "68.82",
+    "confidence": "high",
+    "drift": null,
+    "metric_scores": [
+      {
+        "slug": "rule_of_law",
+        "score": 72.0,
+        "weight": 0.1667,
+        "name_en": "Rule of Law",
+        "name_ru": "Верховенство права",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "World Bank WGI 2023",
+        "weighted_score": 0.7129
+      },
+      {
+        "slug": "economic_freedom",
+        "score": 68.1,
+        "weight": 0.1667,
+        "name_en": "Economic Freedom",
+        "name_ru": "Экономическая свобода",
+        "data_year": 2024,
+        "reliability": "high",
+        "source_name": "Heritage Foundation Index 2024",
+        "weighted_score": 0.7036
+      },
+      {
+        "slug": "political_stability",
+        "score": 76.0,
+        "weight": 0.1667,
+        "name_en": "Political Stability",
+        "name_ru": "Политическая стабильность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "World Bank WGI 2023",
+        "weighted_score": 0.7219
+      },
+      {
+        "slug": "safety",
+        "score": 63.0,
+        "weight": 0.1667,
+        "name_en": "Physical Safety",
+        "name_ru": "Физическая безопасность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Global Peace Index 2023 (inverted)",
+        "weighted_score": 0.6907
+      },
+      {
+        "slug": "corruption",
+        "score": 73.0,
+        "weight": 0.1667,
+        "name_en": "Anti-Corruption",
+        "name_ru": "Антикоррупционность",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Transparency International CPI 2023",
+        "weighted_score": 0.7152
+      },
+      {
+        "slug": "digital_access",
+        "score": 62.0,
+        "weight": 0.1667,
+        "name_en": "Digital Access",
+        "name_ru": "Цифровой доступ",
+        "data_year": 2023,
+        "reliability": "high",
+        "source_name": "Freedom House: Freedom on the Net 2023",
+        "weighted_score": 0.688
+      }
+    ],
+    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
+    "created_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
+    "formula_version": "cii-v1.0",
+    "aggregation_method": "geometric",
+    "scenario_slug": ""
+  },
+  {
     "id": "f26e8e12-328b-4125-88af-a901ef93f2f8",
     "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
     "version": "v1.0",
@@ -76,7 +240,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
@@ -158,7 +322,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
@@ -240,7 +404,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
@@ -322,7 +486,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
@@ -404,92 +568,10 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
-  },
-  {
-    "id": "aea70d71-1966-486c-b0db-df12a9b20028",
-    "country_id": "3a393f05-32ba-498b-97b2-7ee01d0701c0",
-    "version": "v1.0",
-    "overall_score": "25.76",
-    "confidence": "high",
-    "drift": null,
-    "metric_scores": [
-      {
-        "slug": "rule_of_law",
-        "score": 20.0,
-        "weight": 0.1667,
-        "name_en": "Rule of Law",
-        "name_ru": "Верховенство права",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "World Bank WGI 2023",
-        "weighted_score": 0.4994
-      },
-      {
-        "slug": "economic_freedom",
-        "score": 54.2,
-        "weight": 0.1667,
-        "name_en": "Economic Freedom",
-        "name_ru": "Экономическая свобода",
-        "data_year": 2024,
-        "reliability": "high",
-        "source_name": "Heritage Foundation Index 2024",
-        "weighted_score": 0.6656
-      },
-      {
-        "slug": "political_stability",
-        "score": 13.0,
-        "weight": 0.1667,
-        "name_en": "Political Stability",
-        "name_ru": "Политическая стабильность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "World Bank WGI 2023",
-        "weighted_score": 0.4276
-      },
-      {
-        "slug": "safety",
-        "score": 38.0,
-        "weight": 0.1667,
-        "name_en": "Physical Safety",
-        "name_ru": "Физическая безопасность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Global Peace Index 2023 (inverted)",
-        "weighted_score": 0.6064
-      },
-      {
-        "slug": "corruption",
-        "score": 26.0,
-        "weight": 0.1667,
-        "name_en": "Anti-Corruption",
-        "name_ru": "Антикоррупционность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Transparency International CPI 2023",
-        "weighted_score": 0.5431
-      },
-      {
-        "slug": "digital_access",
-        "score": 21.0,
-        "weight": 0.1667,
-        "name_en": "Digital Access",
-        "name_ru": "Цифровой доступ",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Freedom House: Freedom on the Net 2023",
-        "weighted_score": 0.5075
-      }
-    ],
-    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
-    "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
-    "formula_version": "cii-v1.0",
-    "aggregation_method": "geometric",
-    "scenario_slug": ""
   },
   {
     "id": "701d7128-8954-4c55-895a-ce48ccb0b6a4",
@@ -568,7 +650,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
@@ -650,7 +732,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
@@ -732,7 +814,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
@@ -814,7 +896,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
@@ -896,92 +978,10 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
-  },
-  {
-    "id": "ff3838a1-29f9-4e07-886c-88844a2e53d0",
-    "country_id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
-    "version": "v1.0",
-    "overall_score": "68.82",
-    "confidence": "high",
-    "drift": null,
-    "metric_scores": [
-      {
-        "slug": "rule_of_law",
-        "score": 72.0,
-        "weight": 0.1667,
-        "name_en": "Rule of Law",
-        "name_ru": "Верховенство права",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "World Bank WGI 2023",
-        "weighted_score": 0.7129
-      },
-      {
-        "slug": "economic_freedom",
-        "score": 68.1,
-        "weight": 0.1667,
-        "name_en": "Economic Freedom",
-        "name_ru": "Экономическая свобода",
-        "data_year": 2024,
-        "reliability": "high",
-        "source_name": "Heritage Foundation Index 2024",
-        "weighted_score": 0.7036
-      },
-      {
-        "slug": "political_stability",
-        "score": 76.0,
-        "weight": 0.1667,
-        "name_en": "Political Stability",
-        "name_ru": "Политическая стабильность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "World Bank WGI 2023",
-        "weighted_score": 0.7219
-      },
-      {
-        "slug": "safety",
-        "score": 63.0,
-        "weight": 0.1667,
-        "name_en": "Physical Safety",
-        "name_ru": "Физическая безопасность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Global Peace Index 2023 (inverted)",
-        "weighted_score": 0.6907
-      },
-      {
-        "slug": "corruption",
-        "score": 73.0,
-        "weight": 0.1667,
-        "name_en": "Anti-Corruption",
-        "name_ru": "Антикоррупционность",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Transparency International CPI 2023",
-        "weighted_score": 0.7152
-      },
-      {
-        "slug": "digital_access",
-        "score": 62.0,
-        "weight": 0.1667,
-        "name_en": "Digital Access",
-        "name_ru": "Цифровой доступ",
-        "data_year": 2023,
-        "reliability": "high",
-        "source_name": "Freedom House: Freedom on the Net 2023",
-        "weighted_score": 0.688
-      }
-    ],
-    "calculated_at": "2026-07-08 11:36:57.023028+00:00",
-    "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
-    "formula_version": "cii-v1.0",
-    "aggregation_method": "geometric",
-    "scenario_slug": ""
   },
   {
     "id": "e09707c0-1656-4daf-8704-77d35b2be97d",
@@ -1060,7 +1060,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "safety_political_risk"
@@ -1142,7 +1142,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "relocation_residence"
@@ -1224,7 +1224,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "permanent_residence_citizenship"
@@ -1306,7 +1306,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "low_budget_living"
@@ -1388,7 +1388,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": "business_self_employment"
@@ -1470,7 +1470,7 @@
     ],
     "calculated_at": "2026-07-08 11:36:57.023028+00:00",
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
     "formula_version": "cii-v1.0",
     "aggregation_method": "geometric",
     "scenario_slug": ""

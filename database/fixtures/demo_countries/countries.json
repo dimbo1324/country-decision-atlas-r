@@ -12,8 +12,8 @@
     "currency_code": "RUB",
     "is_active": true,
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
-    "is_demo": true
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
+    "is_demo": false
   },
   {
     "id": "b56e34bb-6bad-43ed-bd5c-a96b1f5052ce",
@@ -28,8 +28,8 @@
     "currency_code": "UYU",
     "is_active": true,
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
-    "is_demo": true
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
+    "is_demo": false
   },
   {
     "id": "efa081b1-89d0-4993-a27a-b030f28693f9",
@@ -44,7 +44,7 @@
     "currency_code": "ARS",
     "is_active": true,
     "created_at": "2026-07-08 11:36:57.023028+00:00",
-    "updated_at": "2026-07-08 11:36:57.023028+00:00",
-    "is_demo": true
+    "updated_at": "2026-07-08 12:02:26.543596+00:00",
+    "is_demo": false
   }
 ]
