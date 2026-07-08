@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import random
 import uuid
 from abc import ABC, abstractmethod
 from datetime import UTC, datetime
 from pathlib import Path
 from scripts.synthetic_data.core.models import FileFormat, GeneratedArtifact
+from scripts.synthetic_data.core.random_content import RandomContentFactory
 
 
 class BaseGenerator(ABC):
@@ -13,10 +13,10 @@ class BaseGenerator(ABC):
     extension: str
 
     def generate(
-        self, *, output_dir: Path, rng: random.Random
+        self, *, output_dir: Path, content: RandomContentFactory
     ) -> GeneratedArtifact:
         target_path = output_dir / self._build_filename()
-        self._write(target_path, rng)
+        self._write(target_path, content)
         return GeneratedArtifact(
             file_format=self.file_format,
             path=target_path,
@@ -29,4 +29,4 @@ class BaseGenerator(ABC):
         return f"sample_{timestamp}_{unique_suffix}.{self.extension}"
 
     @abstractmethod
-    def _write(self, path: Path, rng: random.Random) -> None: ...
+    def _write(self, path: Path, content: RandomContentFactory) -> None: ...

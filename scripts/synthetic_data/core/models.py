@@ -9,17 +9,22 @@ class FileFormat(StrEnum):
     JSON = "json"
     MARKDOWN = "markdown"
     EXCEL = "xlsx"
-    DOCX = "docx"
+    DOCX_COPYABLE = "docx-copyable"
+    DOCX_NON_COPYABLE = "docx-non-copyable"
+    DOCX_MIXED = "docx-mixed"
     PDF_COPYABLE = "pdf-copyable"
     PDF_NON_COPYABLE = "pdf-non-copyable"
+    PDF_MIXED = "pdf-mixed"
 
     @classmethod
     def from_alias(cls, alias: str) -> tuple[FileFormat, ...]:
         normalized = alias.strip().lower()
         if normalized == "all":
             return tuple(cls)
+        if normalized == "docx":
+            return (cls.DOCX_COPYABLE, cls.DOCX_NON_COPYABLE, cls.DOCX_MIXED)
         if normalized == "pdf":
-            return (cls.PDF_COPYABLE, cls.PDF_NON_COPYABLE)
+            return (cls.PDF_COPYABLE, cls.PDF_NON_COPYABLE, cls.PDF_MIXED)
         for member in cls:
             if member.value == normalized or member.name.lower() == normalized:
                 return (member,)

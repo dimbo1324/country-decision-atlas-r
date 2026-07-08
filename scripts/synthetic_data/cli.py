@@ -10,10 +10,20 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from scripts.synthetic_data.core.input_data import (  # noqa: E402
+    InputDataError,
+    load_input_data,
+)
 from scripts.synthetic_data.core.models import FileFormat  # noqa: E402
 from scripts.synthetic_data.core.output_layout import (  # noqa: E402
-    DEFAULT_SYNTHETIC_DATA_ROOT,
     resolve_output_dir,
+)
+from scripts.synthetic_data.core.paths import (  # noqa: E402
+    DEFAULT_INPUT_DATA_FILE,
+    DEFAULT_OUTPUT_DATA_ROOT,
+)
+from scripts.synthetic_data.core.random_content import (  # noqa: E402
+    RandomContentFactory,
 )
 from scripts.synthetic_data.core.registry import get_generator  # noqa: E402
 
@@ -42,8 +52,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--formats",
         default=_ALL_FORMATS_ALIAS,
         help=(
-            "Comma-separated formats: json, markdown, xlsx, docx, "
-            "pdf-copyable, pdf-non-copyable, pdf (both PDF variants), "
+            "Comma-separated formats: json, markdown, xlsx, "
+            "docx-copyable, docx-non-copyable, docx-mixed, docx (all 3), "
+            "pdf-copyable, pdf-non-copyable, pdf-mixed, pdf (all 3), "
             "all (default)."
         ),
     )
@@ -62,11 +73,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--input-file",
+        type=Path,
+        default=DEFAULT_INPUT_DATA_FILE,
+        help=(
+            "JSON file supplying the word/header pools used to fill "
+            "generated documents (default: "
+            "docs/synthetic_data/input_data/data.json)."
+        ),
+    )
+    parser.add_argument(
         "--output-root",
         type=Path,
-        default=DEFAULT_SYNTHETIC_DATA_ROOT,
+        default=DEFAULT_OUTPUT_DATA_ROOT,
         help=(
-            "Root directory for generated files (default: docs/synthetic_data)."
+            "Root directory for generated files "
+            "(default: docs/synthetic_data/output_data)."
         ),
     )
     parser.add_argument(
@@ -91,7 +113,15 @@ def run(argv: list[str]) -> int:
         print("ERROR: --count must be at least 1", file=sys.stderr)
         return 2
 
-    rng = random.Random(args.seed)
+    try:
+        input_data = load_input_data(args.input_file)
+    except InputDataError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    content = RandomContentFactory(
+        rng=random.Random(args.seed), input_data=input_data
+    )
 
     for file_format in formats:
         output_dir = resolve_output_dir(
@@ -105,7 +135,9 @@ def run(argv: list[str]) -> int:
                 )
                 continue
             generator = get_generator(file_format)
-            artifact = generator.generate(output_dir=output_dir, rng=rng)
+            artifact = generator.generate(
+                output_dir=output_dir, content=content
+            )
             print(
                 f"generated {artifact.file_format.value} -> "
                 f"{artifact.path} ({artifact.size_bytes} bytes)"

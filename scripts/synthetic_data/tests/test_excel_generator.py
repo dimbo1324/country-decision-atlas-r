@@ -1,14 +1,16 @@
 from __future__ import annotations
 
-import random
 from openpyxl import load_workbook
 from pathlib import Path
+from scripts.synthetic_data.core.random_content import RandomContentFactory
 from scripts.synthetic_data.generators.excel_generator import ExcelGenerator
 
 
-def test_excel_generator_writes_two_sheets_with_rows(tmp_path: Path) -> None:
+def test_excel_generator_writes_two_sheets_with_rows(
+    tmp_path: Path, content: RandomContentFactory
+) -> None:
     generator = ExcelGenerator()
-    artifact = generator.generate(output_dir=tmp_path, rng=random.Random(3))
+    artifact = generator.generate(output_dir=tmp_path, content=content)
 
     workbook = load_workbook(artifact.path)
     assert len(workbook.sheetnames) == 2

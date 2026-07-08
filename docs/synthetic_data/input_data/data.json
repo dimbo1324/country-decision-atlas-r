@@ -1,0 +1,17 @@
+{
+  "words": [
+    "aurora", "velvet", "harbor", "quartz", "meadow", "lantern", "cascade",
+    "granite", "orchid", "thicket", "compass", "ember", "glacier", "willow",
+    "pebble", "canyon", "driftwood", "marble", "horizon", "pinewood",
+    "sparrow", "thunder", "violet", "cobalt", "amber", "ridge", "hollow",
+    "brook", "cinder", "maple", "copper", "juniper", "prairie", "tundra",
+    "basalt", "coral", "fern", "moss", "spruce", "clover", "hazel",
+    "obsidian", "opal", "saffron", "slate", "topaz", "umbra", "wisteria",
+    "zephyr", "acorn", "birch", "cedar", "delta", "ebony", "flint",
+    "lagoon", "nimbus", "paddock", "quill", "reef", "sable", "trellis"
+  ],
+  "headers": [
+    "Overview", "Summary", "Findings", "Notes", "Appendix", "Reference",
+    "Draft", "Sample", "Outline", "Fragment", "Snapshot", "Sketch"
+  ]
+}

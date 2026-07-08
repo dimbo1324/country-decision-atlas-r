@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import json
-import random
 from pathlib import Path
+from scripts.synthetic_data.core.random_content import RandomContentFactory
 from scripts.synthetic_data.generators.json_generator import JsonGenerator
 
 
-def test_json_generator_writes_valid_json(tmp_path: Path) -> None:
+def test_json_generator_writes_valid_json(
+    tmp_path: Path, content: RandomContentFactory
+) -> None:
     generator = JsonGenerator()
-    artifact = generator.generate(output_dir=tmp_path, rng=random.Random(42))
+    artifact = generator.generate(output_dir=tmp_path, content=content)
 
     assert artifact.path.exists()
     assert artifact.path.suffix == ".json"
