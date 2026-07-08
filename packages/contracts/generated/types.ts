@@ -2084,6 +2084,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/threads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Threads */
+        get: operations["list_my_threads_api_v1_me_threads_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/threads/{thread_id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Thread Messages */
+        get: operations["list_thread_messages_api_v1_me_threads__thread_id__messages_get"];
+        put?: never;
+        /** Send Thread Message */
+        post: operations["send_thread_message_api_v1_me_threads__thread_id__messages_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/threads/{thread_id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Close Thread */
+        post: operations["close_thread_api_v1_me_threads__thread_id__close_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/migration-board/posts": {
         parameters: {
             query?: never;
@@ -2214,6 +2266,23 @@ export interface paths {
         put?: never;
         /** Dismiss Migration Board Report */
         post: operations["dismiss_migration_board_report_api_v1_admin_migration_board_reports__report_id__dismiss_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/migration-board/threads/{thread_id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Migration Board Thread Messages For Admin */
+        get: operations["get_migration_board_thread_messages_for_admin_api_v1_admin_migration_board_threads__thread_id__messages_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4295,6 +4364,10 @@ export interface components {
             quality_warnings?: string[];
             applied_persona?: components["schemas"]["Persona"] | null;
             persona_weight_profile?: components["schemas"]["PersonaWeightProfile"] | null;
+        };
+        /** CloseThreadResponse */
+        CloseThreadResponse: {
+            thread: components["schemas"]["ThreadResponse"];
         };
         /** CommunityAnswer */
         CommunityAnswer: {
@@ -7956,6 +8029,11 @@ export interface components {
             /** Rank */
             rank: number;
         };
+        /** SendThreadMessageRequest */
+        SendThreadMessageRequest: {
+            /** Body */
+            body: string;
+        };
         /** SharedTripChecklistItem */
         SharedTripChecklistItem: {
             /** Title */
@@ -8181,6 +8259,67 @@ export interface components {
         TelegramUnlinkResponse: {
             /** Ok */
             ok: boolean;
+        };
+        /** ThreadListResponse */
+        ThreadListResponse: {
+            /** Items */
+            items: components["schemas"]["ThreadResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** ThreadMessageListResponse */
+        ThreadMessageListResponse: {
+            /** Items */
+            items: components["schemas"]["ThreadMessageResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** ThreadMessageResponse */
+        ThreadMessageResponse: {
+            /** Id */
+            id: string;
+            /** Thread Id */
+            thread_id: string;
+            /** Sender User Id */
+            sender_user_id: string;
+            /** Sender Display Name */
+            sender_display_name: string;
+            /** Body */
+            body: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** ThreadResponse */
+        ThreadResponse: {
+            /** Id */
+            id: string;
+            /** Contact Request Id */
+            contact_request_id: string;
+            /** Post Id */
+            post_id: string;
+            /** Post Title */
+            post_title: string;
+            /** Counterpart Display Name */
+            counterpart_display_name: string;
+            /** Status */
+            status: string;
+            /** Closed By User Id */
+            closed_by_user_id?: string | null;
+            /** Closed At */
+            closed_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
         };
         /** TimelineEvidenceRef */
         TimelineEvidenceRef: {
@@ -15259,6 +15398,126 @@ export interface operations {
             };
         };
     };
+    list_my_threads_api_v1_me_threads_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadListResponse"];
+                };
+            };
+        };
+    };
+    list_thread_messages_api_v1_me_threads__thread_id__messages_get: {
+        parameters: {
+            query?: {
+                after?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadMessageListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_thread_message_api_v1_me_threads__thread_id__messages_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendThreadMessageRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadMessageResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    close_thread_api_v1_me_threads__thread_id__close_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloseThreadResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_migration_board_posts_for_admin_api_v1_admin_migration_board_posts_get: {
         parameters: {
             query?: {
@@ -15514,6 +15773,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReviewMigrationBoardReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_migration_board_thread_messages_for_admin_api_v1_admin_migration_board_threads__thread_id__messages_get: {
+        parameters: {
+            query: {
+                report_id: string;
+            };
+            header?: never;
+            path: {
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadMessageListResponse"];
                 };
             };
             /** @description Validation Error */

@@ -5256,6 +5256,128 @@ paths:
                 $ref: '#/components/schemas/BlockedUserListResponse'
       security:
       - BearerAuth: []
+  /api/v1/me/threads:
+    get:
+      tags:
+      - migration-board
+      summary: List My Threads
+      operationId: list_my_threads_api_v1_me_threads_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/me/threads/{thread_id}/messages:
+    get:
+      tags:
+      - migration-board
+      summary: List Thread Messages
+      operationId: list_thread_messages_api_v1_me_threads__thread_id__messages_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: thread_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Thread Id
+      - name: after
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: After
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadMessageListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - migration-board
+      summary: Send Thread Message
+      operationId: send_thread_message_api_v1_me_threads__thread_id__messages_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: thread_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Thread Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendThreadMessageRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadMessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/me/threads/{thread_id}/close:
+    post:
+      tags:
+      - migration-board
+      summary: Close Thread
+      operationId: close_thread_api_v1_me_threads__thread_id__close_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: thread_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Thread Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloseThreadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/admin/migration-board/posts:
     get:
       tags:
@@ -5536,6 +5658,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReviewMigrationBoardReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/admin/migration-board/threads/{thread_id}/messages:
+    get:
+      tags:
+      - admin-migration-board
+      summary: Get Migration Board Thread Messages For Admin
+      operationId: get_migration_board_thread_messages_for_admin_api_v1_admin_migration_board_threads__thread_id__messages_get
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: thread_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Thread Id
+      - name: report_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Report Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadMessageListResponse'
         '422':
           description: Validation Error
           content:
@@ -10032,6 +10188,14 @@ components:
       - scenario
       - locale
       title: CiiCountryComparisonResponse
+    CloseThreadResponse:
+      properties:
+        thread:
+          $ref: '#/components/schemas/ThreadResponse'
+      type: object
+      required:
+      - thread
+      title: CloseThreadResponse
     CommunityAnswer:
       properties:
         id:
@@ -17240,6 +17404,18 @@ components:
       - path
       - rank
       title: SearchResultItem
+    SendThreadMessageRequest:
+      properties:
+        body:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Body
+      additionalProperties: false
+      type: object
+      required:
+      - body
+      title: SendThreadMessageRequest
     SharedTripChecklistItem:
       properties:
         title:
@@ -17704,6 +17880,116 @@ components:
       required:
       - ok
       title: TelegramUnlinkResponse
+    ThreadListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ThreadResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: ThreadListResponse
+    ThreadMessageListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ThreadMessageResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: ThreadMessageListResponse
+    ThreadMessageResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        thread_id:
+          type: string
+          title: Thread Id
+        sender_user_id:
+          type: string
+          title: Sender User Id
+        sender_display_name:
+          type: string
+          title: Sender Display Name
+        body:
+          type: string
+          title: Body
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - thread_id
+      - sender_user_id
+      - sender_display_name
+      - body
+      - created_at
+      title: ThreadMessageResponse
+    ThreadResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        contact_request_id:
+          type: string
+          title: Contact Request Id
+        post_id:
+          type: string
+          title: Post Id
+        post_title:
+          type: string
+          title: Post Title
+        counterpart_display_name:
+          type: string
+          title: Counterpart Display Name
+        status:
+          type: string
+          title: Status
+        closed_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Closed By User Id
+        closed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Closed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - contact_request_id
+      - post_id
+      - post_title
+      - counterpart_display_name
+      - status
+      - created_at
+      - updated_at
+      title: ThreadResponse
     TimelineEvidenceRef:
       properties:
         id:
