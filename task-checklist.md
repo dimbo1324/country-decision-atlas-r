@@ -121,10 +121,10 @@
     {id}/close (require_user)
 [+] api/v1/admin_migration_board.py — GET /admin/migration-board/
     threads/{id}/messages?report_id= (require_capability(MODERATOR_BOARD))
-[ ] contracts/openapi.yaml — точечная вставка (сверено с app.openapi()),
-    pnpm contracts:generate — ЗАПЛАНИРОВАНО в §9 (сейчас
-    test_committed_openapi_matches_runtime_paths_and_schemas закономерно
-    красный: 4 новых пути ещё не внесены в контракт)
+[+] contracts/openapi.yaml — точечная вставка 4 путей + 6 схем (сверено
+    байт-в-байт с app.openapi() через test_committed_openapi_matches_
+    runtime_paths_and_schemas), pnpm contracts:generate — types.ts
+    перегенерирован, pnpm typecheck/lint фронтенда зелёные
 ```
 
 ## 6. Data quality
@@ -163,18 +163,48 @@
 ## 8. Документация
 
 ```text
-[ ] Статус-строка под Эпизодом 7 в 01_План_реализации.md (включая
-    пояснение про номер миграции 051 вместо 052)
-[ ] 02_Текущее_состояние_системы.md — обновление раздела 3.5
+[+] Статус-строка под Эпизодом 7 в 01_План_реализации.md (включая
+    пояснение про номер миграции 051 вместо 052, упрощённые статусы,
+    отказ от Telegram deep-link в v1)
+[+] 02_Текущее_состояние_системы.md — обновление раздела 3.5 (новый
+    буллет «Треды на контактах»)
+```
+
+## 8а. Внепланово: root-cause фикс full quality gate (не задача Эпизода 7)
+
+```text
+[+] Полный gate на реально пересобранном стеке (docker compose up
+    --build) вскрыл, что restore_demo_countries.py --visible падает на
+    UniqueViolation countries_slug_key — countries.id / locales.id /
+    scenarios.id / cii_metric_definitions.id назначаются
+    gen_random_uuid() без фиксированного сида, поэтому экспортированный
+    фикстур embeds id, которые СВЕЖАЯ база миграций никогда не
+    воспроизведёт. Это баг основания текущей ветки (fix/demo-country-
+    fresh-db-visibility), не Эпизода 7, но он блокировал обязательный
+    gate этой задачи — исправлено здесь и явно вынесено отдельным
+    пунктом, а не спрятано внутри диффа треда.
+[+] Добавлен generic remap по natural key (slug/code) для countries +
+    трёх внешних lookup-таблиц (locales.code, scenarios.slug,
+    cii_metric_definitions.slug), применяется ко всем строкам всех
+    demo-таблиц перед upsert. Экспорт дополнен sidecar-файлами
+    (_lookup_locales.json и т.п.). Фикстуры переэкспортированы с текущего
+    стека. 8 новых юнит-тестов на remap-логику.
+[+] Попутно исправлен Path.write_text() без newline="\n" — на Windows
+    транслировал \n в CRLF, из-за чего mixed-line-ending каждый раз
+    «чинил» экспортированные фикстуры и валил pre-commit.
+[+] Прогнан заново на живом стеке: countries=3, все 3 /trust endpoint'а
+    200, Playwright E2E зелёный, pre-commit run --all-files зелёный.
 ```
 
 ## 9. Полный quality gate и завершение
 
 ```text
-[ ] python -m pytest / ruff / mypy / sqlfluff / contracts:generate /
-    pnpm quality
-[ ] Чек-лист заполнен +/-
-[ ] Финальный отчёт
-[ ] Merge --ff-only в main и push — ЯВНО запрошено владельцем в этой
+[+] python dev_tools_scripts_runner.py (full-check, профиль по
+    умолчанию): OK 78, WARN 3 (только stale .mypy_cache/.ruff_cache/
+    .tmp — некритично), FAIL 0, SKIP 1 (protoc generate — по конвенции
+    проекта, .pb.go закоммичены как есть)
+[+] Чек-лист заполнен +/-
+[+] Финальный отчёт (в ответе владельцу по завершении задачи)
+[+] Merge --ff-only в main и push — ЯВНО запрошено владельцем в этой
     задаче, подтверждение повторно не требуется
 ```
