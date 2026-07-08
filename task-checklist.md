@@ -208,3 +208,40 @@
 [+] Merge --ff-only в main и push — ЯВНО запрошено владельцем в этой
     задаче, подтверждение повторно не требуется
 ```
+
+## 10. Внепланово (новая сессия): CI всё ещё падал после мержа в main
+
+Владелец прогнал GitHub Actions на коммите `ea296f2` (до собственного
+чекпоинт-коммита `3d2d7f6`) и на живой машине — оба показали падения,
+попросил довести до полностью зелёного состояния.
+
+```text
+[+] Диагностика: коммит владельца `3d2d7f6` (`_ensure_demo_countries_
+    visible` — точечный UPDATE is_demo/is_active вместо повторной
+    вставки фикстур) — корректен и самодостаточен, 16/16 тестов
+    restore-скрипта зелёные. Проблема НЕ в нём.
+[+] Настоящая причина оставшихся падений (Integration/migration smoke,
+    Playwright E2E в GitHub Actions): jobs `integration` и `e2e` в
+    .github/workflows/quality.yml применяли миграции, но никогда не
+    вызывали `restore_demo_countries.py --visible` и `rebuild_search_
+    index.py --all` — в отличие от локального full_check.py, где эти
+    шаги уже были. Каждая свежая CI-база держала russia/uruguay/
+    argentina скрытыми (is_demo=TRUE, решение Эпизода 5), а смоук/E2E-
+    тесты (написанные ДО Эпизода 5) жёстко ожидают их публичной
+    видимости.
+[+] Добавлены недостающие шаги в оба job'а (после apply_migrations /
+    bootstrap, до старта API): restore_demo_countries.py --visible +
+    rebuild_search_index.py --all.
+[+] Отдельно, не связано с Эпизодом 5/7: Backend quality job падал на
+    mypy в scripts/synthetic_data/ (`_Font` — невалидный type alias,
+    отсутствующие stub'ы для pypdf). Исправлено: PEP 695 `type _Font =
+    ...` вместо голого присваивания union'а, явный int()-каст размера
+    изображения, добавлен pypdf/pypdf.* в ignore_missing_imports.
+[+] Полный python dev_tools_scripts_runner.py (профиль по умолчанию)
+    прогнан заново на реальном Docker-стеке этой машины: OK 78, WARN 2
+    (только стейл-кэш), FAIL 0, SKIP 1 (protoc, по конвенции). Все
+    ранее падавшие smoke-проверки (trust×3, countries, search) и
+    Playwright E2E (174s) — зелёные.
+[ ] Push в origin/main и повторная проверка на самом GitHub Actions —
+    не выполнено в рамках этой сессии (см. финальный отчёт).
+```
