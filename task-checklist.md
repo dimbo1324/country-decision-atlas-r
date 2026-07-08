@@ -1,109 +1,163 @@
-# Чек-лист задачи: `fix/demo-country-fresh-db-visibility`
+# Чек-лист задачи: Эпизод 7 — `feat/community-threads-v1` (треды на контактах)
 
-Цель: починить регресс, унаследованный от Эпизода 5 (`feat/country-contribution-v1`,
-коммит `a9569f1`, уже в `main`). После скрытия демо-стран (`is_demo = FALSE`
-во всех паблик-ридерах) свежая БД (CI/новый Docker/новая dev-машина) не
-показывает НИ ОДНОЙ страны публично — единственные страны в базовых
-сид-миграциях (russia/uruguay/argentina) как раз демо. Экспорт фикстур
-(`export_demo_countries.py` → `database/fixtures/demo_countries/*.json`),
-обещанный чек-листом Эпизода 5, так и не был прогнан. Обнаружено при полном
-Docker-гейте (`full-check-reports/20260708-105319/`): `GET /countries` = 0,
-`GET /countries/{russia,uruguay,argentina}/trust` = 404, ~123 упавших
-Playwright E2E. Подтверждено: этот разрыв не связан с Эпизодом 6
-(`git diff main feat/migration-flows-v1 -- .../countries.py` — пустой).
+Цель: лёгкая переписка строго между сторонами с ПРИНЯТЫМ contact request на
+доске попутчиков (не мессенджер): polling-доставка, лимит сообщений/день,
+закрытие любой стороной, заморозка при блокировке, репорт, модераторский
+доступ к переписке только в контексте поданного репорта с аудитом каждого
+обращения. Полная реализация по плану
+(`docs/_arch_/02_План/01_План_реализации.md`, раздел «Эпизод 7»).
+Ветка создана НЕ от `main`, а от текущей рабочей ветки
+`fix/demo-country-fresh-db-visibility` — по прямому указанию владельца
+(она ещё не смерджена, но уже является «актуальной»). В конце задачи —
+явно запрошенный владельцем merge + push в `main` (не требует повторного
+подтверждения).
 
-## 0. Решение владельца
+## 0. Архитектурные решения, принятые самостоятельно
 
 ```text
-[+] Выбран вариант «тестовая видимость демо-набора»: демо-страны остаются
-    скрытыми на паблик-поверхностях по умолчанию (инвариант Эпизода 5,
-    решение Р-1, не пересматривается); для CI/dev/full-gate-прогона на
-    свежей БД добавляется отдельный режим восстановления с is_demo=FALSE,
-    специально для того, чтобы smoke-проверки и E2E продолжили видеть
-    контент без переписывания ~123 тестов и smoke-эндпоинтов.
+[+] Номер миграции — 051, а не 052, как в тексте плана. Плановый текст
+    предполагал, что Эпизод 6 (`feat/migration-flows-v1`, тоже
+    использующий номер 051) будет смерджен первым. Эта ветка растёт не
+    от Эпизода 6, а от отдельной fix-ветки поверх main (main — только по
+    050 включительно), поэтому следующий реальный номер здесь — 051.
+    Когда/если Эпизод 6 будет смерджен позже, его миграцию потребуется
+    переномеровать (051 → следующий свободный) — миграция ещё не
+    применена ни в одном реальном окружении, переномерование до merge
+    разрешено правилами проекта. Явно зафиксировано здесь, чтобы не
+    потерялось.
+[+] Статусы треда упрощены до `open|closed|frozen` вместо буквальных
+    `open|closed_by_a|closed_by_b|frozen` из наброска плана. Кто именно
+    закрыл — отдельная колонка `closed_by_user_id` + `closed_at` (более
+    точная запись факта, чем условное разделение на «сторону A/B»).
+    Acceptance («любая сторона закрывает») выполняется полностью.
+[+] Тред создаётся АВТОМАТИЧЕСКИ в момент принятия contact request
+    (внутри `accept_contact_request`), а не отдельным действием — план
+    говорит «тред — только на accepted контакт», отдельного «создать
+    тред» действия не описано и не нужно: 1:1 связь с contact_request
+    (UNIQUE) делает автосоздание естественным и исключает состояние
+    «контакт принят, а треда нет».
+[+] Заморозка при блокировке — расширение существующего `block_user`
+    (services/migration_board/contacts.py): все open-треды между этими
+    двумя пользователями переводятся в `frozen`.
+[+] Репорт треда переиспользует УЖЕ СУЩЕСТВУЮЩИЙ
+    `report_contact_request`/`POST .../contact-requests/{id}/report` —
+    тред 1:1 с contact_request, значит репорт на contact_request и есть
+    репорт на тред. Отдельного `POST /me/threads/{id}/report` не
+    заводим (переиспользование, не переизобретение).
+[+] Модераторский доступ к сообщениям треда — новый admin-эндпоинт,
+    требующий `report_id` в query: сервис проверяет, что репорт с этим
+    id существует и `report.contact_request_id` совпадает с
+    `thread.contact_request_id` (без ограничения на статус репорта —
+    инвариант требует «в контексте поданного репорта», не «только пока
+    репорт не рассмотрен»), плюс `assert_no_moderation_conflict`.
+    Каждое обращение — отдельная audit-запись (не только первое).
+[+] Лимит сообщений/день — новый параметр методологии
+    `board.max_thread_messages_per_day`, добавлен в существующий
+    `BoardLimits` (это расширение пакета migration_board, не новый
+    домен параметров).
+[+] PII-фильтр НЕ применяется к телу сообщений треда (в отличие от
+    публичных постов доски) — переписка приватна и видна только двум
+    согласившимся сторонам (+ модератору по репорту), фильтрация PII
+    предназначена для ПУБЛИЧНЫХ поверхностей (инвариант «PII-фильтр на
+    публичных проекциях», не на приватных каналах).
+[+] Auth-зависимость — `require_user` (не `get_current_active_user`),
+    по конвенции остального пакета migration_board/api/v1/
+    migration_board.py.
 ```
 
-## 1. Экспорт демо-фикстур
+## 1. Миграция 051
 
 ```text
-[+] scripts/dev_tools/export_demo_countries.py прогнан против реально
-    заполненной Postgres (тот же контейнер, что поднял предыдущий полный
-    гейт) — напрямую с хоста через маппированный порт (5433), т.к.
-    api-контейнер запускается non-root и не может писать в
-    /app/database (COPY-слой образа, не volume) — поэтому экспорт из
-    контейнера был невозможен, а с хоста сработал сразу
-[+] database/fixtures/demo_countries/*.json закоммичены (20 таблиц: countries,
-    translations, country_profiles, country_cards, sources, evidence_items,
-    legal_signals, legal_signal_events, country_metric_values,
-    country_cii_scores, country_scores(+breakdowns), routes(+documents/
-    sources/evidence/checklist_items), country_pair_compatibility(+sources/
-    evidence))
+[ ] CREATE TABLE contact_threads (id, contact_request_id UNIQUE FK,
+    status open|closed|frozen, closed_by_user_id, closed_at,
+    created_at, updated_at)
+[ ] CREATE TABLE thread_messages (id, thread_id FK CASCADE,
+    sender_user_id FK, body NOT NULL non-empty, created_at) + индекс
+    (thread_id, created_at, id) для polling
+[ ] INSERT methodology_parameters: board.max_thread_messages_per_day
+[ ] INSERT feature_flags + feature_access_rules: community_threads_enabled
+[ ] sqlfluff-чисто, идемпотентно; schema-тесты
 ```
 
-## 2. Код
+## 2. Methodology config
 
 ```text
-[+] scripts/dev_tools/restore_demo_countries.py — новый флаг --visible:
-    при восстановлении таблицы countries построчно переопределяет
-    is_demo=False (только для этой таблицы, остальные 19 — без изменений).
-    Без флага поведение прежнее (is_demo сохраняется как в фикстуре, т.е.
-    True) — обычный dev-restore не трогается
-[+] scripts/dev_tools/full_check.py — новый шаг в Docker-бутстрапе между
-    bootstrap_runtime_read_models.py и rebuild_search_index.py --all:
-    `docker compose exec -T api python scripts/dev_tools/
-    restore_demo_countries.py --visible`
+[ ] services/methodology_config.py: BOARD_MAX_THREAD_MESSAGES_PER_DAY,
+    поле в BoardLimits, REQUIRED_NUMERIC_KEYS, build_methodology_config
+[ ] repositories/data_quality/methodology_config.py: диапазон в
+    REQUIRED_NUMERIC_PARAMETER_SQL
+[ ] tests/methodology_test_helpers.py + test_flexible_methodology_v1.py:
+    обновлены под новый обязательный параметр
 ```
 
-## 3. Тесты
+## 3. Репозиторий (`repositories/migration_board/threads.py`)
 
 ```text
-[+] tests/test_restore_demo_countries_script.py — 2 новых теста:
-    --visible переопределяет is_demo на False только для countries;
-    без флага is_demo остаётся как в фикстуре (True) — оба через
-    monkeypatch на _load_rows/_upsert_table, без реальной БД
-[+] Полный набор тестов репозитория — 2013 passed, 29 skipped (2011 + 2
-    новых; эта ветка срезана от main, без 50 тестов Эпизода 6)
+[ ] create_thread_for_contact_request, get_thread_by_id,
+    get_thread_for_contact_request, list_messages (after/limit),
+    create_message, count_messages_created_since, close_thread,
+    freeze_threads_between_users, list_my_threads
+[ ] Ре-экспорт в repositories/migration_board/__init__.py
 ```
 
-## 4. Ручная проверка на реальном Docker-стеке
+## 4. Сервисы
 
 ```text
-[+] docker compose up --build -d api — пересобран образ с новым кодом
-    и фикстурами (COPY-слой подхватывает scripts/ и database/ с диска)
-[+] docker compose exec -T api python scripts/dev_tools/
-    restore_demo_countries.py --visible — восстановлено, is_demo=False
-[+] GET /api/v1/countries?locale=ru — теперь возвращает 3 страны
-    (было 0)
-[+] GET /api/v1/countries/russia/trust?locale=ru — теперь 200 (было 404)
-[+] rebuild_search_index.py --all + GET /api/v1/search?q=residence —
-    возвращает результаты (20 документов)
-[-] Полный снос volume (`docker compose down -v`) для проверки на
-    ПОЛНОСТЬЮ чистой БД с нуля — НЕ выполнялся: заблокировано явным
-    deny-правилом пользователя на удаление Docker volume. Проверено на
-    уже заполненной БД того же контейнера (то же самое семантически:
-    restore --visible флипает is_demo и наполняет ровно те же таблицы,
-    которые были бы пусты на реально чистой БД) — считаю равнозначной,
-    но не идентичной проверкой; итоговое подтверждение "от абсолютно
-    нуля" — за владельцем, если требуется дополнительная строгость
+[ ] services/migration_board/threads.py — list_my_threads,
+    get_thread_messages, send_message (ownership+status+лимит+аудит),
+    close_thread (ownership+аудит), get_thread_for_moderation
+    (report_id-гейт+no-conflict+аудит на каждый вызов)
+[ ] services/migration_board/contacts.py — accept_contact_request
+    создаёт тред; block_user замораживает открытые треды
 ```
 
-## 5. Проверка качества
+## 5. API и контракты
 
 ```text
-[+] python -m ruff check apps packages scripts tests — чисто
-[+] python -m mypy apps packages scripts tests — чисто, 571 файл
-[+] python -m pytest — 2013 passed, 29 skipped
-[-] Полный python dev_tools_scripts_runner.py (Docker-гейт целиком,
-    с нуля) — НЕ перезапущен целиком в рамках этой задачи (см. §4);
-    ключевые смоуки, которые он проверяет, подтверждены вручную выше
+[ ] schemas/migration_board.py — Thread*/ThreadMessage* модели
+[ ] api/v1/migration_board.py — GET /me/threads, GET /me/threads/
+    {id}/messages, POST /me/threads/{id}/messages, POST /me/threads/
+    {id}/close (require_user)
+[ ] api/v1/admin_migration_board.py — GET /admin/migration-board/
+    threads/{id}/messages?report_id= (require_capability(MODERATOR_BOARD))
+[ ] contracts/openapi.yaml — точечная вставка (сверено с app.openapi()),
+    pnpm contracts:generate
 ```
 
-## 6. Завершение
+## 6. Data quality
 
 ```text
-[+] Чек-лист заполнен +/-
-[+] Финальный отчёт
-[-] Merge в main — по прямому указанию владельца НЕ выполняется в этой
-    задаче; работаем дальше в этой ветке (fix/demo-country-fresh-db-
-    visibility), коммит и push сделаны
+[ ] Расширение services/data_quality/migration_board_checks.py +
+    repositories/data_quality/migration_board.py новыми проверками
+    (открытый тред без accepted контакта; сообщение после закрытия/
+    заморозки — защита в глубину)
+```
+
+## 7. Тесты (~20-30 по плану)
+
+```text
+[ ] test_community_threads_mig.py
+[ ] test_community_threads_service.py (автосоздание, ownership, лимит,
+    close, freeze-on-block, moderator access + audit на каждый вызов)
+[ ] test_community_threads_api.py (RBAC, polling, 403/404/409)
+[ ] test_community_threads_dq.py
+```
+
+## 8. Документация
+
+```text
+[ ] Статус-строка под Эпизодом 7 в 01_План_реализации.md (включая
+    пояснение про номер миграции 051 вместо 052)
+[ ] 02_Текущее_состояние_системы.md — обновление раздела 3.5
+```
+
+## 9. Полный quality gate и завершение
+
+```text
+[ ] python -m pytest / ruff / mypy / sqlfluff / contracts:generate /
+    pnpm quality
+[ ] Чек-лист заполнен +/-
+[ ] Финальный отчёт
+[ ] Merge --ff-only в main и push — ЯВНО запрошено владельцем в этой
+    задаче, подтверждение повторно не требуется
 ```
