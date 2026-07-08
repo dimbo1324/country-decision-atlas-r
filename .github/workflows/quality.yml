@@ -133,6 +133,16 @@ jobs:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
         run: python scripts/bootstrap_runtime_read_models.py
 
+      - name: Restore demo country visibility for smoke checks
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/dev_tools/restore_demo_countries.py --visible
+
+      - name: Rebuild search index
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/rebuild_search_index.py --all
+
       - name: Start API
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
@@ -262,6 +272,16 @@ jobs:
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
         run: python scripts/apply_migrations.py
+
+      - name: Restore demo country visibility for E2E fixtures
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/dev_tools/restore_demo_countries.py --visible
+
+      - name: Rebuild search index
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+        run: python scripts/rebuild_search_index.py --all
 
       - name: Start API
         env:

@@ -20,7 +20,7 @@ class PageLayout:
 
 DEFAULT_PAGE_LAYOUT = PageLayout()
 
-_Font = ImageFont.FreeTypeFont | ImageFont.ImageFont
+type _Font = ImageFont.FreeTypeFont | ImageFont.ImageFont
 
 
 def _measurement_draw() -> ImageDraw.ImageDraw:
@@ -95,7 +95,7 @@ def render_text_snippet(
     lines = _wrap_line(draw, text, font, max_width_px - (padding * 2))
     line_height = font_size + (padding // 2)
     content_width = max(
-        (draw.textbbox((0, 0), line, font=font)[2] for line in lines),
+        (int(draw.textbbox((0, 0), line, font=font)[2]) for line in lines),
         default=0,
     )
     image_width = content_width + (padding * 2)

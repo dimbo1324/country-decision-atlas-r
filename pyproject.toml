@@ -148,7 +148,7 @@ module = ["app.integrations.notifier_grpc.generated.*"]
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = ["reportlab", "reportlab.*", "docx", "docx.*", "openpyxl", "openpyxl.*", "PIL", "PIL.*"]
+module = ["reportlab", "reportlab.*", "docx", "docx.*", "openpyxl", "openpyxl.*", "PIL", "PIL.*", "pypdf", "pypdf.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
