@@ -172,3 +172,55 @@ def _append_migration_board_checks(
             ["migration_board_block_invalid"],
         )
     )
+
+    for row in repository.list_open_threads_without_active_contact(connection):
+        issues.append(
+            _issue(
+                "migration_board_thread_open_without_active_contact",
+                "critical",
+                "contact_thread",
+                row.get("id"),
+                "Open community thread must have an accepted contact request.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "migration_board_threads_match_contact_status",
+            issues,
+            ["migration_board_thread_open_without_active_contact"],
+        )
+    )
+
+    for row in repository.list_thread_messages_after_thread_closed(connection):
+        issues.append(
+            _issue(
+                "migration_board_thread_message_after_closed",
+                "critical",
+                "thread_message",
+                row.get("id"),
+                "Thread message was created after its thread was closed.",
+                row,
+            )
+        )
+    for row in repository.list_thread_messages_after_block(connection):
+        issues.append(
+            _issue(
+                "migration_board_thread_message_after_block",
+                "critical",
+                "thread_message",
+                row.get("id"),
+                "Thread message was created after the counterpart was blocked.",
+                row,
+            )
+        )
+    checks.append(
+        _check(
+            "migration_board_thread_messages_respect_closed_at",
+            issues,
+            [
+                "migration_board_thread_message_after_closed",
+                "migration_board_thread_message_after_block",
+            ],
+        )
+    )

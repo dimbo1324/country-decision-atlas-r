@@ -192,3 +192,69 @@ def list_invalid_migration_board_blocks(
         WHERE blocker_user_id = blocked_user_id
         """,
     )
+
+
+def list_open_threads_without_active_contact(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            ct.id::text AS id,
+            ct.status,
+            ct.contact_request_id::text AS contact_request_id,
+            mbcr.status AS contact_request_status
+        FROM contact_threads ct
+        JOIN migration_board_contact_requests mbcr
+            ON mbcr.id = ct.contact_request_id
+        WHERE ct.status = 'open' AND mbcr.status <> 'accepted'
+        """,
+    )
+
+
+def list_thread_messages_after_thread_closed(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            tm.id::text AS id,
+            tm.thread_id::text AS thread_id,
+            tm.created_at,
+            ct.closed_at
+        FROM thread_messages tm
+        JOIN contact_threads ct ON ct.id = tm.thread_id
+        WHERE ct.status = 'closed' AND tm.created_at > ct.closed_at
+        """,
+    )
+
+
+def list_thread_messages_after_block(
+    connection: Connection[Any],
+) -> list[dict[str, Any]]:
+    return fetch_all(
+        connection,
+        """
+        SELECT
+            tm.id::text AS id,
+            tm.thread_id::text AS thread_id,
+            tm.created_at,
+            mbb.created_at AS block_created_at
+        FROM thread_messages tm
+        JOIN contact_threads ct ON ct.id = tm.thread_id
+        JOIN migration_board_contact_requests mbcr
+            ON mbcr.id = ct.contact_request_id
+        JOIN migration_board_blocks mbb ON (
+            (
+                mbb.blocker_user_id = mbcr.from_user_id
+                AND mbb.blocked_user_id = mbcr.to_user_id
+            ) OR (
+                mbb.blocker_user_id = mbcr.to_user_id
+                AND mbb.blocked_user_id = mbcr.from_user_id
+            )
+        )
+        WHERE tm.created_at > mbb.created_at
+        """,
+    )

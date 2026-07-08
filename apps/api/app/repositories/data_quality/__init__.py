@@ -137,8 +137,11 @@ from app.repositories.data_quality.migration_board import (
     list_invalid_migration_board_reports as list_invalid_migration_board_reports,
     list_migration_board_posts_with_route_country_mismatch as list_migration_board_posts_with_route_country_mismatch,
     list_migration_board_public_posts_with_pii as list_migration_board_public_posts_with_pii,
+    list_open_threads_without_active_contact as list_open_threads_without_active_contact,
     list_published_migration_board_posts_without_acknowledgements as list_published_migration_board_posts_without_acknowledgements,
     list_published_migration_board_posts_without_approval as list_published_migration_board_posts_without_approval,
+    list_thread_messages_after_block as list_thread_messages_after_block,
+    list_thread_messages_after_thread_closed as list_thread_messages_after_thread_closed,
 )
 from app.repositories.data_quality.personas import (
     list_active_personas_missing_descriptions as list_active_personas_missing_descriptions,
