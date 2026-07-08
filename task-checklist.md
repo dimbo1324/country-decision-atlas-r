@@ -68,69 +68,75 @@
 ## 1. Миграция 051
 
 ```text
-[ ] CREATE TABLE contact_threads (id, contact_request_id UNIQUE FK,
+[+] CREATE TABLE contact_threads (id, contact_request_id UNIQUE FK,
     status open|closed|frozen, closed_by_user_id, closed_at,
     created_at, updated_at)
-[ ] CREATE TABLE thread_messages (id, thread_id FK CASCADE,
+[+] CREATE TABLE thread_messages (id, thread_id FK CASCADE,
     sender_user_id FK, body NOT NULL non-empty, created_at) + индекс
     (thread_id, created_at, id) для polling
-[ ] INSERT methodology_parameters: board.max_thread_messages_per_day
-[ ] INSERT feature_flags + feature_access_rules: community_threads_enabled
-[ ] sqlfluff-чисто, идемпотентно; schema-тесты
+[+] INSERT methodology_parameters: board.max_thread_messages_per_day
+[+] INSERT feature_flags + feature_access_rules: community_threads_enabled
+[+] sqlfluff-чисто, идемпотентно (schema-тесты — отдельным пунктом
+    в §7, test_community_threads_mig.py)
 ```
 
 ## 2. Methodology config
 
 ```text
-[ ] services/methodology_config.py: BOARD_MAX_THREAD_MESSAGES_PER_DAY,
+[+] services/methodology_config.py: BOARD_MAX_THREAD_MESSAGES_PER_DAY,
     поле в BoardLimits, REQUIRED_NUMERIC_KEYS, build_methodology_config
-[ ] repositories/data_quality/methodology_config.py: диапазон в
+[+] repositories/data_quality/methodology_config.py: диапазон в
     REQUIRED_NUMERIC_PARAMETER_SQL
-[ ] tests/methodology_test_helpers.py + test_flexible_methodology_v1.py:
+[+] tests/methodology_test_helpers.py + test_flexible_methodology_v1.py:
     обновлены под новый обязательный параметр
 ```
 
 ## 3. Репозиторий (`repositories/migration_board/threads.py`)
 
 ```text
-[ ] create_thread_for_contact_request, get_thread_by_id,
+[+] create_thread_for_contact_request, get_thread_by_id,
     get_thread_for_contact_request, list_messages (after/limit),
     create_message, count_messages_created_since, close_thread,
     freeze_threads_between_users, list_my_threads
-[ ] Ре-экспорт в repositories/migration_board/__init__.py
+[+] Ре-экспорт в repositories/migration_board/__init__.py
 ```
 
 ## 4. Сервисы
 
 ```text
-[ ] services/migration_board/threads.py — list_my_threads,
+[+] services/migration_board/threads.py — list_my_threads,
     get_thread_messages, send_message (ownership+status+лимит+аудит),
     close_thread (ownership+аудит), get_thread_for_moderation
     (report_id-гейт+no-conflict+аудит на каждый вызов)
-[ ] services/migration_board/contacts.py — accept_contact_request
+[+] services/migration_board/contacts.py — accept_contact_request
     создаёт тред; block_user замораживает открытые треды
 ```
 
 ## 5. API и контракты
 
 ```text
-[ ] schemas/migration_board.py — Thread*/ThreadMessage* модели
-[ ] api/v1/migration_board.py — GET /me/threads, GET /me/threads/
+[+] schemas/migration_board.py — Thread*/ThreadMessage* модели
+[+] api/v1/migration_board.py — GET /me/threads, GET /me/threads/
     {id}/messages, POST /me/threads/{id}/messages, POST /me/threads/
     {id}/close (require_user)
-[ ] api/v1/admin_migration_board.py — GET /admin/migration-board/
+[+] api/v1/admin_migration_board.py — GET /admin/migration-board/
     threads/{id}/messages?report_id= (require_capability(MODERATOR_BOARD))
 [ ] contracts/openapi.yaml — точечная вставка (сверено с app.openapi()),
-    pnpm contracts:generate
+    pnpm contracts:generate — ЗАПЛАНИРОВАНО в §9 (сейчас
+    test_committed_openapi_matches_runtime_paths_and_schemas закономерно
+    красный: 4 новых пути ещё не внесены в контракт)
 ```
 
 ## 6. Data quality
 
 ```text
-[ ] Расширение services/data_quality/migration_board_checks.py +
-    repositories/data_quality/migration_board.py новыми проверками
-    (открытый тред без accepted контакта; сообщение после закрытия/
-    заморозки — защита в глубину)
+[+] Расширение services/data_quality/migration_board_checks.py +
+    repositories/data_quality/migration_board.py новыми проверками:
+    list_open_threads_without_active_contact (открытый тред без
+    accepted контакта), list_thread_messages_after_thread_closed
+    (сообщение после closed_at), list_thread_messages_after_block
+    (сообщение после блокировки — прокси для заморозки, так как в
+    contact_threads нет отдельной колонки frozen_at)
 ```
 
 ## 7. Тесты (~20-30 по плану)
@@ -140,7 +146,9 @@
 [ ] test_community_threads_service.py (автосоздание, ownership, лимит,
     close, freeze-on-block, moderator access + audit на каждый вызов)
 [ ] test_community_threads_api.py (RBAC, polling, 403/404/409)
-[ ] test_community_threads_dq.py
+[+] test_community_threads_dq.py (4 теста: регистрация обеих проверок +
+    открытый тред без активного контакта + сообщение после закрытия +
+    сообщение после блокировки; полный набор DQ-тестов зелёный, 24 passed)
 ```
 
 ## 8. Документация
