@@ -33,6 +33,9 @@ METHODOLOGY_SEED_SQL = (
     + Path("database/migrations/049_author_metrics_v1.sql").read_text(
         encoding="utf-8"
     )
+    + Path("database/migrations/051_community_threads_v1.sql").read_text(
+        encoding="utf-8"
+    )
 )
 NOW = datetime(2026, 7, 4, tzinfo=UTC)
 
@@ -66,6 +69,7 @@ def _rows(**overrides: float) -> list[dict[str, Any]]:
         methodology_config.BOARD_MAX_CONTACT_REQUESTS_PER_DAY: 20.0,
         methodology_config.BOARD_MAX_REPORTS_PER_DAY: 20.0,
         methodology_config.BOARD_AUTO_HIDE_REPORT_THRESHOLD: 3.0,
+        methodology_config.BOARD_MAX_THREAD_MESSAGES_PER_DAY: 50.0,
         methodology_config.FLOWS_K_ANONYMITY: 20.0,
         methodology_config.TRIP_WARNING_HIGH_IMPACT_MIN_RANK: 3.0,
         methodology_config.TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK: 3.0,

@@ -26,6 +26,7 @@ BOARD_MAX_ACTIVE_POSTS = "board.max_active_posts"
 BOARD_MAX_CONTACT_REQUESTS_PER_DAY = "board.max_contact_requests_per_day"
 BOARD_MAX_REPORTS_PER_DAY = "board.max_reports_per_day"
 BOARD_AUTO_HIDE_REPORT_THRESHOLD = "board.auto_hide_report_threshold"
+BOARD_MAX_THREAD_MESSAGES_PER_DAY = "board.max_thread_messages_per_day"
 FLOWS_K_ANONYMITY = "flows.k_anonymity"
 TRIP_WARNING_HIGH_IMPACT_MIN_RANK = "trip.warning.high_impact_min_rank"
 TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK = (
@@ -52,6 +53,7 @@ REQUIRED_NUMERIC_KEYS = (
     BOARD_MAX_CONTACT_REQUESTS_PER_DAY,
     BOARD_MAX_REPORTS_PER_DAY,
     BOARD_AUTO_HIDE_REPORT_THRESHOLD,
+    BOARD_MAX_THREAD_MESSAGES_PER_DAY,
     FLOWS_K_ANONYMITY,
     TRIP_WARNING_HIGH_IMPACT_MIN_RANK,
     TRIP_WARNING_RESTRICTIVE_PAIR_SEVERITY_RANK,
@@ -111,6 +113,7 @@ class BoardLimits:
     max_contact_requests_per_day: int
     max_reports_per_day: int
     auto_hide_report_threshold: int
+    max_thread_messages_per_day: int
 
 
 @dataclass(frozen=True)
@@ -219,6 +222,9 @@ def build_methodology_config(
         ),
         auto_hide_report_threshold=_positive_int(
             parameters, BOARD_AUTO_HIDE_REPORT_THRESHOLD
+        ),
+        max_thread_messages_per_day=_positive_int(
+            parameters, BOARD_MAX_THREAD_MESSAGES_PER_DAY
         ),
     )
     flows_k_anonymity = _positive_int(parameters, FLOWS_K_ANONYMITY)
