@@ -15,49 +15,21 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 settings = get_settings()
-_rate_windows: dict[str, list[float]] = {}
-_RATE_WINDOW = 60.0
-_last_rate_cleanup = 0.0
 
 
 def _rate_limit_client(request: Request) -> str | None:
     if request.client is None:
         return None
-    if settings.trusted_proxy_headers:
+    if (
+        settings.trusted_proxy_headers
+        and request.client.host in settings.trusted_proxy_ip_set
+    ):
         forwarded = (
             request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
         )
         if forwarded:
             return forwarded
     return request.client.host
-
-
-def _cleanup_rate_windows(now: float) -> None:
-    global _last_rate_cleanup
-    if (
-        now - _last_rate_cleanup < _RATE_WINDOW
-        and len(_rate_windows) <= settings.api_rate_limit_max_clients
-    ):
-        return
-    cutoff = now - _RATE_WINDOW
-    active = {
-        client: [timestamp for timestamp in timestamps if timestamp > cutoff]
-        for client, timestamps in _rate_windows.items()
-    }
-    active = {
-        client: timestamps
-        for client, timestamps in active.items()
-        if timestamps
-    }
-    if len(active) > settings.api_rate_limit_max_clients:
-        active = dict(
-            sorted(active.items(), key=lambda item: item[1][-1], reverse=True)[
-                : settings.api_rate_limit_max_clients
-            ]
-        )
-    _rate_windows.clear()
-    _rate_windows.update(active)
-    _last_rate_cleanup = now
 
 
 async def health() -> HealthResponse:
@@ -87,8 +59,6 @@ def ready() -> ReadinessResponse:
 app = create_app(
     settings=settings,
     rate_limit_client=_rate_limit_client,
-    cleanup_rate_windows=_cleanup_rate_windows,
-    rate_windows=_rate_windows,
     health_handler=health,
     readiness_handler=ready,
 )

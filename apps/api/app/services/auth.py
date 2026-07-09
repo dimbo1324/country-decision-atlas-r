@@ -5,6 +5,7 @@ import secrets
 from app.core.config import Settings, get_settings
 from app.core.errors import api_error
 from app.repositories import auth as repository
+from app.services import rate_limiter
 from app.services.feature_flags import ensure_feature_enabled
 from datetime import UTC, datetime, timedelta
 from psycopg import Connection
@@ -153,10 +154,18 @@ def login_user(
 ) -> tuple[str, dict[str, Any], dict[str, Any]]:
     _require_auth_feature_enabled(connection)
     normalized_email = normalize_email(email)
+    if rate_limiter.is_login_locked_out(normalized_email):
+        raise api_error(
+            429,
+            "too_many_login_attempts",
+            "Too many failed login attempts. Try again later.",
+            {},
+        )
     user = repository.get_user_by_email_with_credentials(
         connection, normalized_email
     )
     if user is None or not verify_password(password, user.get("password_hash")):
+        rate_limiter.record_login_failure(normalized_email)
         raise api_error(
             401,
             "invalid_credentials",
@@ -169,6 +178,7 @@ def login_user(
         raise api_error(
             403, "user_deleted", "This account no longer exists.", {}
         )
+    rate_limiter.clear_login_failures(normalized_email)
     repository.update_last_login(connection, user["id"])
     raw_token, session = create_login_session(
         connection,

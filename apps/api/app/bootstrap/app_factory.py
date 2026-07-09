@@ -1,5 +1,4 @@
 import logging
-import time
 from app.api.v1 import (
     admin,
     admin_ai,
@@ -45,6 +44,7 @@ from app.api.v1 import (
 )
 from app.core.database import close_database_pool, open_database_pool
 from app.schemas.system import HealthResponse, ReadinessResponse
+from app.services.rate_limiter import check_rate_limit
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
@@ -53,6 +53,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse, Response
 from psycopg import Error as PsycopgError
+from starlette.concurrency import run_in_threadpool
 from typing import Any
 
 
@@ -63,8 +64,6 @@ def create_app(
     *,
     settings: Any,
     rate_limit_client: Callable[[Request], str | None],
-    cleanup_rate_windows: Callable[[float], None],
-    rate_windows: dict[str, list[float]],
     health_handler: Callable[[], Awaitable[HealthResponse]],
     readiness_handler: Callable[[], ReadinessResponse],
 ) -> FastAPI:
@@ -83,9 +82,7 @@ def create_app(
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
         allow_headers=["Content-Type", "Authorization"],
     )
-    _register_middleware(
-        app, settings, rate_limit_client, cleanup_rate_windows, rate_windows
-    )
+    _register_middleware(app, settings, rate_limit_client)
     _register_exception_handlers(app)
     _register_system_routes(app, health_handler, readiness_handler)
     _register_api_routes(app)
@@ -96,11 +93,6 @@ def create_app(
 def _lifespan() -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-        logger.warning(
-            "Rate limiting is per-process (in-memory). "
-            "In multi-worker deployments the effective limit scales with worker count. "
-            "Migrate to Redis for cross-worker enforcement."
-        )
         open_database_pool()
         try:
             yield
@@ -121,12 +113,13 @@ def error_response(
     )
 
 
+_AUTH_RATE_LIMIT_PATHS = {"/api/v1/auth/login", "/api/v1/auth/register"}
+
+
 def _register_middleware(
     app: FastAPI,
     settings: Any,
     rate_limit_client: Callable[[Request], str | None],
-    cleanup_rate_windows: Callable[[float], None],
-    rate_windows: dict[str, list[float]],
 ) -> None:
     @app.middleware("http")
     async def security_headers_middleware(
@@ -145,22 +138,31 @@ def _register_middleware(
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
-        if settings.app_env != "production":
-            return await call_next(request)
         if request.url.path in {"/health", "/ready"}:
+            return await call_next(request)
+        is_auth_path = request.url.path in _AUTH_RATE_LIMIT_PATHS
+        if not is_auth_path and settings.app_env != "production":
             return await call_next(request)
         client = rate_limit_client(request)
         if client is not None:
-            now = time.monotonic()
-            cleanup_rate_windows(now)
-            cutoff = now - 60.0
-            recent = [t for t in rate_windows.get(client, []) if t > cutoff]
-            if len(recent) >= settings.api_rate_limit_per_minute:
+            if is_auth_path:
+                allowed = await run_in_threadpool(
+                    check_rate_limit,
+                    f"auth:{client}",
+                    limit=settings.api_rate_limit_auth_per_minute,
+                    window_seconds=60,
+                )
+            else:
+                allowed = await run_in_threadpool(
+                    check_rate_limit,
+                    f"general:{client}",
+                    limit=settings.api_rate_limit_per_minute,
+                    window_seconds=60,
+                )
+            if not allowed:
                 return error_response(
                     429, "rate_limit_exceeded", "Too many requests."
                 )
-            recent.append(now)
-            rate_windows[client] = recent
         return await call_next(request)
 
 

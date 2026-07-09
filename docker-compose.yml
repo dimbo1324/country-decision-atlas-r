@@ -41,6 +41,9 @@ services:
       APP_DEBUG: ${APP_DEBUG:-false}
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       API_RATE_LIMIT_PER_MINUTE: ${API_RATE_LIMIT_PER_MINUTE:-600}
+      API_RATE_LIMIT_AUTH_PER_MINUTE: ${API_RATE_LIMIT_AUTH_PER_MINUTE:-300}
+      TRUSTED_PROXY_HEADERS: ${TRUSTED_PROXY_HEADERS:-false}
+      TRUSTED_PROXY_IPS: ${TRUSTED_PROXY_IPS:-}
       DATABASE_URL: postgresql://${POSTGRES_USER:-country_atlas}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-country_atlas}
       CACHE_MODE: ${CACHE_MODE:-null}
       REDIS_URL: redis://redis:6379/0
@@ -49,6 +52,10 @@ services:
       AUTH_SESSION_TTL_HOURS: ${AUTH_SESSION_TTL_HOURS:-168}
       AUTH_PASSWORD_MIN_LENGTH: ${AUTH_PASSWORD_MIN_LENGTH:-12}
       AUTH_REGISTRATION_ENABLED: ${AUTH_REGISTRATION_ENABLED:-true}
+      AUTH_LOGIN_MAX_FAILED_ATTEMPTS: ${AUTH_LOGIN_MAX_FAILED_ATTEMPTS:-5}
+      AUTH_LOGIN_FAILURE_WINDOW_SECONDS: ${AUTH_LOGIN_FAILURE_WINDOW_SECONDS:-900}
+      AUTH_LOGIN_LOCKOUT_SECONDS: ${AUTH_LOGIN_LOCKOUT_SECONDS:-60}
+      AUTH_LOGIN_LOCKOUT_MAX_SECONDS: ${AUTH_LOGIN_LOCKOUT_MAX_SECONDS:-900}
       NOTIFIER_INTERNAL_AUTH_TOKEN: ${NOTIFIER_INTERNAL_AUTH_TOKEN:-dev-grpc-token}
       NOTIFIER_GRPC_ADDR: ${NOTIFIER_GRPC_ADDR:-notifier:9090}
     ports:
@@ -58,6 +65,8 @@ services:
       - ./packages:/app/packages
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test:

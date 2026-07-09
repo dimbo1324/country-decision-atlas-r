@@ -19,8 +19,13 @@ class Settings(BaseSettings):
     default_locale: str = "ru"
     supported_locales: str = "en,ru"
     api_rate_limit_per_minute: int = 120
-    api_rate_limit_max_clients: int = 10000
+    api_rate_limit_auth_per_minute: int = 10
     trusted_proxy_headers: bool = False
+    trusted_proxy_ips: str = ""
+    auth_login_max_failed_attempts: int = 5
+    auth_login_failure_window_seconds: int = 900
+    auth_login_lockout_seconds: int = 60
+    auth_login_lockout_max_seconds: int = 900
     analytics_enabled: bool = True
     analytics_salt: str = "local-dev-analytics-salt"
     cache_mode: str = "null"
@@ -55,6 +60,12 @@ class Settings(BaseSettings):
             for origin in self.api_cors_origins.split(",")
             if origin.strip()
         ]
+
+    @property
+    def trusted_proxy_ip_set(self) -> set[str]:
+        return {
+            ip.strip() for ip in self.trusted_proxy_ips.split(",") if ip.strip()
+        }
 
 
 @lru_cache(maxsize=1)

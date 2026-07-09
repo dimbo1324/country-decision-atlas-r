@@ -7,7 +7,7 @@ from app.core.mvp_requirements import (
     MVP_CONTENT_DEPTH_TARGETS,
     MVP_READINESS_THRESHOLDS,
 )
-from app.main import _cleanup_rate_windows, _rate_limit_client, ready
+from app.main import _rate_limit_client, ready
 from app.schemas.decision_engine import UserStoryCreate
 from app.schemas.translation_jobs import TranslationJobProcessBatchRequest
 from app.services import decision_engine, translation_jobs
@@ -131,25 +131,24 @@ def test_rate_limiter_ignores_forwarded_for_by_default(
     assert _rate_limit_client(request) == "10.0.0.5"
 
 
-def test_rate_limiter_uses_forwarded_for_only_when_enabled(
+def test_rate_limiter_uses_forwarded_for_only_when_client_is_trusted_proxy(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(main_module.settings, "trusted_proxy_headers", True)
+    monkeypatch.setattr(main_module.settings, "trusted_proxy_ips", "10.0.0.5")
     request = _request("10.0.0.5", "203.0.113.10")
     assert _rate_limit_client(request) == "203.0.113.10"
 
 
-def test_rate_limiter_cleans_expired_and_bounds_clients(
+def test_rate_limiter_ignores_forwarded_for_from_untrusted_client(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(main_module.settings, "api_rate_limit_max_clients", 2)
-    monkeypatch.setattr(main_module, "_last_rate_cleanup", 0.0)
-    main_module._rate_windows.clear()
-    main_module._rate_windows.update(
-        {"expired": [1.0], "a": [100.0], "b": [110.0], "c": [120.0]}
+    monkeypatch.setattr(main_module.settings, "trusted_proxy_headers", True)
+    monkeypatch.setattr(
+        main_module.settings, "trusted_proxy_ips", "203.0.113.99"
     )
-    _cleanup_rate_windows(130.0)
-    assert set(main_module._rate_windows) == {"b", "c"}
+    request = _request("10.0.0.5", "203.0.113.10")
+    assert _rate_limit_client(request) == "10.0.0.5"
 
 
 def test_internal_routes_fail_closed_without_app_env() -> None:

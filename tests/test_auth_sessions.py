@@ -3,7 +3,11 @@
 import pytest
 from app.core.config import Settings
 from app.repositories import auth as repository
-from app.services import auth as service, feature_flags as feature_flags_service
+from app.services import (
+    auth as service,
+    feature_flags as feature_flags_service,
+    rate_limiter,
+)
 from datetime import UTC, datetime
 from fastapi import HTTPException
 from typing import Any, cast
@@ -238,6 +242,85 @@ def test_login_user_rejects_wrong_password(
     assert exc_info.value.status_code == 401
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "invalid_credentials"
+
+
+def test_login_user_rejects_when_locked_out(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_auth(monkeypatch)
+    monkeypatch.setattr(rate_limiter, "is_login_locked_out", lambda *_a: True)
+    get_credentials_called: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "get_user_by_email_with_credentials",
+        lambda *_a: get_credentials_called.setdefault("called", True),
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        service.login_user(
+            CONNECTION, email="user@example.local", password="whatever12345"
+        )
+    assert exc_info.value.status_code == 429
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "too_many_login_attempts"
+    assert "called" not in get_credentials_called
+
+
+def test_login_user_records_failure_on_wrong_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_auth(monkeypatch)
+    monkeypatch.setattr(rate_limiter, "is_login_locked_out", lambda *_a: False)
+    correct_hash = service.hash_password("correct-password-123")
+    monkeypatch.setattr(
+        repository,
+        "get_user_by_email_with_credentials",
+        lambda *_a: {**_user_row(), "password_hash": correct_hash},
+    )
+    recorded: dict[str, Any] = {}
+    monkeypatch.setattr(
+        rate_limiter,
+        "record_login_failure",
+        lambda email: recorded.setdefault("email", email),
+    )
+    with pytest.raises(HTTPException):
+        service.login_user(
+            CONNECTION,
+            email="user@example.local",
+            password="wrong-password-123",
+        )
+    assert recorded["email"] == "user@example.local"
+
+
+def test_login_user_clears_failures_on_success(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_auth(monkeypatch)
+    monkeypatch.setattr(rate_limiter, "is_login_locked_out", lambda *_a: False)
+    correct_hash = service.hash_password("correct-password-123")
+    monkeypatch.setattr(
+        repository,
+        "get_user_by_email_with_credentials",
+        lambda *_a: {**_user_row(), "password_hash": correct_hash},
+    )
+    monkeypatch.setattr(repository, "update_last_login", lambda *_a: None)
+    monkeypatch.setattr(
+        repository,
+        "create_auth_session",
+        lambda *_a, **kwargs: _session_row(user_id=kwargs["user_id"]),
+    )
+    monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
+    cleared: dict[str, Any] = {}
+    monkeypatch.setattr(
+        rate_limiter,
+        "clear_login_failures",
+        lambda email: cleared.setdefault("email", email),
+    )
+    service.login_user(
+        CONNECTION,
+        email="user@example.local",
+        password="correct-password-123",
+    )
+    assert cleared["email"] == "user@example.local"
 
 
 def test_login_user_rejects_suspended_account(
