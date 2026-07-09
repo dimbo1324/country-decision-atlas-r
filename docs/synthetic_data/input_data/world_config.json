@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0",
+  "default_country_count": 5,
+  "name_prefixes": [
+    "Avel",
+    "Cendor",
+    "Dorev",
+    "Elvar",
+    "Faren",
+    "Gald",
+    "Helion",
+    "Ivara",
+    "Kelmar",
+    "Lunor"
+  ],
+  "name_suffixes": [
+    "ia",
+    "ora",
+    "en",
+    "ara",
+    "is",
+    "on",
+    "eva"
+  ],
+  "forbidden_country_names": [
+    "Argentina",
+    "Brazil",
+    "Canada",
+    "China",
+    "France",
+    "Germany",
+    "India",
+    "Japan",
+    "Russia",
+    "Spain",
+    "United States",
+    "Uruguay"
+  ],
+  "archetypes": [
+    {
+      "slug": "stable_technical_expensive",
+      "label": "Stable, technical and expensive",
+      "metric_ranges": {
+        "economy": {"minimum": 75, "maximum": 92},
+        "cost_of_living": {"minimum": 70, "maximum": 92},
+        "safety": {"minimum": 72, "maximum": 90},
+        "civil_freedoms": {"minimum": 65, "maximum": 88},
+        "institutional_stability": {"minimum": 78, "maximum": 93},
+        "digital_infrastructure": {"minimum": 78, "maximum": 95},
+        "migration_openness": {"minimum": 45, "maximum": 68},
+        "data_confidence": {"minimum": 70, "maximum": 92}
+      }
+    },
+    {
+      "slug": "affordable_unstable",
+      "label": "Affordable with unstable institutions",
+      "metric_ranges": {
+        "economy": {"minimum": 40, "maximum": 65},
+        "cost_of_living": {"minimum": 20, "maximum": 48},
+        "safety": {"minimum": 35, "maximum": 60},
+        "civil_freedoms": {"minimum": 38, "maximum": 60},
+        "institutional_stability": {"minimum": 20, "maximum": 48},
+        "digital_infrastructure": {"minimum": 40, "maximum": 62},
+        "migration_openness": {"minimum": 55, "maximum": 80},
+        "data_confidence": {"minimum": 42, "maximum": 65}
+      }
+    },
+    {
+      "slug": "free_small_market",
+      "label": "Free and safe with a small labor market",
+      "metric_ranges": {
+        "economy": {"minimum": 48, "maximum": 70},
+        "cost_of_living": {"minimum": 45, "maximum": 68},
+        "safety": {"minimum": 75, "maximum": 94},
+        "civil_freedoms": {"minimum": 78, "maximum": 95},
+        "institutional_stability": {"minimum": 70, "maximum": 88},
+        "digital_infrastructure": {"minimum": 62, "maximum": 85},
+        "migration_openness": {"minimum": 50, "maximum": 76},
+        "data_confidence": {"minimum": 65, "maximum": 86}
+      }
+    },
+    {
+      "slug": "wealthy_restricted",
+      "label": "Economically strong with restricted freedoms",
+      "metric_ranges": {
+        "economy": {"minimum": 75, "maximum": 94},
+        "cost_of_living": {"minimum": 65, "maximum": 90},
+        "safety": {"minimum": 60, "maximum": 82},
+        "civil_freedoms": {"minimum": 15, "maximum": 43},
+        "institutional_stability": {"minimum": 65, "maximum": 85},
+        "digital_infrastructure": {"minimum": 70, "maximum": 92},
+        "migration_openness": {"minimum": 28, "maximum": 55},
+        "data_confidence": {"minimum": 45, "maximum": 72}
+      }
+    },
+    {
+      "slug": "recovering_country",
+      "label": "Country in recovery",
+      "metric_ranges": {
+        "economy": {"minimum": 38, "maximum": 70},
+        "cost_of_living": {"minimum": 35, "maximum": 60},
+        "safety": {"minimum": 38, "maximum": 72},
+        "civil_freedoms": {"minimum": 40, "maximum": 75},
+        "institutional_stability": {"minimum": 35, "maximum": 70},
+        "digital_infrastructure": {"minimum": 42, "maximum": 75},
+        "migration_openness": {"minimum": 45, "maximum": 78},
+        "data_confidence": {"minimum": 40, "maximum": 75}
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "slug": "balanced",
+      "archetypes": [
+        "stable_technical_expensive",
+        "affordable_unstable",
+        "free_small_market",
+        "wealthy_restricted",
+        "recovering_country"
+      ],
+      "event_intensity": 5
+    },
+    {
+      "slug": "crisis",
+      "archetypes": [
+        "affordable_unstable",
+        "recovering_country",
+        "wealthy_restricted",
+        "free_small_market",
+        "stable_technical_expensive"
+      ],
+      "event_intensity": 9
+    },
+    {
+      "slug": "optimistic",
+      "archetypes": [
+        "stable_technical_expensive",
+        "free_small_market",
+        "recovering_country",
+        "wealthy_restricted",
+        "affordable_unstable"
+      ],
+      "event_intensity": 3
+    },
+    {
+      "slug": "data_quality",
+      "archetypes": [
+        "recovering_country",
+        "affordable_unstable",
+        "wealthy_restricted",
+        "free_small_market",
+        "stable_technical_expensive"
+      ],
+      "event_intensity": 7
+    },
+    {
+      "slug": "moderation",
+      "archetypes": [
+        "free_small_market",
+        "wealthy_restricted",
+        "affordable_unstable",
+        "recovering_country",
+        "stable_technical_expensive"
+      ],
+      "event_intensity": 4
+    }
+  ]
+}

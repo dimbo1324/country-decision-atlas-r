@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import random
+import secrets
 import sys
 from pathlib import Path
 
@@ -21,14 +23,30 @@ from scripts.synthetic_data.core.output_layout import (  # noqa: E402
 from scripts.synthetic_data.core.paths import (  # noqa: E402
     DEFAULT_INPUT_DATA_FILE,
     DEFAULT_OUTPUT_DATA_ROOT,
+    DEFAULT_WORLD_INPUT_FILE,
 )
 from scripts.synthetic_data.core.random_content import (  # noqa: E402
     RandomContentFactory,
 )
-from scripts.synthetic_data.core.registry import get_generator  # noqa: E402
+from scripts.synthetic_data.core.world_generator import (  # noqa: E402
+    WorldGenerationOptions,
+    WorldGenerator,
+)
+from scripts.synthetic_data.core.world_input import (  # noqa: E402
+    WorldInputError,
+    load_world_input,
+)
+from scripts.synthetic_data.core.world_models import (  # noqa: E402
+    SyntheticWorld,
+)
+from scripts.synthetic_data.core.world_validation import (  # noqa: E402
+    WorldValidationError,
+    validate_world,
+)
 
 
 _ALL_FORMATS_ALIAS = "all"
+_WORLD_COMMANDS = frozenset({"validate", "plan", "generate"})
 
 
 def _parse_formats(raw: str) -> list[FileFormat]:
@@ -99,7 +117,52 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run(argv: list[str]) -> int:
+def build_world_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="synthetic-data-generator",
+        description="Builds a deterministic fictional country world for local testing.",
+    )
+    parser.add_argument("command", choices=sorted(_WORLD_COMMANDS))
+    parser.add_argument(
+        "--world-input",
+        type=Path,
+        default=DEFAULT_WORLD_INPUT_FILE,
+        help="World JSON configuration (default: docs/synthetic_data/input_data/world_config.json).",
+    )
+    parser.add_argument(
+        "--profile",
+        default="balanced",
+        help="World profile declared in the input configuration (default: balanced).",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Seed for reproducible world data; a seed is generated when omitted.",
+    )
+    parser.add_argument(
+        "--countries",
+        type=int,
+        default=None,
+        help="Override the configuration country count; only 4 or 5 are allowed.",
+    )
+    parser.add_argument(
+        "--output-root",
+        type=Path,
+        default=DEFAULT_OUTPUT_DATA_ROOT,
+        help="Root directory for generated datasets.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Build and validate the world without writing output files.",
+    )
+    return parser
+
+
+def _run_legacy(argv: list[str]) -> int:
+    from scripts.synthetic_data.core.registry import get_generator
+
     parser = build_arg_parser()
     args = parser.parse_args(argv)
 
@@ -144,6 +207,91 @@ def run(argv: list[str]) -> int:
             )
 
     return 0
+
+
+def _resolve_seed(seed: int | None) -> int:
+    return secrets.randbelow(2**63) if seed is None else seed
+
+
+def _write_world_dataset(*, world: SyntheticWorld, output_root: Path) -> Path:
+    dataset_dir = output_root / world.metadata.dataset_id
+    canonical_dir = dataset_dir / "canonical"
+    reports_dir = dataset_dir / "reports"
+    canonical_dir.mkdir(parents=True, exist_ok=True)
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    payload = world.to_dict()
+    (canonical_dir / "synthetic_world.json").write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    (reports_dir / "validation_report.json").write_text(
+        json.dumps(
+            {
+                "dataset_id": world.metadata.dataset_id,
+                "status": "valid",
+                "errors": [],
+            },
+            indent=2,
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return dataset_dir
+
+
+def _run_world(argv: list[str]) -> int:
+    parser = build_world_arg_parser()
+    args = parser.parse_args(argv)
+    try:
+        input_data = load_world_input(args.world_input)
+        if args.command == "validate":
+            print(
+                "valid world input "
+                f"schema={input_data.schema_version} "
+                f"profiles={','.join(profile.slug for profile in input_data.profiles)}"
+            )
+            return 0
+
+        seed = _resolve_seed(args.seed)
+        world = WorldGenerator(input_data=input_data).generate(
+            WorldGenerationOptions(
+                seed=seed,
+                profile=args.profile,
+                country_count=args.countries,
+            )
+        )
+        errors = validate_world(
+            world,
+            forbidden_country_names=input_data.forbidden_country_names,
+        )
+        if errors:
+            raise WorldValidationError("; ".join(errors))
+        print(
+            f"dataset_id={world.metadata.dataset_id} seed={seed} "
+            f"profile={world.metadata.profile} countries={len(world.countries)}"
+        )
+        if args.command == "plan" or args.dry_run:
+            for country in world.countries:
+                print(f"- {country.name} ({country.code}): {country.archetype}")
+            return 0
+
+        dataset_dir = _write_world_dataset(
+            world=world, output_root=args.output_root
+        )
+        print(f"generated canonical world -> {dataset_dir}")
+        return 0
+    except (ValueError, WorldInputError, WorldValidationError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+
+def run(argv: list[str]) -> int:
+    if argv and argv[0] in _WORLD_COMMANDS:
+        return _run_world(argv)
+    return _run_legacy(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
