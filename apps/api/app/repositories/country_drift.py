@@ -152,7 +152,7 @@ def get_previous_drift_snapshot(
         SELECT
             {_SNAPSHOT_COLUMNS}
         FROM country_drift_snapshots cds
-        WHERE cds.country_id::text = %s
+        WHERE cds.country_id = %s::uuid
           AND cds.period_end < %s
           AND cds.methodology_version = %s
         ORDER BY cds.period_end DESC, cds.computed_at DESC

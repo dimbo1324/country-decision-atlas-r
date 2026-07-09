@@ -108,7 +108,9 @@ def test_get_ai_draft_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
     client = _client()
     monkeypatch.setattr(repository, "get_ai_draft", lambda *_a, **_kw: None)
 
-    response = client.get("/api/v1/admin/ai/drafts/missing")
+    response = client.get(
+        "/api/v1/admin/ai/drafts/99999999-9999-9999-9999-999999999999"
+    )
 
     assert response.status_code == 404
 
@@ -123,7 +125,7 @@ def test_patch_ai_draft_status_to_approved(
     )
 
     response = client.patch(
-        "/api/v1/admin/ai/drafts/draft-1/status",
+        "/api/v1/admin/ai/drafts/11111111-1111-1111-1111-111111111111/status",
         json={"status": "approved", "reviewed_by": "editor"},
     )
 

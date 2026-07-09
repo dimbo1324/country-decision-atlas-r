@@ -11,6 +11,7 @@ from app.services import capabilities as service
 from fastapi import APIRouter, Depends, Query, status
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin/capabilities", tags=["admin-capabilities"])
@@ -63,11 +64,11 @@ def grant_capability(
 
 @router.delete("/{capability_id}", status_code=status.HTTP_204_NO_CONTENT)
 def revoke_capability(
-    capability_id: str,
+    capability_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_owner)],
 ) -> None:
     service.revoke_capability(
-        connection, current_user=current_user, capability_id=capability_id
+        connection, current_user=current_user, capability_id=str(capability_id)
     )
     connection.commit()

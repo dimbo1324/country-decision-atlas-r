@@ -161,7 +161,7 @@ def get_user_story(
             created_at,
             updated_at
         FROM user_stories
-        WHERE id::text = %s AND status = 'published'
+        WHERE id = %s::uuid AND status = 'published'
         """,
         (story_id,),
     )

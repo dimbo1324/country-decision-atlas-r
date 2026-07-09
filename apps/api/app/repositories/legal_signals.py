@@ -16,7 +16,7 @@ LEGAL_SIGNAL_SORT_COLUMNS = {
 
 def list_legal_signals(
     connection: Connection[Any],
-    country_id: str,
+    country_slug: str,
     limit: int,
     offset: int,
     signal_type: str | None = None,
@@ -27,7 +27,7 @@ def list_legal_signals(
     order: str = "desc",
 ) -> list[dict[str, Any]]:
     filter_sql, params = _filters(
-        country_id, signal_type, impact_direction, impact_level, status
+        country_slug, signal_type, impact_direction, impact_level, status
     )
     sort_column, order_sql = resolve_sort_clause(
         sort, order, LEGAL_SIGNAL_SORT_COLUMNS, "published_date"
@@ -64,14 +64,14 @@ def list_legal_signals(
 
 def count_legal_signals(
     connection: Connection[Any],
-    country_id: str,
+    country_slug: str,
     signal_type: str | None = None,
     impact_direction: str | None = None,
     impact_level: str | None = None,
     status: str = "published",
 ) -> int:
     filter_sql, params = _filters(
-        country_id, signal_type, impact_direction, impact_level, status
+        country_slug, signal_type, impact_direction, impact_level, status
     )
     row = fetch_one(
         connection,
@@ -87,14 +87,14 @@ def count_legal_signals(
 
 
 def _filters(
-    country_id: str,
+    country_slug: str,
     signal_type: str | None,
     impact_direction: str | None,
     impact_level: str | None,
     status: str,
 ) -> tuple[str, tuple[Any, ...]]:
-    filters = ["(c.id::text = %s OR c.slug = %s)", "ls.status = %s"]
-    params: list[Any] = [country_id, country_id, status]
+    filters = ["c.slug = %s", "ls.status = %s"]
+    params: list[Any] = [country_slug, status]
     if signal_type:
         filters.append("ls.signal_type = %s")
         params.append(signal_type)

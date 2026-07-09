@@ -12,6 +12,7 @@ from app.services import country_contribution as service
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin", tags=["admin-country-contribution"])
@@ -38,11 +39,13 @@ def list_country_proposals_for_curation(
     response_model=CountryProposalResponse,
 )
 def get_country_proposal_for_curation(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     _: _Editor,
 ) -> dict[str, Any]:
-    return {"item": service.get_proposal_for_curation(connection, proposal_id)}
+    return {
+        "item": service.get_proposal_for_curation(connection, str(proposal_id))
+    }
 
 
 @router.post(
@@ -50,12 +53,12 @@ def get_country_proposal_for_curation(
     response_model=CountryProposalResponse,
 )
 def assign_country_proposal_curator(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Editor,
 ) -> dict[str, Any]:
     proposal = service.assign_curator(
-        connection, current_user=current_user, proposal_id=proposal_id
+        connection, current_user=current_user, proposal_id=str(proposal_id)
     )
     connection.commit()
     return {"item": proposal}
@@ -63,12 +66,12 @@ def assign_country_proposal_curator(
 
 @router.post("/country-proposals/{proposal_id}/readiness-check")
 def run_country_proposal_readiness_check(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Editor,
 ) -> dict[str, Any]:
     snapshot = service.run_readiness_check(
-        connection, current_user=current_user, proposal_id=proposal_id
+        connection, current_user=current_user, proposal_id=str(proposal_id)
     )
     connection.commit()
     return snapshot
@@ -79,7 +82,7 @@ def run_country_proposal_readiness_check(
     response_model=GenericItemResponse,
 )
 def upsert_country_proposal_scenario_scores(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ScenarioScoresUpsert,
     connection: _Conn,
     current_user: _Editor,
@@ -87,7 +90,7 @@ def upsert_country_proposal_scenario_scores(
     result = service.upsert_scenario_scores(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         scenario_slug=payload.scenario_slug,
         breakdowns=payload.breakdowns,
     )
@@ -100,12 +103,12 @@ def upsert_country_proposal_scenario_scores(
     response_model=CountryProposalResponse,
 )
 def publish_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Editor,
 ) -> dict[str, Any]:
     proposal = service.publish_proposal(
-        connection, current_user=current_user, proposal_id=proposal_id
+        connection, current_user=current_user, proposal_id=str(proposal_id)
     )
     connection.commit()
     return {"item": proposal}
@@ -116,7 +119,7 @@ def publish_country_proposal(
     response_model=CountryProposalResponse,
 )
 def reject_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ModerationReasonPayload,
     connection: _Conn,
     current_user: _Editor,
@@ -124,7 +127,7 @@ def reject_country_proposal(
     proposal = service.reject_proposal(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         reason=payload.reason,
     )
     connection.commit()
@@ -136,7 +139,7 @@ def reject_country_proposal(
     response_model=CountryProposalResponse,
 )
 def request_country_proposal_changes(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ModerationReasonPayload,
     connection: _Conn,
     current_user: _Editor,
@@ -144,7 +147,7 @@ def request_country_proposal_changes(
     proposal = service.request_changes(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         reason=payload.reason,
     )
     connection.commit()
@@ -156,12 +159,12 @@ def request_country_proposal_changes(
     response_model=CountryProposalResponse,
 )
 def archive_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Editor,
 ) -> dict[str, Any]:
     proposal = service.archive_proposal(
-        connection, current_user=current_user, proposal_id=proposal_id
+        connection, current_user=current_user, proposal_id=str(proposal_id)
     )
     connection.commit()
     return {"item": proposal}

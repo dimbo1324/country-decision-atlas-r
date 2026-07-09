@@ -143,7 +143,7 @@ def get_route_by_id(
             {ROUTE_PUBLIC_FIELDS}
         FROM routes r
         JOIN countries c ON c.id = r.country_id
-        WHERE r.id::text = %s
+        WHERE r.id = %s::uuid
           AND r.status = 'published'
         """,
         (
@@ -196,7 +196,7 @@ def list_route_documents(
             CASE WHEN %s = 'ru' THEN COALESCE(note_ru, note) ELSE note END AS note,
             display_order
         FROM route_documents
-        WHERE route_id::text = %s
+        WHERE route_id = %s::uuid
         ORDER BY display_order ASC, name ASC
         """,
         (
@@ -225,7 +225,7 @@ def list_route_sources(
         FROM route_sources rs
         JOIN sources s ON s.id = rs.source_id
         LEFT JOIN countries c ON c.id = s.country_id
-        WHERE rs.route_id::text = %s
+        WHERE rs.route_id = %s::uuid
           AND s.status = 'published'
           AND s.url IS NOT NULL
         ORDER BY
@@ -261,7 +261,7 @@ def list_route_evidence(
         JOIN evidence_items ei ON ei.id = re.evidence_item_id
         LEFT JOIN sources s ON s.id = ei.source_id
         LEFT JOIN countries c ON c.id = ei.country_id
-        WHERE re.route_id::text = %s
+        WHERE re.route_id = %s::uuid
           AND ei.status = 'published'
         ORDER BY COALESCE(ei.retrieved_at, ei.created_at) DESC NULLS LAST, ei.title
         """,
@@ -279,7 +279,7 @@ def get_route_for_admin(
         SELECT
             {ADMIN_ROUTE_FIELDS}
         FROM routes
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         """,
         (route_id,),
     )
@@ -297,7 +297,7 @@ def patch_route_status(
         SET
             status = %s,
             updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {ADMIN_ROUTE_FIELDS},
             (SELECT slug FROM countries WHERE id = country_id) AS country_slug

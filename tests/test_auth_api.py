@@ -191,7 +191,7 @@ def test_revoke_session_returns_ok(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     client = _client(authenticated=True)
     response = client.delete(
-        "/api/v1/auth/sessions/session-1",
+        "/api/v1/auth/sessions/11111111-1111-1111-1111-111111111111",
         headers={"Authorization": "Bearer session-token"},
     )
     assert response.status_code == 200

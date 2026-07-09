@@ -28,7 +28,7 @@ def list_checklist_items(
         SELECT
             {CHECKLIST_FIELDS}
         FROM trip_checklist_items tci
-        WHERE tci.trip_id::text = %s
+        WHERE tci.trip_id = %s::uuid
         ORDER BY tci.position, tci.created_at
         """,
         (trip_id,),
@@ -44,7 +44,7 @@ def get_checklist_item_for_trip(
         SELECT
             {CHECKLIST_FIELDS}
         FROM trip_checklist_items tci
-        WHERE tci.trip_id::text = %s AND tci.id::text = %s
+        WHERE tci.trip_id = %s::uuid AND tci.id = %s::uuid
         """,
         (trip_id, item_id),
     )
@@ -56,7 +56,7 @@ def next_checklist_position(connection: Connection[Any], trip_id: str) -> int:
         """
         SELECT COALESCE(MAX(position), 0) + 1 AS next_position
         FROM trip_checklist_items
-        WHERE trip_id::text = %s
+        WHERE trip_id = %s::uuid
         """,
         (trip_id,),
     )
@@ -135,7 +135,7 @@ def update_checklist_item(
             due_date = %s,
             status = %s,
             position = %s
-        WHERE id::text = %s AND trip_id::text = %s
+        WHERE id = %s::uuid AND trip_id = %s::uuid
         RETURNING id::text AS id
         """,
         (
@@ -163,7 +163,7 @@ def delete_checklist_item(
         connection,
         """
         DELETE FROM trip_checklist_items
-        WHERE trip_id::text = %s AND id::text = %s
+        WHERE trip_id = %s::uuid AND id = %s::uuid
         RETURNING id
         """,
         (trip_id, item_id),

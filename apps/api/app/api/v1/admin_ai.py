@@ -22,6 +22,7 @@ from app.services import (
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin", tags=["admin-ai"])
@@ -102,11 +103,11 @@ def list_ai_drafts(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def get_ai_draft(
-    draft_id: str,
+    draft_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
-    return ai_drafts_service.get_ai_draft_for_admin(connection, draft_id)
+    return ai_drafts_service.get_ai_draft_for_admin(connection, str(draft_id))
 
 
 @router.patch(
@@ -115,13 +116,13 @@ def get_ai_draft(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_ai_draft_status(
-    draft_id: str,
+    draft_id: UUID,
     payload: AIDraftStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = ai_drafts_service.update_ai_draft_status(
-        connection, draft_id, payload.status, payload.reviewed_by
+        connection, str(draft_id), payload.status, payload.reviewed_by
     )
     connection.commit()
     return row
@@ -153,12 +154,12 @@ def list_contradiction_candidates(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def get_contradiction_candidate(
-    candidate_id: str,
+    candidate_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     return contradiction_service.get_contradiction_candidate_for_admin(
-        connection, candidate_id
+        connection, str(candidate_id)
     )
 
 
@@ -168,13 +169,13 @@ def get_contradiction_candidate(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_contradiction_candidate_status(
-    candidate_id: str,
+    candidate_id: UUID,
     payload: ContradictionCandidateStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_editor)],
 ) -> dict[str, Any]:
     row = contradiction_service.update_contradiction_candidate_status(
-        connection, candidate_id, payload.status, payload.reviewed_by
+        connection, str(candidate_id), payload.status, payload.reviewed_by
     )
     connection.commit()
     return row

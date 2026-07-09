@@ -582,19 +582,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /api/v1/countries/{country_id}/profile:
+  /api/v1/countries/{country_slug}/profile:
     get:
       tags:
       - countries
       summary: Read Country Profile
-      operationId: read_country_profile_api_v1_countries__country_id__profile_get
+      operationId: read_country_profile_api_v1_countries__country_slug__profile_get
       parameters:
-      - name: country_id
+      - name: country_slug
         in: path
         required: true
         schema:
           type: string
-          title: Country Id
+          title: Country Slug
       - name: locale
         in: query
         required: false
@@ -619,19 +619,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /api/v1/countries/{country_id}/scores:
+  /api/v1/countries/{country_slug}/scores:
     get:
       tags:
       - countries
       summary: Read Country Scores
-      operationId: read_country_scores_api_v1_countries__country_id__scores_get
+      operationId: read_country_scores_api_v1_countries__country_slug__scores_get
       parameters:
-      - name: country_id
+      - name: country_slug
         in: path
         required: true
         schema:
           type: string
-          title: Country Id
+          title: Country Slug
       - name: limit
         in: query
         required: false
@@ -1081,6 +1081,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Route Id
       - name: locale
         in: query
@@ -1186,19 +1187,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /api/v1/countries/{country_id}/legal-signals:
+  /api/v1/countries/{country_slug}/legal-signals:
     get:
       tags:
       - legal_signals
       summary: Read Country Legal Signals
-      operationId: read_country_legal_signals_api_v1_countries__country_id__legal_signals_get
+      operationId: read_country_legal_signals_api_v1_countries__country_slug__legal_signals_get
       parameters:
-      - name: country_id
+      - name: country_slug
         in: path
         required: true
         schema:
           type: string
-          title: Country Id
+          title: Country Slug
       - name: signal_type
         in: query
         required: false
@@ -1549,6 +1550,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Signal Id
       - name: locale
         in: query
@@ -1586,6 +1588,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Signal Id
       responses:
         '200':
@@ -2112,6 +2115,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Source Id
       - name: locale
         in: query
@@ -2149,6 +2153,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Source Id
       - name: limit
         in: query
@@ -2264,6 +2269,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Source Id
       requestBody:
         required: true
@@ -2337,6 +2343,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Evidence Item Id
       requestBody:
         required: true
@@ -2410,6 +2417,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Signal Id
       requestBody:
         required: true
@@ -2523,6 +2531,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Story Id
       requestBody:
         required: true
@@ -3258,6 +3267,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Story Id
       responses:
         '200':
@@ -3764,6 +3774,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Draft Id
       responses:
         '200':
@@ -3800,6 +3811,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Draft Id
       requestBody:
         required: true
@@ -3895,6 +3907,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Candidate Id
       responses:
         '200':
@@ -3931,6 +3944,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Candidate Id
       requestBody:
         required: true
@@ -4040,6 +4054,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Question Id
       responses:
         '200':
@@ -4068,6 +4083,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Question Id
       responses:
         '200':
@@ -4097,6 +4113,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Question Id
       requestBody:
         required: true
@@ -4131,6 +4148,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Answer Id
       requestBody:
         required: true
@@ -4266,6 +4284,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Question Id
       requestBody:
         required: true
@@ -4357,6 +4376,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Answer Id
       requestBody:
         required: true
@@ -4448,6 +4468,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Report Id
       requestBody:
         required: true
@@ -4539,6 +4560,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Rating Id
       requestBody:
         required: true
@@ -4716,6 +4738,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -4785,6 +4808,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -4812,6 +4836,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       requestBody:
         required: true
@@ -4846,6 +4871,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -4874,6 +4900,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -4933,6 +4960,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       - name: limit
         in: query
@@ -4970,6 +4998,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       requestBody:
         required: true
@@ -5034,6 +5063,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Request Id
       requestBody:
         required: true
@@ -5068,6 +5098,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Request Id
       requestBody:
         required: true
@@ -5102,6 +5133,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Request Id
       responses:
         '200':
@@ -5130,6 +5162,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       requestBody:
         required: true
@@ -5164,6 +5197,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Request Id
       requestBody:
         required: true
@@ -5198,6 +5232,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       requestBody:
         required: true
@@ -5231,6 +5266,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '204':
@@ -5285,6 +5321,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Thread Id
       - name: after
         in: query
@@ -5330,6 +5367,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Thread Id
       requestBody:
         required: true
@@ -5364,6 +5402,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Thread Id
       responses:
         '200':
@@ -5439,6 +5478,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -5467,6 +5507,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       responses:
         '200':
@@ -5495,6 +5536,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       requestBody:
         required: true
@@ -5529,6 +5571,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Post Id
       requestBody:
         required: true
@@ -5610,6 +5653,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Report Id
       requestBody:
         required: true
@@ -5644,6 +5688,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Report Id
       requestBody:
         required: true
@@ -5678,12 +5723,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Thread Id
       - name: report_id
         in: query
         required: true
         schema:
           type: string
+          format: uuid
           title: Report Id
       responses:
         '200':
@@ -5807,6 +5854,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Session Id
       responses:
         '200':
@@ -5944,6 +5992,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '200':
@@ -5972,6 +6021,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       requestBody:
         required: true
@@ -6006,6 +6056,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       requestBody:
         required: true
@@ -6040,6 +6091,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '200':
@@ -6068,6 +6120,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '200':
@@ -6264,6 +6317,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Profile Id
       responses:
         '200':
@@ -6291,6 +6345,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Profile Id
       requestBody:
         required: true
@@ -6324,6 +6379,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Profile Id
       responses:
         '204':
@@ -6416,6 +6472,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6443,6 +6500,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6476,6 +6534,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '204':
@@ -6500,6 +6559,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6527,6 +6587,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6561,12 +6622,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: waypoint_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Waypoint Id
       requestBody:
         required: true
@@ -6600,12 +6663,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: waypoint_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Waypoint Id
       responses:
         '204':
@@ -6630,6 +6695,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6664,6 +6730,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6691,6 +6758,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6725,6 +6793,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6759,12 +6828,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: item_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Item Id
       requestBody:
         required: true
@@ -6798,12 +6869,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: item_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Item Id
       responses:
         '204':
@@ -6828,6 +6901,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6856,6 +6930,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6883,6 +6958,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -6917,12 +6993,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: reminder_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Reminder Id
       responses:
         '204':
@@ -6947,6 +7025,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -6974,6 +7053,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '204':
@@ -6998,6 +7078,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: format
         in: query
@@ -7036,6 +7117,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       responses:
         '200':
@@ -7063,6 +7145,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       requestBody:
         required: true
@@ -7097,12 +7180,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: annotation_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Annotation Id
       requestBody:
         required: true
@@ -7136,12 +7221,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: annotation_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Annotation Id
       responses:
         '204':
@@ -7166,6 +7253,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Trip Id
       - name: since
         in: query
@@ -7377,6 +7465,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Capability Id
       responses:
         '204':
@@ -7462,6 +7551,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '200':
@@ -7488,6 +7578,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: User Id
       responses:
         '200':
@@ -7583,6 +7674,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7610,6 +7702,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       requestBody:
         required: true
@@ -7644,6 +7737,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7672,6 +7766,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7700,6 +7795,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7727,6 +7823,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       requestBody:
         required: true
@@ -7761,6 +7858,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       requestBody:
         required: true
@@ -7836,6 +7934,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Subscription Id
       responses:
         '204':
@@ -7938,6 +8037,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7966,6 +8066,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       responses:
         '200':
@@ -7994,6 +8095,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Definition Id
       requestBody:
         required: true
@@ -8093,6 +8195,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8120,6 +8223,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8154,6 +8258,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8182,6 +8287,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       - name: locale
         in: path
@@ -8222,6 +8328,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8256,12 +8363,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       - name: source_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Source Id
       requestBody:
         required: true
@@ -8296,6 +8405,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8330,12 +8440,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       - name: evidence_item_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Evidence Item Id
       requestBody:
         required: true
@@ -8370,6 +8482,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8404,12 +8517,14 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       - name: signal_id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
           title: Signal Id
       requestBody:
         required: true
@@ -8444,6 +8559,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8478,6 +8594,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8559,6 +8676,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8587,6 +8705,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8615,6 +8734,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8646,6 +8766,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8680,6 +8801,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':
@@ -8708,6 +8830,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8742,6 +8865,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       requestBody:
         required: true
@@ -8776,6 +8900,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
           title: Proposal Id
       responses:
         '200':

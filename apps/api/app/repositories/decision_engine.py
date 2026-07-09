@@ -601,7 +601,7 @@ def get_legal_signal(
             {resolved_locale_sql} AS resolved_locale,
             {status_sql} AS translation_status
         FROM legal_signals
-        WHERE id::text = %s AND status = 'published'
+        WHERE id = %s::uuid AND status = 'published'
         """,
         (signal_id,),
     )
@@ -627,7 +627,7 @@ def list_evidence_for_legal_signal(
             created_at,
             updated_at
         FROM evidence_items
-        WHERE legal_signal_id::text = %s AND status = 'published'
+        WHERE legal_signal_id = %s::uuid AND status = 'published'
         ORDER BY retrieved_at DESC NULLS LAST, title
         """,
         (signal_id,),
@@ -659,7 +659,7 @@ def get_source(
             created_at,
             updated_at
         FROM sources
-        WHERE id::text = %s AND status = 'published'
+        WHERE id = %s::uuid AND status = 'published'
         """,
         (source_id,),
     )
@@ -685,7 +685,7 @@ def list_evidence_for_source(
             created_at,
             updated_at
         FROM evidence_items
-        WHERE source_id::text = %s AND status = 'published'
+        WHERE source_id = %s::uuid AND status = 'published'
         ORDER BY retrieved_at DESC NULLS LAST, title
         LIMIT %s OFFSET %s
         """,
@@ -701,7 +701,7 @@ def count_evidence_for_source(
         """
         SELECT COUNT(*) AS total
         FROM evidence_items
-        WHERE source_id::text = %s AND status = 'published'
+        WHERE source_id = %s::uuid AND status = 'published'
         """,
         (source_id,),
     )

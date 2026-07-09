@@ -4,7 +4,7 @@ import pytest
 from app.core.config import Settings
 from app.repositories import auth as repository
 from app.services import auth as service, feature_flags as feature_flags_service
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from fastapi import HTTPException
 from typing import Any, cast
 from unittest.mock import MagicMock
@@ -15,6 +15,7 @@ CONNECTION = MagicMock()
 _SETTINGS = Settings(
     app_env="local",
     auth_session_ttl_hours=168,
+    auth_session_touch_interval_minutes=5,
     auth_password_min_length=12,
     auth_registration_enabled=True,
 )
@@ -63,6 +64,21 @@ def _session_row(**overrides: Any) -> dict[str, Any]:
     }
     row.update(overrides)
     return row
+
+
+def _session_with_user_result(
+    *,
+    session: dict[str, Any] | None = None,
+    user: dict[str, Any] | None = None,
+    is_revoked: bool = False,
+    is_expired: bool = False,
+) -> dict[str, Any]:
+    return {
+        "is_revoked": is_revoked,
+        "is_expired": is_expired,
+        "session": session if session is not None else _session_row(),
+        "user": user if user is not None else _user_row(),
+    }
 
 
 def test_register_user_disabled_feature_returns_403(
@@ -342,13 +358,25 @@ def test_validate_session_token_rejects_unknown_token(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        repository, "get_active_session_by_token_hash", lambda *_a: None
-    )
-    monkeypatch.setattr(
-        repository, "get_session_by_token_hash", lambda *_a: None
+        repository, "get_session_with_user_by_token_hash", lambda *_a: None
     )
     with pytest.raises(HTTPException) as exc_info:
         service.validate_session_token(CONNECTION, "unknown-token")
+    assert exc_info.value.status_code == 401
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "invalid_auth_token"
+
+
+def test_validate_session_token_rejects_revoked_session(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        repository,
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(is_revoked=True),
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        service.validate_session_token(CONNECTION, "revoked-token")
     assert exc_info.value.status_code == 401
     detail = cast(dict[str, Any], exc_info.value.detail)
     assert detail["error"]["code"] == "invalid_auth_token"
@@ -358,14 +386,9 @@ def test_validate_session_token_reports_expired_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        repository, "get_active_session_by_token_hash", lambda *_a: None
-    )
-    monkeypatch.setattr(
         repository,
-        "get_session_by_token_hash",
-        lambda *_a: _session_row(
-            revoked_at=None, expires_at=datetime.now(UTC) - timedelta(hours=1)
-        ),
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(is_expired=True),
     )
     with pytest.raises(HTTPException) as exc_info:
         service.validate_session_token(CONNECTION, "expired-token")
@@ -379,11 +402,10 @@ def test_validate_session_token_rejects_suspended_user(
 ) -> None:
     monkeypatch.setattr(
         repository,
-        "get_active_session_by_token_hash",
-        lambda *_a: _session_row(),
-    )
-    monkeypatch.setattr(
-        repository, "get_user_by_id", lambda *_a: _user_row(status="suspended")
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            user=_user_row(status="suspended")
+        ),
     )
     with pytest.raises(HTTPException) as exc_info:
         service.validate_session_token(CONNECTION, "valid-token")
@@ -392,15 +414,17 @@ def test_validate_session_token_rejects_suspended_user(
     assert detail["error"]["code"] == "user_suspended"
 
 
-def test_validate_session_token_success_touches_session(
+def test_validate_session_token_success_touches_stale_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
     monkeypatch.setattr(
         repository,
-        "get_active_session_by_token_hash",
-        lambda *_a: _session_row(),
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            session=_session_row(last_seen_at=None)
+        ),
     )
-    monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     touched: dict[str, Any] = {}
     monkeypatch.setattr(
         repository,
@@ -413,15 +437,35 @@ def test_validate_session_token_success_touches_session(
     assert touched["session_id"] == "session-1"
 
 
+def test_validate_session_token_does_not_touch_recently_seen_session(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            session=_session_row(last_seen_at=datetime.now(UTC))
+        ),
+    )
+    touched: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "touch_session",
+        lambda _conn, session_id: touched.setdefault("session_id", session_id),
+    )
+    service.validate_session_token(CONNECTION, "valid-token")
+    assert touched == {}
+
+
 def test_get_current_user_from_token_returns_user_dict(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
         repository,
-        "get_active_session_by_token_hash",
-        lambda *_a: _session_row(),
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(),
     )
-    monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     monkeypatch.setattr(repository, "touch_session", lambda *_a: None)
     user = service.get_current_user_from_token(CONNECTION, "valid-token")
     assert user["id"] == _user_row()["id"]

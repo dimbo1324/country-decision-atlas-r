@@ -224,7 +224,7 @@ def update_post(
             moderation_status = CASE WHEN %s THEN 'pending' ELSE moderation_status END,
             published_at = CASE WHEN %s THEN NULL ELSE published_at END,
             updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id::text AS id
         """,
         (
@@ -264,7 +264,7 @@ def replace_post_tags(
     connection: Connection[Any], *, post_id: str, tags: list[str]
 ) -> None:
     connection.execute(
-        "DELETE FROM migration_board_post_tags WHERE post_id::text = %s",
+        "DELETE FROM migration_board_post_tags WHERE post_id = %s::uuid",
         (post_id,),
     )
     for tag in tags:
@@ -287,7 +287,7 @@ def get_post_by_id(
         SELECT
             {POST_SELECT}
         {POST_JOINS}
-        WHERE mbp.id::text = %s
+        WHERE mbp.id = %s::uuid
         """,
         (post_id,),
     )
@@ -302,7 +302,7 @@ def get_post_for_owner(
         SELECT
             {POST_SELECT}
         {POST_JOINS}
-        WHERE mbp.id::text = %s AND mbp.user_id::text = %s
+        WHERE mbp.id = %s::uuid AND mbp.user_id = %s::uuid
         """,
         (post_id, user_id),
     )
@@ -346,7 +346,7 @@ def list_user_posts(
         SELECT
             {POST_SELECT}
         {POST_JOINS}
-        WHERE mbp.user_id::text = %s
+        WHERE mbp.user_id = %s::uuid
         ORDER BY mbp.updated_at DESC, mbp.created_at DESC
         """,
         (user_id,),
@@ -392,7 +392,7 @@ def submit_post_for_review(
             moderation_status = 'pending',
             submitted_at = NOW(),
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('draft', 'rejected', 'archived')
+        WHERE id = %s::uuid AND status IN ('draft', 'rejected', 'archived')
         RETURNING id::text AS id
         """,
         (post_id,),
@@ -415,7 +415,7 @@ def publish_post(
             published_at = NOW(),
             rejected_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
           AND status = 'review'
           AND risk_acknowledged IS TRUE
           AND legal_disclaimer_acknowledged IS TRUE
@@ -446,7 +446,7 @@ def reject_post(
             rejected_at = NOW(),
             published_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('review', 'published')
+        WHERE id = %s::uuid AND status IN ('review', 'published')
         RETURNING id::text AS id
         """,
         (moderator_user_id, reason, post_id),
@@ -466,7 +466,7 @@ def archive_post(
             archived_at = NOW(),
             published_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('draft', 'review', 'published', 'rejected')
+        WHERE id = %s::uuid AND status IN ('draft', 'review', 'published', 'rejected')
         RETURNING id::text AS id
         """,
         (post_id,),
@@ -492,7 +492,7 @@ def hide_post(
             moderation_reason = %s,
             published_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id::text AS id
         """,
         (moderator_user_id, reason, post_id),
@@ -506,7 +506,7 @@ def count_user_active_posts(connection: Connection[Any], user_id: str) -> int:
         """
         SELECT COUNT(*) AS total
         FROM migration_board_posts
-        WHERE user_id::text = %s AND status IN ('draft', 'review', 'published')
+        WHERE user_id = %s::uuid AND status IN ('draft', 'review', 'published')
         """,
         (user_id,),
     )
@@ -526,14 +526,14 @@ def _public_filters(
         visibility_clause.append("mbp.visibility = 'members_only'")
     if include_private_for_user_id is not None:
         visibility_clause.append(
-            "(mbp.visibility = 'private' AND mbp.user_id::text = %s)"
+            "(mbp.visibility = 'private' AND mbp.user_id = %s::uuid)"
         )
         params.append(include_private_for_user_id)
     clauses.append("(" + " OR ".join(visibility_clause) + ")")
     mapping = {
         "destination_country_slug": "dc.slug = %s",
         "origin_country_slug": "oc.slug = %s",
-        "route_id": "mbp.route_id::text = %s",
+        "route_id": "mbp.route_id = %s::uuid",
         "scenario_slug": "mbp.scenario_slug = %s",
         "persona_slug": "mbp.persona_slug = %s",
         "timeline_window": "mbp.timeline_window = %s",

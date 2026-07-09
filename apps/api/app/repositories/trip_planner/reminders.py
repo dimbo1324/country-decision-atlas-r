@@ -28,7 +28,7 @@ def list_reminders(
             {REMINDER_FIELDS}
         FROM trip_reminders tr
         LEFT JOIN trip_checklist_items tci ON tci.id = tr.checklist_item_id
-        WHERE tr.trip_id::text = %s
+        WHERE tr.trip_id = %s::uuid
         ORDER BY tr.remind_at, tr.created_at
         """,
         (trip_id,),
@@ -45,7 +45,7 @@ def get_reminder_for_trip(
             {REMINDER_FIELDS}
         FROM trip_reminders tr
         LEFT JOIN trip_checklist_items tci ON tci.id = tr.checklist_item_id
-        WHERE tr.trip_id::text = %s AND tr.id::text = %s
+        WHERE tr.trip_id = %s::uuid AND tr.id = %s::uuid
         """,
         (trip_id, reminder_id),
     )
@@ -91,8 +91,8 @@ def cancel_reminder(
         """
         UPDATE trip_reminders
         SET status = 'cancelled'
-        WHERE id::text = %s
-          AND trip_id::text = %s
+        WHERE id = %s::uuid
+          AND trip_id = %s::uuid
           AND status = 'scheduled'
         RETURNING id::text AS id
         """,
@@ -157,7 +157,7 @@ def mark_reminder_sent(
         """
         UPDATE trip_reminders
         SET status = 'sent', sent_at = %s
-        WHERE id::text = %s AND status = 'scheduled'
+        WHERE id = %s::uuid AND status = 'scheduled'
         RETURNING id::text AS id
         """,
         (sent_at, reminder_id),

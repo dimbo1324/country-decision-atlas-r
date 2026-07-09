@@ -30,7 +30,7 @@ def list_user_watchlist(
             {WATCHLIST_FIELDS}
         FROM watchlists w
         JOIN countries c ON c.id = w.country_id
-        WHERE w.user_id::text = %s AND w.status = 'active'
+        WHERE w.user_id = %s::uuid AND w.status = 'active'
         ORDER BY w.created_at DESC
         """,
         (user_id,),
@@ -47,7 +47,7 @@ def get_user_watchlist_item(
             {WATCHLIST_FIELDS}
         FROM watchlists w
         JOIN countries c ON c.id = w.country_id
-        WHERE w.id::text = %s AND w.user_id::text = %s
+        WHERE w.id = %s::uuid AND w.user_id = %s::uuid
         """,
         (watchlist_id, user_id),
     )
@@ -63,7 +63,7 @@ def get_user_watchlist_item_by_country_slug(
             {WATCHLIST_FIELDS}
         FROM watchlists w
         JOIN countries c ON c.id = w.country_id
-        WHERE w.user_id::text = %s AND c.slug = %s
+        WHERE w.user_id = %s::uuid AND c.slug = %s
         """,
         (user_id, country_slug),
     )
@@ -97,7 +97,7 @@ def archive_country_from_watchlist(
         """
         UPDATE watchlists
         SET status = 'archived', archived_at = NOW(), updated_at = NOW()
-        WHERE user_id::text = %s AND country_id::text = %s AND status = 'active'
+        WHERE user_id = %s::uuid AND country_id = %s::uuid AND status = 'active'
         RETURNING id::text AS id
         """,
         (user_id, country_id),
@@ -125,7 +125,7 @@ def update_watchlist_preferences(
             notify_route_updates = COALESCE(%s, notify_route_updates),
             notes = CASE WHEN %s THEN %s ELSE notes END,
             updated_at = NOW()
-        WHERE user_id::text = %s AND country_id::text = %s AND status = 'active'
+        WHERE user_id = %s::uuid AND country_id = %s::uuid AND status = 'active'
         RETURNING id::text AS id
         """,
         (
@@ -148,7 +148,7 @@ def get_watchlist_status_for_country(
         """
         SELECT id
         FROM watchlists
-        WHERE user_id::text = %s AND country_id::text = %s AND status = 'active'
+        WHERE user_id = %s::uuid AND country_id = %s::uuid AND status = 'active'
         """,
         (user_id, country_id),
     )
@@ -158,7 +158,7 @@ def get_watchlist_status_for_country(
 def count_user_watchlist(connection: Connection[Any], user_id: str) -> int:
     row = fetch_one(
         connection,
-        "SELECT COUNT(*) AS total FROM watchlists WHERE user_id::text = %s AND status = 'active'",
+        "SELECT COUNT(*) AS total FROM watchlists WHERE user_id = %s::uuid AND status = 'active'",
         (user_id,),
     )
     return int(row["total"]) if row else 0

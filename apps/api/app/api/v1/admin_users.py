@@ -15,6 +15,7 @@ from app.services import admin_users as service
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin/users", tags=["admin-users"])
@@ -59,17 +60,17 @@ def list_users(
 
 @router.get("/{user_id}", response_model=AdminUser)
 def get_user(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> AdminUser:
-    user = service.get_user_or_404(connection, user_id)
+    user = service.get_user_or_404(connection, str(user_id))
     return _to_admin_user(user)
 
 
 @router.patch("/{user_id}/role", response_model=AdminUser)
 def update_user_role(
-    user_id: str,
+    user_id: UUID,
     payload: RoleUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_admin)],
@@ -77,7 +78,7 @@ def update_user_role(
     updated = service.update_user_role(
         connection,
         current_user=current_user,
-        user_id=user_id,
+        user_id=str(user_id),
         new_role=payload.role,
     )
     connection.commit()
@@ -86,7 +87,7 @@ def update_user_role(
 
 @router.patch("/{user_id}/status", response_model=AdminUser)
 def update_user_status(
-    user_id: str,
+    user_id: UUID,
     payload: UserStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_admin)],
@@ -94,7 +95,7 @@ def update_user_status(
     updated = service.update_user_status(
         connection,
         current_user=current_user,
-        user_id=user_id,
+        user_id=str(user_id),
         new_status=payload.status,
     )
     connection.commit()
@@ -103,12 +104,12 @@ def update_user_status(
 
 @router.get("/{user_id}/sessions", response_model=UserSessionListResponse)
 def list_user_sessions(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> UserSessionListResponse:
-    service.get_user_or_404(connection, user_id)
-    sessions = repository.list_user_sessions(connection, user_id)
+    service.get_user_or_404(connection, str(user_id))
+    sessions = repository.list_user_sessions(connection, str(user_id))
     return UserSessionListResponse(
         items=[_to_auth_session(row) for row in sessions]
     )
@@ -118,11 +119,13 @@ def list_user_sessions(
     "/{user_id}/sessions/revoke-all", response_model=RevokeAllSessionsResponse
 )
 def revoke_all_user_sessions(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
 ) -> RevokeAllSessionsResponse:
-    service.get_user_or_404(connection, user_id)
-    revoked_count = repository.revoke_all_user_sessions(connection, user_id)
+    service.get_user_or_404(connection, str(user_id))
+    revoked_count = repository.revoke_all_user_sessions(
+        connection, str(user_id)
+    )
     connection.commit()
     return RevokeAllSessionsResponse(revoked_count=revoked_count)

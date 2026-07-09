@@ -187,36 +187,37 @@ def logout_session(
     repository.revoke_session(connection, session_id, user_id)
 
 
+def _should_touch_session(session: dict[str, Any], settings: Settings) -> bool:
+    last_seen_at = session.get("last_seen_at")
+    if last_seen_at is None:
+        return True
+    threshold = timedelta(minutes=settings.auth_session_touch_interval_minutes)
+    return bool(datetime.now(UTC) - last_seen_at >= threshold)
+
+
 def validate_session_token(
     connection: Connection[Any], raw_token: str
 ) -> dict[str, Any]:
     token_hash = hash_session_token(raw_token)
-    session = repository.get_active_session_by_token_hash(
+    result = repository.get_session_with_user_by_token_hash(
         connection, token_hash
     )
-    if session is None:
-        maybe_expired = repository.get_session_by_token_hash(
-            connection, token_hash
-        )
-        if maybe_expired is not None and maybe_expired["revoked_at"] is None:
-            raise api_error(
-                401, "auth_session_expired", "Session has expired.", {}
-            )
+    if result is None or result["is_revoked"]:
         raise api_error(
             401, "invalid_auth_token", "Session token is invalid.", {}
         )
-    user = repository.get_user_by_id(connection, session["user_id"])
-    if user is None:
-        raise api_error(
-            401, "invalid_auth_token", "Session token is invalid.", {}
-        )
+    if result["is_expired"]:
+        raise api_error(401, "auth_session_expired", "Session has expired.", {})
+    user = result["user"]
+    session = result["session"]
     if user["status"] == "suspended":
         raise api_error(403, "user_suspended", "This account is suspended.", {})
     if user["status"] == "deleted":
         raise api_error(
             403, "user_deleted", "This account no longer exists.", {}
         )
-    repository.touch_session(connection, session["id"])
+    if _should_touch_session(session, get_settings()):
+        repository.touch_session(connection, session["id"])
     return {"user": user, "session": session}
 
 

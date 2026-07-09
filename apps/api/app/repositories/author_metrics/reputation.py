@@ -23,7 +23,7 @@ def get_reputation_inputs_for_author(
             ) AS active_country_count
         FROM author_metric_definitions amd
         LEFT JOIN author_metric_values amv ON amv.metric_id = amd.id
-        WHERE amd.author_user_id::text = %s AND amd.status = 'published'
+        WHERE amd.author_user_id = %s::uuid AND amd.status = 'published'
         """,
         (author_user_id,),
     )
@@ -109,7 +109,7 @@ def get_author_reputation(
             computed_at,
             methodology_version
         FROM author_reputation
-        WHERE author_user_id::text = %s
+        WHERE author_user_id = %s::uuid
         """,
         (author_user_id,),
     )

@@ -113,7 +113,7 @@ def test_create_my_author_metric_commits_and_returns_definition(
     def fake_create(_connection: Any, **kwargs: Any) -> dict[str, Any]:
         captured.update(kwargs)
         return {
-            "id": "metric-1",
+            "id": "11111111-1111-1111-1111-111111111111",
             "slug": "cost-of-living",
             "name_en": "Cost of Living",
             "name_ru": "Стоимость жизни",
@@ -163,7 +163,7 @@ def test_regular_user_cannot_approve_author_metric(
     )
 
     response = _client(USER).post(
-        "/api/v1/admin/author-metrics/metric-1/approve"
+        "/api/v1/admin/author-metrics/11111111-1111-1111-1111-111111111111/approve"
     )
 
     assert response.status_code == 403
@@ -176,7 +176,7 @@ def test_moderator_can_approve_author_metric(
         author_metrics_service,
         "approve_definition",
         lambda *_a, **_kw: {
-            "id": "metric-1",
+            "id": "11111111-1111-1111-1111-111111111111",
             "slug": "cost-of-living",
             "name_en": "Cost of Living",
             "name_ru": "Стоимость жизни",
@@ -205,7 +205,7 @@ def test_moderator_can_approve_author_metric(
     )
 
     response = _client(MODERATOR).post(
-        "/api/v1/admin/author-metrics/metric-1/approve"
+        "/api/v1/admin/author-metrics/11111111-1111-1111-1111-111111111111/approve"
     )
 
     assert response.status_code == 200

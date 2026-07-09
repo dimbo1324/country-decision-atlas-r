@@ -89,7 +89,7 @@ def list_legal_velocity_events(
             lse.evidence_item_id
         FROM legal_signal_events lse
         JOIN legal_signals ls ON ls.id = lse.legal_signal_id
-        WHERE lse.country_id::text = %s
+        WHERE lse.country_id = %s::uuid
           AND ls.status = 'published'
           AND lse.event_date >= CURRENT_DATE - (%s::int * INTERVAL '1 day')
           AND lse.event_date <= CURRENT_DATE
@@ -139,7 +139,7 @@ def list_scenario_risk_inputs(
             ORDER BY evidence.published_at DESC NULLS LAST, evidence.created_at DESC
             LIMIT 1
         ) ei ON TRUE
-        WHERE ls.country_id::text = %s
+        WHERE ls.country_id = %s::uuid
           AND ls.status = 'published'
           AND COALESCE(lse.event_date, ls.published_date, ls.effective_date, ls.created_at::date)
               >= CURRENT_DATE - (%s::int * INTERVAL '1 day')
@@ -189,7 +189,7 @@ def list_contradiction_inputs(
             ORDER BY evidence.published_at DESC NULLS LAST, evidence.created_at DESC
             LIMIT 1
         ) ei ON TRUE
-        WHERE ls.country_id::text = %s
+        WHERE ls.country_id = %s::uuid
           AND ls.status = 'published'
           AND COALESCE(lse.event_date, ls.published_date, ls.effective_date, ls.created_at::date)
               >= CURRENT_DATE - (%s::int * INTERVAL '1 day')

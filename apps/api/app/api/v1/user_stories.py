@@ -8,6 +8,7 @@ from app.services import decision_engine
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
+from uuid import UUID
 
 
 router = APIRouter(prefix="/user-stories", tags=["user_stories"])
@@ -44,10 +45,10 @@ def read_user_stories(
 
 @router.get("/{story_id}", response_model=UserStoryResponse)
 def read_user_story(
-    story_id: str,
+    story_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> UserStoryResponse:
-    return decision_engine.get_user_story(connection, story_id)
+    return decision_engine.get_user_story(connection, str(story_id))
 
 
 @router.post("", response_model=UserStoryResponse, status_code=201)

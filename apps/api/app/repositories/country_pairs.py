@@ -90,7 +90,7 @@ def list_pair_sources(
         FROM country_pair_compatibility_sources cps
         JOIN sources s ON s.id = cps.source_id
         LEFT JOIN countries c ON c.id = s.country_id
-        WHERE cps.country_pair_id::text = %s
+        WHERE cps.country_pair_id = %s::uuid
           AND s.status = 'published'
         ORDER BY
             CASE s.source_type
@@ -124,7 +124,7 @@ def list_pair_evidence(
         JOIN evidence_items ei ON ei.id = cpe.evidence_item_id
         LEFT JOIN sources s ON s.id = ei.source_id
         LEFT JOIN countries c ON c.id = ei.country_id
-        WHERE cpe.country_pair_id::text = %s
+        WHERE cpe.country_pair_id = %s::uuid
           AND ei.status = 'published'
         ORDER BY COALESCE(ei.retrieved_at, ei.created_at) DESC NULLS LAST, ei.title
         """,

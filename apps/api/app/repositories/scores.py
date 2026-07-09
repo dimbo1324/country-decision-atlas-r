@@ -6,7 +6,7 @@ from typing import Any
 
 def list_country_scores(
     connection: Connection[Any],
-    country_id: str,
+    country_slug: str,
     locale: str,
     limit: int,
     offset: int,
@@ -67,24 +67,24 @@ def list_country_scores(
             AND t_name.field_name = 'name'
             AND t_name.locale_id = l.id
             AND t_name.status IN ('reviewed', 'approved')
-        WHERE c.id::text = %s OR c.slug = %s
+        WHERE c.slug = %s
         ORDER BY s.slug
         LIMIT %s OFFSET %s
         """,
-        (requested_locale, country_id, country_id, limit, offset),
+        (requested_locale, country_slug, limit, offset),
     )
 
 
-def count_country_scores(connection: Connection[Any], country_id: str) -> int:
+def count_country_scores(connection: Connection[Any], country_slug: str) -> int:
     row = fetch_one(
         connection,
         """
         SELECT COUNT(*) AS total
         FROM country_scores cs
         JOIN countries c ON c.id = cs.country_id
-        WHERE c.id::text = %s OR c.slug = %s
+        WHERE c.slug = %s
         """,
-        (country_id, country_id),
+        (country_slug,),
     )
     return int(row["total"]) if row else 0
 

@@ -32,7 +32,7 @@ def list_user_trips(
             {TRIP_FIELDS}
         FROM trips t
         LEFT JOIN countries oc ON oc.id = t.origin_country_id
-        WHERE t.user_id::text = %s
+        WHERE t.user_id = %s::uuid
         ORDER BY t.updated_at DESC, t.created_at DESC
         """,
         (user_id,),
@@ -49,7 +49,7 @@ def get_trip_for_user(
             {TRIP_FIELDS}
         FROM trips t
         LEFT JOIN countries oc ON oc.id = t.origin_country_id
-        WHERE t.id::text = %s AND t.user_id::text = %s
+        WHERE t.id = %s::uuid AND t.user_id = %s::uuid
         """,
         (trip_id, user_id),
     )
@@ -107,7 +107,7 @@ def update_trip(
             status = %s,
             confidence_tier = %s,
             completed_at = %s
-        WHERE id::text = %s AND user_id::text = %s
+        WHERE id = %s::uuid AND user_id = %s::uuid
         RETURNING id::text AS id
         """,
         (
@@ -131,7 +131,7 @@ def delete_trip(
         connection,
         """
         DELETE FROM trips
-        WHERE id::text = %s AND user_id::text = %s
+        WHERE id = %s::uuid AND user_id = %s::uuid
         RETURNING id
         """,
         (trip_id, user_id),

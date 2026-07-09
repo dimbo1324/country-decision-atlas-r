@@ -131,7 +131,7 @@ def get_proposal_by_id(
         SELECT {PROPOSAL_FIELDS}
         FROM country_proposals cp
         JOIN countries c ON c.id = cp.country_id
-        WHERE cp.id::text = %s
+        WHERE cp.id = %s::uuid
         """,
         (proposal_id,),
     )
@@ -146,7 +146,7 @@ def get_proposal_for_owner(
         SELECT {PROPOSAL_FIELDS}
         FROM country_proposals cp
         JOIN countries c ON c.id = cp.country_id
-        WHERE cp.id::text = %s AND cp.proposer_user_id::text = %s
+        WHERE cp.id = %s::uuid AND cp.proposer_user_id = %s::uuid
         """,
         (proposal_id, proposer_user_id),
     )
@@ -165,7 +165,7 @@ def list_proposals_for_user(
         SELECT {PROPOSAL_FIELDS}, COUNT(*) OVER() AS total_count
         FROM country_proposals cp
         JOIN countries c ON c.id = cp.country_id
-        WHERE cp.proposer_user_id::text = %s
+        WHERE cp.proposer_user_id = %s::uuid
         ORDER BY cp.created_at DESC
         LIMIT %s OFFSET %s
         """,
@@ -212,7 +212,7 @@ def update_justification(
         """
         UPDATE country_proposals
         SET justification = %s
-        WHERE id::text = %s AND proposer_user_id::text = %s AND status = 'draft'
+        WHERE id = %s::uuid AND proposer_user_id = %s::uuid AND status = 'draft'
         RETURNING id
         """,
         (justification, proposal_id, proposer_user_id),
@@ -227,7 +227,7 @@ def assign_curator(
         """
         UPDATE country_proposals
         SET curator_user_id = %s
-        WHERE id::text = %s AND curator_user_id IS NULL
+        WHERE id = %s::uuid AND curator_user_id IS NULL
         RETURNING id
         """,
         (curator_user_id, proposal_id),
@@ -242,7 +242,7 @@ def store_readiness_snapshot(
         """
         UPDATE country_proposals
         SET readiness_snapshot = %s::jsonb
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id
         """,
         (snapshot_json, proposal_id),
@@ -268,7 +268,7 @@ def apply_status_transition(
             moderated_at = CASE WHEN %s::uuid IS NOT NULL THEN NOW() ELSE moderated_at END,
             moderation_reason = COALESCE(%s, moderation_reason),
             published_at = CASE WHEN %s THEN NOW() ELSE published_at END
-        WHERE id::text = %s AND status = %s
+        WHERE id = %s::uuid AND status = %s
         RETURNING id
         """,
         (
@@ -287,13 +287,13 @@ def set_country_active(
     connection: Connection[Any], *, country_id: str, is_active: bool
 ) -> None:
     connection.execute(
-        "UPDATE countries SET is_active = %s WHERE id::text = %s",
+        "UPDATE countries SET is_active = %s WHERE id = %s::uuid",
         (is_active, country_id),
     )
 
 
 def get_user_role(connection: Connection[Any], user_id: str) -> str | None:
     row = fetch_one(
-        connection, "SELECT role FROM users WHERE id::text = %s", (user_id,)
+        connection, "SELECT role FROM users WHERE id = %s::uuid", (user_id,)
     )
     return str(row["role"]) if row else None

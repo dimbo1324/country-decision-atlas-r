@@ -62,7 +62,7 @@ def get_user_by_id(
         SELECT
             {USER_FIELDS}
         FROM users
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         """,
         (user_id,),
     )
@@ -130,7 +130,7 @@ def set_user_role(
         f"""
         UPDATE users
         SET role = %s, updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {USER_FIELDS}
         """,
@@ -146,7 +146,7 @@ def set_user_status(
         f"""
         UPDATE users
         SET status = %s, updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {USER_FIELDS}
         """,
@@ -160,7 +160,7 @@ def update_last_login(connection: Connection[Any], user_id: str) -> None:
         """
         UPDATE users
         SET last_login_at = NOW(), last_seen_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id
         """,
         (user_id,),
@@ -173,7 +173,7 @@ def update_last_seen(connection: Connection[Any], user_id: str) -> None:
         """
         UPDATE users
         SET last_seen_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id
         """,
         (user_id,),
@@ -188,7 +188,7 @@ def update_user_display_name(
         f"""
         UPDATE users
         SET display_name = %s, updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {USER_FIELDS}
         """,
@@ -204,7 +204,7 @@ def update_user_metadata(
         f"""
         UPDATE users
         SET metadata = %s, updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {USER_FIELDS}
         """,
@@ -238,7 +238,7 @@ def get_password_credential(
         """
         SELECT id::text AS id, user_id::text AS user_id, password_hash, password_updated_at
         FROM user_auth_credentials
-        WHERE user_id::text = %s AND credential_type = 'password'
+        WHERE user_id = %s::uuid AND credential_type = 'password'
         """,
         (user_id,),
     )
@@ -252,7 +252,7 @@ def update_password_credential(
         """
         UPDATE user_auth_credentials
         SET password_hash = %s, password_updated_at = NOW(), updated_at = NOW()
-        WHERE user_id::text = %s AND credential_type = 'password'
+        WHERE user_id = %s::uuid AND credential_type = 'password'
         RETURNING id::text AS id, user_id::text AS user_id, password_updated_at
         """,
         (password_hash, user_id),
@@ -265,7 +265,7 @@ def has_password_credential(connection: Connection[Any], user_id: str) -> bool:
         """
         SELECT id
         FROM user_auth_credentials
-        WHERE user_id::text = %s AND credential_type = 'password'
+        WHERE user_id = %s::uuid AND credential_type = 'password'
         """,
         (user_id,),
     )
@@ -307,47 +307,76 @@ def create_auth_session(
     )
 
 
-def get_session_by_token_hash(
+def get_session_with_user_by_token_hash(
     connection: Connection[Any], token_hash: str
 ) -> dict[str, Any] | None:
-    return fetch_one(
+    row = fetch_one(
         connection,
-        f"""
+        """
         SELECT
-            {SESSION_FIELDS}
-        FROM auth_sessions
-        WHERE token_hash = %s
+            s.id::text AS session_id,
+            s.user_id::text AS session_user_id,
+            s.created_at AS session_created_at,
+            s.expires_at AS session_expires_at,
+            s.revoked_at AS session_revoked_at,
+            s.last_seen_at AS session_last_seen_at,
+            s.user_agent_hash AS session_user_agent_hash,
+            s.ip_hash AS session_ip_hash,
+            s.metadata AS session_metadata,
+            (s.revoked_at IS NOT NULL) AS is_revoked,
+            (s.expires_at <= NOW()) AS is_expired,
+            u.id::text AS user_id,
+            u.email AS user_email,
+            u.display_name AS user_display_name,
+            u.role AS user_role,
+            u.status AS user_status,
+            u.email_verified_at AS user_email_verified_at,
+            u.last_login_at AS user_last_login_at,
+            u.last_seen_at AS user_last_seen_at,
+            u.metadata AS user_metadata,
+            u.created_at AS user_created_at,
+            u.updated_at AS user_updated_at
+        FROM auth_sessions s
+        JOIN users u ON u.id = s.user_id
+        WHERE s.token_hash = %s
         """,
         (token_hash,),
     )
-
-
-def get_active_session_by_token_hash(
-    connection: Connection[Any], token_hash: str
-) -> dict[str, Any] | None:
-    return fetch_one(
-        connection,
-        f"""
-        SELECT
-            {SESSION_FIELDS}
-        FROM auth_sessions
-        WHERE token_hash = %s
-          AND revoked_at IS NULL
-          AND expires_at > NOW()
-        """,
-        (token_hash,),
-    )
+    if row is None:
+        return None
+    return {
+        "is_revoked": bool(row["is_revoked"]),
+        "is_expired": bool(row["is_expired"]),
+        "session": {
+            "id": row["session_id"],
+            "user_id": row["session_user_id"],
+            "created_at": row["session_created_at"],
+            "expires_at": row["session_expires_at"],
+            "revoked_at": row["session_revoked_at"],
+            "last_seen_at": row["session_last_seen_at"],
+            "user_agent_hash": row["session_user_agent_hash"],
+            "ip_hash": row["session_ip_hash"],
+            "metadata": row["session_metadata"],
+        },
+        "user": {
+            "id": row["user_id"],
+            "email": row["user_email"],
+            "display_name": row["user_display_name"],
+            "role": row["user_role"],
+            "status": row["user_status"],
+            "email_verified_at": row["user_email_verified_at"],
+            "last_login_at": row["user_last_login_at"],
+            "last_seen_at": row["user_last_seen_at"],
+            "metadata": row["user_metadata"],
+            "created_at": row["user_created_at"],
+            "updated_at": row["user_updated_at"],
+        },
+    }
 
 
 def touch_session(connection: Connection[Any], session_id: str) -> None:
-    fetch_all(
-        connection,
-        """
-        UPDATE auth_sessions
-        SET last_seen_at = NOW()
-        WHERE id::text = %s
-        RETURNING id
-        """,
+    connection.execute(
+        "UPDATE auth_sessions SET last_seen_at = NOW() WHERE id = %s::uuid",
         (session_id,),
     )
 
@@ -360,7 +389,7 @@ def revoke_session(
         f"""
         UPDATE auth_sessions
         SET revoked_at = NOW()
-        WHERE id::text = %s AND user_id::text = %s AND revoked_at IS NULL
+        WHERE id = %s::uuid AND user_id = %s::uuid AND revoked_at IS NULL
         RETURNING
             {SESSION_FIELDS}
         """,
@@ -374,7 +403,7 @@ def revoke_all_user_sessions(connection: Connection[Any], user_id: str) -> int:
         """
         UPDATE auth_sessions
         SET revoked_at = NOW()
-        WHERE user_id::text = %s AND revoked_at IS NULL
+        WHERE user_id = %s::uuid AND revoked_at IS NULL
         RETURNING id
         """,
         (user_id,),
@@ -391,7 +420,7 @@ def list_user_sessions(
         SELECT
             {SESSION_FIELDS}
         FROM auth_sessions
-        WHERE user_id::text = %s
+        WHERE user_id = %s::uuid
         ORDER BY created_at DESC
         """,
         (user_id,),
@@ -404,7 +433,7 @@ def count_active_sessions(connection: Connection[Any], user_id: str) -> int:
         """
         SELECT COUNT(*) AS total
         FROM auth_sessions
-        WHERE user_id::text = %s AND revoked_at IS NULL AND expires_at > NOW()
+        WHERE user_id = %s::uuid AND revoked_at IS NULL AND expires_at > NOW()
         """,
         (user_id,),
     )
@@ -487,7 +516,7 @@ def get_telegram_link_by_user(
         SELECT
             {TELEGRAM_LINK_FIELDS}
         FROM user_telegram_links
-        WHERE user_id::text = %s AND status = 'linked'
+        WHERE user_id = %s::uuid AND status = 'linked'
         """,
         (user_id,),
     )
@@ -516,7 +545,7 @@ def unlink_telegram_user(
         f"""
         UPDATE user_telegram_links
         SET status = 'unlinked', unlinked_at = NOW()
-        WHERE user_id::text = %s AND status = 'linked'
+        WHERE user_id = %s::uuid AND status = 'linked'
         RETURNING
             {TELEGRAM_LINK_FIELDS}
         """,

@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     ai_max_context_chars: int = 12000
     ai_log_interactions: bool = True
     auth_session_ttl_hours: int = 168
+    auth_session_touch_interval_minutes: int = 5
     auth_password_min_length: int = 12
     auth_registration_enabled: bool = True
     notifier_internal_auth_token: str | None = None

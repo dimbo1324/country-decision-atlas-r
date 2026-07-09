@@ -48,7 +48,7 @@ def test_public_listing_endpoint_returns_privacy_safe_items(
         lambda *_a, **_kw: {
             "items": [
                 {
-                    "id": "post-1",
+                    "id": "11111111-1111-1111-1111-111111111111",
                     "title": "Moving to Uruguay",
                     "summary": "Preparing documents and housing research.",
                     "author": {"display_name": "Member"},
@@ -103,7 +103,7 @@ def test_authenticated_user_can_create_post(
     def fake_create(_connection: Any, **kwargs: Any) -> dict[str, Any]:
         captured.update(kwargs)
         return {
-            "id": "post-1",
+            "id": "11111111-1111-1111-1111-111111111111",
             "title": "Moving to Uruguay",
             "summary": "Preparing documents and housing research.",
             "destination_country": {
@@ -161,7 +161,7 @@ def test_regular_user_cannot_approve_post(
         capabilities_repository, "has_active_grant", lambda *_a, **_kw: False
     )
     response = _client(USER).post(
-        "/api/v1/admin/migration-board/posts/post-1/approve"
+        "/api/v1/admin/migration-board/posts/11111111-1111-1111-1111-111111111111/approve"
     )
     assert response.status_code == 403
 
@@ -171,7 +171,7 @@ def test_moderator_can_approve_post(monkeypatch: pytest.MonkeyPatch) -> None:
         migration_board_service,
         "approve_post",
         lambda *_a, **_kw: {
-            "id": "post-1",
+            "id": "11111111-1111-1111-1111-111111111111",
             "user_id": "user-1",
             "author_display_name": "User",
             "title": "Moving to Uruguay",
@@ -206,7 +206,7 @@ def test_moderator_can_approve_post(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
     response = _client(MODERATOR).post(
-        "/api/v1/admin/migration-board/posts/post-1/approve"
+        "/api/v1/admin/migration-board/posts/11111111-1111-1111-1111-111111111111/approve"
     )
 
     assert response.status_code == 200

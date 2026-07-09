@@ -43,7 +43,7 @@ def unblock_user(
     cursor = connection.execute(
         """
         DELETE FROM migration_board_blocks
-        WHERE blocker_user_id::text = %s AND blocked_user_id::text = %s
+        WHERE blocker_user_id = %s::uuid AND blocked_user_id = %s::uuid
         """,
         (blocker_user_id, blocked_user_id),
     )
@@ -59,9 +59,9 @@ def is_user_blocked(
         SELECT 1
         FROM migration_board_blocks
         WHERE (
-            blocker_user_id::text = %s AND blocked_user_id::text = %s
+            blocker_user_id = %s::uuid AND blocked_user_id = %s::uuid
         ) OR (
-            blocker_user_id::text = %s AND blocked_user_id::text = %s
+            blocker_user_id = %s::uuid AND blocked_user_id = %s::uuid
         )
         """,
         (user_a_id, user_b_id, user_b_id, user_a_id),
@@ -83,7 +83,7 @@ def list_blocked_users(
             mbb.reason
         FROM migration_board_blocks mbb
         JOIN users u ON u.id = mbb.blocked_user_id
-        WHERE mbb.blocker_user_id::text = %s
+        WHERE mbb.blocker_user_id = %s::uuid
         ORDER BY mbb.created_at DESC
         """,
         (user_id,),
@@ -107,20 +107,20 @@ def list_potential_companion_posts(
           AND mbp.moderation_status = 'approved'
           AND mbp.visibility IN ('public', 'members_only')
           AND mbp.user_id::text <> %s
-          AND mbp.destination_country_id::text = %s
+          AND mbp.destination_country_id = %s::uuid
           AND NOT EXISTS (
               SELECT 1
               FROM migration_board_blocks mbb
               WHERE (
-                  mbb.blocker_user_id::text = %s
+                  mbb.blocker_user_id = %s::uuid
                   AND mbb.blocked_user_id = mbp.user_id
               ) OR (
-                  mbb.blocked_user_id::text = %s
+                  mbb.blocked_user_id = %s::uuid
                   AND mbb.blocker_user_id = mbp.user_id
               )
           )
         ORDER BY
-            (mbp.route_id::text = %s) DESC,
+            (mbp.route_id = %s::uuid) DESC,
             (mbp.timeline_window = %s) DESC,
             (mbp.scenario_slug = %s) DESC,
             mbp.published_at DESC NULLS LAST
@@ -157,7 +157,7 @@ def get_route_for_validation(
         """
         SELECT id::text AS id, country_id::text AS country_id, slug, title
         FROM routes
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         """,
         (route_id,),
     )
@@ -183,6 +183,6 @@ def persona_exists(connection: Connection[Any], slug: str) -> bool:
 
 def user_exists(connection: Connection[Any], user_id: str) -> bool:
     row = fetch_one(
-        connection, "SELECT 1 FROM users WHERE id::text = %s", (user_id,)
+        connection, "SELECT 1 FROM users WHERE id = %s::uuid", (user_id,)
     )
     return row is not None

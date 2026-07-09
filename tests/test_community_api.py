@@ -110,7 +110,9 @@ def test_public_get_pending_question_returns_404(
 ) -> None:
     monkeypatch.setattr(repository, "get_question", lambda *_a, **_kw: None)
 
-    response = _client().get("/api/v1/community/questions/pending-question")
+    response = _client().get(
+        "/api/v1/community/questions/99999999-9999-9999-9999-999999999999"
+    )
 
     assert response.status_code == 404
 
@@ -142,7 +144,7 @@ def test_public_post_answer_creates_pending(
     )
 
     response = _client().post(
-        "/api/v1/community/questions/q1/answers",
+        "/api/v1/community/questions/11111111-1111-1111-1111-111111111111/answers",
         json={
             "body": "answer",
             "created_by_identity_type": "anonymous_session",

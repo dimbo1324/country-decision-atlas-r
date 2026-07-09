@@ -30,6 +30,7 @@ from app.services.feature_flags import ensure_feature_enabled
 from fastapi import APIRouter, Depends
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 TELEGRAM_WEB_LINK_FEATURE_KEY = "telegram_web_link_enabled"
@@ -145,11 +146,13 @@ def list_sessions(
 
 @router.delete("/sessions/{session_id}", response_model=LogoutResponse)
 def revoke_session(
-    session_id: str,
+    session_id: UUID,
     current_user: Annotated[CurrentUser, Depends(get_current_active_user)],
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> LogoutResponse:
-    revoked = repository.revoke_session(connection, session_id, current_user.id)
+    revoked = repository.revoke_session(
+        connection, str(session_id), current_user.id
+    )
     connection.commit()
     return LogoutResponse(ok=revoked is not None)
 

@@ -25,7 +25,7 @@ def list_profiles_for_user(
         SELECT
             {PROFILE_FIELDS}
         FROM user_weight_profiles
-        WHERE user_id::text = %s
+        WHERE user_id = %s::uuid
         ORDER BY is_default DESC, updated_at DESC, name ASC
         """,
         (user_id,),
@@ -41,8 +41,8 @@ def get_profile_for_user(
         SELECT
             {PROFILE_FIELDS}
         FROM user_weight_profiles
-        WHERE id::text = %s
-          AND user_id::text = %s
+        WHERE id = %s::uuid
+          AND user_id = %s::uuid
         """,
         (profile_id, user_id),
     )
@@ -57,7 +57,7 @@ def get_profile_by_name_for_user(
         SELECT
             {PROFILE_FIELDS}
         FROM user_weight_profiles
-        WHERE user_id::text = %s
+        WHERE user_id = %s::uuid
           AND name = %s
         """,
         (user_id, name),
@@ -86,7 +86,7 @@ def clear_default_profiles(
         """
         UPDATE user_weight_profiles
         SET is_default = FALSE, updated_at = NOW()
-        WHERE user_id::text = %s
+        WHERE user_id = %s::uuid
           AND scenario_slug IS NOT DISTINCT FROM %s
           AND is_default IS TRUE
         RETURNING id
@@ -141,8 +141,8 @@ def update_profile(
             weights = %s,
             is_default = %s,
             updated_at = NOW()
-        WHERE id::text = %s
-          AND user_id::text = %s
+        WHERE id = %s::uuid
+          AND user_id = %s::uuid
         RETURNING
             {PROFILE_FIELDS}
         """,
@@ -164,8 +164,8 @@ def delete_profile(
         connection,
         """
         DELETE FROM user_weight_profiles
-        WHERE id::text = %s
-          AND user_id::text = %s
+        WHERE id = %s::uuid
+          AND user_id = %s::uuid
         RETURNING id
         """,
         (profile_id, user_id),

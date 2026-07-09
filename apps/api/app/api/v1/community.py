@@ -25,6 +25,7 @@ from app.services import (
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/community", tags=["community"])
@@ -49,10 +50,10 @@ def list_questions(
     responses={404: {"description": "Not found"}},
 )
 def get_question(
-    question_id: str,
+    question_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> dict[str, Any]:
-    return community_service.get_public_question(connection, question_id)
+    return community_service.get_public_question(connection, str(question_id))
 
 
 @router.post("/questions", response_model=CommunityQuestion, status_code=201)
@@ -71,10 +72,10 @@ def create_question(
     response_model=list[CommunityAnswer],
 )
 def list_answers(
-    question_id: str,
+    question_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> list[dict[str, Any]]:
-    return community_service.list_public_answers(connection, question_id)
+    return community_service.list_public_answers(connection, str(question_id))
 
 
 @router.post(
@@ -84,13 +85,13 @@ def list_answers(
     responses={404: {"description": "Not found"}},
 )
 def create_answer(
-    question_id: str,
+    question_id: UUID,
     payload: CommunityAnswerCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> dict[str, Any]:
     row = community_service.submit_answer(
-        connection, settings, question_id, payload
+        connection, settings, str(question_id), payload
     )
     connection.commit()
     return row
@@ -102,13 +103,13 @@ def create_answer(
     responses={404: {"description": "Not found"}},
 )
 def create_vote(
-    answer_id: str,
+    answer_id: UUID,
     payload: CommunityVoteCreate,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> ConsensusSummary:
     result = community_service.submit_vote(
-        connection, settings, answer_id, payload
+        connection, settings, str(answer_id), payload
     )
     connection.commit()
     return result

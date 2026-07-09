@@ -18,16 +18,17 @@ from app.services.localization import overlay_localized_fields
 from fastapi import APIRouter, Depends, HTTPException, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
+from uuid import UUID
 
 
 router = APIRouter(
-    prefix="/countries/{country_id}/legal-signals", tags=["legal_signals"]
+    prefix="/countries/{country_slug}/legal-signals", tags=["legal_signals"]
 )
 
 
 @router.get("", response_model=LegalSignalListResponse)
 def read_country_legal_signals(
-    country_id: str,
+    country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     signal_type: str | None = None,
@@ -47,7 +48,7 @@ def read_country_legal_signals(
 ) -> LegalSignalListResponse:
     rows = list_legal_signals(
         connection,
-        country_id,
+        country_slug,
         limit,
         offset,
         signal_type,
@@ -70,7 +71,7 @@ def read_country_legal_signals(
     )
     total = count_legal_signals(
         connection,
-        country_id,
+        country_slug,
         signal_type,
         impact_direction,
         impact_level,
@@ -181,18 +182,18 @@ def read_legal_signals(
 
 @top_level_router.get("/{signal_id}", response_model=LegalSignalDetailResponse)
 def read_legal_signal(
-    signal_id: str,
+    signal_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> LegalSignalDetailResponse:
-    return decision_engine.get_legal_signal(connection, signal_id, locale)
+    return decision_engine.get_legal_signal(connection, str(signal_id), locale)
 
 
 @top_level_router.get(
     "/{signal_id}/evidence", response_model=EvidenceListResponse
 )
 def read_legal_signal_evidence(
-    signal_id: str,
+    signal_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> EvidenceListResponse:
-    return decision_engine.get_legal_signal_evidence(connection, signal_id)
+    return decision_engine.get_legal_signal_evidence(connection, str(signal_id))

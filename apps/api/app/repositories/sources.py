@@ -202,10 +202,10 @@ def _evidence_filters(
         filters.append("c.slug = %s")
         params.append(country_slug)
     if source_id:
-        filters.append("ei.source_id::text = %s")
+        filters.append("ei.source_id = %s::uuid")
         params.append(source_id)
     if legal_signal_id:
-        filters.append("ei.legal_signal_id::text = %s")
+        filters.append("ei.legal_signal_id = %s::uuid")
         params.append(legal_signal_id)
     if confidence:
         filters.append("ei.confidence = %s")

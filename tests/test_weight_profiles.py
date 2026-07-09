@@ -18,6 +18,7 @@ CONNECTION_MOCK = MagicMock()
 CONNECTION = cast(Connection[Any], CONNECTION_MOCK)
 NOW = datetime(2026, 7, 4, tzinfo=UTC)
 USER_ID = "11111111-1111-1111-1111-111111111111"
+PROFILE_ID = "22222222-2222-2222-2222-222222222222"
 USER = CurrentUser(
     id=USER_ID,
     email="user@example.local",
@@ -38,7 +39,7 @@ WEIGHTS = {
 
 def _row(**overrides: Any) -> dict[str, Any]:
     row = {
-        "id": "profile-1",
+        "id": PROFILE_ID,
         "user_id": USER_ID,
         "name": "Balanced",
         "scenario_slug": None,
@@ -229,7 +230,7 @@ def test_list_weight_profiles_api(monkeypatch: pytest.MonkeyPatch) -> None:
     response = _client().get("/api/v1/me/weight-profiles")
 
     assert response.status_code == 200
-    assert response.json()["items"][0]["id"] == "profile-1"
+    assert response.json()["items"][0]["id"] == PROFILE_ID
 
 
 def test_get_weight_profile_api(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -237,10 +238,10 @@ def test_get_weight_profile_api(monkeypatch: pytest.MonkeyPatch) -> None:
         service, "get_user_weight_profile", lambda *_a, **_kw: _row()
     )
 
-    response = _client().get("/api/v1/me/weight-profiles/profile-1")
+    response = _client().get(f"/api/v1/me/weight-profiles/{PROFILE_ID}")
 
     assert response.status_code == 200
-    assert response.json()["item"]["id"] == "profile-1"
+    assert response.json()["item"]["id"] == PROFILE_ID
 
 
 def test_get_weight_profile_api_returns_404_when_missing(
@@ -248,7 +249,7 @@ def test_get_weight_profile_api_returns_404_when_missing(
 ) -> None:
     monkeypatch.setattr(repository, "get_profile_for_user", lambda *_: None)
 
-    response = _client().get("/api/v1/me/weight-profiles/missing")
+    response = _client().get(f"/api/v1/me/weight-profiles/{PROFILE_ID}")
 
     assert response.status_code == 404
 
@@ -285,7 +286,7 @@ def test_patch_weight_profile_api_passes_field_set(
     monkeypatch.setattr(service, "update_user_weight_profile", fake_update)
 
     response = _client().patch(
-        "/api/v1/me/weight-profiles/profile-1",
+        f"/api/v1/me/weight-profiles/{PROFILE_ID}",
         json={"name": "Safety first"},
     )
 

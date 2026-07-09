@@ -40,7 +40,7 @@ def list_route_checklist_items(
         SELECT
             {CHECKLIST_ITEM_FIELDS.format(title_col=title_col, description_col=description_col)}
         FROM route_checklist_items rci
-        WHERE rci.route_id::text = %s
+        WHERE rci.route_id = %s::uuid
           AND rci.status = 'published'
         ORDER BY rci.step_order
         """,

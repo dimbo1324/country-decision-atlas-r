@@ -17,6 +17,7 @@ from app.services.localization import overlay_localized_fields
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any, Literal
+from uuid import UUID
 
 
 router = APIRouter(tags=["sources"])
@@ -125,12 +126,12 @@ def read_evidence_items(
 
 @router.get("/sources/{source_id}", response_model=SourceResponse)
 def read_source(
-    source_id: str,
+    source_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> SourceResponse:
     return SourceResponse(
-        item=decision_engine.get_source(connection, source_id),
+        item=decision_engine.get_source(connection, str(source_id)),
         locale=source_locale_resolution(locale),
     )
 
@@ -139,11 +140,11 @@ def read_source(
     "/sources/{source_id}/evidence", response_model=EvidenceItemListResponse
 )
 def read_source_evidence(
-    source_id: str,
+    source_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> EvidenceItemListResponse:
     return decision_engine.get_source_evidence(
-        connection, source_id, limit, offset
+        connection, str(source_id), limit, offset
     )

@@ -24,7 +24,7 @@ def list_annotations(
         SELECT
             {ANNOTATION_FIELDS}
         FROM trip_annotations ta
-        WHERE ta.trip_id::text = %s
+        WHERE ta.trip_id = %s::uuid
         ORDER BY ta.position NULLS LAST, ta.created_at
         """,
         (trip_id,),
@@ -40,7 +40,7 @@ def get_annotation_for_trip(
         SELECT
             {ANNOTATION_FIELDS}
         FROM trip_annotations ta
-        WHERE ta.trip_id::text = %s AND ta.id::text = %s
+        WHERE ta.trip_id = %s::uuid AND ta.id = %s::uuid
         """,
         (trip_id, annotation_id),
     )
@@ -96,7 +96,7 @@ def update_annotation(
             kind = %s,
             body = %s,
             position = %s
-        WHERE id::text = %s AND trip_id::text = %s
+        WHERE id = %s::uuid AND trip_id = %s::uuid
         RETURNING id::text AS id
         """,
         (waypoint_id, kind, body, position, annotation_id, trip_id),
@@ -115,7 +115,7 @@ def delete_annotation(
         connection,
         """
         DELETE FROM trip_annotations
-        WHERE trip_id::text = %s AND id::text = %s
+        WHERE trip_id = %s::uuid AND id = %s::uuid
         RETURNING id
         """,
         (trip_id, annotation_id),

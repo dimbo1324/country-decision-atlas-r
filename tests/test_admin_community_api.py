@@ -88,7 +88,7 @@ def test_admin_can_change_question_status_to_published(
     )
 
     response = _client().patch(
-        "/api/v1/admin/community/questions/q1/status",
+        "/api/v1/admin/community/questions/33333333-3333-3333-3333-333333333333/status",
         json={"status": "published"},
     )
 
@@ -109,7 +109,7 @@ def test_admin_question_status_update_ignores_client_supplied_moderated_by(
     monkeypatch.setattr(repository, "update_question_status", fake_update)
 
     response = _client().patch(
-        "/api/v1/admin/community/questions/q1/status",
+        "/api/v1/admin/community/questions/33333333-3333-3333-3333-333333333333/status",
         json={"status": "published", "moderated_by": "spoofed-attacker-id"},
     )
 
@@ -126,7 +126,7 @@ def test_admin_update_missing_question_returns_404(
     )
 
     response = _client().patch(
-        "/api/v1/admin/community/questions/missing/status",
+        "/api/v1/admin/community/questions/99999999-9999-9999-9999-999999999999/status",
         json={"status": "published"},
     )
 
@@ -163,7 +163,7 @@ def test_admin_answer_status_update_ignores_client_supplied_moderated_by(
     monkeypatch.setattr(repository, "update_answer_status", fake_update)
 
     response = _client().patch(
-        "/api/v1/admin/community/answers/a1/status",
+        "/api/v1/admin/community/answers/44444444-4444-4444-4444-444444444444/status",
         json={"status": "published", "moderated_by": "spoofed-attacker-id"},
     )
 
@@ -207,7 +207,7 @@ def test_admin_data_error_report_status_update_ignores_client_supplied_reviewed_
     )
 
     response = _client().patch(
-        "/api/v1/admin/community/data-error-reports/r1/status",
+        "/api/v1/admin/community/data-error-reports/55555555-5555-5555-5555-555555555555/status",
         json={"status": "resolved", "reviewed_by": "spoofed-attacker-id"},
     )
 
@@ -254,7 +254,7 @@ def test_admin_user_story_rating_status_update_ignores_client_supplied_reviewed_
     )
 
     response = _client().patch(
-        "/api/v1/admin/community/user-story-ratings/rt1/status",
+        "/api/v1/admin/community/user-story-ratings/66666666-6666-6666-6666-666666666666/status",
         json={"status": "published", "reviewed_by": "spoofed-attacker-id"},
     )
 

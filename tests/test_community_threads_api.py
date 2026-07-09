@@ -195,7 +195,7 @@ def test_moderator_thread_messages_requires_capability(
 
     response = _client(USER).get(
         f"/api/v1/admin/migration-board/threads/{THREAD_ID}/messages",
-        params={"report_id": "report-1"},
+        params={"report_id": "88888888-8888-8888-8888-888888888888"},
     )
 
     assert response.status_code == 403
@@ -220,7 +220,7 @@ def test_moderator_can_view_thread_messages_with_valid_report(
 
     response = _client(MODERATOR).get(
         f"/api/v1/admin/migration-board/threads/{THREAD_ID}/messages",
-        params={"report_id": "report-1"},
+        params={"report_id": "88888888-8888-8888-8888-888888888888"},
     )
 
     assert response.status_code == 200

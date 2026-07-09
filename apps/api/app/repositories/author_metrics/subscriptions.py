@@ -55,7 +55,7 @@ def get_subscription_by_id(
         SELECT
             {SUBSCRIPTION_SELECT}
         {SUBSCRIPTION_JOINS}
-        WHERE asub.id::text = %s
+        WHERE asub.id = %s::uuid
         """,
         (subscription_id,),
     )
@@ -75,7 +75,7 @@ def get_subscription_for_target(
             SELECT
                 {SUBSCRIPTION_SELECT}
             {SUBSCRIPTION_JOINS}
-            WHERE asub.user_id::text = %s AND asub.metric_id::text = %s
+            WHERE asub.user_id = %s::uuid AND asub.metric_id = %s::uuid
             """,
             (user_id, metric_id),
         )
@@ -85,7 +85,7 @@ def get_subscription_for_target(
         SELECT
             {SUBSCRIPTION_SELECT}
         {SUBSCRIPTION_JOINS}
-        WHERE asub.user_id::text = %s AND asub.author_user_id::text = %s
+        WHERE asub.user_id = %s::uuid AND asub.author_user_id = %s::uuid
         """,
         (user_id, author_user_id),
     )
@@ -95,7 +95,7 @@ def delete_subscription(
     connection: Connection[Any], subscription_id: str
 ) -> None:
     connection.execute(
-        "DELETE FROM author_subscriptions WHERE id::text = %s",
+        "DELETE FROM author_subscriptions WHERE id = %s::uuid",
         (subscription_id,),
     )
 
@@ -109,7 +109,7 @@ def list_subscriptions_for_user(
         SELECT
             {SUBSCRIPTION_SELECT}
         {SUBSCRIPTION_JOINS}
-        WHERE asub.user_id::text = %s
+        WHERE asub.user_id = %s::uuid
         ORDER BY asub.created_at DESC
         """,
         (user_id,),
@@ -125,8 +125,8 @@ def count_subscribers_for_author(
         SELECT COUNT(DISTINCT asub.user_id) AS total
         FROM author_subscriptions asub
         LEFT JOIN author_metric_definitions amd ON amd.id = asub.metric_id
-        WHERE asub.author_user_id::text = %s
-           OR amd.author_user_id::text = %s
+        WHERE asub.author_user_id = %s::uuid
+           OR amd.author_user_id = %s::uuid
         """,
         (author_user_id, author_user_id),
     )
@@ -158,7 +158,7 @@ def list_feed_values_for_user(
         JOIN author_metric_values amv ON amv.metric_id = amd.id
         JOIN countries c ON c.id = amv.country_id
         JOIN users u ON u.id = amd.author_user_id
-        WHERE asub.user_id::text = %s
+        WHERE asub.user_id = %s::uuid
           AND amd.status = 'published'
           AND amd.visibility = 'public'
         ORDER BY amv.updated_at DESC

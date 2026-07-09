@@ -33,6 +33,7 @@ from fastapi import APIRouter, Depends, Query, Security, status
 from fastapi.security import HTTPAuthorizationCredentials
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(tags=["migration-board"])
@@ -106,12 +107,12 @@ def list_board_posts(
     "/migration-board/posts/{post_id}", response_model=MigrationBoardPostDetail
 )
 def get_board_post(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser | None, Depends(optional_current_user)],
 ) -> dict[str, Any]:
     return service.get_public_post(
-        connection, post_id=post_id, current_user=current_user
+        connection, post_id=str(post_id), current_user=current_user
     )
 
 
@@ -148,12 +149,12 @@ def create_my_board_post(
     response_model=MyMigrationBoardPost,
 )
 def get_my_board_post(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     return service.get_my_post(
-        connection, current_user=current_user, post_id=post_id
+        connection, current_user=current_user, post_id=str(post_id)
     )
 
 
@@ -162,13 +163,16 @@ def get_my_board_post(
     response_model=MyMigrationBoardPost,
 )
 def update_my_board_post(
-    post_id: str,
+    post_id: UUID,
     payload: UpdateMigrationBoardPostRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     post = service.update_user_post(
-        connection, current_user=current_user, post_id=post_id, payload=payload
+        connection,
+        current_user=current_user,
+        post_id=str(post_id),
+        payload=payload,
     )
     connection.commit()
     return post
@@ -179,12 +183,12 @@ def update_my_board_post(
     response_model=SubmitMigrationBoardPostResponse,
 )
 def submit_my_board_post(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     post = service.submit_user_post(
-        connection, current_user=current_user, post_id=post_id
+        connection, current_user=current_user, post_id=str(post_id)
     )
     connection.commit()
     return {"post": post}
@@ -195,12 +199,12 @@ def submit_my_board_post(
     response_model=ArchiveMigrationBoardPostResponse,
 )
 def archive_my_board_post(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     post = service.archive_user_post(
-        connection, current_user=current_user, post_id=post_id
+        connection, current_user=current_user, post_id=str(post_id)
     )
     connection.commit()
     return {"post": post}
@@ -225,13 +229,13 @@ def list_my_board_matches(
     response_model=CompanionMatchesResponse,
 )
 def list_post_board_matches(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
     limit: int = Query(20, ge=1, le=100),
 ) -> dict[str, Any]:
     return service.list_companion_matches(
-        connection, current_user=current_user, post_id=post_id, limit=limit
+        connection, current_user=current_user, post_id=str(post_id), limit=limit
     )
 
 
@@ -241,7 +245,7 @@ def list_post_board_matches(
     status_code=status.HTTP_201_CREATED,
 )
 def create_board_contact_request(
-    post_id: str,
+    post_id: UUID,
     payload: CreateContactRequestRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -249,7 +253,7 @@ def create_board_contact_request(
     request = service.create_contact_request(
         connection,
         current_user=current_user,
-        post_id=post_id,
+        post_id=str(post_id),
         message=payload.message,
     )
     connection.commit()
@@ -283,7 +287,7 @@ def list_outgoing_contact_requests(
     response_model=ContactRequestActionResponse,
 )
 def accept_contact_request(
-    request_id: str,
+    request_id: UUID,
     payload: ContactRequestActionRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -291,7 +295,7 @@ def accept_contact_request(
     request = service.accept_contact_request(
         connection,
         current_user=current_user,
-        request_id=request_id,
+        request_id=str(request_id),
         response_note=payload.response_note,
     )
     connection.commit()
@@ -303,7 +307,7 @@ def accept_contact_request(
     response_model=ContactRequestActionResponse,
 )
 def decline_contact_request(
-    request_id: str,
+    request_id: UUID,
     payload: ContactRequestActionRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -311,7 +315,7 @@ def decline_contact_request(
     request = service.decline_contact_request(
         connection,
         current_user=current_user,
-        request_id=request_id,
+        request_id=str(request_id),
         response_note=payload.response_note,
     )
     connection.commit()
@@ -323,12 +327,12 @@ def decline_contact_request(
     response_model=ContactRequestActionResponse,
 )
 def cancel_contact_request(
-    request_id: str,
+    request_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     request = service.cancel_contact_request(
-        connection, current_user=current_user, request_id=request_id
+        connection, current_user=current_user, request_id=str(request_id)
     )
     connection.commit()
     return {"request": request}
@@ -340,7 +344,7 @@ def cancel_contact_request(
     status_code=status.HTTP_201_CREATED,
 )
 def report_board_post(
-    post_id: str,
+    post_id: UUID,
     payload: CreateMigrationBoardReportRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -348,7 +352,7 @@ def report_board_post(
     report = service.report_post(
         connection,
         current_user=current_user,
-        post_id=post_id,
+        post_id=str(post_id),
         reason=payload.reason,
         details=payload.details,
     )
@@ -362,7 +366,7 @@ def report_board_post(
     status_code=status.HTTP_201_CREATED,
 )
 def report_board_contact_request(
-    request_id: str,
+    request_id: UUID,
     payload: CreateMigrationBoardReportRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -370,7 +374,7 @@ def report_board_contact_request(
     report = service.report_contact_request(
         connection,
         current_user=current_user,
-        request_id=request_id,
+        request_id=str(request_id),
         reason=payload.reason,
         details=payload.details,
     )
@@ -384,7 +388,7 @@ def report_board_contact_request(
     status_code=status.HTTP_201_CREATED,
 )
 def block_board_user(
-    user_id: str,
+    user_id: UUID,
     payload: BlockUserRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -392,7 +396,7 @@ def block_board_user(
     row = service.block_user(
         connection,
         current_user=current_user,
-        blocked_user_id=user_id,
+        blocked_user_id=str(user_id),
         reason=payload.reason,
     )
     connection.commit()
@@ -401,12 +405,12 @@ def block_board_user(
 
 @router.delete("/me/migration-board/blocks/{user_id}", status_code=204)
 def unblock_board_user(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> None:
     service.unblock_user(
-        connection, current_user=current_user, blocked_user_id=user_id
+        connection, current_user=current_user, blocked_user_id=str(user_id)
     )
     connection.commit()
 
@@ -435,7 +439,7 @@ def list_my_threads(
     response_model=ThreadMessageListResponse,
 )
 def list_thread_messages(
-    thread_id: str,
+    thread_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
     after: datetime | None = None,
@@ -444,7 +448,7 @@ def list_thread_messages(
     return service.list_thread_messages(
         connection,
         current_user=current_user,
-        thread_id=thread_id,
+        thread_id=str(thread_id),
         after=after,
         limit=limit,
     )
@@ -456,7 +460,7 @@ def list_thread_messages(
     status_code=status.HTTP_201_CREATED,
 )
 def send_thread_message(
-    thread_id: str,
+    thread_id: UUID,
     payload: SendThreadMessageRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -464,7 +468,7 @@ def send_thread_message(
     message = service.send_thread_message(
         connection,
         current_user=current_user,
-        thread_id=thread_id,
+        thread_id=str(thread_id),
         body=payload.body,
     )
     connection.commit()
@@ -476,12 +480,12 @@ def send_thread_message(
     response_model=CloseThreadResponse,
 )
 def close_thread(
-    thread_id: str,
+    thread_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> dict[str, Any]:
     thread = service.close_thread(
-        connection, current_user=current_user, thread_id=thread_id
+        connection, current_user=current_user, thread_id=str(thread_id)
     )
     connection.commit()
     return {"thread": thread}

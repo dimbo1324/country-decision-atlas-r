@@ -84,7 +84,7 @@ def get_value(
         SELECT
             {VALUE_SELECT}
         {VALUE_JOINS}
-        WHERE amv.metric_id::text = %s AND amv.country_id::text = %s
+        WHERE amv.metric_id = %s::uuid AND amv.country_id = %s::uuid
         """,
         (metric_id, country_id),
     )
@@ -99,7 +99,7 @@ def list_values_for_definition(
         SELECT
             {VALUE_SELECT}
         {VALUE_JOINS}
-        WHERE amv.metric_id::text = %s
+        WHERE amv.metric_id = %s::uuid
         ORDER BY c.slug
         """,
         (metric_id,),
@@ -114,7 +114,7 @@ def count_countries_with_values(
         """
         SELECT COUNT(*) AS total
         FROM author_metric_values
-        WHERE metric_id::text = %s
+        WHERE metric_id = %s::uuid
         """,
         (metric_id,),
     )

@@ -63,7 +63,7 @@ def replace_breakdowns(
     breakdowns: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     connection.execute(
-        "DELETE FROM country_score_breakdowns WHERE country_score_id::text = %s",
+        "DELETE FROM country_score_breakdowns WHERE country_score_id = %s::uuid",
         (country_score_id,),
     )
     return fetch_all(
@@ -112,7 +112,7 @@ def get_country_score(
         SELECT id, country_id, scenario_id, score, score_label, confidence,
                explanation_en, explanation_ru, calculated_at
         FROM country_scores
-        WHERE country_id::text = %s AND scenario_id::text = %s
+        WHERE country_id = %s::uuid AND scenario_id = %s::uuid
         """,
         (country_id, scenario_id),
     )

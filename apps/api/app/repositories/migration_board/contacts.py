@@ -57,7 +57,7 @@ def get_contact_request_by_id(
         JOIN migration_board_posts mbp ON mbp.id = mbcr.post_id
         JOIN users fu ON fu.id = mbcr.from_user_id
         JOIN users tu ON tu.id = mbcr.to_user_id
-        WHERE mbcr.id::text = %s
+        WHERE mbcr.id = %s::uuid
         """,
         (request_id,),
     )
@@ -88,7 +88,7 @@ def list_incoming_contact_requests(
         JOIN migration_board_posts mbp ON mbp.id = mbcr.post_id
         JOIN users fu ON fu.id = mbcr.from_user_id
         JOIN users tu ON tu.id = mbcr.to_user_id
-        WHERE mbcr.to_user_id::text = %s
+        WHERE mbcr.to_user_id = %s::uuid
           AND NOT EXISTS (
               SELECT 1
               FROM migration_board_blocks mbb
@@ -126,7 +126,7 @@ def list_outgoing_contact_requests(
         JOIN migration_board_posts mbp ON mbp.id = mbcr.post_id
         JOIN users fu ON fu.id = mbcr.from_user_id
         JOIN users tu ON tu.id = mbcr.to_user_id
-        WHERE mbcr.from_user_id::text = %s
+        WHERE mbcr.from_user_id = %s::uuid
         ORDER BY mbcr.created_at DESC
         """,
         (user_id,),
@@ -149,7 +149,7 @@ def update_contact_request_status(
             responded_at = CASE WHEN %s IN ('accepted', 'declined') THEN NOW() ELSE responded_at END,
             cancelled_at = CASE WHEN %s = 'cancelled' THEN NOW() ELSE cancelled_at END,
             response_note = %s
-        WHERE id::text = %s AND status = 'pending'
+        WHERE id = %s::uuid AND status = 'pending'
         RETURNING id::text AS id
         """,
         (status, status, status, response_note, request_id),
@@ -169,7 +169,7 @@ def pending_contact_request_exists(
         """
         SELECT 1
         FROM migration_board_contact_requests
-        WHERE post_id::text = %s AND from_user_id::text = %s AND status = 'pending'
+        WHERE post_id = %s::uuid AND from_user_id = %s::uuid AND status = 'pending'
         """,
         (post_id, from_user_id),
     )
@@ -184,7 +184,7 @@ def count_contact_requests_created_since(
         """
         SELECT COUNT(*) AS total
         FROM migration_board_contact_requests
-        WHERE from_user_id::text = %s AND created_at >= NOW() - INTERVAL '1 day'
+        WHERE from_user_id = %s::uuid AND created_at >= NOW() - INTERVAL '1 day'
         """,
         (user_id,),
     )

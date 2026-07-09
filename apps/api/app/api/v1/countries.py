@@ -174,13 +174,13 @@ def read_country(
     return CountryResponse(item=row, locale=build_locale([row], locale))
 
 
-@router.get("/{country_id}/profile", response_model=CountryProfileResponse)
+@router.get("/{country_slug}/profile", response_model=CountryProfileResponse)
 def read_country_profile(
-    country_id: str,
+    country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> CountryProfileResponse:
-    row = get_profile(connection, country_id, locale)
+    row = get_profile(connection, country_slug, locale)
     if row is None:
         raise HTTPException(
             status_code=404, detail="Country profile not found."
@@ -188,16 +188,16 @@ def read_country_profile(
     return CountryProfileResponse(item=row, locale=build_locale([row], locale))
 
 
-@router.get("/{country_id}/scores", response_model=CountryScoreListResponse)
+@router.get("/{country_slug}/scores", response_model=CountryScoreListResponse)
 def read_country_scores(
-    country_id: str,
+    country_slug: str,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CountryScoreListResponse:
-    rows = list_country_scores(connection, country_id, locale, limit, offset)
-    total = count_country_scores(connection, country_id)
+    rows = list_country_scores(connection, country_slug, locale, limit, offset)
+    total = count_country_scores(connection, country_slug)
     return CountryScoreListResponse(
         items=rows,
         pagination=Pagination(limit=limit, offset=offset, total=total),

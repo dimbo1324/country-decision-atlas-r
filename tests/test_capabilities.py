@@ -337,7 +337,7 @@ class TestAdminCapabilitiesApi:
             lambda *_a, **_kw: _grant_row(revoked_at=NOW),
         )
         response = _client(OWNER).delete(
-            "/api/v1/admin/capabilities/grant-1",
+            "/api/v1/admin/capabilities/11111111-1111-1111-1111-111111111111",
             headers={"Authorization": "Bearer owner-token"},
         )
         assert response.status_code == 204

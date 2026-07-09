@@ -61,7 +61,7 @@ def get_thread_by_id(
         f"""
         SELECT {THREAD_FIELDS}
         {THREAD_JOINS}
-        WHERE ct.id::text = %s
+        WHERE ct.id = %s::uuid
         """,
         (thread_id,),
     )
@@ -75,7 +75,7 @@ def get_thread_for_contact_request(
         f"""
         SELECT {THREAD_FIELDS}
         {THREAD_JOINS}
-        WHERE ct.contact_request_id::text = %s
+        WHERE ct.contact_request_id = %s::uuid
         """,
         (contact_request_id,),
     )
@@ -89,7 +89,7 @@ def list_my_threads(
         f"""
         SELECT {THREAD_FIELDS}
         {THREAD_JOINS}
-        WHERE mbcr.from_user_id::text = %s OR mbcr.to_user_id::text = %s
+        WHERE mbcr.from_user_id = %s::uuid OR mbcr.to_user_id = %s::uuid
         ORDER BY ct.updated_at DESC
         """,
         (user_id, user_id),
@@ -120,7 +120,7 @@ def list_messages(
             SELECT {MESSAGE_FIELDS}
             FROM thread_messages tm
             JOIN users u ON u.id = tm.sender_user_id
-            WHERE tm.thread_id::text = %s AND tm.created_at > %s
+            WHERE tm.thread_id = %s::uuid AND tm.created_at > %s
             ORDER BY tm.created_at ASC, tm.id ASC
             LIMIT %s
             """,
@@ -132,7 +132,7 @@ def list_messages(
         SELECT {MESSAGE_FIELDS}
         FROM thread_messages tm
         JOIN users u ON u.id = tm.sender_user_id
-        WHERE tm.thread_id::text = %s
+        WHERE tm.thread_id = %s::uuid
         ORDER BY tm.created_at ASC, tm.id ASC
         LIMIT %s
         """,
@@ -157,7 +157,7 @@ def create_message(
         (thread_id, sender_user_id, body),
     )
     connection.execute(
-        "UPDATE contact_threads SET updated_at = NOW() WHERE id::text = %s",
+        "UPDATE contact_threads SET updated_at = NOW() WHERE id = %s::uuid",
         (thread_id,),
     )
     return {
@@ -177,7 +177,7 @@ def count_messages_created_since(
         """
         SELECT COUNT(*) AS total
         FROM thread_messages
-        WHERE sender_user_id::text = %s AND created_at >= NOW() - INTERVAL '1 day'
+        WHERE sender_user_id = %s::uuid AND created_at >= NOW() - INTERVAL '1 day'
         """,
         (user_id,),
     )
@@ -192,7 +192,7 @@ def close_thread(
         """
         UPDATE contact_threads
         SET status = 'closed', closed_by_user_id = %s::uuid, closed_at = NOW()
-        WHERE id::text = %s AND status = 'open'
+        WHERE id = %s::uuid AND status = 'open'
         RETURNING id::text AS id
         """,
         (closed_by_user_id, thread_id),
@@ -211,8 +211,8 @@ def freeze_threads_between_users(
         WHERE ct.contact_request_id = mbcr.id
           AND ct.status = 'open'
           AND (
-              (mbcr.from_user_id::text = %s AND mbcr.to_user_id::text = %s)
-              OR (mbcr.from_user_id::text = %s AND mbcr.to_user_id::text = %s)
+              (mbcr.from_user_id = %s::uuid AND mbcr.to_user_id = %s::uuid)
+              OR (mbcr.from_user_id = %s::uuid AND mbcr.to_user_id = %s::uuid)
           )
         """,
         (user_a_id, user_b_id, user_b_id, user_a_id),

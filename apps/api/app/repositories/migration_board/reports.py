@@ -57,7 +57,7 @@ def get_report_by_id(
             reviewed_at,
             resolution_note
         FROM migration_board_reports
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         """,
         (report_id,),
     )
@@ -112,7 +112,7 @@ def update_report_status(
             reviewed_by = %s::uuid,
             reviewed_at = NOW(),
             resolution_note = %s
-        WHERE id::text = %s AND status IN ('pending', 'reviewing')
+        WHERE id = %s::uuid AND status IN ('pending', 'reviewing')
         RETURNING id::text AS id
         """,
         (status, reviewed_by, resolution_note, report_id),
@@ -133,8 +133,8 @@ def existing_pending_report_exists(
             """
             SELECT 1
             FROM migration_board_reports
-            WHERE reporter_user_id::text = %s
-              AND post_id::text = %s
+            WHERE reporter_user_id = %s::uuid
+              AND post_id = %s::uuid
               AND status IN ('pending', 'reviewing')
             """,
             (reporter_user_id, post_id),
@@ -145,8 +145,8 @@ def existing_pending_report_exists(
         """
         SELECT 1
         FROM migration_board_reports
-        WHERE reporter_user_id::text = %s
-          AND contact_request_id::text = %s
+        WHERE reporter_user_id = %s::uuid
+          AND contact_request_id = %s::uuid
           AND status IN ('pending', 'reviewing')
         """,
         (reporter_user_id, contact_request_id),
@@ -162,7 +162,7 @@ def count_reports_created_today(
         """
         SELECT COUNT(*) AS total
         FROM migration_board_reports
-        WHERE reporter_user_id::text = %s AND created_at >= NOW() - INTERVAL '1 day'
+        WHERE reporter_user_id = %s::uuid AND created_at >= NOW() - INTERVAL '1 day'
         """,
         (user_id,),
     )
@@ -177,7 +177,7 @@ def count_resolved_reports_for_post(
         """
         SELECT COUNT(*) AS total
         FROM migration_board_reports
-        WHERE post_id::text = %s AND status = 'resolved'
+        WHERE post_id = %s::uuid AND status = 'resolved'
         """,
         (post_id,),
     )

@@ -201,7 +201,7 @@ def get_country_slug_by_id(
 ) -> str | None:
     row = fetch_one(
         connection,
-        "SELECT slug FROM countries WHERE id::text = %s",
+        "SELECT slug FROM countries WHERE id = %s::uuid",
         (country_id,),
     )
     return str(row["slug"]) if row else None
@@ -212,7 +212,7 @@ def get_source_for_admin(
 ) -> dict[str, Any] | None:
     return fetch_one(
         connection,
-        f"SELECT {SOURCE_RETURNING} FROM sources WHERE id::text = %s",
+        f"SELECT {SOURCE_RETURNING} FROM sources WHERE id = %s::uuid",
         (source_id,),
     )
 
@@ -279,7 +279,7 @@ def get_evidence_item_for_admin(
 ) -> dict[str, Any] | None:
     return fetch_one(
         connection,
-        f"SELECT {EVIDENCE_RETURNING} FROM evidence_items WHERE id::text = %s",
+        f"SELECT {EVIDENCE_RETURNING} FROM evidence_items WHERE id = %s::uuid",
         (evidence_item_id,),
     )
 
@@ -368,7 +368,7 @@ def get_legal_signal_for_admin(
 ) -> dict[str, Any] | None:
     return fetch_one(
         connection,
-        f"SELECT {LEGAL_SIGNAL_RETURNING} FROM legal_signals WHERE id::text = %s",
+        f"SELECT {LEGAL_SIGNAL_RETURNING} FROM legal_signals WHERE id = %s::uuid",
         (signal_id,),
     )
 
@@ -538,7 +538,7 @@ def get_user_story_for_admin(
 ) -> dict[str, Any] | None:
     return fetch_one(
         connection,
-        f"SELECT {USER_STORY_RETURNING} FROM user_stories WHERE id::text = %s",
+        f"SELECT {USER_STORY_RETURNING} FROM user_stories WHERE id = %s::uuid",
         (story_id,),
     )
 
@@ -645,7 +645,7 @@ def _patch_entity(
     }
     if not data:
         row = connection.execute(
-            sql.SQL("SELECT {} FROM {} WHERE id::text = %s").format(
+            sql.SQL("SELECT {} FROM {} WHERE id = %s::uuid").format(
                 sql.SQL(returning),
                 sql.Identifier(table),
             ),
@@ -664,7 +664,7 @@ def _patch_entity(
     query = sql.SQL("""
         UPDATE {}
         SET {}, updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING {}
     """).format(
         sql.Identifier(table),

@@ -22,7 +22,7 @@ def has_active_grant(
         """
         SELECT 1
         FROM user_capabilities
-        WHERE user_id::text = %s
+        WHERE user_id = %s::uuid
           AND capability = %s
           AND revoked_at IS NULL
         """,
@@ -72,7 +72,7 @@ def revoke_capability_by_id(
         f"""
         UPDATE user_capabilities
         SET revoked_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
           AND revoked_at IS NULL
         RETURNING
             {CAPABILITY_FIELDS}
@@ -90,7 +90,7 @@ def get_capability_by_id(
         SELECT
             {CAPABILITY_FIELDS}
         FROM user_capabilities
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         """,
         (capability_id,),
     )
@@ -108,7 +108,7 @@ def list_capabilities(
     filters = []
     params: list[Any] = []
     if user_id is not None:
-        filters.append("user_id::text = %s")
+        filters.append("user_id = %s::uuid")
         params.append(user_id)
     if capability is not None:
         filters.append("capability = %s")

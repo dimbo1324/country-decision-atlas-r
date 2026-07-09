@@ -37,7 +37,7 @@ def enable_trip_share(
             visibility = 'link',
             share_token_hash = %s,
             share_token_prefix = %s
-        WHERE id::text = %s AND user_id::text = %s
+        WHERE id = %s::uuid AND user_id = %s::uuid
         RETURNING id::text AS id
         """,
         (token_hash, token_prefix, trip_id, user_id),
@@ -58,7 +58,7 @@ def disable_trip_share(
             visibility = 'private',
             share_token_hash = NULL,
             share_token_prefix = NULL
-        WHERE id::text = %s AND user_id::text = %s
+        WHERE id = %s::uuid AND user_id = %s::uuid
         RETURNING id::text AS id
         """,
         (trip_id, user_id),

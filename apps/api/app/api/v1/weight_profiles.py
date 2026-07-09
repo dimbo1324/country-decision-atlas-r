@@ -12,6 +12,7 @@ from app.services import weight_profiles as service
 from fastapi import APIRouter, Depends, status
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/me/weight-profiles", tags=["weight-profiles"])
@@ -34,12 +35,12 @@ def list_weight_profiles(
 
 @router.get("/{profile_id}", response_model=UserWeightProfileResponse)
 def get_weight_profile(
-    profile_id: str,
+    profile_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> UserWeightProfileResponse:
     profile = service.get_user_weight_profile(
-        connection, profile_id, current_user.id
+        connection, str(profile_id), current_user.id
     )
     return UserWeightProfileResponse(item=UserWeightProfile(**profile))
 
@@ -68,7 +69,7 @@ def create_weight_profile(
 
 @router.patch("/{profile_id}", response_model=UserWeightProfileResponse)
 def update_weight_profile(
-    profile_id: str,
+    profile_id: UUID,
     payload: UserWeightProfilePatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
@@ -76,7 +77,7 @@ def update_weight_profile(
     profile = service.update_user_weight_profile(
         connection,
         user_id=current_user.id,
-        profile_id=profile_id,
+        profile_id=str(profile_id),
         fields=payload.model_fields_set,
         name=payload.name,
         scenario_slug=payload.scenario_slug,
@@ -89,11 +90,11 @@ def update_weight_profile(
 
 @router.delete("/{profile_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_weight_profile(
-    profile_id: str,
+    profile_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> None:
     service.delete_user_weight_profile(
-        connection, profile_id=profile_id, user_id=current_user.id
+        connection, profile_id=str(profile_id), user_id=current_user.id
     )
     connection.commit()

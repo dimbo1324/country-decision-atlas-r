@@ -10,6 +10,7 @@ from app.services import routes as routes_service
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(tags=["routes"])
@@ -60,8 +61,8 @@ def read_country_route(
 
 @router.get("/routes/{route_id}", response_model=RouteDetailResponse)
 def read_route(
-    route_id: str,
+    route_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     locale: LocaleQuery,
 ) -> RouteDetailResponse:
-    return routes_service.get_route_detail(connection, route_id, locale)
+    return routes_service.get_route_detail(connection, str(route_id), locale)

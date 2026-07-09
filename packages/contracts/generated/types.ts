@@ -259,7 +259,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/countries/{country_id}/profile": {
+    "/api/v1/countries/{country_slug}/profile": {
         parameters: {
             query?: never;
             header?: never;
@@ -267,7 +267,7 @@ export interface paths {
             cookie?: never;
         };
         /** Read Country Profile */
-        get: operations["read_country_profile_api_v1_countries__country_id__profile_get"];
+        get: operations["read_country_profile_api_v1_countries__country_slug__profile_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -276,7 +276,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/countries/{country_id}/scores": {
+    "/api/v1/countries/{country_slug}/scores": {
         parameters: {
             query?: never;
             header?: never;
@@ -284,7 +284,7 @@ export interface paths {
             cookie?: never;
         };
         /** Read Country Scores */
-        get: operations["read_country_scores_api_v1_countries__country_id__scores_get"];
+        get: operations["read_country_scores_api_v1_countries__country_slug__scores_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -446,7 +446,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/countries/{country_id}/legal-signals": {
+    "/api/v1/countries/{country_slug}/legal-signals": {
         parameters: {
             query?: never;
             header?: never;
@@ -454,7 +454,7 @@ export interface paths {
             cookie?: never;
         };
         /** Read Country Legal Signals */
-        get: operations["read_country_legal_signals_api_v1_countries__country_id__legal_signals_get"];
+        get: operations["read_country_legal_signals_api_v1_countries__country_slug__legal_signals_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -11255,14 +11255,14 @@ export interface operations {
             };
         };
     };
-    read_country_profile_api_v1_countries__country_id__profile_get: {
+    read_country_profile_api_v1_countries__country_slug__profile_get: {
         parameters: {
             query?: {
                 locale?: "en" | "ru";
             };
             header?: never;
             path: {
-                country_id: string;
+                country_slug: string;
             };
             cookie?: never;
         };
@@ -11288,7 +11288,7 @@ export interface operations {
             };
         };
     };
-    read_country_scores_api_v1_countries__country_id__scores_get: {
+    read_country_scores_api_v1_countries__country_slug__scores_get: {
         parameters: {
             query?: {
                 limit?: number;
@@ -11297,7 +11297,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                country_id: string;
+                country_slug: string;
             };
             cookie?: never;
         };
@@ -11641,7 +11641,7 @@ export interface operations {
             };
         };
     };
-    read_country_legal_signals_api_v1_countries__country_id__legal_signals_get: {
+    read_country_legal_signals_api_v1_countries__country_slug__legal_signals_get: {
         parameters: {
             query?: {
                 signal_type?: string | null;
@@ -11656,7 +11656,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                country_id: string;
+                country_slug: string;
             };
             cookie?: never;
         };

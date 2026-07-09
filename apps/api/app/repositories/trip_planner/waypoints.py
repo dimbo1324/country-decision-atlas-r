@@ -31,7 +31,7 @@ def list_waypoints(
             {WAYPOINT_FIELDS}
         FROM trip_waypoints tw
         JOIN countries c ON c.id = tw.country_id
-        WHERE tw.trip_id::text = %s
+        WHERE tw.trip_id = %s::uuid
         ORDER BY tw.position, tw.created_at
         """,
         (trip_id,),
@@ -48,7 +48,7 @@ def get_waypoint_for_trip(
             {WAYPOINT_FIELDS}
         FROM trip_waypoints tw
         JOIN countries c ON c.id = tw.country_id
-        WHERE tw.trip_id::text = %s AND tw.id::text = %s
+        WHERE tw.trip_id = %s::uuid AND tw.id = %s::uuid
         """,
         (trip_id, waypoint_id),
     )
@@ -60,7 +60,7 @@ def next_waypoint_position(connection: Connection[Any], trip_id: str) -> int:
         """
         SELECT COALESCE(MAX(position), 0) + 1 AS next_position
         FROM trip_waypoints
-        WHERE trip_id::text = %s
+        WHERE trip_id = %s::uuid
         """,
         (trip_id,),
     )
@@ -138,7 +138,7 @@ def update_waypoint(
             planned_from = %s,
             planned_to = %s,
             notes = %s
-        WHERE id::text = %s AND trip_id::text = %s
+        WHERE id = %s::uuid AND trip_id = %s::uuid
         RETURNING id::text AS id
         """,
         (
@@ -167,7 +167,7 @@ def delete_waypoint(
         connection,
         """
         DELETE FROM trip_waypoints
-        WHERE trip_id::text = %s AND id::text = %s
+        WHERE trip_id = %s::uuid AND id = %s::uuid
         RETURNING id
         """,
         (trip_id, waypoint_id),
@@ -189,7 +189,7 @@ def reorder_waypoints(
             """
             UPDATE trip_waypoints
             SET position = %s
-            WHERE id::text = %s AND trip_id::text = %s
+            WHERE id = %s::uuid AND trip_id = %s::uuid
             """,
             (_REORDER_STAGING_OFFSET + offset, waypoint_id, trip_id),
         )
@@ -198,7 +198,7 @@ def reorder_waypoints(
             """
             UPDATE trip_waypoints
             SET position = %s
-            WHERE id::text = %s AND trip_id::text = %s
+            WHERE id = %s::uuid AND trip_id = %s::uuid
             """,
             (index, waypoint_id, trip_id),
         )

@@ -16,6 +16,7 @@ from app.services.capabilities import MODERATOR_BOARD
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(
@@ -38,11 +39,11 @@ def list_migration_board_posts_for_admin(
 
 @router.get("/posts/{post_id}", response_model=AdminMigrationBoardPost)
 def get_migration_board_post_for_admin(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_capability(MODERATOR_BOARD))],
 ) -> dict[str, Any]:
-    return service.get_post_for_moderation(connection, post_id)
+    return service.get_post_for_moderation(connection, str(post_id))
 
 
 @router.post(
@@ -50,14 +51,14 @@ def get_migration_board_post_for_admin(
     response_model=ModerateMigrationBoardPostResponse,
 )
 def approve_migration_board_post(
-    post_id: str,
+    post_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(MODERATOR_BOARD))
     ],
 ) -> dict[str, Any]:
     post = service.approve_post(
-        connection, current_user=current_user, post_id=post_id
+        connection, current_user=current_user, post_id=str(post_id)
     )
     connection.commit()
     return {"post": post}
@@ -68,7 +69,7 @@ def approve_migration_board_post(
     response_model=ModerateMigrationBoardPostResponse,
 )
 def reject_migration_board_post(
-    post_id: str,
+    post_id: UUID,
     payload: ModerateMigrationBoardPostRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -78,7 +79,7 @@ def reject_migration_board_post(
     post = service.reject_post(
         connection,
         current_user=current_user,
-        post_id=post_id,
+        post_id=str(post_id),
         reason=payload.moderation_reason,
     )
     connection.commit()
@@ -90,7 +91,7 @@ def reject_migration_board_post(
     response_model=ModerateMigrationBoardPostResponse,
 )
 def hide_migration_board_post(
-    post_id: str,
+    post_id: UUID,
     payload: ModerateMigrationBoardPostRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -100,7 +101,7 @@ def hide_migration_board_post(
     post = service.hide_post(
         connection,
         current_user=current_user,
-        post_id=post_id,
+        post_id=str(post_id),
         reason=payload.moderation_reason,
     )
     connection.commit()
@@ -125,7 +126,7 @@ def list_migration_board_reports_for_admin(
     response_model=ReviewMigrationBoardReportResponse,
 )
 def resolve_migration_board_report(
-    report_id: str,
+    report_id: UUID,
     payload: ReviewMigrationBoardReportRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -135,7 +136,7 @@ def resolve_migration_board_report(
     report = service.resolve_report(
         connection,
         current_user=current_user,
-        report_id=report_id,
+        report_id=str(report_id),
         resolution_note=payload.resolution_note,
         hide_related_post=payload.hide_post,
     )
@@ -148,7 +149,7 @@ def resolve_migration_board_report(
     response_model=ReviewMigrationBoardReportResponse,
 )
 def dismiss_migration_board_report(
-    report_id: str,
+    report_id: UUID,
     payload: ReviewMigrationBoardReportRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -158,7 +159,7 @@ def dismiss_migration_board_report(
     report = service.dismiss_report(
         connection,
         current_user=current_user,
-        report_id=report_id,
+        report_id=str(report_id),
         resolution_note=payload.resolution_note,
     )
     connection.commit()
@@ -170,8 +171,8 @@ def dismiss_migration_board_report(
     response_model=ThreadMessageListResponse,
 )
 def get_migration_board_thread_messages_for_admin(
-    thread_id: str,
-    report_id: str,
+    thread_id: UUID,
+    report_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(MODERATOR_BOARD))
@@ -180,6 +181,6 @@ def get_migration_board_thread_messages_for_admin(
     return service.get_thread_messages_for_moderation(
         connection,
         current_user=current_user,
-        thread_id=thread_id,
-        report_id=report_id,
+        thread_id=str(thread_id),
+        report_id=str(report_id),
     )

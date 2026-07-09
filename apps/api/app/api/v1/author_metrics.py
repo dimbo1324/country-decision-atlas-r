@@ -25,6 +25,7 @@ from app.services.capabilities import AUTHOR_METRICS
 from fastapi import APIRouter, Depends, Query, status
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(tags=["author-metrics"])
@@ -34,20 +35,20 @@ router = APIRouter(tags=["author-metrics"])
     "/authors/{user_id}/metrics", response_model=PublicAuthorMetricListResponse
 )
 def list_author_public_metrics(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> dict[str, Any]:
-    return service.list_public_definitions_for_author(connection, user_id)
+    return service.list_public_definitions_for_author(connection, str(user_id))
 
 
 @router.get(
     "/authors/{user_id}/reputation", response_model=AuthorReputationResponse
 )
 def get_author_reputation(
-    user_id: str,
+    user_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> dict[str, Any]:
-    reputation = service.get_reputation_for_author(connection, user_id)
+    reputation = service.get_reputation_for_author(connection, str(user_id))
     if reputation is None:
         raise api_error(
             404,
@@ -103,14 +104,14 @@ def create_my_author_metric(
     response_model=MyAuthorMetricDefinition,
 )
 def get_my_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(AUTHOR_METRICS))
     ],
 ) -> dict[str, Any]:
     return service.get_my_definition(
-        connection, current_user=current_user, definition_id=definition_id
+        connection, current_user=current_user, definition_id=str(definition_id)
     )
 
 
@@ -119,7 +120,7 @@ def get_my_author_metric(
     response_model=MyAuthorMetricDefinition,
 )
 def update_my_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     payload: UpdateAuthorMetricRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -129,7 +130,7 @@ def update_my_author_metric(
     definition = service.update_my_definition(
         connection,
         current_user=current_user,
-        definition_id=definition_id,
+        definition_id=str(definition_id),
         payload=payload,
     )
     connection.commit()
@@ -141,14 +142,14 @@ def update_my_author_metric(
     response_model=SubmitAuthorMetricResponse,
 )
 def submit_my_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(AUTHOR_METRICS))
     ],
 ) -> dict[str, Any]:
     definition = service.submit_my_definition(
-        connection, current_user=current_user, definition_id=definition_id
+        connection, current_user=current_user, definition_id=str(definition_id)
     )
     connection.commit()
     return {"definition": definition}
@@ -159,14 +160,14 @@ def submit_my_author_metric(
     response_model=ArchiveAuthorMetricResponse,
 )
 def archive_my_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(AUTHOR_METRICS))
     ],
 ) -> dict[str, Any]:
     definition = service.archive_my_definition(
-        connection, current_user=current_user, definition_id=definition_id
+        connection, current_user=current_user, definition_id=str(definition_id)
     )
     connection.commit()
     return {"definition": definition}
@@ -177,14 +178,14 @@ def archive_my_author_metric(
     response_model=AuthorMetricValueListResponse,
 )
 def list_my_author_metric_values(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(AUTHOR_METRICS))
     ],
 ) -> dict[str, Any]:
     return service.list_values_for_my_definition(
-        connection, current_user=current_user, definition_id=definition_id
+        connection, current_user=current_user, definition_id=str(definition_id)
     )
 
 
@@ -193,7 +194,7 @@ def list_my_author_metric_values(
     response_model=AuthorMetricValueListResponse,
 )
 def bulk_upsert_my_author_metric_values(
-    definition_id: str,
+    definition_id: UUID,
     payload: BulkUpsertAuthorMetricValuesRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -203,7 +204,7 @@ def bulk_upsert_my_author_metric_values(
     result = service.bulk_upsert_values(
         connection,
         current_user=current_user,
-        definition_id=definition_id,
+        definition_id=str(definition_id),
         items=payload.items,
     )
     connection.commit()
@@ -216,7 +217,7 @@ def bulk_upsert_my_author_metric_values(
     status_code=status.HTTP_201_CREATED,
 )
 def fork_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     payload: ForkAuthorMetricRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -226,7 +227,7 @@ def fork_author_metric(
     definition = service.fork_definition(
         connection,
         current_user=current_user,
-        source_definition_id=definition_id,
+        source_definition_id=str(definition_id),
         slug=payload.slug,
     )
     connection.commit()
@@ -255,12 +256,14 @@ def create_my_subscription(
 
 @router.delete("/me/subscriptions/{subscription_id}", status_code=204)
 def delete_my_subscription(
-    subscription_id: str,
+    subscription_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_user)],
 ) -> None:
     service.delete_subscription(
-        connection, current_user=current_user, subscription_id=subscription_id
+        connection,
+        current_user=current_user,
+        subscription_id=str(subscription_id),
     )
     connection.commit()
 

@@ -100,7 +100,7 @@ def list_active_country_slugs(connection: Connection[Any]) -> list[str]:
 
 def get_country(
     connection: Connection[Any],
-    country_id: str,
+    country_slug: str,
     locale: str,
 ) -> dict[str, Any] | None:
     requested_locale = validate_locale(locale)
@@ -108,22 +108,21 @@ def get_country(
         connection,
         COUNTRY_SELECT
         + """
-        WHERE (c.id::text = %s OR c.slug = %s) AND c.is_demo = FALSE
+        WHERE c.slug = %s AND c.is_demo = FALSE
         """,
         (
             requested_locale,
             requested_locale,
             requested_locale,
             requested_locale,
-            country_id,
-            country_id,
+            country_slug,
         ),
     )
 
 
 def get_profile(
     connection: Connection[Any],
-    country_id: str,
+    country_slug: str,
     locale: str,
 ) -> dict[str, Any] | None:
     requested_locale = validate_locale(locale)
@@ -147,7 +146,7 @@ def get_profile(
             %s AS translation_status
         FROM country_profiles cp
         JOIN countries c ON c.id = cp.country_id
-        WHERE c.id::text = %s OR c.slug = %s
+        WHERE c.slug = %s
         """,
-        (status, country_id, country_id),
+        (status, country_slug),
     )

@@ -87,7 +87,7 @@ def get_route_ai_context(
     ]
     params: list[Any] = [locale]
     if route_id:
-        filters.append("sd.entity_id::text = %s")
+        filters.append("sd.entity_id = %s::uuid")
         params.append(route_id)
     if route_slug:
         filters.append("sd.path LIKE %s")

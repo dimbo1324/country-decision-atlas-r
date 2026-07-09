@@ -1,11 +1,9 @@
-from app.core.database import fetch_one
 from app.core.locales import SOURCE_LOCALE, validate_locale
 from app.schemas.common import (
     LocaleResolution,
     TranslationStatus,
     locale_resolution,
 )
-from psycopg import Connection
 from typing import Any
 
 
@@ -64,18 +62,3 @@ def build_locale(
             locale, SOURCE_LOCALE, TranslationStatus.fallback
         )
     return locale_resolution(locale, SOURCE_LOCALE, TranslationStatus.missing)
-
-
-def require_country_id(connection: Connection[Any], country_id: str) -> str:
-    row = fetch_one(
-        connection,
-        """
-        SELECT id::text AS id
-        FROM countries
-        WHERE id::text = %s OR slug = %s
-        """,
-        (country_id, country_id),
-    )
-    if row is None:
-        raise LookupError("Country not found.")
-    return str(row["id"])

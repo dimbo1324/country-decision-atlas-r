@@ -23,6 +23,7 @@ from app.services.capabilities import CONTRIBUTOR_COUNTRIES
 from fastapi import APIRouter, Depends, Query, status
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(tags=["country-contribution"])
@@ -67,13 +68,13 @@ def list_my_country_proposals(
     response_model=CountryProposalResponse,
 )
 def get_my_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Contributor,
 ) -> dict[str, Any]:
     return {
         "item": service.get_my_proposal(
-            connection, current_user=current_user, proposal_id=proposal_id
+            connection, current_user=current_user, proposal_id=str(proposal_id)
         )
     }
 
@@ -83,7 +84,7 @@ def get_my_country_proposal(
     response_model=CountryProposalResponse,
 )
 def patch_my_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: CountryProposalPatch,
     connection: _Conn,
     current_user: _Contributor,
@@ -91,7 +92,7 @@ def patch_my_country_proposal(
     proposal = service.patch_my_proposal(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         payload=payload,
     )
     connection.commit()
@@ -103,12 +104,12 @@ def patch_my_country_proposal(
     response_model=CountryProposalResponse,
 )
 def submit_my_country_proposal(
-    proposal_id: str,
+    proposal_id: UUID,
     connection: _Conn,
     current_user: _Contributor,
 ) -> dict[str, Any]:
     proposal = service.submit_my_proposal(
-        connection, current_user=current_user, proposal_id=proposal_id
+        connection, current_user=current_user, proposal_id=str(proposal_id)
     )
     connection.commit()
     return {"item": proposal}
@@ -119,7 +120,7 @@ def submit_my_country_proposal(
     response_model=GenericItemResponse,
 )
 def upsert_my_country_proposal_card(
-    proposal_id: str,
+    proposal_id: UUID,
     locale: str,
     payload: CountryCardUpsert,
     connection: _Conn,
@@ -128,7 +129,7 @@ def upsert_my_country_proposal_card(
     item = service.upsert_my_card(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         locale=locale,
         payload=payload,
     )
@@ -142,7 +143,7 @@ def upsert_my_country_proposal_card(
     status_code=status.HTTP_201_CREATED,
 )
 def create_my_country_proposal_source(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ContributorSourceCreate,
     connection: _Conn,
     current_user: _Contributor,
@@ -150,7 +151,7 @@ def create_my_country_proposal_source(
     item = service.create_my_source(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         payload=payload,
     )
     connection.commit()
@@ -162,8 +163,8 @@ def create_my_country_proposal_source(
     response_model=GenericItemResponse,
 )
 def patch_my_country_proposal_source(
-    proposal_id: str,
-    source_id: str,
+    proposal_id: UUID,
+    source_id: UUID,
     payload: ContributorSourcePatch,
     connection: _Conn,
     current_user: _Contributor,
@@ -171,8 +172,8 @@ def patch_my_country_proposal_source(
     item = service.patch_my_source(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
-        source_id=source_id,
+        proposal_id=str(proposal_id),
+        source_id=str(source_id),
         payload=payload,
     )
     connection.commit()
@@ -185,7 +186,7 @@ def patch_my_country_proposal_source(
     status_code=status.HTTP_201_CREATED,
 )
 def create_my_country_proposal_evidence_item(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ContributorEvidenceItemCreate,
     connection: _Conn,
     current_user: _Contributor,
@@ -193,7 +194,7 @@ def create_my_country_proposal_evidence_item(
     item = service.create_my_evidence_item(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         payload=payload,
     )
     connection.commit()
@@ -205,8 +206,8 @@ def create_my_country_proposal_evidence_item(
     response_model=GenericItemResponse,
 )
 def patch_my_country_proposal_evidence_item(
-    proposal_id: str,
-    evidence_item_id: str,
+    proposal_id: UUID,
+    evidence_item_id: UUID,
     payload: ContributorEvidenceItemPatch,
     connection: _Conn,
     current_user: _Contributor,
@@ -214,8 +215,8 @@ def patch_my_country_proposal_evidence_item(
     item = service.patch_my_evidence_item(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
-        evidence_item_id=evidence_item_id,
+        proposal_id=str(proposal_id),
+        evidence_item_id=str(evidence_item_id),
         payload=payload,
     )
     connection.commit()
@@ -228,7 +229,7 @@ def patch_my_country_proposal_evidence_item(
     status_code=status.HTTP_201_CREATED,
 )
 def create_my_country_proposal_legal_signal(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ContributorLegalSignalCreate,
     connection: _Conn,
     current_user: _Contributor,
@@ -236,7 +237,7 @@ def create_my_country_proposal_legal_signal(
     item = service.create_my_legal_signal(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         payload=payload,
     )
     connection.commit()
@@ -248,8 +249,8 @@ def create_my_country_proposal_legal_signal(
     response_model=GenericItemResponse,
 )
 def patch_my_country_proposal_legal_signal(
-    proposal_id: str,
-    signal_id: str,
+    proposal_id: UUID,
+    signal_id: UUID,
     payload: ContributorLegalSignalPatch,
     connection: _Conn,
     current_user: _Contributor,
@@ -257,8 +258,8 @@ def patch_my_country_proposal_legal_signal(
     item = service.patch_my_legal_signal(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
-        signal_id=signal_id,
+        proposal_id=str(proposal_id),
+        signal_id=str(signal_id),
         payload=payload,
     )
     connection.commit()
@@ -271,7 +272,7 @@ def patch_my_country_proposal_legal_signal(
     status_code=status.HTTP_201_CREATED,
 )
 def create_my_country_proposal_timeline_event(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: ContributorTimelineEventCreate,
     connection: _Conn,
     current_user: _Contributor,
@@ -279,7 +280,7 @@ def create_my_country_proposal_timeline_event(
     item = service.create_my_timeline_event(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         payload=payload,
     )
     connection.commit()
@@ -291,7 +292,7 @@ def create_my_country_proposal_timeline_event(
     response_model=GenericListResponse,
 )
 def upsert_my_country_proposal_metric_values(
-    proposal_id: str,
+    proposal_id: UUID,
     payload: CountryMetricValuesUpsert,
     connection: _Conn,
     current_user: _Contributor,
@@ -299,7 +300,7 @@ def upsert_my_country_proposal_metric_values(
     result = service.upsert_my_metric_values(
         connection,
         current_user=current_user,
-        proposal_id=proposal_id,
+        proposal_id=str(proposal_id),
         entries=payload.values,
     )
     connection.commit()

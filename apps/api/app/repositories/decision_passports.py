@@ -131,7 +131,7 @@ def revoke_decision_passport(
         f"""
         UPDATE decision_passports
         SET status = 'revoked'
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING
             {PASSPORT_FIELDS}
         """,

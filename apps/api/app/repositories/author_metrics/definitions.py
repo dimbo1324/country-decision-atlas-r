@@ -131,7 +131,7 @@ def update_definition(
             published_at = CASE WHEN %s THEN NULL ELSE published_at END,
             version = CASE WHEN %s THEN version + 1 ELSE version END,
             updated_at = NOW()
-        WHERE id::text = %s
+        WHERE id = %s::uuid
         RETURNING id::text AS id
         """,
         (
@@ -162,7 +162,7 @@ def get_definition_by_id(
         SELECT
             {DEFINITION_SELECT}
         {DEFINITION_JOINS}
-        WHERE amd.id::text = %s
+        WHERE amd.id = %s::uuid
         """,
         (definition_id,),
     )
@@ -177,7 +177,7 @@ def get_definition_for_author(
         SELECT
             {DEFINITION_SELECT}
         {DEFINITION_JOINS}
-        WHERE amd.id::text = %s AND amd.author_user_id::text = %s
+        WHERE amd.id = %s::uuid AND amd.author_user_id = %s::uuid
         """,
         (definition_id, author_user_id),
     )
@@ -192,7 +192,7 @@ def get_definition_by_author_slug(
         SELECT
             {DEFINITION_SELECT}
         {DEFINITION_JOINS}
-        WHERE amd.author_user_id::text = %s AND amd.slug = %s
+        WHERE amd.author_user_id = %s::uuid AND amd.slug = %s
         """,
         (author_user_id, slug),
     )
@@ -207,7 +207,7 @@ def list_definitions_for_author(
         SELECT
             {DEFINITION_SELECT}
         {DEFINITION_JOINS}
-        WHERE amd.author_user_id::text = %s
+        WHERE amd.author_user_id = %s::uuid
         ORDER BY amd.updated_at DESC, amd.created_at DESC
         """,
         (author_user_id,),
@@ -223,7 +223,7 @@ def list_published_definitions_for_author(
         SELECT
             {DEFINITION_SELECT}
         {DEFINITION_JOINS}
-        WHERE amd.author_user_id::text = %s
+        WHERE amd.author_user_id = %s::uuid
           AND amd.status = 'published'
           AND amd.visibility = 'public'
         ORDER BY amd.published_at DESC NULLS LAST
@@ -248,7 +248,7 @@ def list_published_definitions_for_country(
             amv.updated_at AS value_updated_at
         {DEFINITION_JOINS}
         JOIN author_metric_values amv ON amv.metric_id = amd.id
-        WHERE amv.country_id::text = %s
+        WHERE amv.country_id = %s::uuid
           AND amd.status = 'published'
           AND amd.visibility = 'public'
         ORDER BY amd.published_at DESC NULLS LAST
@@ -295,7 +295,7 @@ def submit_definition_for_review(
             status = 'review',
             submitted_at = NOW(),
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('draft', 'rejected', 'archived')
+        WHERE id = %s::uuid AND status IN ('draft', 'rejected', 'archived')
         RETURNING id::text AS id
         """,
         (definition_id,),
@@ -318,7 +318,7 @@ def publish_definition(
             published_at = NOW(),
             rejected_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s AND status = 'review'
+        WHERE id = %s::uuid AND status = 'review'
         RETURNING id::text AS id
         """,
         (moderator_user_id, definition_id),
@@ -345,7 +345,7 @@ def reject_definition(
             rejected_at = NOW(),
             published_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('review', 'published')
+        WHERE id = %s::uuid AND status IN ('review', 'published')
         RETURNING id::text AS id
         """,
         (moderator_user_id, reason, definition_id),
@@ -365,7 +365,7 @@ def archive_definition(
             archived_at = NOW(),
             published_at = NULL,
             updated_at = NOW()
-        WHERE id::text = %s AND status IN ('draft', 'review', 'published', 'rejected')
+        WHERE id = %s::uuid AND status IN ('draft', 'review', 'published', 'rejected')
         RETURNING id::text AS id
         """,
         (definition_id,),

@@ -12,6 +12,7 @@ from app.services.capabilities import MODERATOR_METRICS
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(
@@ -34,25 +35,27 @@ def list_author_metrics_for_admin(
 
 @router.get("/{definition_id}", response_model=AdminAuthorMetricDefinition)
 def get_author_metric_for_admin(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_capability(MODERATOR_METRICS))],
 ) -> dict[str, Any]:
-    return service.get_definition_for_moderation(connection, definition_id)
+    return service.get_definition_for_moderation(connection, str(definition_id))
 
 
 @router.post(
     "/{definition_id}/approve", response_model=ModerateAuthorMetricResponse
 )
 def approve_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
         CurrentUser, Depends(require_capability(MODERATOR_METRICS))
     ],
 ) -> dict[str, Any]:
     definition = service.approve_definition(
-        connection, current_user=current_user, definition_id=definition_id
+        connection,
+        current_user=current_user,
+        definition_id=str(definition_id),
     )
     connection.commit()
     return {"definition": definition}
@@ -62,7 +65,7 @@ def approve_author_metric(
     "/{definition_id}/reject", response_model=ModerateAuthorMetricResponse
 )
 def reject_author_metric(
-    definition_id: str,
+    definition_id: UUID,
     payload: ModerateAuthorMetricRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[
@@ -72,7 +75,7 @@ def reject_author_metric(
     definition = service.reject_definition(
         connection,
         current_user=current_user,
-        definition_id=definition_id,
+        definition_id=str(definition_id),
         reason=payload.moderation_reason,
     )
     connection.commit()

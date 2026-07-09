@@ -30,6 +30,7 @@ from app.services.capabilities import MODERATOR_COMMUNITY
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin/community", tags=["admin-community"])
@@ -62,13 +63,13 @@ def list_questions_for_admin(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_question_status(
-    question_id: str,
+    question_id: UUID,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_question_status(
-        connection, question_id, payload.status, current_user.id
+        connection, str(question_id), payload.status, current_user.id
     )
     connection.commit()
     return row
@@ -94,13 +95,13 @@ def list_answers_for_admin(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_answer_status(
-    answer_id: str,
+    answer_id: UUID,
     payload: CommunityStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = community_service.update_answer_status(
-        connection, answer_id, payload.status, current_user.id
+        connection, str(answer_id), payload.status, current_user.id
     )
     connection.commit()
     return row
@@ -128,14 +129,14 @@ def list_data_error_reports_for_admin(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_data_error_report_status(
-    report_id: str,
+    report_id: UUID,
     payload: DataErrorReportStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_moderator_or_editor)],
 ) -> dict[str, Any]:
     row = data_error_reports_service.update_data_error_report_status(
         connection,
-        report_id,
+        str(report_id),
         payload.status,
         current_user.id,
         payload.resolution_note,
@@ -166,13 +167,13 @@ def list_user_story_ratings_for_admin(
     responses={**_RESPONSES, 404: {"description": "Not found"}},
 )
 def update_user_story_rating_status(
-    rating_id: str,
+    rating_id: UUID,
     payload: UserStoryRatingStatusUpdateRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_moderator)],
 ) -> dict[str, Any]:
     row = user_story_ratings_service.update_user_story_rating_status(
-        connection, rating_id, payload.status, current_user.id
+        connection, str(rating_id), payload.status, current_user.id
     )
     connection.commit()
     return row

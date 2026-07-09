@@ -47,7 +47,7 @@ REGULAR_USER = CurrentUser(
 
 def _user_row(**overrides: Any) -> dict[str, Any]:
     row = {
-        "id": "target-id",
+        "id": "77777777-7777-7777-7777-777777777777",
         "email": "target@example.local",
         "display_name": "Target",
         "role": "user",
@@ -77,7 +77,7 @@ def test_update_user_role_blocks_non_owner_from_promoting_to_owner(
         service.update_user_role(
             CONNECTION,
             current_user=ADMIN_USER,
-            user_id="target-id",
+            user_id="77777777-7777-7777-7777-777777777777",
             new_role="owner",
         )
     assert exc_info.value.status_code == 403
@@ -95,7 +95,7 @@ def test_update_user_role_blocks_non_owner_from_demoting_an_owner(
         service.update_user_role(
             CONNECTION,
             current_user=ADMIN_USER,
-            user_id="target-id",
+            user_id="77777777-7777-7777-7777-777777777777",
             new_role="editor",
         )
     assert exc_info.value.status_code == 403
@@ -111,7 +111,7 @@ def test_update_user_role_allows_owner_to_promote_to_owner(
     updated = service.update_user_role(
         CONNECTION,
         current_user=OWNER_USER,
-        user_id="target-id",
+        user_id="77777777-7777-7777-7777-777777777777",
         new_role="owner",
     )
     assert updated["role"] == "owner"
@@ -127,7 +127,7 @@ def test_update_user_role_allows_admin_for_non_owner_roles(
     updated = service.update_user_role(
         CONNECTION,
         current_user=ADMIN_USER,
-        user_id="target-id",
+        user_id="77777777-7777-7777-7777-777777777777",
         new_role="editor",
     )
     assert updated["role"] == "editor"
@@ -143,7 +143,7 @@ def test_update_user_status_blocks_non_owner_from_changing_owner_status(
         service.update_user_status(
             CONNECTION,
             current_user=ADMIN_USER,
-            user_id="target-id",
+            user_id="77777777-7777-7777-7777-777777777777",
             new_status="suspended",
         )
     assert exc_info.value.status_code == 403
@@ -163,7 +163,7 @@ def test_update_user_status_allows_owner_to_change_owner_status(
     updated = service.update_user_status(
         CONNECTION,
         current_user=OWNER_USER,
-        user_id="target-id",
+        user_id="77777777-7777-7777-7777-777777777777",
         new_status="suspended",
     )
     assert updated["status"] == "suspended"
@@ -179,7 +179,7 @@ def test_update_user_status_allows_admin_for_non_owner_target(
     updated = service.update_user_status(
         CONNECTION,
         current_user=ADMIN_USER,
-        user_id="target-id",
+        user_id="77777777-7777-7777-7777-777777777777",
         new_status="suspended",
     )
     assert updated["status"] == "suspended"
@@ -228,7 +228,7 @@ def test_list_users_with_admin_returns_200(
     assert response.status_code == 200
     body = response.json()
     assert body["total"] == 1
-    assert body["items"][0]["id"] == "target-id"
+    assert body["items"][0]["id"] == "77777777-7777-7777-7777-777777777777"
 
 
 def test_update_role_endpoint_with_admin_returns_200(
@@ -240,7 +240,7 @@ def test_update_role_endpoint_with_admin_returns_200(
     )
     client = _client(ADMIN_USER)
     response = client.patch(
-        "/api/v1/admin/users/target-id/role",
+        "/api/v1/admin/users/77777777-7777-7777-7777-777777777777/role",
         json={"role": "editor"},
         headers={"Authorization": "Bearer admin-token"},
     )
@@ -254,7 +254,7 @@ def test_update_role_endpoint_to_owner_with_admin_returns_403(
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
     client = _client(ADMIN_USER)
     response = client.patch(
-        "/api/v1/admin/users/target-id/role",
+        "/api/v1/admin/users/77777777-7777-7777-7777-777777777777/role",
         json={"role": "owner"},
         headers={"Authorization": "Bearer admin-token"},
     )
@@ -268,7 +268,7 @@ def test_revoke_all_user_sessions_endpoint_returns_count(
     monkeypatch.setattr(repository, "revoke_all_user_sessions", lambda *_a: 2)
     client = _client(ADMIN_USER)
     response = client.post(
-        "/api/v1/admin/users/target-id/sessions/revoke-all",
+        "/api/v1/admin/users/77777777-7777-7777-7777-777777777777/sessions/revoke-all",
         headers={"Authorization": "Bearer admin-token"},
     )
     assert response.status_code == 200

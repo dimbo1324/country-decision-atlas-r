@@ -31,6 +31,7 @@ from app.services.data_quality import build_data_quality_report
 from fastapi import APIRouter, Depends
 from psycopg import Connection
 from typing import Annotated, Any
+from uuid import UUID
 
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -64,13 +65,13 @@ def admin_create_source(
     responses=ADMIN_RESPONSES,
 )
 def admin_patch_source(
-    source_id: str,
+    source_id: UUID,
     payload: SourcePatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminSourceResponse:
     row = admin_content.patch_source(
-        connection, source_id, payload, current_user.email
+        connection, str(source_id), payload, current_user.email
     )
     connection.commit()
     return AdminSourceResponse(item=row)
@@ -100,13 +101,13 @@ def admin_create_evidence_item(
     responses=ADMIN_RESPONSES,
 )
 def admin_patch_evidence_item(
-    evidence_item_id: str,
+    evidence_item_id: UUID,
     payload: EvidenceItemPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminEvidenceItemResponse:
     row = admin_content.patch_evidence_item(
-        connection, evidence_item_id, payload, current_user.email
+        connection, str(evidence_item_id), payload, current_user.email
     )
     connection.commit()
     return AdminEvidenceItemResponse(item=row)
@@ -136,13 +137,13 @@ def admin_create_legal_signal(
     responses=ADMIN_RESPONSES,
 )
 def admin_patch_legal_signal(
-    signal_id: str,
+    signal_id: UUID,
     payload: LegalSignalPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminLegalSignalResponse:
     row = admin_content.patch_legal_signal(
-        connection, signal_id, payload, current_user.email
+        connection, str(signal_id), payload, current_user.email
     )
     connection.commit()
     return AdminLegalSignalResponse(item=row)
@@ -190,13 +191,13 @@ def admin_create_user_story(
     responses=ADMIN_RESPONSES,
 )
 def admin_patch_user_story(
-    story_id: str,
+    story_id: UUID,
     payload: UserStoryPatch,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     current_user: Annotated[CurrentUser, Depends(require_editor)],
 ) -> AdminUserStoryResponse:
     row = admin_content.patch_user_story(
-        connection, story_id, payload, current_user.email
+        connection, str(story_id), payload, current_user.email
     )
     connection.commit()
     return AdminUserStoryResponse(item=row)

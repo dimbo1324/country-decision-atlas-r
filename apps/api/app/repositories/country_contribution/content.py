@@ -27,7 +27,7 @@ def get_card(
                cost_of_living_overview, business_overview, safety_overview,
                legal_signals_summary, risk_summary, source_summary
         FROM country_cards
-        WHERE country_id::text = %s AND locale = %s
+        WHERE country_id = %s::uuid AND locale = %s
         """,
         (country_id, locale),
     )
@@ -65,7 +65,7 @@ def get_legal_signal_country_id(
 ) -> str | None:
     row = fetch_one(
         connection,
-        "SELECT country_id::text AS country_id FROM legal_signals WHERE id::text = %s",
+        "SELECT country_id::text AS country_id FROM legal_signals WHERE id = %s::uuid",
         (legal_signal_id,),
     )
     return str(row["country_id"]) if row else None
@@ -168,7 +168,7 @@ def list_metric_values_for_country(
                cmv.source_name, cmv.source_url, cmv.reliability
         FROM country_metric_values cmv
         JOIN cii_metric_definitions cmd ON cmd.id = cmv.metric_id
-        WHERE cmv.country_id::text = %s
+        WHERE cmv.country_id = %s::uuid
         """,
         (country_id,),
     )
@@ -178,7 +178,7 @@ def source_exists(connection: Connection[Any], source_id: str) -> bool:
     return (
         fetch_one(
             connection,
-            "SELECT 1 FROM sources WHERE id::text = %s",
+            "SELECT 1 FROM sources WHERE id = %s::uuid",
             (source_id,),
         )
         is not None
@@ -191,7 +191,7 @@ def evidence_item_exists(
     return (
         fetch_one(
             connection,
-            "SELECT 1 FROM evidence_items WHERE id::text = %s",
+            "SELECT 1 FROM evidence_items WHERE id = %s::uuid",
             (evidence_item_id,),
         )
         is not None
