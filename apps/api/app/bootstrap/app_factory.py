@@ -75,14 +75,14 @@ def create_app(
         openapi_url="/api/openapi.json",
         lifespan=_lifespan(),
     )
+    _register_middleware(app, settings, rate_limit_client)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_credentials=False,
+        allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-        allow_headers=["Content-Type", "Authorization"],
+        allow_headers=["Content-Type", "Authorization", "X-CSRF-Token"],
     )
-    _register_middleware(app, settings, rate_limit_client)
     _register_exception_handlers(app)
     _register_system_routes(app, health_handler, readiness_handler)
     _register_api_routes(app)
@@ -114,6 +114,45 @@ def error_response(
 
 
 _AUTH_RATE_LIMIT_PATHS = {"/api/v1/auth/login", "/api/v1/auth/register"}
+_CSRF_EXEMPT_PATHS = {"/api/v1/auth/login", "/api/v1/auth/register"}
+_CSRF_PROTECTED_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+_CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline'; "
+    "style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data:; "
+    "font-src 'self' data:; "
+    "connect-src 'self'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'"
+)
+_PERMISSIONS_POLICY = "camera=(), microphone=(), geolocation=(), payment=()"
+
+
+def csrf_check_required(
+    *,
+    method: str,
+    path: str,
+    has_authorization_header: bool,
+    has_session_cookie: bool,
+) -> bool:
+    return (
+        method in _CSRF_PROTECTED_METHODS
+        and path not in _CSRF_EXEMPT_PATHS
+        and not has_authorization_header
+        and has_session_cookie
+    )
+
+
+def csrf_tokens_match(
+    cookie_token: str | None, header_token: str | None
+) -> bool:
+    return (
+        bool(cookie_token)
+        and bool(header_token)
+        and (cookie_token == header_token)
+    )
 
 
 def _register_middleware(
@@ -129,9 +168,37 @@ def _register_middleware(
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Content-Security-Policy"] = _CONTENT_SECURITY_POLICY
+        response.headers["Permissions-Policy"] = _PERMISSIONS_POLICY
+        if settings.security_hsts_enabled:
+            response.headers["Strict-Transport-Security"] = (
+                "max-age=63072000; includeSubDomains"
+            )
         return response
+
+    @app.middleware("http")
+    async def csrf_protection_middleware(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        needs_check = csrf_check_required(
+            method=request.method,
+            path=request.url.path,
+            has_authorization_header="authorization" in request.headers,
+            has_session_cookie=settings.auth_session_cookie_name
+            in request.cookies,
+        )
+        if needs_check:
+            cookie_token = request.cookies.get(settings.auth_csrf_cookie_name)
+            header_token = request.headers.get("x-csrf-token")
+            if not csrf_tokens_match(cookie_token, header_token):
+                return error_response(
+                    403,
+                    "csrf_token_invalid",
+                    "CSRF token is missing or invalid.",
+                )
+        return await call_next(request)
 
     @app.middleware("http")
     async def rate_limit_middleware(

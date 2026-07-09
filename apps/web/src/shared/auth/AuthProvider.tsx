@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { authApi, type AuthUser } from "../api/auth";
-import { clearStoredToken, getStoredToken, setStoredToken } from "./session";
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -27,18 +26,14 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    if (!getStoredToken()) {
-      return;
-    }
     setIsLoading(true);
     try {
       const response = await authApi.getMe();
       setUser(response.user);
     } catch {
-      clearStoredToken();
       setUser(null);
     }
     setIsLoading(false);
@@ -50,7 +45,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function login(email: string, password: string) {
     const response = await authApi.login({ email, password });
-    setStoredToken(response.token);
     setUser(response.user);
   }
 
@@ -64,13 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       password,
       display_name: displayName,
     });
-    setStoredToken(response.token);
     setUser(response.user);
   }
 
   async function logout() {
     await authApi.logout().catch(() => undefined);
-    clearStoredToken();
     setUser(null);
   }
 

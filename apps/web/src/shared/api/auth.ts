@@ -1,5 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
-import { authHeaders } from "../auth/session";
+import { csrfHeaders } from "../auth/session";
 import { apiDelete, apiGet, apiPost } from "./http";
 
 export type AuthUser = components["schemas"]["AuthUser"];
@@ -15,6 +15,12 @@ export type TelegramLinkResponse =
   components["schemas"]["TelegramLinkResponse"];
 export type TelegramLinkStatusResponse =
   components["schemas"]["TelegramLinkStatusResponse"];
+export type RevokeAllSessionsRequest =
+  components["schemas"]["RevokeAllSessionsRequest"];
+export type SecurityNotification =
+  components["schemas"]["SecurityNotification"];
+export type SecurityNotificationListResponse =
+  components["schemas"]["SecurityNotificationListResponse"];
 
 export function register(payload: RegisterRequest): Promise<AuthTokenResponse> {
   return apiPost<AuthTokenResponse, RegisterRequest>(
@@ -34,33 +40,52 @@ export function logout(): Promise<{ ok: boolean }> {
   return apiPost<{ ok: boolean }, Record<string, never>>(
     "/api/v1/auth/logout",
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function getMe(): Promise<CurrentUserResponse> {
   return apiGet<CurrentUserResponse>("/api/v1/auth/me", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
 export function listSessions(): Promise<UserSessionListResponse> {
   return apiGet<UserSessionListResponse>("/api/v1/auth/sessions", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
 export function revokeSession(sessionId: string): Promise<{ ok: boolean }> {
   return apiDelete<{ ok: boolean }>(`/api/v1/auth/sessions/${sessionId}`, {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
-export function revokeAllSessions(): Promise<{ revoked_count: number }> {
-  return apiPost<{ revoked_count: number }, Record<string, never>>(
+export function revokeAllSessions(
+  currentPassword: string,
+): Promise<{ revoked_count: number }> {
+  return apiPost<{ revoked_count: number }, RevokeAllSessionsRequest>(
     "/api/v1/auth/sessions/revoke-all",
+    { current_password: currentPassword },
+    { headers: csrfHeaders() },
+  );
+}
+
+export function listSecurityNotifications(): Promise<SecurityNotificationListResponse> {
+  return apiGet<SecurityNotificationListResponse>(
+    "/api/v1/auth/security-notifications",
+    { headers: csrfHeaders() },
+  );
+}
+
+export function acknowledgeSecurityNotification(
+  notificationId: string,
+): Promise<{ ok: boolean }> {
+  return apiPost<{ ok: boolean }, Record<string, never>>(
+    `/api/v1/auth/security-notifications/${notificationId}/ack`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -68,19 +93,19 @@ export function linkTelegram(code: string): Promise<TelegramLinkResponse> {
   return apiPost<TelegramLinkResponse, TelegramLinkRequest>(
     "/api/v1/auth/telegram/link",
     { code },
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function unlinkTelegram(): Promise<{ ok: boolean }> {
   return apiDelete<{ ok: boolean }>("/api/v1/auth/telegram/link", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
 export function getTelegramLinkStatus(): Promise<TelegramLinkStatusResponse> {
   return apiGet<TelegramLinkStatusResponse>("/api/v1/auth/telegram/link", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
@@ -92,6 +117,8 @@ export const authApi = {
   listSessions,
   revokeSession,
   revokeAllSessions,
+  listSecurityNotifications,
+  acknowledgeSecurityNotification,
   linkTelegram,
   unlinkTelegram,
   getTelegramLinkStatus,

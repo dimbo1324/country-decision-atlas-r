@@ -5875,6 +5875,12 @@ paths:
       - auth
       summary: Revoke All Sessions
       operationId: revoke_all_sessions_api_v1_auth_sessions_revoke_all_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeAllSessionsRequest'
+        required: true
       responses:
         '200':
           description: Successful Response
@@ -5882,8 +5888,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RevokeAllSessionsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
       security:
       - BearerAuth: []
+  /api/v1/auth/security-notifications:
+    get:
+      tags:
+      - auth
+      summary: List Security Notifications
+      operationId: list_security_notifications_api_v1_auth_security_notifications_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityNotificationListResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/auth/security-notifications/{notification_id}/ack:
+    post:
+      tags:
+      - auth
+      summary: Acknowledge Security Notification
+      operationId: acknowledge_security_notification_api_v1_auth_security_notifications__notification_id__ack_post
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: notification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Notification Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityNotificationAckResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/auth/telegram/link:
     get:
       tags:
@@ -10146,6 +10202,20 @@ components:
             format: date-time
           - type: 'null'
           title: Revoked At
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+        ip_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ip Display
+        is_current:
+          type: boolean
+          title: Is Current
+          default: false
       type: object
       required:
       - id
@@ -10165,6 +10235,10 @@ components:
           type: string
           format: date-time
           title: Expires At
+        is_new_device:
+          type: boolean
+          title: Is New Device
+          default: false
       type: object
       required:
       - token
@@ -16827,6 +16901,15 @@ components:
       required:
       - report
       title: ReviewMigrationBoardReportResponse
+    RevokeAllSessionsRequest:
+      properties:
+        current_password:
+          type: string
+          title: Current Password
+      type: object
+      required:
+      - current_password
+      title: RevokeAllSessionsRequest
     RevokeAllSessionsResponse:
       properties:
         revoked_count:
@@ -17529,6 +17612,59 @@ components:
       - path
       - rank
       title: SearchResultItem
+    SecurityNotification:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          const: new_device_login
+          title: Event Type
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+        ip_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ip Display
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        acknowledged_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Acknowledged At
+      type: object
+      required:
+      - id
+      - event_type
+      - created_at
+      title: SecurityNotification
+    SecurityNotificationAckResponse:
+      properties:
+        ok:
+          type: boolean
+          title: Ok
+      type: object
+      required:
+      - ok
+      title: SecurityNotificationAckResponse
+    SecurityNotificationListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/SecurityNotification'
+          type: array
+          title: Items
+      type: object
+      title: SecurityNotificationListResponse
     SendThreadMessageRequest:
       properties:
         body:

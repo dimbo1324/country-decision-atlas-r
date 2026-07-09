@@ -4,12 +4,15 @@ import re
 import secrets
 from app.core.config import Settings, get_settings
 from app.core.errors import api_error
-from app.repositories import auth as repository
+from app.core.request_context import derive_device_label, mask_ip_for_display
+from app.repositories import auth as repository, security_notifications
+from app.repositories.audit import insert_audit_event
 from app.services import rate_limiter
 from app.services.feature_flags import ensure_feature_enabled
 from datetime import UTC, datetime, timedelta
 from psycopg import Connection
 from typing import Any, cast
+from uuid import UUID
 
 
 PBKDF2_ALGORITHM = "pbkdf2_sha256"
@@ -59,8 +62,20 @@ def generate_session_token() -> str:
     return secrets.token_urlsafe(32)
 
 
+def generate_csrf_token() -> str:
+    return secrets.token_urlsafe(24)
+
+
 def hash_session_token(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def hash_device_identifier(value: str, settings: Settings) -> str:
+    return hmac.new(
+        settings.auth_device_fingerprint_salt.encode("utf-8"),
+        value.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
 
 
 def _require_auth_feature_enabled(connection: Connection[Any]) -> None:
@@ -127,12 +142,27 @@ def create_login_session(
     connection: Connection[Any],
     *,
     user_id: str,
-    user_agent_hash: str | None = None,
-    ip_hash: str | None = None,
-) -> tuple[str, dict[str, Any]]:
+    user_agent: str | None = None,
+    client_ip: str | None = None,
+    notify_new_device: bool = True,
+) -> tuple[str, dict[str, Any], bool]:
     settings = get_settings()
     raw_token = generate_session_token()
     token_hash = hash_session_token(raw_token)
+    user_agent_hash = (
+        hash_device_identifier(user_agent, settings) if user_agent else None
+    )
+    ip_hash = hash_device_identifier(client_ip, settings) if client_ip else None
+    device_label = derive_device_label(user_agent)
+    ip_display = mask_ip_for_display(client_ip)
+    device_fingerprint_hash = hash_device_identifier(
+        f"{user_agent or ''}|{client_ip or ''}", settings
+    )
+    is_new_device = notify_new_device and not (
+        repository.has_prior_session_with_fingerprint(
+            connection, user_id, device_fingerprint_hash
+        )
+    )
     session = repository.create_auth_session(
         connection,
         user_id=user_id,
@@ -140,8 +170,27 @@ def create_login_session(
         expires_at=_new_session_expiry(settings),
         user_agent_hash=user_agent_hash,
         ip_hash=ip_hash,
+        device_label=device_label,
+        ip_display=ip_display,
+        device_fingerprint_hash=device_fingerprint_hash,
     )
-    return raw_token, session
+    if is_new_device:
+        security_notifications.create_new_device_login_notification(
+            connection,
+            user_id=user_id,
+            session_id=session["id"],
+            device_label=device_label,
+            ip_display=ip_display,
+        )
+        insert_audit_event(
+            connection,
+            entity_type="auth_session",
+            entity_id=UUID(session["id"]),
+            action="new_device_login",
+            changed_by=user_id,
+            changes={"device_label": device_label, "ip_display": ip_display},
+        )
+    return raw_token, session, is_new_device
 
 
 def login_user(
@@ -149,9 +198,9 @@ def login_user(
     *,
     email: str,
     password: str,
-    user_agent_hash: str | None = None,
-    ip_hash: str | None = None,
-) -> tuple[str, dict[str, Any], dict[str, Any]]:
+    user_agent: str | None = None,
+    client_ip: str | None = None,
+) -> tuple[str, dict[str, Any], dict[str, Any], bool]:
     _require_auth_feature_enabled(connection)
     normalized_email = normalize_email(email)
     if rate_limiter.is_login_locked_out(normalized_email):
@@ -180,15 +229,15 @@ def login_user(
         )
     rate_limiter.clear_login_failures(normalized_email)
     repository.update_last_login(connection, user["id"])
-    raw_token, session = create_login_session(
+    raw_token, session, is_new_device = create_login_session(
         connection,
         user_id=user["id"],
-        user_agent_hash=user_agent_hash,
-        ip_hash=ip_hash,
+        user_agent=user_agent,
+        client_ip=client_ip,
     )
     refreshed_user = repository.get_user_by_id(connection, user["id"])
     assert refreshed_user is not None
-    return raw_token, refreshed_user, session
+    return raw_token, refreshed_user, session, is_new_device
 
 
 def logout_session(
@@ -203,6 +252,14 @@ def _should_touch_session(session: dict[str, Any], settings: Settings) -> bool:
         return True
     threshold = timedelta(minutes=settings.auth_session_touch_interval_minutes)
     return bool(datetime.now(UTC) - last_seen_at >= threshold)
+
+
+def _should_rotate_token(session: dict[str, Any], settings: Settings) -> bool:
+    last_rotated = session.get("rotated_at") or session["created_at"]
+    threshold = timedelta(
+        minutes=settings.auth_session_rotation_interval_minutes
+    )
+    return bool(datetime.now(UTC) - last_rotated >= threshold)
 
 
 def validate_session_token(
@@ -226,9 +283,24 @@ def validate_session_token(
         raise api_error(
             403, "user_deleted", "This account no longer exists.", {}
         )
-    if _should_touch_session(session, get_settings()):
-        repository.touch_session(connection, session["id"])
-    return {"user": user, "session": session}
+    settings = get_settings()
+    rotated_token: str | None = None
+    if result["matched_current_token"]:
+        if _should_rotate_token(session, settings):
+            rotated_token = generate_session_token()
+            repository.rotate_session_token(
+                connection,
+                session["id"],
+                new_token_hash=hash_session_token(rotated_token),
+                previous_token_hash=token_hash,
+                previous_token_expires_at=datetime.now(UTC)
+                + timedelta(
+                    seconds=settings.auth_session_rotation_grace_seconds
+                ),
+            )
+        elif _should_touch_session(session, settings):
+            repository.touch_session(connection, session["id"])
+    return {"user": user, "session": session, "rotated_token": rotated_token}
 
 
 def get_current_user_from_token(
@@ -237,3 +309,18 @@ def get_current_user_from_token(
     return cast(
         dict[str, Any], validate_session_token(connection, raw_token)["user"]
     )
+
+
+def require_step_up_reauthentication(
+    connection: Connection[Any], *, user_id: str, password: str
+) -> None:
+    credential = repository.get_password_credential(connection, user_id)
+    if credential is None or not verify_password(
+        password, credential.get("password_hash")
+    ):
+        raise api_error(
+            401,
+            "step_up_reauthentication_failed",
+            "Please confirm your current password to continue.",
+            {},
+        )

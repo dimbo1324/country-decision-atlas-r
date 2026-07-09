@@ -9,7 +9,7 @@ from app.core.auth import (
     get_current_session_context,
 )
 from app.core.database import get_connection
-from app.repositories import auth as repository
+from app.repositories import auth as repository, security_notifications
 from app.services import (
     auth as service,
     feature_flags as feature_flags_service,
@@ -79,7 +79,7 @@ def test_register_returns_token_and_user(
     monkeypatch.setattr(
         service,
         "create_login_session",
-        lambda *_a, **_kw: ("raw-token-value", _session_row()),
+        lambda *_a, **_kw: ("raw-token-value", _session_row(), False),
     )
     client = _client()
     response = client.post(
@@ -94,13 +94,21 @@ def test_register_returns_token_and_user(
     body = response.json()
     assert body["token"] == "raw-token-value"
     assert body["user"]["email"] == "user@example.local"
+    assert body["is_new_device"] is False
+    assert response.cookies.get("cda_session") == "raw-token-value"
+    assert response.cookies.get("cda_csrf") is not None
 
 
 def test_login_returns_token_and_user(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         service,
         "login_user",
-        lambda *_a, **_kw: ("raw-token-value", _user_row(), _session_row()),
+        lambda *_a, **_kw: (
+            "raw-token-value",
+            _user_row(),
+            _session_row(),
+            True,
+        ),
     )
     client = _client()
     response = client.post(
@@ -109,6 +117,8 @@ def test_login_returns_token_and_user(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     assert response.status_code == 200
     assert response.json()["token"] == "raw-token-value"
+    assert response.json()["is_new_device"] is True
+    assert response.cookies.get("cda_session") == "raw-token-value"
 
 
 def test_login_invalid_credentials_returns_401(
@@ -202,13 +212,112 @@ def test_revoke_all_sessions_returns_count(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(repository, "revoke_all_user_sessions", lambda *_a: 3)
+    monkeypatch.setattr(
+        service, "require_step_up_reauthentication", lambda *_a, **_kw: None
+    )
     client = _client(authenticated=True)
     response = client.post(
         "/api/v1/auth/sessions/revoke-all",
+        json={"current_password": "correct-password-123"},
         headers={"Authorization": "Bearer session-token"},
     )
     assert response.status_code == 200
     assert response.json()["revoked_count"] == 3
+
+
+def test_revoke_all_sessions_rejects_wrong_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from app.core.errors import api_error
+
+    def _raise(*_a: Any, **_kw: Any) -> None:
+        raise api_error(
+            401,
+            "step_up_reauthentication_failed",
+            "Please confirm your current password to continue.",
+            {},
+        )
+
+    monkeypatch.setattr(service, "require_step_up_reauthentication", _raise)
+    client = _client(authenticated=True)
+    response = client.post(
+        "/api/v1/auth/sessions/revoke-all",
+        json={"current_password": "wrong-password"},
+        headers={"Authorization": "Bearer session-token"},
+    )
+    assert response.status_code == 401
+    assert (
+        response.json()["detail"]["error"]["code"]
+        == "step_up_reauthentication_failed"
+    )
+
+
+def _notification_row(**overrides: Any) -> dict[str, Any]:
+    row = {
+        "id": "33333333-3333-3333-3333-333333333333",
+        "user_id": CURRENT_USER.id,
+        "session_id": "session-1",
+        "event_type": "new_device_login",
+        "device_label": "Chrome on Windows",
+        "ip_display": "203.0.113.xxx",
+        "created_at": datetime(2026, 1, 1, tzinfo=UTC),
+        "acknowledged_at": None,
+    }
+    row.update(overrides)
+    return row
+
+
+def test_list_security_notifications_returns_items(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        security_notifications,
+        "list_unacknowledged_notifications",
+        lambda *_a: [_notification_row()],
+    )
+    client = _client(authenticated=True)
+    response = client.get(
+        "/api/v1/auth/security-notifications",
+        headers={"Authorization": "Bearer session-token"},
+    )
+    assert response.status_code == 200
+    items = response.json()["items"]
+    assert len(items) == 1
+    assert items[0]["device_label"] == "Chrome on Windows"
+
+
+def test_acknowledge_security_notification_returns_ok(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        security_notifications,
+        "acknowledge_notification",
+        lambda *_a: _notification_row(),
+    )
+    client = _client(authenticated=True)
+    response = client.post(
+        "/api/v1/auth/security-notifications/"
+        "33333333-3333-3333-3333-333333333333/ack",
+        headers={"Authorization": "Bearer session-token"},
+    )
+    assert response.status_code == 200
+    assert response.json()["ok"] is True
+
+
+def test_acknowledge_security_notification_not_found_returns_ok_false(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        security_notifications, "acknowledge_notification", lambda *_a: None
+    )
+    client = _client(authenticated=True)
+    response = client.post(
+        "/api/v1/auth/security-notifications/"
+        "33333333-3333-3333-3333-333333333333/ack",
+        headers={"Authorization": "Bearer session-token"},
+    )
+    assert response.status_code == 200
+    assert response.json()["ok"] is False
 
 
 def _enable_telegram_feature(monkeypatch: pytest.MonkeyPatch) -> None:

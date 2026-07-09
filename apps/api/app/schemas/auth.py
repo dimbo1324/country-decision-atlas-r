@@ -33,12 +33,16 @@ class AuthSession(BaseModel):
     expires_at: datetime
     last_seen_at: datetime | None
     revoked_at: datetime | None
+    device_label: str | None = None
+    ip_display: str | None = None
+    is_current: bool = False
 
 
 class AuthTokenResponse(BaseModel):
     token: str
     user: AuthUser
     expires_at: datetime
+    is_new_device: bool = False
 
 
 class CurrentUserResponse(BaseModel):
@@ -49,12 +53,33 @@ class LogoutResponse(BaseModel):
     ok: bool
 
 
+class RevokeAllSessionsRequest(BaseModel):
+    current_password: str
+
+
 class RevokeAllSessionsResponse(BaseModel):
     revoked_count: int = Field(ge=0)
 
 
 class UserSessionListResponse(BaseModel):
     items: list[AuthSession] = Field(default_factory=list)
+
+
+class SecurityNotification(BaseModel):
+    id: str
+    event_type: Literal["new_device_login"]
+    device_label: str | None = None
+    ip_display: str | None = None
+    created_at: datetime
+    acknowledged_at: datetime | None = None
+
+
+class SecurityNotificationListResponse(BaseModel):
+    items: list[SecurityNotification] = Field(default_factory=list)
+
+
+class SecurityNotificationAckResponse(BaseModel):
+    ok: bool
 
 
 class TelegramLinkRequest(BaseModel):

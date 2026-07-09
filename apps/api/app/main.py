@@ -3,6 +3,7 @@ from app.bootstrap.app_factory import create_app
 from app.core.config import get_settings
 from app.core.database import get_pool
 from app.core.errors import api_error
+from app.core.request_context import resolve_client_ip
 from app.schemas.system import HealthResponse, ReadinessResponse
 from fastapi import Request
 from psycopg import Error as PsycopgError
@@ -18,18 +19,7 @@ settings = get_settings()
 
 
 def _rate_limit_client(request: Request) -> str | None:
-    if request.client is None:
-        return None
-    if (
-        settings.trusted_proxy_headers
-        and request.client.host in settings.trusted_proxy_ip_set
-    ):
-        forwarded = (
-            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        )
-        if forwarded:
-            return forwarded
-    return request.client.host
+    return resolve_client_ip(request, settings)
 
 
 async def health() -> HealthResponse:

@@ -1,5 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
-import { authHeaders } from "../auth/session";
+import { csrfHeaders } from "../auth/session";
 import { apiDelete, apiGet, apiPatch, apiPost } from "./http";
 
 export type WatchlistItem = components["schemas"]["WatchlistItem"];
@@ -16,7 +16,7 @@ type WatchlistPreferencesUpdate = {
 
 export function listWatchlist(): Promise<WatchlistResponse> {
   return apiGet<WatchlistResponse>("/api/v1/me/watchlist", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
@@ -26,13 +26,13 @@ export function addCountryToWatchlist(
   return apiPost<WatchlistItem, Record<string, never>>(
     `/api/v1/me/watchlist/countries/${countrySlug}`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function removeCountryFromWatchlist(countrySlug: string): Promise<void> {
   return apiDelete<void>(`/api/v1/me/watchlist/countries/${countrySlug}`, {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
@@ -43,7 +43,7 @@ export function updateWatchlistPreferences(
   return apiPatch<WatchlistItem, WatchlistPreferencesUpdate>(
     `/api/v1/me/watchlist/countries/${countrySlug}`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -52,7 +52,7 @@ export function getCountryWatchlistStatus(
 ): Promise<WatchlistStatusResponse> {
   return apiGet<WatchlistStatusResponse>(
     `/api/v1/countries/${countrySlug}/watchlist-status`,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 

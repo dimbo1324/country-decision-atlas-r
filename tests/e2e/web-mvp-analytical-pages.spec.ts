@@ -166,20 +166,12 @@ test.describe("data quality page", () => {
     await page.goto(e2eRoutes.dataQuality);
     await expectHasMainHeading(page, /отчёт качества данных/i);
 
-    const hasReport = await page
-      .locator("[data-testid='data-quality-report']")
-      .isVisible()
-      .catch(() => false);
-    const hasUnauthenticated = await page
-      .locator("[data-testid='data-quality-unauthenticated']")
-      .isVisible()
-      .catch(() => false);
-    const hasForbidden = await page
-      .locator("[data-testid='data-quality-forbidden']")
-      .isVisible()
-      .catch(() => false);
-
-    expect(hasReport || hasUnauthenticated || hasForbidden).toBe(true);
+    await page.waitForSelector(
+      "[data-testid='data-quality-report'], " +
+        "[data-testid='data-quality-unauthenticated'], " +
+        "[data-testid='data-quality-forbidden']",
+      { state: "visible" },
+    );
     await expectNoAppCrash(page);
   });
 

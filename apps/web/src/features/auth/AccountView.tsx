@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   authApi,
   type AuthSession,
+  type SecurityNotification,
   type TelegramLinkStatusResponse,
 } from "../../shared/api/auth";
 import { isApiError } from "../../shared/api/http";
@@ -18,20 +19,31 @@ export function AccountView() {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
   const [sessions, setSessions] = useState<AuthSession[]>([]);
+  const [notifications, setNotifications] = useState<SecurityNotification[]>(
+    [],
+  );
   const [telegramStatus, setTelegramStatus] =
     useState<TelegramLinkStatusResponse | null>(null);
   const [linkCode, setLinkCode] = useState("");
   const [telegramError, setTelegramError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<unknown | null>(null);
+  const [revokeAllPassword, setRevokeAllPassword] = useState("");
+  const [revokeAllError, setRevokeAllError] = useState<string | null>(null);
+  const [showRevokeAllConfirm, setShowRevokeAllConfirm] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     let active = true;
-    Promise.all([authApi.listSessions(), authApi.getTelegramLinkStatus()])
-      .then(([sessionResponse, linkStatus]) => {
+    Promise.all([
+      authApi.listSessions(),
+      authApi.getTelegramLinkStatus(),
+      authApi.listSecurityNotifications(),
+    ])
+      .then(([sessionResponse, linkStatus, notificationResponse]) => {
         if (!active) return;
         setSessions(sessionResponse.items ?? []);
         setTelegramStatus(linkStatus);
+        setNotifications(notificationResponse.items ?? []);
       })
       .catch((err: unknown) => {
         if (active) setLoadError(err);
@@ -51,9 +63,28 @@ export function AccountView() {
     setSessions((prev) => prev.filter((session) => session.id !== sessionId));
   }
 
-  async function handleRevokeAll() {
-    await authApi.revokeAllSessions();
-    setSessions([]);
+  async function handleRevokeAll(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setRevokeAllError(null);
+    try {
+      await authApi.revokeAllSessions(revokeAllPassword);
+      setSessions([]);
+      setShowRevokeAllConfirm(false);
+      setRevokeAllPassword("");
+    } catch (err: unknown) {
+      setRevokeAllError(
+        isApiError(err)
+          ? (err.error?.message ?? "Не удалось отозвать сессии.")
+          : "Не удалось отозвать сессии.",
+      );
+    }
+  }
+
+  async function handleAcknowledgeNotification(notificationId: string) {
+    await authApi.acknowledgeSecurityNotification(notificationId);
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== notificationId),
+    );
   }
 
   async function handleLinkTelegram(event: React.FormEvent<HTMLFormElement>) {
@@ -134,6 +165,36 @@ export function AccountView() {
         <ErrorState error={isApiError(loadError) ? loadError : undefined} />
       )}
 
+      {notifications.length > 0 && (
+        <div
+          className="accountSection"
+          data-testid="security-notifications"
+        >
+          <p className="accountSectionTitle">Уведомления безопасности</p>
+          {notifications.map((notification) => (
+            <div
+              className="sessionRow"
+              key={notification.id}
+              data-testid="new-device-notification"
+            >
+              <span>
+                Вход с нового устройства: {notification.device_label ?? "?"}
+                {notification.ip_display ? ` (${notification.ip_display})` : ""}
+                , {new Date(notification.created_at).toLocaleString("ru-RU")}.
+                Это были вы?
+              </span>
+              <button
+                type="button"
+                className="runButton"
+                onClick={() => handleAcknowledgeNotification(notification.id)}
+              >
+                Подтвердить
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="accountSection">
         <p className="accountSectionTitle">Telegram</p>
         {telegramStatus?.linked ? (
@@ -188,8 +249,11 @@ export function AccountView() {
                 key={session.id}
               >
                 <span>
-                  Создана:{" "}
+                  {session.device_label ?? "Неизвестное устройство"}
+                  {session.ip_display ? ` · ${session.ip_display}` : ""}
+                  {" · "}
                   {new Date(session.created_at).toLocaleString("ru-RU")}
+                  {session.is_current ? " · текущая сессия" : ""}
                 </span>
                 <button
                   type="button"
@@ -202,13 +266,40 @@ export function AccountView() {
             ))}
           </div>
         )}
-        <button
-          type="button"
-          className="runButton"
-          onClick={handleRevokeAll}
-        >
-          Отозвать все сессии
-        </button>
+        {showRevokeAllConfirm ? (
+          <form
+            onSubmit={handleRevokeAll}
+            className="authForm"
+          >
+            <label className="formGroup">
+              <span className="formLabel">Подтвердите пароль</span>
+              <input
+                type="password"
+                className="formInput"
+                value={revokeAllPassword}
+                onChange={(event) => setRevokeAllPassword(event.target.value)}
+                required
+                data-testid="revoke-all-password-input"
+              />
+            </label>
+            {revokeAllError && <p className="formError">{revokeAllError}</p>}
+            <button
+              type="submit"
+              className="runButton"
+              data-testid="revoke-all-confirm-submit"
+            >
+              Подтвердить отзыв всех сессий
+            </button>
+          </form>
+        ) : (
+          <button
+            type="button"
+            className="runButton"
+            onClick={() => setShowRevokeAllConfirm(true)}
+          >
+            Отозвать все сессии
+          </button>
+        )}
       </div>
     </div>
   );

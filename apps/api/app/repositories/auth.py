@@ -281,6 +281,10 @@ SESSION_FIELDS = """
     last_seen_at,
     user_agent_hash,
     ip_hash,
+    device_label,
+    ip_display,
+    device_fingerprint_hash,
+    rotated_at,
     metadata
 """
 
@@ -293,18 +297,47 @@ def create_auth_session(
     expires_at: datetime,
     user_agent_hash: str | None,
     ip_hash: str | None,
+    device_label: str | None = None,
+    ip_display: str | None = None,
+    device_fingerprint_hash: str | None = None,
 ) -> dict[str, Any]:
     return execute_one(
         connection,
         f"""
         INSERT INTO auth_sessions (
-            user_id, token_hash, expires_at, user_agent_hash, ip_hash
-        ) VALUES (%s, %s, %s, %s, %s)
+            user_id, token_hash, expires_at, user_agent_hash, ip_hash,
+            device_label, ip_display, device_fingerprint_hash
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING
             {SESSION_FIELDS}
         """,
-        (user_id, token_hash, expires_at, user_agent_hash, ip_hash),
+        (
+            user_id,
+            token_hash,
+            expires_at,
+            user_agent_hash,
+            ip_hash,
+            device_label,
+            ip_display,
+            device_fingerprint_hash,
+        ),
     )
+
+
+def has_prior_session_with_fingerprint(
+    connection: Connection[Any], user_id: str, device_fingerprint_hash: str
+) -> bool:
+    row = fetch_one(
+        connection,
+        """
+        SELECT id
+        FROM auth_sessions
+        WHERE user_id = %s::uuid AND device_fingerprint_hash = %s
+        LIMIT 1
+        """,
+        (user_id, device_fingerprint_hash),
+    )
+    return row is not None
 
 
 def get_session_with_user_by_token_hash(
@@ -322,9 +355,14 @@ def get_session_with_user_by_token_hash(
             s.last_seen_at AS session_last_seen_at,
             s.user_agent_hash AS session_user_agent_hash,
             s.ip_hash AS session_ip_hash,
+            s.device_label AS session_device_label,
+            s.ip_display AS session_ip_display,
+            s.device_fingerprint_hash AS session_device_fingerprint_hash,
+            s.rotated_at AS session_rotated_at,
             s.metadata AS session_metadata,
             (s.revoked_at IS NOT NULL) AS is_revoked,
             (s.expires_at <= NOW()) AS is_expired,
+            (s.token_hash = %s) AS matched_current_token,
             u.id::text AS user_id,
             u.email AS user_email,
             u.display_name AS user_display_name,
@@ -339,14 +377,16 @@ def get_session_with_user_by_token_hash(
         FROM auth_sessions s
         JOIN users u ON u.id = s.user_id
         WHERE s.token_hash = %s
+           OR (s.previous_token_hash = %s AND s.previous_token_expires_at > NOW())
         """,
-        (token_hash,),
+        (token_hash, token_hash, token_hash),
     )
     if row is None:
         return None
     return {
         "is_revoked": bool(row["is_revoked"]),
         "is_expired": bool(row["is_expired"]),
+        "matched_current_token": bool(row["matched_current_token"]),
         "session": {
             "id": row["session_id"],
             "user_id": row["session_user_id"],
@@ -356,6 +396,10 @@ def get_session_with_user_by_token_hash(
             "last_seen_at": row["session_last_seen_at"],
             "user_agent_hash": row["session_user_agent_hash"],
             "ip_hash": row["session_ip_hash"],
+            "device_label": row["session_device_label"],
+            "ip_display": row["session_ip_display"],
+            "device_fingerprint_hash": row["session_device_fingerprint_hash"],
+            "rotated_at": row["session_rotated_at"],
             "metadata": row["session_metadata"],
         },
         "user": {
@@ -378,6 +422,33 @@ def touch_session(connection: Connection[Any], session_id: str) -> None:
     connection.execute(
         "UPDATE auth_sessions SET last_seen_at = NOW() WHERE id = %s::uuid",
         (session_id,),
+    )
+
+
+def rotate_session_token(
+    connection: Connection[Any],
+    session_id: str,
+    *,
+    new_token_hash: str,
+    previous_token_hash: str,
+    previous_token_expires_at: datetime,
+) -> None:
+    connection.execute(
+        """
+        UPDATE auth_sessions
+        SET token_hash = %s,
+            previous_token_hash = %s,
+            previous_token_expires_at = %s,
+            rotated_at = NOW(),
+            last_seen_at = NOW()
+        WHERE id = %s::uuid
+        """,
+        (
+            new_token_hash,
+            previous_token_hash,
+            previous_token_expires_at,
+            session_id,
+        ),
     )
 
 

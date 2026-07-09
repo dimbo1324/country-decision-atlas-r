@@ -2408,6 +2408,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/security-notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Security Notifications */
+        get: operations["list_security_notifications_api_v1_auth_security_notifications_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/security-notifications/{notification_id}/ack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Acknowledge Security Notification */
+        post: operations["acknowledge_security_notification_api_v1_auth_security_notifications__notification_id__ack_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/telegram/link": {
         parameters: {
             query?: never;
@@ -4282,6 +4316,15 @@ export interface components {
             last_seen_at: string | null;
             /** Revoked At */
             revoked_at: string | null;
+            /** Device Label */
+            device_label?: string | null;
+            /** Ip Display */
+            ip_display?: string | null;
+            /**
+             * Is Current
+             * @default false
+             */
+            is_current: boolean;
         };
         /** AuthTokenResponse */
         AuthTokenResponse: {
@@ -4293,6 +4336,11 @@ export interface components {
              * Format: date-time
              */
             expires_at: string;
+            /**
+             * Is New Device
+             * @default false
+             */
+            is_new_device: boolean;
         };
         /** AuthUser */
         AuthUser: {
@@ -7674,6 +7722,11 @@ export interface components {
         ReviewMigrationBoardReportResponse: {
             report: components["schemas"]["MigrationBoardReportResponse"];
         };
+        /** RevokeAllSessionsRequest */
+        RevokeAllSessionsRequest: {
+            /** Current Password */
+            current_password: string;
+        };
         /** RevokeAllSessionsResponse */
         RevokeAllSessionsResponse: {
             /** Revoked Count */
@@ -8028,6 +8081,37 @@ export interface components {
             path: string;
             /** Rank */
             rank: number;
+        };
+        /** SecurityNotification */
+        SecurityNotification: {
+            /** Id */
+            id: string;
+            /**
+             * Event Type
+             * @constant
+             */
+            event_type: "new_device_login";
+            /** Device Label */
+            device_label?: string | null;
+            /** Ip Display */
+            ip_display?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Acknowledged At */
+            acknowledged_at?: string | null;
+        };
+        /** SecurityNotificationAckResponse */
+        SecurityNotificationAckResponse: {
+            /** Ok */
+            ok: boolean;
+        };
+        /** SecurityNotificationListResponse */
+        SecurityNotificationListResponse: {
+            /** Items */
+            items?: components["schemas"]["SecurityNotification"][];
         };
         /** SendThreadMessageRequest */
         SendThreadMessageRequest: {
@@ -15983,7 +16067,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevokeAllSessionsRequest"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -15992,6 +16080,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RevokeAllSessionsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_security_notifications_api_v1_auth_security_notifications_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecurityNotificationListResponse"];
+                };
+            };
+        };
+    };
+    acknowledge_security_notification_api_v1_auth_security_notifications__notification_id__ack_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                notification_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecurityNotificationAckResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -1,5 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
-import { authHeaders } from "../auth/session";
+import { csrfHeaders } from "../auth/session";
 import { apiDelete, apiGet, apiPatch, apiPost, queryString } from "./http";
 
 export type MigrationBoardPostListResponse =
@@ -59,7 +59,7 @@ export function listBoardPosts(
 ): Promise<MigrationBoardPostListResponse> {
   return apiGet<MigrationBoardPostListResponse>(
     `/api/v1/migration-board/posts${queryString(filters)}`,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -69,7 +69,7 @@ export function getBoardPost(
   return apiGet<MigrationBoardPostDetail>(
     `/api/v1/migration-board/posts/${postId}`,
     {
-      headers: authHeaders(),
+      headers: csrfHeaders(),
     },
   );
 }
@@ -78,7 +78,7 @@ export function listMyBoardPosts(): Promise<MyMigrationBoardPostListResponse> {
   return apiGet<MyMigrationBoardPostListResponse>(
     "/api/v1/me/migration-board/posts",
     {
-      headers: authHeaders(),
+      headers: csrfHeaders(),
     },
   );
 }
@@ -89,7 +89,7 @@ export function createBoardPost(
   return apiPost<MyMigrationBoardPost, CreateMigrationBoardPostRequest>(
     "/api/v1/me/migration-board/posts",
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -100,7 +100,7 @@ export function updateBoardPost(
   return apiPatch<MyMigrationBoardPost, UpdateMigrationBoardPostRequest>(
     `/api/v1/me/migration-board/posts/${postId}`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -110,7 +110,7 @@ export function submitBoardPost(
   return apiPost<{ post: MyMigrationBoardPost }, Record<string, never>>(
     `/api/v1/me/migration-board/posts/${postId}/submit`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -120,7 +120,7 @@ export function archiveBoardPost(
   return apiPost<{ post: MyMigrationBoardPost }, Record<string, never>>(
     `/api/v1/me/migration-board/posts/${postId}/archive`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -130,7 +130,7 @@ export function listCompanionMatches(
   const path = postId
     ? `/api/v1/me/migration-board/posts/${postId}/matches`
     : "/api/v1/me/migration-board/matches";
-  return apiGet<CompanionMatchesResponse>(path, { headers: authHeaders() });
+  return apiGet<CompanionMatchesResponse>(path, { headers: csrfHeaders() });
 }
 
 export function createContactRequest(
@@ -140,21 +140,21 @@ export function createContactRequest(
   return apiPost<ContactRequestResponse, CreateContactRequestRequest>(
     `/api/v1/migration-board/posts/${postId}/contact-requests`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function listIncomingContactRequests(): Promise<ContactRequestListResponse> {
   return apiGet<ContactRequestListResponse>(
     "/api/v1/me/migration-board/contact-requests/incoming",
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function listOutgoingContactRequests(): Promise<ContactRequestListResponse> {
   return apiGet<ContactRequestListResponse>(
     "/api/v1/me/migration-board/contact-requests/outgoing",
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -167,7 +167,7 @@ export function acceptContactRequest(
   >(
     `/api/v1/me/migration-board/contact-requests/${requestId}/accept`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -180,7 +180,7 @@ export function declineContactRequest(
   >(
     `/api/v1/me/migration-board/contact-requests/${requestId}/decline`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -190,7 +190,7 @@ export function cancelContactRequest(
   return apiPost<{ request: ContactRequestResponse }, Record<string, never>>(
     `/api/v1/me/migration-board/contact-requests/${requestId}/cancel`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -202,7 +202,7 @@ export function reportPost(
     MigrationBoardReportResponse,
     CreateMigrationBoardReportRequest
   >(`/api/v1/migration-board/posts/${postId}/report`, payload, {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
@@ -210,19 +210,19 @@ export function blockUser(userId: string, reason?: string): Promise<unknown> {
   return apiPost<unknown, { reason?: string }>(
     `/api/v1/me/migration-board/blocks/${userId}`,
     { reason },
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function unblockUser(userId: string): Promise<void> {
   return apiDelete<void>(`/api/v1/me/migration-board/blocks/${userId}`, {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
 export function listBlockedUsers(): Promise<BlockedUserListResponse> {
   return apiGet<BlockedUserListResponse>("/api/v1/me/migration-board/blocks", {
-    headers: authHeaders(),
+    headers: csrfHeaders(),
   });
 }
 
@@ -231,7 +231,7 @@ export function listAdminBoardPosts(
 ): Promise<AdminMigrationBoardPostListResponse> {
   return apiGet<AdminMigrationBoardPostListResponse>(
     `/api/v1/admin/migration-board/posts${queryString({ status })}`,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -239,7 +239,7 @@ export function approveAdminBoardPost(postId: string): Promise<unknown> {
   return apiPost<unknown, Record<string, never>>(
     `/api/v1/admin/migration-board/posts/${postId}/approve`,
     {},
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -250,7 +250,7 @@ export function rejectAdminBoardPost(
   return apiPost<unknown, ModerateMigrationBoardPostRequest>(
     `/api/v1/admin/migration-board/posts/${postId}/reject`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -261,14 +261,14 @@ export function hideAdminBoardPost(
   return apiPost<unknown, ModerateMigrationBoardPostRequest>(
     `/api/v1/admin/migration-board/posts/${postId}/hide`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
 export function listAdminBoardReports(): Promise<MigrationBoardReportListResponse> {
   return apiGet<MigrationBoardReportListResponse>(
     "/api/v1/admin/migration-board/reports",
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -279,7 +279,7 @@ export function resolveAdminBoardReport(
   return apiPost<unknown, ReviewMigrationBoardReportRequest>(
     `/api/v1/admin/migration-board/reports/${reportId}/resolve`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 
@@ -290,7 +290,7 @@ export function dismissAdminBoardReport(
   return apiPost<unknown, ReviewMigrationBoardReportRequest>(
     `/api/v1/admin/migration-board/reports/${reportId}/dismiss`,
     payload,
-    { headers: authHeaders() },
+    { headers: csrfHeaders() },
   );
 }
 

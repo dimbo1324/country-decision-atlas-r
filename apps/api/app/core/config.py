@@ -50,6 +50,12 @@ class Settings(BaseSettings):
     auth_session_touch_interval_minutes: int = 5
     auth_password_min_length: int = 12
     auth_registration_enabled: bool = True
+    auth_session_cookie_name: str = "cda_session"
+    auth_csrf_cookie_name: str = "cda_csrf"
+    auth_session_rotation_interval_minutes: int = 15
+    auth_session_rotation_grace_seconds: int = 30
+    auth_device_fingerprint_salt: str = "local-dev-device-fingerprint-salt"
+    security_hsts_enabled: bool = False
     notifier_internal_auth_token: str | None = None
     notifier_grpc_addr: str = "localhost:9090"
 

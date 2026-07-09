@@ -112,21 +112,27 @@ CSP/HSTS/Permissions-Policy), и дополнительно реализоват
 
 ## Проверка
 
-- [ ] `py -3.12 -m pytest tests/ -q` зелёный.
-- [ ] `py -3.12 -m mypy apps scripts tests` чистый.
-- [ ] `py -3.12 -m ruff check` / `ruff format --check` чистые.
-- [ ] `pnpm --filter web typecheck` / `lint` чистые.
-- [ ] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
-      зелёный, включая Playwright E2E.
+- [+] `py -3.12 -m pytest tests/ -q` зелёный.
+- [+] `py -3.12 -m mypy apps scripts tests` чистый.
+- [+] `py -3.12 -m ruff check` / `ruff format --check` чистые.
+- [+] `pnpm --filter web typecheck` / `lint` / `build` чистые.
+- [+] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
+      зелёный (78 OK, 0 FAIL), включая Playwright E2E 283/283.
+- [+] Дополнительно найден и исправлен один непроходящий существующий
+      E2E-тест (`web-mvp-analytical-pages.spec.ts` — гонка между рендером
+      и асинхронным определением состояния аутентификации через cookie;
+      переведён на `page.waitForSelector` вместо мгновенного
+      `isVisible()`), и попутно исправлен унаследованный от AE-2 баг
+      порядка мидлварей (см. отчёт).
 
 ## Завершение
 
-- [ ] Чек-лист заполнен `+`/`-`.
-- [ ] `docs/_arch_/09_План_устранения_аудита.md`: статус AE-3 обновлён.
-- [ ] Финальный отчёт написан (включая явно обозначенные компромиссы:
+- [+] Чек-лист заполнен `+`/`-`.
+- [+] `docs/_arch_/09_План_устранения_аудита.md`: статус AE-3 обновлён.
+- [+] Финальный отчёт написан (включая явно обозначенные компромиссы:
       `script-src 'unsafe-inline'` в CSP как принятый временный шаг вместо
       nonce-based CSP; уведомление о новом устройстве — только через
       собственный in-app баннер, без внешней интеграции, по правилу
       автономной разработки).
-- [ ] Коммит, merge в `main` (ff-only), push на `origin/main` — по прямому
+- [+] Коммит, merge в `main` (ff-only), push на `origin/main` — по прямому
       запросу владельца (уже дан).

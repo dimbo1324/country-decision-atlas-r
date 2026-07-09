@@ -52,6 +52,7 @@ export async function apiGet<TResponse>(
       ...options.headers,
     },
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -75,6 +76,7 @@ export async function apiPost<TResponse, TBody>(
     },
     body: JSON.stringify(body),
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -98,6 +100,7 @@ export async function apiPatch<TResponse, TBody>(
     },
     body: JSON.stringify(body),
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -118,6 +121,7 @@ export async function apiDelete<TResponse>(
       ...options.headers,
     },
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {

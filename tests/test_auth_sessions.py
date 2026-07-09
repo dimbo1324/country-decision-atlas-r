@@ -2,7 +2,7 @@
 
 import pytest
 from app.core.config import Settings
-from app.repositories import auth as repository
+from app.repositories import auth as repository, security_notifications
 from app.services import (
     auth as service,
     feature_flags as feature_flags_service,
@@ -65,6 +65,7 @@ def _session_row(**overrides: Any) -> dict[str, Any]:
         "expires_at": datetime(2026, 1, 8, tzinfo=UTC),
         "revoked_at": None,
         "last_seen_at": None,
+        "rotated_at": None,
     }
     row.update(overrides)
     return row
@@ -76,13 +77,23 @@ def _session_with_user_result(
     user: dict[str, Any] | None = None,
     is_revoked: bool = False,
     is_expired: bool = False,
+    matched_current_token: bool = True,
 ) -> dict[str, Any]:
     return {
         "is_revoked": is_revoked,
         "is_expired": is_expired,
+        "matched_current_token": matched_current_token,
         "session": session if session is not None else _session_row(),
         "user": user if user is not None else _user_row(),
     }
+
+
+def _mock_known_device(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        repository,
+        "has_prior_session_with_fingerprint",
+        lambda *_a, **_kw: True,
+    )
 
 
 def test_register_user_disabled_feature_returns_403(
@@ -309,6 +320,7 @@ def test_login_user_clears_failures_on_success(
         lambda *_a, **kwargs: _session_row(user_id=kwargs["user_id"]),
     )
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
+    _mock_known_device(monkeypatch)
     cleared: dict[str, Any] = {}
     monkeypatch.setattr(
         rate_limiter,
@@ -393,19 +405,22 @@ def test_login_user_success_creates_session_and_updates_last_login(
         lambda *_a, **kwargs: _session_row(user_id=kwargs["user_id"]),
     )
     monkeypatch.setattr(repository, "get_user_by_id", lambda *_a: _user_row())
-    raw_token, user, session = service.login_user(
+    _mock_known_device(monkeypatch)
+    raw_token, user, session, is_new_device = service.login_user(
         CONNECTION, email="user@example.local", password="correct-password-123"
     )
     assert isinstance(raw_token, str) and len(raw_token) > 0
     assert user["id"] == _user_row()["id"]
     assert session["id"] == "session-1"
     assert touched["user_id"] == _user_row()["id"]
+    assert is_new_device is False
 
 
 def test_create_login_session_stores_hashed_token_not_raw(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    _mock_known_device(monkeypatch)
     captured: dict[str, Any] = {}
 
     def fake_create_auth_session(_conn: Any, **kwargs: Any) -> dict[str, Any]:
@@ -415,12 +430,13 @@ def test_create_login_session_stores_hashed_token_not_raw(
     monkeypatch.setattr(
         repository, "create_auth_session", fake_create_auth_session
     )
-    raw_token, session = service.create_login_session(
+    raw_token, session, is_new_device = service.create_login_session(
         CONNECTION, user_id="user-1"
     )
     assert captured["token_hash"] == service.hash_session_token(raw_token)
     assert captured["token_hash"] != raw_token
     assert session["id"] == "session-1"
+    assert is_new_device is False
 
 
 def test_logout_session_revokes_session(
@@ -505,7 +521,9 @@ def test_validate_session_token_success_touches_stale_session(
         repository,
         "get_session_with_user_by_token_hash",
         lambda *_a: _session_with_user_result(
-            session=_session_row(last_seen_at=None)
+            session=_session_row(
+                last_seen_at=None, rotated_at=datetime.now(UTC)
+            )
         ),
     )
     touched: dict[str, Any] = {}
@@ -528,7 +546,9 @@ def test_validate_session_token_does_not_touch_recently_seen_session(
         repository,
         "get_session_with_user_by_token_hash",
         lambda *_a: _session_with_user_result(
-            session=_session_row(last_seen_at=datetime.now(UTC))
+            session=_session_row(
+                last_seen_at=datetime.now(UTC), rotated_at=datetime.now(UTC)
+            )
         ),
     )
     touched: dict[str, Any] = {}
@@ -550,5 +570,234 @@ def test_get_current_user_from_token_returns_user_dict(
         lambda *_a: _session_with_user_result(),
     )
     monkeypatch.setattr(repository, "touch_session", lambda *_a: None)
+    monkeypatch.setattr(
+        repository, "rotate_session_token", lambda *_a, **_kw: None
+    )
     user = service.get_current_user_from_token(CONNECTION, "valid-token")
     assert user["id"] == _user_row()["id"]
+
+
+def test_validate_session_token_rotates_stale_token(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            session=_session_row(rotated_at=None)
+        ),
+    )
+    rotated: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "rotate_session_token",
+        lambda _conn, session_id, **kwargs: rotated.update(
+            session_id=session_id, **kwargs
+        ),
+    )
+    touched: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "touch_session",
+        lambda _conn, session_id: touched.setdefault("session_id", session_id),
+    )
+    result = service.validate_session_token(CONNECTION, "valid-token")
+    assert rotated["session_id"] == "session-1"
+    assert rotated["new_token_hash"] == service.hash_session_token(
+        result["rotated_token"]
+    )
+    assert rotated["previous_token_hash"] == service.hash_session_token(
+        "valid-token"
+    )
+    assert result["rotated_token"] is not None
+    assert result["rotated_token"] != "valid-token"
+    assert touched == {}
+
+
+def test_validate_session_token_does_not_rotate_fresh_token(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            session=_session_row(
+                last_seen_at=datetime.now(UTC), rotated_at=datetime.now(UTC)
+            )
+        ),
+    )
+    rotated: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "rotate_session_token",
+        lambda *_a, **_kw: rotated.setdefault("called", True),
+    )
+    result = service.validate_session_token(CONNECTION, "valid-token")
+    assert rotated == {}
+    assert result["rotated_token"] is None
+
+
+def test_validate_session_token_accepts_previous_token_in_grace_window(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "get_session_with_user_by_token_hash",
+        lambda *_a: _session_with_user_result(
+            session=_session_row(rotated_at=datetime.now(UTC)),
+            matched_current_token=False,
+        ),
+    )
+    rotated: dict[str, Any] = {}
+    touched: dict[str, Any] = {}
+    monkeypatch.setattr(
+        repository,
+        "rotate_session_token",
+        lambda *_a, **_kw: rotated.setdefault("called", True),
+    )
+    monkeypatch.setattr(
+        repository,
+        "touch_session",
+        lambda *_a: touched.setdefault("called", True),
+    )
+    result = service.validate_session_token(CONNECTION, "previous-token")
+    assert result["user"]["id"] == _user_row()["id"]
+    assert rotated == {}
+    assert touched == {}
+
+
+def test_require_step_up_reauthentication_accepts_correct_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    correct_hash = service.hash_password("correct-password-123")
+    monkeypatch.setattr(
+        repository,
+        "get_password_credential",
+        lambda *_a: {"password_hash": correct_hash},
+    )
+    service.require_step_up_reauthentication(
+        CONNECTION, user_id="user-1", password="correct-password-123"
+    )
+
+
+def test_require_step_up_reauthentication_rejects_wrong_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    correct_hash = service.hash_password("correct-password-123")
+    monkeypatch.setattr(
+        repository,
+        "get_password_credential",
+        lambda *_a: {"password_hash": correct_hash},
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        service.require_step_up_reauthentication(
+            CONNECTION, user_id="user-1", password="wrong-password"
+        )
+    assert exc_info.value.status_code == 401
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "step_up_reauthentication_failed"
+
+
+def test_require_step_up_reauthentication_rejects_missing_credential(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(repository, "get_password_credential", lambda *_a: None)
+    with pytest.raises(HTTPException) as exc_info:
+        service.require_step_up_reauthentication(
+            CONNECTION, user_id="user-1", password="anything"
+        )
+    assert exc_info.value.status_code == 401
+
+
+def test_create_login_session_flags_first_session_as_new_device(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "has_prior_session_with_fingerprint",
+        lambda *_a, **_kw: False,
+    )
+    monkeypatch.setattr(
+        repository,
+        "create_auth_session",
+        lambda _conn, **kwargs: _session_row(
+            id="22222222-2222-2222-2222-222222222222",
+            user_id=kwargs["user_id"],
+        ),
+    )
+    notified: dict[str, Any] = {}
+    monkeypatch.setattr(
+        security_notifications,
+        "create_new_device_login_notification",
+        lambda _conn, **kwargs: notified.update(kwargs),
+    )
+    audited: dict[str, Any] = {}
+    monkeypatch.setattr(
+        service,
+        "insert_audit_event",
+        lambda _conn, **kwargs: audited.update(kwargs),
+    )
+    _raw_token, _session, is_new_device = service.create_login_session(
+        CONNECTION,
+        user_id="user-1",
+        user_agent="Mozilla/5.0 (Windows NT 10.0) Chrome/120.0.0.0",
+        client_ip="203.0.113.5",
+    )
+    assert is_new_device is True
+    assert notified["user_id"] == "user-1"
+    assert notified["device_label"] == "Chrome on Windows"
+    assert audited["action"] == "new_device_login"
+
+
+def test_create_login_session_does_not_notify_known_device(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    _mock_known_device(monkeypatch)
+    monkeypatch.setattr(
+        repository,
+        "create_auth_session",
+        lambda _conn, **kwargs: _session_row(user_id=kwargs["user_id"]),
+    )
+    notified: dict[str, Any] = {}
+    monkeypatch.setattr(
+        security_notifications,
+        "create_new_device_login_notification",
+        lambda _conn, **kwargs: notified.update(kwargs),
+    )
+    _raw_token, _session, is_new_device = service.create_login_session(
+        CONNECTION, user_id="user-1"
+    )
+    assert is_new_device is False
+    assert notified == {}
+
+
+def test_create_login_session_skips_notification_when_disabled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(service, "get_settings", lambda: _SETTINGS)
+    monkeypatch.setattr(
+        repository,
+        "has_prior_session_with_fingerprint",
+        lambda *_a, **_kw: False,
+    )
+    monkeypatch.setattr(
+        repository,
+        "create_auth_session",
+        lambda _conn, **kwargs: _session_row(user_id=kwargs["user_id"]),
+    )
+    notified: dict[str, Any] = {}
+    monkeypatch.setattr(
+        security_notifications,
+        "create_new_device_login_notification",
+        lambda _conn, **kwargs: notified.update(kwargs),
+    )
+    _raw_token, _session, is_new_device = service.create_login_session(
+        CONNECTION, user_id="user-1", notify_new_device=False
+    )
+    assert is_new_device is False
+    assert notified == {}
