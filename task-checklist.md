@@ -1,138 +1,107 @@
-# Чек-лист задачи: AE-3 «Сессии и XSS-периметр» — вариант Б + усиленная защита
+# Чек-лист задачи: AE-4 «Целостность при конкурентности»
 
-Цель: закрыть Аудит-эпизод 3 (`docs/_arch_/09_План_устранения_аудита.md`,
-находки P0-2, P2-5) вариантом Б (httpOnly-cookie сессии + CSRF +
-CSP/HSTS/Permissions-Policy), и дополнительно реализовать три меры
-усиленной защиты, согласованные с владельцем сверх базового плана эпизода:
+Цель: закрыть Аудит-эпизод 4 (`docs/_arch_/09_План_устранения_аудита.md`,
+находки P1-1, P1-2, P1-3, P2-9) — убрать гонки «check-then-act» и длинную
+транзакцию, блокирующую БД внешним сервисом (Kafka).
 
-1. Короткоживущие ротируемые токены сессии (вместо статичного 7-дневного
-   токена).
-2. Видимость сессий/устройств + уведомление о входе с нового устройства.
-3. Step-up повторная аутентификация для чувствительного действия
-   (массовый отзыв сессий).
-
-Ветка: `fix/session-security-v1` (совпадает с именем из плана эпизода).
+Ветка: `fix/concurrency-integrity-v1` (совпадает с именем из плана эпизода).
+Решения владельца не требуется — эпизод независим.
 
 ## Подготовка
 
-- [+] Прочитан весь раздел «Аудит-эпизод 3» плана устранения аудита.
-- [+] Изучены текущие файлы: `services/auth.py`, `repositories/auth.py`,
-      `core/auth.py`, `api/v1/auth.py`, `schemas/auth.py`,
-      `bootstrap/app_factory.py`, `main.py`, `core/config.py`,
-      миграция `044_auth_rbac.sql`.
-- [+] Изучены фронтенд-файлы: `session.ts`, `AuthProvider.tsx`, `http.ts`,
-      `auth.ts`/`data-quality.ts`/`migrationBoard.ts`/`watchlists.ts`
-      (использование `authHeaders`), `AccountView.tsx`, `next.config.mjs`.
-- [+] Подтверждено: `GET/DELETE /auth/sessions` и `POST
-      /auth/sessions/revoke-all` уже существуют; `user_agent_hash`/
-      `ip_hash` в схеме есть, но никогда не заполняются роутером — фиксируем
-      это в этом же эпизоде, а не откладываем.
-- [+] Подтверждено: `APP_ENV=local` по умолчанию в docker-compose и
-      Playwright — `Secure`-флаг cookie должен быть условным
-      (`app_env == "production"`), иначе локальная разработка и E2E
-      сломаются на чистом http.
+- [+] Прочитан раздел «Аудит-эпизод 4» плана устранения аудита.
+- [+] Изучены: `scripts/outbox_relay_runner.py`,
+      `repositories/domain_events.py`, `services/migration_board/*.py`,
+      `services/auth.py` (register), `services/country_contribution/
+      proposals.py`, `services/author_metrics/definitions.py`,
+      `services/weight_profiles.py` (образец UniqueViolation-обработки),
+      `core/database.py::get_connection`.
+- [+] Подтверждено: `countries.slug/iso2/iso3`, `country_proposals.slug`,
+      `users.email`, `author_metric_definitions (author_user_id, slug)` —
+      все настоящие UNIQUE-констрейнты в БД (гонка реальна, не мнимая).
+- [+] Подтверждено эмпирически (AST-скан `api/v1/*.py`): 13 мутирующих
+      эндпоинтов не вызывают `connection.commit()` и корректно полагаются на
+      неявный commit пула (`ConnectionPool.connection()` коммитит на чистом
+      выходе, откатывает на исключении) — П2-9 не баг, а нефиксированная
+      конвенция; решение зафиксировано ниже без риска механической правки
+      40+ файлов.
 
-## Реализация — backend
+## Реализация — P1-1: relay вне длинной транзакции
 
-- [+] Миграция `052_session_security_hardening.sql`: новые колонки
-      `auth_sessions` (`previous_token_hash`, `previous_token_expires_at`,
-      `rotated_at`, `device_label`, `ip_display`, `device_fingerprint_hash`),
-      индекс на `previous_token_hash`; новая таблица
-      `user_security_notifications` (уведомления о входе с нового
-      устройства, с `acknowledged_at`); расширение
-      `audit_events_action_check` значением `new_device_login`.
-- [+] `core/config.py`: новые настройки — имена cookie сессии/CSRF,
-      интервал/грация ротации токена, флаг HSTS (по умолчанию выключен —
-      «за флагом» согласно плану эпизода).
-- [+] `core/request_context.py` (новый): единая точка извлечения client IP
-      с учётом доверенных прокси (вынесено из `main.py`, переиспользуется
-      в auth-роутере) + вывод короткой читаемой метки устройства из
-      User-Agent + маскирование IP для отображения.
-- [+] `services/auth.py`: генерация CSRF-токена при логине; заполнение
-      `device_label`/`ip_display`/`device_fingerprint_hash` при создании
-      сессии; определение «нового устройства»; ротация токена сессии по
-      истечении интервала (с grace-периодом на предыдущий токен);
-      `require_step_up_reauthentication()` — повторная проверка пароля.
-- [+] `repositories/auth.py`: обновлены `SESSION_FIELDS`,
-      `create_auth_session`, `get_session_with_user_by_token_hash` (лукап
-      с учётом grace-периода предыдущего токена), новая `rotate_session_token`,
-      `has_prior_session_with_fingerprint`.
-- [+] `repositories/security_notifications.py` (новый): создание/список/
-      подтверждение уведомлений о новом устройстве.
-- [+] `core/auth.py`: чтение токена сессии из cookie, если нет
-      `Authorization`; проброс ротированного токена в `Response`
-      (cookie + заголовок для API-клиентов).
-- [+] `api/v1/auth.py`: `login`/`register` выставляют httpOnly cookie сессии
-      и не-httpOnly cookie CSRF (двухканальный переходный период — тело
-      ответа тоже содержит токен); `logout` очищает обе cookie;
-      `GET /auth/sessions` отдаёт `device_label`/`ip_display`/`is_current`;
-      `POST /auth/sessions/revoke-all` требует `current_password` (step-up);
-      новые `GET /auth/security-notifications`,
-      `POST /auth/security-notifications/{id}/ack`.
-- [+] `schemas/auth.py`: расширены `AuthSession`, новые
-      `RevokeAllSessionsRequest`, `SecurityNotification*`.
-- [+] `bootstrap/app_factory.py`: `CORSMiddleware.allow_credentials=True`;
-      security-headers — CSP, Permissions-Policy, HSTS (за флагом), убран
-      устаревший `X-XSS-Protection`; новый `csrf_protection_middleware`
-      (double-submit, исключения для `/auth/login`/`/auth/register` и
-      запросов с `Authorization`).
-- [+] `main.py`: `_rate_limit_client` переведён на общий
-      `core/request_context.py`.
-- [+] `contracts/openapi.yaml` + `pnpm contracts:generate`.
+- [ ] Миграция `053_domain_events_in_flight.sql`: колонка `locked_at`,
+      расширение `domain_events_status_check` значением `in_flight`.
+- [ ] `repositories/domain_events.py`: новые
+      `lock_and_mark_in_flight_domain_events` (короткая транзакция:
+      `SELECT ... FOR UPDATE SKIP LOCKED` + `UPDATE ... SET status =
+      'in_flight'`), `requeue_stale_in_flight_domain_events` (восстановление
+      «зависших» in_flight после падения процесса).
+- [ ] `scripts/outbox_relay_runner.py::run_relay`: короткая транзакция на
+      lock+mark-in-flight, `publisher.publish()` вне транзакции, отдельная
+      короткая транзакция на relayed/failed на каждое событие; dry-run
+      переведён на не блокирующий `list_pending_domain_events` (не трогает
+      состояние).
+- [ ] `KafkaPublisher`: явные `message.timeout.ms`/`delivery.timeout.ms`
+      вместо дефолтных 300с.
+- [ ] Обновлены `tests/test_outbox_relay.py` под новые функции репозитория;
+      добавлен тест на requeue зависшего `in_flight`.
 
-## Реализация — frontend
+## Реализация — P1-2: advisory-lock на дневные лимиты
 
-- [+] `shared/auth/session.ts`: убраны localStorage-хелперы токена; новый
-      `csrfHeaders()` читает CSRF-cookie.
-- [+] `shared/auth/AuthProvider.tsx`: не хранит токен в localStorage,
-      полагается на httpOnly cookie; `refresh()` больше не блокируется
-      отсутствием токена в localStorage.
-- [+] `shared/api/http.ts`: `credentials: "include"` на все четыре метода.
-- [+] `shared/api/auth.ts`, `data-quality.ts`, `migrationBoard.ts`,
-      `watchlists.ts`: `authHeaders` → `csrfHeaders` (механическое
-      переименование под новую семантику).
-- [+] `next.config.mjs`: заголовки CSP/Permissions-Policy/X-Frame-Options/
-      X-Content-Type-Options/Referrer-Policy.
-- [+] `AccountView.tsx`: показ устройства/IP по сессии, отметка текущей
-      сессии, баннер «вход с нового устройства» с подтверждением,
-      запрос пароля перед «Отозвать все сессии».
+- [ ] `services/migration_board/helpers.py`:
+      `with_daily_limit_lock(connection, user_id, scope)` —
+      `pg_advisory_xact_lock(hashtext(...))`.
+- [ ] `threads.py::send_thread_message`, `posts.py::create_user_post`,
+      `contacts.py::create_contact_request`,
+      `reporting.py::_create_report` — count+insert обёрнуты в
+      `with connection.transaction():` с предварительным
+      `with_daily_limit_lock`.
+- [ ] Конкурентный тест (threading, N потоков) на лимит сообщений треда —
+      лимит не превышается ни разу за серию прогонов.
+
+## Реализация — P1-3: UniqueViolation вместо 500
+
+- [ ] `services/auth.py::register_user` — `create_user`/
+      `set_password_credential` обёрнуты в `try/except UniqueViolation` →
+      тот же 409 `email_already_registered`.
+- [ ] `services/country_contribution/proposals.py::create_proposal` —
+      транзакционный блок обёрнут в `try/except UniqueViolation`,
+      маппинг по имени констрейнта на `country_slug_taken`/
+      `country_iso_taken`.
+- [ ] `services/author_metrics/definitions.py::create_my_definition` —
+      `create_definition` обёрнут в `try/except UniqueViolation` → 409
+      `author_metric_slug_taken`.
+- [ ] Тесты: параллельный (двойной) register/create_proposal/
+      create_my_definition — ровно один успех, второй — чистый 409, не 500.
+
+## Реализация — P2-9: конвенция коммита
+
+- [+] Решение: пул (`ConnectionPool.connection()`) уже коммитит на чистом
+      выходе / откатывает на исключении — это подтверждённый, безопасный
+      и неявный контракт `get_connection`. Явные `connection.commit()` в
+      40+ роутерах избыточны, но безвредны; 13 существующих эндпоинтов уже
+      полагаются только на неявный коммит и работают корректно. Механическая
+      правка 40+ файлов ради чисто косметической консистентности — вне
+      объёма (не баг, не риск). Решение задокументировано в docstring
+      `get_connection` и в финальном отчёте; тест-инвариант не заводится,
+      т.к. любой вариант конвенции корректен и запись строгого теста была
+      бы произвольной.
+- [ ] `core/database.py::get_connection` — добавлен docstring,
+      фиксирующий контракт явно.
 
 ## Тесты
 
-- [+] Unit: ротация токена (актуальный + grace-период предыдущего),
-      определение нового устройства, step-up отклоняет неверный пароль,
-      CSRF-мидлварь пропускает/блокирует по матрице случаев.
-- [+] Миграционный тест на новые колонки/таблицу/constraint.
-- [+] Обновлены существующие `test_auth_sessions.py`/`test_auth_api.py`
-      под новые поля без потери покрытия старого поведения.
-- [+] Playwright: логин выставляет httpOnly cookie сессии (JS не может её
-      прочитать), сессия переживает reload без localStorage, мутирующий
-      запрос без CSRF-заголовка получает 403 (там, где это проверяемо на
-      уровне E2E), существующие auth/RBAC сценарии не регрессируют.
-
-## Проверка
-
-- [+] `py -3.12 -m pytest tests/ -q` зелёный.
-- [+] `py -3.12 -m mypy apps scripts tests` чистый.
-- [+] `py -3.12 -m ruff check` / `ruff format --check` чистые.
-- [+] `pnpm --filter web typecheck` / `lint` / `build` чистые.
-- [+] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
-      зелёный (78 OK, 0 FAIL), включая Playwright E2E 283/283.
-- [+] Дополнительно найден и исправлен один непроходящий существующий
-      E2E-тест (`web-mvp-analytical-pages.spec.ts` — гонка между рендером
-      и асинхронным определением состояния аутентификации через cookie;
-      переведён на `page.waitForSelector` вместо мгновенного
-      `isVisible()`), и попутно исправлен унаследованный от AE-2 баг
-      порядка мидлварей (см. отчёт).
+- [ ] Полный `py -3.12 -m pytest tests/ -q` зелёный.
+- [ ] `py -3.12 -m mypy apps scripts tests` чистый.
+- [ ] `py -3.12 -m ruff check` / `ruff format --check` чистые.
+- [ ] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
+      зелёный, включая Playwright E2E.
 
 ## Завершение
 
-- [+] Чек-лист заполнен `+`/`-`.
-- [+] `docs/_arch_/09_План_устранения_аудита.md`: статус AE-3 обновлён.
-- [+] Финальный отчёт написан (включая явно обозначенные компромиссы:
-      `script-src 'unsafe-inline'` в CSP как принятый временный шаг вместо
-      nonce-based CSP; уведомление о новом устройстве — только через
-      собственный in-app баннер, без внешней интеграции, по правилу
-      автономной разработки).
-- [+] Коммит, merge в `main` (ff-only), push на `origin/main` — по прямому
-      запросу владельца (уже дан).
+- [ ] Чек-лист заполнен `+`/`-`.
+- [ ] `docs/_arch_/09_План_устранения_аудита.md`: статус AE-4 обновлён.
+- [ ] Финальный отчёт написан (включая явно обозначенное решение по P2-9).
+- [ ] Коммит на ветке; merge в `main` и push — только по отдельному прямому
+      запросу владельца (в этот раз запрос был только «выполни AE-4», без
+      явного «мердж и пуш» — жду подтверждения перед мерджем, по аналогии с
+      AE-1/AE-2).
