@@ -107,7 +107,7 @@
 [+] .ai/project/11-commands.md: команда go test обновлена под -race +
     заметка про локальный CGO-гэп; AGENTS.md перегенерирован
     (sync-agents)
-[ ] Коммит на branch fix/ci-testing-hardening-v1
-[ ] ff-merge в main, push
-[ ] Финальный отчёт с честной пометкой про локальное CGO-ограничение
+[+] Коммит на branch fix/ci-testing-hardening-v1
+[+] ff-merge в main, push
+[+] Финальный отчёт с честной пометкой про локальное CGO-ограничение
 ```
