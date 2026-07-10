@@ -1,96 +1,120 @@
-# Чек-лист задачи: Аудит-эпизод 10 — архитектурная гигиена (AE-10) + общая чистка
+# Чек-лист задачи: конвейер синтетических данных — Этап 3 (контент и сценарии)
 
-Источник: `docs/_arch_/09_План_устранения_аудита.md` (раздел «Аудит-эпизод
-10»), находки P2-8, P2-2, P3-3, P3-4, P3-6, P3-7, P3-8, P3-10, P3-11.
+Источник: `docs/synthetic_data/synthetic_data_pipeline_technical_specification.md`,
+раздел 23, «Этап 3 — пользователи, контент и сценарии тестирования».
+Зависимость: Этап 1 (основание) и Этап 2 (страны и временная динамика) —
+уже реализованы и смержены в `main`.
 
-Владелец явно попросил: **без коммитов и пушей** — всё ниже оставлено как
-незакоммиченные изменения в рабочем дереве ветки `fix/architecture-hygiene-v1`
-для собственного ревью и последующего коммита владельцем.
+Ветка: `feat/synthetic-data-stage3-content-v1`.
 
-## 1. Находки эпизода
+## Подготовка
 
-```text
-[+] P2-8 (PII): единый services/pii_patterns.py; SQL DQ-проверки переведены
-    на Python-фильтр вместо дублирующего POSIX-regex
-[+] P2-8 (lifecycle): country_cards — находка устарела (уже исправлено
-    миграцией 007, подтверждено прямым запросом к БД); попутно найден и
-    устранён СВОЙ второй источник дублирования PublicationStatus,
-    случайно созданный при реализации P3-3 (пойман mypy)
-[+] P2-2 / P3-8 (COUNT OVER / LIMIT-OFFSET): осознанно не тронуты — сами
-    находки рекомендуют не трогать без реального объёма данных;
-    подтверждено отсутствием admin-панели в apps/web, использующей total
-[+] P3-3: admin status Query -> PublicationStatus enum (422 вместо
-    молчаливого пустого списка); контракт + generated types обновлены
-[+] P3-4: Idempotency-Key на create-proposal и create-my-definition поверх
-    существующего CacheBackend; frontend-часть (disable-on-submit) не
-    применима — форм для этих эндпоинтов в apps/web ещё нет
-[+] P3-6: отдельный мини-пул для /ready (не пересекается с основным)
-[+] P3-7: sync.WaitGroup вокруг gRPC-горутины в notifier; Run() дожидается
-    её завершения симметрично HTTP Shutdown
-[+] P3-10: без действия по коду — зафиксировано в 02_Реестр_инвариантов.md
-[+] P3-11: _total(rows) вынесен в services/list_helpers.py (был идентичен
-    в 5 местах); _audit(...) НЕ унифицирован — 3 разные сигнатуры
-    отражают реальные различия данных на местах вызова, не случайное
-    дублирование; риск унификации несоразмерен P3-важности
-```
+- [+] Перечитан раздел 23 «Этап 3» техзадания (состав работ + критерии
+      перехода) и раздел 6.3 (люди и контент), 8.1-8.2 (блоки и рецепты
+      документов), 9 (формат сценариев).
+- [+] Изучено текущее состояние `scripts/synthetic_data/core/`:
+      `world_models.py`, `world_input.py`, `world_generator.py`,
+      `world_validation.py`, `seed.py`, `cli.py`, `world_config.json`.
+      Подтверждено: Этапы 1-2 закрыты (Pydantic-модели, детерминированный
+      seed, генератор архетипов, валидатор диапазонов/связности).
 
-## 2. Побочные находки (вне исходного набора эпизода)
+## Реализация — канонические модели (`world_models.py`)
 
-```text
-[+] apps/notifier/Dockerfile собирался с golang:1.23-alpine, а go.mod
-    требует go 1.25.0 — образ вообще не собирался. Исправлено.
-[+] 7 рабочих, но незарегистрированных скриптов зарегистрированы в
-    dev_tools_scripts_runner.py (cleanup-expired-sessions,
-    recompute-country-drift/platform-metrics/trust-scores, outbox-relay,
-    export-demo-countries, translation-pipeline-status)
-[+] При регистрации найдены и исправлены 2 независимых бага:
-    outbox_relay.py не добавлял apps/api в sys.path (ModuleNotFoundError
-    при каждом запуске); translation_pipeline_status.py использовал
-    DATABASE_URL-дефолт без логина/пароля
-[+] Однократная необъяснённая потеря 09_План_устранения_аудита.md и
-    audit_result.txt обнаружена и устранена (git checkout HEAD — оба
-    файла совпали с HEAD без диффа, содержимое не пострадало). Причина не
-    установлена; остальное дерево проверено, других пропаж не найдено.
-```
+- [ ] `SyntheticUser` (user_id, display_name, email на `example.test`,
+      role, locale).
+- [ ] `SyntheticAuthor` (author_id, user_id, display_name, reputation,
+      specialization, bio).
+- [ ] `SyntheticArticle` (article_id, author_id, country_id, title,
+      summary, source_ids, published_as_of).
+- [ ] `SyntheticComment` (comment_id, article_id, user_id, body,
+      created_as_of, moderation_status).
+- [ ] `SyntheticLegalSignal` (signal_id, country_id, event_id,
+      effective_as_of, impact, confidence, source_id,
+      affected_country_ids).
+- [ ] `ResolvedBlock` + `SyntheticDocumentRecipe` (recipe_id,
+      document_type, country_id, blocks — рецепт как ссылки на факты
+      и текстовые блоки, не как независимый шаблон).
+- [ ] `ScenarioStep`, `ScenarioExpectedResult`, `SyntheticScenario`
+      (машиночитаемый формат: исходное состояние, действия, ожидаемый
+      результат, связанные артефакты, метки риска).
+- [ ] `SyntheticWorld` расширен новыми полями: users, authors, articles,
+      comments, legal_signals, document_recipes, scenarios.
 
-## 3. Проверки
+## Реализация — входные данные (`world_input.py` + `world_config.json`)
 
-```text
-[+] python -m ruff check apps packages scripts tests — зелёный
-[+] python -m ruff format --check apps packages scripts tests — зелёный
-[+] python -m mypy apps/api packages scripts tests — зелёный (624 файла)
-[+] python -m pytest tests/ — зелёный (полный прогон, несколько раз по
-    ходу работы + финальный прогон)
-[+] go build / go vet / go test (apps/notifier) — зелёные
-[+] Ручная проверка P3-7: собранный образ notifier поднят с mongo+
-    redpanda, SIGTERM отправлен живому контейнеру — "notifier stopped"
-    только после остановки gRPC-сервера, exit code 0
-[+] pnpm --filter @country-decision-atlas/web typecheck/lint/build —
-    зелёные (контракт менялся из-за P3-3/P3-4)
-[+] pnpm format:check (репозиторий целиком) — зелёный
-[+] Полный playwright test — 284/284 зелёный (1.2 мин). Первый прогон
-    показал только 68/284 за 12.6 мин из-за краха самого Docker Desktop
-    (демон упал, все контейнеры Exited(255)) в процессе фонового прогона
-    — не связано с этой работой; Docker Desktop перезапущен, контейнеры
-    подняты заново, тест перепрогнан начисто с тем же кодом — 284/284
-```
+- [ ] `user_given_names`/`user_family_names` — словари вымышленных имён
+      (без совпадений с реальными людьми, техническая генерация).
+- [ ] `document_blocks` — библиотека текстовых блоков (id, kind,
+      applies_to, requires, variants) для локали `en-US`.
+- [ ] `document_recipes` — рецепты (id/document_type, упорядоченный
+      список block id).
+- [ ] Расширены существующие проверки `_ensure_input_is_safe` — новые
+      секции конфигурации проходят ту же проверку на PII/секреты/URL.
 
+## Реализация — генерация
 
-## 4. Документация
+- [ ] Новый `core/content_generator.py`: детерминированная генерация
+      пользователей, авторов, статей, комментариев (с разными статусами
+      модерации — approved/pending/hidden), правовых сигналов (привязаны
+      к уже существующему событию страны — связность по правилу 7.2).
+- [ ] Новый `core/document_recipes.py`: разрешение рецепта в
+      `ResolvedBlock` по фактам конкретной страны; ошибка при ссылке на
+      несуществующий факт.
+- [ ] Новый `core/scenario_generator.py`: генерация ≥3 базовых сценариев
+      (сравнение стран; работа с источником/комментарием; изменение
+      данных + watchlist + fake-уведомление) плюс сценарий с неполными/
+      конфликтующими/устаревшими данными (страна с минимальным
+      `data_confidence`).
+- [ ] `world_generator.py`: оркестрация — сборка контента и сценариев
+      поверх уже сгенерированных стран, сборка итогового `SyntheticWorld`.
 
-```text
-[+] Статус AE-10 в 09_План_устранения_аудита.md заполнен (по образцу
-    AE-1..AE-9), включая честную запись обо всех отступлениях от наброска
-[+] Карта зависимостей в том же файле обновлена (AE-10 → сделано)
-[+] 02_Реестр_инвариантов.md дополнен пунктом про сиды в миграциях (P3-10)
-[+] Чек-лист заполнен отметками +/-
-```
+## Реализация — валидация (`world_validation.py`)
 
-## 5. Завершение
+- [ ] Все `author.user_id`, `article.author_id`/`country_id`/`source_ids`,
+      `comment.article_id`/`user_id`, `legal_signal.country_id`/
+      `event_id`/`source_id`, `document_recipe.country_id`,
+      `scenario.related_artifacts` — ссылаются на существующие сущности.
+- [ ] Email пользователей оканчиваются на `example.test`.
+- [ ] `moderation_status` — из допустимого множества, встречаются не
+      менее двух разных статусов в мире.
+- [ ] Документный рецепт: каждый `requires` блока разрешим на фактах
+      страны, иначе ошибка валидации.
+- [ ] Сценарии: минимум 3 сценария, каждый со непустыми `steps` и
+      `expected_results`; отдельно проверено наличие сценария с меткой
+      неполных/устаревших данных.
 
-```text
-[+] Владелец подтвердил: коммит и push на origin/main через слияние веток.
-    Перед коммитом повторно прогнаны ruff check, mypy, pytest — все
-    зелёные на текущем состоянии рабочего дерева.
-[+] Итоговый отчёт написан
-```
+## Тесты
+
+- [ ] `tests/test_world_models.py`: новые модели, JSON Schema.
+- [ ] `tests/test_world_input.py`: парсинг новых секций конфигурации,
+      отклонение PII/секретов в них же.
+- [ ] `tests/test_world_generator.py`: пользователи/авторы/статьи/
+      комментарии/правовые сигналы связаны с существующими странами;
+      воспроизводимость по seed сохраняется.
+- [ ] Новый `tests/test_document_recipes.py`.
+- [ ] Новый `tests/test_scenario_generator.py`.
+- [ ] `tests/test_world_validation.py`: новые невалидные миры (чужой
+      author_id, несуществующий факт в рецепте, сценарий без шагов) —
+      каждый ловится валидатором с понятной ошибкой.
+- [ ] Ручной прогон `validate`/`plan`/`generate` — новый контент виден
+      в выводе `plan` и в `synthetic_world.json`.
+
+## Проверка
+
+- [ ] `py -3.12 -m pytest scripts/synthetic_data/tests/ -q` зелёный.
+- [ ] `py -3.12 -m mypy scripts/synthetic_data` чистый.
+- [ ] `py -3.12 -m ruff check scripts/synthetic_data` / `ruff format --check` чистые.
+- [ ] Полный `py -3.12 -m pytest tests/ -q` (весь проект) зелёный.
+- [ ] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
+      зелёный.
+
+## Завершение
+
+- [ ] Чек-лист заполнен `+`/`-`.
+- [ ] Раздел 23 «Этап 3» техзадания: статус обновлён на «реализовано»
+      с честной записью отступлений (если будут).
+- [ ] Финальный отчёт написан.
+- [ ] Коммит на ветке. Merge в `main` и push на `origin/main` — только
+      после отдельного явного подтверждения владельца (по аналогии с
+      AE-4 в этой же сессии: «реализуй этап 3» само по себе не было
+      командой на мердж/пуш).
