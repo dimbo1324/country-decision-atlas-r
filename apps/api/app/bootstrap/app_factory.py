@@ -42,7 +42,12 @@ from app.api.v1 import (
     weight_profiles,
     what_changed,
 )
-from app.core.database import close_database_pool, open_database_pool
+from app.core.database import (
+    close_database_pool,
+    close_readiness_pool,
+    open_database_pool,
+    open_readiness_pool,
+)
 from app.core.request_context import bind_request_id, reset_request_id
 from app.schemas.system import HealthResponse, ReadinessResponse
 from app.services import metrics
@@ -98,9 +103,11 @@ def _lifespan() -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         open_database_pool()
+        open_readiness_pool()
         try:
             yield
         finally:
+            close_readiness_pool()
             close_database_pool()
 
     return lifespan

@@ -1,6 +1,7 @@
 from app.repositories import data_quality as repository
 from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
 from app.services.data_quality._issues import _check, _issue
+from app.services.pii_patterns import contains_pii
 from psycopg import Connection
 from typing import Any
 
@@ -73,17 +74,23 @@ def _append_author_metrics_checks(
         )
     )
 
-    for row in repository.list_published_author_metrics_with_pii(connection):
-        issues.append(
-            _issue(
-                "author_metric_public_text_contains_pii",
-                "critical",
-                "author_metric_definition",
-                row.get("id"),
-                "Published public author metric text contains direct contact details.",
-                {"id": row.get("id")},
+    for row in repository.list_published_public_author_metrics_text(connection):
+        if contains_pii(
+            str(row.get("name_en") or ""),
+            str(row.get("name_ru") or ""),
+            str(row.get("methodology_en") or ""),
+            str(row.get("methodology_ru") or ""),
+        ):
+            issues.append(
+                _issue(
+                    "author_metric_public_text_contains_pii",
+                    "critical",
+                    "author_metric_definition",
+                    row.get("id"),
+                    "Published public author metric text contains direct contact details.",
+                    {"id": row.get("id")},
+                )
             )
-        )
     checks.append(
         _check(
             "author_metrics_public_text_has_no_pii",

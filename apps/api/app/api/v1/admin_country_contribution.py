@@ -1,6 +1,7 @@
 from app.core.auth import CurrentUser
 from app.core.database import get_connection
 from app.core.rbac import require_editor
+from app.schemas.common import PublicationStatus
 from app.schemas.country_contribution import (
     CountryProposalListResponse,
     CountryProposalResponse,
@@ -25,12 +26,15 @@ _Conn = Annotated[Connection[Any], Depends(get_connection)]
 def list_country_proposals_for_curation(
     connection: _Conn,
     _: _Editor,
-    status: str | None = Query(None),
+    status: PublicationStatus | None = Query(None),  # noqa: B008
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
 ) -> dict[str, Any]:
     return service.list_proposals_for_curation(
-        connection, status=status, limit=limit, offset=offset
+        connection,
+        status=status.value if status is not None else None,
+        limit=limit,
+        offset=offset,
     )
 
 

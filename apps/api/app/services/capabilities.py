@@ -3,6 +3,7 @@ from app.core.errors import api_error
 from app.repositories import capabilities as repository
 from app.repositories.audit import insert_audit_event
 from app.services import admin_users
+from app.services.list_helpers import total_from_window_count
 from collections.abc import Iterable
 from psycopg import Connection
 from typing import Any
@@ -110,7 +111,7 @@ def list_capabilities(
         limit=limit,
         offset=offset,
     )
-    return {"items": rows, "total": _total(rows)}
+    return {"items": rows, "total": total_from_window_count(rows)}
 
 
 def _ensure_known_capability(capability: str) -> None:
@@ -140,9 +141,3 @@ def _audit(
         changed_by=current_user.id,
         changes={"user_id": row["user_id"], "capability": row["capability"]},
     )
-
-
-def _total(rows: list[dict[str, Any]]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0].get("total_count") or len(rows))

@@ -53,9 +53,17 @@ def list_migration_board_posts_with_route_country_mismatch(
     )
 
 
-def list_migration_board_public_posts_with_pii(
+def list_published_public_migration_board_posts_text(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
+    """Candidate rows for the PII data-quality check (P2-8, Аудит-эпизод 10).
+
+    See app.repositories.data_quality.author_metrics.
+    list_published_public_author_metrics_text for why this returns
+    unfiltered candidates instead of matching a hand-written PostgreSQL
+    regex duplicate of app.services.pii_patterns.PII_PATTERNS — the same
+    POSIX-vs-PCRE dialect gap applies here.
+    """
     return fetch_all(
         connection,
         """
@@ -64,16 +72,6 @@ def list_migration_board_public_posts_with_pii(
         WHERE status = 'published'
           AND moderation_status = 'approved'
           AND visibility IN ('public', 'members_only')
-          AND (
-              title ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR summary ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR title ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR summary ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR title ~* 'https?://|www\\.'
-              OR summary ~* 'https?://|www\\.'
-              OR title ~ '(\\+?\\d[\\s().-]*){8,}'
-              OR summary ~ '(\\+?\\d[\\s().-]*){8,}'
-          )
         """,
     )
 

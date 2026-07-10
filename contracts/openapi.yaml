@@ -7708,6 +7708,15 @@ paths:
       - author-metrics
       summary: Create My Author Metric
       operationId: create_my_author_metric_api_v1_me_author_metrics_post
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
       requestBody:
         content:
           application/json:
@@ -8059,7 +8068,7 @@ paths:
         required: false
         schema:
           anyOf:
-          - type: string
+          - $ref: '#/components/schemas/PublicationStatus'
           - type: 'null'
           title: Status
       - name: limit
@@ -8193,6 +8202,15 @@ paths:
       operationId: create_my_country_proposal_api_v1_me_country_proposals_post
       security:
       - BearerAuth: []
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
       requestBody:
         required: true
         content:
@@ -8698,7 +8716,7 @@ paths:
         required: false
         schema:
           anyOf:
-          - type: string
+          - $ref: '#/components/schemas/PublicationStatus'
           - type: 'null'
           title: Status
       - name: limit

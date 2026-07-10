@@ -1,4 +1,3 @@
-import re
 from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories import author_metrics as repository
@@ -8,6 +7,7 @@ from app.services.feature_flags import (
     ensure_feature_enabled as _ensure_feature_enabled,
 )
 from app.services.methodology_config import get_active_methodology_config
+from app.services.pii_patterns import contains_pii
 from psycopg import Connection
 from typing import Any
 from uuid import UUID
@@ -18,12 +18,6 @@ ALLOWED_POLARITIES = {"higher_is_better", "lower_is_better"}
 ALLOWED_LICENSES = {"platform", "cc_by_sa"}
 ALLOWED_VISIBILITIES = {"private", "public"}
 LOCKED_LICENSE_STATUSES = {"review", "published", "archived"}
-PII_PATTERNS = (
-    re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.IGNORECASE),
-    re.compile(r"(?:\+?\d[\s().-]*){8,}"),
-    re.compile(r"(?<!\w)@[A-Za-z0-9_]{4,32}\b"),
-    re.compile(r"https?://|www\.", re.IGNORECASE),
-)
 
 
 def ensure_feature_enabled(connection: Connection[Any]) -> None:
@@ -77,8 +71,7 @@ def get_definition_or_404(
 
 
 def _reject_pii(*texts: str) -> None:
-    combined = "\n".join(texts)
-    if any(pattern.search(combined) for pattern in PII_PATTERNS):
+    if contains_pii(*texts):
         raise api_error(
             422,
             "pii_not_allowed",
@@ -267,12 +260,6 @@ def _reputation(row: dict[str, Any]) -> dict[str, Any]:
         "computed_at": row["computed_at"],
         "methodology_version": row["methodology_version"],
     }
-
-
-def _total(rows: list[dict[str, Any]]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0].get("total_count") or len(rows))
 
 
 def _audit(

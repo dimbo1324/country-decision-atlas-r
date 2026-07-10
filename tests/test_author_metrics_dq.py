@@ -77,8 +77,16 @@ def test_author_metrics_data_quality_detects_pii_and_dangling_fork(
     install_clean_report_fakes(monkeypatch)
     monkeypatch.setattr(
         data_quality_repository,
-        "list_published_author_metrics_with_pii",
-        lambda *_: [{"id": "metric-3"}],
+        "list_published_public_author_metrics_text",
+        lambda *_: [
+            {
+                "id": "metric-3",
+                "name_en": "Cost of Living",
+                "name_ru": "Стоимость жизни",
+                "methodology_en": "Contact me at author@example.com for details.",
+                "methodology_ru": "",
+            }
+        ],
     )
     monkeypatch.setattr(
         data_quality_repository,
@@ -93,3 +101,28 @@ def test_author_metrics_data_quality_detects_pii_and_dangling_fork(
         "author_metric_public_text_contains_pii",
         "author_metric_dangling_fork_lineage",
     }.issubset({issue.code for issue in report.issues})
+
+
+def test_author_metrics_data_quality_ignores_clean_public_text(
+    monkeypatch: Any,
+) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_public_author_metrics_text",
+        lambda *_: [
+            {
+                "id": "metric-5",
+                "name_en": "Cost of Living",
+                "name_ru": "Стоимость жизни",
+                "methodology_en": "Computed from public statistics.",
+                "methodology_ru": "Рассчитано из открытых данных.",
+            }
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert "author_metric_public_text_contains_pii" not in {
+        issue.code for issue in report.issues
+    }

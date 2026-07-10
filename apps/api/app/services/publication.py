@@ -1,12 +1,13 @@
 from app.core.errors import api_error
+from app.schemas.common import PublicationStatus
 
 
-PUBLICATION_STATUSES: tuple[str, ...] = (
-    "draft",
-    "review",
-    "published",
-    "archived",
-    "rejected",
+# Re-exported so existing importers of `PUBLICATION_STATUSES`/transition
+# helpers from this module don't need a second import; the enum itself is
+# defined once in app.schemas.common (P2-8, Аудит-эпизод 10 — this used to
+# be a second, hand-duplicated tuple here).
+PUBLICATION_STATUSES: tuple[str, ...] = tuple(
+    status.value for status in PublicationStatus
 )
 
 _ALLOWED: dict[str, frozenset[str]] = {

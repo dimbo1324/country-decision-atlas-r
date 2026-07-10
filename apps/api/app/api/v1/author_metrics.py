@@ -21,8 +21,10 @@ from app.schemas.author_metrics import (
     UpdateAuthorMetricRequest,
 )
 from app.services import author_metrics as service
+from app.services.cache import get_cache_backend
 from app.services.capabilities import AUTHOR_METRICS
-from fastapi import APIRouter, Depends, Query, status
+from app.services.idempotency import with_idempotency_key
+from fastapi import APIRouter, Depends, Header, Query, status
 from psycopg import Connection
 from typing import Annotated, Any
 from uuid import UUID
@@ -91,12 +93,24 @@ def create_my_author_metric(
     current_user: Annotated[
         CurrentUser, Depends(require_capability(AUTHOR_METRICS))
     ],
+    idempotency_key: Annotated[
+        str | None, Header(alias="Idempotency-Key")
+    ] = None,
 ) -> dict[str, Any]:
-    definition = service.create_my_definition(
-        connection, current_user=current_user, payload=payload
+    def _create() -> dict[str, Any]:
+        definition = service.create_my_definition(
+            connection, current_user=current_user, payload=payload
+        )
+        connection.commit()
+        return definition
+
+    return with_idempotency_key(
+        get_cache_backend(),
+        scope="author_metric_definition_create",
+        user_id=current_user.id,
+        idempotency_key=idempotency_key,
+        create=_create,
     )
-    connection.commit()
-    return definition
 
 
 @router.get(

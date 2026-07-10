@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -86,7 +87,10 @@ func Run() {
 	if cfg.GRPCAuthToken == "" {
 		log.Printf("warning: GRPC_AUTH_TOKEN is not set, gRPC subscription service will reject all calls")
 	}
+	var grpcWG sync.WaitGroup
+	grpcWG.Add(1)
 	go func() {
+		defer grpcWG.Done()
 		log.Printf("gRPC server starting addr=%s", cfg.GRPCAddr)
 		if err := grpcserver.Serve(ctx, cfg.GRPCAddr, cfg.GRPCAuthToken, grpcSrv); err != nil {
 			log.Printf("gRPC server error: %v", err)
@@ -154,6 +158,7 @@ func Run() {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	_ = httpSrv.Shutdown(shutdownCtx)
+	grpcWG.Wait()
 
 	log.Println("notifier stopped")
 }

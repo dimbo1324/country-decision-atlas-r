@@ -263,7 +263,7 @@ def test_readiness_checks_database(monkeypatch: pytest.MonkeyPatch) -> None:
     connection = MagicMock()
     pool = MagicMock()
     pool.connection.return_value.__enter__.return_value = connection
-    monkeypatch.setattr(main_module, "get_pool", lambda: pool)
+    monkeypatch.setattr(main_module, "get_readiness_pool", lambda: pool)
     response = ready()
     assert response.database == "ok"
     connection.execute.assert_called_once_with("SELECT 1")
@@ -274,7 +274,7 @@ def test_readiness_returns_controlled_503(
 ) -> None:
     monkeypatch.setattr(
         main_module,
-        "get_pool",
+        "get_readiness_pool",
         MagicMock(side_effect=RuntimeError("unavailable")),
     )
     with pytest.raises(HTTPException) as error:

@@ -7,8 +7,11 @@ from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+API_DIR = ROOT_DIR / "apps" / "api"
+for _import_path in (ROOT_DIR, API_DIR):
+    _import_path_str = str(_import_path)
+    if _import_path_str not in sys.path:
+        sys.path.insert(0, _import_path_str)
 from scripts.outbox_relay_runner import (
     DEFAULT_BATCH_SIZE,
     DEFAULT_KAFKA_TOPIC,

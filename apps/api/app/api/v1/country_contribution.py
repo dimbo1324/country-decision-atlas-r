@@ -19,8 +19,10 @@ from app.schemas.country_contribution import (
     GenericListResponse,
 )
 from app.services import country_contribution as service
+from app.services.cache import get_cache_backend
 from app.services.capabilities import CONTRIBUTOR_COUNTRIES
-from fastapi import APIRouter, Depends, Query, status
+from app.services.idempotency import with_idempotency_key
+from fastapi import APIRouter, Depends, Header, Query, status
 from psycopg import Connection
 from typing import Annotated, Any
 from uuid import UUID
@@ -43,12 +45,24 @@ def create_my_country_proposal(
     payload: CountryProposalCreate,
     connection: _Conn,
     current_user: _Contributor,
+    idempotency_key: Annotated[
+        str | None, Header(alias="Idempotency-Key")
+    ] = None,
 ) -> dict[str, Any]:
-    proposal = service.create_proposal(
-        connection, current_user=current_user, payload=payload
+    def _create() -> dict[str, Any]:
+        proposal = service.create_proposal(
+            connection, current_user=current_user, payload=payload
+        )
+        connection.commit()
+        return {"item": proposal}
+
+    return with_idempotency_key(
+        get_cache_backend(),
+        scope="country_proposal_create",
+        user_id=current_user.id,
+        idempotency_key=idempotency_key,
+        create=_create,
     )
-    connection.commit()
-    return {"item": proposal}
 
 
 @router.get("/me/country-proposals", response_model=CountryProposalListResponse)

@@ -43,8 +43,8 @@ from app.repositories.data_quality.author_metrics import (
     list_author_metric_values_missing_source_or_experience as list_author_metric_values_missing_source_or_experience,
     list_author_metric_values_out_of_scale as list_author_metric_values_out_of_scale,
     list_author_metrics_with_dangling_fork_lineage as list_author_metrics_with_dangling_fork_lineage,
-    list_published_author_metrics_with_pii as list_published_author_metrics_with_pii,
     list_published_author_metrics_without_methodology as list_published_author_metrics_without_methodology,
+    list_published_public_author_metrics_text as list_published_public_author_metrics_text,
 )
 from app.repositories.data_quality.cii import (
     list_cii_metric_definitions_without_polarity as list_cii_metric_definitions_without_polarity,
@@ -136,10 +136,10 @@ from app.repositories.data_quality.migration_board import (
     list_invalid_migration_board_contact_requests as list_invalid_migration_board_contact_requests,
     list_invalid_migration_board_reports as list_invalid_migration_board_reports,
     list_migration_board_posts_with_route_country_mismatch as list_migration_board_posts_with_route_country_mismatch,
-    list_migration_board_public_posts_with_pii as list_migration_board_public_posts_with_pii,
     list_open_threads_without_active_contact as list_open_threads_without_active_contact,
     list_published_migration_board_posts_without_acknowledgements as list_published_migration_board_posts_without_acknowledgements,
     list_published_migration_board_posts_without_approval as list_published_migration_board_posts_without_approval,
+    list_published_public_migration_board_posts_text as list_published_public_migration_board_posts_text,
     list_thread_messages_after_block as list_thread_messages_after_block,
     list_thread_messages_after_thread_closed as list_thread_messages_after_thread_closed,
 )

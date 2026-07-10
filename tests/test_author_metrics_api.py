@@ -8,6 +8,7 @@ from app.repositories import capabilities as capabilities_repository
 from app.services import author_metrics as author_metrics_service
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from tests.cache_test_helpers import FakeCacheBackend
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -155,6 +156,76 @@ def test_create_my_author_metric_commits_and_returns_definition(
     CONNECTION.commit.assert_called()
 
 
+def _fake_definition(suffix: str) -> dict[str, Any]:
+    return {
+        "id": f"11111111-1111-1111-1111-11111111111{suffix}",
+        "slug": "cost-of-living",
+        "name_en": "Cost of Living",
+        "name_ru": "Стоимость жизни",
+        "methodology_en": "",
+        "methodology_ru": "",
+        "polarity": "lower_is_better",
+        "scale_min": 0,
+        "scale_max": 100,
+        "license": "platform",
+        "author": {"user_id": USER.id, "display_name": "User"},
+        "forked_from_id": None,
+        "version": 1,
+        "published_at": None,
+        "status": "draft",
+        "visibility": "private",
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-01T00:00:00Z",
+        "submitted_at": None,
+        "archived_at": None,
+        "rejected_at": None,
+        "moderation_reason": None,
+    }
+
+
+def test_create_my_author_metric_repeated_idempotency_key_does_not_duplicate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        capabilities_repository, "has_active_grant", lambda *_a, **_kw: True
+    )
+    shared_cache = FakeCacheBackend()
+    monkeypatch.setattr(
+        author_metrics, "get_cache_backend", lambda: shared_cache
+    )
+    calls: list[int] = []
+
+    def fake_create(_connection: Any, **_kwargs: Any) -> dict[str, Any]:
+        calls.append(1)
+        return _fake_definition(str(len(calls)))
+
+    monkeypatch.setattr(
+        author_metrics_service, "create_my_definition", fake_create
+    )
+
+    client = _client(USER)
+    payload = {
+        "slug": "cost-of-living",
+        "name_en": "Cost of Living",
+        "name_ru": "Стоимость жизни",
+    }
+    first = client.post(
+        "/api/v1/me/author-metrics",
+        json=payload,
+        headers={"Idempotency-Key": "retry-1"},
+    )
+    second = client.post(
+        "/api/v1/me/author-metrics",
+        json=payload,
+        headers={"Idempotency-Key": "retry-1"},
+    )
+
+    assert first.status_code == 201
+    assert second.status_code == 201
+    assert first.json() == second.json()
+    assert len(calls) == 1
+
+
 def test_regular_user_cannot_approve_author_metric(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -215,6 +286,44 @@ def test_moderator_can_approve_author_metric(
 def test_admin_author_metrics_queue_requires_auth() -> None:
     response = _client().get("/api/v1/admin/author-metrics")
     assert response.status_code == 401
+
+
+def test_admin_author_metrics_returns_422_for_invalid_status(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        author_metrics_service,
+        "list_definitions_for_moderation",
+        lambda *_a, **_kw: {"items": [], "total": 0},
+    )
+
+    response = _client(MODERATOR).get(
+        "/api/v1/admin/author-metrics?status=not_a_real_status"
+    )
+
+    assert response.status_code == 422
+
+
+def test_admin_author_metrics_accepts_valid_status_filter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_list(*_a: Any, **kwargs: Any) -> dict[str, Any]:
+        captured.update(kwargs)
+        return {"items": [], "total": 0}
+
+    monkeypatch.setattr(
+        author_metrics_service, "list_definitions_for_moderation", fake_list
+    )
+
+    response = _client(MODERATOR).get(
+        "/api/v1/admin/author-metrics?status=review"
+    )
+
+    assert response.status_code == 200
+    assert captured["status"] == "review"
+    assert isinstance(captured["status"], str)
 
 
 def test_subscriptions_feed_requires_auth() -> None:

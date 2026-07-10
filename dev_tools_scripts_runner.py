@@ -146,6 +146,103 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("restore-check", "pg-restore-check"),
         directory=ROOT_DIR / "scripts",
     ),
+    ScriptInfo(
+        key="11",
+        filename="cleanup_expired_auth_sessions.py",
+        title="cleanup-expired-sessions",
+        description=(
+            "Marks expired-but-not-yet-revoked auth_sessions as revoked "
+            "(revoked_at). Complements cleanup-retention, which only "
+            "deletes rows already expired/revoked past the retention "
+            "window — this keeps the session listing/audit trail accurate "
+            "in the meantime. Accepts --limit and --dry-run. Intended to "
+            "run on a recurring schedule (cron/systemd timer/CronJob) once "
+            "a deployment target exists."
+        ),
+        aliases=("cleanup-sessions", "expired-sessions"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="12",
+        filename="recompute_country_drift.py",
+        title="recompute-country-drift",
+        description=(
+            "Recomputes country drift snapshots for one country or all "
+            "active countries. Accepts --all or --country, --dry-run, and "
+            "--no-events. The idempotent single-country path for the "
+            "'recompute all' admin endpoint, which only enqueues a request "
+            "rather than looping synchronously (P2-3, Аудит-эпизод 5)."
+        ),
+        aliases=("recompute-drift", "country-drift"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="13",
+        filename="recompute_platform_metrics.py",
+        title="recompute-platform-metrics",
+        description=(
+            "Recomputes platform intelligence metrics for one country or "
+            "all active countries. Accepts --all or --country, --dry-run, "
+            "--metric-key, and --scenario-slug. Same enqueue-not-loop "
+            "relationship to the admin HTTP endpoint as recompute-country-"
+            "drift (P2-3, Аудит-эпизод 5)."
+        ),
+        aliases=("recompute-metrics", "platform-metrics"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="14",
+        filename="recompute_trust_scores.py",
+        title="recompute-trust-scores",
+        description=(
+            "Recomputes country trust scores for one country or all active "
+            "countries. Accepts --all or --country and --dry-run. Same "
+            "enqueue-not-loop relationship to the admin HTTP endpoint as "
+            "recompute-country-drift (P2-3, Аудит-эпизод 5)."
+        ),
+        aliases=("recompute-trust", "trust-scores"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="15",
+        filename="outbox_relay.py",
+        title="outbox-relay",
+        description=(
+            "Relays pending domain_events to Kafka (short claim transaction, "
+            "publish outside it, short result transaction — P1-1, Аудит-"
+            "эпизод 4). Reads DATABASE_URL/KAFKA_BROKERS/KAFKA_TOPIC "
+            "directly from the environment, not Settings. Accepts "
+            "--batch-size, --max-attempts, --notify-after, --dry-run, "
+            "--metrics-json, --metrics-output. Intended to run on a "
+            "recurring schedule (cron/systemd timer/CronJob) once a "
+            "deployment target exists."
+        ),
+        aliases=("relay", "domain-events-relay"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="16",
+        filename="export_demo_countries.py",
+        title="export-demo-countries",
+        description=(
+            "Exports the conserved demo country dataset (russia, uruguay, "
+            "argentina) to JSON fixtures under "
+            "database/fixtures/demo_countries/ — the inverse of "
+            "restore-demo-countries. Takes no flags."
+        ),
+        aliases=("export-demo",),
+    ),
+    ScriptInfo(
+        key="17",
+        filename="translation_pipeline_status.py",
+        title="translation-pipeline-status",
+        description=(
+            "Read-only report: translation units and jobs by status, and "
+            "counts of missing/stale EN translations. Takes no flags."
+        ),
+        aliases=("translation-status", "i18n-status"),
+        directory=ROOT_DIR / "scripts",
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

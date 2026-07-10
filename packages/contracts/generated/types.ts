@@ -17921,7 +17921,9 @@ export interface operations {
     create_my_author_metric_api_v1_me_author_metrics_post: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -18296,7 +18298,7 @@ export interface operations {
     list_author_metrics_for_admin_api_v1_admin_author_metrics_get: {
         parameters: {
             query?: {
-                status?: string | null;
+                status?: components["schemas"]["PublicationStatus"] | null;
                 limit?: number;
                 offset?: number;
             };
@@ -18458,7 +18460,9 @@ export interface operations {
     create_my_country_proposal_api_v1_me_country_proposals_post: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -18907,7 +18911,7 @@ export interface operations {
     list_country_proposals_for_curation_api_v1_admin_country_proposals_get: {
         parameters: {
             query?: {
-                status?: string | null;
+                status?: components["schemas"]["PublicationStatus"] | null;
                 limit?: number;
                 offset?: number;
             };

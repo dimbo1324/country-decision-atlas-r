@@ -2,6 +2,7 @@ from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories import migration_board as repository
 from app.services import capabilities as capabilities_service
+from app.services.list_helpers import total_from_window_count
 from app.services.migration_board import helpers
 from psycopg import Connection
 from typing import Any
@@ -71,7 +72,7 @@ def list_reports_for_moderation(
     )
     return {
         "items": [helpers._report(row) for row in rows],
-        "total": helpers._total(rows),
+        "total": total_from_window_count(rows),
     }
 
 

@@ -1,6 +1,7 @@
 from app.repositories import data_quality as repository
 from app.schemas.data_quality import DataQualityCheck, DataQualityIssue
 from app.services.data_quality._issues import _check, _issue
+from app.services.pii_patterns import contains_pii
 from psycopg import Connection
 from typing import Any
 
@@ -75,19 +76,22 @@ def _append_migration_board_checks(
         )
     )
 
-    for row in repository.list_migration_board_public_posts_with_pii(
+    for row in repository.list_published_public_migration_board_posts_text(
         connection
     ):
-        issues.append(
-            _issue(
-                "migration_board_public_text_contains_pii",
-                "critical",
-                "migration_board_post",
-                row.get("id"),
-                "Public migration board title or summary contains direct contact details.",
-                {"id": row.get("id")},
+        if contains_pii(
+            str(row.get("title") or ""), str(row.get("summary") or "")
+        ):
+            issues.append(
+                _issue(
+                    "migration_board_public_text_contains_pii",
+                    "critical",
+                    "migration_board_post",
+                    row.get("id"),
+                    "Public migration board title or summary contains direct contact details.",
+                    {"id": row.get("id")},
+                )
             )
-        )
     checks.append(
         _check(
             "migration_board_public_text_has_no_pii",

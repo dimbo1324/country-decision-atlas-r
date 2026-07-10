@@ -7,6 +7,7 @@ from app.schemas.author_metrics import (
     ModerateAuthorMetricRequest,
     ModerateAuthorMetricResponse,
 )
+from app.schemas.common import PublicationStatus
 from app.services import author_metrics as service
 from app.services.capabilities import MODERATOR_METRICS
 from fastapi import APIRouter, Depends, Query
@@ -24,12 +25,15 @@ router = APIRouter(
 def list_author_metrics_for_admin(
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_capability(MODERATOR_METRICS))],
-    status: str | None = Query(None),
+    status: PublicationStatus | None = Query(None),  # noqa: B008
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
 ) -> dict[str, Any]:
     return service.list_definitions_for_moderation(
-        connection, status=status, limit=limit, offset=offset
+        connection,
+        status=status.value if status is not None else None,
+        limit=limit,
+        offset=offset,
     )
 
 

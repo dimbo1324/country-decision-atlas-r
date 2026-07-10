@@ -39,9 +39,13 @@ def test_migration_board_data_quality_detects_broken_public_post(
     )
     monkeypatch.setattr(
         data_quality_repository,
-        "list_migration_board_public_posts_with_pii",
+        "list_published_public_migration_board_posts_text",
         lambda *_: [
-            {"id": "post-2", "title": "Contact me", "summary": "email"}
+            {
+                "id": "post-2",
+                "title": "Contact me",
+                "summary": "Reach me at someone@example.com",
+            }
         ],
     )
 
@@ -52,6 +56,29 @@ def test_migration_board_data_quality_detects_broken_public_post(
         "migration_board_published_without_approval",
         "migration_board_public_text_contains_pii",
     }.issubset({issue.code for issue in report.issues})
+
+
+def test_migration_board_data_quality_ignores_clean_public_text(
+    monkeypatch: Any,
+) -> None:
+    install_clean_report_fakes(monkeypatch)
+    monkeypatch.setattr(
+        data_quality_repository,
+        "list_published_public_migration_board_posts_text",
+        lambda *_: [
+            {
+                "id": "post-3",
+                "title": "Looking for a housemate",
+                "summary": "Moving next month, open to sharing costs.",
+            }
+        ],
+    )
+
+    report = data_quality.build_data_quality_report(CONNECTION)
+
+    assert "migration_board_public_text_contains_pii" not in {
+        issue.code for issue in report.issues
+    }
 
 
 def test_migration_board_data_quality_detects_interaction_violations(

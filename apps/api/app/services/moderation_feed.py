@@ -1,4 +1,5 @@
 from app.repositories.audit import list_audit_events
+from app.services.list_helpers import total_from_window_count
 from psycopg import Connection
 from typing import Any
 
@@ -27,7 +28,7 @@ def list_moderation_actions(
     )
     return {
         "items": [_entry(row) for row in rows],
-        "total": _total(rows),
+        "total": total_from_window_count(rows),
         "anomalies": _detect_anomalies(rows),
     }
 
@@ -42,12 +43,6 @@ def _entry(row: dict[str, Any]) -> dict[str, Any]:
         "changed_at": row["changed_at"],
         "changes": row.get("changes") or {},
     }
-
-
-def _total(rows: list[dict[str, Any]]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0].get("total_count") or len(rows))
 
 
 def _detect_anomalies(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

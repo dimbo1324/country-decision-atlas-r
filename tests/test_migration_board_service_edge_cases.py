@@ -1409,17 +1409,6 @@ class TestMiscHelpers:
         diff = service._diff_for_update(before, after)
         assert diff["status"] == {"old": "review", "new": "published"}
 
-    def test_total_returns_zero_for_empty_rows(self) -> None:
-        assert service._total([]) == 0
-
-    def test_total_reads_window_function_count(self) -> None:
-        rows = [{"total_count": 42}, {"total_count": 42}]
-        assert service._total(rows) == 42
-
-    def test_total_falls_back_to_row_count_without_window_column(self) -> None:
-        rows = [{"id": "a"}, {"id": "b"}, {"id": "c"}]
-        assert service._total(rows) == 3
-
 
 class TestFeatureFlagGating:
     def test_ensure_feature_enabled_raises_403_when_disabled(

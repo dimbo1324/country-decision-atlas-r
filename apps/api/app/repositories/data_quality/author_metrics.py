@@ -52,34 +52,26 @@ def list_author_metric_values_out_of_scale(
     )
 
 
-def list_published_author_metrics_with_pii(
+def list_published_public_author_metrics_text(
     connection: Connection[Any],
 ) -> list[dict[str, Any]]:
+    """Candidate rows for the PII data-quality check (P2-8, Аудит-эпизод 10).
+
+    PII detection itself runs in Python against these fetched rows
+    (services.data_quality.author_metrics_checks), using the same
+    app.services.pii_patterns.PII_PATTERNS as every other PII check in the
+    codebase. This used to be a hand-written PostgreSQL regex duplicate of
+    those patterns, translated into POSIX ERE syntax (no lookbehind/word-
+    boundary support) — it had already drifted from the Python patterns by
+    the time of the audit and could never be made byte-identical to them
+    given the regex-dialect gap.
+    """
     return fetch_all(
         connection,
         """
         SELECT id::text AS id, name_en, name_ru, methodology_en, methodology_ru
         FROM author_metric_definitions
-        WHERE status = 'published'
-          AND visibility = 'public'
-          AND (
-              name_en ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR name_ru ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR methodology_en ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR methodology_ru ~* '[A-Z0-9._%%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}'
-              OR name_en ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR name_ru ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR methodology_en ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR methodology_ru ~* '(^|[^A-Za-z0-9_])@[A-Za-z0-9_]{4,32}'
-              OR name_en ~* 'https?://|www\\.'
-              OR name_ru ~* 'https?://|www\\.'
-              OR methodology_en ~* 'https?://|www\\.'
-              OR methodology_ru ~* 'https?://|www\\.'
-              OR name_en ~ '(\\+?\\d[\\s().-]*){8,}'
-              OR name_ru ~ '(\\+?\\d[\\s().-]*){8,}'
-              OR methodology_en ~ '(\\+?\\d[\\s().-]*){8,}'
-              OR methodology_ru ~ '(\\+?\\d[\\s().-]*){8,}'
-          )
+        WHERE status = 'published' AND visibility = 'public'
         """,
     )
 

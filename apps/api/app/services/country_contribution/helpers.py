@@ -121,12 +121,6 @@ def _proposal_view(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _total(rows: list[dict[str, Any]]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0].get("total_count") or len(rows))
-
-
 def _audit(
     connection: Connection[Any],
     proposal_id: str,

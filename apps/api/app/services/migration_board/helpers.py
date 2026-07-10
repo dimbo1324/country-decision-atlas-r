@@ -1,4 +1,3 @@
-import re
 from app.core.auth import CurrentUser
 from app.core.errors import api_error
 from app.repositories.analytics import insert_analytics_event
@@ -7,6 +6,7 @@ from app.services.feature_flags import (
     ensure_feature_enabled as _ensure_feature_enabled,
 )
 from app.services.methodology_config import get_active_methodology_config
+from app.services.pii_patterns import contains_pii
 from psycopg import Connection
 from typing import Any
 from uuid import UUID
@@ -71,12 +71,6 @@ ALLOWED_REPORT_REASONS = {
     "off_topic",
     "other",
 }
-PII_PATTERNS = (
-    re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.IGNORECASE),
-    re.compile(r"(?:\+?\d[\s().-]*){8,}"),
-    re.compile(r"(?<!\w)@[A-Za-z0-9_]{4,32}\b"),
-    re.compile(r"https?://|www\.", re.IGNORECASE),
-)
 
 
 def ensure_feature_enabled(
@@ -131,8 +125,7 @@ def max_thread_messages_per_day(connection: Connection[Any]) -> int:
 
 
 def _reject_public_pii(title: str, summary: str) -> None:
-    text = f"{title}\n{summary}"
-    if any(pattern.search(text) for pattern in PII_PATTERNS):
+    if contains_pii(title, summary):
         raise api_error(
             422,
             "pii_not_allowed",
@@ -325,12 +318,6 @@ def _safe_post_metadata(post: dict[str, Any]) -> dict[str, Any]:
         "timeline_window": post.get("timeline_window"),
         "companion_goal": post.get("companion_goal"),
     }
-
-
-def _total(rows: list[dict[str, Any]]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0].get("total_count") or len(rows))
 
 
 def _audit(

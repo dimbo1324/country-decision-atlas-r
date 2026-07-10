@@ -7,6 +7,14 @@ from typing import Any, cast
 
 
 _pool: ConnectionPool[Any] | None = None
+_readiness_pool: ConnectionPool[Any] | None = None
+
+# Deliberately tiny and fixed (not env-configurable like the main pool):
+# /ready must fail fast on its own short queue rather than wait behind
+# request traffic saturating the main pool (P3-6, Аудит-эпизод 10).
+_READINESS_POOL_MIN_SIZE = 1
+_READINESS_POOL_MAX_SIZE = 2
+_READINESS_POOL_TIMEOUT_SECONDS = 5.0
 
 
 def open_database_pool(settings: Settings | None = None) -> None:
@@ -37,6 +45,42 @@ def get_pool() -> ConnectionPool[Any]:
     if _pool is None:
         raise RuntimeError("Database pool is not initialized.")
     return _pool
+
+
+def open_readiness_pool(settings: Settings | None = None) -> None:
+    """Separate, tiny connection pool used only by /ready (P3-6).
+
+    Keeping this isolated from the main pool means readiness checks don't
+    queue behind saturated request traffic and report a healthy instance
+    as unready, which could trigger an orchestrator restart.
+    """
+    global _readiness_pool
+    if _readiness_pool is not None:
+        return
+    resolved_settings = settings or get_settings()
+    _readiness_pool = ConnectionPool(
+        conninfo=resolved_settings.database_url,
+        kwargs={"row_factory": dict_row},
+        min_size=_READINESS_POOL_MIN_SIZE,
+        max_size=_READINESS_POOL_MAX_SIZE,
+        timeout=_READINESS_POOL_TIMEOUT_SECONDS,
+        open=False,
+    )
+    _readiness_pool.open()
+
+
+def close_readiness_pool() -> None:
+    global _readiness_pool
+    if _readiness_pool is None:
+        return
+    _readiness_pool.close()
+    _readiness_pool = None
+
+
+def get_readiness_pool() -> ConnectionPool[Any]:
+    if _readiness_pool is None:
+        raise RuntimeError("Readiness database pool is not initialized.")
+    return _readiness_pool
 
 
 def get_pool_stats() -> dict[str, int]:

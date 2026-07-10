@@ -4,6 +4,7 @@ from app.core.errors import api_error
 from app.repositories import country_contribution as repository
 from app.services.country_contribution import helpers
 from app.services.country_onboarding import evaluate_country_onboarding
+from app.services.list_helpers import total_from_window_count
 from app.services.publication import ensure_allowed_transition
 from psycopg import Connection
 from typing import Any
@@ -22,7 +23,7 @@ def list_proposals_for_curation(
     )
     return {
         "items": [helpers._proposal_view(row) for row in rows],
-        "total": helpers._total(rows),
+        "total": total_from_window_count(rows),
     }
 
 

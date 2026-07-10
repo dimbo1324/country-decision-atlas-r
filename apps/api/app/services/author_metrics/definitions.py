@@ -4,6 +4,7 @@ from app.core.errors import api_error
 from app.repositories import author_metrics as repository
 from app.services import capabilities as capabilities_service
 from app.services.author_metrics import helpers
+from app.services.list_helpers import total_from_window_count
 from psycopg import Connection, errors as psycopg_errors
 from typing import Any
 
@@ -293,7 +294,7 @@ def list_definitions_for_moderation(
     )
     return {
         "items": [helpers._admin_definition(row) for row in rows],
-        "total": helpers._total(rows),
+        "total": total_from_window_count(rows),
     }
 
 

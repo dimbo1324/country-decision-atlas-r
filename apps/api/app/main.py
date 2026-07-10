@@ -1,6 +1,6 @@
 from app.bootstrap.app_factory import create_app
 from app.core.config import get_settings
-from app.core.database import get_pool
+from app.core.database import get_readiness_pool
 from app.core.errors import api_error
 from app.core.logging_config import configure_logging
 from app.core.request_context import resolve_client_ip
@@ -27,7 +27,7 @@ async def health() -> HealthResponse:
 
 def ready() -> ReadinessResponse:
     try:
-        with get_pool().connection() as connection:
+        with get_readiness_pool().connection() as connection:
             connection.execute("SELECT 1").fetchone()
     except (PoolTimeout, PsycopgError, RuntimeError) as exc:
         raise api_error(
