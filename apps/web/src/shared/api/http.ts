@@ -1,11 +1,48 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
-import { API_BASE_URL } from "../config/env";
+import { API_BASE_URL, API_TIMEOUT_MS } from "../config/env";
 
 export type ApiErrorResponse = components["schemas"]["ErrorResponse"];
 
 type RequestOptions = {
   headers?: HeadersInit;
 };
+
+function toNetworkApiError(err: unknown): ApiErrorResponse {
+  if (
+    err instanceof DOMException &&
+    (err.name === "TimeoutError" || err.name === "AbortError")
+  ) {
+    return {
+      error: {
+        code: "request_timeout",
+        message: `Превышено время ожидания ответа от сервера (${API_TIMEOUT_MS / 1000} с).`,
+      },
+    };
+  }
+  return {
+    error: {
+      code: "network_error",
+      message:
+        err instanceof Error
+          ? err.message
+          : "Сетевая ошибка при обращении к API.",
+    },
+  };
+}
+
+async function fetchWithTimeout(
+  path: string,
+  init: RequestInit,
+): Promise<Response> {
+  try {
+    return await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+  } catch (err) {
+    throw toNetworkApiError(err);
+  }
+}
 
 export function queryString(
   params: Record<string, string | number | boolean | null | undefined>,
@@ -46,7 +83,7 @@ export async function apiGet<TResponse>(
   path: string,
   options: RequestOptions = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetchWithTimeout(path, {
     headers: {
       Accept: "application/json",
       ...options.headers,
@@ -67,7 +104,7 @@ export async function apiPost<TResponse, TBody>(
   body: TBody,
   options: RequestOptions = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetchWithTimeout(path, {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -91,7 +128,7 @@ export async function apiPatch<TResponse, TBody>(
   body: TBody,
   options: RequestOptions = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetchWithTimeout(path, {
     method: "PATCH",
     headers: {
       "Accept": "application/json",
@@ -114,7 +151,7 @@ export async function apiDelete<TResponse>(
   path: string,
   options: RequestOptions = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetchWithTimeout(path, {
     method: "DELETE",
     headers: {
       Accept: "application/json",

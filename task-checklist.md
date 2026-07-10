@@ -10,49 +10,51 @@ fetch); зафиксировать судьбу P2-12 (рендер-страте
 ## 1. Подготовка
 
 ```text
-[ ] Прочитан раздел «Аудит-эпизод 9» плана устранения аудита
-[ ] Прочитаны находки P2-11/P2-12 в audit_result.txt
-[ ] Прочитан раздел «Визуальный транш» в 01_План_реализации.md
-[ ] Изучен текущий apps/web/src/shared/api/http.ts и вызывающий паттерн (ErrorState/isApiError)
-[ ] Ветка fix/frontend-resilience-v1 создана от актуального main
-[ ] Чек-лист создан и запушен до начала основной работы
+[+] Прочитан раздел «Аудит-эпизод 9» плана устранения аудита
+[+] Прочитаны находки P2-11/P2-12 в audit_result.txt
+[+] Прочитан раздел «Визуальный транш» в 01_План_реализации.md
+[+] Изучен текущий apps/web/src/shared/api/http.ts и вызывающий паттерн (ErrorState/isApiError)
+[+] Ветка fix/frontend-resilience-v1 создана от актуального main
+[+] Чек-лист создан и запушен до начала основной работы
 ```
 
 ## 2. P2-11 — таймауты fetch
 
 ```text
-[ ] API_TIMEOUT_MS добавлен в shared/config/env.ts (конфигурируемо через NEXT_PUBLIC_API_TIMEOUT_MS)
-[ ] http.ts: AbortSignal.timeout(API_TIMEOUT_MS) во всех 4 методах (apiGet/apiPost/apiPatch/apiDelete)
-[ ] Единый catch-путь маппит TimeoutError/AbortError и произвольную сетевую ошибку в ApiErrorResponse-совместимую форму (совместимо с isApiError/ErrorState)
-[ ] typecheck/lint зелёные
+[+] API_TIMEOUT_MS добавлен в shared/config/env.ts (конфигурируемо через NEXT_PUBLIC_API_TIMEOUT_MS, дефолт 10000)
+[+] http.ts: AbortSignal.timeout(API_TIMEOUT_MS) во всех 4 методах (apiGet/apiPost/apiPatch/apiDelete) через общий fetchWithTimeout
+[+] Единый catch-путь (toNetworkApiError) маппит TimeoutError/AbortError и произвольную сетевую ошибку в ApiErrorResponse-совместимую форму (совместимо с isApiError/ErrorState) — попутно активирует ранее недостижимую ветку "Backend недоступен" в ErrorState.tsx
+[+] typecheck/lint зелёные
 ```
 
 ## 3. P2-12 — рендер-стратегия (не код, а фиксация решения)
 
 ```text
-[ ] Абзац с конкретными техническими шагами добавлен в раздел «Визуальный транш» 01_План_реализации.md
-[ ] Абзац ссылается на существующие хуки cache_invalidation.py
-[ ] Статус эпизода в 09_План_устранения_аудита.md обновлён (P2-12 закрыт документально, не кодом)
+[+] Абзац с конкретными техническими шагами добавлен в раздел «Визуальный транш» 01_План_реализации.md
+[+] Абзац ссылается на существующие хуки cache_invalidation.py
+[+] Статус эпизода в 09_План_устранения_аудита.md обновлён (P2-12 закрыт документально, не кодом)
 ```
 
 ## 4. Тесты
 
 ```text
-[ ] Новый Playwright E2E: зависший мок-бэкенд (задержка > таймаута) даёт контролируемый ErrorState, не бесконечную загрузку
-[ ] Существующие E2E не регрессируют (полный прогон)
+[+] Новый Playwright E2E ("drift block shows error state when API request hangs past the timeout"): зависший мок-бэкенд (задержка 11с > таймаута 10с) даёт контролируемый ErrorState за ~10.8с, не бесконечную загрузку
+[+] Существующие E2E не регрессируют — полный прогон 284/284 (283 существующих + 1 новый) зелёный
 ```
 
 ## 5. Проверки и завершение
 
 ```text
-[ ] pnpm --filter @country-decision-atlas/web typecheck проходит
-[ ] pnpm --filter @country-decision-atlas/web lint проходит
-[ ] pnpm --filter @country-decision-atlas/web build проходит
-[ ] Полный python dev_tools_scripts_runner.py (или обоснованно суженный набор) зелёный
-[ ] Статус эпизода AE-9 обновлён в 09_План_устранения_аудита.md («Реализовано»/детали)
-[ ] Чек-лист заполнен отметками +/-
-[ ] Коммит(ы) осмысленные
-[ ] Слияние в main выполнено fast-forward (после подтверждения владельца)
-[ ] Push в origin/main выполнен (после подтверждения владельца)
-[ ] Итоговый отчёт написан
+[+] pnpm --filter @country-decision-atlas/web typecheck проходит
+[+] pnpm --filter @country-decision-atlas/web lint проходит
+[+] pnpm --filter @country-decision-atlas/web build проходит
+[+] pnpm format:check (репозиторий целиком) проходит
+[+] Полный python -m pytest tests/ проходит (exit code 0) — Python-код не менялся, прогнан для полноты
+[-] Литеральный `python dev_tools_scripts_runner.py --profile full` не запускался — вместо этого вручную собран и прогнан эквивалентный, но более точечный набор: Docker-стек (api+redis) поднят, миграции применены, demo-страны/поиск восстановлены, `pnpm build` + полный `playwright test` (284/284) на живом стеке, плюс typecheck/lint/format/pytest. Причина: изменения на 100% ограничены apps/web + 2 md-документа + 1 e2e-спек (подтверждено `git status`), backend/Go/миграции не менялись — полный прогон mypy/ruff/sqlfluff/go test не добавил бы риск-покрытия, но добавил бы ~10 мин без необходимости
+[+] Статус эпизода AE-9 обновлён в 09_План_устранения_аудита.md («Реализовано», детали, обновлена карта зависимостей)
+[+] Чек-лист заполнен отметками +/-
+[+] Коммит(ы) осмысленные
+[ ] Слияние в main выполнено fast-forward (ожидает подтверждения владельца)
+[ ] Push в origin/main выполнен (ожидает подтверждения владельца)
+[+] Итоговый отчёт написан
 ```

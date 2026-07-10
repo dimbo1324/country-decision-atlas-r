@@ -139,6 +139,39 @@ test("drift block shows error state when API fails", async ({ page }) => {
   await expectNoAppCrash(page);
 });
 
+test("drift block shows error state when API request hangs past the timeout", async ({
+  page,
+}) => {
+  // apps/web/src/shared/config/env.ts::API_TIMEOUT_MS defaults to 10s;
+  // this delay must stay comfortably above that default.
+  test.setTimeout(45_000);
+  await page.route(
+    `${API_BASE_URL}/api/v1/countries/russia/drift**`,
+    async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 11_000));
+      await route
+        .fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            country_slug: "russia",
+            latest_snapshot: null,
+            history: [],
+            disclaimer:
+              "This is a contextual trend indicator, not legal advice.",
+          }),
+        })
+        .catch(() => undefined);
+    },
+  );
+  await page.goto(e2eRoutes.country("russia", "ru"));
+  await expectPageReady(page);
+  await expect(page.getByTestId("country-drift-error")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expectNoAppCrash(page);
+});
+
 test("no crash on mobile viewport for country drift section", async ({
   page,
 }) => {
