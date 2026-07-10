@@ -1,7 +1,12 @@
 """Null and Redis cache backends: miss/error behavior and cache-key composition."""
 
 from app.core.config import Settings
-from app.services.cache import NullCache, RedisCache, get_cache_backend
+from app.services.cache import (
+    NullCache,
+    RedisCache,
+    get_cache_backend,
+    reset_cache_backend,
+)
 from app.services.cache_invalidation import invalidate_platform_read_cache
 from app.services.cache_keys import (
     countries_matrix_key,
@@ -118,3 +123,32 @@ def test_invalidation_calls_expected_prefixes() -> None:
 
 def test_cache_disabled_returns_null_cache() -> None:
     assert isinstance(get_cache_backend(Settings(cache_mode="null")), NullCache)
+
+
+def test_get_cache_backend_returns_the_same_redis_client_on_repeat_calls() -> (
+    None
+):
+    reset_cache_backend()
+    try:
+        settings = Settings(
+            cache_mode="redis", redis_url="redis://localhost:6379/0"
+        )
+        first = get_cache_backend(settings)
+        second = get_cache_backend(settings)
+        assert first is second
+    finally:
+        reset_cache_backend()
+
+
+def test_reset_cache_backend_forces_a_fresh_client() -> None:
+    reset_cache_backend()
+    try:
+        settings = Settings(
+            cache_mode="redis", redis_url="redis://localhost:6379/0"
+        )
+        first = get_cache_backend(settings)
+        reset_cache_backend()
+        second = get_cache_backend(settings)
+        assert first is not second
+    finally:
+        reset_cache_backend()

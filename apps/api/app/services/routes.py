@@ -20,6 +20,7 @@ from app.schemas.routes import (
     RouteListResponse,
     RouteType,
 )
+from app.services import search_index
 from app.services.cache import cache_ttl, get_cache_backend
 from app.services.cache_invalidation import (
     invalidate_country_cache,
@@ -177,6 +178,7 @@ def change_route_status(
             connection, route_id, new_status
         )
         _audit_status_change(connection, before, after, changed_by)
+        _sync_route_index(connection, after)
         _emit_route_published_event(connection, before, after)
     if is_publish_transition(old_status, new_status):
         country_slug = str(after.get("country_slug") or "")
@@ -256,6 +258,38 @@ def _audit_status_change(
         changed_by=changed_by,
         changes={"status": {"old": old_status, "new": new_status}},
     )
+
+
+def _sync_route_index(connection: Connection[Any], row: dict[str, Any]) -> None:
+    """Mirrors ENTITY_JOBS["route"] in scripts/rebuild_search_index.py so a
+    route publish/unpublish is reflected in /search immediately (P1-7,
+    Аудит-эпизод 5) instead of only on the next full rebuild pass."""
+    country_slug = row.get("country_slug")
+    if not country_slug:
+        return
+    route_id = str(row["id"])
+    path = f"/routes/{route_id}"
+    title_en = str(row.get("title") or "")
+    title_ru = str(row.get("title_ru") or row.get("title") or "")
+    summary_en = str(row.get("summary") or "")
+    summary_ru = str(row.get("summary_ru") or row.get("summary") or "")
+    for locale, title, summary in (
+        ("en", title_en, summary_en),
+        ("ru", title_ru, summary_ru),
+    ):
+        search_index.sync_document(
+            connection,
+            entity_type="route",
+            entity_id=route_id,
+            country_slug=country_slug,
+            locale=locale,
+            status=str(row.get("status")),
+            title=title,
+            summary=summary,
+            body="",
+            path=path,
+            source_updated_at=row.get("updated_at"),
+        )
 
 
 def _emit_route_published_event(

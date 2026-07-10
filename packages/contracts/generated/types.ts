@@ -4150,6 +4150,26 @@ export interface components {
             /** Total */
             total: number;
         };
+        /**
+         * AdminRecomputeQueuedResponse
+         * @description Acknowledges that an all-countries recompute was requested. The
+         *     request is only recorded, not executed inline; the actual recompute
+         *     runs separately via the CLI recompute scripts, on a schedule or by
+         *     hand.
+         */
+        AdminRecomputeQueuedResponse: {
+            /**
+             * Queued
+             * @default true
+             */
+            queued: boolean;
+            /** Resource */
+            resource: string;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Event Id */
+            event_id?: string | null;
+        };
         /** AdminSourceResponse */
         AdminSourceResponse: {
             /** Item */
@@ -4925,21 +4945,6 @@ export interface components {
              * Format: date-time
              */
             generated_at?: string;
-        };
-        /** CountryDriftBatchRecomputeResult */
-        CountryDriftBatchRecomputeResult: {
-            /** Countries Processed */
-            countries_processed: number;
-            /** Snapshots Written */
-            snapshots_written: number;
-            /** Events Emitted */
-            events_emitted: number;
-            /** Insufficient Data Count */
-            insufficient_data_count: number;
-            /** Errors */
-            errors?: {
-                [key: string]: unknown;
-            }[];
         };
         /** CountryDriftHistoryItem */
         CountryDriftHistoryItem: {
@@ -7656,27 +7661,6 @@ export interface components {
             /** Errors */
             errors?: string[];
         };
-        /** PlatformMetricsRecomputeSummary */
-        PlatformMetricsRecomputeSummary: {
-            /** Feature Enabled */
-            feature_enabled: boolean;
-            /** Dry Run */
-            dry_run: boolean;
-            /** Countries Requested */
-            countries_requested: number;
-            /** Countries Processed */
-            countries_processed: number;
-            /** Countries Skipped */
-            countries_skipped: number;
-            /** Metrics Computed */
-            metrics_computed: number;
-            /** Metrics Written */
-            metrics_written: number;
-            /** Metrics Failed */
-            metrics_failed: number;
-            /** Errors */
-            errors?: string[];
-        };
         /**
          * PublicationStatus
          * @enum {string}
@@ -9303,25 +9287,6 @@ export interface components {
              * @default false
              */
             dry_run: boolean;
-        };
-        /** TrustRecomputeSummary */
-        TrustRecomputeSummary: {
-            /** Feature Enabled */
-            feature_enabled: boolean;
-            /** Dry Run */
-            dry_run: boolean;
-            /** Countries Processed */
-            countries_processed: number;
-            /** Countries Computed */
-            countries_computed: number;
-            /** Countries Stored */
-            countries_stored: number;
-            /** Countries Failed */
-            countries_failed: number;
-            /** Errors */
-            errors?: {
-                [key: string]: unknown;
-            }[];
         };
         /** UpdateMigrationBoardPostRequest */
         UpdateMigrationBoardPostRequest: {
@@ -12823,12 +12788,12 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PlatformMetricsRecomputeSummary"];
+                    "application/json": components["schemas"]["AdminRecomputeQueuedResponse"];
                 };
             };
             /** @description Unauthorized */
@@ -12919,12 +12884,12 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TrustRecomputeSummary"];
+                    "application/json": components["schemas"]["AdminRecomputeQueuedResponse"];
                 };
             };
             /** @description Unauthorized */
@@ -13005,12 +12970,12 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CountryDriftBatchRecomputeResult"];
+                    "application/json": components["schemas"]["AdminRecomputeQueuedResponse"];
                 };
             };
             /** @description Unauthorized */

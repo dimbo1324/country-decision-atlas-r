@@ -58,7 +58,7 @@ func Run() {
 	deadLetters := mongostore.NewDeadLetterRepository(store)
 	metricsCollector := metrics.New()
 
-	svc := subscriptions.New(subRepo, identityRepo, cfg.AllowedCountries)
+	svc := subscriptions.New(subRepo, identityRepo)
 
 	registry := channels.NewRegistry()
 	registry.Register(channels.NewTelegramChannel(tgClient))

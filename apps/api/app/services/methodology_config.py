@@ -37,6 +37,9 @@ TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK = (
 )
 AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH = "author_metrics.min_methodology_length"
 AUTHOR_METRICS_MIN_COUNTRY_COVERAGE = "author_metrics.min_country_coverage"
+RETENTION_ANALYTICS_DAYS = "retention.analytics_days"
+RETENTION_DOMAIN_EVENTS_DAYS = "retention.domain_events_days"
+RETENTION_SESSIONS_DAYS = "retention.sessions_days"
 
 REQUIRED_NUMERIC_KEYS = (
     SCORE_LABEL_WEAK_BELOW,
@@ -60,6 +63,9 @@ REQUIRED_NUMERIC_KEYS = (
     TRIP_WARNING_MISSING_PAIR_SEVERITY_RANK,
     AUTHOR_METRICS_MIN_METHODOLOGY_LENGTH,
     AUTHOR_METRICS_MIN_COUNTRY_COVERAGE,
+    RETENTION_ANALYTICS_DAYS,
+    RETENTION_DOMAIN_EVENTS_DAYS,
+    RETENTION_SESSIONS_DAYS,
 )
 
 
@@ -130,6 +136,13 @@ class AuthorMetricsThresholds:
 
 
 @dataclass(frozen=True)
+class RetentionThresholds:
+    analytics_days: int
+    domain_events_days: int
+    sessions_days: int
+
+
+@dataclass(frozen=True)
 class MethodologyConfig:
     version: str
     parameters: dict[str, MethodologyParameter]
@@ -139,6 +152,7 @@ class MethodologyConfig:
     flows_k_anonymity: int
     trip_warnings: TripWarningThresholds
     author_metrics: AuthorMetricsThresholds
+    retention: RetentionThresholds
 
 
 _cached_config: MethodologyConfig | None = None
@@ -247,6 +261,13 @@ def build_methodology_config(
             parameters, AUTHOR_METRICS_MIN_COUNTRY_COVERAGE
         ),
     )
+    retention = RetentionThresholds(
+        analytics_days=_positive_int(parameters, RETENTION_ANALYTICS_DAYS),
+        domain_events_days=_positive_int(
+            parameters, RETENTION_DOMAIN_EVENTS_DAYS
+        ),
+        sessions_days=_positive_int(parameters, RETENTION_SESSIONS_DAYS),
+    )
     _validate_thresholds(score_labels, decision)
     return MethodologyConfig(
         version=version,
@@ -257,6 +278,7 @@ def build_methodology_config(
         flows_k_anonymity=flows_k_anonymity,
         trip_warnings=trip_warnings,
         author_metrics=author_metrics,
+        retention=retention,
     )
 
 

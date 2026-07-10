@@ -8,12 +8,10 @@ import (
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 )
 
-var allowedCountries = []string{"argentina", "russia", "uruguay"}
-
 func makeService() (*Service, *mongostore.InMemorySubscriptionRepository, *mongostore.InMemoryTelegramIdentityRepository) {
 	subs := mongostore.NewInMemorySubscriptionRepository(nil)
 	identities := mongostore.NewInMemoryTelegramIdentityRepository()
-	svc := New(subs, identities, allowedCountries)
+	svc := New(subs, identities)
 	return svc, subs, identities
 }
 
@@ -68,9 +66,24 @@ func TestCreateSubscriptionReactivates(t *testing.T) {
 	_ = subs
 }
 
-func TestCreateSubscriptionUnknownCountry(t *testing.T) {
+func TestCreateSubscriptionAcceptsCountryNotInAnyStaticList(t *testing.T) {
+	// P2-13, Аудит-эпизод 5: the notifier no longer validates against a
+	// hardcoded env-var list of countries, so a slug never seen before
+	// (i.e. not one of the three demo countries) must still succeed - the
+	// API is the source of truth for which countries actually exist.
 	svc, _, _ := makeService()
-	_, err := svc.CreateSubscription(context.Background(), "user1", "dima", "germany")
+	sub, err := svc.CreateSubscription(context.Background(), "user1", "dima", "germany")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if sub.CountrySlug != "germany" {
+		t.Errorf("want germany got %s", sub.CountrySlug)
+	}
+}
+
+func TestCreateSubscriptionEmptyCountryIsRejected(t *testing.T) {
+	svc, _, _ := makeService()
+	_, err := svc.CreateSubscription(context.Background(), "user1", "dima", "   ")
 	if !errors.Is(err, ErrUnknownCountry) {
 		t.Errorf("want ErrUnknownCountry got %v", err)
 	}
@@ -104,9 +117,9 @@ func TestDeleteSubscriptionIdempotent(t *testing.T) {
 	}
 }
 
-func TestDeleteSubscriptionUnknownCountry(t *testing.T) {
+func TestDeleteSubscriptionEmptyCountryIsRejected(t *testing.T) {
 	svc, _, _ := makeService()
-	_, err := svc.DeleteSubscription(context.Background(), "user1", "germany")
+	_, err := svc.DeleteSubscription(context.Background(), "user1", "   ")
 	if !errors.Is(err, ErrUnknownCountry) {
 		t.Errorf("want ErrUnknownCountry got %v", err)
 	}

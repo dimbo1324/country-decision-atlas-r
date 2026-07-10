@@ -5,6 +5,7 @@ from app.repositories import (
     countries as countries_repository,
     route_checklists as route_checklists_repository,
     routes as routes_repository,
+    search_index as search_index_repository,
 )
 from app.services import routes as service
 from datetime import UTC, datetime
@@ -78,6 +79,41 @@ def route_row(
         "updated_at": NOW,
         "total_count": total_count,
     }
+
+
+@pytest.fixture(autouse=True)
+def stub_search_index(
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict[str, list[dict[str, Any]]]:
+    """Route publish/unpublish now syncs the search index in the same
+    transaction (P1-7, Аудит-эпизод 5); stub the repository writes so
+    lifecycle tests that don't otherwise touch a real connection keep
+    working, while still letting a test inspect the captured calls."""
+    calls: dict[str, list[dict[str, Any]]] = {"upsert": [], "delete": []}
+
+    def fake_upsert(_conn: Any, **kwargs: Any) -> dict[str, Any]:
+        calls["upsert"].append(kwargs)
+        return kwargs
+
+    def fake_delete(
+        _conn: Any, entity_type: str, entity_id: str, locale: str
+    ) -> int:
+        calls["delete"].append(
+            {
+                "entity_type": entity_type,
+                "entity_id": entity_id,
+                "locale": locale,
+            }
+        )
+        return 1
+
+    monkeypatch.setattr(
+        search_index_repository, "upsert_search_document", fake_upsert
+    )
+    monkeypatch.setattr(
+        search_index_repository, "delete_search_document", fake_delete
+    )
+    return calls
 
 
 def patch_country_exists(
@@ -357,6 +393,43 @@ def test_published_to_archived_writes_audit_only(
 
     assert audit_events[0]["action"] == "archived"
     assert domain_events == []
+
+
+def test_publishing_a_route_upserts_both_locale_search_documents(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = route_row(status="review")
+    after = route_row(status="published")
+    patch_lifecycle(monkeypatch, before, after)
+
+    service.change_route_status(
+        cast(Any, FakeConnection()), ROUTE_ID, "published", "admin"
+    )
+
+    upserted = stub_search_index["upsert"]
+    assert stub_search_index["delete"] == []
+    assert {call["locale"] for call in upserted} == {"en", "ru"}
+    assert all(call["entity_type"] == "route" for call in upserted)
+    assert all(call["path"] == f"/routes/{ROUTE_ID}" for call in upserted)
+
+
+def test_archiving_a_route_removes_both_locale_search_documents(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = route_row(status="published")
+    after = route_row(status="archived")
+    patch_lifecycle(monkeypatch, before, after)
+
+    service.change_route_status(
+        cast(Any, FakeConnection()), ROUTE_ID, "archived", "admin"
+    )
+
+    assert stub_search_index["upsert"] == []
+    deleted = stub_search_index["delete"]
+    assert {call["locale"] for call in deleted} == {"en", "ru"}
+    assert all(call["entity_type"] == "route" for call in deleted)
 
 
 def test_seeded_routes_do_not_create_route_published_events(

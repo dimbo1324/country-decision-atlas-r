@@ -25,7 +25,10 @@ REQUIRED_NUMERIC_PARAMETER_SQL = """
         ('trip.warning.restrictive_pair_severity_rank', 1::numeric, 4::numeric),
         ('trip.warning.missing_pair_severity_rank', 1::numeric, 4::numeric),
         ('author_metrics.min_methodology_length', 1::numeric, 10000::numeric),
-        ('author_metrics.min_country_coverage', 1::numeric, 1000::numeric)
+        ('author_metrics.min_country_coverage', 1::numeric, 1000::numeric),
+        ('retention.analytics_days', 1::numeric, 3650::numeric),
+        ('retention.domain_events_days', 1::numeric, 3650::numeric),
+        ('retention.sessions_days', 1::numeric, 3650::numeric)
 """
 
 

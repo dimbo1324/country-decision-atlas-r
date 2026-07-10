@@ -25,7 +25,7 @@ func makeIntegrationSetup() (
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
 	dedup := mongostore.NewInMemoryDedupRepository()
 	tg := &telegram.FakeClient{}
-	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
+	svc := subscriptions.New(subsRepo, identities)
 	h := NewTelegramHandler(dedup, subsRepo, dl, tg)
 	return h, subsRepo, dl, dedup, tg, svc
 }

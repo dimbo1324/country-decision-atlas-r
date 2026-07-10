@@ -13,19 +13,20 @@ var ErrUnknownCountry = errors.New("unknown country")
 type Service struct {
 	subs       mongostore.SubscriptionManager
 	identities mongostore.TelegramIdentityRepository
-	allowed    map[string]struct{}
 }
 
+// New no longer takes a static allow-list of country slugs (P2-13,
+// Аудит-эпизод 5): the API already validates country slugs against the
+// database when a subscription is created there, and the notifier has no
+// way to keep an env-var list in sync with countries added later without a
+// restart. A subscription to an unknown slug is inert — it simply never
+// matches a future domain event — so there is no correctness or security
+// reason to reject it here.
 func New(
 	subs mongostore.SubscriptionManager,
 	identities mongostore.TelegramIdentityRepository,
-	allowedCountries []string,
 ) *Service {
-	m := make(map[string]struct{}, len(allowedCountries))
-	for _, c := range allowedCountries {
-		m[normalizeSlug(c)] = struct{}{}
-	}
-	return &Service{subs: subs, identities: identities, allowed: m}
+	return &Service{subs: subs, identities: identities}
 }
 
 func normalizeSlug(slug string) string {
@@ -34,7 +35,7 @@ func normalizeSlug(slug string) string {
 
 func (s *Service) resolveCountry(slug string) (string, error) {
 	normalized := normalizeSlug(slug)
-	if _, ok := s.allowed[normalized]; !ok {
+	if normalized == "" {
 		return "", ErrUnknownCountry
 	}
 	return normalized, nil

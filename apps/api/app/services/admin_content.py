@@ -14,6 +14,7 @@ from app.schemas.admin_content import (
     UserStoryPatch,
 )
 from app.schemas.common import PublicationStatus
+from app.services import search_index
 from app.services.cache_invalidation import (
     invalidate_country_cache,
     invalidate_home_cache,
@@ -127,6 +128,13 @@ def create_source(
     with connection.transaction():
         row = repository.create_source(connection, data)
         _audit_create(connection, "source", row, changed_by)
+        _sync_single_locale_both_index(
+            connection,
+            "source",
+            row,
+            title=str(row.get("title") or ""),
+            summary=str(row.get("publisher") or ""),
+        )
     return row
 
 
@@ -157,6 +165,13 @@ def patch_source(
             changed_by,
             SOURCE_AUDIT_FIELDS,
         )
+        _sync_single_locale_both_index(
+            connection,
+            "source",
+            after,
+            title=str(after.get("title") or ""),
+            summary=str(after.get("publisher") or ""),
+        )
     return after
 
 
@@ -176,6 +191,13 @@ def create_evidence_item(
     with connection.transaction():
         row = repository.create_evidence_item(connection, data)
         _audit_create(connection, "evidence_item", row, changed_by)
+        _sync_single_locale_both_index(
+            connection,
+            "evidence_item",
+            row,
+            title=str(row.get("title") or ""),
+            summary=str(row.get("summary") or ""),
+        )
     return row
 
 
@@ -216,6 +238,13 @@ def patch_evidence_item(
             changed_by,
             EVIDENCE_AUDIT_FIELDS,
         )
+        _sync_single_locale_both_index(
+            connection,
+            "evidence_item",
+            after,
+            title=str(after.get("title") or ""),
+            summary=str(after.get("summary") or ""),
+        )
     return after
 
 
@@ -234,6 +263,7 @@ def create_legal_signal(
     with connection.transaction():
         row = repository.create_legal_signal(connection, data)
         _audit_create(connection, "legal_signal", row, changed_by)
+        _sync_legal_signal_index(connection, row)
     return row
 
 
@@ -269,6 +299,7 @@ def patch_legal_signal(
             changed_by,
             LEGAL_SIGNAL_AUDIT_FIELDS,
         )
+        _sync_legal_signal_index(connection, after)
         _emit_legal_signal_published_event(connection, before, after)
     if is_publish_transition(
         str(before.get("status")), str(after.get("status"))
@@ -320,6 +351,7 @@ def patch_country_profile(
             changed_by,
             COUNTRY_PROFILE_AUDIT_FIELDS,
         )
+        _sync_country_profile_index(connection, after, country_slug)
     country_slug_after = str(after.get("country_slug") or country_slug)
     invalidate_country_cache(country_slug_after)
     invalidate_home_cache()
@@ -539,6 +571,113 @@ def _audit(
         action=action,
         changed_by=changed_by,
         changes=changes,
+    )
+
+
+def _sync_single_locale_both_index(
+    connection: Connection[Any],
+    entity_type: str,
+    row: dict[str, Any],
+    *,
+    title: str,
+    summary: str,
+) -> None:
+    """Sources and evidence_items are indexed with the same title/summary
+    under both locales (see rebuild_search_index.py's _index_single_locale_both)."""
+    country_id = row.get("country_id")
+    country_slug = (
+        repository.get_country_slug_by_id(connection, str(country_id))
+        if country_id
+        else None
+    )
+    path = (
+        f"/sources?country_slug={country_slug}" if country_slug else "/sources"
+    )
+    for locale in ("en", "ru"):
+        search_index.sync_document(
+            connection,
+            entity_type=entity_type,
+            entity_id=str(row["id"]),
+            country_slug=country_slug,
+            locale=locale,
+            status=str(row.get("status")),
+            title=title,
+            summary=summary,
+            body="",
+            path=path,
+            source_updated_at=row.get("updated_at"),
+        )
+
+
+def _sync_legal_signal_index(
+    connection: Connection[Any], row: dict[str, Any]
+) -> None:
+    country_slug = repository.get_country_slug_by_id(
+        connection, str(row["country_id"])
+    )
+    if not country_slug:
+        return
+    path = f"/legal-signals?country_slug={country_slug}"
+    title_en = str(row.get("title_en") or row.get("title") or "")
+    title_ru = str(
+        row.get("title_ru") or row.get("title_en") or row.get("title") or ""
+    )
+    summary_en = str(row.get("summary_en") or row.get("summary") or "")
+    summary_ru = str(
+        row.get("summary_ru")
+        or row.get("summary_en")
+        or row.get("summary")
+        or ""
+    )
+    for locale, title, summary in (
+        ("en", title_en, summary_en),
+        ("ru", title_ru, summary_ru),
+    ):
+        search_index.sync_document(
+            connection,
+            entity_type="legal_signal",
+            entity_id=str(row["id"]),
+            country_slug=country_slug,
+            locale=locale,
+            status=str(row.get("status")),
+            title=title,
+            summary=summary,
+            body="",
+            path=path,
+            source_updated_at=row.get("updated_at"),
+        )
+
+
+def _sync_country_profile_index(
+    connection: Connection[Any], row: dict[str, Any], country_slug: str
+) -> None:
+    country_name = repository.get_country_name_by_id(
+        connection, str(row["country_id"])
+    )
+    if not country_name:
+        return
+    body = " ".join(
+        str(row.get(field) or "")
+        for field in (
+            "migration_overview",
+            "tax_overview",
+            "cost_of_living_overview",
+            "business_overview",
+            "safety_overview",
+        )
+    ).strip()
+    search_index.sync_document(
+        connection,
+        entity_type="country",
+        entity_id=str(row["country_id"]),
+        country_slug=country_slug,
+        locale=str(row.get("locale") or "en"),
+        status=str(row.get("status")),
+        title=country_name,
+        summary=str(row.get("executive_summary") or ""),
+        body=body,
+        path=f"/countries/{country_slug}",
+        source_updated_at=row.get("updated_at"),
     )
 
 

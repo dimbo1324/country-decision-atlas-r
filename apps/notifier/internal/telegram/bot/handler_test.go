@@ -20,7 +20,7 @@ func makeHandler() (*Handler, *telegram.FakeClient) {
 func makeHandlerWithLinkCodes() (*Handler, *telegram.FakeClient, *mongostore.InMemoryTelegramLinkCodeRepository) {
 	subsRepo := mongostore.NewInMemorySubscriptionRepository(nil)
 	identities := mongostore.NewInMemoryTelegramIdentityRepository()
-	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
+	svc := subscriptions.New(subsRepo, identities)
 	tg := &telegram.FakeClient{}
 	linkCodes := mongostore.NewInMemoryTelegramLinkCodeRepository()
 	h := New(svc, tg, linkCodes, 10*time.Minute)

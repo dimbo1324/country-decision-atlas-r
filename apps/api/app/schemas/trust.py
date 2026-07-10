@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
-from typing import Any
 
 
 class TrustComponentBreakdown(BaseModel):
@@ -50,13 +49,3 @@ class TrustRecomputeCountryResult(BaseModel):
     confidence: str | None = None
     freshness_status: str | None = None
     error: str | None = None
-
-
-class TrustRecomputeSummary(BaseModel):
-    feature_enabled: bool
-    dry_run: bool
-    countries_processed: int
-    countries_computed: int
-    countries_stored: int
-    countries_failed: int
-    errors: list[dict[str, Any]] = Field(default_factory=list)

@@ -27,7 +27,7 @@ func startTestServer(t *testing.T) (
 	identities := mongostore.NewInMemoryTelegramIdentityRepository()
 	linkCodes := mongostore.NewInMemoryTelegramLinkCodeRepository()
 	dl := mongostore.NewInMemoryDeliveryLogRepository()
-	svc := subscriptions.New(subsRepo, identities, []string{"argentina", "russia", "uruguay"})
+	svc := subscriptions.New(subsRepo, identities)
 
 	srv := New(svc, dl, identities, linkCodes)
 
@@ -254,7 +254,9 @@ func TestGRPCGetDeliveryStatusAppliesLimit(t *testing.T) {
 	}
 }
 
-func TestGRPCInvalidCountryRejected(t *testing.T) {
+func TestGRPCCountryNotInAnyStaticListIsAccepted(t *testing.T) {
+	// P2-13, Аудит-эпизод 5: no hardcoded allow-list on the notifier side
+	// anymore, so a country slug it has never seen before must succeed.
 	client, _, _, _, _ := startTestServer(t)
 	ctx := context.Background()
 	resp, err := client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
@@ -263,8 +265,22 @@ func TestGRPCInvalidCountryRejected(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected transport error: %v", err)
 	}
+	if resp.Error != "" {
+		t.Errorf("want no error got %s", resp.Error)
+	}
+}
+
+func TestGRPCEmptyCountryRejected(t *testing.T) {
+	client, _, _, _, _ := startTestServer(t)
+	ctx := context.Background()
+	resp, err := client.CreateSubscription(ctx, &pb.CreateSubscriptionRequest{
+		TelegramUserId: "user1", Username: "dima", CountrySlug: "   ",
+	})
+	if err != nil {
+		t.Fatalf("unexpected transport error: %v", err)
+	}
 	if resp.Error == "" {
-		t.Error("want error for unknown country")
+		t.Error("want error for empty country slug")
 	}
 }
 

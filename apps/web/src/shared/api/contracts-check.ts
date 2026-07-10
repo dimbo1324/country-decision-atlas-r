@@ -74,8 +74,8 @@ type CountryDataJournalResponse =
 type PlatformMetric = components["schemas"]["PlatformMetric"];
 type PlatformMetricListResponse =
   components["schemas"]["PlatformMetricListResponse"];
-type PlatformMetricsRecomputeSummary =
-  components["schemas"]["PlatformMetricsRecomputeSummary"];
+type AdminRecomputeQueuedResponse =
+  components["schemas"]["AdminRecomputeQueuedResponse"];
 type CountryTrustResponse = components["schemas"]["CountryTrustResponse"];
 type MethodologySection = components["schemas"]["MethodologySection"];
 type MethodologyListResponse = components["schemas"]["MethodologyListResponse"];
@@ -88,8 +88,6 @@ type CountryDriftRecomputeRequest =
   components["schemas"]["CountryDriftRecomputeRequest"];
 type CountryDriftRecomputeResult =
   components["schemas"]["CountryDriftRecomputeResult"];
-type CountryDriftBatchRecomputeResult =
-  components["schemas"]["CountryDriftBatchRecomputeResult"];
 type SearchResultItem = components["schemas"]["SearchResultItem"];
 type SearchResponse = components["schemas"]["SearchResponse"];
 type AIAskRequest = components["schemas"]["AIAskRequest"];
@@ -207,7 +205,7 @@ export type FrontendCriticalContracts = {
   countryDataJournalResponse: CountryDataJournalResponse;
   platformMetric: PlatformMetric;
   platformMetricListResponse: PlatformMetricListResponse;
-  platformMetricsRecomputeSummary: PlatformMetricsRecomputeSummary;
+  adminRecomputeQueuedResponse: AdminRecomputeQueuedResponse;
   countryTrust: CountryTrustResponse;
   methodologySection: MethodologySection;
   methodologyList: MethodologyListResponse;
@@ -218,7 +216,6 @@ export type FrontendCriticalContracts = {
   countryDriftHistoryItem: CountryDriftHistoryItem;
   countryDriftRecomputeRequest: CountryDriftRecomputeRequest;
   countryDriftRecomputeResult: CountryDriftRecomputeResult;
-  countryDriftBatchRecomputeResult: CountryDriftBatchRecomputeResult;
   searchResultItem: SearchResultItem;
   searchResponse: SearchResponse;
   aiAskRequest: AIAskRequest;

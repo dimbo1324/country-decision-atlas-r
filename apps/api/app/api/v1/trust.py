@@ -3,18 +3,15 @@ from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.rbac import require_admin
 from app.repositories import trust as trust_repo
-from app.schemas.common import ErrorResponse
+from app.schemas.common import AdminRecomputeQueuedResponse, ErrorResponse
 from app.schemas.trust import (
     CountryTrustResponse,
     TrustComponentBreakdown,
     TrustRecomputeCountryResult,
     TrustRecomputeRequest,
-    TrustRecomputeSummary,
 )
-from app.services.trust_runtime import (
-    compute_and_store_trust_for_all_countries,
-    compute_and_store_trust_for_country,
-)
+from app.services.admin_recompute import enqueue_recompute_request
+from app.services.trust_runtime import compute_and_store_trust_for_country
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -85,20 +82,22 @@ def get_country_trust(
 
 @admin_router.post(
     "/admin/trust/recompute",
-    response_model=TrustRecomputeSummary,
+    response_model=AdminRecomputeQueuedResponse,
+    status_code=202,
     responses={401: {"model": ErrorResponse}},
 )
 def admin_recompute_all_trust(
     payload: TrustRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
-) -> TrustRecomputeSummary:
-    result = compute_and_store_trust_for_all_countries(
-        connection, dry_run=payload.dry_run
+) -> AdminRecomputeQueuedResponse:
+    event_id = enqueue_recompute_request(
+        connection, resource="trust", dry_run=payload.dry_run
     )
-    if not payload.dry_run:
-        connection.commit()
-    return TrustRecomputeSummary(**result)
+    connection.commit()
+    return AdminRecomputeQueuedResponse(
+        resource="trust", dry_run=payload.dry_run, event_id=event_id
+    )
 
 
 @admin_router.post(

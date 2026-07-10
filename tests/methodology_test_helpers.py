@@ -7,6 +7,7 @@ from app.services.methodology_config import (
     DecisionThresholds,
     MethodologyConfig,
     RecommendationThresholds,
+    RetentionThresholds,
     ScoreLabelThresholds,
     TripWarningThresholds,
 )
@@ -45,6 +46,11 @@ def methodology_config() -> MethodologyConfig:
         author_metrics=AuthorMetricsThresholds(
             min_methodology_length=120,
             min_country_coverage=5,
+        ),
+        retention=RetentionThresholds(
+            analytics_days=180,
+            domain_events_days=30,
+            sessions_days=30,
         ),
     )
 

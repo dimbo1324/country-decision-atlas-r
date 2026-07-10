@@ -103,6 +103,21 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         ),
         aliases=("restore-demo", "demo-countries"),
     ),
+    ScriptInfo(
+        key="8",
+        filename="cleanup_retention.py",
+        title="cleanup-retention",
+        description=(
+            "Deletes rows past their configured retention window from "
+            "analytics_events, ai_interaction_logs, relayed domain_events, and "
+            "expired/revoked auth_sessions. Windows come from "
+            "methodology_config.py. Accepts --dry-run. Intended to run on a "
+            "recurring schedule (cron/systemd timer/CronJob) once a deployment "
+            "target exists."
+        ),
+        aliases=("retention-cleanup", "cleanup-retention.py"),
+        directory=ROOT_DIR / "scripts",
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

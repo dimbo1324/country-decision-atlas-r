@@ -3,19 +3,16 @@ from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.rbac import require_admin
 from app.repositories import country_drift as country_drift_repo
-from app.schemas.common import ErrorResponse
+from app.schemas.common import AdminRecomputeQueuedResponse, ErrorResponse
 from app.schemas.country_drift import (
-    CountryDriftBatchRecomputeResult,
     CountryDriftHistoryItem,
     CountryDriftRecomputeRequest,
     CountryDriftRecomputeResult,
     CountryDriftResponse,
     CountryDriftSnapshot,
 )
-from app.services.country_drift import (
-    compute_and_store_all_country_drifts,
-    compute_and_store_country_drift,
-)
+from app.services.admin_recompute import enqueue_recompute_request
+from app.services.country_drift import compute_and_store_country_drift
 from fastapi import APIRouter, Depends, Query
 from psycopg import Connection
 from typing import Annotated, Any
@@ -108,25 +105,24 @@ def get_country_drift(
 
 @admin_router.post(
     "/admin/country-drift/recompute",
-    response_model=CountryDriftBatchRecomputeResult,
+    response_model=AdminRecomputeQueuedResponse,
+    status_code=202,
     responses={401: {"model": ErrorResponse}},
 )
 def admin_recompute_all_country_drift(
     payload: CountryDriftRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
-) -> CountryDriftBatchRecomputeResult:
-    result = compute_and_store_all_country_drifts(
-        connection, dry_run=payload.dry_run, emit_events=payload.emit_events
+) -> AdminRecomputeQueuedResponse:
+    event_id = enqueue_recompute_request(
+        connection,
+        resource="country_drift",
+        dry_run=payload.dry_run,
+        extra_payload={"emit_events": payload.emit_events},
     )
-    if not payload.dry_run:
-        connection.commit()
-    return CountryDriftBatchRecomputeResult(
-        countries_processed=result.countries_processed,
-        snapshots_written=result.snapshots_written,
-        events_emitted=result.events_emitted,
-        insufficient_data_count=result.insufficient_data_count,
-        errors=result.errors,
+    connection.commit()
+    return AdminRecomputeQueuedResponse(
+        resource="country_drift", dry_run=payload.dry_run, event_id=event_id
     )
 
 

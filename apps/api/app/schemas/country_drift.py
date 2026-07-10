@@ -67,11 +67,3 @@ class CountryDriftRecomputeResult(BaseModel):
     event_count: int
     event_emitted: bool
     error: str | None = None
-
-
-class CountryDriftBatchRecomputeResult(BaseModel):
-    countries_processed: int
-    snapshots_written: int
-    events_emitted: int
-    insufficient_data_count: int
-    errors: list[dict[str, Any]] = Field(default_factory=list)

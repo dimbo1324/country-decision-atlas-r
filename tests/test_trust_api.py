@@ -101,29 +101,41 @@ def test_get_country_trust_components_populated(
     assert result.components.freshness_score == pytest.approx(100.0)
 
 
-def test_admin_recompute_all_returns_summary(
+def test_admin_recompute_all_enqueues_request_instead_of_computing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    summary = {
-        "feature_enabled": True,
-        "dry_run": False,
-        "countries_processed": 3,
-        "countries_computed": 3,
-        "countries_stored": 3,
-        "countries_failed": 0,
-        "errors": [],
-    }
     monkeypatch.setattr(
         trust_api,
-        "compute_and_store_trust_for_all_countries",
-        lambda *_a, **_kw: summary,
+        "enqueue_recompute_request",
+        lambda *_a, **_kw: "event-123",
     )
     conn = MagicMock()
     result = trust_api.admin_recompute_all_trust(
         TrustRecomputeRequest(dry_run=False), conn, ADMIN_USER
     )
-    assert result.countries_processed == 3
-    assert result.feature_enabled is True
+    assert result.queued is True
+    assert result.resource == "trust"
+    assert result.dry_run is False
+    assert result.event_id == "event-123"
+    conn.commit.assert_called_once()
+
+
+def test_admin_recompute_all_forwards_dry_run(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_enqueue(_conn: Any, **kwargs: Any) -> str:
+        captured.update(kwargs)
+        return "event-456"
+
+    monkeypatch.setattr(trust_api, "enqueue_recompute_request", fake_enqueue)
+    conn = MagicMock()
+    trust_api.admin_recompute_all_trust(
+        TrustRecomputeRequest(dry_run=True), conn, ADMIN_USER
+    )
+    assert captured["resource"] == "trust"
+    assert captured["dry_run"] is True
 
 
 def test_admin_recompute_country_returns_result(
@@ -180,19 +192,10 @@ def _admin_client(
     app.dependency_overrides[get_connection] = lambda: conn
     if current_user is not None:
         app.dependency_overrides[get_current_active_user] = lambda: current_user
-    summary = {
-        "feature_enabled": True,
-        "dry_run": False,
-        "countries_processed": 0,
-        "countries_computed": 0,
-        "countries_stored": 0,
-        "countries_failed": 0,
-        "errors": [],
-    }
     monkeypatch.setattr(
         trust_api,
-        "compute_and_store_trust_for_all_countries",
-        lambda *_a, **_kw: summary,
+        "enqueue_recompute_request",
+        lambda *_a, **_kw: "event-789",
     )
     return TestClient(app, raise_server_exceptions=False)
 
@@ -215,11 +218,11 @@ def test_admin_recompute_with_user_role_returns_403(monkeypatch: Any) -> None:
     assert response.status_code == 403
 
 
-def test_admin_recompute_with_admin_role_returns_200(monkeypatch: Any) -> None:
+def test_admin_recompute_with_admin_role_returns_202(monkeypatch: Any) -> None:
     client = _admin_client(monkeypatch, current_user=ADMIN_USER)
     response = client.post(
         "/api/v1/admin/trust/recompute",
         json={"dry_run": False},
         headers={"Authorization": "Bearer admin-session-token"},
     )
-    assert response.status_code == 200
+    assert response.status_code == 202

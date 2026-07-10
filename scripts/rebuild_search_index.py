@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from collections.abc import Callable, Sequence
@@ -20,13 +19,13 @@ for import_path in (ROOT_DIR, API_DIR):
 
 from app.core.config import get_settings  # noqa: E402
 from app.repositories import search_index, search_sources  # noqa: E402
+from app.services import search_index as search_index_service  # noqa: E402
+
+
+_content_hash = search_index_service.content_hash
 
 
 LOCALES = ("en", "ru")
-
-
-def _content_hash(*parts: str) -> str:
-    return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()
 
 
 def _upsert(

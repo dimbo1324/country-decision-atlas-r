@@ -207,6 +207,17 @@ def get_country_slug_by_id(
     return str(row["slug"]) if row else None
 
 
+def get_country_name_by_id(
+    connection: Connection[Any], country_id: str
+) -> str | None:
+    row = fetch_one(
+        connection,
+        "SELECT name FROM countries WHERE id = %s::uuid",
+        (country_id,),
+    )
+    return str(row["name"]) if row else None
+
+
 def get_source_for_admin(
     connection: Connection[Any], source_id: str
 ) -> dict[str, Any] | None:

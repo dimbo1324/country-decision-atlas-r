@@ -108,20 +108,34 @@ class RedisCache:
         return f"{self.namespace}:{safe_key}"
 
 
+_redis_backend: RedisCache | None = None
+
+
 def get_cache_backend(settings: Settings | None = None) -> CacheBackend:
+    global _redis_backend
     resolved = settings or get_settings()
     if resolved.cache_mode != "redis":
         return NullCache()
+    if _redis_backend is not None:
+        return _redis_backend
     try:
         from redis import Redis
 
         client = Redis.from_url(
             resolved.redis_url, socket_connect_timeout=0.2, socket_timeout=0.2
         )
-        return RedisCache(client, resolved.cache_namespace)
+        _redis_backend = RedisCache(client, resolved.cache_namespace)
+        return _redis_backend
     except Exception as exc:
         logger.warning("Redis cache initialization failed.", exc_info=exc)
         return NullCache()
+
+
+def reset_cache_backend() -> None:
+    """Test-only: drop the cached Redis client so the next get_cache_backend()
+    call builds a fresh one (e.g. against a different Settings.redis_url)."""
+    global _redis_backend
+    _redis_backend = None
 
 
 def cache_ttl(settings: Settings | None = None) -> int:

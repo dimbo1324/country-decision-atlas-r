@@ -2646,12 +2646,12 @@ paths:
               $ref: '#/components/schemas/PlatformMetricsRecomputeRequest'
         required: true
       responses:
-        '200':
+        '202':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PlatformMetricsRecomputeSummary'
+                $ref: '#/components/schemas/AdminRecomputeQueuedResponse'
         '401':
           description: Unauthorized
           content:
@@ -2715,12 +2715,12 @@ paths:
               $ref: '#/components/schemas/TrustRecomputeRequest'
         required: true
       responses:
-        '200':
+        '202':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TrustRecomputeSummary'
+                $ref: '#/components/schemas/AdminRecomputeQueuedResponse'
         '401':
           description: Unauthorized
           content:
@@ -2788,12 +2788,12 @@ paths:
               $ref: '#/components/schemas/CountryDriftRecomputeRequest'
         required: true
       responses:
-        '200':
+        '202':
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CountryDriftBatchRecomputeResult'
+                $ref: '#/components/schemas/AdminRecomputeQueuedResponse'
         '401':
           description: Unauthorized
           content:
@@ -9889,6 +9889,35 @@ components:
       - items
       - total
       title: AdminMigrationBoardPostListResponse
+    AdminRecomputeQueuedResponse:
+      properties:
+        queued:
+          type: boolean
+          title: Queued
+          default: true
+        resource:
+          type: string
+          title: Resource
+        dry_run:
+          type: boolean
+          title: Dry Run
+        event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Id
+      type: object
+      required:
+      - resource
+      - dry_run
+      title: AdminRecomputeQueuedResponse
+      description: 'Acknowledges that an all-countries recompute was requested. The
+
+        request is only recorded, not executed inline; the actual recompute
+
+        runs separately via the CLI recompute scripts, on a schedule or by
+
+        hand.'
     AdminSourceResponse:
       properties:
         item:
@@ -11407,33 +11436,6 @@ components:
       - limit
       - offset
       title: CountryDataJournalResponse
-    CountryDriftBatchRecomputeResult:
-      properties:
-        countries_processed:
-          type: integer
-          title: Countries Processed
-        snapshots_written:
-          type: integer
-          title: Snapshots Written
-        events_emitted:
-          type: integer
-          title: Events Emitted
-        insufficient_data_count:
-          type: integer
-          title: Insufficient Data Count
-        errors:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Errors
-      type: object
-      required:
-      - countries_processed
-      - snapshots_written
-      - events_emitted
-      - insufficient_data_count
-      title: CountryDriftBatchRecomputeResult
     CountryDriftHistoryItem:
       properties:
         period_start:
@@ -16785,48 +16787,6 @@ components:
       - metrics_written
       - metrics_failed
       title: PlatformMetricsRecomputeResult
-    PlatformMetricsRecomputeSummary:
-      properties:
-        feature_enabled:
-          type: boolean
-          title: Feature Enabled
-        dry_run:
-          type: boolean
-          title: Dry Run
-        countries_requested:
-          type: integer
-          title: Countries Requested
-        countries_processed:
-          type: integer
-          title: Countries Processed
-        countries_skipped:
-          type: integer
-          title: Countries Skipped
-        metrics_computed:
-          type: integer
-          title: Metrics Computed
-        metrics_written:
-          type: integer
-          title: Metrics Written
-        metrics_failed:
-          type: integer
-          title: Metrics Failed
-        errors:
-          items:
-            type: string
-          type: array
-          title: Errors
-      type: object
-      required:
-      - feature_enabled
-      - dry_run
-      - countries_requested
-      - countries_processed
-      - countries_skipped
-      - metrics_computed
-      - metrics_written
-      - metrics_failed
-      title: PlatformMetricsRecomputeSummary
     PublicationStatus:
       type: string
       enum:
@@ -19934,41 +19894,6 @@ components:
           default: false
       type: object
       title: TrustRecomputeRequest
-    TrustRecomputeSummary:
-      properties:
-        feature_enabled:
-          type: boolean
-          title: Feature Enabled
-        dry_run:
-          type: boolean
-          title: Dry Run
-        countries_processed:
-          type: integer
-          title: Countries Processed
-        countries_computed:
-          type: integer
-          title: Countries Computed
-        countries_stored:
-          type: integer
-          title: Countries Stored
-        countries_failed:
-          type: integer
-          title: Countries Failed
-        errors:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Errors
-      type: object
-      required:
-      - feature_enabled
-      - dry_run
-      - countries_processed
-      - countries_computed
-      - countries_stored
-      - countries_failed
-      title: TrustRecomputeSummary
     UpdateMigrationBoardPostRequest:
       properties:
         destination_country_slug:

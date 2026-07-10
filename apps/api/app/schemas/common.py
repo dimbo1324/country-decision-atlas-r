@@ -69,6 +69,18 @@ class ContentValidationError(ErrorResponse):
     pass
 
 
+class AdminRecomputeQueuedResponse(BaseModel):
+    """Acknowledges that an all-countries recompute was requested. The
+    request is only recorded, not executed inline; the actual recompute
+    runs separately via the CLI recompute scripts, on a schedule or by
+    hand."""
+
+    queued: bool = True
+    resource: str
+    dry_run: bool
+    event_id: str | None = None
+
+
 def locale_resolution(
     requested_locale: str | LocaleCode,
     resolved_locale: str | LocaleCode,

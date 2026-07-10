@@ -3,7 +3,7 @@ from app.core.database import get_connection
 from app.core.errors import api_error
 from app.core.rbac import require_admin
 from app.repositories import platform_metrics as pm_repo
-from app.schemas.common import ErrorResponse
+from app.schemas.common import AdminRecomputeQueuedResponse, ErrorResponse
 from app.schemas.platform_metrics import (
     PlatformMetric,
     PlatformMetricDetailResponse,
@@ -11,11 +11,10 @@ from app.schemas.platform_metrics import (
     PlatformMetricListResponse,
     PlatformMetricsRecomputeRequest,
     PlatformMetricsRecomputeResult,
-    PlatformMetricsRecomputeSummary,
 )
+from app.services.admin_recompute import enqueue_recompute_request
 from app.services.platform_metrics_runtime import (
     VALID_METRIC_KEYS,
-    compute_platform_metrics_for_all_countries,
     compute_platform_metrics_for_country,
     is_feature_enabled,
 )
@@ -186,29 +185,34 @@ admin_router = APIRouter(tags=["admin"])
 
 @admin_router.post(
     "/admin/platform-metrics/recompute",
-    response_model=PlatformMetricsRecomputeSummary,
+    response_model=AdminRecomputeQueuedResponse,
+    status_code=202,
     responses=PLATFORM_METRICS_RESPONSES,
 )
 def admin_recompute_all_platform_metrics(
     payload: PlatformMetricsRecomputeRequest,
     connection: Annotated[Connection[Any], Depends(get_connection)],
     _: Annotated[CurrentUser, Depends(require_admin)],
-) -> PlatformMetricsRecomputeSummary:
+) -> AdminRecomputeQueuedResponse:
     if not is_feature_enabled(connection):
         raise api_error(
             403,
             "self_computed_intelligence_disabled",
             "Self-computed intelligence feature is disabled.",
         )
-    result = compute_platform_metrics_for_all_countries(
+    event_id = enqueue_recompute_request(
         connection,
+        resource="platform_metrics",
         dry_run=payload.dry_run,
-        metric_key=payload.metric_key,
-        scenario_slug=payload.scenario_slug,
+        extra_payload={
+            "metric_key": payload.metric_key,
+            "scenario_slug": payload.scenario_slug,
+        },
     )
-    if not payload.dry_run:
-        connection.commit()
-    return result
+    connection.commit()
+    return AdminRecomputeQueuedResponse(
+        resource="platform_metrics", dry_run=payload.dry_run, event_id=event_id
+    )
 
 
 @admin_router.post(

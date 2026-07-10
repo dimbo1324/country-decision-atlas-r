@@ -8,10 +8,7 @@ from app.repositories import (
     feature_flags as ff_repo,
     platform_metrics as pm_repo,
 )
-from app.schemas.platform_metrics import (
-    PlatformMetricsRecomputeResult,
-    PlatformMetricsRecomputeSummary,
-)
+from app.schemas.platform_metrics import PlatformMetricsRecomputeResult
 from app.services.platform_metric_types import METHODOLOGY_VERSION
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -348,23 +345,13 @@ def test_get_metric_invalid_key_raises(monkeypatch: pytest.MonkeyPatch) -> None:
     assert exc_info.value.status_code == 422
 
 
-def test_admin_recompute_all_writes_metrics(
+def test_admin_recompute_all_enqueues_request_instead_of_computing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     install_feature_enabled(monkeypatch)
-    expected_summary = PlatformMetricsRecomputeSummary(
-        feature_enabled=True,
-        dry_run=False,
-        countries_requested=3,
-        countries_processed=3,
-        countries_skipped=0,
-        metrics_computed=21,
-        metrics_written=21,
-        metrics_failed=0,
-    )
     monkeypatch.setattr(
-        "app.api.v1.platform_metrics.compute_platform_metrics_for_all_countries",
-        lambda *_a, **_kw: expected_summary,
+        "app.api.v1.platform_metrics.enqueue_recompute_request",
+        lambda *_a, **_kw: "event-123",
     )
     from app.schemas.platform_metrics import PlatformMetricsRecomputeRequest
 
@@ -372,35 +359,44 @@ def test_admin_recompute_all_writes_metrics(
     result = pm_api.admin_recompute_all_platform_metrics(
         PlatformMetricsRecomputeRequest(), conn, ADMIN_USER
     )
-    assert result.metrics_written == 21
+    assert result.queued is True
+    assert result.resource == "platform_metrics"
+    assert result.event_id == "event-123"
+    conn.commit.assert_called_once()
 
 
-def test_admin_recompute_dry_run_writes_nothing(
+def test_admin_recompute_all_forwards_dry_run_metric_key_and_scenario(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     install_feature_enabled(monkeypatch)
-    dry_summary = PlatformMetricsRecomputeSummary(
-        feature_enabled=True,
-        dry_run=True,
-        countries_requested=3,
-        countries_processed=3,
-        countries_skipped=0,
-        metrics_computed=21,
-        metrics_written=0,
-        metrics_failed=0,
-    )
+    captured: dict[str, Any] = {}
+
+    def fake_enqueue(_conn: Any, **kwargs: Any) -> str:
+        captured.update(kwargs)
+        return "event-456"
+
     monkeypatch.setattr(
-        "app.api.v1.platform_metrics.compute_platform_metrics_for_all_countries",
-        lambda *_a, **_kw: dry_summary,
+        "app.api.v1.platform_metrics.enqueue_recompute_request", fake_enqueue
     )
     from app.schemas.platform_metrics import PlatformMetricsRecomputeRequest
 
     conn = MagicMock()
     result = pm_api.admin_recompute_all_platform_metrics(
-        PlatformMetricsRecomputeRequest(dry_run=True), conn, ADMIN_USER
+        PlatformMetricsRecomputeRequest(
+            dry_run=True,
+            metric_key="legal_velocity_index",
+            scenario_slug="relocation_residence",
+        ),
+        conn,
+        ADMIN_USER,
     )
     assert result.dry_run is True
-    assert result.metrics_written == 0
+    assert captured["resource"] == "platform_metrics"
+    assert captured["dry_run"] is True
+    assert captured["extra_payload"] == {
+        "metric_key": "legal_velocity_index",
+        "scenario_slug": "relocation_residence",
+    }
 
 
 def test_admin_recompute_one_country_works(
@@ -468,4 +464,4 @@ def test_openapi_contract_contains_platform_metric_schema() -> None:
     contract = load_contract()
     schemas = contract["components"]["schemas"]
     assert "PlatformMetric" in schemas
-    assert "PlatformMetricsRecomputeSummary" in schemas
+    assert "AdminRecomputeQueuedResponse" in schemas

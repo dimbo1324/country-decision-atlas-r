@@ -1,7 +1,10 @@
 """Audit log and domain-event side effects of moving legal signals through the editorial publication lifecycle."""
 
 import pytest
-from app.repositories import admin_content as admin_repository
+from app.repositories import (
+    admin_content as admin_repository,
+    search_index as search_index_repository,
+)
 from app.schemas.admin_content import (
     CountryProfilePatch,
     EvidenceItemCreate,
@@ -101,6 +104,7 @@ def country_profile_row(
 ) -> dict[str, Any]:
     row: dict[str, Any] = {
         "id": str(uuid4()),
+        "country_id": str(uuid4()),
         "locale": "en",
         "executive_summary": "Summary",
         "migration_overview": "Migration",
@@ -114,6 +118,49 @@ def country_profile_row(
         "status": status,
     }
     return {**row, **overrides}
+
+
+@pytest.fixture(autouse=True)
+def stub_search_index(
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict[str, list[dict[str, Any]]]:
+    """Every admin_content write now syncs the search index in the same
+    transaction (P1-7, Аудит-эпизод 5), so every test in this file needs a
+    country lookup and a search_index repository stub even if it isn't
+    asserting on search-index behavior itself — autouse keeps that plumbing
+    out of tests that don't care, while tests that do can still request this
+    fixture by name to inspect the captured calls."""
+    calls: dict[str, list[dict[str, Any]]] = {"upsert": [], "delete": []}
+    monkeypatch.setattr(
+        admin_repository, "get_country_slug_by_id", lambda *_: "argentina"
+    )
+    monkeypatch.setattr(
+        admin_repository, "get_country_name_by_id", lambda *_: "Argentina"
+    )
+
+    def fake_upsert(_conn: Any, **kwargs: Any) -> dict[str, Any]:
+        calls["upsert"].append(kwargs)
+        return kwargs
+
+    def fake_delete(
+        _conn: Any, entity_type: str, entity_id: str, locale: str
+    ) -> int:
+        calls["delete"].append(
+            {
+                "entity_type": entity_type,
+                "entity_id": entity_id,
+                "locale": locale,
+            }
+        )
+        return 1
+
+    monkeypatch.setattr(
+        search_index_repository, "upsert_search_document", fake_upsert
+    )
+    monkeypatch.setattr(
+        search_index_repository, "delete_search_document", fake_delete
+    )
+    return calls
 
 
 def patch_audit(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
@@ -478,3 +525,124 @@ def test_publish_validation_still_blocks_invalid_content(
     assert exc.value.status_code == 422
     detail = cast(dict[str, Any], exc.value.detail)
     assert detail["error"]["code"] == "data_quality_validation_failed"
+
+
+def test_publishing_a_source_upserts_both_locale_search_documents(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = source_row("review")
+    after = {**before, "status": "published"}
+    rows = [before, after]
+    patch_audit(monkeypatch)
+    monkeypatch.setattr(
+        admin_repository, "get_source_for_admin", lambda *_: rows.pop(0)
+    )
+    monkeypatch.setattr(admin_repository, "patch_source", lambda *_: after)
+
+    admin_content.patch_source(
+        cast(Any, FakeConnection()),
+        str(before["id"]),
+        SourcePatch(status=PublicationStatus.published),
+        "admin",
+    )
+
+    upserted = stub_search_index["upsert"]
+    assert stub_search_index["delete"] == []
+    assert {call["locale"] for call in upserted} == {"en", "ru"}
+    assert all(call["entity_type"] == "source" for call in upserted)
+    assert all(
+        call["path"] == "/sources?country_slug=argentina" for call in upserted
+    )
+
+
+def test_unpublishing_a_source_removes_both_locale_search_documents(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = source_row("published")
+    after = {**before, "status": "archived"}
+    rows = [before, after]
+    patch_audit(monkeypatch)
+    monkeypatch.setattr(
+        admin_repository, "get_source_for_admin", lambda *_: rows.pop(0)
+    )
+    monkeypatch.setattr(admin_repository, "patch_source", lambda *_: after)
+
+    admin_content.patch_source(
+        cast(Any, FakeConnection()),
+        str(before["id"]),
+        SourcePatch(status=PublicationStatus.archived),
+        "admin",
+    )
+
+    assert stub_search_index["upsert"] == []
+    deleted = stub_search_index["delete"]
+    assert {call["locale"] for call in deleted} == {"en", "ru"}
+    assert all(call["entity_type"] == "source" for call in deleted)
+
+
+def test_publishing_a_legal_signal_upserts_distinct_content_per_locale(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = legal_signal_row("review")
+    after = {**before, "status": "published"}
+    rows = [before, after]
+    patch_audit(monkeypatch)
+    patch_domain_events(monkeypatch)
+    monkeypatch.setattr(
+        admin_repository, "get_legal_signal_for_admin", lambda *_: rows.pop(0)
+    )
+    monkeypatch.setattr(
+        admin_repository, "patch_legal_signal", lambda *_: after
+    )
+    monkeypatch.setattr(
+        admin_repository,
+        "get_source_for_admin",
+        lambda *_: source_row("published"),
+    )
+
+    admin_content.patch_legal_signal(
+        cast(Any, FakeConnection()),
+        str(before["id"]),
+        LegalSignalPatch(status=PublicationStatus.published),
+        "admin",
+    )
+
+    upserted = {call["locale"]: call for call in stub_search_index["upsert"]}
+    assert upserted["en"]["title"] == before["title_en"]
+    assert upserted["ru"]["title"] == before["title_ru"]
+    assert upserted["en"]["path"] == "/legal-signals?country_slug=argentina"
+
+
+def test_publishing_a_country_profile_upserts_one_locale_document(
+    monkeypatch: pytest.MonkeyPatch,
+    stub_search_index: dict[str, list[dict[str, Any]]],
+) -> None:
+    before = country_profile_row("review")
+    after = {**before, "status": "published"}
+    rows = [before, after]
+    patch_audit(monkeypatch)
+    monkeypatch.setattr(
+        admin_repository,
+        "get_country_profile_for_admin",
+        lambda *_: rows.pop(0),
+    )
+    monkeypatch.setattr(
+        admin_repository, "patch_country_profile", lambda *_: after
+    )
+
+    admin_content.patch_country_profile(
+        cast(Any, FakeConnection()),
+        "argentina",
+        CountryProfilePatch(status=PublicationStatus.published),
+        "admin",
+    )
+
+    upserted = stub_search_index["upsert"]
+    assert len(upserted) == 1
+    assert upserted[0]["entity_type"] == "country"
+    assert upserted[0]["title"] == "Argentina"
+    assert upserted[0]["path"] == "/countries/argentina"
+    assert upserted[0]["locale"] == "en"
