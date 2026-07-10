@@ -48,6 +48,8 @@ export function VelocitySlide({ active, dataset }: VelocitySlideProps) {
           values={timeline}
           active={active}
           colorVar="--color-blue3"
+          yAxisLabel="Сигналов / квартал"
+          xAxisLabel="24 месяца"
         />
       </ChartFrame>
     </SlideSection>

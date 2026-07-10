@@ -13,39 +13,39 @@ export function useCanvasLoop(
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
+    // Keep the canvas backing store in sync with its CSS box every frame,
+    // measuring fresh (never caching) so any layout shift — width OR height —
+    // is picked up on the next frame instead of drawing past a stale buffer.
+    const syncSize = (cssWidth: number, cssHeight: number) => {
       const ratio = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, rect.width * ratio);
-      canvas.height = Math.max(1, rect.height * ratio);
+      const nextWidth = Math.max(1, Math.round(cssWidth * ratio));
+      const nextHeight = Math.max(1, Math.round(cssHeight * ratio));
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
-    resize();
 
-    let widthAtLastResize = canvas.getBoundingClientRect().width;
-    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const currentWidth = canvas.getBoundingClientRect().width;
-        if (Math.abs(currentWidth - widthAtLastResize) < 1) return;
-        widthAtLastResize = currentWidth;
-        resize();
-      }, 200);
+    const paint = () => {
+      const rect = canvas.getBoundingClientRect();
+      syncSize(rect.width, rect.height);
+      draw(ctx, rect.width, rect.height);
     };
-    window.addEventListener("resize", handleResize);
 
     const tick = () => {
-      const rect = canvas.getBoundingClientRect();
-      draw(ctx, rect.width, rect.height);
+      paint();
       frameRef.current = requestAnimationFrame(tick);
     };
+    // Paint synchronously on mount instead of waiting for the first rAF tick:
+    // a fresh mount (e.g. the fullscreen chart overlay, which remounts this
+    // component into a portal) must show a correct frame immediately, not an
+    // empty canvas for one frame while the first rAF callback is pending.
+    paint();
     frameRef.current = requestAnimationFrame(tick);
 
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
-      clearTimeout(resizeTimer);
-      window.removeEventListener("resize", handleResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, ref]);

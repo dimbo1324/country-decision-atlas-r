@@ -39,7 +39,7 @@ export function TopBar({
             key={slide.id}
             onClick={() => onNavigate(slideIndex)}
             className={cn(
-              "font-mono relative px-3 py-2 text-[9px] tracking-[0.2em] uppercase transition-colors duration-300",
+              "font-mono relative px-3 py-2 text-xs tracking-[0.18em] uppercase transition-colors duration-300",
               slideIndex === activeIndex ? "text-c1" : "text-c3 hover:text-c1",
             )}
           >
@@ -58,7 +58,11 @@ export function TopBar({
         variant="primary"
         onClick={onRunAnalysis}
         disabled={isRunning}
-        className={isRunning ? "cursor-wait opacity-60" : undefined}
+        aria-live="polite"
+        className={cn(
+          "w-[188px] shrink-0",
+          isRunning && "cursor-wait opacity-60",
+        )}
       >
         {isRunning ? "Пересчёт…" : "Запустить анализ"}
       </Button>

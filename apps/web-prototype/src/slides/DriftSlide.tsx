@@ -48,6 +48,8 @@ export function DriftSlide({ active, dataset }: DriftSlideProps) {
           active={active}
           colorVar="--color-terra3"
           zeroLine
+          yAxisLabel="Индекс дрейфа"
+          xAxisLabel="24 месяца"
         />
       </ChartFrame>
     </SlideSection>

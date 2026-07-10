@@ -18,7 +18,7 @@ export function HeroSlide({ active }: HeroSlideProps) {
   return (
     <SlideSection className="items-center text-center">
       <Kicker>Аналитическая платформа · Осн. MMXXVI · Онлайн</Kicker>
-      <h1 className="text-shimmer font-display text-6xl font-bold sm:text-7xl lg:text-8xl">
+      <h1 className="text-shimmer font-display py-2 text-6xl leading-[1.15] font-bold sm:text-7xl lg:text-8xl">
         CountryAtlas
       </h1>
       <p className="font-body text-c2 max-w-2xl text-lg italic sm:text-xl">

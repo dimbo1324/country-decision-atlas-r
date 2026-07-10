@@ -30,7 +30,9 @@ export function Button({
     <button
       {...rest}
       className={cn(
-        "group border-gold2 text-gold3 font-mono relative inline-flex items-center gap-2 overflow-hidden border px-5 py-3 text-[10px] tracking-[0.25em] uppercase",
+        "group border-gold2 text-gold3 font-mono relative inline-flex items-center justify-center gap-2 overflow-hidden border px-5 py-3 text-[10px] tracking-[0.25em] uppercase",
+        // No transform on :active — the ink fill animates, the box never resizes.
+        "transition-[border-color,color] duration-300 active:translate-y-0",
         className,
       )}
     >

@@ -61,13 +61,13 @@ export function CommunitySlide({ dataset }: CommunitySlideProps) {
         </p>
       </div>
 
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {dataset.catalog.map((country) => (
           <Card
             key={country.slug}
             accent="plum"
             onClick={() => setSelected(country)}
-            className="flex flex-col gap-4"
+            className="flex min-h-[168px] flex-col gap-4"
           >
             <div className="flex items-center justify-between">
               <span className="font-mono text-c4 text-[10px] tracking-[0.2em]">
@@ -76,10 +76,10 @@ export function CommunitySlide({ dataset }: CommunitySlideProps) {
               <span
                 className={
                   country.driftValue > 1.5
-                    ? "text-sage3 flex items-center gap-1 text-xs"
+                    ? "text-sage3 font-display flex items-center gap-1 text-xs font-bold"
                     : country.driftValue < -1.5
-                      ? "text-terra3 flex items-center gap-1 text-xs"
-                      : "text-c3 flex items-center gap-1 text-xs"
+                      ? "text-terra3 font-display flex items-center gap-1 text-xs font-bold"
+                      : "text-c3 font-display flex items-center gap-1 text-xs font-bold"
                 }
               >
                 {driftIcon(country.driftValue)}
@@ -145,7 +145,7 @@ export function CommunitySlide({ dataset }: CommunitySlideProps) {
               <div className="border-warm flex items-center gap-2 border p-3">
                 {driftIcon(selected.driftValue)}
                 <span className="text-c1 text-sm">{selected.driftLabel}</span>
-                <span className="font-mono text-c3 ml-auto text-xs">
+                <span className="font-display text-c1 ml-auto text-sm font-bold">
                   {selected.driftValue > 0 ? "+" : ""}
                   {selected.driftValue}
                 </span>

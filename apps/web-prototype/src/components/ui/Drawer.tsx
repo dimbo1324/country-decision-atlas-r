@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ACCENTS, type Accent } from "@/lib/accents";
@@ -31,11 +32,17 @@ export function Drawer({
 
   const accentClasses = ACCENTS[accent];
 
-  return (
+  // Portalled to document.body: the pager slide this renders from lives
+  // inside a `transform: translateX(...)` track, and any transformed
+  // ancestor becomes the containing block for `position: fixed` descendants
+  // — the drawer would be boxed into the (very wide) track instead of the
+  // viewport, landing behind the top bar. Same class of bug as the chart
+  // fullscreen overlay, same fix.
+  return createPortal(
     <div
       aria-hidden={!open}
       className={cn(
-        "fixed inset-0 z-50 transition-opacity duration-300",
+        "fixed inset-0 z-[80] transition-opacity duration-300",
         open
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0",
@@ -80,6 +87,7 @@ export function Drawer({
         </div>
         <div className="flex-1 overflow-y-auto px-7 pb-7">{children}</div>
       </aside>
-    </div>
+    </div>,
+    document.body,
   );
 }

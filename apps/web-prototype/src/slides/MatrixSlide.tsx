@@ -1,7 +1,7 @@
 import { SlideSection } from "@/components/shell/SlideSection";
 import { Kicker } from "@/components/ui/Kicker";
 import { ChartFrame, MetricStat } from "@/components/ui/ChartFrame";
-import { DivergingBarChart } from "@/components/charts/DivergingBarChart";
+import { DivergingMeter } from "@/components/charts/DivergingMeter";
 import { SCENARIOS, type Dataset } from "@/data/generator";
 
 interface MatrixSlideProps {
@@ -45,23 +45,16 @@ export function MatrixSlide({ active, dataset }: MatrixSlideProps) {
         title={`${dataset.scenarioLeftName} ↔ ${dataset.scenarioRightName}`}
         className="h-80"
       >
-        <div className="flex h-full flex-col gap-2">
-          <div className="flex items-center justify-between px-1 font-mono text-[9px] tracking-[0.2em] uppercase">
-            <span className="text-gold3">{dataset.scenarioLeftName}</span>
-            <span className="text-sage3">{dataset.scenarioRightName}</span>
-          </div>
-          <div className="flex-1">
-            <DivergingBarChart
-              key={dataset.version}
-              categories={SCENARIOS}
-              leftValues={dataset.scenarioLeftValues}
-              rightValues={dataset.scenarioRightValues}
-              leftColorVar="--color-gold"
-              rightColorVar="--color-sage3"
-              active={active}
-            />
-          </div>
-        </div>
+        <DivergingMeter
+          categories={SCENARIOS}
+          leftLabel={dataset.scenarioLeftName}
+          rightLabel={dataset.scenarioRightName}
+          leftValues={dataset.scenarioLeftValues}
+          rightValues={dataset.scenarioRightValues}
+          leftColorVar="--color-gold"
+          rightColorVar="--color-sage3"
+          active={active}
+        />
       </ChartFrame>
     </SlideSection>
   );

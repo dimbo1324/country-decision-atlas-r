@@ -27,6 +27,9 @@ export function RadarChart({
     target: series.map((serie) => serie.values),
   });
   const tickRef = useRef(0);
+  // Hover is tracked in a ref (not state) so it never restarts useCanvasLoop's
+  // effect — the running draw loop just reads the latest value each frame.
+  const hoveredRef = useRef(false);
 
   useCanvasLoop(
     canvasRef,
@@ -47,10 +50,12 @@ export function RadarChart({
       const step = (Math.PI * 2) / axes.length;
       const border = readCssVar("--color-c4") || "#494436";
       const textColor = readCssVar("--color-c3") || "#827a6a";
+      const axisColor = readCssVar("--color-c2") || "#c0b6a0";
+      const hovered = hoveredRef.current;
 
       ctx.clearRect(0, 0, width, height);
 
-      ctx.strokeStyle = withAlpha(border, 0.5);
+      ctx.strokeStyle = withAlpha(border, hovered ? 0.75 : 0.5);
       ctx.lineWidth = 1;
       for (let ring = 1; ring <= 4; ring += 1) {
         ctx.beginPath();
@@ -63,6 +68,32 @@ export function RadarChart({
           else ctx.lineTo(x, y);
         }
         ctx.stroke();
+      }
+
+      if (hovered) {
+        ctx.save();
+        // Spokes: one line per axis from center to the outer ring.
+        ctx.strokeStyle = withAlpha(axisColor, 0.22);
+        ctx.lineWidth = 1;
+        axes.forEach((_axis, i) => {
+          const angle = -Math.PI / 2 + step * i;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+          ctx.stroke();
+        });
+        // Value scale along the top spoke (0/25/50/75/100). Same serif
+        // display face as every other number in the app — mono is reserved
+        // for uppercase text labels (the axis names below), never values.
+        ctx.font = "bold 9px 'Playfair Display', Georgia, serif";
+        ctx.fillStyle = withAlpha(axisColor, 0.8);
+        ctx.textAlign = "left";
+        for (let ring = 1; ring <= 4; ring += 1) {
+          const r = (radius * ring) / 4;
+          const value = Math.round((maxValue * ring) / 4);
+          ctx.fillText(String(value), cx + 4, cy - r);
+        }
+        ctx.restore();
       }
 
       ctx.fillStyle = textColor;
@@ -106,6 +137,12 @@ export function RadarChart({
     <canvas
       ref={canvasRef}
       className="h-full w-full"
+      onMouseEnter={() => {
+        hoveredRef.current = true;
+      }}
+      onMouseLeave={() => {
+        hoveredRef.current = false;
+      }}
     />
   );
 }

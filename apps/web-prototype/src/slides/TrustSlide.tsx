@@ -33,9 +33,9 @@ export function TrustSlide({ dataset }: TrustSlideProps) {
           <Card
             key={dimension.label}
             accent="blue"
-            className="flex flex-col gap-3"
+            className="flex min-h-[184px] flex-col gap-3"
           >
-            <span className="font-display text-blue3 text-3xl font-bold">
+            <span className="font-display text-blue3 text-4xl leading-none font-bold">
               <Counter
                 key={`${dataset.version}-${dimension.label}`}
                 value={dimension.value}
@@ -46,7 +46,7 @@ export function TrustSlide({ dataset }: TrustSlideProps) {
             <span className="font-mono text-c2 text-[10px] tracking-[0.2em] uppercase">
               {dimension.label}
             </span>
-            <span className="text-c3 text-xs leading-relaxed">
+            <span className="text-c3 text-xs leading-relaxed text-pretty">
               {dimension.detail}
             </span>
           </Card>
