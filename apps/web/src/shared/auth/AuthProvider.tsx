@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { authApi, type AuthUser } from "../api/auth";
+import { hasSessionCookie } from "./session";
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -26,7 +27,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => hasSessionCookie());
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
@@ -40,6 +41,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Anonymous visitors (no CSRF cookie => definitely no session) must not
+    // trigger any setState here: a client-side setState in this provider —
+    // however brief — duplicates SSR content on force-dynamic pages (see
+    // Episode 14 postmortem). The CSRF cookie is the one session signal
+    // readable synchronously by JS, so it stands in for the old
+    // localStorage-token check that did the same job pre-AE-3.
+    if (!hasSessionCookie()) return;
     void refresh();
   }, [refresh]);
 

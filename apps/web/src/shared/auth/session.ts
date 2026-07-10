@@ -12,3 +12,7 @@ export function csrfHeaders(): HeadersInit {
   const token = readCookie(CSRF_COOKIE_NAME);
   return token ? { "X-CSRF-Token": token } : {};
 }
+
+export function hasSessionCookie(): boolean {
+  return readCookie(CSRF_COOKIE_NAME) !== null;
+}
