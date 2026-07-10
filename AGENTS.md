@@ -425,8 +425,14 @@ corepack pnpm@9.12.0 install --frozen-lockfile
 corepack pnpm@9.12.0 contracts:generate
 corepack pnpm@9.12.0 --filter @country-decision-atlas/web typecheck
 corepack pnpm@9.12.0 --filter @country-decision-atlas/web lint
-cd apps/notifier; go vet ./...; go test ./...
+cd apps/notifier; go vet ./...; go test -race ./...
 ```
+
+`-race` requires a working CGO toolchain (`CGO_ENABLED=1` plus a C
+compiler). GitHub Actions' `ubuntu-latest` has one preinstalled; a local
+Windows machine without mingw/gcc will fail with `-race requires cgo` —
+drop `-race` for a local sanity check in that case, the CI job is the
+actual `-race` gate (P2-6, Аудит-эпизод 8).
 
 ## Postgres observability (dev)
 

@@ -1857,7 +1857,7 @@ class FullCheck:
         )
         self.run_gate_step(
             "go test",
-            [go_exe, "test", "./..."] if go_exe else None,
+            [go_exe, "test", "-race", "./..."] if go_exe else None,
             cwd=notifier_dir,
         )
 

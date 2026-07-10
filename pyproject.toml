@@ -27,6 +27,7 @@ dev = [
   "mypy>=1.11.0,<2.0.0",
   "pytest>=9.0.3,<10.0.0",
   "pytest-cov>=5.0.0,<6.0.0",
+  "pip-audit>=2.7.0,<3.0.0",
   "pyyaml>=6.0.0,<7.0.0",
   "pre-commit>=4.2.0,<5.0.0",
   "ruff>=0.12.0,<1.0.0",
@@ -161,3 +162,10 @@ pythonpath = [
   "packages/contracts",
   "packages/shared",
 ]
+
+[tool.coverage.run]
+source = ["apps/api/app/services", "apps/api/app/repositories"]
+
+[tool.coverage.report]
+fail_under = 70
+skip_covered = false

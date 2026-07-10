@@ -33,11 +33,27 @@ jobs:
       - name: MyPy
         run: python -m mypy apps packages scripts tests
 
-      - name: Pytest
-        run: python -m pytest
+      - name: Pytest with coverage
+        run: >
+          python -m pytest --cov=apps/api/app/services
+          --cov=apps/api/app/repositories --cov-report=xml
+          --cov-report=term-missing
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: error
 
       - name: SQLFluff
         run: python -m sqlfluff lint database --dialect postgres
+
+      - name: pip-audit
+        # P2-6, Аудит-эпизод 8: allow-fail on introduction — gate once the
+        # findings (if any) have been triaged and either fixed or accepted.
+        continue-on-error: true
+        run: python -m pip_audit
 
   notifier:
     name: Go notifier quality
@@ -86,7 +102,17 @@ jobs:
 
       - name: go test
         working-directory: apps/notifier
-        run: go test ./...
+        run: go test -race ./...
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: govulncheck
+        # P2-6, Аудит-эпизод 8: allow-fail on introduction — gate once the
+        # findings (if any) have been triaged and either fixed or accepted.
+        continue-on-error: true
+        working-directory: apps/notifier
+        run: govulncheck ./...
 
   integration:
     name: Integration / migration smoke
@@ -180,6 +206,12 @@ jobs:
           RUN_RUNTIME_SMOKE_TESTS: "1"
         run: python -m pytest tests/smoke/ -v
 
+      - name: Repository integration tests
+        env:
+          DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          RUN_REPOSITORY_INTEGRATION_TESTS: "1"
+        run: python -m pytest tests/repository/ -v
+
   frontend:
     name: Frontend quality
     runs-on: ubuntu-latest
@@ -216,6 +248,12 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: pnpm audit
+        # P2-6, Аудит-эпизод 8: allow-fail on introduction — gate once the
+        # findings (if any) have been triaged and either fixed or accepted.
+        continue-on-error: true
+        run: pnpm audit --prod
 
   e2e:
     name: Playwright E2E
