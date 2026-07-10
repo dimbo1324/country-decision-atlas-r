@@ -304,8 +304,15 @@ jobs:
       - name: Run frontend regression gate
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
-          API_BASE_URL: http://127.0.0.1:8000
-          NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+          # localhost, not 127.0.0.1: the frontend (WEB_BASE_URL, default
+          # localhost:3000) and API must share the same cookie-scoping host
+          # or the browser can never see cda_csrf via document.cookie —
+          # cookies are host-matched by exact string, so 127.0.0.1 and
+          # localhost are different origins even though both resolve to the
+          # loopback interface. uvicorn is still bound to 127.0.0.1 above;
+          # localhost:8000 resolves to it fine on the runner.
+          API_BASE_URL: http://localhost:8000
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
           APP_ENV: local
         run: pnpm web:mvp:check
 

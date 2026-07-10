@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { authApi, type AuthUser } from "../api/auth";
-import { hasSessionCookie } from "./session";
+import { clearSessionHint, hasSessionHint, setSessionHint } from "./session";
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -27,33 +27,38 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(() => hasSessionCookie());
+  const [isLoading, setIsLoading] = useState(() => hasSessionHint());
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await authApi.getMe();
       setUser(response.user);
+      setSessionHint();
     } catch {
       setUser(null);
+      clearSessionHint();
     }
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
-    // Anonymous visitors (no CSRF cookie => definitely no session) must not
-    // trigger any setState here: a client-side setState in this provider —
-    // however brief — duplicates SSR content on force-dynamic pages (see
-    // Episode 14 postmortem). The CSRF cookie is the one session signal
-    // readable synchronously by JS, so it stands in for the old
-    // localStorage-token check that did the same job pre-AE-3.
-    if (!hasSessionCookie()) return;
+    // Visitors with no session hint must not trigger any setState here: a
+    // client-side setState in this provider — however brief — duplicates
+    // SSR content on force-dynamic pages (see Episode 14 postmortem). The
+    // hint is a first-party cookie this app sets itself on successful
+    // login/refresh, not a read of the API's own session/CSRF cookies —
+    // those are invisible to document.cookie whenever the API is deployed
+    // on a different origin than the frontend (separate subdomain in prod,
+    // 127.0.0.1 vs localhost in CI).
+    if (!hasSessionHint()) return;
     void refresh();
   }, [refresh]);
 
   async function login(email: string, password: string) {
     const response = await authApi.login({ email, password });
     setUser(response.user);
+    setSessionHint();
   }
 
   async function register(
@@ -67,11 +72,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       display_name: displayName,
     });
     setUser(response.user);
+    setSessionHint();
   }
 
   async function logout() {
     await authApi.logout().catch(() => undefined);
     setUser(null);
+    clearSessionHint();
   }
 
   return (
