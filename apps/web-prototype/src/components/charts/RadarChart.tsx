@@ -79,7 +79,10 @@ export function RadarChart({
           const angle = -Math.PI / 2 + step * i;
           ctx.beginPath();
           ctx.moveTo(cx, cy);
-          ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+          ctx.lineTo(
+            cx + Math.cos(angle) * radius,
+            cy + Math.sin(angle) * radius,
+          );
           ctx.stroke();
         });
         // Value scale along the top spoke (0/25/50/75/100). Same serif

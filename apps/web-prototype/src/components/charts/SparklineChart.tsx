@@ -112,7 +112,11 @@ export function SparklineChart({
 
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText(xAxisLabel.toUpperCase(), (padX + width - padX) / 2, xAxisY + 8);
+        ctx.fillText(
+          xAxisLabel.toUpperCase(),
+          (padX + width - padX) / 2,
+          xAxisY + 8,
+        );
         ctx.restore();
       }
 
