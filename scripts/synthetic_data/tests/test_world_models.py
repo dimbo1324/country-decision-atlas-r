@@ -59,3 +59,37 @@ def test_world_models_are_frozen() -> None:
         )
     else:
         raise AssertionError("expected assignment to a frozen model to fail")
+
+
+def test_synthetic_world_schema_includes_stage3_content_defs() -> None:
+    schema = SyntheticWorld.model_json_schema()
+
+    for def_name in (
+        "SyntheticUser",
+        "SyntheticAuthor",
+        "SyntheticArticle",
+        "SyntheticComment",
+        "SyntheticLegalSignal",
+        "SyntheticDocumentRecipe",
+        "SyntheticScenario",
+    ):
+        assert def_name in schema["$defs"]
+
+
+def test_world_to_dict_serializes_stage3_content() -> None:
+    world = WorldGenerator(input_data=load_world_input()).generate(
+        WorldGenerationOptions(seed=42017, profile="balanced")
+    )
+    payload = cast(dict[str, Any], world.to_dict())
+
+    for field in (
+        "users",
+        "authors",
+        "articles",
+        "comments",
+        "legal_signals",
+        "document_recipes",
+        "scenarios",
+    ):
+        assert field in payload
+        assert len(payload[field]) > 0

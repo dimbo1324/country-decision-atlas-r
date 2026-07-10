@@ -110,3 +110,163 @@ def test_validator_rejects_metric_change_pointing_to_wrong_event_metric() -> (
     )
 
     assert any("unexplained" in error for error in errors)
+
+
+def test_validator_rejects_user_with_non_reserved_email() -> None:
+    world, input_data = _world()
+    bad_user = world.users[0].model_copy(update={"email": "someone@gmail.com"})
+    invalid_world = world.model_copy(
+        update={"users": (bad_user, *world.users[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("reserved domain" in error for error in errors)
+
+
+def test_validator_rejects_author_referencing_unknown_user() -> None:
+    world, input_data = _world()
+    bad_author = world.authors[0].model_copy(update={"user_id": "user-ghost"})
+    invalid_world = world.model_copy(
+        update={"authors": (bad_author, *world.authors[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("existing user" in error for error in errors)
+
+
+def test_validator_rejects_article_with_source_from_another_country() -> None:
+    world, input_data = _world()
+    other_country_source_id = world.countries[1].sources[0].source_id
+    bad_article = world.articles[0].model_copy(
+        update={"source_ids": (other_country_source_id,)}
+    )
+    invalid_world = world.model_copy(
+        update={"articles": (bad_article, *world.articles[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any(
+        "does not belong to the article's country" in error for error in errors
+    )
+
+
+def test_validator_rejects_comment_with_unknown_moderation_status() -> None:
+    world, input_data = _world()
+    bad_comment = world.comments[0].model_copy(
+        update={"moderation_status": "auto_deleted"}
+    )
+    invalid_world = world.model_copy(
+        update={"comments": (bad_comment, *world.comments[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("unknown moderation status" in error for error in errors)
+
+
+def test_validator_requires_at_least_two_moderation_statuses() -> None:
+    world, input_data = _world()
+    all_approved = tuple(
+        comment.model_copy(update={"moderation_status": "approved"})
+        for comment in world.comments
+    )
+    invalid_world = world.model_copy(update={"comments": all_approved})
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("at least two distinct moderation" in error for error in errors)
+
+
+def test_validator_rejects_legal_signal_with_foreign_event() -> None:
+    world, input_data = _world()
+    foreign_event_id = world.countries[1].events[0].event_id
+    bad_signal = world.legal_signals[0].model_copy(
+        update={"event_id": foreign_event_id}
+    )
+    invalid_world = world.model_copy(
+        update={"legal_signals": (bad_signal, *world.legal_signals[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("event from its own country" in error for error in errors)
+
+
+def test_validator_rejects_document_recipe_with_empty_blocks() -> None:
+    world, input_data = _world()
+    bad_recipe = world.document_recipes[0].model_copy(update={"blocks": ()})
+    invalid_world = world.model_copy(
+        update={"document_recipes": (bad_recipe, *world.document_recipes[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("at least one block" in error for error in errors)
+
+
+def test_validator_rejects_scenario_with_no_steps() -> None:
+    world, input_data = _world()
+    bad_scenario = world.scenarios[0].model_copy(update={"steps": ()})
+    invalid_world = world.model_copy(
+        update={"scenarios": (bad_scenario, *world.scenarios[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("has no steps" in error for error in errors)
+
+
+def test_validator_rejects_scenario_with_dangling_related_artifact() -> None:
+    world, input_data = _world()
+    bad_scenario = world.scenarios[0].model_copy(
+        update={"related_artifacts": ("nonexistent-artifact-id",)}
+    )
+    invalid_world = world.model_copy(
+        update={"scenarios": (bad_scenario, *world.scenarios[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("does not exist in the world" in error for error in errors)
+
+
+def test_validator_rejects_fewer_than_three_scenarios() -> None:
+    world, input_data = _world()
+    invalid_world = world.model_copy(update={"scenarios": world.scenarios[:2]})
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("at least 3 scenarios" in error for error in errors)

@@ -43,6 +43,47 @@ def test_default_world_input_loads_all_archetypes_and_profiles() -> None:
     assert set(world_input.archetypes[0].metric_ranges) == set(REQUIRED_METRICS)
 
 
+def test_default_world_input_loads_content_libraries() -> None:
+    world_input = load_world_input()
+
+    assert len(world_input.user_given_names) >= 5
+    assert len(world_input.user_family_names) >= 5
+    assert world_input.document_blocks
+    assert world_input.document_recipes
+    recipe = world_input.document_recipe_by_id("country_overview")
+    assert recipe.blocks
+    for block_id in recipe.blocks:
+        block = world_input.document_block_by_id(block_id)
+        assert block.variants
+
+
+def test_document_recipe_referencing_unknown_block_is_rejected(
+    tmp_path: Path,
+) -> None:
+    payload = _read_default_payload()
+    recipes = payload["document_recipes"]
+    assert isinstance(recipes, list)
+    first_recipe = recipes[0]
+    assert isinstance(first_recipe, dict)
+    first_recipe["blocks"] = ["missing_block"]
+
+    with pytest.raises(WorldInputError, match="unknown blocks"):
+        load_world_input(_write_world_input(tmp_path, payload))
+
+
+def test_duplicate_document_block_id_is_rejected(tmp_path: Path) -> None:
+    payload = _read_default_payload()
+    blocks = payload["document_blocks"]
+    assert isinstance(blocks, list)
+    first_block = blocks[0]
+    assert isinstance(first_block, dict)
+    duplicate = dict(first_block)
+    blocks.append(duplicate)
+
+    with pytest.raises(WorldInputError, match="unique"):
+        load_world_input(_write_world_input(tmp_path, payload))
+
+
 def test_missing_required_metric_is_rejected(tmp_path: Path) -> None:
     payload = _read_default_payload()
     archetypes = payload["archetypes"]
@@ -89,6 +130,33 @@ def test_input_containing_pii_or_secrets_is_rejected(
         unsafe_value,
         *_existing_name_prefixes(payload),
     ]
+
+    with pytest.raises(WorldInputError):
+        load_world_input(_write_world_input(tmp_path, payload))
+
+
+def test_pii_in_user_given_names_is_rejected(tmp_path: Path) -> None:
+    payload = _read_default_payload()
+    payload["user_given_names"] = [
+        "contact-owner@example.com",
+        *cast(list[str], payload["user_given_names"]),
+    ]
+
+    with pytest.raises(WorldInputError):
+        load_world_input(_write_world_input(tmp_path, payload))
+
+
+def test_secret_keyword_in_document_block_variant_is_rejected(
+    tmp_path: Path,
+) -> None:
+    payload = _read_default_payload()
+    blocks = payload["document_blocks"]
+    assert isinstance(blocks, list)
+    first_block = blocks[0]
+    assert isinstance(first_block, dict)
+    variants = first_block["variants"]
+    assert isinstance(variants, list)
+    variants.append("production password: hunter2")
 
     with pytest.raises(WorldInputError):
         load_world_input(_write_world_input(tmp_path, payload))

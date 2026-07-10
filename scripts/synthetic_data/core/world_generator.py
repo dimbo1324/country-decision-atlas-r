@@ -5,6 +5,12 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import date
+from scripts.synthetic_data.core.content_generator import (
+    CountryContent,
+    generate_country_content,
+)
+from scripts.synthetic_data.core.document_recipes import resolve_document_recipe
+from scripts.synthetic_data.core.scenario_generator import generate_scenarios
 from scripts.synthetic_data.core.seed import SeedFactory
 from scripts.synthetic_data.core.world_input import (
     REQUIRED_METRICS,
@@ -70,6 +76,32 @@ class WorldGenerator:
             )
             for index in range(country_count)
         )
+        content_by_country: dict[str, CountryContent] = {
+            country.slug: generate_country_content(
+                country=country,
+                world_input=self._input_data,
+                seed_factory=seed_factory,
+            )
+            for country in countries
+        }
+        document_recipes = tuple(
+            resolve_document_recipe(
+                recipe_input,
+                world_input=self._input_data,
+                country=country,
+                rng=seed_factory.rng(
+                    "document_recipe", country.slug, recipe_input.id
+                ),
+            )
+            for country in countries
+            for recipe_input in self._input_data.document_recipes
+        )
+        scenarios = generate_scenarios(
+            profile=profile.slug,
+            countries=countries,
+            content_by_country=content_by_country,
+        )
+
         world = SyntheticWorld(
             metadata=WorldMetadata(
                 dataset_id=dataset_id,
@@ -82,6 +114,27 @@ class WorldGenerator:
                 generated_on=options.generated_on or date.today().isoformat(),
             ),
             countries=countries,
+            users=tuple(
+                user
+                for content in content_by_country.values()
+                for user in content.users
+            ),
+            authors=tuple(
+                content.author for content in content_by_country.values()
+            ),
+            articles=tuple(
+                content.article for content in content_by_country.values()
+            ),
+            comments=tuple(
+                comment
+                for content in content_by_country.values()
+                for comment in content.comments
+            ),
+            legal_signals=tuple(
+                content.legal_signal for content in content_by_country.values()
+            ),
+            document_recipes=document_recipes,
+            scenarios=scenarios,
         )
         ensure_world_valid(
             world,

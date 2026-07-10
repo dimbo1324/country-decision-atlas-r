@@ -164,5 +164,71 @@
       ],
       "event_intensity": 4
     }
+  ],
+  "user_given_names": [
+    "Alex",
+    "Sam",
+    "Jordan",
+    "Riley",
+    "Casey",
+    "Morgan",
+    "Taylor",
+    "Jamie",
+    "Quinn",
+    "Avery"
+  ],
+  "user_family_names": [
+    "Voss",
+    "Kade",
+    "Renn",
+    "Solis",
+    "Marek",
+    "Tovin",
+    "Dahl",
+    "Brix",
+    "Onyeka",
+    "Larsen"
+  ],
+  "document_blocks": [
+    {
+      "id": "country_intro",
+      "kind": "paragraph",
+      "applies_to": ["country_overview"],
+      "requires": ["country.name", "country.archetype"],
+      "variants": [
+        "{country.name} is a fictional test country used for Country Decision Atlas development.",
+        "This is a synthetic profile for {country.name}, generated for local testing."
+      ]
+    },
+    {
+      "id": "country_risk_summary",
+      "kind": "paragraph",
+      "applies_to": ["country_overview"],
+      "requires": ["country.name", "country.risks"],
+      "variants": [
+        "For {country.name}, a key limitation remains {risk_label}.",
+        "When evaluating {country.name}, consider this factor: {risk_label}."
+      ]
+    },
+    {
+      "id": "country_strength_summary",
+      "kind": "paragraph",
+      "applies_to": ["country_overview"],
+      "requires": ["country.name", "country.strengths"],
+      "variants": [
+        "{country.name} stands out for {strength_label}.",
+        "A notable strength of {country.name} is {strength_label}."
+      ]
+    }
+  ],
+  "document_recipes": [
+    {
+      "id": "country_overview",
+      "blocks": [
+        "country_intro",
+        "country_risk_summary",
+        "country_strength_summary"
+      ]
+    }
   ]
 }

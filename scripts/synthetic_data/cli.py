@@ -271,11 +271,18 @@ def _run_world(argv: list[str]) -> int:
             raise WorldValidationError("; ".join(errors))
         print(
             f"dataset_id={world.metadata.dataset_id} seed={seed} "
-            f"profile={world.metadata.profile} countries={len(world.countries)}"
+            f"profile={world.metadata.profile} countries={len(world.countries)} "
+            f"users={len(world.users)} authors={len(world.authors)} "
+            f"articles={len(world.articles)} comments={len(world.comments)} "
+            f"legal_signals={len(world.legal_signals)} "
+            f"document_recipes={len(world.document_recipes)} "
+            f"scenarios={len(world.scenarios)}"
         )
         if args.command == "plan" or args.dry_run:
             for country in world.countries:
                 print(f"- {country.name} ({country.code}): {country.archetype}")
+            for scenario in world.scenarios:
+                print(f"  scenario: {scenario.title} ({scenario.category})")
             return 0
 
         dataset_dir = _write_world_dataset(

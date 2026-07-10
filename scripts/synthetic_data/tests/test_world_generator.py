@@ -88,3 +88,92 @@ def test_country_count_can_be_reduced_to_four() -> None:
     world = _generate_world(country_count=4)
 
     assert len(world.countries) == 4
+
+
+def test_every_country_has_an_author_article_and_legal_signal() -> None:
+    world = _generate_world()
+    country_ids = {country.country_id for country in world.countries}
+
+    assert len(world.authors) == len(world.countries)
+    assert len(world.articles) == len(world.countries)
+    assert len(world.legal_signals) == len(world.countries)
+    assert {author.author_id for author in world.authors} == {
+        article.author_id for article in world.articles
+    }
+    assert {article.country_id for article in world.articles} == country_ids
+    assert {signal.country_id for signal in world.legal_signals} == (
+        country_ids
+    )
+
+
+def test_legal_signal_reuses_the_countrys_own_event_and_source() -> None:
+    world = _generate_world()
+    events_by_country = {
+        country.country_id: {event.event_id for event in country.events}
+        for country in world.countries
+    }
+    sources_by_country = {
+        country.country_id: {source.source_id for source in country.sources}
+        for country in world.countries
+    }
+
+    for signal in world.legal_signals:
+        assert signal.event_id in events_by_country[signal.country_id]
+        assert signal.source_id in sources_by_country[signal.country_id]
+        assert signal.country_id in signal.affected_country_ids
+
+
+def test_users_use_reserved_email_domain() -> None:
+    world = _generate_world()
+
+    assert world.users
+    for user in world.users:
+        assert user.email.endswith("@example.test")
+
+
+def test_comments_cover_multiple_moderation_statuses() -> None:
+    world = _generate_world()
+
+    statuses = {comment.moderation_status for comment in world.comments}
+    assert len(statuses) >= 2
+
+
+def test_document_recipes_are_generated_per_country() -> None:
+    world = _generate_world()
+
+    assert len(world.document_recipes) == len(world.countries) * len(
+        load_world_input().document_recipes
+    )
+    for recipe in world.document_recipes:
+        assert recipe.blocks
+        for block in recipe.blocks:
+            assert block.text.strip()
+
+
+def test_scenarios_include_the_four_base_categories() -> None:
+    world = _generate_world()
+
+    categories = {scenario.category for scenario in world.scenarios}
+    assert categories == {
+        "comparison",
+        "source_review",
+        "change_notification",
+        "data_quality",
+    }
+
+
+def test_data_quality_scenario_targets_the_weakest_data_confidence_country() -> (
+    None
+):
+    world = _generate_world()
+    weakest = min(
+        world.countries,
+        key=lambda country: country.current_metrics["data_confidence"],
+    )
+
+    data_quality_scenario = next(
+        scenario
+        for scenario in world.scenarios
+        if scenario.category == "data_quality"
+    )
+    assert weakest.country_id in data_quality_scenario.related_artifacts

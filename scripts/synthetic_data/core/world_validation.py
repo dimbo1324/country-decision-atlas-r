@@ -9,6 +9,11 @@ class WorldValidationError(RuntimeError):
     pass
 
 
+_ALLOWED_MODERATION_STATUSES = frozenset({"approved", "pending", "hidden"})
+_ALLOWED_LEGAL_IMPACTS = frozenset({"positive", "negative", "neutral"})
+_EMAIL_DOMAIN_SUFFIX = "@example.test"
+
+
 def validate_world(
     world: SyntheticWorld,
     *,
@@ -19,6 +24,8 @@ def validate_world(
     country_codes: set[str] = set()
     country_slugs: set[str] = set()
     country_names: set[str] = set()
+    event_ids_by_country: dict[str, set[str]] = {}
+    source_ids_by_country: dict[str, set[str]] = {}
     forbidden_names = {name.casefold() for name in forbidden_country_names}
 
     if not 4 <= len(world.countries) <= 5:
@@ -97,7 +104,9 @@ def validate_world(
                 )
             if event.direction not in {"improved", "declined"}:
                 errors.append(f"{country.slug}: event direction is invalid")
+        source_ids: set[str] = set()
         for source in country.sources:
+            source_ids.add(source.source_id)
             if source.country_id != country.country_id:
                 errors.append(f"{country.slug}: source has another country id")
             if source.event_id not in event_ids:
@@ -112,8 +121,185 @@ def validate_world(
                 errors.append(
                     f"{country.slug}: source confidence is outside 0..100"
                 )
+        event_ids_by_country[country.country_id] = event_ids
+        source_ids_by_country[country.country_id] = source_ids
 
+    _validate_content(
+        world,
+        errors,
+        country_ids=country_ids,
+        event_ids_by_country=event_ids_by_country,
+        source_ids_by_country=source_ids_by_country,
+    )
     return tuple(errors)
+
+
+def _validate_content(
+    world: SyntheticWorld,
+    errors: list[str],
+    *,
+    country_ids: set[str],
+    event_ids_by_country: dict[str, set[str]],
+    source_ids_by_country: dict[str, set[str]],
+) -> None:
+    user_ids: set[str] = set()
+    for user in world.users:
+        if user.user_id in user_ids:
+            errors.append(f"duplicate user id: {user.user_id}")
+        user_ids.add(user.user_id)
+        if not user.email.endswith(_EMAIL_DOMAIN_SUFFIX):
+            errors.append(
+                f"{user.user_id}: email must use the {_EMAIL_DOMAIN_SUFFIX} "
+                "reserved domain"
+            )
+
+    author_ids: set[str] = set()
+    for author in world.authors:
+        if author.author_id in author_ids:
+            errors.append(f"duplicate author id: {author.author_id}")
+        author_ids.add(author.author_id)
+        if author.user_id not in user_ids:
+            errors.append(
+                f"{author.author_id}: author must reference an existing user"
+            )
+
+    article_ids: set[str] = set()
+    for article in world.articles:
+        if article.article_id in article_ids:
+            errors.append(f"duplicate article id: {article.article_id}")
+        article_ids.add(article.article_id)
+        if article.author_id not in author_ids:
+            errors.append(
+                f"{article.article_id}: article must reference an "
+                "existing author"
+            )
+        if article.country_id not in country_ids:
+            errors.append(
+                f"{article.article_id}: article must reference an "
+                "existing country"
+            )
+        allowed_sources = source_ids_by_country.get(article.country_id, set())
+        for source_id in article.source_ids:
+            if source_id not in allowed_sources:
+                errors.append(
+                    f"{article.article_id}: source {source_id} does not "
+                    "belong to the article's country"
+                )
+
+    for comment in world.comments:
+        if comment.article_id not in article_ids:
+            errors.append(
+                f"{comment.comment_id}: comment must reference an "
+                "existing article"
+            )
+        if comment.user_id not in user_ids:
+            errors.append(
+                f"{comment.comment_id}: comment must reference an existing user"
+            )
+        if comment.moderation_status not in _ALLOWED_MODERATION_STATUSES:
+            errors.append(
+                f"{comment.comment_id}: unknown moderation status "
+                f"{comment.moderation_status!r}"
+            )
+    if world.comments:
+        distinct_statuses = {
+            comment.moderation_status for comment in world.comments
+        }
+        if len(distinct_statuses) < 2:
+            errors.append(
+                "comments must cover at least two distinct moderation "
+                "statuses across the world"
+            )
+
+    signal_ids: set[str] = set()
+    for signal in world.legal_signals:
+        if signal.signal_id in signal_ids:
+            errors.append(f"duplicate legal signal id: {signal.signal_id}")
+        signal_ids.add(signal.signal_id)
+        country_events = event_ids_by_country.get(signal.country_id)
+        if country_events is None:
+            errors.append(
+                f"{signal.signal_id}: legal signal must reference an "
+                "existing country"
+            )
+        elif signal.event_id not in country_events:
+            errors.append(
+                f"{signal.signal_id}: legal signal must reference an "
+                "event from its own country"
+            )
+        allowed_sources = source_ids_by_country.get(signal.country_id, set())
+        if signal.source_id not in allowed_sources:
+            errors.append(
+                f"{signal.signal_id}: legal signal must reference a "
+                "source from its own country"
+            )
+        if any(cid not in country_ids for cid in signal.affected_country_ids):
+            errors.append(
+                f"{signal.signal_id}: affected_country_ids references an "
+                "unknown country"
+            )
+        if signal.impact not in _ALLOWED_LEGAL_IMPACTS:
+            errors.append(
+                f"{signal.signal_id}: unknown legal signal impact "
+                f"{signal.impact!r}"
+            )
+        if not 0 <= signal.confidence <= 100:
+            errors.append(f"{signal.signal_id}: confidence is outside 0..100")
+
+    for recipe in world.document_recipes:
+        if recipe.country_id not in country_ids:
+            errors.append(
+                f"{recipe.recipe_id}: document recipe must reference an "
+                "existing country"
+            )
+        if not recipe.blocks:
+            errors.append(
+                f"{recipe.recipe_id}: document recipe must contain at "
+                "least one block"
+            )
+        for block in recipe.blocks:
+            if not block.text.strip():
+                errors.append(
+                    f"{recipe.recipe_id}: block {block.block_id} resolved "
+                    "to empty text"
+                )
+
+    if len(world.scenarios) < 3:
+        errors.append("world must contain at least 3 scenarios")
+
+    known_artifact_ids = (
+        country_ids
+        | {
+            event_id
+            for ids in event_ids_by_country.values()
+            for event_id in ids
+        }
+        | {
+            source_id
+            for ids in source_ids_by_country.values()
+            for source_id in ids
+        }
+        | article_ids
+        | signal_ids
+        | {comment.comment_id for comment in world.comments}
+    )
+    for scenario in world.scenarios:
+        if not scenario.steps:
+            errors.append(f"{scenario.scenario_id}: scenario has no steps")
+        if not scenario.expected_results:
+            errors.append(
+                f"{scenario.scenario_id}: scenario has no expected results"
+            )
+        if not scenario.related_artifacts:
+            errors.append(
+                f"{scenario.scenario_id}: scenario has no related artifacts"
+            )
+        for artifact_id in scenario.related_artifacts:
+            if artifact_id not in known_artifact_ids:
+                errors.append(
+                    f"{scenario.scenario_id}: related artifact "
+                    f"{artifact_id} does not exist in the world"
+                )
 
 
 def ensure_world_valid(

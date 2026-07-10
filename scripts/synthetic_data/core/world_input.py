@@ -90,6 +90,21 @@ class ProfileInput:
 
 
 @dataclass(frozen=True)
+class TextBlockInput:
+    id: str
+    kind: str
+    applies_to: tuple[str, ...]
+    requires: tuple[str, ...]
+    variants: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class DocumentRecipeInput:
+    id: str
+    blocks: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class WorldInput:
     schema_version: str
     default_country_count: int
@@ -98,6 +113,10 @@ class WorldInput:
     forbidden_country_names: tuple[str, ...]
     archetypes: tuple[ArchetypeInput, ...]
     profiles: tuple[ProfileInput, ...]
+    user_given_names: tuple[str, ...]
+    user_family_names: tuple[str, ...]
+    document_blocks: tuple[TextBlockInput, ...]
+    document_recipes: tuple[DocumentRecipeInput, ...]
     source_checksum: str
 
     def archetype_by_slug(self, slug: str) -> ArchetypeInput:
@@ -111,6 +130,18 @@ class WorldInput:
             if profile.slug == slug:
                 return profile
         raise WorldInputError(f"Unknown world profile: {slug}")
+
+    def document_block_by_id(self, block_id: str) -> TextBlockInput:
+        for block in self.document_blocks:
+            if block.id == block_id:
+                return block
+        raise WorldInputError(f"Unknown document block: {block_id}")
+
+    def document_recipe_by_id(self, recipe_id: str) -> DocumentRecipeInput:
+        for recipe in self.document_recipes:
+            if recipe.id == recipe_id:
+                return recipe
+        raise WorldInputError(f"Unknown document recipe: {recipe_id}")
 
 
 def _mapping(value: object, *, field: str, path: Path) -> dict[str, Any]:
@@ -269,6 +300,81 @@ def _load_profiles(
     return tuple(profiles)
 
 
+def _load_document_blocks(
+    value: object, *, path: Path
+) -> tuple[TextBlockInput, ...]:
+    if not isinstance(value, list) or not value:
+        raise WorldInputError(
+            f"{path}: document_blocks must be a non-empty list"
+        )
+
+    blocks: list[TextBlockInput] = []
+    for index, raw_block in enumerate(value):
+        payload = _mapping(
+            raw_block, field=f"document_blocks[{index}]", path=path
+        )
+        blocks.append(
+            TextBlockInput(
+                id=_string(payload.get("id"), field="block.id", path=path),
+                kind=_string(
+                    payload.get("kind"), field="block.kind", path=path
+                ),
+                applies_to=_string_list(
+                    payload.get("applies_to"),
+                    field="block.applies_to",
+                    path=path,
+                ),
+                requires=_string_list(
+                    payload.get("requires"),
+                    field="block.requires",
+                    path=path,
+                ),
+                variants=_string_list(
+                    payload.get("variants"),
+                    field="block.variants",
+                    path=path,
+                ),
+            )
+        )
+    if len({block.id for block in blocks}) != len(blocks):
+        raise WorldInputError(f"{path}: document block ids must be unique")
+    return tuple(blocks)
+
+
+def _load_document_recipes(
+    value: object, *, path: Path, blocks: tuple[TextBlockInput, ...]
+) -> tuple[DocumentRecipeInput, ...]:
+    if not isinstance(value, list) or not value:
+        raise WorldInputError(
+            f"{path}: document_recipes must be a non-empty list"
+        )
+
+    available_blocks = {block.id for block in blocks}
+    recipes: list[DocumentRecipeInput] = []
+    for index, raw_recipe in enumerate(value):
+        payload = _mapping(
+            raw_recipe, field=f"document_recipes[{index}]", path=path
+        )
+        recipe_blocks = _string_list(
+            payload.get("blocks"), field="recipe.blocks", path=path
+        )
+        unknown_blocks = set(recipe_blocks) - available_blocks
+        if unknown_blocks:
+            raise WorldInputError(
+                f"{path}: recipe references unknown blocks: "
+                f"{sorted(unknown_blocks)}"
+            )
+        recipes.append(
+            DocumentRecipeInput(
+                id=_string(payload.get("id"), field="recipe.id", path=path),
+                blocks=recipe_blocks,
+            )
+        )
+    if len({recipe.id for recipe in recipes}) != len(recipes):
+        raise WorldInputError(f"{path}: document recipe ids must be unique")
+    return tuple(recipes)
+
+
 def load_world_input(path: Path = DEFAULT_WORLD_INPUT_FILE) -> WorldInput:
     if not path.exists():
         raise WorldInputError(f"World input file not found: {path}")
@@ -285,6 +391,9 @@ def load_world_input(path: Path = DEFAULT_WORLD_INPUT_FILE) -> WorldInput:
 
     root = _mapping(payload, field="root", path=path)
     archetypes = _load_archetypes(root.get("archetypes"), path=path)
+    document_blocks = _load_document_blocks(
+        root.get("document_blocks"), path=path
+    )
     return WorldInput(
         schema_version=_string(
             root.get("schema_version"), field="schema_version", path=path
@@ -316,6 +425,24 @@ def load_world_input(path: Path = DEFAULT_WORLD_INPUT_FILE) -> WorldInput:
         archetypes=archetypes,
         profiles=_load_profiles(
             root.get("profiles"), path=path, archetypes=archetypes
+        ),
+        user_given_names=_string_list(
+            root.get("user_given_names"),
+            field="user_given_names",
+            path=path,
+            minimum_length=5,
+        ),
+        user_family_names=_string_list(
+            root.get("user_family_names"),
+            field="user_family_names",
+            path=path,
+            minimum_length=5,
+        ),
+        document_blocks=document_blocks,
+        document_recipes=_load_document_recipes(
+            root.get("document_recipes"),
+            path=path,
+            blocks=document_blocks,
         ),
         source_checksum=hashlib.sha256(raw_bytes).hexdigest(),
     )
