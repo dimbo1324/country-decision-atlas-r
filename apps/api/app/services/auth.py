@@ -10,7 +10,7 @@ from app.repositories.audit import insert_audit_event
 from app.services import rate_limiter
 from app.services.feature_flags import ensure_feature_enabled
 from datetime import UTC, datetime, timedelta
-from psycopg import Connection
+from psycopg import Connection, errors as psycopg_errors
 from typing import Any, cast
 from uuid import UUID
 
@@ -122,15 +122,23 @@ def register_user(
             "An account with this email already exists.",
             {"email": normalized_email},
         )
-    user = repository.create_user(
-        connection,
-        email=normalized_email,
-        display_name=display_name.strip() or normalized_email,
-        role="user",
-    )
-    repository.set_password_credential(
-        connection, user["id"], hash_password(password)
-    )
+    try:
+        user = repository.create_user(
+            connection,
+            email=normalized_email,
+            display_name=display_name.strip() or normalized_email,
+            role="user",
+        )
+        repository.set_password_credential(
+            connection, user["id"], hash_password(password)
+        )
+    except psycopg_errors.UniqueViolation as exc:
+        raise api_error(
+            409,
+            "email_already_registered",
+            "An account with this email already exists.",
+            {"email": normalized_email},
+        ) from exc
     return user
 
 

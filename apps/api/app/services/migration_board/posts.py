@@ -69,48 +69,55 @@ def create_user_post(
 ) -> dict[str, Any]:
     helpers.ensure_feature_enabled(connection, helpers.BOARD_FEATURE_KEY)
     limit = helpers.max_active_posts(connection)
-    if repository.count_user_active_posts(connection, current_user.id) >= limit:
-        raise api_error(
-            429,
-            "active_post_limit_exceeded",
-            "You have reached the active migration board post limit.",
-            {"limit": limit},
+    with connection.transaction():
+        helpers.with_daily_limit_lock(
+            connection, current_user.id, "active_post"
         )
-    refs = _validate_post_payload(connection, payload)
-    helpers._reject_public_pii(payload.title, payload.summary)
-    tags = _validate_tags(payload.tags)
-    destination_country_id = refs["destination_country_id"]
-    if destination_country_id is None:
-        raise api_error(
-            422,
-            "destination_country_required",
-            "Destination country is required.",
-            {},
+        if (
+            repository.count_user_active_posts(connection, current_user.id)
+            >= limit
+        ):
+            raise api_error(
+                429,
+                "active_post_limit_exceeded",
+                "You have reached the active migration board post limit.",
+                {"limit": limit},
+            )
+        refs = _validate_post_payload(connection, payload)
+        helpers._reject_public_pii(payload.title, payload.summary)
+        tags = _validate_tags(payload.tags)
+        destination_country_id = refs["destination_country_id"]
+        if destination_country_id is None:
+            raise api_error(
+                422,
+                "destination_country_required",
+                "Destination country is required.",
+                {},
+            )
+        post = repository.create_post(
+            connection,
+            user_id=current_user.id,
+            destination_country_id=destination_country_id,
+            origin_country_id=refs["origin_country_id"],
+            route_id=payload.route_id,
+            scenario_slug=payload.scenario_slug,
+            persona_slug=payload.persona_slug,
+            title=payload.title,
+            summary=payload.summary,
+            target_city=payload.target_city,
+            target_month=payload.target_month,
+            timeline_window=payload.timeline_window,
+            budget_range=payload.budget_range,
+            household_type=payload.household_type,
+            migration_stage=payload.migration_stage,
+            companion_goal=payload.companion_goal,
+            preferred_language=payload.preferred_language,
+            visibility=payload.visibility,
+            risk_acknowledged=payload.risk_acknowledged,
+            legal_disclaimer_acknowledged=payload.legal_disclaimer_acknowledged,
+            contact_requests_enabled=payload.contact_requests_enabled,
+            tags=tags,
         )
-    post = repository.create_post(
-        connection,
-        user_id=current_user.id,
-        destination_country_id=destination_country_id,
-        origin_country_id=refs["origin_country_id"],
-        route_id=payload.route_id,
-        scenario_slug=payload.scenario_slug,
-        persona_slug=payload.persona_slug,
-        title=payload.title,
-        summary=payload.summary,
-        target_city=payload.target_city,
-        target_month=payload.target_month,
-        timeline_window=payload.timeline_window,
-        budget_range=payload.budget_range,
-        household_type=payload.household_type,
-        migration_stage=payload.migration_stage,
-        companion_goal=payload.companion_goal,
-        preferred_language=payload.preferred_language,
-        visibility=payload.visibility,
-        risk_acknowledged=payload.risk_acknowledged,
-        legal_disclaimer_acknowledged=payload.legal_disclaimer_acknowledged,
-        contact_requests_enabled=payload.contact_requests_enabled,
-        tags=tags,
-    )
     helpers._audit(
         connection, post, "created", current_user, {"status": {"new": "draft"}}
     )

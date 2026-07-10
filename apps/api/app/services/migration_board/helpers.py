@@ -89,6 +89,21 @@ def ensure_feature_enabled(
     )
 
 
+def with_daily_limit_lock(
+    connection: Connection[Any], user_id: str, scope: str
+) -> None:
+    """Serialize concurrent count-then-insert daily-limit checks per user+scope.
+
+    Must be called inside an open transaction: pg_advisory_xact_lock is held
+    until the transaction ends, closing the TOCTOU window between counting
+    today's rows and inserting a new one.
+    """
+    connection.execute(
+        "SELECT pg_advisory_xact_lock(hashtext(%s))",
+        (f"{scope}:{user_id}",),
+    )
+
+
 def max_active_posts(connection: Connection[Any]) -> int:
     return get_active_methodology_config(connection).board.max_active_posts
 

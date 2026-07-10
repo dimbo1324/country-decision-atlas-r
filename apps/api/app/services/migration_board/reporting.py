@@ -124,36 +124,38 @@ def _create_report(
     details: str | None,
 ) -> dict[str, Any]:
     limit = helpers.max_reports_per_day(connection)
-    if (
-        repository.count_reports_created_today(connection, current_user.id)
-        >= limit
-    ):
-        raise api_error(
-            429,
-            "report_limit_exceeded",
-            "Daily report limit exceeded.",
-            {"limit": limit},
+    with connection.transaction():
+        helpers.with_daily_limit_lock(connection, current_user.id, "report")
+        if (
+            repository.count_reports_created_today(connection, current_user.id)
+            >= limit
+        ):
+            raise api_error(
+                429,
+                "report_limit_exceeded",
+                "Daily report limit exceeded.",
+                {"limit": limit},
+            )
+        if repository.existing_pending_report_exists(
+            connection,
+            reporter_user_id=current_user.id,
+            post_id=post_id,
+            contact_request_id=contact_request_id,
+        ):
+            raise api_error(
+                409,
+                "duplicate_pending_report",
+                "A pending report already exists.",
+                {},
+            )
+        report = repository.create_report(
+            connection,
+            reporter_user_id=current_user.id,
+            post_id=post_id,
+            contact_request_id=contact_request_id,
+            reason=reason,
+            details=details,
         )
-    if repository.existing_pending_report_exists(
-        connection,
-        reporter_user_id=current_user.id,
-        post_id=post_id,
-        contact_request_id=contact_request_id,
-    ):
-        raise api_error(
-            409,
-            "duplicate_pending_report",
-            "A pending report already exists.",
-            {},
-        )
-    report = repository.create_report(
-        connection,
-        reporter_user_id=current_user.id,
-        post_id=post_id,
-        contact_request_id=contact_request_id,
-        reason=reason,
-        details=details,
-    )
     helpers._audit(
         connection,
         {"id": post_id or contact_request_id},

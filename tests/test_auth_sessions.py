@@ -218,6 +218,33 @@ def test_register_user_creates_user_and_password_credential(
     assert service.verify_password("a-long-password", stored["password_hash"])
 
 
+def test_register_user_concurrent_race_becomes_409_not_500(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from psycopg import errors as psycopg_errors
+
+    _enable_auth(monkeypatch)
+    monkeypatch.setattr(repository, "get_user_by_email", lambda *_a: None)
+
+    def _raise_unique_violation(*_a: Any, **_kw: Any) -> Any:
+        raise psycopg_errors.UniqueViolation(
+            'duplicate key value violates unique constraint "users_email_key"'
+        )
+
+    monkeypatch.setattr(repository, "create_user", _raise_unique_violation)
+
+    with pytest.raises(HTTPException) as exc_info:
+        service.register_user(
+            CONNECTION,
+            email="racer@example.local",
+            password="a-long-password",
+            display_name="Racer",
+        )
+    assert exc_info.value.status_code == 409
+    detail = cast(dict[str, Any], exc_info.value.detail)
+    assert detail["error"]["code"] == "email_already_registered"
+
+
 def test_login_user_rejects_missing_user(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

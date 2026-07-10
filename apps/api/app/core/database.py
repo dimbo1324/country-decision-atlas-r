@@ -39,6 +39,14 @@ def get_pool() -> ConnectionPool[Any]:
 
 
 def get_connection() -> Iterator[Connection[Any]]:
+    """Yield a pooled connection that commits or rolls back on its own.
+
+    `ConnectionPool.connection()` commits the transaction when this context
+    manager exits cleanly and rolls back if an exception propagates out of
+    the request handler. Explicit `connection.commit()` calls in routers are
+    therefore redundant but harmless; see P2-9, Аудит-эпизод 4 in
+    docs/_arch_/09_План_устранения_аудита.md for the decision record.
+    """
     with get_pool().connection() as connection:
         yield connection
 

@@ -4,7 +4,7 @@ from app.core.errors import api_error
 from app.repositories import author_metrics as repository
 from app.services import capabilities as capabilities_service
 from app.services.author_metrics import helpers
-from psycopg import Connection
+from psycopg import Connection, errors as psycopg_errors
 from typing import Any
 
 
@@ -57,21 +57,29 @@ def create_my_definition(
         payload.methodology_en,
         payload.methodology_ru,
     )
-    definition = repository.create_definition(
-        connection,
-        author_user_id=current_user.id,
-        slug=payload.slug,
-        name_en=payload.name_en,
-        name_ru=payload.name_ru,
-        methodology_en=payload.methodology_en,
-        methodology_ru=payload.methodology_ru,
-        polarity=payload.polarity,
-        scale_min=payload.scale_min,
-        scale_max=payload.scale_max,
-        license=payload.license,
-        visibility=payload.visibility,
-        forked_from_id=None,
-    )
+    try:
+        definition = repository.create_definition(
+            connection,
+            author_user_id=current_user.id,
+            slug=payload.slug,
+            name_en=payload.name_en,
+            name_ru=payload.name_ru,
+            methodology_en=payload.methodology_en,
+            methodology_ru=payload.methodology_ru,
+            polarity=payload.polarity,
+            scale_min=payload.scale_min,
+            scale_max=payload.scale_max,
+            license=payload.license,
+            visibility=payload.visibility,
+            forked_from_id=None,
+        )
+    except psycopg_errors.UniqueViolation as exc:
+        raise api_error(
+            409,
+            "author_metric_slug_taken",
+            "You already have an author metric with this slug.",
+            {},
+        ) from exc
     helpers._audit(
         connection,
         definition,

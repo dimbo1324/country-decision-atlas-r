@@ -40,25 +40,29 @@ def create_contact_request(
             {},
         )
     limit = helpers.max_contact_requests_per_day(connection)
-    if (
-        repository.count_contact_requests_created_since(
-            connection, user_id=current_user.id, since_sql="1 day"
+    with connection.transaction():
+        helpers.with_daily_limit_lock(
+            connection, current_user.id, "contact_request"
         )
-        >= limit
-    ):
-        raise api_error(
-            429,
-            "contact_request_limit_exceeded",
-            "Daily contact request limit exceeded.",
-            {"limit": limit},
+        if (
+            repository.count_contact_requests_created_since(
+                connection, user_id=current_user.id, since_sql="1 day"
+            )
+            >= limit
+        ):
+            raise api_error(
+                429,
+                "contact_request_limit_exceeded",
+                "Daily contact request limit exceeded.",
+                {"limit": limit},
+            )
+        request = repository.create_contact_request(
+            connection,
+            post_id=post_id,
+            from_user_id=current_user.id,
+            to_user_id=post["user_id"],
+            message=message,
         )
-    request = repository.create_contact_request(
-        connection,
-        post_id=post_id,
-        from_user_id=current_user.id,
-        to_user_id=post["user_id"],
-        message=message,
-    )
     helpers._audit(
         connection,
         post,

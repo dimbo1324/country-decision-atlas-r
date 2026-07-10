@@ -205,6 +205,88 @@ class TestProposalCreation:
         assert captured["iso3"] == "WKD"
 
 
+class TestProposalCreationRace:
+    def test_concurrent_slug_race_becomes_409_not_500(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from psycopg import errors as psycopg_errors
+
+        _enable_feature(monkeypatch)
+        monkeypatch.setattr(repository, "country_slug_exists", lambda *_: False)
+        monkeypatch.setattr(repository, "country_iso_exists", lambda *_a: False)
+
+        def _raise_unique_violation(*_a: Any, **_k: Any) -> Any:
+            raise psycopg_errors.UniqueViolation(
+                "duplicate key value violates unique constraint "
+                '"countries_slug_key"'
+            )
+
+        monkeypatch.setattr(
+            repository, "create_country_shell", _raise_unique_violation
+        )
+        monkeypatch.setattr(
+            proposals_service,
+            "_constraint_name",
+            lambda _exc: "countries_slug_key",
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            proposals_service.create_proposal(
+                CONNECTION,
+                current_user=CONTRIBUTOR,
+                payload=CountryProposalCreate(
+                    slug="wakanda",
+                    name_en="Wakanda",
+                    name_ru="Ваканда",
+                    iso2="WK",
+                    iso3="WKD",
+                    justification="x" * 30,
+                ),
+            )
+        assert exc_info.value.status_code == 409
+        _assert_error(exc_info, "country_slug_taken")
+
+    def test_concurrent_iso_race_becomes_409_not_500(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from psycopg import errors as psycopg_errors
+
+        _enable_feature(monkeypatch)
+        monkeypatch.setattr(repository, "country_slug_exists", lambda *_: False)
+        monkeypatch.setattr(repository, "country_iso_exists", lambda *_a: False)
+
+        def _raise_unique_violation(*_a: Any, **_k: Any) -> Any:
+            raise psycopg_errors.UniqueViolation(
+                "duplicate key value violates unique constraint "
+                '"countries_iso2_key"'
+            )
+
+        monkeypatch.setattr(
+            repository, "create_country_shell", _raise_unique_violation
+        )
+        monkeypatch.setattr(
+            proposals_service,
+            "_constraint_name",
+            lambda _exc: "countries_iso2_key",
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            proposals_service.create_proposal(
+                CONNECTION,
+                current_user=CONTRIBUTOR,
+                payload=CountryProposalCreate(
+                    slug="wakanda",
+                    name_en="Wakanda",
+                    name_ru="Ваканда",
+                    iso2="WK",
+                    iso3="WKD",
+                    justification="x" * 30,
+                ),
+            )
+        assert exc_info.value.status_code == 409
+        _assert_error(exc_info, "country_iso_taken")
+
+
 class TestProposalOwnership:
     def test_patch_requires_ownership(
         self, monkeypatch: pytest.MonkeyPatch

@@ -3,8 +3,12 @@ from app.core.errors import api_error
 from app.repositories import country_contribution as repository
 from app.services.country_contribution import helpers
 from app.services.publication import ensure_allowed_transition
-from psycopg import Connection
+from psycopg import Connection, errors as psycopg_errors
 from typing import Any
+
+
+def _constraint_name(exc: psycopg_errors.UniqueViolation) -> str:
+    return (exc.diag.constraint_name or "").lower()
 
 
 def create_proposal(
@@ -29,35 +33,53 @@ def create_proposal(
             "A country with this ISO code already exists.",
             {},
         )
-    with connection.transaction():
-        country = repository.create_country_shell(
-            connection,
-            slug=payload.slug,
-            iso2=iso2,
-            iso3=iso3,
-            name_en=payload.name_en,
-        )
-        repository.create_country_name_translation(
-            connection, country_id=str(country["id"]), name_ru=payload.name_ru
-        )
-        created = repository.create_proposal_row(
-            connection,
-            proposer_user_id=current_user.id,
-            country_id=str(country["id"]),
-            slug=payload.slug,
-            name_en=payload.name_en,
-            name_ru=payload.name_ru,
-            iso2=iso2,
-            iso3=iso3,
-            justification=payload.justification,
-        )
-        helpers._audit(
-            connection,
-            str(created["id"]),
-            "created",
-            current_user.id,
-            {"status": {"new": "draft"}, "slug": {"new": payload.slug}},
-        )
+    try:
+        with connection.transaction():
+            country = repository.create_country_shell(
+                connection,
+                slug=payload.slug,
+                iso2=iso2,
+                iso3=iso3,
+                name_en=payload.name_en,
+            )
+            repository.create_country_name_translation(
+                connection,
+                country_id=str(country["id"]),
+                name_ru=payload.name_ru,
+            )
+            created = repository.create_proposal_row(
+                connection,
+                proposer_user_id=current_user.id,
+                country_id=str(country["id"]),
+                slug=payload.slug,
+                name_en=payload.name_en,
+                name_ru=payload.name_ru,
+                iso2=iso2,
+                iso3=iso3,
+                justification=payload.justification,
+            )
+            helpers._audit(
+                connection,
+                str(created["id"]),
+                "created",
+                current_user.id,
+                {"status": {"new": "draft"}, "slug": {"new": payload.slug}},
+            )
+    except psycopg_errors.UniqueViolation as exc:
+        constraint = _constraint_name(exc)
+        if "iso" in constraint:
+            raise api_error(
+                409,
+                "country_iso_taken",
+                "A country with this ISO code already exists.",
+                {},
+            ) from exc
+        raise api_error(
+            409,
+            "country_slug_taken",
+            "A country with this slug already exists.",
+            {},
+        ) from exc
     proposal = helpers.get_proposal_or_404(connection, str(created["id"]))
     return helpers._proposal_view(proposal)
 

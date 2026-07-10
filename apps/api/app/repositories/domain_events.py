@@ -204,6 +204,81 @@ def lock_pending_notifiable_domain_events(
     )
 
 
+def lock_and_mark_in_flight_domain_events(
+    conn: Connection[Any],
+    *,
+    batch_size: int,
+    notify_after: str,
+) -> list[dict[str, Any]]:
+    """Claim a batch of pending events for relay in one short transaction.
+
+    Selecting with FOR UPDATE SKIP LOCKED and marking status='in_flight' in
+    the same transaction lets the caller commit and release row locks
+    immediately, before making the blocking publish call. See P1-1,
+    Аудит-эпизод 4.
+    """
+    locked = fetch_all(
+        conn,
+        """
+        SELECT id
+        FROM domain_events
+        WHERE status = 'pending'
+          AND notifiable = TRUE
+          AND created_at >= %s::timestamptz
+        ORDER BY created_at ASC
+        LIMIT %s
+        FOR UPDATE SKIP LOCKED
+        """,
+        (notify_after, batch_size),
+    )
+    if not locked:
+        return []
+    ids = [row["id"] for row in locked]
+    return fetch_all(
+        conn,
+        """
+        UPDATE domain_events
+        SET status = 'in_flight', locked_at = NOW()
+        WHERE id = ANY(%s)
+        RETURNING
+            id,
+            event_key,
+            event_type,
+            aggregate_type,
+            aggregate_id,
+            country_slug,
+            payload,
+            status,
+            notifiable,
+            created_at,
+            relayed_at,
+            attempts,
+            last_error
+        """,
+        (ids,),
+    )
+
+
+def requeue_stale_in_flight_domain_events(
+    conn: Connection[Any],
+    *,
+    stale_after_seconds: int,
+) -> int:
+    """Recover events stuck in_flight by a relay process that crashed mid-publish."""
+    rows = fetch_all(
+        conn,
+        """
+        UPDATE domain_events
+        SET status = 'pending', locked_at = NULL
+        WHERE status = 'in_flight'
+          AND locked_at < NOW() - (%s || ' seconds')::interval
+        RETURNING id
+        """,
+        (stale_after_seconds,),
+    )
+    return len(rows)
+
+
 def mark_domain_event_publish_failed_or_retry(
     conn: Connection[Any],
     event_id: UUID,

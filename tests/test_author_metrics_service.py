@@ -167,6 +167,33 @@ class TestDefinitionLifecycle:
         assert result["status"] == "draft"
         assert result["author"]["user_id"] == AUTHOR_ID
 
+    def test_concurrent_slug_race_becomes_409_not_500(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from psycopg import errors as psycopg_errors
+
+        _enable_features(monkeypatch)
+        monkeypatch.setattr(
+            repository, "get_definition_by_author_slug", lambda *_a: None
+        )
+
+        def _raise_unique_violation(*_a: Any, **_k: Any) -> Any:
+            raise psycopg_errors.UniqueViolation(
+                "duplicate key value violates unique constraint "
+                '"uq_author_metric_definitions_author_slug"'
+            )
+
+        monkeypatch.setattr(
+            repository, "create_definition", _raise_unique_violation
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            service.create_my_definition(
+                CONNECTION, current_user=AUTHOR, payload=_create_payload()
+            )
+        assert exc_info.value.status_code == 409
+        _assert_error(exc_info, "author_metric_slug_taken")
+
     def test_submit_requires_methodology_length(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:

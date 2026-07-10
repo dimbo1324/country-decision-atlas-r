@@ -13,6 +13,9 @@ DEFAULT_BATCH_SIZE = 50
 DEFAULT_MAX_ATTEMPTS = 3
 DEFAULT_NOTIFY_AFTER = "2026-01-01T00:00:00Z"
 DEFAULT_KAFKA_TOPIC = "cda.domain-events"
+DEFAULT_STALE_IN_FLIGHT_SECONDS = 300
+DEFAULT_MESSAGE_TIMEOUT_MS = 10_000
+DEFAULT_DELIVERY_TIMEOUT_MS = 10_000
 
 
 class EventPublisher(Protocol):
@@ -42,7 +45,13 @@ class KafkaPublisher:
                     "confluent-kafka is not installed. "
                     "Install it with: pip install 'country-decision-atlas[alerts]'"
                 ) from e
-            self._producer = Producer({"bootstrap.servers": self._brokers})
+            self._producer = Producer(
+                {
+                    "bootstrap.servers": self._brokers,
+                    "message.timeout.ms": DEFAULT_MESSAGE_TIMEOUT_MS,
+                    "delivery.timeout.ms": DEFAULT_DELIVERY_TIMEOUT_MS,
+                }
+            )
         return self._producer
 
     def publish(self, key: str, payload: dict[str, Any]) -> None:
@@ -105,54 +114,65 @@ def run_relay(
     notify_after: str = DEFAULT_NOTIFY_AFTER,
     dry_run: bool = False,
     metrics: RelayMetrics | None = None,
+    stale_in_flight_seconds: int = DEFAULT_STALE_IN_FLIGHT_SECONDS,
 ) -> int:
     from app.repositories.domain_events import (
-        lock_pending_notifiable_domain_events,
+        list_pending_domain_events,
+        lock_and_mark_in_flight_domain_events,
         mark_domain_event_publish_failed_or_retry,
         mark_domain_event_relayed,
+        requeue_stale_in_flight_domain_events,
     )
 
     started = time.monotonic()
     metrics = metrics or RelayMetrics()
     try:
+        if dry_run:
+            events = list_pending_domain_events(conn, limit=batch_size)
+            metrics.selected_total = len(events)
+            metrics.dry_run_total = len(events)
+            metrics.skipped_total = len(events)
+            return len(events)
+
         with conn.transaction():
-            events = lock_pending_notifiable_domain_events(
+            requeue_stale_in_flight_domain_events(
+                conn, stale_after_seconds=stale_in_flight_seconds
+            )
+
+        with conn.transaction():
+            events = lock_and_mark_in_flight_domain_events(
                 conn,
                 batch_size=batch_size,
                 notify_after=notify_after,
             )
+        metrics.selected_total = len(events)
+        if not events:
+            return 0
 
-            metrics.selected_total = len(events)
-            if not events:
-                return 0
-
-            if dry_run:
-                metrics.dry_run_total = len(events)
-                metrics.skipped_total = len(events)
-                return len(events)
-
-            for event in events:
-                event_id = UUID(str(event["id"]))
-                payload = build_relay_payload(event)
-                key = relay_key(event)
-                try:
-                    publisher.publish(key, payload)
-                    metrics.published_total += 1
+        for event in events:
+            event_id = UUID(str(event["id"]))
+            payload = build_relay_payload(event)
+            key = relay_key(event)
+            try:
+                publisher.publish(key, payload)
+                metrics.published_total += 1
+                with conn.transaction():
                     mark_domain_event_relayed(conn, event_id)
-                    metrics.relayed_total += 1
-                except Exception as exc:
-                    metrics.failed_total += 1
+                metrics.relayed_total += 1
+            except Exception as exc:
+                metrics.failed_total += 1
+                with conn.transaction():
                     updated = mark_domain_event_publish_failed_or_retry(
                         conn, event_id, str(exc), max_attempts
                     )
-                    attempts = int(event.get("attempts") or 0) + 1
-                    if (
-                        updated and updated.get("status") == "failed"
-                    ) or attempts >= max_attempts:
-                        metrics.marked_failed_total += 1
-                        metrics.max_attempts_reached_total += 1
+                attempts = int(event.get("attempts") or 0) + 1
+                if (
+                    updated and updated.get("status") == "failed"
+                ) or attempts >= max_attempts:
+                    metrics.marked_failed_total += 1
+                    metrics.max_attempts_reached_total += 1
 
-            return len(events)
+        return len(events)
     finally:
         metrics.duration_ms = int((time.monotonic() - started) * 1000)
 

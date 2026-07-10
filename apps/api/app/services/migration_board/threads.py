@@ -66,22 +66,26 @@ def send_thread_message(
             422, "empty_message_body", "Message body cannot be empty.", {}
         )
     limit = helpers.max_thread_messages_per_day(connection)
-    if (
-        repository.count_messages_created_since(connection, current_user.id)
-        >= limit
-    ):
-        raise api_error(
-            429,
-            "thread_message_limit_exceeded",
-            "Daily message limit exceeded.",
-            {"limit": limit},
+    with connection.transaction():
+        helpers.with_daily_limit_lock(
+            connection, current_user.id, "thread_message"
         )
-    message = repository.create_message(
-        connection,
-        thread_id=thread_id,
-        sender_user_id=current_user.id,
-        body=body,
-    )
+        if (
+            repository.count_messages_created_since(connection, current_user.id)
+            >= limit
+        ):
+            raise api_error(
+                429,
+                "thread_message_limit_exceeded",
+                "Daily message limit exceeded.",
+                {"limit": limit},
+            )
+        message = repository.create_message(
+            connection,
+            thread_id=thread_id,
+            sender_user_id=current_user.id,
+            body=body,
+        )
     helpers._audit(
         connection,
         {"id": thread_id},

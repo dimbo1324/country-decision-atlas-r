@@ -67,13 +67,23 @@ def _patch_repo(
 ) -> None:
     import app.repositories.domain_events as repo
 
-    def fake_lock(
+    def fake_lock_in_flight(
         _c: Any,
         *,
         batch_size: int,  # noqa: ARG001
         notify_after: str,  # noqa: ARG001
     ) -> list[dict[str, Any]]:
         return events
+
+    def fake_list_pending(
+        _c: Any,
+        *,
+        limit: int,  # noqa: ARG001
+    ) -> list[dict[str, Any]]:
+        return events
+
+    def fake_requeue_stale(_c: Any, *, stale_after_seconds: int) -> int:  # noqa: ARG001
+        return 0
 
     def fake_relayed(_c: Any, event_id: UUID) -> dict[str, Any] | None:
         relayed_ids.append(str(event_id))
@@ -91,7 +101,11 @@ def _patch_repo(
         return None
 
     monkeypatch.setattr(
-        repo, "lock_pending_notifiable_domain_events", fake_lock
+        repo, "lock_and_mark_in_flight_domain_events", fake_lock_in_flight
+    )
+    monkeypatch.setattr(repo, "list_pending_domain_events", fake_list_pending)
+    monkeypatch.setattr(
+        repo, "requeue_stale_in_flight_domain_events", fake_requeue_stale
     )
     monkeypatch.setattr(repo, "mark_domain_event_relayed", fake_relayed)
     monkeypatch.setattr(
@@ -215,6 +229,68 @@ class TestRelayFiltering:
         run_relay(_make_conn(), pub, notify_after=NOTIFY_AFTER, dry_run=True)
         assert len(relayed) == 0
         assert len(failed) == 0
+
+
+class TestRelayInFlightRecovery:
+    def test_requeue_stale_in_flight_runs_before_locking(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        _patch_repo(monkeypatch, [], relayed, failed)
+        requeued_calls: list[int] = []
+
+        import app.repositories.domain_events as repo
+
+        def fake_requeue(_c: Any, *, stale_after_seconds: int) -> int:
+            requeued_calls.append(stale_after_seconds)
+            return 0
+
+        monkeypatch.setattr(
+            repo, "requeue_stale_in_flight_domain_events", fake_requeue
+        )
+        run_relay(
+            _make_conn(),
+            FakePublisher(),
+            notify_after=NOTIFY_AFTER,
+            stale_in_flight_seconds=120,
+        )
+        assert requeued_calls == [120]
+
+    def test_dry_run_does_not_requeue_or_lock(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        relayed: list[str] = []
+        failed: list[tuple[str, str, int]] = []
+        event = _make_event(event_key="key-dry-norequeue", created_at=AFTER_DT)
+        _patch_repo(monkeypatch, [event], relayed, failed)
+        requeued_calls: list[int] = []
+        locked_calls: list[int] = []
+
+        import app.repositories.domain_events as repo
+
+        def fake_requeue(_c: Any, *, stale_after_seconds: int) -> int:
+            requeued_calls.append(stale_after_seconds)
+            return 0
+
+        def fake_lock(_c: Any, **_kw: Any) -> list[dict[str, Any]]:
+            locked_calls.append(1)
+            return []
+
+        monkeypatch.setattr(
+            repo, "requeue_stale_in_flight_domain_events", fake_requeue
+        )
+        monkeypatch.setattr(
+            repo, "lock_and_mark_in_flight_domain_events", fake_lock
+        )
+        run_relay(
+            _make_conn(),
+            FakePublisher(),
+            notify_after=NOTIFY_AFTER,
+            dry_run=True,
+        )
+        assert requeued_calls == []
+        assert locked_calls == []
 
 
 class TestRelayFailure:
