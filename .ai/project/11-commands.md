@@ -33,6 +33,37 @@ corepack pnpm@9.12.0 --filter @country-decision-atlas/web lint
 cd apps/notifier; go vet ./...; go test ./...
 ```
 
+## Postgres observability (dev)
+
+`docker-compose.yml`'s `postgres` service preloads `pg_stat_statements`
+(P2-1, Аудит-эпизод 7). It still needs to be registered once per database
+after the stack is up — `apply_migrations.py` doesn't do this, since a
+`CREATE EXTENSION` here would fail in CI's plain `postgres:16-alpine`
+service (no `shared_preload_libraries` override there), so it stays a
+manual dev-only step:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+```
+
+Top-N slowest queries by total time:
+
+```sql
+SELECT
+    query,
+    calls,
+    total_exec_time,
+    mean_exec_time,
+    rows
+FROM pg_stat_statements
+ORDER BY total_exec_time DESC
+LIMIT 20;
+```
+
+`/metrics` (the FastAPI app's own endpoint) exposes request counts,
+latency, and DB pool gauges separately — `pg_stat_statements` is for
+diagnosing *which queries* are slow, not request-level metrics.
+
 ## Gate policy
 
 - Before merge to `main`: full gate

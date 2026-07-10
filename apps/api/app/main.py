@@ -1,8 +1,8 @@
-import logging
 from app.bootstrap.app_factory import create_app
 from app.core.config import get_settings
 from app.core.database import get_pool
 from app.core.errors import api_error
+from app.core.logging_config import configure_logging
 from app.core.request_context import resolve_client_ip
 from app.schemas.system import HealthResponse, ReadinessResponse
 from fastapi import Request
@@ -11,10 +11,7 @@ from psycopg_pool import PoolTimeout
 from typing import Any
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s",
-)
+configure_logging()
 settings = get_settings()
 
 

@@ -31,6 +31,19 @@ paths:
                 $ref: '#/components/schemas/ReadinessResponse'
         '503':
           description: Database unavailable
+  /metrics:
+    get:
+      tags:
+      - system
+      summary: Metrics Endpoint
+      operationId: metrics_endpoint_metrics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/plain:
+              schema:
+                type: string
   /api/v1/countries/{country_slug}/trust:
     get:
       tags:

@@ -1,6 +1,30 @@
 import re
 from app.core.config import Settings
+from contextvars import ContextVar, Token
 from fastapi import Request
+
+
+_NO_REQUEST_ID = "-"
+_request_id_var: ContextVar[str] = ContextVar(
+    "request_id", default=_NO_REQUEST_ID
+)
+
+
+def bind_request_id(request_id: str) -> Token[str]:
+    """Store request_id for the duration of this request so logging.Formatter
+    subclasses (see core/logging_config.py) can stamp every log line without
+    threading the value through every function call (P2-1, Аудит-эпизод 7)."""
+    return _request_id_var.set(request_id)
+
+
+def reset_request_id(token: Token[str]) -> None:
+    _request_id_var.reset(token)
+
+
+def get_request_id() -> str:
+    """Returns "-" outside a request (startup/shutdown/background scripts),
+    never raises — logging must never fail because of a missing context."""
+    return _request_id_var.get()
 
 
 _BROWSER_PATTERNS: tuple[tuple[str, str], ...] = (

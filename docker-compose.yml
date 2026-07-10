@@ -3,6 +3,19 @@ name: country-decision-atlas
 services:
   postgres:
     image: postgres:16-alpine
+    # pg_stat_statements ships with the official image but needs preloading
+    # via shared_preload_libraries (a server-restart setting, so it must be
+    # set at container start, not via CREATE EXTENSION alone) — dev-only
+    # observability aid (P2-1, Аудит-эпизод 7); see .ai/project/11-commands.md
+    # for the one-time CREATE EXTENSION step and the top-N slow-query query.
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - pg_stat_statements.max=5000
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-country_atlas}
       POSTGRES_USER: ${POSTGRES_USER:-country_atlas}

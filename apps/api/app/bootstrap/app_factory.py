@@ -43,7 +43,9 @@ from app.api.v1 import (
     what_changed,
 )
 from app.core.database import close_database_pool, open_database_pool
+from app.core.request_context import bind_request_id, reset_request_id
 from app.schemas.system import HealthResponse, ReadinessResponse
+from app.services import metrics
 from app.services.rate_limiter import check_rate_limit
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
@@ -51,10 +53,12 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from psycopg import Error as PsycopgError
 from starlette.concurrency import run_in_threadpool
+from time import monotonic
 from typing import Any
+from uuid import uuid4
 
 
 logger = logging.getLogger(__name__)
@@ -161,6 +165,36 @@ def _register_middleware(
     rate_limit_client: Callable[[Request], str | None],
 ) -> None:
     @app.middleware("http")
+    async def request_id_middleware(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        # Registered first so it wraps every other middleware below
+        # (Starlette layers middleware LIFO: the first-added is outermost) -
+        # the request id must be bound before anything downstream might log,
+        # and the header must survive even an early 403/429 from an inner
+        # middleware (P2-1, Аудит-эпизод 7).
+        request_id = request.headers.get("X-Request-ID") or str(uuid4())
+        request.state.request_id = request_id
+        token = bind_request_id(request_id)
+        try:
+            response = await call_next(request)
+        finally:
+            reset_request_id(token)
+        response.headers["X-Request-ID"] = request_id
+        return response
+
+    @app.middleware("http")
+    async def metrics_middleware(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        started_at = monotonic()
+        response = await call_next(request)
+        metrics.record_request(response.status_code, monotonic() - started_at)
+        return response
+
+    @app.middleware("http")
     async def security_headers_middleware(
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
@@ -205,7 +239,7 @@ def _register_middleware(
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
-        if request.url.path in {"/health", "/ready"}:
+        if request.url.path in {"/health", "/ready", "/metrics"}:
             return await call_next(request)
         is_auth_path = request.url.path in _AUTH_RATE_LIMIT_PATHS
         if not is_auth_path and settings.app_env != "production":
@@ -292,6 +326,13 @@ def _register_system_routes(
         response_model=ReadinessResponse,
         responses={503: {"description": "Database unavailable"}},
     )(readiness_handler)
+
+    @app.get("/metrics", tags=["system"], response_class=PlainTextResponse)
+    def metrics_endpoint() -> PlainTextResponse:
+        return PlainTextResponse(
+            metrics.render_prometheus_text(),
+            media_type="text/plain; version=0.0.4",
+        )
 
 
 def _register_api_routes(app: FastAPI) -> None:
