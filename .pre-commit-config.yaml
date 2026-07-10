@@ -11,7 +11,12 @@ repos:
         exclude: ^(docs/|README.*|.*\.md$|.*\.txt$)
         stages: [pre-commit]
       - id: check-yaml
-        exclude: ^(docs/|contracts/openapi\.yaml$)
+        exclude: ^(docs/|contracts/openapi\.yaml$|docker-compose\.prod\.yml$)
+        stages: [pre-commit]
+      - id: check-yaml
+        name: check-yaml (docker-compose.prod.yml, allows !reset)
+        args: ["--unsafe"]
+        files: ^docker-compose\.prod\.yml$
         stages: [pre-commit]
       - id: check-json
         stages: [pre-commit]

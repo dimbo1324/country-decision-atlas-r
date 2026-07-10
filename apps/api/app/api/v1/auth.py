@@ -217,7 +217,7 @@ def list_sessions(
     ],
     connection: Annotated[Connection[Any], Depends(get_connection)],
 ) -> UserSessionListResponse:
-    sessions = repository.list_user_sessions(connection, context.user.id)
+    sessions = repository.list_active_user_sessions(connection, context.user.id)
     return UserSessionListResponse(
         items=[
             _to_auth_session(row, current_session_id=context.session_id)

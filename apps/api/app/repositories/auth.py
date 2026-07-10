@@ -485,6 +485,11 @@ def revoke_all_user_sessions(connection: Connection[Any], user_id: str) -> int:
 def list_user_sessions(
     connection: Connection[Any], user_id: str
 ) -> list[dict[str, Any]]:
+    """Full session history for a user, revoked/expired included. Backs the
+    admin moderation endpoint (GET /admin/users/{id}/sessions), where seeing
+    past sessions is the point of the investigation. Self-service session
+    visibility must use list_active_user_sessions instead — see that
+    function's docstring."""
     return fetch_all(
         connection,
         f"""
@@ -492,6 +497,27 @@ def list_user_sessions(
             {SESSION_FIELDS}
         FROM auth_sessions
         WHERE user_id = %s::uuid
+        ORDER BY created_at DESC
+        """,
+        (user_id,),
+    )
+
+
+def list_active_user_sessions(
+    connection: Connection[Any], user_id: str
+) -> list[dict[str, Any]]:
+    """Backs GET /auth/sessions ("Активные сессии" in AccountView.tsx):
+    only sessions the user could still authenticate with. Using
+    list_user_sessions here would list the user's entire session history —
+    including sessions revoked or expired months ago — under an "active"
+    heading, each with a working "Revoke" button."""
+    return fetch_all(
+        connection,
+        f"""
+        SELECT
+            {SESSION_FIELDS}
+        FROM auth_sessions
+        WHERE user_id = %s::uuid AND revoked_at IS NULL AND expires_at > NOW()
         ORDER BY created_at DESC
         """,
         (user_id,),

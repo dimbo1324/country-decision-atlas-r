@@ -828,3 +828,27 @@ def test_create_login_session_skips_notification_when_disabled(
     )
     assert is_new_device is False
     assert notified == {}
+
+
+def test_list_active_user_sessions_sql_filters_revoked_and_expired() -> None:
+    # Guards the fix for GET /auth/sessions showing a user's entire session
+    # history under an "Active sessions" heading. If someone edits this SQL
+    # and drops the filter, this test fails instead of silently reopening
+    # the bug.
+    import inspect
+
+    source = inspect.getsource(repository.list_active_user_sessions)
+    assert "revoked_at IS NULL" in source
+    assert "expires_at > NOW()" in source
+
+
+def test_list_user_sessions_sql_has_no_active_filter() -> None:
+    # list_user_sessions backs the admin moderation endpoint
+    # (GET /admin/users/{id}/sessions), where full history — revoked and
+    # expired sessions included — is the point. Guards against someone
+    # "fixing" the wrong function and breaking that admin view.
+    import inspect
+
+    source = inspect.getsource(repository.list_user_sessions)
+    assert "revoked_at IS NULL" not in source
+    assert "expires_at >" not in source

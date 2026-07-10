@@ -184,7 +184,7 @@ def test_logout_revokes_session(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_list_sessions_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        repository, "list_user_sessions", lambda *_a: [_session_row()]
+        repository, "list_active_user_sessions", lambda *_a: [_session_row()]
     )
     client = _client(authenticated=True)
     response = client.get(
@@ -193,6 +193,35 @@ def test_list_sessions_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     assert response.status_code == 200
     assert len(response.json()["items"]) == 1
+
+
+def test_list_sessions_uses_active_only_repository_function(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # GET /auth/sessions is rendered under an "Active sessions" heading with
+    # a working Revoke button on each row (AccountView.tsx) - it must never
+    # go back to list_user_sessions, which returns the full history
+    # (revoked/expired included) and backs the admin moderation endpoint.
+    calls: list[str] = []
+
+    def fake_active_only(*_a: Any) -> list[Any]:
+        calls.append("active_only")
+        return []
+
+    def fake_full_history(*_a: Any) -> list[Any]:
+        calls.append("full_history")
+        return []
+
+    monkeypatch.setattr(
+        repository, "list_active_user_sessions", fake_active_only
+    )
+    monkeypatch.setattr(repository, "list_user_sessions", fake_full_history)
+    client = _client(authenticated=True)
+    client.get(
+        "/api/v1/auth/sessions",
+        headers={"Authorization": "Bearer session-token"},
+    )
+    assert calls == ["active_only"]
 
 
 def test_revoke_session_returns_ok(monkeypatch: pytest.MonkeyPatch) -> None:
