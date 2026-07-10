@@ -51,9 +51,16 @@ def _wrap_line(
 
 
 def render_paragraphs_to_pages(
-    paragraphs: list[str], *, layout: PageLayout = DEFAULT_PAGE_LAYOUT
+    paragraphs: list[str],
+    *,
+    layout: PageLayout = DEFAULT_PAGE_LAYOUT,
+    font_path: str | None = None,
 ) -> list[Image.Image]:
-    font = ImageFont.load_default(size=layout.font_size)
+    font: _Font = (
+        ImageFont.truetype(font_path, size=layout.font_size)
+        if font_path
+        else ImageFont.load_default(size=layout.font_size)
+    )
     draw = _measurement_draw()
     max_width = layout.page_size[0] - (layout.margin * 2)
     line_height = layout.font_size + layout.line_spacing
@@ -89,8 +96,13 @@ def render_text_snippet(
     font_size: int = 22,
     padding: int = 16,
     max_width_px: int = 900,
+    font_path: str | None = None,
 ) -> Image.Image:
-    font = ImageFont.load_default(size=font_size)
+    font: _Font = (
+        ImageFont.truetype(font_path, size=font_size)
+        if font_path
+        else ImageFont.load_default(size=font_size)
+    )
     draw = _measurement_draw()
     lines = _wrap_line(draw, text, font, max_width_px - (padding * 2))
     line_height = font_size + (padding // 2)

@@ -119,6 +119,7 @@ class SyntheticDocumentRecipe(_FrozenModel):
     recipe_id: str
     document_type: str
     country_id: str
+    locale: str = "en-US"
     blocks: tuple[ResolvedBlock, ...]
 
 

@@ -12,9 +12,18 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from scripts.synthetic_data.core.dataset_packager import (  # noqa: E402
+    ALL_DOCUMENT_FORMATS,
+    package_dataset,
+    render_dataset_documents,
+)
 from scripts.synthetic_data.core.input_data import (  # noqa: E402
     InputDataError,
     load_input_data,
+)
+from scripts.synthetic_data.core.locale_corpus import (  # noqa: E402
+    LocaleCorpusError,
+    load_locale_corpus,
 )
 from scripts.synthetic_data.core.models import FileFormat  # noqa: E402
 from scripts.synthetic_data.core.output_layout import (  # noqa: E402
@@ -46,7 +55,7 @@ from scripts.synthetic_data.core.world_validation import (  # noqa: E402
 
 
 _ALL_FORMATS_ALIAS = "all"
-_WORLD_COMMANDS = frozenset({"validate", "plan", "generate"})
+_WORLD_COMMANDS = frozenset({"validate", "plan", "generate", "render"})
 
 
 def _parse_formats(raw: str) -> list[FileFormat]:
@@ -157,6 +166,19 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Build and validate the world without writing output files.",
     )
+    parser.add_argument(
+        "--formats",
+        default=_ALL_FORMATS_ALIAS,
+        help=(
+            "Comma-separated document formats to render: json, txt, xlsx, "
+            "docx, pdf, all (default). Only used by generate/render."
+        ),
+    )
+    parser.add_argument(
+        "--dataset",
+        default=None,
+        help="Existing dataset_id to re-render documents for (render command).",
+    )
     return parser
 
 
@@ -213,38 +235,110 @@ def _resolve_seed(seed: int | None) -> int:
     return secrets.randbelow(2**63) if seed is None else seed
 
 
+def _parse_document_formats(raw: str) -> tuple[str, ...]:
+    normalized = raw.strip().lower()
+    if normalized == _ALL_FORMATS_ALIAS:
+        return ALL_DOCUMENT_FORMATS
+    formats: list[str] = []
+    for alias in normalized.split(","):
+        alias = alias.strip()
+        if alias not in ALL_DOCUMENT_FORMATS:
+            raise ValueError(f"Unknown document format alias: {alias!r}")
+        if alias not in formats:
+            formats.append(alias)
+    return tuple(formats)
+
+
 def _write_world_dataset(*, world: SyntheticWorld, output_root: Path) -> Path:
     dataset_dir = output_root / world.metadata.dataset_id
     canonical_dir = dataset_dir / "canonical"
-    reports_dir = dataset_dir / "reports"
     canonical_dir.mkdir(parents=True, exist_ok=True)
-    reports_dir.mkdir(parents=True, exist_ok=True)
     payload = world.to_dict()
     (canonical_dir / "synthetic_world.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
         + "\n",
         encoding="utf-8",
     )
-    (reports_dir / "validation_report.json").write_text(
-        json.dumps(
-            {
-                "dataset_id": world.metadata.dataset_id,
-                "status": "valid",
-                "errors": [],
-            },
-            indent=2,
-            ensure_ascii=False,
-            sort_keys=True,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     return dataset_dir
+
+
+def _render_and_package(
+    *,
+    world: SyntheticWorld,
+    world_errors: tuple[str, ...],
+    dataset_dir: Path,
+    formats: tuple[str, ...],
+) -> None:
+    locale_corpus = load_locale_corpus()
+    documents = render_dataset_documents(
+        world=world,
+        locale_corpus=locale_corpus,
+        dataset_dir=dataset_dir,
+        formats=formats,
+    )
+    result = package_dataset(
+        world=world,
+        world_errors=world_errors,
+        dataset_dir=dataset_dir,
+        documents=documents,
+    )
+    print(
+        f"rendered {len(documents)} documents -> manifest="
+        f"{result.manifest_path} zip={result.zip_path}"
+    )
+    if result.artifact_errors:
+        print(
+            f"WARNING: {len(result.artifact_errors)} artifact validation "
+            "issues; see validation_report.json",
+            file=sys.stderr,
+        )
+
+
+def _run_render(args: argparse.Namespace) -> int:
+    if not args.dataset:
+        print("ERROR: render requires --dataset <dataset_id>", file=sys.stderr)
+        return 2
+    dataset_dir = args.output_root / args.dataset
+    canonical_path = dataset_dir / "canonical" / "synthetic_world.json"
+    if not canonical_path.exists():
+        print(
+            f"ERROR: no canonical world found at {canonical_path}",
+            file=sys.stderr,
+        )
+        return 2
+    try:
+        formats = _parse_document_formats(args.formats)
+    except ValueError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+    try:
+        world = SyntheticWorld.model_validate_json(
+            canonical_path.read_text(encoding="utf-8")
+        )
+        errors = validate_world(world)
+        if args.dry_run:
+            print(
+                f"[dry-run] would re-render {dataset_dir} "
+                f"formats={','.join(formats)}"
+            )
+            return 0
+        _render_and_package(
+            world=world,
+            world_errors=errors,
+            dataset_dir=dataset_dir,
+            formats=formats,
+        )
+        return 0
+    except (ValueError, WorldValidationError, LocaleCorpusError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
 
 
 def _run_world(argv: list[str]) -> int:
     parser = build_world_arg_parser()
     args = parser.parse_args(argv)
+    if args.command == "render":
+        return _run_render(args)
     try:
         input_data = load_world_input(args.world_input)
         if args.command == "validate":
@@ -289,8 +383,20 @@ def _run_world(argv: list[str]) -> int:
             world=world, output_root=args.output_root
         )
         print(f"generated canonical world -> {dataset_dir}")
+        formats = _parse_document_formats(args.formats)
+        _render_and_package(
+            world=world,
+            world_errors=errors,
+            dataset_dir=dataset_dir,
+            formats=formats,
+        )
         return 0
-    except (ValueError, WorldInputError, WorldValidationError) as error:
+    except (
+        ValueError,
+        WorldInputError,
+        WorldValidationError,
+        LocaleCorpusError,
+    ) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
 

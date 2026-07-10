@@ -41,7 +41,8 @@ def test_world_metadata_carries_fictional_notice_and_locales() -> None:
     )
 
     assert world.metadata.fictional_notice == FICTIONAL_NOTICE
-    assert world.metadata.supported_locales == ("en-US",)
+    assert "en-US" in world.metadata.supported_locales
+    assert len(world.metadata.supported_locales) == 15
     metadata = cast(dict[str, Any], world.to_dict()["metadata"])
     assert metadata["fictional_notice"] == FICTIONAL_NOTICE
 

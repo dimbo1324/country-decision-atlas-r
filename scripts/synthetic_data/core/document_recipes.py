@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import random
+from scripts.synthetic_data.core.locale_corpus import (
+    REQUIRED_BLOCK_IDS,
+    LocaleTextPack,
+)
 from scripts.synthetic_data.core.world_input import (
     DocumentRecipeInput,
     TextBlockInput,
@@ -99,4 +103,38 @@ def resolve_document_recipe(
         document_type=recipe.id,
         country_id=country.country_id,
         blocks=tuple(resolved_blocks),
+    )
+
+
+def resolve_localized_document_recipe(
+    *,
+    country: SyntheticCountry,
+    text_pack: LocaleTextPack,
+    rng: random.Random,
+) -> SyntheticDocumentRecipe:
+    """Resolve a `country_overview` recipe from the 15-locale corpus
+    (spec section 23, stage 4) rather than `world_config.json`'s
+    `document_blocks`/`document_recipes` — a separate, locale-keyed block
+    library so the stage 3 `en-US` recipe path stays untouched."""
+    risk_label = _humanize(country.risks[0]) if country.risks else ""
+    strength_label = (
+        _humanize(country.strengths[0]) if country.strengths else ""
+    )
+    resolved_blocks = tuple(
+        ResolvedBlock(
+            block_id=block_id,
+            text=rng.choice(text_pack.blocks[block_id]).format(
+                country_name=country.name,
+                risk_label=risk_label,
+                strength_label=strength_label,
+            ),
+        )
+        for block_id in REQUIRED_BLOCK_IDS
+    )
+    return SyntheticDocumentRecipe(
+        recipe_id=f"recipe-{country.slug}-{text_pack.locale}-country_overview",
+        document_type="country_overview",
+        country_id=country.country_id,
+        locale=text_pack.locale,
+        blocks=resolved_blocks,
     )

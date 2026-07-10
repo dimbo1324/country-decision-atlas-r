@@ -1,0 +1,515 @@
+{
+  "schema_version": "locale-corpus-v1",
+  "locales": [
+    {
+      "locale": "en-US",
+      "language_name": "English",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Indo-European (Germanic)",
+      "fictional_notice": "SYNTHETIC TEST DATA — FICTIONAL COUNTRIES AND PERSONS — NOT FOR PRODUCTION USE",
+      "given_names": ["Alex", "Sam", "Jordan", "Riley", "Casey", "Morgan"],
+      "family_names": ["Voss", "Kade", "Renn", "Solis", "Marek", "Dahl"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} is a fictional country used only for local testing.",
+          "This overview of {country_name} is generated test data, not a real place."
+        ],
+        "country_risk_summary": [
+          "For {country_name}, the main limiting factor remains {risk_label}.",
+          "When assessing {country_name}, note the risk factor: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} performs strongly on {strength_label}.",
+          "A notable strength of {country_name} is {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "This matches what I've read about {country_name} recently.",
+        "Not sure this fully reflects the current situation in {country_name}."
+      ],
+      "sample_short": "Test data only.",
+      "sample_long": "This long-form paragraph exists to check that word wrapping, hyphenation, and page breaks behave correctly across several lines of English text.",
+      "sample_diacritic": "Naïve café résumé façade.",
+      "sample_mixed": "{country_name} report #47 — see https://example.test/report for details.",
+      "sample_number": "The synthetic data_confidence score reached 87.5 out of 100.",
+      "sample_date": "The snapshot was generated on 2026-01-01."
+    },
+    {
+      "locale": "es-ES",
+      "language_name": "Spanish",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Indo-European (Romance)",
+      "fictional_notice": "DATOS DE PRUEBA SINTÉTICOS — PAÍSES Y PERSONAS FICTICIOS — NO USAR EN PRODUCCIÓN",
+      "given_names": ["María", "Diego", "Lucía", "Pablo", "Sofía", "Iván"],
+      "family_names": ["Alonso", "Vidal", "Peña", "Bravo", "Roldán", "Castaño"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} es un país ficticio usado solo para pruebas locales.",
+          "Esta ficha de {country_name} son datos de prueba generados, no un lugar real."
+        ],
+        "country_risk_summary": [
+          "En {country_name}, el principal factor limitante sigue siendo {risk_label}.",
+          "Al evaluar {country_name}, conviene tener en cuenta el riesgo: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} destaca especialmente en {strength_label}.",
+          "Un punto fuerte de {country_name} es {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "Esto coincide con lo que he leído sobre {country_name} últimamente.",
+        "No estoy seguro de que esto refleje bien la situación actual en {country_name}."
+      ],
+      "sample_short": "Solo datos de prueba.",
+      "sample_long": "Este párrafo largo existe para comprobar que el ajuste de línea y los saltos de página funcionan correctamente en varias líneas de texto en español.",
+      "sample_diacritic": "Niño peña café mañana ¿qué tal?",
+      "sample_mixed": "{country_name} informe nº 47 — véase https://example.test/report para más detalles.",
+      "sample_number": "La puntuación sintética de data_confidence alcanzó 87,5 sobre 100.",
+      "sample_date": "La instantánea se generó el 1 de enero de 2026."
+    },
+    {
+      "locale": "ru-RU",
+      "language_name": "Russian",
+      "script": "Cyrillic",
+      "direction": "ltr",
+      "language_group": "Indo-European (Slavic)",
+      "fictional_notice": "СИНТЕТИЧЕСКИЕ ТЕСТОВЫЕ ДАННЫЕ — ВЫМЫШЛЕННЫЕ СТРАНЫ И ЛИЦА — НЕ ДЛЯ ПРОДАКШЕНА",
+      "given_names": ["Анна", "Игорь", "Ольга", "Денис", "Марина", "Павел"],
+      "family_names": ["Орлов", "Соколов", "Макарова", "Гусев", "Тихонова", "Королев"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} — вымышленная страна, используемая только для локального тестирования.",
+          "Этот обзор {country_name} — сгенерированные тестовые данные, а не реальное место."
+        ],
+        "country_risk_summary": [
+          "Для {country_name} основным ограничивающим фактором остаётся {risk_label}.",
+          "При оценке {country_name} стоит учитывать риск: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} демонстрирует высокие показатели по параметру {strength_label}.",
+          "Заметная сильная сторона {country_name} — {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "Это совпадает с тем, что я недавно читал о {country_name}.",
+        "Не уверен, что это полностью отражает текущую ситуацию в {country_name}."
+      ],
+      "sample_short": "Только тестовые данные.",
+      "sample_long": "Этот длинный абзац нужен, чтобы проверить перенос строк и разбиение на страницы для нескольких строк русского текста с кириллицей.",
+      "sample_diacritic": "Ёжик, ёлка, тёмный лёд.",
+      "sample_mixed": "{country_name}, отчёт № 47 — подробности см. на https://example.test/report.",
+      "sample_number": "Синтетический показатель data_confidence достиг 87,5 из 100.",
+      "sample_date": "Снимок данных создан 1 января 2026 года."
+    },
+    {
+      "locale": "hi-IN",
+      "language_name": "Hindi",
+      "script": "Devanagari",
+      "direction": "ltr",
+      "language_group": "Indo-European (Indo-Aryan)",
+      "fictional_notice": "सिंथेटिक टेस्ट डेटा — काल्पनिक देश और व्यक्ति — उत्पादन उपयोग के लिए नहीं",
+      "given_names": ["अर्जुन", "प्रिया", "रोहित", "नीलम", "संजय", "दिव्या"],
+      "family_names": ["शर्मा", "वर्मा", "पटेल", "रेड्डी", "जोशी", "नायर"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} एक काल्पनिक देश है, जो केवल स्थानीय परीक्षण के लिए उपयोग होता है।",
+          "{country_name} का यह विवरण जनित परीक्षण डेटा है, कोई वास्तविक जगह नहीं।"
+        ],
+        "country_risk_summary": [
+          "{country_name} के लिए मुख्य सीमा कारक अभी भी {risk_label} है।",
+          "{country_name} का मूल्यांकन करते समय इस जोखिम को ध्यान में रखें: {risk_label}।"
+        ],
+        "country_strength_summary": [
+          "{country_name} {strength_label} में अच्छा प्रदर्शन करता है।",
+          "{country_name} की एक उल्लेखनीय शक्ति {strength_label} है।"
+        ]
+      },
+      "comment_templates": [
+        "यह उससे मेल खाता है जो मैंने {country_name} के बारे में हाल ही में पढ़ा था।",
+        "मुझे पूरा यकीन नहीं कि यह {country_name} की वर्तमान स्थिति को पूरी तरह दर्शाता है।"
+      ],
+      "sample_short": "केवल परीक्षण डेटा।",
+      "sample_long": "यह लंबा अनुच्छेद यह जांचने के लिए है कि हिंदी पाठ की कई पंक्तियों में शब्द व्रैपिंग और पेज ब्रेक सही से काम करते हैं।",
+      "sample_diacritic": "संगीत, ज्ञान, क्षेत्र, श्री।",
+      "sample_mixed": "{country_name} रिपोर्ट #47 — विवरण के लिए https://example.test/report देखें।",
+      "sample_number": "सिंथेटिक data_confidence स्कोर 100 में से 87.5 तक पहुंचा।",
+      "sample_date": "यह स्नैपशॉट 1 जनवरी 2026 को बनाया गया।"
+    },
+    {
+      "locale": "fa-IR",
+      "language_name": "Persian",
+      "script": "Arabic",
+      "direction": "rtl",
+      "language_group": "Indo-European (Iranian)",
+      "fictional_notice": "داده‌های آزمایشی مصنوعی — کشورها و افراد خیالی — برای محیط تولید مناسب نیست",
+      "given_names": ["آرش", "لیلا", "کوروش", "نگار", "فرهاد", "مهتاب"],
+      "family_names": ["راد", "نوری", "صادقی", "فرخی", "بختیاری", "قاسمی"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} یک کشور خیالی است که فقط برای آزمایش محلی استفاده می‌شود.",
+          "این گزارش درباره {country_name} داده‌های آزمایشی تولیدشده است، نه یک مکان واقعی."
+        ],
+        "country_risk_summary": [
+          "در مورد {country_name}، مهم‌ترین عامل محدودکننده همچنان {risk_label} است.",
+          "هنگام بررسی {country_name} باید ریسک زیر را در نظر گرفت: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} در زمینه {strength_label} عملکرد قوی دارد.",
+          "یکی از نقاط قوت {country_name}، {strength_label} است."
+        ]
+      },
+      "comment_templates": [
+        "این با آنچه اخیراً درباره {country_name} خوانده‌ام مطابقت دارد.",
+        "مطمئن نیستم این وضعیت فعلی {country_name} را کامل نشان می‌دهد."
+      ],
+      "sample_short": "فقط داده‌های آزمایشی.",
+      "sample_long": "این پاراگراف طولانی برای بررسی درستی بودن شکست خط و جهت نوشتار راست به چپ در چندین خط متن فارسی وجود دارد.",
+      "sample_diacritic": "مـَدـْرَسـَه و کـِتَابـَخانـَه.",
+      "sample_mixed": "{country_name} گزارش شماره 47 — جزئیات در https://example.test/report.",
+      "sample_number": "امتیاز آزمایشی data_confidence به 87.5 از 100 رسید.",
+      "sample_date": "این نما در تاریخ 2026-01-01 ساخته شد."
+    },
+    {
+      "locale": "ar-SA",
+      "language_name": "Arabic",
+      "script": "Arabic",
+      "direction": "rtl",
+      "language_group": "Afro-Asiatic (Semitic)",
+      "fictional_notice": "بيانات اختبار اصطناعية — دول وأشخاص خياليون — غير مخصصة للاستخدام الفعلي",
+      "given_names": ["ليلى", "عمر", "نورة", "خالد", "سارة", "فهد"],
+      "family_names": ["العمري", "القحطاني", "المرزوقي", "الحربي", "الزهراني", "الفارسي"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} دولة خيالية تُستخدم فقط للاختبار المحلي.",
+          "هذه النبذة عن {country_name} بيانات اختبار مُولّدة، وليست مكانًا حقيقياً."
+        ],
+        "country_risk_summary": [
+          "بالنسبة لـ {country_name}، يبقى العامل المحدّ الرئيسي هو {risk_label}.",
+          "عند تقييم {country_name}، يجب مراعاة عامل الخطر: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "تتميز {country_name} بشكل واضح في {strength_label}.",
+          "من أبرز نقاط قوة {country_name} هو {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "هذا يتطابق مع ما قرأته مؤخراً عن {country_name}.",
+        "لست متأكداً من أن هذا يعكس الوضع الحالي في {country_name} بالكامل."
+      ],
+      "sample_short": "بيانات اختبار فقط.",
+      "sample_long": "توجد هذه الفقرة الطويلة لاختبار التفاف الأسطر وفواصل الصفحات عبر عدة أسطر من النص العربي.",
+      "sample_diacritic": "اللُّغَة العَرَبِيَّة الفُصْحَى.",
+      "sample_mixed": "{country_name} — تقرير رقم 47 — التفاصيل على https://example.test/report.",
+      "sample_number": "وصلت قيمة data_confidence الاصطناعية إلى 87.5 من 100.",
+      "sample_date": "أُنشئت هذه اللقطة بتاريخ 2026-01-01."
+    },
+    {
+      "locale": "zh-Hans-CN",
+      "language_name": "Chinese (Simplified)",
+      "script": "Han",
+      "direction": "ltr",
+      "language_group": "Sino-Tibetan",
+      "fictional_notice": "合成测试数据 — 虚构国家与人物 — 不用于生产环境",
+      "given_names": ["雨莹", "子祕", "思恩", "建国", "静宜", "志强"],
+      "family_names": ["李", "王", "张", "刘", "陈", "赵"],
+      "blocks": {
+        "country_intro": [
+          "{country_name}是一个虚构国家，仅用于本地测试。",
+          "关于{country_name}的此件概览是生成的测试数据，并非真实地点。"
+        ],
+        "country_risk_summary": [
+          "对于{country_name}，主要限制因素仍然是{risk_label}。",
+          "在评估{country_name}时，需要注意风险因素：{risk_label}。"
+        ],
+        "country_strength_summary": [
+          "{country_name}在{strength_label}方面表现突出。",
+          "{country_name}的一个显著优势是{strength_label}。"
+        ]
+      },
+      "comment_templates": [
+        "这与我最近关于{country_name}的阅读内容相符。",
+        "我不确定这是否完全反映了{country_name}的当前情况。"
+      ],
+      "sample_short": "仅为测试数据。",
+      "sample_long": "这段长文字用于检查中文文本在多行排版中的换行与分页是否正常工作，并且不会出现乱码或方块。",
+      "sample_diacritic": "拼音声调示例：mā má mǎ mà。",
+      "sample_mixed": "{country_name}报告 #47 — 详情请见 https://example.test/report。",
+      "sample_number": "合成 data_confidence 得分达到 87.5（满分 100）。",
+      "sample_date": "本快照生成于2026年1月1日。"
+    },
+    {
+      "locale": "ja-JP",
+      "language_name": "Japanese",
+      "script": "Han/Kana",
+      "direction": "ltr",
+      "language_group": "Japonic",
+      "fictional_notice": "合成テストデータ — 架空の国と人物 — 本番環境での使用不可",
+      "given_names": ["さくら", "ひなた", "だいち", "みちこ", "はると", "ゆい"],
+      "family_names": ["佐藤", "鈴木", "高橋", "田中", "渡辺", "山田"],
+      "blocks": {
+        "country_intro": [
+          "{country_name}はローカルテストのためのあくまで架空の国です。",
+          "{country_name}のこの概要は生成されたテストデータであり、実在の場所ではありません。"
+        ],
+        "country_risk_summary": [
+          "{country_name}において、主な制約要因は依然として{risk_label}です。",
+          "{country_name}を評価する際は、リスク要因：{risk_label}に注意してください。"
+        ],
+        "country_strength_summary": [
+          "{country_name}は{strength_label}の面で優れています。",
+          "{country_name}の目立った強みは{strength_label}です。"
+        ]
+      },
+      "comment_templates": [
+        "最近読んだ{country_name}に関する内容と一致しています。",
+        "{country_name}の現在の状況を完全に反映しているかは分かりません。"
+      ],
+      "sample_short": "テストデータのみ。",
+      "sample_long": "この長い段落は、日本語テキストの複数行にわたる改行とページ分割が正しく動作するかを確認するために存在します。",
+      "sample_diacritic": "ひらがな、カタカナ、漢字の混在例です。",
+      "sample_mixed": "{country_name}レポート #47 — 詳細は https://example.test/report をご覧ください。",
+      "sample_number": "合成 data_confidence スコアは100中87.5に達しました。",
+      "sample_date": "このスナップショットは2026年1月1日に作成されました。"
+    },
+    {
+      "locale": "ko-KR",
+      "language_name": "Korean",
+      "script": "Hangul",
+      "direction": "ltr",
+      "language_group": "Koreanic",
+      "fictional_notice": "합성 테스트 데이터 — 가상의 국가와 인물 — 실제 서비스에 사용 불가",
+      "given_names": ["지훈", "서연", "민준", "유나", "준서", "하은"],
+      "family_names": ["김", "이", "박", "최", "정", "강"],
+      "blocks": {
+        "country_intro": [
+          "{country_name}은 로컬 테스트를 위해만 사용되는 가상의 국가입니다.",
+          "{country_name}에 대한 이 개요는 생성된 테스트 데이터이며 실제 장소가 아닙니다."
+        ],
+        "country_risk_summary": [
+          "{country_name}의 경우 주요 제한 요인은 여전히 {risk_label}입니다.",
+          "{country_name}를 평가할 때는 위험 요인인 {risk_label}을 고려해야 합니다."
+        ],
+        "country_strength_summary": [
+          "{country_name}은 {strength_label} 부문에서 강세를 보입니다.",
+          "{country_name}의 두드러진 강점은 {strength_label}입니다."
+        ]
+      },
+      "comment_templates": [
+        "최근에 읽은 {country_name} 관련 내용과 일치합니다.",
+        "이것이 {country_name}의 현재 상황을 완전히 반영하는지는 확신하지 못하겠습니다."
+      ],
+      "sample_short": "테스트 데이터입니다.",
+      "sample_long": "이 긴 단락은 한국어 텍스트의 여러 줄에 걸친 줄 바꿈과 페이지 나눠짐이 올바르게 동작하는지 확인하기 위해 존재합니다.",
+      "sample_diacritic": "한글 자모 예시: 가치카타파하.",
+      "sample_mixed": "{country_name} 보고서 #47 — 자세한 내용은 https://example.test/report 참조.",
+      "sample_number": "합성 data_confidence 점수는 100점 만점에 87.5점을 기록했습니다.",
+      "sample_date": "이 스냅샷은 2026년 1월 1일에 생성되었습니다."
+    },
+    {
+      "locale": "tr-TR",
+      "language_name": "Turkish",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Turkic",
+      "fictional_notice": "SENTİTİK TEST VERİLERİ — KURGUSAL ÜLKELER VE KİŞİLER — ÜRETİM ORTAMI İÇİN DEĞİLDİR",
+      "given_names": ["Elif", "Kaan", "Zeynep", "Barış", "Deniz", "Şeyma"],
+      "family_names": ["Yıldız", "Çelik", "Şahin", "Doğan", "Arıkan", "Kılıç"],
+      "blocks": {
+        "country_intro": [
+          "{country_name}, yalnızca yerel testler için kullanılan kurgusal bir ülkedir.",
+          "{country_name} hakkındaki bu özet, gerçek bir yer değil, üretilmiş test verisidir."
+        ],
+        "country_risk_summary": [
+          "{country_name} için ana sınırlayıcı faktör hâlâ {risk_label}'dır.",
+          "{country_name} değerlendirilirken şu risk faktörü dikkate alınmalıdır: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name}, {strength_label} konusunda güçlü bir performans gösteriyor.",
+          "{country_name}'in öne çıkan güçlü yanı {strength_label}'dır."
+        ]
+      },
+      "comment_templates": [
+        "Bu, {country_name} hakkında son zamanlarda okuduklarımla örtüşüyor.",
+        "Bunun {country_name}'deki mevcut durumu tam olarak yansıttığından emin değilim."
+      ],
+      "sample_short": "Yalnızca test verisi.",
+      "sample_long": "Bu uzun paragraf, Türkçe metnin birden fazla satırında kelime kaydırma ve sayfa sonlarının doğru çalıştığını kontrol etmek için mevcuttur.",
+      "sample_diacritic": "İş ışığı, gülüş, şeker, çiçek.",
+      "sample_mixed": "{country_name} rapor #47 — ayrıntılar için https://example.test/report adresine bakın.",
+      "sample_number": "Sentetik data_confidence puanı 100 üzerinden 87,5'e ulaştı.",
+      "sample_date": "Bu görüntü 1 Ocak 2026 tarihinde oluşturuldu."
+    },
+    {
+      "locale": "id-ID",
+      "language_name": "Indonesian",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Austronesian",
+      "fictional_notice": "DATA UJI SINTETIS — NEGARA DAN ORANG FIKTIF — TIDAK UNTUK PRODUKSI",
+      "given_names": ["Putri", "Budi", "Sari", "Agus", "Dewi", "Rizky"],
+      "family_names": ["Wijaya", "Santoso", "Kurniawan", "Pratama", "Hidayat", "Saputra"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} adalah negara fiktif yang hanya digunakan untuk pengujian lokal.",
+          "Ringkasan {country_name} ini adalah data uji yang dihasilkan, bukan tempat nyata."
+        ],
+        "country_risk_summary": [
+          "Bagi {country_name}, faktor pembatas utama tetap {risk_label}.",
+          "Saat menilai {country_name}, perhatikan faktor risiko: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} tampil kuat pada aspek {strength_label}.",
+          "Salah satu kekuatan {country_name} yang menonjol adalah {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "Ini sesuai dengan apa yang baru-baru ini saya baca tentang {country_name}.",
+        "Saya tidak yakin ini sepenuhnya mencerminkan situasi terkini di {country_name}."
+      ],
+      "sample_short": "Hanya data uji.",
+      "sample_long": "Paragraf panjang ini ada untuk memeriksa apakah pembungkusan kata dan pemisahan halaman berfungsi dengan benar pada beberapa baris teks bahasa Indonesia.",
+      "sample_diacritic": "Contoh kata serapan: kafe, ménu, kopérasi.",
+      "sample_mixed": "{country_name} laporan #47 — lihat https://example.test/report untuk rincian.",
+      "sample_number": "Skor data_confidence sintetis mencapai 87,5 dari 100.",
+      "sample_date": "Cuplikan ini dibuat pada 1 Januari 2026."
+    },
+    {
+      "locale": "sw-KE",
+      "language_name": "Swahili",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Niger-Congo (Bantu)",
+      "fictional_notice": "DATA YA JARIBIO LA UBUNIFU — NCHI NA WATU WA KUBUNI — SI KWA MATUMIZI YA UZALISHAJI",
+      "given_names": ["Amani", "Baraka", "Zawadi", "Juma", "Neema", "Kito"],
+      "family_names": ["Mwangi", "Otieno", "Njoroge", "Kamau", "Wafula", "Kiptoo"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} ni nchi ya kubuni inayotumika kwa majaribio ya ndani pekee.",
+          "Muhtasari huu wa {country_name} ni data ya jaribio iliyotengenezwa, si mahali halisi."
+        ],
+        "country_risk_summary": [
+          "Kwa {country_name}, kikwazo kikuu bado ni {risk_label}.",
+          "Wakati wa kutathmini {country_name}, zingatia hatari: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} ina utendaji imara katika {strength_label}.",
+          "Nguvu moja dhahiri ya {country_name} ni {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "Hii inalingana na nilichosoma hivi karibuni kuhusu {country_name}.",
+        "Sina uhakika kama hii inaonyesha kikamilifu hali ya sasa ya {country_name}."
+      ],
+      "sample_short": "Data ya jaribio tu.",
+      "sample_long": "Aya hii ndefu ipo ili kuangalia kama ufungaji wa maneno na mgawanyo wa kurasa unafanya kazi vizuri katika mistari kadhaa ya maandishi ya Kiswahili.",
+      "sample_diacritic": "Mfano: ng'ombe, gh, dh, ny.",
+      "sample_mixed": "{country_name} ripoti #47 — angalia https://example.test/report kwa maelezo.",
+      "sample_number": "Alama ya data_confidence ya kubuni ilifikia 87.5 kati ya 100.",
+      "sample_date": "Muhtasari huu uliundwa tarehe 1 Januari 2026."
+    },
+    {
+      "locale": "vi-VN",
+      "language_name": "Vietnamese",
+      "script": "Latin",
+      "direction": "ltr",
+      "language_group": "Austroasiatic",
+      "fictional_notice": "DỮ LIỆU THỬ NGHIỆM TỔNG HỢP — QUỐC GIA VÀ NHÂN VẬT HƯ CẤU — KHÔNG DÙNG CHO SẢN XUẤT",
+      "given_names": ["Lan", "Minh", "Huyền", "Phương", "Tuấn", "Mai"],
+      "family_names": ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Vũ"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} là một quốc gia hư cấu chỉ dùng để kiểm thử cục bộ.",
+          "Tóm tắt này về {country_name} là dữ liệu thử nghiệm được tạo ra, không phải nơi có thật."
+        ],
+        "country_risk_summary": [
+          "Đối với {country_name}, yếu tố hạn chế chính vẫn là {risk_label}.",
+          "Khi đánh giá {country_name}, cần lưu ý yếu tố rủi ro: {risk_label}."
+        ],
+        "country_strength_summary": [
+          "{country_name} thể hiện tốt ở {strength_label}.",
+          "Một điểm mạnh nổi bật của {country_name} là {strength_label}."
+        ]
+      },
+      "comment_templates": [
+        "Điều này khớp với những gì tôi mới đọc gần đây về {country_name}.",
+        "Tôi không chắc điều này phản ánh đầy đủ tình hình hiện tại ở {country_name}."
+      ],
+      "sample_short": "Chỉ là dữ liệu thử nghiệm.",
+      "sample_long": "Đoạn văn dài này tồn tại để kiểm tra việc ngắt dòng và ngắt trang hoạt động đúng trên nhiều dòng văn bản tiếng Việt có dấu.",
+      "sample_diacritic": "Ví dụ: ngữ, nghỉa, thử, đẳng.",
+      "sample_mixed": "{country_name} báo cáo #47 — xem chi tiết tại https://example.test/report.",
+      "sample_number": "Điểm data_confidence tổng hợp đạt 87,5 trên 100.",
+      "sample_date": "Ảnh chụp nhanh này được tạo vào ngày 1 tháng 1 năm 2026."
+    },
+    {
+      "locale": "th-TH",
+      "language_name": "Thai",
+      "script": "Thai",
+      "direction": "ltr",
+      "language_group": "Kra-Dai",
+      "fictional_notice": "ข้อมูลทดสอบสังเคราะห์ — ประเทศและบุคคลสมมติ — ห้ามใช้งานจริง",
+      "given_names": ["น้ำผึ้ง", "สมชาย", "ประภาส", "สุดา", "ธนากร", "กัญญา"],
+      "family_names": ["ศรีสุข", "จันทร์ดี", "สินธุ", "นาคงาม", "พรสุวรรณ", "สุวรรณ"],
+      "blocks": {
+        "country_intro": [
+          "{country_name}เป็นประเทศสมมติที่ใช้เฉพาะการทดสอบภายในเท่านั้น",
+          "ภาพรวมนี้ของ{country_name}เป็นข้อมูลทดสอบที่สร้างขึ้น ไม่ใช่สถานที่จริง"
+        ],
+        "country_risk_summary": [
+          "สำหรับ{country_name} ปัจจัยจำกัดหลักยังคงเป็น {risk_label}",
+          "เมื่อประเมิน{country_name} ควรคำนึงถึงปัจจัยเสี่ยง: {risk_label}"
+        ],
+        "country_strength_summary": [
+          "{country_name}มีผลงานโดดเด่นในด้าน {strength_label}",
+          "จุดแข็งที่เด่นชัดของ{country_name}คือ {strength_label}"
+        ]
+      },
+      "comment_templates": [
+        "สิ่งนี้สอดคล้องกับสิ่งที่อ่านเกี่ยวกับ{country_name}เมื่อเร็ว ๆ นี้",
+        "ไม่แน่ใจว่าสิ่งนี้สะท้อนสถานการณ์ปัจจุบันของ{country_name}อย่างครบถ้วน"
+      ],
+      "sample_short": "ข้อมูลทดสอบเท่านั้น",
+      "sample_long": "ย่อหน้ายาวนี้มีไว้เพื่อทดสอบการตัดคำและการขึ้นบรรทัดหน้าของข้อความภาษาไทยหลายบรรทัด",
+      "sample_diacritic": "ตัวอย่างวรรณยุกต์: ก่ ข่ ก้ ข้",
+      "sample_mixed": "{country_name} รายงาน #47 — ดูรายละเอียดที่ https://example.test/report",
+      "sample_number": "คะแนน data_confidence สังเคราะห์อยู่ที่ 87.5 จาก 100",
+      "sample_date": "ภาพนี้ถูกสร้างขึ้นเมื่อวันที่ 1 มกราคม 2026"
+    },
+    {
+      "locale": "ta-IN",
+      "language_name": "Tamil",
+      "script": "Tamil",
+      "direction": "ltr",
+      "language_group": "Dravidian",
+      "fictional_notice": "செயற்கை சோதனை தரவு — கற்பனை நாடுகள் மற்றும் நபர்கள் — உற்பத்தி சூழலுக்கு பயன்படுத்த வேண்டாம்",
+      "given_names": ["கல்யாணி", "அருண்", "ப்ரியா", "விஜய்", "மீனா", "கவின்"],
+      "family_names": ["முருகன்", "சுப்ரமணியன்", "ராஜன்", "செல்வன்", "பாண்டியன்", "வேலு"],
+      "blocks": {
+        "country_intro": [
+          "{country_name} என்பது உள்ளூர் சோதனைக்கு மட்டுமே பயன்படுத்தப்படும் ஒரு கற்பனை நாடு ஆகும்.",
+          "{country_name} பற்றிய இந்த சுருக்கம் உருவாக்கப்பட்ட சோதனை தரவு ஆகும், இது ஒரு உண்மையான இடம் அல்ல."
+        ],
+        "country_risk_summary": [
+          "{country_name}க்கு முக்கிய கட்டுப்பாட்டு காரணி இன்னும் {risk_label} ஆகும்.",
+          "{country_name}ஐ மதிப்பிடும்போது, {risk_label} என்ற ஆபத்து காரணியை கருத்தில் கொள்ளவும்."
+        ],
+        "country_strength_summary": [
+          "{country_name} {strength_label} என்பதில் வலுவான செயல்திறனை காட்டுகிறது.",
+          "{country_name}ின் குறிப்பிடத்தக்க வலிமை {strength_label} ஆகும்."
+        ]
+      },
+      "comment_templates": [
+        "நான் சமீபத்தில் படித்ததுடன் {country_name} பற்றிய இந்த தகவல் பொருந்துகிறது.",
+        "இது {country_name}ின் தற்போதைய நிலையை முழுமையாக பிரதிபலிக்கிறதா என்று எனக்கு உறுதி இல்லை."
+      ],
+      "sample_short": "சோதனை தரவு மட்டுமே.",
+      "sample_long": "தமிழ் உரையின் பல வரிகளில் சொல் மடிப்பும் பக்க பிரிவும் சரியாக செயல்படுகிறதா என்பதை சரிபார்க்க இந்த நீண்ட பத்தி உள்ளது.",
+      "sample_diacritic": "உதாரணம்: குழந்தை, வீடு, தமிழ்.",
+      "sample_mixed": "{country_name} அறிக்கை #47 — விவரங்களுக்கு https://example.test/report பார்க்கவும்.",
+      "sample_number": "செயற்கை data_confidence மதிப்பெண் 100இல் 87.5ஐ எட்டியது.",
+      "sample_date": "இந்த பதிவு 2026 ஜனவரி 1 அன்று உருவாக்கப்பட்டது."
+    }
+  ]
+}

@@ -44,6 +44,8 @@ synthetic-data = [
   "python-docx>=1.1,<2.0",
   "openpyxl>=3.1,<4.0",
   "pypdf>=4.3,<5.0",
+  "python-bidi>=0.6.6,<0.7.0",
+  "arabic-reshaper>=3.0.0,<4.0.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -149,7 +151,7 @@ module = ["app.integrations.notifier_grpc.generated.*"]
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = ["reportlab", "reportlab.*", "docx", "docx.*", "openpyxl", "openpyxl.*", "PIL", "PIL.*", "pypdf", "pypdf.*"]
+module = ["reportlab", "reportlab.*", "docx", "docx.*", "openpyxl", "openpyxl.*", "PIL", "PIL.*", "pypdf", "pypdf.*", "bidi", "bidi.*", "arabic_reshaper", "arabic_reshaper.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

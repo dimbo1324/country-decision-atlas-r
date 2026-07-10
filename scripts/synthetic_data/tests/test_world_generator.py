@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from scripts.synthetic_data.core.locale_corpus import REQUIRED_LOCALES
 from scripts.synthetic_data.core.world_generator import (
     WorldGenerationOptions,
     WorldGenerator,
@@ -141,8 +142,14 @@ def test_comments_cover_multiple_moderation_statuses() -> None:
 def test_document_recipes_are_generated_per_country() -> None:
     world = _generate_world()
 
-    assert len(world.document_recipes) == len(world.countries) * len(
+    per_country_recipes = len(world.countries) * len(
         load_world_input().document_recipes
+    )
+    # One showcase recipe per locale in the full 15-locale corpus,
+    # including en-US, on top of the per-country en-US recipes above.
+    localized_showcase_recipes = len(REQUIRED_LOCALES)
+    assert len(world.document_recipes) == (
+        per_country_recipes + localized_showcase_recipes
     )
     for recipe in world.document_recipes:
         assert recipe.blocks
@@ -177,3 +184,58 @@ def test_data_quality_scenario_targets_the_weakest_data_confidence_country() -> 
         if scenario.category == "data_quality"
     )
     assert weakest.country_id in data_quality_scenario.related_artifacts
+
+
+def test_supported_locales_matches_the_15_locale_matrix_plus_en_us() -> None:
+    world = _generate_world()
+
+    assert set(world.metadata.supported_locales) == {
+        "en-US",
+        *REQUIRED_LOCALES,
+    }
+
+
+def test_every_non_english_locale_gets_exactly_one_showcase_recipe() -> None:
+    world = _generate_world()
+
+    locale_counts: dict[str, int] = {}
+    for recipe in world.document_recipes:
+        if recipe.locale != "en-US":
+            locale_counts[recipe.locale] = (
+                locale_counts.get(recipe.locale, 0) + 1
+            )
+
+    assert set(locale_counts) == set(REQUIRED_LOCALES) - {"en-US"}
+    assert all(count == 1 for count in locale_counts.values())
+
+
+def test_localized_recipe_blocks_mention_the_bound_countrys_name() -> None:
+    world = _generate_world()
+    countries_by_id = {
+        country.country_id: country for country in world.countries
+    }
+
+    for recipe in world.document_recipes:
+        if recipe.document_type != "country_overview":
+            continue
+        country = countries_by_id[recipe.country_id]
+        for block in recipe.blocks:
+            assert block.text.strip()
+            assert country.name in block.text
+
+
+def test_locale_recipe_generation_is_reproducible_for_the_same_seed() -> None:
+    first = _generate_world(seed=555)
+    second = _generate_world(seed=555)
+
+    first_locale_texts = sorted(
+        (recipe.locale, block.text)
+        for recipe in first.document_recipes
+        for block in recipe.blocks
+    )
+    second_locale_texts = sorted(
+        (recipe.locale, block.text)
+        for recipe in second.document_recipes
+        for block in recipe.blocks
+    )
+    assert first_locale_texts == second_locale_texts

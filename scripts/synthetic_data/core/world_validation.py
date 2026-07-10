@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Collection
+from scripts.synthetic_data.core.locale_corpus import REQUIRED_LOCALES
 from scripts.synthetic_data.core.world_input import REQUIRED_METRICS
 from scripts.synthetic_data.core.world_models import SyntheticWorld
 
@@ -246,12 +247,20 @@ def _validate_content(
         if not 0 <= signal.confidence <= 100:
             errors.append(f"{signal.signal_id}: confidence is outside 0..100")
 
+    known_locales = frozenset({"en-US", *REQUIRED_LOCALES})
+    recipe_locales: set[str] = set()
     for recipe in world.document_recipes:
         if recipe.country_id not in country_ids:
             errors.append(
                 f"{recipe.recipe_id}: document recipe must reference an "
                 "existing country"
             )
+        if recipe.locale not in known_locales:
+            errors.append(
+                f"{recipe.recipe_id}: unknown document recipe locale "
+                f"{recipe.locale!r}"
+            )
+        recipe_locales.add(recipe.locale)
         if not recipe.blocks:
             errors.append(
                 f"{recipe.recipe_id}: document recipe must contain at "
@@ -263,6 +272,12 @@ def _validate_content(
                     f"{recipe.recipe_id}: block {block.block_id} resolved "
                     "to empty text"
                 )
+    missing_locales = set(REQUIRED_LOCALES) - recipe_locales
+    if missing_locales:
+        errors.append(
+            "world is missing a document recipe for locales: "
+            f"{sorted(missing_locales)}"
+        )
 
     if len(world.scenarios) < 3:
         errors.append("world must contain at least 3 scenarios")

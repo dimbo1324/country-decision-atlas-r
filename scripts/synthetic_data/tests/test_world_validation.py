@@ -270,3 +270,39 @@ def test_validator_rejects_fewer_than_three_scenarios() -> None:
     )
 
     assert any("at least 3 scenarios" in error for error in errors)
+
+
+def test_validator_rejects_document_recipe_with_unknown_locale() -> None:
+    world, input_data = _world()
+    bad_recipe = world.document_recipes[0].model_copy(
+        update={"locale": "xx-XX"}
+    )
+    invalid_world = world.model_copy(
+        update={"document_recipes": (bad_recipe, *world.document_recipes[1:])}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any("unknown document recipe locale" in error for error in errors)
+
+
+def test_validator_rejects_world_missing_a_locale_recipe() -> None:
+    world, input_data = _world()
+    trimmed_recipes = tuple(
+        recipe for recipe in world.document_recipes if recipe.locale != "ta-IN"
+    )
+    invalid_world = world.model_copy(
+        update={"document_recipes": trimmed_recipes}
+    )
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+    )
+
+    assert any(
+        "missing a document recipe for locales" in error for error in errors
+    )

@@ -9,7 +9,14 @@ from scripts.synthetic_data.core.content_generator import (
     CountryContent,
     generate_country_content,
 )
-from scripts.synthetic_data.core.document_recipes import resolve_document_recipe
+from scripts.synthetic_data.core.document_recipes import (
+    resolve_document_recipe,
+    resolve_localized_document_recipe,
+)
+from scripts.synthetic_data.core.locale_corpus import (
+    LocaleCorpus,
+    load_locale_corpus,
+)
 from scripts.synthetic_data.core.scenario_generator import generate_scenarios
 from scripts.synthetic_data.core.seed import SeedFactory
 from scripts.synthetic_data.core.world_input import (
@@ -31,7 +38,6 @@ from scripts.synthetic_data.core.world_validation import ensure_world_valid
 
 GENERATOR_VERSION = "synthetic-world-v1"
 _HISTORY_DATES = ("2024-01-01", "2025-01-01", "2026-01-01")
-_SUPPORTED_LOCALES: tuple[str, ...] = ("en-US",)
 
 
 @dataclass(frozen=True)
@@ -43,8 +49,16 @@ class WorldGenerationOptions:
 
 
 class WorldGenerator:
-    def __init__(self, *, input_data: WorldInput) -> None:
+    def __init__(
+        self,
+        *,
+        input_data: WorldInput,
+        locale_corpus: LocaleCorpus | None = None,
+    ) -> None:
         self._input_data = input_data
+        self._locale_corpus = (
+            load_locale_corpus() if locale_corpus is None else locale_corpus
+        )
 
     def generate(self, options: WorldGenerationOptions) -> SyntheticWorld:
         profile = self._input_data.profile_by_slug(options.profile)
@@ -96,6 +110,16 @@ class WorldGenerator:
             for country in countries
             for recipe_input in self._input_data.document_recipes
         )
+        localized_document_recipes = tuple(
+            resolve_localized_document_recipe(
+                country=countries[index % len(countries)],
+                text_pack=text_pack,
+                rng=seed_factory.rng(
+                    "localized_document_recipe", text_pack.locale
+                ),
+            )
+            for index, text_pack in enumerate(self._locale_corpus.packs)
+        )
         scenarios = generate_scenarios(
             profile=profile.slug,
             countries=countries,
@@ -109,7 +133,12 @@ class WorldGenerator:
                 generator_version=GENERATOR_VERSION,
                 seed=options.seed,
                 profile=profile.slug,
-                supported_locales=_SUPPORTED_LOCALES,
+                supported_locales=tuple(
+                    sorted(
+                        {"en-US"}
+                        | {pack.locale for pack in self._locale_corpus.packs}
+                    )
+                ),
                 source_config_checksum=self._input_data.source_checksum,
                 generated_on=options.generated_on or date.today().isoformat(),
             ),
@@ -133,7 +162,7 @@ class WorldGenerator:
             legal_signals=tuple(
                 content.legal_signal for content in content_by_country.values()
             ),
-            document_recipes=document_recipes,
+            document_recipes=document_recipes + localized_document_recipes,
             scenarios=scenarios,
         )
         ensure_world_valid(
