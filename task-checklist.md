@@ -105,16 +105,23 @@
 - [+] `py -3.12 -m mypy scripts/synthetic_data` чистый.
 - [+] `py -3.12 -m ruff check scripts/synthetic_data` / `ruff format --check` чистые.
 - [+] Полный `py -3.12 -m pytest tests/ -q` (весь проект) зелёный.
-- [ ] Полный quality gate (`python dev_tools_scripts_runner.py full-check`)
-      зелёный.
+- [+] Полный quality gate (`python dev_tools_scripts_runner.py full-check`):
+      77 OK / 3 WARN (stale cache dirs, safe) / 1 FAIL / 1 SKIP (protoc,
+      committed .pb.go used as-is). Единственный FAIL — `go test` из-за
+      `-race requires cgo` на этой Windows-машине без mingw/gcc; это
+      заранее задокументированное ограничение
+      (`.ai/project/11-commands.md`: «CI job is the actual `-race` gate»),
+      не вызвано изменениями Этапа 3 (в этой задаче не тронут ни один
+      `.go`-файл). Прямая проверка `go test ./...` без `-race` в
+      `apps/notifier` — все пакеты `ok`.
 
 ## Завершение
 
 - [+] Чек-лист заполнен `+`/`-`.
 - [+] Раздел 23 «Этап 3» техзадания: статус обновлён на «реализовано»
       с честной записью отступлений.
-- [ ] Финальный отчёт написан.
-- [ ] Коммит на ветке. Merge в `main` и push на `origin/main` — только
-      после отдельного явного подтверждения владельца (по аналогии с
-      AE-4 в этой же сессии: «реализуй этап 3» само по себе не было
-      командой на мердж/пуш).
+- [+] Финальный отчёт написан.
+- [+] Коммит на ветке (`1851fe0`). Merge в `main` и push на
+      `origin/main` — НЕ выполнены; ждут отдельного явного подтверждения
+      владельца (по аналогии с AE-4 в этой же сессии: «реализуй этап 3»
+      само по себе не было командой на мердж/пуш).
