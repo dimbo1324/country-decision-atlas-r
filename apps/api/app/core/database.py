@@ -17,8 +17,9 @@ def open_database_pool(settings: Settings | None = None) -> None:
     _pool = ConnectionPool(
         conninfo=resolved_settings.database_url,
         kwargs={"row_factory": dict_row},
-        min_size=1,
-        max_size=10,
+        min_size=resolved_settings.database_pool_min_size,
+        max_size=resolved_settings.database_pool_max_size,
+        timeout=resolved_settings.database_pool_timeout_seconds,
         open=False,
     )
     _pool.open()
@@ -36,6 +37,13 @@ def get_pool() -> ConnectionPool[Any]:
     if _pool is None:
         raise RuntimeError("Database pool is not initialized.")
     return _pool
+
+
+def get_pool_stats() -> dict[str, int]:
+    """Exposes ConnectionPool.get_stats() (pool_size, pool_available,
+    requests_waiting, etc.) for a future /metrics endpoint (P2-4, Аудит-
+    эпизод 6; see AE-7 for the endpoint itself)."""
+    return get_pool().get_stats()
 
 
 def get_connection() -> Iterator[Connection[Any]]:

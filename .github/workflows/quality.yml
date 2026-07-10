@@ -131,16 +131,19 @@ jobs:
       - name: Bootstrap runtime read models
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: python scripts/bootstrap_runtime_read_models.py
 
       - name: Restore demo country visibility for smoke checks
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: python scripts/dev_tools/restore_demo_countries.py --visible
 
       - name: Rebuild search index
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: python scripts/rebuild_search_index.py --all
 
       - name: Start API
@@ -157,6 +160,7 @@ jobs:
       - name: Bootstrap owner account for admin smoke checks
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: |
           python scripts/create_auth_user.py \
             --email ci-owner@example.local \
@@ -278,11 +282,13 @@ jobs:
       - name: Restore demo country visibility for E2E fixtures
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: python scripts/dev_tools/restore_demo_countries.py --visible
 
       - name: Rebuild search index
         env:
           DATABASE_URL: postgresql://country_atlas:change-me@localhost:5432/country_atlas
+          APP_ENV: local
         run: python scripts/rebuild_search_index.py --all
 
       - name: Start API

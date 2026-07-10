@@ -111,6 +111,7 @@ lerna-debug.log*
 *.backup
 *.sql.gz
 *.psql
+backups/
 postgres-data/
 pgdata/
 redis-data/

@@ -118,6 +118,34 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("retention-cleanup", "cleanup-retention.py"),
         directory=ROOT_DIR / "scripts",
     ),
+    ScriptInfo(
+        key="9",
+        filename="backup_postgres.py",
+        title="backup-postgres",
+        description=(
+            "Runs pg_dump against the running postgres service via "
+            "`docker compose exec` and writes a timestamped .sql file to "
+            "backups/postgres/. Accepts --output-dir, --service, and "
+            "--dry-run. Intended to run on a recurring schedule (cron/"
+            "systemd timer/CronJob) once a deployment target exists."
+        ),
+        aliases=("backup-db", "pg-backup"),
+        directory=ROOT_DIR / "scripts",
+    ),
+    ScriptInfo(
+        key="10",
+        filename="restore_postgres_check.py",
+        title="restore-postgres-check",
+        description=(
+            "Restores a pg_dump backup into a disposable scratch Postgres "
+            "container (never the real database), verifies "
+            "schema_migrations is populated, then discards the container. "
+            "Requires --backup-file. Accepts --dry-run. Intended as a "
+            "periodic backup-integrity smoke check."
+        ),
+        aliases=("restore-check", "pg-restore-check"),
+        directory=ROOT_DIR / "scripts",
+    ),
 ]
 
 DEFAULT_SCRIPT_KEY = "1"

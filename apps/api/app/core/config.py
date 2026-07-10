@@ -1,5 +1,5 @@
 from functools import lru_cache
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Literal
 
@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     security_hsts_enabled: bool = False
     notifier_internal_auth_token: str | None = None
     notifier_grpc_addr: str = "localhost:9090"
+    database_pool_min_size: int = 1
+    database_pool_max_size: int = 10
+    database_pool_timeout_seconds: float = 30.0
 
     @property
     def cors_origins(self) -> list[str]:
@@ -72,6 +75,30 @@ class Settings(BaseSettings):
         return {
             ip.strip() for ip in self.trusted_proxy_ips.split(",") if ip.strip()
         }
+
+    @model_validator(mode="after")
+    def _forbid_default_secrets_in_production(self) -> "Settings":
+        """P1-10, Аудит-эпизод 6: nothing stops the app from booting in
+        production with the same placeholder secrets docker-compose.yml
+        ships for local dev — fail loudly instead of running with a
+        guessable analytics salt or a weak/absent inter-service token."""
+        if self.app_env != "production":
+            return self
+        unsafe: list[str] = []
+        if "change-me" in self.database_url:
+            unsafe.append("database_url")
+        if self.analytics_salt == "local-dev-analytics-salt":
+            unsafe.append("analytics_salt")
+        if self.notifier_internal_auth_token in (None, "dev-grpc-token"):
+            unsafe.append("notifier_internal_auth_token")
+        if unsafe:
+            raise RuntimeError(
+                "Refusing to start with APP_ENV=production while these "
+                f"settings still hold their local-dev default: {', '.join(unsafe)}. "
+                "Set real values via environment variables or .env before "
+                "starting in production."
+            )
+        return self
 
 
 @lru_cache(maxsize=1)

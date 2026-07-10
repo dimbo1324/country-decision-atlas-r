@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -15,6 +16,15 @@ for import_path in (ROOT_DIR, API_DIR):
     import_path_str = str(import_path)
     if import_path_str not in sys.path:
         sys.path.insert(0, import_path_str)
+
+# `pnpm runtime:bootstrap` runs this on the host, outside Docker, against
+# the dockerized Postgres via its published port (Settings' local-dev
+# defaults already point there) - it never sets APP_ENV, so without this it
+# would inherit Settings.app_env's "production" default and trip the P1-10
+# fail-fast validator (Аудит-эпизод 6). A real production run of this script
+# already has APP_ENV=production set for other reasons (Secure cookie flag,
+# general rate limiter), so setdefault only ever applies to the local/CI case.
+os.environ.setdefault("APP_ENV", "local")
 
 from app.core.config import get_settings  # noqa: E402
 from app.services.platform_metrics_runtime import (  # noqa: E402
