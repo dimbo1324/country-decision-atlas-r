@@ -54,16 +54,27 @@ def _generate_user(
     )
 
 
+_DEFAULT_COMMENT_COUNT = 3
+_MODERATION_PROFILE_COMMENT_COUNT = 5
+
+
 def generate_country_content(
     *,
     country: SyntheticCountry,
     world_input: WorldInput,
     seed_factory: SeedFactory,
+    profile_slug: str = "balanced",
 ) -> CountryContent:
     """Generate the author, article, comments, and legal signal for one
     country, all tied to its existing Stage-2 event and source so that a
     recent legal signal is always reflected in the metric history and
-    related materials (spec section 7.2)."""
+    related materials (spec section 7.2).
+
+    The `moderation` profile generates more comments than other profiles
+    (still cycling through the same moderation statuses), giving manual
+    testers more comment volume and moderation-queue depth to work with —
+    the one content-shape difference the `moderation` profile's own
+    description promises (spec section 16)."""
     rng = seed_factory.rng("content", country.slug)
 
     author_user = _generate_user(
@@ -108,6 +119,11 @@ def generate_country_content(
         published_as_of=event.as_of,
     )
 
+    comment_count = (
+        _MODERATION_PROFILE_COMMENT_COUNT
+        if profile_slug == "moderation"
+        else _DEFAULT_COMMENT_COUNT
+    )
     comments = tuple(
         SyntheticComment(
             comment_id=f"comment-{country.slug}-{index}",
@@ -119,7 +135,7 @@ def generate_country_content(
                 index % len(_MODERATION_STATUSES)
             ],
         )
-        for index in range(3)
+        for index in range(comment_count)
     )
 
     legal_signal = SyntheticLegalSignal(

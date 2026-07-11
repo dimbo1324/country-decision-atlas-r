@@ -13,10 +13,17 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from scripts.synthetic_data.core.dataset_packager import (  # noqa: E402
+from scripts.synthetic_data.core.dataset_discovery import (  # noqa: E402
+    available_dataset_ids,
+    find_dataset_dir,
+    list_datasets,
+)
+from scripts.synthetic_data.core.dataset_prune import (  # noqa: E402
+    apply_prune,
+    plan_prune,
+)
+from scripts.synthetic_data.core.document_formats import (  # noqa: E402
     ALL_DOCUMENT_FORMATS,
-    package_dataset,
-    render_dataset_documents,
 )
 from scripts.synthetic_data.core.input_data import (  # noqa: E402
     InputDataError,
@@ -40,6 +47,7 @@ from scripts.synthetic_data.core.random_content import (  # noqa: E402
 )
 from scripts.synthetic_data.core.sql_loader import (  # noqa: E402
     SqlLoaderError,
+    ensure_not_production,
     execute_sql_file,
 )
 from scripts.synthetic_data.core.world_generator import (  # noqa: E402
@@ -61,8 +69,46 @@ from scripts.synthetic_data.core.world_validation import (  # noqa: E402
 
 _ALL_FORMATS_ALIAS = "all"
 _WORLD_COMMANDS = frozenset(
-    {"validate", "plan", "generate", "render", "load-sql", "cleanup-sql"}
+    {
+        "validate",
+        "plan",
+        "generate",
+        "render",
+        "load-sql",
+        "cleanup-sql",
+        "list",
+        "package",
+        "prune",
+        "schema",
+    }
 )
+# `dataset_packager` transitively imports reportlab/python-docx/openpyxl —
+# it is only imported (lazily, inside the relevant command functions) by
+# generate/render/package, so validate/plan/list/prune/schema stay usable
+# without those libraries installed (spec section 12).
+
+
+class _Report:
+    """Collects a command's output as both human-readable lines and a
+    structured dict, then emits exactly one of the two depending on
+    `--json`/`--quiet` — every command builds its result the same way
+    instead of sprinkling `print()` calls conditionally."""
+
+    def __init__(self, args: argparse.Namespace) -> None:
+        self._json = getattr(args, "json", False)
+        self._quiet = getattr(args, "quiet", False)
+        self.lines: list[str] = []
+        self.data: dict[str, object] = {}
+
+    def line(self, text: str) -> None:
+        self.lines.append(text)
+
+    def emit(self) -> None:
+        if self._json:
+            print(json.dumps(self.data, ensure_ascii=False, sort_keys=True))
+        elif not self._quiet:
+            for text in self.lines:
+                print(text)
 
 
 def _parse_formats(raw: str) -> list[FileFormat]:
@@ -72,6 +118,19 @@ def _parse_formats(raw: str) -> list[FileFormat]:
             if file_format not in formats:
                 formats.append(file_format)
     return formats
+
+
+def _add_output_flags(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Print one structured JSON object instead of human text.",
+    )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Suppress routine output (errors still go to stderr).",
+    )
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -171,7 +230,11 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Build and validate the world without writing output files.",
+        help=(
+            "Build and validate without writing files (generate/render), "
+            "or preview without connecting/deleting (load-sql/cleanup-sql/"
+            "prune)."
+        ),
     )
     parser.add_argument(
         "--formats",
@@ -185,16 +248,16 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         "--dataset",
         default=None,
         help=(
-            "Existing dataset_id to re-render documents for (render), or "
-            "load/cleanup SQL for (load-sql/cleanup-sql)."
+            "Existing dataset_id to re-render (render), load/cleanup SQL "
+            "for (load-sql/cleanup-sql), or repackage (package)."
         ),
     )
     parser.add_argument(
         "--confirm",
         action="store_true",
         help=(
-            "Required explicit confirmation for load-sql/cleanup-sql — "
-            "these connect to a real database."
+            "Required explicit confirmation for load-sql/cleanup-sql "
+            "(connects to a real database) and prune (deletes directories)."
         ),
     )
     parser.add_argument(
@@ -205,6 +268,13 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
             "(default: the DATABASE_URL environment variable)."
         ),
     )
+    parser.add_argument(
+        "--keep-last",
+        type=int,
+        default=None,
+        help="Number of newest datasets to keep; required by prune.",
+    )
+    _add_output_flags(parser)
     return parser
 
 
@@ -288,13 +358,34 @@ def _write_world_dataset(*, world: SyntheticWorld, output_root: Path) -> Path:
     return dataset_dir
 
 
+def _resolve_dataset_dir(args: argparse.Namespace) -> Path | None:
+    if not args.dataset:
+        return None
+    return find_dataset_dir(args.dataset, primary_root=args.output_root)
+
+
+def _dataset_not_found_error(args: argparse.Namespace) -> str:
+    known = available_dataset_ids(args.output_root, DEFAULT_OUTPUT_DATA_ROOT)
+    suffix = f"; known dataset ids: {', '.join(known)}" if known else ""
+    return (
+        f"dataset {args.dataset!r} not found under {args.output_root} "
+        f"(also checked {DEFAULT_OUTPUT_DATA_ROOT}){suffix}"
+    )
+
+
 def _render_and_package(
     *,
     world: SyntheticWorld,
     world_errors: tuple[str, ...],
     dataset_dir: Path,
     formats: tuple[str, ...],
+    report: _Report,
 ) -> None:
+    from scripts.synthetic_data.core.dataset_packager import (
+        package_dataset,
+        render_dataset_documents,
+    )
+
     locale_corpus = load_locale_corpus()
     documents = render_dataset_documents(
         world=world,
@@ -308,10 +399,14 @@ def _render_and_package(
         dataset_dir=dataset_dir,
         documents=documents,
     )
-    print(
+    report.line(
         f"rendered {len(documents)} documents -> manifest="
         f"{result.manifest_path} zip={result.zip_path}"
     )
+    report.data["documents_rendered"] = len(documents)
+    report.data["manifest_path"] = str(result.manifest_path)
+    report.data["zip_path"] = str(result.zip_path)
+    report.data["artifact_errors"] = list(result.artifact_errors)
     if result.artifact_errors:
         print(
             f"WARNING: {len(result.artifact_errors)} artifact validation "
@@ -320,18 +415,15 @@ def _render_and_package(
         )
 
 
-def _run_render(args: argparse.Namespace) -> int:
+def _run_render(args: argparse.Namespace, report: _Report) -> int:
     if not args.dataset:
         print("ERROR: render requires --dataset <dataset_id>", file=sys.stderr)
         return 2
-    dataset_dir = args.output_root / args.dataset
-    canonical_path = dataset_dir / "canonical" / "synthetic_world.json"
-    if not canonical_path.exists():
-        print(
-            f"ERROR: no canonical world found at {canonical_path}",
-            file=sys.stderr,
-        )
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
         return 2
+    canonical_path = dataset_dir / "canonical" / "synthetic_world.json"
     try:
         formats = _parse_document_formats(args.formats)
     except ValueError as error:
@@ -343,30 +435,217 @@ def _run_render(args: argparse.Namespace) -> int:
         )
         errors = validate_world(world)
         if args.dry_run:
-            print(
+            report.line(
                 f"[dry-run] would re-render {dataset_dir} "
                 f"formats={','.join(formats)}"
             )
+            report.data.update(
+                {
+                    "dry_run": True,
+                    "dataset_dir": str(dataset_dir),
+                    "formats": list(formats),
+                }
+            )
+            report.emit()
             return 0
         _render_and_package(
             world=world,
             world_errors=errors,
             dataset_dir=dataset_dir,
             formats=formats,
+            report=report,
         )
+        report.data["dataset_id"] = world.metadata.dataset_id
+        report.emit()
         return 0
     except (ValueError, WorldValidationError, LocaleCorpusError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
 
 
-def _run_sql_command(args: argparse.Namespace) -> int:
+def _run_package(args: argparse.Namespace, report: _Report) -> int:
+    if not args.dataset:
+        print("ERROR: package requires --dataset <dataset_id>", file=sys.stderr)
+        return 2
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+    canonical_path = dataset_dir / "canonical" / "synthetic_world.json"
+    try:
+        world = SyntheticWorld.model_validate_json(
+            canonical_path.read_text(encoding="utf-8")
+        )
+    except ValueError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+    errors = validate_world(world)
+    if args.dry_run:
+        report.line(f"[dry-run] would repackage {dataset_dir}")
+        report.data.update({"dry_run": True, "dataset_dir": str(dataset_dir)})
+        report.emit()
+        return 0
+
+    from scripts.synthetic_data.core.dataset_packager import (
+        discover_existing_documents,
+        package_dataset,
+    )
+
+    documents = discover_existing_documents(
+        world=world, dataset_dir=dataset_dir
+    )
+    result = package_dataset(
+        world=world,
+        world_errors=errors,
+        dataset_dir=dataset_dir,
+        documents=documents,
+    )
+    report.line(
+        f"repackaged {len(documents)} existing documents -> manifest="
+        f"{result.manifest_path} zip={result.zip_path}"
+    )
+    report.data.update(
+        {
+            "dataset_id": world.metadata.dataset_id,
+            "documents_found": len(documents),
+            "manifest_path": str(result.manifest_path),
+            "zip_path": str(result.zip_path),
+            "artifact_errors": list(result.artifact_errors),
+        }
+    )
+    report.emit()
+    return 0
+
+
+def _run_list(args: argparse.Namespace, report: _Report) -> int:
+    datasets = list_datasets(args.output_root)
+    report.data["datasets"] = [
+        {
+            "dataset_id": summary.dataset_id,
+            "seed": summary.seed,
+            "profile": summary.profile,
+            "generated_on": summary.generated_on,
+            "country_count": summary.country_count,
+            "size_bytes": summary.size_bytes,
+            "path": str(summary.path),
+        }
+        for summary in datasets
+    ]
+    if not datasets:
+        report.line(f"no datasets found under {args.output_root}")
+    for summary in datasets:
+        size_mb = summary.size_bytes / (1024 * 1024)
+        report.line(
+            f"{summary.dataset_id}  seed={summary.seed} "
+            f"profile={summary.profile} generated_on={summary.generated_on} "
+            f"countries={summary.country_count} size={size_mb:.1f}MB"
+        )
+    report.emit()
+    return 0
+
+
+def _run_prune(args: argparse.Namespace, report: _Report) -> int:
+    if args.keep_last is None:
+        print("ERROR: prune requires --keep-last N", file=sys.stderr)
+        return 2
+    try:
+        plan = plan_prune(args.output_root, keep_last=args.keep_last)
+    except ValueError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    report.data["kept"] = list(plan.kept)
+    report.data["removed"] = list(plan.removed)
+    if args.dry_run:
+        report.line(
+            f"[dry-run] would keep {len(plan.kept)}, "
+            f"remove {len(plan.removed)}: {', '.join(plan.removed) or '(none)'}"
+        )
+        report.data["dry_run"] = True
+        report.emit()
+        return 0
+    if plan.removed and not args.confirm:
+        print(
+            "ERROR: prune requires --confirm to actually delete "
+            f"{len(plan.removed)} dataset(s); use --dry-run to preview",
+            file=sys.stderr,
+        )
+        return 2
+
+    apply_prune(args.output_root, plan)
+    report.line(
+        f"kept {len(plan.kept)}, removed {len(plan.removed)}: "
+        f"{', '.join(plan.removed) or '(none)'}"
+    )
+    report.emit()
+    return 0
+
+
+def _run_schema() -> int:
+    schema = SyntheticWorld.model_json_schema()
+    print(json.dumps(schema, indent=2, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
+def _run_sql_command(args: argparse.Namespace, report: _Report) -> int:
+    """`load-sql`/`cleanup-sql`. Flag validation and the production guard
+    both run before the dataset directory is resolved from disk — a
+    misconfigured or forbidden invocation must be rejected the same way
+    whether or not the named dataset happens to exist locally, and never
+    later than the point where a real connection would be opened."""
     if not args.dataset:
         print(
             f"ERROR: {args.command} requires --dataset <dataset_id>",
             file=sys.stderr,
         )
         return 2
+    database_url = args.database_url or os.environ.get("DATABASE_URL")
+    if not database_url and not args.dry_run:
+        print(
+            "ERROR: no database URL given (--database-url or DATABASE_URL "
+            "environment variable)",
+            file=sys.stderr,
+        )
+        return 2
+    target = (
+        database_url.split("@")[-1] if database_url else "(no database url)"
+    )
+    sql_filename = (
+        "seed_synthetic_world.sql"
+        if args.command == "load-sql"
+        else "cleanup_synthetic_world.sql"
+    )
+
+    if args.dry_run:
+        try:
+            ensure_not_production()
+            blocked = False
+        except SqlLoaderError as error:
+            blocked = True
+            report.line(f"[dry-run] would refuse: {error}")
+        dataset_dir = _resolve_dataset_dir(args)
+        sql_path = (
+            dataset_dir / "sql" / sql_filename
+            if dataset_dir is not None
+            else args.output_root / args.dataset / "sql" / sql_filename
+        )
+        if not blocked:
+            report.line(
+                f"[dry-run] would apply {sql_path} to {target} "
+                f"(dataset={args.dataset})"
+            )
+        report.data.update(
+            {
+                "dry_run": True,
+                "dataset_id": args.dataset,
+                "sql_path": str(sql_path),
+                "target": target,
+                "blocked_by_production_guard": blocked,
+            }
+        )
+        report.emit()
+        return 2 if blocked else 0
+
     if not args.confirm:
         print(
             f"ERROR: {args.command} requires --confirm — it connects to a "
@@ -374,48 +653,71 @@ def _run_sql_command(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 2
-    database_url = args.database_url or os.environ.get("DATABASE_URL")
-    if not database_url:
-        print(
-            "ERROR: no database URL given (--database-url or DATABASE_URL "
-            "environment variable)",
-            file=sys.stderr,
-        )
+    try:
+        ensure_not_production()
+    except SqlLoaderError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
         return 2
 
-    dataset_dir = args.output_root / args.dataset
-    sql_filename = (
-        "seed_synthetic_world.sql"
-        if args.command == "load-sql"
-        else "cleanup_synthetic_world.sql"
-    )
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
     sql_path = dataset_dir / "sql" / sql_filename
+    assert database_url is not None  # guaranteed by the check above
     try:
         execute_sql_file(sql_path, database_url=database_url)
     except SqlLoaderError as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
-    print(
-        f"{args.command}: applied {sql_path} to {database_url.split('@')[-1]}"
+    report.line(f"{args.command}: applied {sql_path} to {target}")
+    report.data.update(
+        {
+            "dataset_id": args.dataset,
+            "sql_path": str(sql_path),
+            "target": target,
+            "applied": True,
+        }
     )
+    report.emit()
     return 0
 
 
 def _run_world(argv: list[str]) -> int:
     parser = build_world_arg_parser()
     args = parser.parse_args(argv)
+    report = _Report(args)
+
     if args.command == "render":
-        return _run_render(args)
+        return _run_render(args, report)
+    if args.command == "package":
+        return _run_package(args, report)
+    if args.command == "list":
+        return _run_list(args, report)
+    if args.command == "prune":
+        return _run_prune(args, report)
+    if args.command == "schema":
+        return _run_schema()
     if args.command in ("load-sql", "cleanup-sql"):
-        return _run_sql_command(args)
+        return _run_sql_command(args, report)
     try:
         input_data = load_world_input(args.world_input)
         if args.command == "validate":
-            print(
+            report.line(
                 "valid world input "
                 f"schema={input_data.schema_version} "
                 f"profiles={','.join(profile.slug for profile in input_data.profiles)}"
             )
+            report.data.update(
+                {
+                    "status": "valid",
+                    "schema_version": input_data.schema_version,
+                    "profiles": [
+                        profile.slug for profile in input_data.profiles
+                    ],
+                }
+            )
+            report.emit()
             return 0
 
         seed = _resolve_seed(args.seed)
@@ -432,7 +734,7 @@ def _run_world(argv: list[str]) -> int:
         )
         if errors:
             raise WorldValidationError("; ".join(errors))
-        print(
+        report.line(
             f"dataset_id={world.metadata.dataset_id} seed={seed} "
             f"profile={world.metadata.profile} countries={len(world.countries)} "
             f"users={len(world.users)} authors={len(world.authors)} "
@@ -441,24 +743,59 @@ def _run_world(argv: list[str]) -> int:
             f"document_recipes={len(world.document_recipes)} "
             f"scenarios={len(world.scenarios)}"
         )
+        report.data.update(
+            {
+                "dataset_id": world.metadata.dataset_id,
+                "seed": seed,
+                "profile": world.metadata.profile,
+                "countries": len(world.countries),
+                "users": len(world.users),
+                "authors": len(world.authors),
+                "articles": len(world.articles),
+                "comments": len(world.comments),
+                "legal_signals": len(world.legal_signals),
+                "document_recipes": len(world.document_recipes),
+                "scenarios": len(world.scenarios),
+            }
+        )
         if args.command == "plan" or args.dry_run:
             for country in world.countries:
-                print(f"- {country.name} ({country.code}): {country.archetype}")
+                report.line(
+                    f"- {country.name} ({country.code}): {country.archetype}"
+                )
             for scenario in world.scenarios:
-                print(f"  scenario: {scenario.title} ({scenario.category})")
+                report.line(
+                    f"  scenario: {scenario.title} ({scenario.category})"
+                )
+            report.data["country_list"] = [
+                {
+                    "name": country.name,
+                    "code": country.code,
+                    "archetype": country.archetype,
+                }
+                for country in world.countries
+            ]
+            report.data["scenario_list"] = [
+                {"title": scenario.title, "category": scenario.category}
+                for scenario in world.scenarios
+            ]
+            report.emit()
             return 0
 
         dataset_dir = _write_world_dataset(
             world=world, output_root=args.output_root
         )
-        print(f"generated canonical world -> {dataset_dir}")
+        report.line(f"generated canonical world -> {dataset_dir}")
+        report.data["dataset_dir"] = str(dataset_dir)
         formats = _parse_document_formats(args.formats)
         _render_and_package(
             world=world,
             world_errors=errors,
             dataset_dir=dataset_dir,
             formats=formats,
+            report=report,
         )
+        report.emit()
         return 0
     except (
         ValueError,

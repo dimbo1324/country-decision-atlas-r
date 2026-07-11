@@ -187,7 +187,9 @@ def test_load_sql_without_confirm_flag_fails_cleanly(tmp_path: Path) -> None:
 
 
 def test_load_sql_refuses_in_production(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     monkeypatch.setenv("APP_ENV", "production")
     monkeypatch.setenv("DATABASE_URL", "postgresql://unreachable-host/db")
@@ -204,6 +206,10 @@ def test_load_sql_refuses_in_production(
     )
 
     assert exit_code == 2
+    # The production guard must fire before dataset autodiscovery even
+    # looks at disk — a nonexistent "syn-doesnotmatter" dataset must not
+    # produce a "not found" error that masks the production block.
+    assert "production" in capsys.readouterr().err.lower()
 
 
 def test_load_sql_without_database_url_fails_cleanly(
@@ -224,3 +230,350 @@ def test_load_sql_without_database_url_fails_cleanly(
     )
 
     assert exit_code == 2
+
+
+def test_load_sql_dry_run_previews_target_without_connecting(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("APP_ENV", "local")
+
+    exit_code = cli.main(
+        [
+            "load-sql",
+            "--dataset",
+            "syn-doesnotmatter",
+            "--output-root",
+            str(tmp_path),
+            "--database-url",
+            "postgresql://user@localhost:5433/db",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+
+
+def test_load_sql_dry_run_reports_production_block_without_dataset_lookup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("APP_ENV", raising=False)
+
+    exit_code = cli.main(
+        [
+            "load-sql",
+            "--dataset",
+            "syn-doesnotmatter",
+            "--output-root",
+            str(tmp_path),
+            "--database-url",
+            "postgresql://user@localhost:5433/db",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_schema_prints_synthetic_world_json_schema() -> None:
+    exit_code = cli.main(["schema"])
+
+    assert exit_code == 0
+
+
+def test_list_reports_empty_output_root(tmp_path: Path) -> None:
+    exit_code = cli.main(["list", "--output-root", str(tmp_path)])
+
+    assert exit_code == 0
+
+
+def test_list_reports_generated_dataset(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "1",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+
+    exit_code = cli.main(["list", "--output-root", str(tmp_path), "--json"])
+
+    assert exit_code == 0
+
+
+def test_package_rebuilds_manifest_without_rerendering(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "2",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+    dataset_dir = next(tmp_path.iterdir())
+    dataset_id = dataset_dir.name
+    manifest_before = (dataset_dir / "manifest.json").read_text(
+        encoding="utf-8"
+    )
+    documents_before = sorted(
+        path.name for path in (dataset_dir / "documents").rglob("*.json")
+    )
+
+    exit_code = cli.main(
+        ["package", "--dataset", dataset_id, "--output-root", str(tmp_path)]
+    )
+
+    assert exit_code == 0
+    documents_after = sorted(
+        path.name for path in (dataset_dir / "documents").rglob("*.json")
+    )
+    assert documents_after == documents_before
+    manifest_after = (dataset_dir / "manifest.json").read_text(encoding="utf-8")
+    assert (
+        json.loads(manifest_after)["dataset_id"]
+        == json.loads(manifest_before)["dataset_id"]
+    )
+
+
+def test_package_dry_run_does_not_touch_manifest(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "3",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+    dataset_dir = next(tmp_path.iterdir())
+    dataset_id = dataset_dir.name
+    manifest_before_mtime = (dataset_dir / "manifest.json").stat().st_mtime
+
+    exit_code = cli.main(
+        [
+            "package",
+            "--dataset",
+            dataset_id,
+            "--output-root",
+            str(tmp_path),
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+    assert (
+        dataset_dir / "manifest.json"
+    ).stat().st_mtime == manifest_before_mtime
+
+
+def test_package_without_dataset_flag_fails_cleanly() -> None:
+    exit_code = cli.main(["package"])
+
+    assert exit_code == 2
+
+
+def test_prune_requires_keep_last(tmp_path: Path) -> None:
+    exit_code = cli.main(["prune", "--output-root", str(tmp_path)])
+
+    assert exit_code == 2
+
+
+def test_prune_dry_run_removes_nothing(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "4",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+
+    exit_code = cli.main(
+        [
+            "prune",
+            "--output-root",
+            str(tmp_path),
+            "--keep-last",
+            "0",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+    assert list(tmp_path.iterdir())
+
+
+def test_prune_without_confirm_does_not_delete(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "5",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+
+    exit_code = cli.main(
+        ["prune", "--output-root", str(tmp_path), "--keep-last", "0"]
+    )
+
+    assert exit_code == 2
+    assert list(tmp_path.iterdir())
+
+
+def test_prune_with_confirm_deletes(tmp_path: Path) -> None:
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "6",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+
+    exit_code = cli.main(
+        [
+            "prune",
+            "--output-root",
+            str(tmp_path),
+            "--keep-last",
+            "0",
+            "--confirm",
+        ]
+    )
+
+    assert exit_code == 0
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_generate_json_flag_prints_a_single_json_object(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "7",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+            "--json",
+        ]
+    )
+
+    assert exit_code == 0
+    out = capsys.readouterr().out.strip()
+    payload = json.loads(out)
+    assert payload["dataset_id"].startswith("syn-")
+    assert "manifest_path" in payload
+
+
+def test_quiet_flag_suppresses_routine_output(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        [
+            "plan",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "8",
+            "--output-root",
+            str(tmp_path),
+            "--quiet",
+        ]
+    )
+
+    assert exit_code == 0
+    assert capsys.readouterr().out == ""
+
+
+def test_render_autodiscovers_dataset_from_default_output_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.synthetic_data.core import dataset_discovery
+
+    # `find_dataset_dir` reads its own module-local binding of
+    # DEFAULT_OUTPUT_DATA_ROOT (imported at module load time), so that is
+    # the name that must be patched for the fallback lookup to see it.
+    monkeypatch.setattr(dataset_discovery, "DEFAULT_OUTPUT_DATA_ROOT", tmp_path)
+
+    generate_exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "9",
+            "--output-root",
+            str(tmp_path),
+            "--formats",
+            "json",
+        ]
+    )
+    assert generate_exit_code == 0
+    dataset_id = next(tmp_path.iterdir()).name
+
+    other_root = tmp_path / "unrelated-empty-root"
+    exit_code = cli.main(
+        [
+            "render",
+            "--dataset",
+            dataset_id,
+            "--output-root",
+            str(other_root),
+            "--formats",
+            "txt",
+        ]
+    )
+
+    assert exit_code == 0
+
+
+def test_render_reports_known_dataset_ids_when_not_found(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        ["render", "--dataset", "syn-ghost", "--output-root", str(tmp_path)]
+    )
+
+    assert exit_code == 2
+    assert "not found" in capsys.readouterr().err

@@ -8,6 +8,7 @@ from scripts.synthetic_data.archive.zip_archiver import create_zip_archive
 from scripts.synthetic_data.core.artifact_validation import (
     validate_generated_documents,
 )
+from scripts.synthetic_data.core.document_formats import ALL_DOCUMENT_FORMATS
 from scripts.synthetic_data.core.document_rendering.context import (
     GeneratedDocument,
     RenderContext,
@@ -43,8 +44,6 @@ from scripts.synthetic_data.core.sql_fixture import (
 )
 from scripts.synthetic_data.core.world_models import SyntheticWorld
 
-
-ALL_DOCUMENT_FORMATS: tuple[str, ...] = ("json", "txt", "xlsx", "docx", "pdf")
 
 _DOCX_RENDERERS = {
     "copyable": render_docx_copyable,
@@ -95,6 +94,44 @@ def render_dataset_documents(
                 documents.append(
                     renderer(ctx, output_dir=locale_dir / "pdf" / mode)
                 )
+    return documents
+
+
+def discover_existing_documents(
+    *, world: SyntheticWorld, dataset_dir: Path
+) -> list[GeneratedDocument]:
+    """Reconstruct `GeneratedDocument` entries for files already rendered
+    on disk, without rendering anything — lets `package` repackage an
+    existing dataset's manifest/ZIP cheaply instead of re-running every
+    renderer."""
+    documents_dir = dataset_dir / "documents"
+    if not documents_dir.exists():
+        return []
+    recipes_by_id = {
+        recipe.recipe_id: recipe for recipe in world.document_recipes
+    }
+    documents: list[GeneratedDocument] = []
+    for path in sorted(documents_dir.rglob("*")):
+        if not path.is_file():
+            continue
+        recipe = recipes_by_id.get(path.stem)
+        if recipe is None:
+            continue
+        parts = path.relative_to(documents_dir).parts
+        locale, file_format = parts[0], parts[1]
+        mode = parts[2] if file_format in ("docx", "pdf") else "n/a"
+        documents.append(
+            GeneratedDocument(
+                path=path,
+                file_format=file_format,
+                mode=mode,
+                locale=locale,
+                country_id=recipe.country_id,
+                recipe_id=recipe.recipe_id,
+                related_artifact_ids=(recipe.country_id,),
+                size_bytes=path.stat().st_size,
+            )
+        )
     return documents
 
 

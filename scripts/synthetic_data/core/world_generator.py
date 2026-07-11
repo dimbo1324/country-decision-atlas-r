@@ -95,6 +95,7 @@ class WorldGenerator:
                 country=country,
                 world_input=self._input_data,
                 seed_factory=seed_factory,
+                profile_slug=profile.slug,
             )
             for country in countries
         }
@@ -192,15 +193,27 @@ class WorldGenerator:
             uuid.uuid5(uuid.NAMESPACE_URL, f"{dataset_id}:country:{slug}")
         )
         current_metrics = {
-            metric: rng.randint(
-                archetype.metric_ranges[metric].minimum,
-                archetype.metric_ranges[metric].maximum,
+            metric: self._draw_metric(
+                rng=rng,
+                metric=metric,
+                minimum=archetype.metric_ranges[metric].minimum,
+                maximum=archetype.metric_ranges[metric].maximum,
+                profile_slug=profile.slug,
             )
             for metric in REQUIRED_METRICS
         }
         event_metric = rng.choice(REQUIRED_METRICS[:-1])
         delta = rng.randint(2, profile.event_intensity + 3)
-        direction = "improved" if rng.choice((True, False)) else "declined"
+        if profile.slug == "crisis":
+            # Near-guaranteed decline (spec section 16: "больше изменений,
+            # рисков... "), instead of the ordinary 50/50 coin flip. A
+            # distinct branch — not just a different probability fed into
+            # the same rng.choice — so every other profile keeps drawing
+            # from the RNG stream exactly as before (balanced must stay
+            # byte-for-byte reproducible with pre-existing snapshots).
+            direction = "declined" if rng.random() < 0.9 else "improved"
+        else:
+            direction = "improved" if rng.choice((True, False)) else "declined"
         if archetype.slug == "recovering_country":
             direction = "improved"
         history = self._metric_history(
@@ -284,6 +297,29 @@ class WorldGenerator:
             MetricSnapshot(as_of=_HISTORY_DATES[1], metrics=midpoint),
             MetricSnapshot(as_of=_HISTORY_DATES[2], metrics=current),
         )
+
+    @staticmethod
+    def _draw_metric(
+        *,
+        rng: random.Random,
+        metric: str,
+        minimum: int,
+        maximum: int,
+        profile_slug: str,
+    ) -> int:
+        """Skew the draw within an archetype's own `[minimum, maximum]` for
+        the profiles whose section-16 description promises a directional
+        bias, without ever widening the range itself. Every archetype
+        already keeps at least one metric's ceiling below 70 (e.g.
+        `migration_openness` tops out at 68 for `stable_technical_expensive`),
+        so skewing other metrics upward for `optimistic` can never produce
+        an all-metrics->=70 country — the "no perfect country" invariant
+        stays structurally guaranteed by the archetype ranges themselves."""
+        if profile_slug == "optimistic":
+            minimum = minimum + (maximum - minimum) // 3
+        elif profile_slug == "data_quality" and metric == "data_confidence":
+            maximum = minimum + (maximum - minimum) // 2
+        return rng.randint(minimum, maximum)
 
     @staticmethod
     def _strengths_and_risks(

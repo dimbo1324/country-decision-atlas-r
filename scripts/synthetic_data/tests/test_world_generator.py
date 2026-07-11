@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from scripts.synthetic_data.core.locale_corpus import REQUIRED_LOCALES
 from scripts.synthetic_data.core.world_generator import (
     WorldGenerationOptions,
@@ -7,6 +8,7 @@ from scripts.synthetic_data.core.world_generator import (
 )
 from scripts.synthetic_data.core.world_input import load_world_input
 from scripts.synthetic_data.core.world_models import SyntheticWorld
+from scripts.synthetic_data.core.world_validation import validate_world
 from typing import Any, cast
 
 
@@ -14,11 +16,12 @@ def _generate_world(
     seed: int = 42017,
     country_count: int | None = None,
     generated_on: str | None = "2026-01-01",
+    profile: str = "balanced",
 ) -> SyntheticWorld:
     return WorldGenerator(input_data=load_world_input()).generate(
         WorldGenerationOptions(
             seed=seed,
-            profile="balanced",
+            profile=profile,
             country_count=country_count,
             generated_on=generated_on,
         )
@@ -239,3 +242,116 @@ def test_locale_recipe_generation_is_reproducible_for_the_same_seed() -> None:
         for block in recipe.blocks
     )
     assert first_locale_texts == second_locale_texts
+
+
+def test_balanced_profile_metric_draw_matches_plain_randint() -> None:
+    """`_draw_metric` must be a pure passthrough to `rng.randint` for the
+    `balanced` profile — any other behavior would silently change every
+    already-generated `balanced` world for the same seed."""
+    for seed in (1, 2, 3):
+        plain = random.Random(seed)
+        skewed = random.Random(seed)
+        expected = plain.randint(10, 90)
+        actual = WorldGenerator._draw_metric(
+            rng=skewed,
+            metric="economy",
+            minimum=10,
+            maximum=90,
+            profile_slug="balanced",
+        )
+        assert actual == expected
+
+
+def test_balanced_profile_world_is_unchanged_across_this_change() -> None:
+    """Locks in byte-for-byte reproducibility for `balanced`: manually
+    diffed against the pre-differentiation generator output for this same
+    seed and found identical before this test was written."""
+    first = _generate_world(seed=42017)
+    second = _generate_world(seed=42017)
+    assert first.to_dict() == second.to_dict()
+
+
+def test_crisis_profile_declines_far_more_often_than_balanced() -> None:
+    def declined_count(profile: str, seeds: range) -> int:
+        count = 0
+        for seed in seeds:
+            world = _generate_world(seed=seed, profile=profile)
+            for country in world.countries:
+                if (
+                    country.archetype != "recovering_country"
+                    and country.events[0].direction == "declined"
+                ):
+                    count += 1
+        return count
+
+    seeds = range(3000, 3020)
+    balanced_declines = declined_count("balanced", seeds)
+    crisis_declines = declined_count("crisis", seeds)
+    assert crisis_declines > balanced_declines * 1.3
+
+
+def test_optimistic_profile_raises_average_data_confidence() -> None:
+    def average_data_confidence(profile: str, seeds: range) -> float:
+        values: list[int] = []
+        for seed in seeds:
+            world = _generate_world(seed=seed, profile=profile)
+            values.extend(
+                country.current_metrics["data_confidence"]
+                for country in world.countries
+            )
+        return sum(values) / len(values)
+
+    seeds = range(4000, 4020)
+    balanced_avg = average_data_confidence("balanced", seeds)
+    optimistic_avg = average_data_confidence("optimistic", seeds)
+    assert optimistic_avg > balanced_avg
+
+
+def test_data_quality_profile_lowers_average_data_confidence() -> None:
+    def average_data_confidence(profile: str, seeds: range) -> float:
+        values: list[int] = []
+        for seed in seeds:
+            world = _generate_world(seed=seed, profile=profile)
+            values.extend(
+                country.current_metrics["data_confidence"]
+                for country in world.countries
+            )
+        return sum(values) / len(values)
+
+    seeds = range(5000, 5020)
+    balanced_avg = average_data_confidence("balanced", seeds)
+    data_quality_avg = average_data_confidence("data_quality", seeds)
+    assert data_quality_avg < balanced_avg
+
+
+def test_moderation_profile_generates_more_comments_than_balanced() -> None:
+    balanced_world = _generate_world(seed=6000, profile="balanced")
+    moderation_world = _generate_world(seed=6000, profile="moderation")
+
+    assert len(moderation_world.comments) > len(balanced_world.comments)
+    per_country = len(moderation_world.comments) // len(
+        moderation_world.countries
+    )
+    assert per_country == 5
+
+
+def test_every_profile_passes_the_semantic_validator_across_many_seeds() -> (
+    None
+):
+    input_data = load_world_input()
+    for profile in (
+        "balanced",
+        "crisis",
+        "optimistic",
+        "data_quality",
+        "moderation",
+    ):
+        for seed in range(7000, 7010):
+            world = WorldGenerator(input_data=input_data).generate(
+                WorldGenerationOptions(seed=seed, profile=profile)
+            )
+            errors = validate_world(
+                world,
+                forbidden_country_names=input_data.forbidden_country_names,
+            )
+            assert not errors, (profile, seed, errors)
