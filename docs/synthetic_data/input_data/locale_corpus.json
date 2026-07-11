@@ -8,25 +8,41 @@
       "direction": "ltr",
       "language_group": "Indo-European (Germanic)",
       "fictional_notice": "SYNTHETIC TEST DATA — FICTIONAL COUNTRIES AND PERSONS — NOT FOR PRODUCTION USE",
-      "given_names": ["Alex", "Sam", "Jordan", "Riley", "Casey", "Morgan"],
-      "family_names": ["Voss", "Kade", "Renn", "Solis", "Marek", "Dahl"],
+      "given_names": ["Alex", "Sam", "Jordan", "Riley", "Casey", "Morgan", "Skyler", "Rowan", "Phoenix", "Emerson", "Hayden", "Peyton", "Sawyer", "Kendall"],
+      "family_names": ["Voss", "Kade", "Renn", "Solis", "Marek", "Dahl", "Bennett", "Foster", "Hayes", "Doyle", "Whitman", "Sherwood", "Pierce", "Callahan"],
       "blocks": {
         "country_intro": [
           "{country_name} is a fictional country used only for local testing.",
-          "This overview of {country_name} is generated test data, not a real place."
+          "This overview of {country_name} is generated test data, not a real place.",
+          "{country_name} does not correspond to any real place; all content here is fabricated for testing.",
+          "The material below describing {country_name} was generated automatically and carries no real-world meaning.",
+          "{country_name} exists only within this test dataset and was invented for QA purposes.",
+          "This write-up of {country_name} is synthetic filler content, not a genuine country profile."
         ],
         "country_risk_summary": [
           "For {country_name}, the main limiting factor remains {risk_label}.",
-          "When assessing {country_name}, note the risk factor: {risk_label}."
+          "When assessing {country_name}, note the risk factor: {risk_label}.",
+          "{country_name} still struggles with {risk_label}.",
+          "One recurring concern for {country_name} is {risk_label}.",
+          "Observers repeatedly point to {risk_label} as a weak spot for {country_name}.",
+          "{country_name}'s outlook is tempered by {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} performs strongly on {strength_label}.",
-          "A notable strength of {country_name} is {strength_label}."
+          "A notable strength of {country_name} is {strength_label}.",
+          "{country_name} consistently ranks well for {strength_label}.",
+          "Reviewers often highlight {country_name}'s {strength_label}.",
+          "{country_name} has built a solid reputation around {strength_label}.",
+          "A recurring positive for {country_name} is {strength_label}."
         ]
       },
       "comment_templates": [
         "This matches what I've read about {country_name} recently.",
-        "Not sure this fully reflects the current situation in {country_name}."
+        "Not sure this fully reflects the current situation in {country_name}.",
+        "I've heard similar things about {country_name} before.",
+        "This lines up with other reports on {country_name} I've seen.",
+        "Does anyone have more recent information about {country_name}?",
+        "Interesting to see this data point for {country_name}."
       ],
       "sample_short": "Test data only.",
       "sample_long": "This long-form paragraph exists to check that word wrapping, hyphenation, and page breaks behave correctly across several lines of English text.",
@@ -42,25 +58,41 @@
       "direction": "ltr",
       "language_group": "Indo-European (Romance)",
       "fictional_notice": "DATOS DE PRUEBA SINTÉTICOS — PAÍSES Y PERSONAS FICTICIOS — NO USAR EN PRODUCCIÓN",
-      "given_names": ["María", "Diego", "Lucía", "Pablo", "Sofía", "Iván"],
-      "family_names": ["Alonso", "Vidal", "Peña", "Bravo", "Roldán", "Castaño"],
+      "given_names": ["María", "Diego", "Lucía", "Pablo", "Sofía", "Iván", "Elena", "Marcos", "Carmen", "Álvaro", "Rocío", "Sergio", "Beatriz", "Nicolás"],
+      "family_names": ["Alonso", "Vidal", "Peña", "Bravo", "Roldán", "Castaño", "Herrera", "Gallardo", "Cabrera", "Montoya", "Serrano", "Espinosa", "Cordero", "Aguilar"],
       "blocks": {
         "country_intro": [
           "{country_name} es un país ficticio usado solo para pruebas locales.",
-          "Esta ficha de {country_name} son datos de prueba generados, no un lugar real."
+          "Esta ficha de {country_name} son datos de prueba generados, no un lugar real.",
+          "{country_name} no corresponde a ningún lugar real; todo el contenido aquí es ficticio con fines de prueba.",
+          "El siguiente material sobre {country_name} se generó automáticamente y no tiene significado real.",
+          "{country_name} solo existe dentro de este conjunto de datos de prueba y fue inventado para control de calidad.",
+          "Esta descripción de {country_name} es contenido sintético de relleno, no un perfil de país real."
         ],
         "country_risk_summary": [
           "En {country_name}, el principal factor limitante sigue siendo {risk_label}.",
-          "Al evaluar {country_name}, conviene tener en cuenta el riesgo: {risk_label}."
+          "Al evaluar {country_name}, conviene tener en cuenta el riesgo: {risk_label}.",
+          "{country_name} sigue enfrentando dificultades relacionadas con {risk_label}.",
+          "Una preocupación recurrente para {country_name} es {risk_label}.",
+          "Los analistas señalan repetidamente {risk_label} como un punto débil de {country_name}.",
+          "Las perspectivas de {country_name} se ven moderadas por {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} destaca especialmente en {strength_label}.",
-          "Un punto fuerte de {country_name} es {strength_label}."
+          "Un punto fuerte de {country_name} es {strength_label}.",
+          "{country_name} obtiene constantemente buenos resultados en {strength_label}.",
+          "Los analistas suelen destacar el {strength_label} de {country_name}.",
+          "{country_name} se ha ganado una sólida reputación en torno a {strength_label}.",
+          "Un aspecto positivo recurrente de {country_name} es {strength_label}."
         ]
       },
       "comment_templates": [
         "Esto coincide con lo que he leído sobre {country_name} últimamente.",
-        "No estoy seguro de que esto refleje bien la situación actual en {country_name}."
+        "No estoy seguro de que esto refleje bien la situación actual en {country_name}.",
+        "He escuchado cosas similares sobre {country_name} antes.",
+        "Esto coincide con otros informes que he visto sobre {country_name}.",
+        "¿Alguien tiene información más reciente sobre {country_name}?",
+        "Interesante ver este dato sobre {country_name}."
       ],
       "sample_short": "Solo datos de prueba.",
       "sample_long": "Este párrafo largo existe para comprobar que el ajuste de línea y los saltos de página funcionan correctamente en varias líneas de texto en español.",
@@ -76,25 +108,41 @@
       "direction": "ltr",
       "language_group": "Indo-European (Slavic)",
       "fictional_notice": "СИНТЕТИЧЕСКИЕ ТЕСТОВЫЕ ДАННЫЕ — ВЫМЫШЛЕННЫЕ СТРАНЫ И ЛИЦА — НЕ ДЛЯ ПРОДАКШЕНА",
-      "given_names": ["Анна", "Игорь", "Ольга", "Денис", "Марина", "Павел"],
-      "family_names": ["Орлов", "Соколов", "Макарова", "Гусев", "Тихонова", "Королев"],
+      "given_names": ["Анна", "Игорь", "Ольга", "Денис", "Марина", "Павел", "Виктор", "Татьяна", "Артём", "Ксения", "Роман", "Наталья", "Григорий", "Юлия"],
+      "family_names": ["Орлов", "Соколов", "Макарова", "Гусев", "Тихонова", "Королев", "Волков", "Белова", "Морозов", "Кузнецова", "Егоров", "Фролова", "Симонов", "Дементьева"],
       "blocks": {
         "country_intro": [
           "{country_name} — вымышленная страна, используемая только для локального тестирования.",
-          "Этот обзор {country_name} — сгенерированные тестовые данные, а не реальное место."
+          "Этот обзор {country_name} — сгенерированные тестовые данные, а не реальное место.",
+          "{country_name} не соответствует какому-либо реальному месту; весь контент здесь вымышлен и создан для тестирования.",
+          "Материал ниже о {country_name} сгенерирован автоматически и не несёт реального смысла.",
+          "{country_name} существует только в этом тестовом наборе данных и был придуман для целей контроля качества.",
+          "Это описание {country_name} — синтетический заполняющий контент, а не настоящий профиль страны."
         ],
         "country_risk_summary": [
           "Для {country_name} основным ограничивающим фактором остаётся {risk_label}.",
-          "При оценке {country_name} стоит учитывать риск: {risk_label}."
+          "При оценке {country_name} стоит учитывать риск: {risk_label}.",
+          "{country_name} по-прежнему сталкивается с трудностями, связанными с {risk_label}.",
+          "Постоянной проблемой для {country_name} остаётся {risk_label}.",
+          "Наблюдатели неоднократно указывают на {risk_label} как на слабое место {country_name}.",
+          "Перспективы {country_name} сдерживаются фактором {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} демонстрирует высокие показатели по параметру {strength_label}.",
-          "Заметная сильная сторона {country_name} — {strength_label}."
+          "Заметная сильная сторона {country_name} — {strength_label}.",
+          "{country_name} стабильно показывает хорошие результаты по параметру {strength_label}.",
+          "Обозреватели часто отмечают {strength_label} у {country_name}.",
+          "{country_name} заслужила прочную репутацию благодаря {strength_label}.",
+          "Постоянным преимуществом {country_name} является {strength_label}."
         ]
       },
       "comment_templates": [
         "Это совпадает с тем, что я недавно читал о {country_name}.",
-        "Не уверен, что это полностью отражает текущую ситуацию в {country_name}."
+        "Не уверен, что это полностью отражает текущую ситуацию в {country_name}.",
+        "Я и раньше слышал нечто похожее о {country_name}.",
+        "Это совпадает с другими отчётами о {country_name}, которые я видел.",
+        "У кого-нибудь есть более свежая информация о {country_name}?",
+        "Интересно видеть этот показатель по {country_name}."
       ],
       "sample_short": "Только тестовые данные.",
       "sample_long": "Этот длинный абзац нужен, чтобы проверить перенос строк и разбиение на страницы для нескольких строк русского текста с кириллицей.",
@@ -110,25 +158,41 @@
       "direction": "ltr",
       "language_group": "Indo-European (Indo-Aryan)",
       "fictional_notice": "सिंथेटिक टेस्ट डेटा — काल्पनिक देश और व्यक्ति — उत्पादन उपयोग के लिए नहीं",
-      "given_names": ["अर्जुन", "प्रिया", "रोहित", "नीलम", "संजय", "दिव्या"],
-      "family_names": ["शर्मा", "वर्मा", "पटेल", "रेड्डी", "जोशी", "नायर"],
+      "given_names": ["अर्जुन", "प्रिया", "रोहित", "नीलम", "संजय", "दिव्या", "विकास", "स्नेहा", "राहुल", "पूजा", "अभिषेक", "सुनीता", "करण", "अंजलि"],
+      "family_names": ["शर्मा", "वर्मा", "पटेल", "रेड्डी", "जोशी", "नायर", "गुप्ता", "सिंह", "मेहता", "चौधरी", "कपूर", "अग्रवाल", "यादव", "मिश्रा"],
       "blocks": {
         "country_intro": [
           "{country_name} एक काल्पनिक देश है, जो केवल स्थानीय परीक्षण के लिए उपयोग होता है।",
-          "{country_name} का यह विवरण जनित परीक्षण डेटा है, कोई वास्तविक जगह नहीं।"
+          "{country_name} का यह विवरण जनित परीक्षण डेटा है, कोई वास्तविक जगह नहीं।",
+          "{country_name} किसी वास्तविक स्थान से मेल नहीं खाता; यहाँ की सारी सामग्री परीक्षण के लिए काल्पनिक है।",
+          "{country_name} के बारे में नीचे दी गई सामग्री स्वचालित रूप से बनाई गई है और इसका कोई वास्तविक अर्थ नहीं है।",
+          "{country_name} केवल इस परीक्षण डेटासेट में मौजूद है और गुणवत्ता जांच के लिए बनाया गया था।",
+          "{country_name} का यह विवरण सिंथेटिक भराव सामग्री है, कोई वास्तविक देश प्रोफ़ाइल नहीं।"
         ],
         "country_risk_summary": [
           "{country_name} के लिए मुख्य सीमा कारक अभी भी {risk_label} है।",
-          "{country_name} का मूल्यांकन करते समय इस जोखिम को ध्यान में रखें: {risk_label}।"
+          "{country_name} का मूल्यांकन करते समय इस जोखिम को ध्यान में रखें: {risk_label}।",
+          "{country_name} अभी भी {risk_label} से जुड़ी कठिनाइयों का सामना कर रहा है।",
+          "{country_name} के लिए एक बार-बार आने वाली चिंता {risk_label} है।",
+          "विश्लेषक बार-बार {risk_label} को {country_name} की कमजोरी के रूप में इंगित करते हैं।",
+          "{country_name} की संभावनाएं {risk_label} से प्रभावित होती हैं।"
         ],
         "country_strength_summary": [
           "{country_name} {strength_label} में अच्छा प्रदर्शन करता है।",
-          "{country_name} की एक उल्लेखनीय शक्ति {strength_label} है।"
+          "{country_name} की एक उल्लेखनीय शक्ति {strength_label} है।",
+          "{country_name} लगातार {strength_label} में अच्छा प्रदर्शन करता है।",
+          "समीक्षक अक्सर {country_name} की {strength_label} को उजागर करते हैं।",
+          "{country_name} ने {strength_label} के आधार पर एक मजबूत प्रतिष्ठा बनाई है।",
+          "{country_name} की एक बार-बार आने वाली सकारात्मक बात {strength_label} है।"
         ]
       },
       "comment_templates": [
-        "यह उससे मेल खाता है जो मैंने {country_name} के बारे में हाल ही में पढ़ा था।",
-        "मुझे पूरा यकीन नहीं कि यह {country_name} की वर्तमान स्थिति को पूरी तरह दर्शाता है।"
+        "यह उससे मेल खाता है जो मैंने {country_name} के बारे में हाल ही में पढ़ा था।",
+        "मुझे पूरा यकीन नहीं कि यह {country_name} की वर्तमान स्थिति को पूरी तरह दर्शाता है।",
+        "मैंने पहले भी {country_name} के बारे में ऐसा ही सुना है।",
+        "यह {country_name} पर अन्य रिपोर्टों से मेल खाता है जो मैंने देखी हैं।",
+        "क्या किसी के पास {country_name} के बारे में और हालिया जानकारी है?",
+        "{country_name} के लिए यह आँकड़ा देखना दिलचस्प है।"
       ],
       "sample_short": "केवल परीक्षण डेटा।",
       "sample_long": "यह लंबा अनुच्छेद यह जांचने के लिए है कि हिंदी पाठ की कई पंक्तियों में शब्द व्रैपिंग और पेज ब्रेक सही से काम करते हैं।",
@@ -144,25 +208,41 @@
       "direction": "rtl",
       "language_group": "Indo-European (Iranian)",
       "fictional_notice": "داده‌های آزمایشی مصنوعی — کشورها و افراد خیالی — برای محیط تولید مناسب نیست",
-      "given_names": ["آرش", "لیلا", "کوروش", "نگار", "فرهاد", "مهتاب"],
-      "family_names": ["راد", "نوری", "صادقی", "فرخی", "بختیاری", "قاسمی"],
+      "given_names": ["آرش", "لیلا", "کوروش", "نگار", "فرهاد", "مهتاب", "بهرام", "شیرین", "رامین", "پریسا", "سهراب", "ژاله", "کامران", "الهام"],
+      "family_names": ["راد", "نوری", "صادقی", "فرخی", "بختیاری", "قاسمی", "افشار", "کریمی", "شریفی", "حیدری", "امینی", "طاهری", "رستمی", "جعفری"],
       "blocks": {
         "country_intro": [
           "{country_name} یک کشور خیالی است که فقط برای آزمایش محلی استفاده می‌شود.",
-          "این گزارش درباره {country_name} داده‌های آزمایشی تولیدشده است، نه یک مکان واقعی."
+          "این گزارش درباره {country_name} داده‌های آزمایشی تولیدشده است، نه یک مکان واقعی.",
+          "{country_name} با هیچ مکان واقعی مطابقت ندارد؛ تمام محتوای اینجا برای آزمایش ساختگی است.",
+          "مطالب زیر درباره {country_name} به‌طور خودکار تولید شده و معنای واقعی ندارد.",
+          "{country_name} فقط در این مجموعه داده آزمایشی وجود دارد و برای اهداف کنترل کیفیت ساخته شده است.",
+          "این توضیح درباره {country_name} محتوای پرکننده مصنوعی است، نه یک نمایه واقعی کشور."
         ],
         "country_risk_summary": [
           "در مورد {country_name}، مهم‌ترین عامل محدودکننده همچنان {risk_label} است.",
-          "هنگام بررسی {country_name} باید ریسک زیر را در نظر گرفت: {risk_label}."
+          "هنگام بررسی {country_name} باید ریسک زیر را در نظر گرفت: {risk_label}.",
+          "{country_name} همچنان با مشکلات مرتبط با {risk_label} دست‌وپنجه نرم می‌کند.",
+          "یک نگرانی مکرر برای {country_name}، {risk_label} است.",
+          "ناظران بارها به {risk_label} به‌عنوان نقطه ضعف {country_name} اشاره می‌کنند.",
+          "چشم‌انداز {country_name} تحت تأثیر {risk_label} قرار دارد."
         ],
         "country_strength_summary": [
           "{country_name} در زمینه {strength_label} عملکرد قوی دارد.",
-          "یکی از نقاط قوت {country_name}، {strength_label} است."
+          "یکی از نقاط قوت {country_name}، {strength_label} است.",
+          "{country_name} به‌طور مداوم در زمینه {strength_label} عملکرد خوبی دارد.",
+          "ناظران اغلب به {strength_label} در {country_name} اشاره می‌کنند.",
+          "{country_name} به دلیل {strength_label} شهرت خوبی کسب کرده است.",
+          "یک نکته مثبت مکرر برای {country_name}، {strength_label} است."
         ]
       },
       "comment_templates": [
         "این با آنچه اخیراً درباره {country_name} خوانده‌ام مطابقت دارد.",
-        "مطمئن نیستم این وضعیت فعلی {country_name} را کامل نشان می‌دهد."
+        "مطمئن نیستم این وضعیت فعلی {country_name} را کامل نشان می‌دهد.",
+        "قبلاً هم چیزهای مشابهی درباره {country_name} شنیده‌ام.",
+        "این با سایر گزارش‌هایی که درباره {country_name} دیده‌ام مطابقت دارد.",
+        "آیا کسی اطلاعات به‌روزتری درباره {country_name} دارد؟",
+        "دیدن این داده درباره {country_name} جالب است."
       ],
       "sample_short": "فقط داده‌های آزمایشی.",
       "sample_long": "این پاراگراف طولانی برای بررسی درستی بودن شکست خط و جهت نوشتار راست به چپ در چندین خط متن فارسی وجود دارد.",
@@ -178,29 +258,45 @@
       "direction": "rtl",
       "language_group": "Afro-Asiatic (Semitic)",
       "fictional_notice": "بيانات اختبار اصطناعية — دول وأشخاص خياليون — غير مخصصة للاستخدام الفعلي",
-      "given_names": ["ليلى", "عمر", "نورة", "خالد", "سارة", "فهد"],
-      "family_names": ["العمري", "القحطاني", "المرزوقي", "الحربي", "الزهراني", "الفارسي"],
+      "given_names": ["ليلى", "عمر", "نورة", "خالد", "سارة", "فهد", "منى", "سعيد", "هند", "ياسر", "ريم", "طارق", "أمل", "ماجد"],
+      "family_names": ["العمري", "القحطاني", "المرزوقي", "الحربي", "الزهراني", "الفارسي", "الغامدي", "الشمري", "العتيبي", "الدوسري", "السبيعي", "المطيري", "الشهري", "القرني"],
       "blocks": {
         "country_intro": [
           "{country_name} دولة خيالية تُستخدم فقط للاختبار المحلي.",
-          "هذه النبذة عن {country_name} بيانات اختبار مُولّدة، وليست مكانًا حقيقياً."
+          "هذه النبذة عن {country_name} بيانات اختبار مُولّدة، وليست مكانًا حقيقياً.",
+          "{country_name} لا تتوافق مع أي مكان حقيقي؛ كل المحتوى هنا مُختلَق لأغراض الاختبار.",
+          "المحتوى أدناه حول {country_name} تم توليده تلقائياً وليس له معنى واقعي.",
+          "توجد {country_name} فقط ضمن مجموعة البيانات الاختبارية هذه وتم اختراعها لأغراض ضمان الجودة.",
+          "هذا الوصف لـ {country_name} هو محتوى اصطناعي حشوي، وليس ملفاً حقيقياً لدولة."
         ],
         "country_risk_summary": [
           "بالنسبة لـ {country_name}، يبقى العامل المحدّ الرئيسي هو {risk_label}.",
-          "عند تقييم {country_name}، يجب مراعاة عامل الخطر: {risk_label}."
+          "عند تقييم {country_name}، يجب مراعاة عامل الخطر: {risk_label}.",
+          "لا تزال {country_name} تواجه صعوبات مرتبطة بـ {risk_label}.",
+          "من المخاوف المتكررة بالنسبة لـ {country_name} هو {risk_label}.",
+          "يشير المراقبون مراراً إلى {risk_label} كنقطة ضعف لدى {country_name}.",
+          "تتأثر توقعات {country_name} بعامل {risk_label}."
         ],
         "country_strength_summary": [
           "تتميز {country_name} بشكل واضح في {strength_label}.",
-          "من أبرز نقاط قوة {country_name} هو {strength_label}."
+          "من أبرز نقاط قوة {country_name} هو {strength_label}.",
+          "تحقق {country_name} أداءً جيداً باستمرار في {strength_label}.",
+          "غالباً ما يبرز المراقبون {strength_label} لدى {country_name}.",
+          "اكتسبت {country_name} سمعة قوية بفضل {strength_label}.",
+          "من النقاط الإيجابية المتكررة لدى {country_name} هي {strength_label}."
         ]
       },
       "comment_templates": [
         "هذا يتطابق مع ما قرأته مؤخراً عن {country_name}.",
-        "لست متأكداً من أن هذا يعكس الوضع الحالي في {country_name} بالكامل."
+        "لست متأكداً من أن هذا يعكس الوضع الحالي في {country_name} بالكامل.",
+        "سمعت أشياء مشابهة عن {country_name} من قبل.",
+        "هذا يتوافق مع تقارير أخرى رأيتها عن {country_name}.",
+        "هل لدى أحد معلومات أحدث عن {country_name}؟",
+        "من المثير للاهتمام رؤية هذه البيانات عن {country_name}."
       ],
       "sample_short": "بيانات اختبار فقط.",
       "sample_long": "توجد هذه الفقرة الطويلة لاختبار التفاف الأسطر وفواصل الصفحات عبر عدة أسطر من النص العربي.",
-      "sample_diacritic": "اللُّغَة العَرَبِيَّة الفُصْحَى.",
+      "sample_diacritic": "اللُّغَة العَرَبِيَّة الفُصْحَى.",
       "sample_mixed": "{country_name} — تقرير رقم 47 — التفاصيل على https://example.test/report.",
       "sample_number": "وصلت قيمة data_confidence الاصطناعية إلى 87.5 من 100.",
       "sample_date": "أُنشئت هذه اللقطة بتاريخ 2026-01-01."
@@ -212,25 +308,41 @@
       "direction": "ltr",
       "language_group": "Sino-Tibetan",
       "fictional_notice": "合成测试数据 — 虚构国家与人物 — 不用于生产环境",
-      "given_names": ["雨莹", "子祕", "思恩", "建国", "静宜", "志强"],
-      "family_names": ["李", "王", "张", "刘", "陈", "赵"],
+      "given_names": ["雨莹", "子祺", "思恩", "建国", "静宜", "志强", "浩然", "梦琪", "俊杰", "欣怡", "宇轩", "婉婷", "泽宇", "雨桐"],
+      "family_names": ["李", "王", "张", "刘", "陈", "赵", "杨", "黄", "周", "吴", "徐", "孙", "马", "朱"],
       "blocks": {
         "country_intro": [
           "{country_name}是一个虚构国家，仅用于本地测试。",
-          "关于{country_name}的此件概览是生成的测试数据，并非真实地点。"
+          "关于{country_name}的此件概览是生成的测试数据，并非真实地点。",
+          "{country_name}与任何真实地点均无关；此处所有内容均为测试而虚构。",
+          "以下关于{country_name}的内容是自动生成的，不具有真实意义。",
+          "{country_name}仅存在于此测试数据集中，是为质量保证目的而虚构的。",
+          "这段关于{country_name}的描述是合成填充内容，并非真实的国家概况。"
         ],
         "country_risk_summary": [
           "对于{country_name}，主要限制因素仍然是{risk_label}。",
-          "在评估{country_name}时，需要注意风险因素：{risk_label}。"
+          "在评估{country_name}时，需要注意风险因素：{risk_label}。",
+          "{country_name}仍面临与{risk_label}相关的困难。",
+          "{country_name}的一个反复出现的问题是{risk_label}。",
+          "观察人士多次指出{risk_label}是{country_name}的薄弱环节。",
+          "{country_name}的前景受到{risk_label}因素的制约。"
         ],
         "country_strength_summary": [
           "{country_name}在{strength_label}方面表现突出。",
-          "{country_name}的一个显著优势是{strength_label}。"
+          "{country_name}的一个显著优势是{strength_label}。",
+          "{country_name}在{strength_label}方面持续表现良好。",
+          "评论者常常强调{country_name}的{strength_label}。",
+          "{country_name}凭借{strength_label}建立了良好的声誉。",
+          "{country_name}的一个持续优势是{strength_label}。"
         ]
       },
       "comment_templates": [
         "这与我最近关于{country_name}的阅读内容相符。",
-        "我不确定这是否完全反映了{country_name}的当前情况。"
+        "我不确定这是否完全反映了{country_name}的当前情况。",
+        "我以前也听过关于{country_name}的类似说法。",
+        "这与我看到的其他关于{country_name}的报告一致。",
+        "有人有关于{country_name}的更新信息吗？",
+        "看到{country_name}的这项数据很有意思。"
       ],
       "sample_short": "仅为测试数据。",
       "sample_long": "这段长文字用于检查中文文本在多行排版中的换行与分页是否正常工作，并且不会出现乱码或方块。",
@@ -246,25 +358,41 @@
       "direction": "ltr",
       "language_group": "Japonic",
       "fictional_notice": "合成テストデータ — 架空の国と人物 — 本番環境での使用不可",
-      "given_names": ["さくら", "ひなた", "だいち", "みちこ", "はると", "ゆい"],
-      "family_names": ["佐藤", "鈴木", "高橋", "田中", "渡辺", "山田"],
+      "given_names": ["さくら", "ひなた", "だいち", "みちこ", "はると", "ゆい", "陽菜", "翔太", "美咲", "健太", "愛子", "拓也", "由美", "亮太"],
+      "family_names": ["佐藤", "鈴木", "高橋", "田中", "渡辺", "山田", "伊藤", "中村", "小林", "加藤", "吉田", "山本", "松本", "井上"],
       "blocks": {
         "country_intro": [
           "{country_name}はローカルテストのためのあくまで架空の国です。",
-          "{country_name}のこの概要は生成されたテストデータであり、実在の場所ではありません。"
+          "{country_name}のこの概要は生成されたテストデータであり、実在の場所ではありません。",
+          "{country_name}は実在するいかなる場所とも一致せず、ここでの内容はすべてテスト目的の架空のものです。",
+          "以下の{country_name}に関する内容は自動生成されたものであり、実際の意味を持ちません。",
+          "{country_name}はこのテストデータセット内にのみ存在し、品質保証の目的で作られました。",
+          "この{country_name}の説明は合成された埋め合わせコンテンツであり、実際の国のプロフィールではありません。"
         ],
         "country_risk_summary": [
           "{country_name}において、主な制約要因は依然として{risk_label}です。",
-          "{country_name}を評価する際は、リスク要因：{risk_label}に注意してください。"
+          "{country_name}を評価する際は、リスク要因：{risk_label}に注意してください。",
+          "{country_name}は依然として{risk_label}に関連する課題に直面しています。",
+          "{country_name}にとって繰り返し指摘される懸念は{risk_label}です。",
+          "観察者は繰り返し{risk_label}を{country_name}の弱点として指摘しています。",
+          "{country_name}の見通しは{risk_label}によって抑制されています。"
         ],
         "country_strength_summary": [
           "{country_name}は{strength_label}の面で優れています。",
-          "{country_name}の目立った強みは{strength_label}です。"
+          "{country_name}の目立った強みは{strength_label}です。",
+          "{country_name}は{strength_label}で一貫して良好な成績を収めています。",
+          "評論家はしばしば{country_name}の{strength_label}を強調します。",
+          "{country_name}は{strength_label}によって確固たる評判を築いてきました。",
+          "{country_name}の繰り返し見られる強みは{strength_label}です。"
         ]
       },
       "comment_templates": [
         "最近読んだ{country_name}に関する内容と一致しています。",
-        "{country_name}の現在の状況を完全に反映しているかは分かりません。"
+        "{country_name}の現在の状況を完全に反映しているかは分かりません。",
+        "以前にも{country_name}について同様の話を聞いたことがあります。",
+        "これは私が見た{country_name}に関する他の報告と一致しています。",
+        "{country_name}についてもっと新しい情報を持っている人はいますか？",
+        "{country_name}のこのデータを見るのは興味深いです。"
       ],
       "sample_short": "テストデータのみ。",
       "sample_long": "この長い段落は、日本語テキストの複数行にわたる改行とページ分割が正しく動作するかを確認するために存在します。",
@@ -280,25 +408,41 @@
       "direction": "ltr",
       "language_group": "Koreanic",
       "fictional_notice": "합성 테스트 데이터 — 가상의 국가와 인물 — 실제 서비스에 사용 불가",
-      "given_names": ["지훈", "서연", "민준", "유나", "준서", "하은"],
-      "family_names": ["김", "이", "박", "최", "정", "강"],
+      "given_names": ["지훈", "서연", "민준", "유나", "준서", "하은", "도윤", "예은", "시우", "수빈", "재현", "지우", "동현", "은서"],
+      "family_names": ["김", "이", "박", "최", "정", "강", "조", "윤", "장", "임", "한", "오", "서", "권"],
       "blocks": {
         "country_intro": [
           "{country_name}은 로컬 테스트를 위해만 사용되는 가상의 국가입니다.",
-          "{country_name}에 대한 이 개요는 생성된 테스트 데이터이며 실제 장소가 아닙니다."
+          "{country_name}에 대한 이 개요는 생성된 테스트 데이터이며 실제 장소가 아닙니다.",
+          "{country_name}은 실제 장소와 일치하지 않으며, 여기의 모든 내용은 테스트 목적의 가상 콘텐츠입니다.",
+          "아래의 {country_name}에 대한 내용은 자동으로 생성된 것이며 실제 의미가 없습니다.",
+          "{country_name}은 이 테스트 데이터세트 내에만 존재하며 품질 보증 목적으로 만들어졌습니다.",
+          "{country_name}에 대한 이 설명은 합성된 채움 콘텐츠이며 실제 국가 프로필이 아닙니다."
         ],
         "country_risk_summary": [
           "{country_name}의 경우 주요 제한 요인은 여전히 {risk_label}입니다.",
-          "{country_name}를 평가할 때는 위험 요인인 {risk_label}을 고려해야 합니다."
+          "{country_name}를 평가할 때는 위험 요인인 {risk_label}을 고려해야 합니다.",
+          "{country_name}은 여전히 {risk_label}과 관련된 어려움을 겪고 있습니다.",
+          "{country_name}에 대해 반복적으로 제기되는 우려는 {risk_label}입니다.",
+          "관찰자들은 {risk_label}을 {country_name}의 약점으로 반복적으로 지적합니다.",
+          "{country_name}의 전망은 {risk_label} 요인으로 인해 제약을 받습니다."
         ],
         "country_strength_summary": [
           "{country_name}은 {strength_label} 부문에서 강세를 보입니다.",
-          "{country_name}의 두드러진 강점은 {strength_label}입니다."
+          "{country_name}의 두드러진 강점은 {strength_label}입니다.",
+          "{country_name}은 {strength_label} 부문에서 꾸준히 좋은 성과를 보입니다.",
+          "평론가들은 종종 {country_name}의 {strength_label}을 강조합니다.",
+          "{country_name}은 {strength_label} 덕분에 확고한 평판을 쌓아왔습니다.",
+          "{country_name}의 반복적으로 나타나는 강점은 {strength_label}입니다."
         ]
       },
       "comment_templates": [
         "최근에 읽은 {country_name} 관련 내용과 일치합니다.",
-        "이것이 {country_name}의 현재 상황을 완전히 반영하는지는 확신하지 못하겠습니다."
+        "이것이 {country_name}의 현재 상황을 완전히 반영하는지는 확신하지 못하겠습니다.",
+        "예전에도 {country_name}에 대해 비슷한 이야기를 들은 적이 있습니다.",
+        "이것은 제가 본 {country_name}에 관한 다른 보고서와 일치합니다.",
+        "{country_name}에 대한 더 최근 정보를 가진 사람이 있나요?",
+        "{country_name}에 대한 이 데이터를 보는 것이 흥미롭습니다."
       ],
       "sample_short": "테스트 데이터입니다.",
       "sample_long": "이 긴 단락은 한국어 텍스트의 여러 줄에 걸친 줄 바꿈과 페이지 나눠짐이 올바르게 동작하는지 확인하기 위해 존재합니다.",
@@ -314,25 +458,41 @@
       "direction": "ltr",
       "language_group": "Turkic",
       "fictional_notice": "SENTİTİK TEST VERİLERİ — KURGUSAL ÜLKELER VE KİŞİLER — ÜRETİM ORTAMI İÇİN DEĞİLDİR",
-      "given_names": ["Elif", "Kaan", "Zeynep", "Barış", "Deniz", "Şeyma"],
-      "family_names": ["Yıldız", "Çelik", "Şahin", "Doğan", "Arıkan", "Kılıç"],
+      "given_names": ["Elif", "Kaan", "Zeynep", "Barış", "Deniz", "Şeyma", "Mehmet", "Ayşe", "Emre", "Gizem", "Burak", "Ceren", "Onur", "Sevgi"],
+      "family_names": ["Yıldız", "Çelik", "Şahin", "Doğan", "Arıkan", "Kılıç", "Aydın", "Koç", "Aksoy", "Güneş", "Polat", "Türk", "Aslan", "Özdemir"],
       "blocks": {
         "country_intro": [
           "{country_name}, yalnızca yerel testler için kullanılan kurgusal bir ülkedir.",
-          "{country_name} hakkındaki bu özet, gerçek bir yer değil, üretilmiş test verisidir."
+          "{country_name} hakkındaki bu özet, gerçek bir yer değil, üretilmiş test verisidir.",
+          "{country_name}, gerçek hiçbir yerle örtüşmez; buradaki tüm içerik test amacıyla uydurulmuştur.",
+          "{country_name} hakkındaki aşağıdaki içerik otomatik olarak üretilmiştir ve gerçek bir anlam taşımaz.",
+          "{country_name} yalnızca bu test veri kümesinde var olur ve kalite güvencesi amacıyla oluşturulmuştur.",
+          "{country_name}'a ilişkin bu açıklama sentetik dolgu içeriktir, gerçek bir ülke profili değildir."
         ],
         "country_risk_summary": [
           "{country_name} için ana sınırlayıcı faktör hâlâ {risk_label}'dır.",
-          "{country_name} değerlendirilirken şu risk faktörü dikkate alınmalıdır: {risk_label}."
+          "{country_name} değerlendirilirken şu risk faktörü dikkate alınmalıdır: {risk_label}.",
+          "{country_name}, {risk_label} ile ilgili zorluklarla mücadeleye devam ediyor.",
+          "{country_name} için tekrar eden bir endişe {risk_label}'dır.",
+          "Gözlemciler {risk_label}'ı {country_name} için tekrar tekrar zayıf nokta olarak gösteriyor.",
+          "{country_name}'ın görünümü {risk_label} faktörüyle sınırlanmaktadır."
         ],
         "country_strength_summary": [
           "{country_name}, {strength_label} konusunda güçlü bir performans gösteriyor.",
-          "{country_name}'in öne çıkan güçlü yanı {strength_label}'dır."
+          "{country_name}'in öne çıkan güçlü yanı {strength_label}'dır.",
+          "{country_name}, {strength_label} konusunda istikrarlı biçimde iyi performans gösteriyor.",
+          "Gözlemciler genellikle {country_name}'ın {strength_label} yönünü öne çıkarır.",
+          "{country_name}, {strength_label} sayesinde sağlam bir itibar kazanmıştır.",
+          "{country_name} için tekrar eden olumlu bir nokta {strength_label}'dır."
         ]
       },
       "comment_templates": [
         "Bu, {country_name} hakkında son zamanlarda okuduklarımla örtüşüyor.",
-        "Bunun {country_name}'deki mevcut durumu tam olarak yansıttığından emin değilim."
+        "Bunun {country_name}'deki mevcut durumu tam olarak yansıttığından emin değilim.",
+        "Daha önce de {country_name} hakkında benzer şeyler duymuştum.",
+        "Bu, {country_name} hakkında gördüğüm diğer raporlarla örtüşüyor.",
+        "{country_name} hakkında daha güncel bilgisi olan var mı?",
+        "{country_name} için bu veriyi görmek ilginç."
       ],
       "sample_short": "Yalnızca test verisi.",
       "sample_long": "Bu uzun paragraf, Türkçe metnin birden fazla satırında kelime kaydırma ve sayfa sonlarının doğru çalıştığını kontrol etmek için mevcuttur.",
@@ -348,25 +508,41 @@
       "direction": "ltr",
       "language_group": "Austronesian",
       "fictional_notice": "DATA UJI SINTETIS — NEGARA DAN ORANG FIKTIF — TIDAK UNTUK PRODUKSI",
-      "given_names": ["Putri", "Budi", "Sari", "Agus", "Dewi", "Rizky"],
-      "family_names": ["Wijaya", "Santoso", "Kurniawan", "Pratama", "Hidayat", "Saputra"],
+      "given_names": ["Putri", "Budi", "Sari", "Agus", "Dewi", "Rizky", "Andi", "Fitri", "Yusuf", "Indah", "Teguh", "Ayu", "Hendra", "Lestari"],
+      "family_names": ["Wijaya", "Santoso", "Kurniawan", "Pratama", "Hidayat", "Saputra", "Setiawan", "Gunawan", "Suryadi", "Wibowo", "Halim", "Permadi", "Iskandar", "Nugroho"],
       "blocks": {
         "country_intro": [
           "{country_name} adalah negara fiktif yang hanya digunakan untuk pengujian lokal.",
-          "Ringkasan {country_name} ini adalah data uji yang dihasilkan, bukan tempat nyata."
+          "Ringkasan {country_name} ini adalah data uji yang dihasilkan, bukan tempat nyata.",
+          "{country_name} tidak sesuai dengan tempat nyata mana pun; semua konten di sini dibuat-buat untuk keperluan pengujian.",
+          "Konten berikut tentang {country_name} dibuat secara otomatis dan tidak memiliki makna nyata.",
+          "{country_name} hanya ada dalam kumpulan data uji ini dan dibuat untuk tujuan penjaminan mutu.",
+          "Uraian tentang {country_name} ini adalah konten pengisi sintetis, bukan profil negara sungguhan."
         ],
         "country_risk_summary": [
           "Bagi {country_name}, faktor pembatas utama tetap {risk_label}.",
-          "Saat menilai {country_name}, perhatikan faktor risiko: {risk_label}."
+          "Saat menilai {country_name}, perhatikan faktor risiko: {risk_label}.",
+          "{country_name} masih menghadapi kesulitan terkait {risk_label}.",
+          "Kekhawatiran yang berulang bagi {country_name} adalah {risk_label}.",
+          "Pengamat berulang kali menunjuk {risk_label} sebagai titik lemah {country_name}.",
+          "Prospek {country_name} dibatasi oleh faktor {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} tampil kuat pada aspek {strength_label}.",
-          "Salah satu kekuatan {country_name} yang menonjol adalah {strength_label}."
+          "Salah satu kekuatan {country_name} yang menonjol adalah {strength_label}.",
+          "{country_name} secara konsisten tampil baik pada aspek {strength_label}.",
+          "Pengamat sering menyoroti {strength_label} dari {country_name}.",
+          "{country_name} telah membangun reputasi kuat berkat {strength_label}.",
+          "Poin positif yang berulang bagi {country_name} adalah {strength_label}."
         ]
       },
       "comment_templates": [
         "Ini sesuai dengan apa yang baru-baru ini saya baca tentang {country_name}.",
-        "Saya tidak yakin ini sepenuhnya mencerminkan situasi terkini di {country_name}."
+        "Saya tidak yakin ini sepenuhnya mencerminkan situasi terkini di {country_name}.",
+        "Saya pernah mendengar hal serupa tentang {country_name} sebelumnya.",
+        "Ini sesuai dengan laporan lain yang pernah saya lihat tentang {country_name}.",
+        "Adakah yang punya informasi lebih baru tentang {country_name}?",
+        "Menarik melihat data ini untuk {country_name}."
       ],
       "sample_short": "Hanya data uji.",
       "sample_long": "Paragraf panjang ini ada untuk memeriksa apakah pembungkusan kata dan pemisahan halaman berfungsi dengan benar pada beberapa baris teks bahasa Indonesia.",
@@ -382,25 +558,41 @@
       "direction": "ltr",
       "language_group": "Niger-Congo (Bantu)",
       "fictional_notice": "DATA YA JARIBIO LA UBUNIFU — NCHI NA WATU WA KUBUNI — SI KWA MATUMIZI YA UZALISHAJI",
-      "given_names": ["Amani", "Baraka", "Zawadi", "Juma", "Neema", "Kito"],
-      "family_names": ["Mwangi", "Otieno", "Njoroge", "Kamau", "Wafula", "Kiptoo"],
+      "given_names": ["Amani", "Baraka", "Zawadi", "Juma", "Neema", "Kito", "Fatuma", "Hassan", "Grace", "Peter", "Faith", "Brian", "Esther", "Daniel"],
+      "family_names": ["Mwangi", "Otieno", "Njoroge", "Kamau", "Wafula", "Kiptoo", "Ochieng", "Wanjiru", "Kariuki", "Achieng", "Mutua", "Cherono", "Odhiambo", "Njeri"],
       "blocks": {
         "country_intro": [
           "{country_name} ni nchi ya kubuni inayotumika kwa majaribio ya ndani pekee.",
-          "Muhtasari huu wa {country_name} ni data ya jaribio iliyotengenezwa, si mahali halisi."
+          "Muhtasari huu wa {country_name} ni data ya jaribio iliyotengenezwa, si mahali halisi.",
+          "{country_name} hailingani na mahali popote halisi; maudhui yote hapa ni ya kubuni kwa madhumuni ya majaribio.",
+          "Maudhui yafuatayo kuhusu {country_name} yalitengenezwa kiotomatiki na hayana maana halisi.",
+          "{country_name} ipo tu ndani ya seti hii ya data ya majaribio na iliundwa kwa madhumuni ya udhibiti wa ubora.",
+          "Maelezo haya ya {country_name} ni maudhui ya kujaza ya kubuni, si wasifu halisi wa nchi."
         ],
         "country_risk_summary": [
           "Kwa {country_name}, kikwazo kikuu bado ni {risk_label}.",
-          "Wakati wa kutathmini {country_name}, zingatia hatari: {risk_label}."
+          "Wakati wa kutathmini {country_name}, zingatia hatari: {risk_label}.",
+          "{country_name} bado inakabiliwa na changamoto zinazohusiana na {risk_label}.",
+          "Wasiwasi unaojirudia kwa {country_name} ni {risk_label}.",
+          "Wachunguzi mara kwa mara wanaonyesha {risk_label} kama udhaifu wa {country_name}.",
+          "Matarajio ya {country_name} yanazuiliwa na kipengele cha {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} ina utendaji imara katika {strength_label}.",
-          "Nguvu moja dhahiri ya {country_name} ni {strength_label}."
+          "Nguvu moja dhahiri ya {country_name} ni {strength_label}.",
+          "{country_name} inaendelea kuwa na utendaji mzuri katika {strength_label}.",
+          "Wachunguzi mara nyingi wanaangazia {strength_label} ya {country_name}.",
+          "{country_name} imejenga sifa thabiti kutokana na {strength_label}.",
+          "Jambo chanya linalojirudia kwa {country_name} ni {strength_label}."
         ]
       },
       "comment_templates": [
         "Hii inalingana na nilichosoma hivi karibuni kuhusu {country_name}.",
-        "Sina uhakika kama hii inaonyesha kikamilifu hali ya sasa ya {country_name}."
+        "Sina uhakika kama hii inaonyesha kikamilifu hali ya sasa ya {country_name}.",
+        "Nimewahi kusikia mambo kama haya kuhusu {country_name} hapo awali.",
+        "Hii inalingana na ripoti nyingine nilizoziona kuhusu {country_name}.",
+        "Kuna yeyote mwenye taarifa mpya zaidi kuhusu {country_name}?",
+        "Inavutia kuona data hii kuhusu {country_name}."
       ],
       "sample_short": "Data ya jaribio tu.",
       "sample_long": "Aya hii ndefu ipo ili kuangalia kama ufungaji wa maneno na mgawanyo wa kurasa unafanya kazi vizuri katika mistari kadhaa ya maandishi ya Kiswahili.",
@@ -416,25 +608,41 @@
       "direction": "ltr",
       "language_group": "Austroasiatic",
       "fictional_notice": "DỮ LIỆU THỬ NGHIỆM TỔNG HỢP — QUỐC GIA VÀ NHÂN VẬT HƯ CẤU — KHÔNG DÙNG CHO SẢN XUẤT",
-      "given_names": ["Lan", "Minh", "Huyền", "Phương", "Tuấn", "Mai"],
-      "family_names": ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Vũ"],
+      "given_names": ["Lan", "Minh", "Huyền", "Phương", "Tuấn", "Mai", "Hùng", "Linh", "Đức", "Trang", "Nam", "Hoa", "Quang", "Thảo"],
+      "family_names": ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Vũ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý", "Đinh"],
       "blocks": {
         "country_intro": [
           "{country_name} là một quốc gia hư cấu chỉ dùng để kiểm thử cục bộ.",
-          "Tóm tắt này về {country_name} là dữ liệu thử nghiệm được tạo ra, không phải nơi có thật."
+          "Tóm tắt này về {country_name} là dữ liệu thử nghiệm được tạo ra, không phải nơi có thật.",
+          "{country_name} không tương ứng với bất kỳ nơi có thật nào; toàn bộ nội dung ở đây là hư cấu nhằm mục đích kiểm thử.",
+          "Nội dung dưới đây về {country_name} được tạo tự động và không có ý nghĩa thực tế.",
+          "{country_name} chỉ tồn tại trong bộ dữ liệu thử nghiệm này và được tạo ra nhằm mục đích đảm bảo chất lượng.",
+          "Bản mô tả này về {country_name} là nội dung tổng hợp để lấp đầy, không phải hồ sơ quốc gia thực sự."
         ],
         "country_risk_summary": [
           "Đối với {country_name}, yếu tố hạn chế chính vẫn là {risk_label}.",
-          "Khi đánh giá {country_name}, cần lưu ý yếu tố rủi ro: {risk_label}."
+          "Khi đánh giá {country_name}, cần lưu ý yếu tố rủi ro: {risk_label}.",
+          "{country_name} vẫn đang gặp khó khăn liên quan đến {risk_label}.",
+          "Một mối lo ngại lặp lại đối với {country_name} là {risk_label}.",
+          "Các nhà quan sát nhiều lần chỉ ra {risk_label} là điểm yếu của {country_name}.",
+          "Triển vọng của {country_name} bị hạn chế bởi yếu tố {risk_label}."
         ],
         "country_strength_summary": [
           "{country_name} thể hiện tốt ở {strength_label}.",
-          "Một điểm mạnh nổi bật của {country_name} là {strength_label}."
+          "Một điểm mạnh nổi bật của {country_name} là {strength_label}.",
+          "{country_name} liên tục thể hiện tốt ở khía cạnh {strength_label}.",
+          "Các nhà bình luận thường nhấn mạnh {strength_label} của {country_name}.",
+          "{country_name} đã xây dựng được danh tiếng vững chắc nhờ {strength_label}.",
+          "Một điểm tích cực lặp lại của {country_name} là {strength_label}."
         ]
       },
       "comment_templates": [
         "Điều này khớp với những gì tôi mới đọc gần đây về {country_name}.",
-        "Tôi không chắc điều này phản ánh đầy đủ tình hình hiện tại ở {country_name}."
+        "Tôi không chắc điều này phản ánh đầy đủ tình hình hiện tại ở {country_name}.",
+        "Tôi từng nghe những điều tương tự về {country_name} trước đây.",
+        "Điều này khớp với các báo cáo khác tôi từng thấy về {country_name}.",
+        "Có ai có thông tin mới hơn về {country_name} không?",
+        "Thật thú vị khi thấy dữ liệu này về {country_name}."
       ],
       "sample_short": "Chỉ là dữ liệu thử nghiệm.",
       "sample_long": "Đoạn văn dài này tồn tại để kiểm tra việc ngắt dòng và ngắt trang hoạt động đúng trên nhiều dòng văn bản tiếng Việt có dấu.",
@@ -450,25 +658,41 @@
       "direction": "ltr",
       "language_group": "Kra-Dai",
       "fictional_notice": "ข้อมูลทดสอบสังเคราะห์ — ประเทศและบุคคลสมมติ — ห้ามใช้งานจริง",
-      "given_names": ["น้ำผึ้ง", "สมชาย", "ประภาส", "สุดา", "ธนากร", "กัญญา"],
-      "family_names": ["ศรีสุข", "จันทร์ดี", "สินธุ", "นาคงาม", "พรสุวรรณ", "สุวรรณ"],
+      "given_names": ["น้ำผึ้ง", "สมชาย", "ประภาส", "สุดา", "ธนากร", "กัญญา", "วิชัย", "อรุณี", "ชัยวัฒน์", "พิมพ์ใจ", "ณัฐพล", "รัตนา", "สมบัติ", "อรทัย"],
+      "family_names": ["ศรีสุข", "จันทร์ดี", "สินธุ", "นาคงาม", "พรสุวรรณ", "สุวรรณ", "ทองดี", "บุญมา", "แสงอรุณ", "วงศ์ษา", "ธรรมรงค์", "ศิริวัฒน์", "เพชรรัตน์", "อินทร์แก้ว"],
       "blocks": {
         "country_intro": [
           "{country_name}เป็นประเทศสมมติที่ใช้เฉพาะการทดสอบภายในเท่านั้น",
-          "ภาพรวมนี้ของ{country_name}เป็นข้อมูลทดสอบที่สร้างขึ้น ไม่ใช่สถานที่จริง"
+          "ภาพรวมนี้ของ{country_name}เป็นข้อมูลทดสอบที่สร้างขึ้น ไม่ใช่สถานที่จริง",
+          "{country_name}ไม่ตรงกับสถานที่จริงใด ๆ เนื้อหาทั้งหมดที่นี่เป็นเรื่องสมมติเพื่อการทดสอบ",
+          "เนื้อหาต่อไปนี้เกี่ยวกับ{country_name}ถูกสร้างขึ้นโดยอัตโนมัติและไม่มีความหมายจริง",
+          "{country_name}มีอยู่เฉพาะในชุดข้อมูลทดสอบนี้และถูกสร้างขึ้นเพื่อวัตถุประสงค์ในการประกันคุณภาพ",
+          "คำอธิบายนี้เกี่ยวกับ{country_name}เป็นเนื้อหาสังเคราะห์สำหรับเติมเต็ม ไม่ใช่ข้อมูลประเทศจริง"
         ],
         "country_risk_summary": [
           "สำหรับ{country_name} ปัจจัยจำกัดหลักยังคงเป็น {risk_label}",
-          "เมื่อประเมิน{country_name} ควรคำนึงถึงปัจจัยเสี่ยง: {risk_label}"
+          "เมื่อประเมิน{country_name} ควรคำนึงถึงปัจจัยเสี่ยง: {risk_label}",
+          "{country_name}ยังคงเผชิญกับความยากลำบากที่เกี่ยวข้องกับ {risk_label}",
+          "ข้อกังวลที่เกิดขึ้นซ้ำสำหรับ{country_name}คือ {risk_label}",
+          "ผู้สังเกตการณ์ชี้ให้เห็นซ้ำ ๆ ว่า {risk_label} เป็นจุดอ่อนของ{country_name}",
+          "แนวโน้มของ{country_name}ถูกจำกัดด้วยปัจจัย {risk_label}"
         ],
         "country_strength_summary": [
           "{country_name}มีผลงานโดดเด่นในด้าน {strength_label}",
-          "จุดแข็งที่เด่นชัดของ{country_name}คือ {strength_label}"
+          "จุดแข็งที่เด่นชัดของ{country_name}คือ {strength_label}",
+          "{country_name}แสดงผลงานที่ดีอย่างต่อเนื่องในด้าน {strength_label}",
+          "นักวิจารณ์มักเน้นย้ำถึง {strength_label} ของ{country_name}",
+          "{country_name}สร้างชื่อเสียงที่มั่นคงจาก {strength_label}",
+          "จุดบวกที่เกิดขึ้นซ้ำสำหรับ{country_name}คือ {strength_label}"
         ]
       },
       "comment_templates": [
         "สิ่งนี้สอดคล้องกับสิ่งที่อ่านเกี่ยวกับ{country_name}เมื่อเร็ว ๆ นี้",
-        "ไม่แน่ใจว่าสิ่งนี้สะท้อนสถานการณ์ปัจจุบันของ{country_name}อย่างครบถ้วน"
+        "ไม่แน่ใจว่าสิ่งนี้สะท้อนสถานการณ์ปัจจุบันของ{country_name}อย่างครบถ้วน",
+        "ฉันเคยได้ยินเรื่องคล้ายกันเกี่ยวกับ{country_name}มาก่อน",
+        "สิ่งนี้สอดคล้องกับรายงานอื่น ๆ ที่ฉันเคยเห็นเกี่ยวกับ{country_name}",
+        "มีใครมีข้อมูลที่ใหม่กว่านี้เกี่ยวกับ{country_name}ไหม",
+        "น่าสนใจที่ได้เห็นข้อมูลนี้สำหรับ{country_name}"
       ],
       "sample_short": "ข้อมูลทดสอบเท่านั้น",
       "sample_long": "ย่อหน้ายาวนี้มีไว้เพื่อทดสอบการตัดคำและการขึ้นบรรทัดหน้าของข้อความภาษาไทยหลายบรรทัด",
@@ -484,25 +708,41 @@
       "direction": "ltr",
       "language_group": "Dravidian",
       "fictional_notice": "செயற்கை சோதனை தரவு — கற்பனை நாடுகள் மற்றும் நபர்கள் — உற்பத்தி சூழலுக்கு பயன்படுத்த வேண்டாம்",
-      "given_names": ["கல்யாணி", "அருண்", "ப்ரியா", "விஜய்", "மீனா", "கவின்"],
-      "family_names": ["முருகன்", "சுப்ரமணியன்", "ராஜன்", "செல்வன்", "பாண்டியன்", "வேலு"],
+      "given_names": ["கல்யாணி", "அருண்", "ப்ரியா", "விஜய்", "மீனா", "கவின்", "சங்கர்", "லதா", "தமிழ்", "ரேவதி", "சுரேஷ்", "பவானி", "மனோஜ்", "தேவி"],
+      "family_names": ["முருகன்", "சுப்ரமணியன்", "ராஜன்", "செல்வன்", "பாண்டியன்", "வேலு", "நடராஜன்", "கண்ணன்", "சிவகுமார்", "ஆனந்த்", "பாலு", "ஈஸ்வரன்", "ரமேஷ்", "கோபால்"],
       "blocks": {
         "country_intro": [
           "{country_name} என்பது உள்ளூர் சோதனைக்கு மட்டுமே பயன்படுத்தப்படும் ஒரு கற்பனை நாடு ஆகும்.",
-          "{country_name} பற்றிய இந்த சுருக்கம் உருவாக்கப்பட்ட சோதனை தரவு ஆகும், இது ஒரு உண்மையான இடம் அல்ல."
+          "{country_name} பற்றிய இந்த சுருக்கம் உருவாக்கப்பட்ட சோதனை தரவு ஆகும், இது ஒரு உண்மையான இடம் அல்ல.",
+          "{country_name} எந்த உண்மையான இடத்திற்கும் ஒத்திசைவதில்லை; இங்குள்ள அனைத்து உள்ளடக்கமும் சோதனைக்காக கற்பனை செய்யப்பட்டது.",
+          "{country_name} பற்றிய கீழ்க்கண்ட உள்ளடக்கம் தானாகவே உருவாக்கப்பட்டது மற்றும் உண்மையான அர்த்தம் இல்லை.",
+          "{country_name} இந்த சோதனை தரவுத்தொகுப்பில் மட்டுமே உள்ளது மற்றும் தர உறுதிப்பாட்டு நோக்கத்திற்காக உருவாக்கப்பட்டது.",
+          "{country_name} பற்றிய இந்த விளக்கம் செயற்கை நிரப்பு உள்ளடக்கமாகும், உண்மையான நாட்டு விவரக்குறிப்பு அல்ல."
         ],
         "country_risk_summary": [
           "{country_name}க்கு முக்கிய கட்டுப்பாட்டு காரணி இன்னும் {risk_label} ஆகும்.",
-          "{country_name}ஐ மதிப்பிடும்போது, {risk_label} என்ற ஆபத்து காரணியை கருத்தில் கொள்ளவும்."
+          "{country_name}ஐ மதிப்பிடும்போது, {risk_label} என்ற ஆபத்து காரணியை கருத்தில் கொள்ளவும்.",
+          "{country_name} இன்னும் {risk_label} தொடர்பான சிரமங்களை எதிர்கொள்கிறது.",
+          "{country_name}க்கு மீண்டும் மீண்டும் வரும் கவலை {risk_label} ஆகும்.",
+          "பார்வையாளர்கள் மீண்டும் மீண்டும் {risk_label} ஐ {country_name}இன் பலவீனமாக சுட்டிக்காட்டுகின்றனர்.",
+          "{country_name}இன் எதிர்பார்ப்புகள் {risk_label} காரணியால் கட்டுப்படுத்தப்படுகின்றன."
         ],
         "country_strength_summary": [
           "{country_name} {strength_label} என்பதில் வலுவான செயல்திறனை காட்டுகிறது.",
-          "{country_name}ின் குறிப்பிடத்தக்க வலிமை {strength_label} ஆகும்."
+          "{country_name}ின் குறிப்பிடத்தக்க வலிமை {strength_label} ஆகும்.",
+          "{country_name} தொடர்ந்து {strength_label} இல் சிறப்பாக செயல்படுகிறது.",
+          "விமர்சகர்கள் பெரும்பாலும் {country_name}இன் {strength_label} ஐ எடுத்துரைக்கின்றனர்.",
+          "{country_name} {strength_label} காரணமாக உறுதியான நற்பெயரை உருவாக்கியுள்ளது.",
+          "{country_name}க்கு மீண்டும் மீண்டும் வரும் நேர்மறையான அம்சம் {strength_label} ஆகும்."
         ]
       },
       "comment_templates": [
         "நான் சமீபத்தில் படித்ததுடன் {country_name} பற்றிய இந்த தகவல் பொருந்துகிறது.",
-        "இது {country_name}ின் தற்போதைய நிலையை முழுமையாக பிரதிபலிக்கிறதா என்று எனக்கு உறுதி இல்லை."
+        "இது {country_name}ின் தற்போதைய நிலையை முழுமையாக பிரதிபலிக்கிறதா என்று எனக்கு உறுதி இல்லை.",
+        "நான் முன்பும் {country_name} பற்றி இதுபோன்ற விஷயங்களை கேட்டிருக்கிறேன்.",
+        "இது நான் பார்த்த {country_name} பற்றிய பிற அறிக்கைகளுடன் பொருந்துகிறது.",
+        "{country_name} பற்றி யாருக்காவது புதிய தகவல் உள்ளதா?",
+        "{country_name}க்கான இந்த தரவைப் பார்ப்பது சுவாரஸ்யமாக உள்ளது."
       ],
       "sample_short": "சோதனை தரவு மட்டுமே.",
       "sample_long": "தமிழ் உரையின் பல வரிகளில் சொல் மடிப்பும் பக்க பிரிவும் சரியாக செயல்படுகிறதா என்பதை சரிபார்க்க இந்த நீண்ட பத்தி உள்ளது.",

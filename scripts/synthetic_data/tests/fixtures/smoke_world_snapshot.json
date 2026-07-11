@@ -1,175 +1,175 @@
 {
   "articles": [
     {
-      "article_id": "article-elvaron",
-      "author_id": "author-elvaron",
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "article_id": "article-quorinora",
+      "author_id": "author-quorinora",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "published_as_of": "2026-01-01",
       "source_ids": [
-        "source-elvaron-civil_freedoms"
+        "source-quorinora-civil_freedoms"
       ],
-      "summary": "A synthetic overview of Elvaron, covering its civil freedoms trend and supporting sources.",
-      "title": "Elvaron: what changed and why it matters"
+      "summary": "A synthetic overview of Quorinora, covering its civil freedoms trend and supporting sources.",
+      "title": "Quorinora: what changed and why it matters"
     },
     {
-      "article_id": "article-ivaraora",
-      "author_id": "author-ivaraora",
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "article_id": "article-isendraael",
+      "author_id": "author-isendraael",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "published_as_of": "2026-01-01",
       "source_ids": [
-        "source-ivaraora-safety"
+        "source-isendraael-safety"
       ],
-      "summary": "A synthetic overview of Ivaraora, covering its safety trend and supporting sources.",
-      "title": "Ivaraora: what changed and why it matters"
+      "summary": "A synthetic overview of Isendraael, covering its safety trend and supporting sources.",
+      "title": "Isendraael: what changed and why it matters"
     },
     {
-      "article_id": "article-farenara",
-      "author_id": "author-farenara",
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "article_id": "article-vantorhelm",
+      "author_id": "author-vantorhelm",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "published_as_of": "2026-01-01",
       "source_ids": [
-        "source-farenara-civil_freedoms"
+        "source-vantorhelm-civil_freedoms"
       ],
-      "summary": "A synthetic overview of Farenara, covering its civil freedoms trend and supporting sources.",
-      "title": "Farenara: what changed and why it matters"
+      "summary": "A synthetic overview of Vantorhelm, covering its civil freedoms trend and supporting sources.",
+      "title": "Vantorhelm: what changed and why it matters"
     },
     {
       "article_id": "article-avelis",
       "author_id": "author-avelis",
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "published_as_of": "2026-01-01",
       "source_ids": [
-        "source-avelis-safety"
+        "source-avelis-migration_openness"
       ],
-      "summary": "A synthetic overview of Avelis, covering its safety trend and supporting sources.",
+      "summary": "A synthetic overview of Avelis, covering its migration openness trend and supporting sources.",
       "title": "Avelis: what changed and why it matters"
     },
     {
-      "article_id": "article-dorevia",
-      "author_id": "author-dorevia",
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "article_id": "article-norvelara",
+      "author_id": "author-norvelara",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "published_as_of": "2026-01-01",
       "source_ids": [
-        "source-dorevia-institutional_stability"
+        "source-norvelara-institutional_stability"
       ],
-      "summary": "A synthetic overview of Dorevia, covering its institutional stability trend and supporting sources.",
-      "title": "Dorevia: what changed and why it matters"
+      "summary": "A synthetic overview of Norvelara, covering its institutional stability trend and supporting sources.",
+      "title": "Norvelara: what changed and why it matters"
     }
   ],
   "authors": [
     {
-      "author_id": "author-elvaron",
-      "bio": "Synthetic author focused on Elvaron coverage.",
-      "display_name": "Avery Renn",
-      "reputation": 65,
-      "specialization": "migration_openness",
-      "user_id": "user-elvaron-author"
+      "author_id": "author-quorinora",
+      "bio": "Synthetic author focused on Quorinora coverage.",
+      "display_name": "Reese Kaczmarek",
+      "reputation": 38,
+      "specialization": "institutional_stability",
+      "user_id": "user-quorinora-author"
     },
     {
-      "author_id": "author-ivaraora",
-      "bio": "Synthetic author focused on Ivaraora coverage.",
-      "display_name": "Morgan Marek",
-      "reputation": 69,
-      "specialization": "data_confidence",
-      "user_id": "user-ivaraora-author"
+      "author_id": "author-isendraael",
+      "bio": "Synthetic author focused on Isendraael coverage.",
+      "display_name": "Phoenix Mbeki",
+      "reputation": 86,
+      "specialization": "safety",
+      "user_id": "user-isendraael-author"
     },
     {
-      "author_id": "author-farenara",
-      "bio": "Synthetic author focused on Farenara coverage.",
-      "display_name": "Jordan Voss",
-      "reputation": 50,
-      "specialization": "civil_freedoms",
-      "user_id": "user-farenara-author"
+      "author_id": "author-vantorhelm",
+      "bio": "Synthetic author focused on Vantorhelm coverage.",
+      "display_name": "Hayden Novak",
+      "reputation": 47,
+      "specialization": "economy",
+      "user_id": "user-vantorhelm-author"
     },
     {
       "author_id": "author-avelis",
       "bio": "Synthetic author focused on Avelis coverage.",
-      "display_name": "Morgan Tovin",
+      "display_name": "Peyton Fitzgerald",
       "reputation": 82,
       "specialization": "institutional_stability",
       "user_id": "user-avelis-author"
     },
     {
-      "author_id": "author-dorevia",
-      "bio": "Synthetic author focused on Dorevia coverage.",
-      "display_name": "Jamie Renn",
-      "reputation": 35,
-      "specialization": "migration_openness",
-      "user_id": "user-dorevia-author"
+      "author_id": "author-norvelara",
+      "bio": "Synthetic author focused on Norvelara coverage.",
+      "display_name": "Ellis Okafor",
+      "reputation": 52,
+      "specialization": "digital_infrastructure",
+      "user_id": "user-norvelara-author"
     }
   ],
   "comments": [
     {
-      "article_id": "article-elvaron",
-      "body": "This matches what I've read about Elvaron recently.",
-      "comment_id": "comment-elvaron-0",
+      "article_id": "article-quorinora",
+      "body": "Not sure this fully reflects the current situation in Quorinora.",
+      "comment_id": "comment-quorinora-0",
       "created_as_of": "2026-01-01",
       "moderation_status": "approved",
-      "user_id": "user-elvaron-commenter-0"
+      "user_id": "user-quorinora-commenter-0"
     },
     {
-      "article_id": "article-elvaron",
-      "body": "This matches what I've read about Elvaron recently.",
-      "comment_id": "comment-elvaron-1",
+      "article_id": "article-quorinora",
+      "body": "This matches what I've read about Quorinora recently.",
+      "comment_id": "comment-quorinora-1",
       "created_as_of": "2026-01-01",
       "moderation_status": "pending",
-      "user_id": "user-elvaron-commenter-1"
+      "user_id": "user-quorinora-commenter-1"
     },
     {
-      "article_id": "article-elvaron",
-      "body": "This matches what I've read about Elvaron recently.",
-      "comment_id": "comment-elvaron-2",
+      "article_id": "article-quorinora",
+      "body": "This matches what I've read about Quorinora recently.",
+      "comment_id": "comment-quorinora-2",
       "created_as_of": "2026-01-01",
       "moderation_status": "hidden",
-      "user_id": "user-elvaron-commenter-0"
+      "user_id": "user-quorinora-commenter-0"
     },
     {
-      "article_id": "article-ivaraora",
-      "body": "Not sure this fully reflects the current situation in Ivaraora.",
-      "comment_id": "comment-ivaraora-0",
+      "article_id": "article-isendraael",
+      "body": "Good summary of Isendraael's trend this period.",
+      "comment_id": "comment-isendraael-0",
       "created_as_of": "2026-01-01",
       "moderation_status": "approved",
-      "user_id": "user-ivaraora-commenter-0"
+      "user_id": "user-isendraael-commenter-0"
     },
     {
-      "article_id": "article-ivaraora",
-      "body": "This matches what I've read about Ivaraora recently.",
-      "comment_id": "comment-ivaraora-1",
+      "article_id": "article-isendraael",
+      "body": "Good summary of Isendraael's trend this period.",
+      "comment_id": "comment-isendraael-1",
       "created_as_of": "2026-01-01",
       "moderation_status": "pending",
-      "user_id": "user-ivaraora-commenter-1"
+      "user_id": "user-isendraael-commenter-1"
     },
     {
-      "article_id": "article-ivaraora",
-      "body": "Good summary of Ivaraora's trend this period.",
-      "comment_id": "comment-ivaraora-2",
+      "article_id": "article-isendraael",
+      "body": "Not sure this fully reflects the current situation in Isendraael.",
+      "comment_id": "comment-isendraael-2",
       "created_as_of": "2026-01-01",
       "moderation_status": "hidden",
-      "user_id": "user-ivaraora-commenter-0"
+      "user_id": "user-isendraael-commenter-0"
     },
     {
-      "article_id": "article-farenara",
-      "body": "Good summary of Farenara's trend this period.",
-      "comment_id": "comment-farenara-0",
+      "article_id": "article-vantorhelm",
+      "body": "Not sure this fully reflects the current situation in Vantorhelm.",
+      "comment_id": "comment-vantorhelm-0",
       "created_as_of": "2026-01-01",
       "moderation_status": "approved",
-      "user_id": "user-farenara-commenter-0"
+      "user_id": "user-vantorhelm-commenter-0"
     },
     {
-      "article_id": "article-farenara",
-      "body": "Good summary of Farenara's trend this period.",
-      "comment_id": "comment-farenara-1",
+      "article_id": "article-vantorhelm",
+      "body": "This matches what I've read about Vantorhelm recently.",
+      "comment_id": "comment-vantorhelm-1",
       "created_as_of": "2026-01-01",
       "moderation_status": "pending",
-      "user_id": "user-farenara-commenter-1"
+      "user_id": "user-vantorhelm-commenter-1"
     },
     {
-      "article_id": "article-farenara",
-      "body": "Not sure this fully reflects the current situation in Farenara.",
-      "comment_id": "comment-farenara-2",
+      "article_id": "article-vantorhelm",
+      "body": "This matches what I've read about Vantorhelm recently.",
+      "comment_id": "comment-vantorhelm-2",
       "created_as_of": "2026-01-01",
       "moderation_status": "hidden",
-      "user_id": "user-farenara-commenter-0"
+      "user_id": "user-vantorhelm-commenter-0"
     },
     {
       "article_id": "article-avelis",
@@ -196,105 +196,105 @@
       "user_id": "user-avelis-commenter-0"
     },
     {
-      "article_id": "article-dorevia",
-      "body": "Good summary of Dorevia's trend this period.",
-      "comment_id": "comment-dorevia-0",
+      "article_id": "article-norvelara",
+      "body": "Good summary of Norvelara's trend this period.",
+      "comment_id": "comment-norvelara-0",
       "created_as_of": "2026-01-01",
       "moderation_status": "approved",
-      "user_id": "user-dorevia-commenter-0"
+      "user_id": "user-norvelara-commenter-0"
     },
     {
-      "article_id": "article-dorevia",
-      "body": "Not sure this fully reflects the current situation in Dorevia.",
-      "comment_id": "comment-dorevia-1",
+      "article_id": "article-norvelara",
+      "body": "Good summary of Norvelara's trend this period.",
+      "comment_id": "comment-norvelara-1",
       "created_as_of": "2026-01-01",
       "moderation_status": "pending",
-      "user_id": "user-dorevia-commenter-1"
+      "user_id": "user-norvelara-commenter-1"
     },
     {
-      "article_id": "article-dorevia",
-      "body": "Good summary of Dorevia's trend this period.",
-      "comment_id": "comment-dorevia-2",
+      "article_id": "article-norvelara",
+      "body": "Good summary of Norvelara's trend this period.",
+      "comment_id": "comment-norvelara-2",
       "created_as_of": "2026-01-01",
       "moderation_status": "hidden",
-      "user_id": "user-dorevia-commenter-0"
+      "user_id": "user-norvelara-commenter-0"
     }
   ],
   "countries": [
     {
       "archetype": "wealthy_restricted",
-      "code": "SYN-ELV-1",
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "code": "SYN-QUO-1",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "events": [
         {
           "as_of": "2026-01-01",
-          "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+          "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
           "direction": "improved",
-          "event_id": "event-elvaron-civil_freedoms",
+          "event_id": "event-quorinora-civil_freedoms",
           "metric": "civil_freedoms",
-          "summary": "Synthetic improved signal for civil_freedoms in Elvaron."
+          "summary": "Synthetic improved signal for civil_freedoms in Quorinora."
         }
       ],
       "metric_history": [
         {
           "as_of": "2024-01-01",
           "metrics": {
-            "civil_freedoms": 12,
-            "cost_of_living": 72,
+            "civil_freedoms": 33,
+            "cost_of_living": 70,
             "data_confidence": 52,
             "digital_infrastructure": 72,
-            "economy": 75,
+            "economy": 82,
             "institutional_stability": 80,
             "migration_openness": 45,
-            "safety": 65
+            "safety": 61
           }
         },
         {
           "as_of": "2025-01-01",
           "metrics": {
-            "civil_freedoms": 14,
-            "cost_of_living": 72,
+            "civil_freedoms": 35,
+            "cost_of_living": 70,
             "data_confidence": 52,
             "digital_infrastructure": 72,
-            "economy": 75,
+            "economy": 82,
             "institutional_stability": 80,
             "migration_openness": 45,
-            "safety": 65
+            "safety": 61
           }
         },
         {
           "as_of": "2026-01-01",
           "metrics": {
-            "civil_freedoms": 16,
-            "cost_of_living": 72,
+            "civil_freedoms": 37,
+            "cost_of_living": 70,
             "data_confidence": 52,
             "digital_infrastructure": 72,
-            "economy": 75,
+            "economy": 82,
             "institutional_stability": 80,
             "migration_openness": 45,
-            "safety": 65
+            "safety": 61
           }
         }
       ],
-      "name": "Elvaron",
+      "name": "Quorinora",
       "risks": [
         "civil_freedoms",
         "migration_openness"
       ],
-      "slug": "elvaron",
+      "slug": "quorinora",
       "sources": [
         {
           "confidence": 52,
-          "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
-          "event_id": "event-elvaron-civil_freedoms",
-          "source_id": "source-elvaron-civil_freedoms",
-          "title": "Synthetic source for Elvaron civil_freedoms",
-          "url": "synthetic://syn-00a8d3d4a1ced7aa/elvaron/event-elvaron-civil_freedoms"
+          "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
+          "event_id": "event-quorinora-civil_freedoms",
+          "source_id": "source-quorinora-civil_freedoms",
+          "title": "Synthetic source for Quorinora civil_freedoms",
+          "url": "synthetic://syn-aa0b270e31058351/quorinora/event-quorinora-civil_freedoms"
         }
       ],
       "strengths": [
-        "institutional_stability",
-        "economy"
+        "economy",
+        "institutional_stability"
       ],
       "uncertainties": [
         "data_confidence"
@@ -302,16 +302,16 @@
     },
     {
       "archetype": "affordable_unstable",
-      "code": "SYN-IVA-2",
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "code": "SYN-ISE-2",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "events": [
         {
           "as_of": "2026-01-01",
-          "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+          "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
           "direction": "declined",
-          "event_id": "event-ivaraora-safety",
+          "event_id": "event-isendraael-safety",
           "metric": "safety",
-          "summary": "Synthetic declined signal for safety in Ivaraora."
+          "summary": "Synthetic declined signal for safety in Isendraael."
         }
       ],
       "metric_history": [
@@ -355,20 +355,20 @@
           }
         }
       ],
-      "name": "Ivaraora",
+      "name": "Isendraael",
       "risks": [
         "institutional_stability",
         "cost_of_living"
       ],
-      "slug": "ivaraora",
+      "slug": "isendraael",
       "sources": [
         {
           "confidence": 52,
-          "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
-          "event_id": "event-ivaraora-safety",
-          "source_id": "source-ivaraora-safety",
-          "title": "Synthetic source for Ivaraora safety",
-          "url": "synthetic://syn-00a8d3d4a1ced7aa/ivaraora/event-ivaraora-safety"
+          "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
+          "event_id": "event-isendraael-safety",
+          "source_id": "source-isendraael-safety",
+          "title": "Synthetic source for Isendraael safety",
+          "url": "synthetic://syn-aa0b270e31058351/isendraael/event-isendraael-safety"
         }
       ],
       "strengths": [
@@ -380,16 +380,16 @@
     },
     {
       "archetype": "stable_technical_expensive",
-      "code": "SYN-FAR-3",
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "code": "SYN-VAN-3",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "events": [
         {
           "as_of": "2026-01-01",
-          "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+          "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
           "direction": "declined",
-          "event_id": "event-farenara-civil_freedoms",
+          "event_id": "event-vantorhelm-civil_freedoms",
           "metric": "civil_freedoms",
-          "summary": "Synthetic declined signal for civil_freedoms in Farenara."
+          "summary": "Synthetic declined signal for civil_freedoms in Vantorhelm."
         }
       ],
       "metric_history": [
@@ -433,19 +433,19 @@
           }
         }
       ],
-      "name": "Farenara",
+      "name": "Vantorhelm",
       "risks": [
         "migration_openness"
       ],
-      "slug": "farenara",
+      "slug": "vantorhelm",
       "sources": [
         {
           "confidence": 71,
-          "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
-          "event_id": "event-farenara-civil_freedoms",
-          "source_id": "source-farenara-civil_freedoms",
-          "title": "Synthetic source for Farenara civil_freedoms",
-          "url": "synthetic://syn-00a8d3d4a1ced7aa/farenara/event-farenara-civil_freedoms"
+          "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
+          "event_id": "event-vantorhelm-civil_freedoms",
+          "source_id": "source-vantorhelm-civil_freedoms",
+          "title": "Synthetic source for Vantorhelm civil_freedoms",
+          "url": "synthetic://syn-aa0b270e31058351/vantorhelm/event-vantorhelm-civil_freedoms"
         }
       ],
       "strengths": [
@@ -457,92 +457,92 @@
     {
       "archetype": "recovering_country",
       "code": "SYN-AVE-4",
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "events": [
         {
           "as_of": "2026-01-01",
-          "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+          "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
           "direction": "improved",
-          "event_id": "event-avelis-safety",
-          "metric": "safety",
-          "summary": "Synthetic improved signal for safety in Avelis."
+          "event_id": "event-avelis-migration_openness",
+          "metric": "migration_openness",
+          "summary": "Synthetic improved signal for migration_openness in Avelis."
         }
       ],
       "metric_history": [
         {
           "as_of": "2024-01-01",
           "metrics": {
-            "civil_freedoms": 70,
-            "cost_of_living": 54,
+            "civil_freedoms": 41,
+            "cost_of_living": 56,
             "data_confidence": 62,
-            "digital_infrastructure": 45,
-            "economy": 42,
-            "institutional_stability": 36,
-            "migration_openness": 72,
-            "safety": 45
+            "digital_infrastructure": 69,
+            "economy": 53,
+            "institutional_stability": 38,
+            "migration_openness": 65,
+            "safety": 68
           }
         },
         {
           "as_of": "2025-01-01",
           "metrics": {
-            "civil_freedoms": 70,
-            "cost_of_living": 54,
+            "civil_freedoms": 41,
+            "cost_of_living": 56,
             "data_confidence": 62,
-            "digital_infrastructure": 45,
-            "economy": 42,
-            "institutional_stability": 36,
-            "migration_openness": 72,
-            "safety": 49
+            "digital_infrastructure": 69,
+            "economy": 53,
+            "institutional_stability": 38,
+            "migration_openness": 66,
+            "safety": 68
           }
         },
         {
           "as_of": "2026-01-01",
           "metrics": {
-            "civil_freedoms": 70,
-            "cost_of_living": 54,
+            "civil_freedoms": 41,
+            "cost_of_living": 56,
             "data_confidence": 62,
-            "digital_infrastructure": 45,
-            "economy": 42,
-            "institutional_stability": 36,
-            "migration_openness": 72,
-            "safety": 53
+            "digital_infrastructure": 69,
+            "economy": 53,
+            "institutional_stability": 38,
+            "migration_openness": 67,
+            "safety": 68
           }
         }
       ],
       "name": "Avelis",
       "risks": [
         "institutional_stability",
-        "economy"
+        "civil_freedoms"
       ],
       "slug": "avelis",
       "sources": [
         {
           "confidence": 62,
-          "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
-          "event_id": "event-avelis-safety",
-          "source_id": "source-avelis-safety",
-          "title": "Synthetic source for Avelis safety",
-          "url": "synthetic://syn-00a8d3d4a1ced7aa/avelis/event-avelis-safety"
+          "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
+          "event_id": "event-avelis-migration_openness",
+          "source_id": "source-avelis-migration_openness",
+          "title": "Synthetic source for Avelis migration_openness",
+          "url": "synthetic://syn-aa0b270e31058351/avelis/event-avelis-migration_openness"
         }
       ],
       "strengths": [
-        "migration_openness",
-        "civil_freedoms"
+        "digital_infrastructure",
+        "safety"
       ],
       "uncertainties": []
     },
     {
       "archetype": "free_small_market",
-      "code": "SYN-DOR-5",
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "code": "SYN-NOR-5",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "events": [
         {
           "as_of": "2026-01-01",
-          "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+          "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
           "direction": "improved",
-          "event_id": "event-dorevia-institutional_stability",
+          "event_id": "event-norvelara-institutional_stability",
           "metric": "institutional_stability",
-          "summary": "Synthetic improved signal for institutional_stability in Dorevia."
+          "summary": "Synthetic improved signal for institutional_stability in Norvelara."
         }
       ],
       "metric_history": [
@@ -586,19 +586,19 @@
           }
         }
       ],
-      "name": "Dorevia",
+      "name": "Norvelara",
       "risks": [
         "cost_of_living"
       ],
-      "slug": "dorevia",
+      "slug": "norvelara",
       "sources": [
         {
           "confidence": 78,
-          "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
-          "event_id": "event-dorevia-institutional_stability",
-          "source_id": "source-dorevia-institutional_stability",
-          "title": "Synthetic source for Dorevia institutional_stability",
-          "url": "synthetic://syn-00a8d3d4a1ced7aa/dorevia/event-dorevia-institutional_stability"
+          "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
+          "event_id": "event-norvelara-institutional_stability",
+          "source_id": "source-norvelara-institutional_stability",
+          "title": "Synthetic source for Norvelara institutional_stability",
+          "url": "synthetic://syn-aa0b270e31058351/norvelara/event-norvelara-institutional_stability"
         }
       ],
       "strengths": [
@@ -613,78 +613,78 @@
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "This is a synthetic profile for Elvaron, generated for local testing."
+          "text": "Quorinora does not exist; this overview is placeholder content for QA."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "When evaluating Elvaron, consider this factor: civil freedoms."
+          "text": "Prospective visitors to Quorinora should note the risk factor: civil freedoms."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Elvaron stands out for institutional stability."
+          "text": "Quorinora performs particularly well on economy."
         }
       ],
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "document_type": "country_overview",
       "locale": "en-US",
-      "recipe_id": "recipe-elvaron-country_overview"
+      "recipe_id": "recipe-quorinora-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Ivaraora is a fictional test country used for Country Decision Atlas development."
+          "text": "No real place corresponds to Isendraael; all details here are synthetic."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "For Ivaraora, a key limitation remains institutional stability."
+          "text": "Among the concerns for Isendraael, institutional stability stands out."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Ivaraora stands out for digital infrastructure."
+          "text": "Among Isendraael's strong points, digital infrastructure is prominent."
         }
       ],
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "document_type": "country_overview",
       "locale": "en-US",
-      "recipe_id": "recipe-ivaraora-country_overview"
+      "recipe_id": "recipe-isendraael-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "This is a synthetic profile for Farenara, generated for local testing."
+          "text": "The following overview of Vantorhelm is entirely fictional test data."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "For Farenara, a key limitation remains migration openness."
+          "text": "Among the concerns for Vantorhelm, migration openness stands out."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Farenara stands out for institutional stability."
+          "text": "Vantorhelm scores especially high on institutional stability."
         }
       ],
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "document_type": "country_overview",
       "locale": "en-US",
-      "recipe_id": "recipe-farenara-country_overview"
+      "recipe_id": "recipe-vantorhelm-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Avelis is a fictional test country used for Country Decision Atlas development."
+          "text": "The following overview of Avelis is entirely fictional test data."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "When evaluating Avelis, consider this factor: institutional stability."
+          "text": "Analysts flag institutional stability as an ongoing issue for Avelis."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "A notable strength of Avelis is migration openness."
+          "text": "Avelis scores especially high on digital infrastructure."
         }
       ],
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "document_type": "country_overview",
       "locale": "en-US",
       "recipe_id": "recipe-avelis-country_overview"
@@ -693,98 +693,98 @@
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "This is a synthetic profile for Dorevia, generated for local testing."
+          "text": "Norvelara is a made-up country created solely to exercise this pipeline."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "When evaluating Dorevia, consider this factor: cost of living."
+          "text": "A notable weak point for Norvelara is cost of living."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Dorevia stands out for safety."
+          "text": "Norvelara stands out for safety."
         }
       ],
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "document_type": "country_overview",
       "locale": "en-US",
-      "recipe_id": "recipe-dorevia-country_overview"
+      "recipe_id": "recipe-norvelara-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "This overview of Elvaron is generated test data, not a real place."
+          "text": "Quorinora does not correspond to any real place; all content here is fabricated for testing."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "For Elvaron, the main limiting factor remains civil freedoms."
+          "text": "For Quorinora, the main limiting factor remains civil freedoms."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Elvaron performs strongly on institutional stability."
+          "text": "A recurring positive for Quorinora is economy."
         }
       ],
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "document_type": "country_overview",
       "locale": "en-US",
-      "recipe_id": "recipe-elvaron-en-US-country_overview"
+      "recipe_id": "recipe-quorinora-en-US-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Ivaraora es un país ficticio usado solo para pruebas locales."
+          "text": "Isendraael es un país ficticio usado solo para pruebas locales."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Al evaluar Ivaraora, conviene tener en cuenta el riesgo: institutional stability."
+          "text": "Una preocupación recurrente para Isendraael es institutional stability."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Ivaraora destaca especialmente en digital infrastructure."
+          "text": "Isendraael destaca especialmente en digital infrastructure."
         }
       ],
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "document_type": "country_overview",
       "locale": "es-ES",
-      "recipe_id": "recipe-ivaraora-es-ES-country_overview"
+      "recipe_id": "recipe-isendraael-es-ES-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Этот обзор Farenara — сгенерированные тестовые данные, а не реальное место."
+          "text": "Материал ниже о Vantorhelm сгенерирован автоматически и не несёт реального смысла."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "При оценке Farenara стоит учитывать риск: migration openness."
+          "text": "Наблюдатели неоднократно указывают на migration openness как на слабое место Vantorhelm."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Заметная сильная сторона Farenara — institutional stability."
+          "text": "Обозреватели часто отмечают institutional stability у Vantorhelm."
         }
       ],
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "document_type": "country_overview",
       "locale": "ru-RU",
-      "recipe_id": "recipe-farenara-ru-RU-country_overview"
+      "recipe_id": "recipe-vantorhelm-ru-RU-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Avelis का यह विवरण जनित परीक्षण डेटा है, कोई वास्तविक जगह नहीं।"
+          "text": "Avelis के बारे में नीचे दी गई सामग्री स्वचालित रूप से बनाई गई है और इसका कोई वास्तविक अर्थ नहीं है।"
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Avelis का मूल्यांकन करते समय इस जोखिम को ध्यान में रखें: institutional stability।"
+          "text": "Avelis अभी भी institutional stability से जुड़ी कठिनाइयों का सामना कर रहा है।"
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Avelis migration openness में अच्छा प्रदर्शन करता है।"
+          "text": "Avelis digital infrastructure में अच्छा प्रदर्शन करता है।"
         }
       ],
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "document_type": "country_overview",
       "locale": "hi-IN",
       "recipe_id": "recipe-avelis-hi-IN-country_overview"
@@ -793,98 +793,98 @@
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Dorevia یک کشور خیالی است که فقط برای آزمایش محلی استفاده می‌شود."
+          "text": "Norvelara یک کشور خیالی است که فقط برای آزمایش محلی استفاده می‌شود."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "هنگام بررسی Dorevia باید ریسک زیر را در نظر گرفت: cost of living."
+          "text": "یک نگرانی مکرر برای Norvelara، cost of living است."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "یکی از نقاط قوت Dorevia، safety است."
+          "text": "ناظران اغلب به safety در Norvelara اشاره می‌کنند."
         }
       ],
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "document_type": "country_overview",
       "locale": "fa-IR",
-      "recipe_id": "recipe-dorevia-fa-IR-country_overview"
+      "recipe_id": "recipe-norvelara-fa-IR-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Elvaron دولة خيالية تُستخدم فقط للاختبار المحلي."
+          "text": "Quorinora دولة خيالية تُستخدم فقط للاختبار المحلي."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "عند تقييم Elvaron، يجب مراعاة عامل الخطر: civil freedoms."
+          "text": "من المخاوف المتكررة بالنسبة لـ Quorinora هو civil freedoms."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "من أبرز نقاط قوة Elvaron هو institutional stability."
+          "text": "تحقق Quorinora أداءً جيداً باستمرار في economy."
         }
       ],
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "document_type": "country_overview",
       "locale": "ar-SA",
-      "recipe_id": "recipe-elvaron-ar-SA-country_overview"
+      "recipe_id": "recipe-quorinora-ar-SA-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Ivaraora是一个虚构国家，仅用于本地测试。"
+          "text": "Isendraael仅存在于此测试数据集中，是为质量保证目的而虚构的。"
         },
         {
           "block_id": "country_risk_summary",
-          "text": "对于Ivaraora，主要限制因素仍然是institutional stability。"
+          "text": "观察人士多次指出institutional stability是Isendraael的薄弱环节。"
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Ivaraora在digital infrastructure方面表现突出。"
+          "text": "Isendraael凭借digital infrastructure建立了良好的声誉。"
         }
       ],
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "document_type": "country_overview",
       "locale": "zh-Hans-CN",
-      "recipe_id": "recipe-ivaraora-zh-Hans-CN-country_overview"
+      "recipe_id": "recipe-isendraael-zh-Hans-CN-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Farenaraのこの概要は生成されたテストデータであり、実在の場所ではありません。"
+          "text": "以下のVantorhelmに関する内容は自動生成されたものであり、実際の意味を持ちません。"
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Farenaraを評価する際は、リスク要因：migration opennessに注意してください。"
+          "text": "観察者は繰り返しmigration opennessをVantorhelmの弱点として指摘しています。"
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Farenaraはinstitutional stabilityの面で優れています。"
+          "text": "評論家はしばしばVantorhelmのinstitutional stabilityを強調します。"
         }
       ],
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "document_type": "country_overview",
       "locale": "ja-JP",
-      "recipe_id": "recipe-farenara-ja-JP-country_overview"
+      "recipe_id": "recipe-vantorhelm-ja-JP-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Avelis은 로컬 테스트를 위해만 사용되는 가상의 국가입니다."
+          "text": "Avelis에 대한 이 설명은 합성된 채움 콘텐츠이며 실제 국가 프로필이 아닙니다."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Avelis의 경우 주요 제한 요인은 여전히 institutional stability입니다."
+          "text": "관찰자들은 institutional stability을 Avelis의 약점으로 반복적으로 지적합니다."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Avelis의 두드러진 강점은 migration openness입니다."
+          "text": "Avelis은 digital infrastructure 부문에서 강세를 보입니다."
         }
       ],
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "document_type": "country_overview",
       "locale": "ko-KR",
       "recipe_id": "recipe-avelis-ko-KR-country_overview"
@@ -893,98 +893,98 @@
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Dorevia hakkındaki bu özet, gerçek bir yer değil, üretilmiş test verisidir."
+          "text": "Norvelara'a ilişkin bu açıklama sentetik dolgu içeriktir, gerçek bir ülke profili değildir."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Dorevia değerlendirilirken şu risk faktörü dikkate alınmalıdır: cost of living."
+          "text": "Gözlemciler cost of living'ı Norvelara için tekrar tekrar zayıf nokta olarak gösteriyor."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Dorevia, safety konusunda güçlü bir performans gösteriyor."
+          "text": "Gözlemciler genellikle Norvelara'ın safety yönünü öne çıkarır."
         }
       ],
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "document_type": "country_overview",
       "locale": "tr-TR",
-      "recipe_id": "recipe-dorevia-tr-TR-country_overview"
+      "recipe_id": "recipe-norvelara-tr-TR-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Ringkasan Elvaron ini adalah data uji yang dihasilkan, bukan tempat nyata."
+          "text": "Quorinora hanya ada dalam kumpulan data uji ini dan dibuat untuk tujuan penjaminan mutu."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Bagi Elvaron, faktor pembatas utama tetap civil freedoms."
+          "text": "Prospek Quorinora dibatasi oleh faktor civil freedoms."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Elvaron tampil kuat pada aspek institutional stability."
+          "text": "Quorinora secara konsisten tampil baik pada aspek economy."
         }
       ],
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "document_type": "country_overview",
       "locale": "id-ID",
-      "recipe_id": "recipe-elvaron-id-ID-country_overview"
+      "recipe_id": "recipe-quorinora-id-ID-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Muhtasari huu wa Ivaraora ni data ya jaribio iliyotengenezwa, si mahali halisi."
+          "text": "Isendraael ipo tu ndani ya seti hii ya data ya majaribio na iliundwa kwa madhumuni ya udhibiti wa ubora."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Wakati wa kutathmini Ivaraora, zingatia hatari: institutional stability."
+          "text": "Wasiwasi unaojirudia kwa Isendraael ni institutional stability."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Ivaraora ina utendaji imara katika digital infrastructure."
+          "text": "Wachunguzi mara nyingi wanaangazia digital infrastructure ya Isendraael."
         }
       ],
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "document_type": "country_overview",
       "locale": "sw-KE",
-      "recipe_id": "recipe-ivaraora-sw-KE-country_overview"
+      "recipe_id": "recipe-isendraael-sw-KE-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Farenara là một quốc gia hư cấu chỉ dùng để kiểm thử cục bộ."
+          "text": "Vantorhelm là một quốc gia hư cấu chỉ dùng để kiểm thử cục bộ."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Khi đánh giá Farenara, cần lưu ý yếu tố rủi ro: migration openness."
+          "text": "Vantorhelm vẫn đang gặp khó khăn liên quan đến migration openness."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Farenara thể hiện tốt ở institutional stability."
+          "text": "Một điểm mạnh nổi bật của Vantorhelm là institutional stability."
         }
       ],
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "document_type": "country_overview",
       "locale": "vi-VN",
-      "recipe_id": "recipe-farenara-vi-VN-country_overview"
+      "recipe_id": "recipe-vantorhelm-vi-VN-country_overview"
     },
     {
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "ภาพรวมนี้ของAvelisเป็นข้อมูลทดสอบที่สร้างขึ้น ไม่ใช่สถานที่จริง"
+          "text": "Avelisมีอยู่เฉพาะในชุดข้อมูลทดสอบนี้และถูกสร้างขึ้นเพื่อวัตถุประสงค์ในการประกันคุณภาพ"
         },
         {
           "block_id": "country_risk_summary",
-          "text": "เมื่อประเมินAvelis ควรคำนึงถึงปัจจัยเสี่ยง: institutional stability"
+          "text": "ผู้สังเกตการณ์ชี้ให้เห็นซ้ำ ๆ ว่า institutional stability เป็นจุดอ่อนของAvelis"
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Avelisมีผลงานโดดเด่นในด้าน migration openness"
+          "text": "นักวิจารณ์มักเน้นย้ำถึง digital infrastructure ของAvelis"
         }
       ],
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "document_type": "country_overview",
       "locale": "th-TH",
       "recipe_id": "recipe-avelis-th-TH-country_overview"
@@ -993,94 +993,94 @@
       "blocks": [
         {
           "block_id": "country_intro",
-          "text": "Dorevia பற்றிய இந்த சுருக்கம் உருவாக்கப்பட்ட சோதனை தரவு ஆகும், இது ஒரு உண்மையான இடம் அல்ல."
+          "text": "Norvelara இந்த சோதனை தரவுத்தொகுப்பில் மட்டுமே உள்ளது மற்றும் தர உறுதிப்பாட்டு நோக்கத்திற்காக உருவாக்கப்பட்டது."
         },
         {
           "block_id": "country_risk_summary",
-          "text": "Doreviaக்கு முக்கிய கட்டுப்பாட்டு காரணி இன்னும் cost of living ஆகும்."
+          "text": "Norvelaraக்கு மீண்டும் மீண்டும் வரும் கவலை cost of living ஆகும்."
         },
         {
           "block_id": "country_strength_summary",
-          "text": "Dorevia safety என்பதில் வலுவான செயல்திறனை காட்டுகிறது."
+          "text": "Norvelara safety என்பதில் வலுவான செயல்திறனை காட்டுகிறது."
         }
       ],
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "document_type": "country_overview",
       "locale": "ta-IN",
-      "recipe_id": "recipe-dorevia-ta-IN-country_overview"
+      "recipe_id": "recipe-norvelara-ta-IN-country_overview"
     }
   ],
   "legal_signals": [
     {
       "affected_country_ids": [
-        "529c8c3f-b437-5dfa-960f-2008f234e06d"
+        "184c33e3-0eb6-5cbb-bd85-8ad384440a4d"
       ],
       "confidence": 52,
-      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "country_id": "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
       "effective_as_of": "2026-01-01",
-      "event_id": "event-elvaron-civil_freedoms",
+      "event_id": "event-quorinora-civil_freedoms",
       "impact": "positive",
-      "signal_id": "legal-elvaron",
-      "source_id": "source-elvaron-civil_freedoms"
+      "signal_id": "legal-quorinora",
+      "source_id": "source-quorinora-civil_freedoms"
     },
     {
       "affected_country_ids": [
-        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+        "f0bc9cfc-45c0-582d-be77-d685c921bbc4"
       ],
       "confidence": 52,
-      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "country_id": "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
       "effective_as_of": "2026-01-01",
-      "event_id": "event-ivaraora-safety",
+      "event_id": "event-isendraael-safety",
       "impact": "negative",
-      "signal_id": "legal-ivaraora",
-      "source_id": "source-ivaraora-safety"
+      "signal_id": "legal-isendraael",
+      "source_id": "source-isendraael-safety"
     },
     {
       "affected_country_ids": [
-        "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f"
+        "7ac0b598-f531-53ff-bba3-bd59d4044394"
       ],
       "confidence": 71,
-      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "country_id": "7ac0b598-f531-53ff-bba3-bd59d4044394",
       "effective_as_of": "2026-01-01",
-      "event_id": "event-farenara-civil_freedoms",
+      "event_id": "event-vantorhelm-civil_freedoms",
       "impact": "negative",
-      "signal_id": "legal-farenara",
-      "source_id": "source-farenara-civil_freedoms"
+      "signal_id": "legal-vantorhelm",
+      "source_id": "source-vantorhelm-civil_freedoms"
     },
     {
       "affected_country_ids": [
-        "75abf449-5ddd-5a36-945c-795ef147846b"
+        "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3"
       ],
       "confidence": 62,
-      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "country_id": "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3",
       "effective_as_of": "2026-01-01",
-      "event_id": "event-avelis-safety",
+      "event_id": "event-avelis-migration_openness",
       "impact": "positive",
       "signal_id": "legal-avelis",
-      "source_id": "source-avelis-safety"
+      "source_id": "source-avelis-migration_openness"
     },
     {
       "affected_country_ids": [
-        "ff833225-b83f-5d20-8af2-d7c68d9c1719"
+        "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3"
       ],
       "confidence": 78,
-      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "country_id": "fcbfc72b-01ca-51cc-9744-2d8a53b7afe3",
       "effective_as_of": "2026-01-01",
-      "event_id": "event-dorevia-institutional_stability",
+      "event_id": "event-norvelara-institutional_stability",
       "impact": "positive",
-      "signal_id": "legal-dorevia",
-      "source_id": "source-dorevia-institutional_stability"
+      "signal_id": "legal-norvelara",
+      "source_id": "source-norvelara-institutional_stability"
     }
   ],
   "metadata": {
-    "dataset_id": "syn-00a8d3d4a1ced7aa",
+    "dataset_id": "syn-aa0b270e31058351",
     "fictional_notice": "SYNTHETIC TEST DATA - NOT REAL",
     "generated_on": "2026-01-01",
     "generator_version": "synthetic-world-v1",
     "profile": "balanced",
     "schema_version": "1.0",
     "seed": 42017,
-    "source_config_checksum": "e3e9854b83f92d670a35a7d84185292210d3313d270ad58957a32a3ef57b30cd",
+    "source_config_checksum": "49cb0b585185811f95dcac1b4079765698cccbede04408b3de20f31959194450",
     "supported_locales": [
       "ar-SA",
       "en-US",
@@ -1104,8 +1104,8 @@
       "category": "comparison",
       "expected_results": [
         {
-          "check": "compare_view_shows_distinct_metrics:elvaron:ivaraora",
-          "description": "Comparison shows different metric profiles for Elvaron and Ivaraora."
+          "check": "compare_view_shows_distinct_metrics:quorinora:isendraael",
+          "description": "Comparison shows different metric profiles for Quorinora and Isendraael."
         }
       ],
       "initial_state": {
@@ -1113,42 +1113,42 @@
       },
       "profile": "balanced",
       "related_artifacts": [
-        "529c8c3f-b437-5dfa-960f-2008f234e06d",
-        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+        "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
+        "f0bc9cfc-45c0-582d-be77-d685c921bbc4"
       ],
       "risk_labels": [
         "search"
       ],
-      "scenario_id": "scenario-compare-elvaron-ivaraora",
+      "scenario_id": "scenario-compare-quorinora-isendraael",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "open_country",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "compare_countries",
           "target": {
-            "country_slug_a": "elvaron",
-            "country_slug_b": "ivaraora"
+            "country_slug_a": "quorinora",
+            "country_slug_b": "isendraael"
           }
         }
       ],
-      "title": "Compare Elvaron and Ivaraora"
+      "title": "Compare Quorinora and Isendraael"
     },
     {
       "category": "comparison",
       "expected_results": [
         {
-          "check": "compare_view_shows_distinct_metrics:farenara:avelis",
-          "description": "Comparison shows different metric profiles for Farenara and Avelis."
+          "check": "compare_view_shows_distinct_metrics:vantorhelm:avelis",
+          "description": "Comparison shows different metric profiles for Vantorhelm and Avelis."
         }
       ],
       "initial_state": {
@@ -1156,18 +1156,18 @@
       },
       "profile": "balanced",
       "related_artifacts": [
-        "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
-        "75abf449-5ddd-5a36-945c-795ef147846b"
+        "7ac0b598-f531-53ff-bba3-bd59d4044394",
+        "7398adb0-b7d4-5ad2-ab92-3a15d60e7ef3"
       ],
       "risk_labels": [
         "search"
       ],
-      "scenario_id": "scenario-compare-farenara-avelis",
+      "scenario_id": "scenario-compare-vantorhelm-avelis",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "farenara"
+            "country_slug": "vantorhelm"
           }
         },
         {
@@ -1179,419 +1179,419 @@
         {
           "action": "compare_countries",
           "target": {
-            "country_slug_a": "farenara",
+            "country_slug_a": "vantorhelm",
             "country_slug_b": "avelis"
           }
         }
       ],
-      "title": "Compare Farenara and Avelis"
+      "title": "Compare Vantorhelm and Avelis"
     },
     {
       "category": "source_review",
       "expected_results": [
         {
-          "check": "source_detail_shows_confidence:source-elvaron-civil_freedoms",
-          "description": "Source Synthetic source for Elvaron civil_freedoms opens and shows its confidence level."
+          "check": "source_detail_shows_confidence:source-quorinora-civil_freedoms",
+          "description": "Source Synthetic source for Quorinora civil_freedoms opens and shows its confidence level."
         },
         {
-          "check": "comment_visible_with_status:comment-elvaron-0:approved",
+          "check": "comment_visible_with_status:comment-quorinora-0:approved",
           "description": "New comment appears with moderation status approved."
         }
       ],
       "initial_state": {
-        "country_slug": "elvaron",
+        "country_slug": "quorinora",
         "user_role": "authenticated_user"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "529c8c3f-b437-5dfa-960f-2008f234e06d",
-        "article-elvaron",
-        "source-elvaron-civil_freedoms",
-        "comment-elvaron-0"
+        "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
+        "article-quorinora",
+        "source-quorinora-civil_freedoms",
+        "comment-quorinora-0"
       ],
       "risk_labels": [
         "moderation",
         "authorization"
       ],
-      "scenario_id": "scenario-source-comment-elvaron",
+      "scenario_id": "scenario-source-comment-quorinora",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "open_article",
           "target": {
-            "article_id": "article-elvaron"
+            "article_id": "article-quorinora"
           }
         },
         {
           "action": "open_source",
           "target": {
-            "source_id": "source-elvaron-civil_freedoms"
+            "source_id": "source-quorinora-civil_freedoms"
           }
         },
         {
           "action": "add_comment",
           "target": {
-            "article_id": "article-elvaron",
-            "comment_id": "comment-elvaron-0"
+            "article_id": "article-quorinora",
+            "comment_id": "comment-quorinora-0"
           }
         }
       ],
-      "title": "Review a source and leave a comment on Elvaron"
+      "title": "Review a source and leave a comment on Quorinora"
     },
     {
       "category": "source_review",
       "expected_results": [
         {
-          "check": "source_detail_shows_confidence:source-ivaraora-safety",
-          "description": "Source Synthetic source for Ivaraora safety opens and shows its confidence level."
+          "check": "source_detail_shows_confidence:source-isendraael-safety",
+          "description": "Source Synthetic source for Isendraael safety opens and shows its confidence level."
         },
         {
-          "check": "comment_visible_with_status:comment-ivaraora-0:approved",
+          "check": "comment_visible_with_status:comment-isendraael-0:approved",
           "description": "New comment appears with moderation status approved."
         }
       ],
       "initial_state": {
-        "country_slug": "ivaraora",
+        "country_slug": "isendraael",
         "user_role": "authenticated_user"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
-        "article-ivaraora",
-        "source-ivaraora-safety",
-        "comment-ivaraora-0"
+        "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
+        "article-isendraael",
+        "source-isendraael-safety",
+        "comment-isendraael-0"
       ],
       "risk_labels": [
         "moderation",
         "authorization"
       ],
-      "scenario_id": "scenario-source-comment-ivaraora",
+      "scenario_id": "scenario-source-comment-isendraael",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "open_article",
           "target": {
-            "article_id": "article-ivaraora"
+            "article_id": "article-isendraael"
           }
         },
         {
           "action": "open_source",
           "target": {
-            "source_id": "source-ivaraora-safety"
+            "source_id": "source-isendraael-safety"
           }
         },
         {
           "action": "add_comment",
           "target": {
-            "article_id": "article-ivaraora",
-            "comment_id": "comment-ivaraora-0"
+            "article_id": "article-isendraael",
+            "comment_id": "comment-isendraael-0"
           }
         }
       ],
-      "title": "Review a source and leave a comment on Ivaraora"
+      "title": "Review a source and leave a comment on Isendraael"
     },
     {
       "category": "change_notification",
       "expected_results": [
         {
-          "check": "what_changed_shows_event:event-elvaron-civil_freedoms",
+          "check": "what_changed_shows_event:event-quorinora-civil_freedoms",
           "description": "'What changed' shows the civil_freedoms improved event with its legal signal."
         },
         {
-          "check": "fake_notification_queued:elvaron:event-elvaron-civil_freedoms",
+          "check": "fake_notification_queued:quorinora:event-quorinora-civil_freedoms",
           "description": "A fake-mode notification is queued for the watchlisted change."
         }
       ],
       "initial_state": {
-        "country_slug": "elvaron",
+        "country_slug": "quorinora",
         "user_role": "authenticated_user"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "529c8c3f-b437-5dfa-960f-2008f234e06d",
-        "event-elvaron-civil_freedoms",
-        "legal-elvaron"
+        "184c33e3-0eb6-5cbb-bd85-8ad384440a4d",
+        "event-quorinora-civil_freedoms",
+        "legal-quorinora"
       ],
       "risk_labels": [
         "freshness",
         "notifications"
       ],
-      "scenario_id": "scenario-watchlist-change-elvaron",
+      "scenario_id": "scenario-watchlist-change-quorinora",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "add_to_watchlist",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "open_what_changed",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "trigger_notification",
           "target": {
             "channel": "fake",
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         }
       ],
-      "title": "Watch Elvaron and see the civil_freedoms change"
+      "title": "Watch Quorinora and see the civil_freedoms change"
     },
     {
       "category": "change_notification",
       "expected_results": [
         {
-          "check": "what_changed_shows_event:event-ivaraora-safety",
+          "check": "what_changed_shows_event:event-isendraael-safety",
           "description": "'What changed' shows the safety declined event with its legal signal."
         },
         {
-          "check": "fake_notification_queued:ivaraora:event-ivaraora-safety",
+          "check": "fake_notification_queued:isendraael:event-isendraael-safety",
           "description": "A fake-mode notification is queued for the watchlisted change."
         }
       ],
       "initial_state": {
-        "country_slug": "ivaraora",
+        "country_slug": "isendraael",
         "user_role": "authenticated_user"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
-        "event-ivaraora-safety",
-        "legal-ivaraora"
+        "f0bc9cfc-45c0-582d-be77-d685c921bbc4",
+        "event-isendraael-safety",
+        "legal-isendraael"
       ],
       "risk_labels": [
         "freshness",
         "notifications"
       ],
-      "scenario_id": "scenario-watchlist-change-ivaraora",
+      "scenario_id": "scenario-watchlist-change-isendraael",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "add_to_watchlist",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "open_what_changed",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "trigger_notification",
           "target": {
             "channel": "fake",
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         }
       ],
-      "title": "Watch Ivaraora and see the safety change"
+      "title": "Watch Isendraael and see the safety change"
     },
     {
       "category": "data_quality",
       "expected_results": [
         {
-          "check": "trust_panel_shows_low_confidence:elvaron",
-          "description": "Trust panel surfaces the low data_confidence (52) for Elvaron."
+          "check": "trust_panel_shows_low_confidence:quorinora",
+          "description": "Trust panel surfaces the low data_confidence (52) for Quorinora."
         }
       ],
       "initial_state": {
-        "country_slug": "elvaron",
+        "country_slug": "quorinora",
         "user_role": "anonymous"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "529c8c3f-b437-5dfa-960f-2008f234e06d"
+        "184c33e3-0eb6-5cbb-bd85-8ad384440a4d"
       ],
       "risk_labels": [
         "freshness",
         "data_quality"
       ],
-      "scenario_id": "scenario-data-quality-elvaron",
+      "scenario_id": "scenario-data-quality-quorinora",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         },
         {
           "action": "open_trust_panel",
           "target": {
-            "country_slug": "elvaron"
+            "country_slug": "quorinora"
           }
         }
       ],
-      "title": "Review incomplete or conflicting data for Elvaron"
+      "title": "Review incomplete or conflicting data for Quorinora"
     },
     {
       "category": "data_quality",
       "expected_results": [
         {
-          "check": "trust_panel_shows_low_confidence:ivaraora",
-          "description": "Trust panel surfaces the low data_confidence (52) for Ivaraora."
+          "check": "trust_panel_shows_low_confidence:isendraael",
+          "description": "Trust panel surfaces the low data_confidence (52) for Isendraael."
         }
       ],
       "initial_state": {
-        "country_slug": "ivaraora",
+        "country_slug": "isendraael",
         "user_role": "anonymous"
       },
       "profile": "balanced",
       "related_artifacts": [
-        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+        "f0bc9cfc-45c0-582d-be77-d685c921bbc4"
       ],
       "risk_labels": [
         "freshness",
         "data_quality"
       ],
-      "scenario_id": "scenario-data-quality-ivaraora",
+      "scenario_id": "scenario-data-quality-isendraael",
       "steps": [
         {
           "action": "open_country",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         },
         {
           "action": "open_trust_panel",
           "target": {
-            "country_slug": "ivaraora"
+            "country_slug": "isendraael"
           }
         }
       ],
-      "title": "Review incomplete or conflicting data for Ivaraora"
+      "title": "Review incomplete or conflicting data for Isendraael"
     }
   ],
   "users": [
     {
-      "display_name": "Avery Renn",
-      "email": "elvaron-author@example.test",
+      "display_name": "Reese Kaczmarek",
+      "email": "quorinora-author@example.test",
       "locale": "en-US",
       "role": "author",
-      "user_id": "user-elvaron-author"
+      "user_id": "user-quorinora-author"
     },
     {
-      "display_name": "Morgan Voss",
-      "email": "elvaron-commenter-0@example.test",
+      "display_name": "Phoenix Kaczmarek",
+      "email": "quorinora-commenter-0@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-elvaron-commenter-0"
+      "user_id": "user-quorinora-commenter-0"
     },
     {
-      "display_name": "Taylor Marek",
-      "email": "elvaron-commenter-1@example.test",
+      "display_name": "Alex Brix",
+      "email": "quorinora-commenter-1@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-elvaron-commenter-1"
+      "user_id": "user-quorinora-commenter-1"
     },
     {
-      "display_name": "Morgan Marek",
-      "email": "ivaraora-author@example.test",
+      "display_name": "Phoenix Mbeki",
+      "email": "isendraael-author@example.test",
       "locale": "en-US",
       "role": "author",
-      "user_id": "user-ivaraora-author"
+      "user_id": "user-isendraael-author"
     },
     {
-      "display_name": "Riley Solis",
-      "email": "ivaraora-commenter-0@example.test",
+      "display_name": "Dakota Rasmussen",
+      "email": "isendraael-commenter-0@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-ivaraora-commenter-0"
+      "user_id": "user-isendraael-commenter-0"
     },
     {
-      "display_name": "Quinn Kade",
-      "email": "ivaraora-commenter-1@example.test",
+      "display_name": "Kendall Renn",
+      "email": "isendraael-commenter-1@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-ivaraora-commenter-1"
+      "user_id": "user-isendraael-commenter-1"
     },
     {
-      "display_name": "Jordan Voss",
-      "email": "farenara-author@example.test",
+      "display_name": "Hayden Novak",
+      "email": "vantorhelm-author@example.test",
       "locale": "en-US",
       "role": "author",
-      "user_id": "user-farenara-author"
+      "user_id": "user-vantorhelm-author"
     },
     {
-      "display_name": "Jamie Dahl",
-      "email": "farenara-commenter-0@example.test",
+      "display_name": "Skyler Osei",
+      "email": "vantorhelm-commenter-0@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-farenara-commenter-0"
+      "user_id": "user-vantorhelm-commenter-0"
     },
     {
-      "display_name": "Sam Brix",
-      "email": "farenara-commenter-1@example.test",
+      "display_name": "Marley Alvarez",
+      "email": "vantorhelm-commenter-1@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-farenara-commenter-1"
+      "user_id": "user-vantorhelm-commenter-1"
     },
     {
-      "display_name": "Morgan Tovin",
+      "display_name": "Peyton Fitzgerald",
       "email": "avelis-author@example.test",
       "locale": "en-US",
       "role": "author",
       "user_id": "user-avelis-author"
     },
     {
-      "display_name": "Jamie Onyeka",
+      "display_name": "Reese Mbeki",
       "email": "avelis-commenter-0@example.test",
       "locale": "en-US",
       "role": "user",
       "user_id": "user-avelis-commenter-0"
     },
     {
-      "display_name": "Taylor Voss",
+      "display_name": "Sage Solis",
       "email": "avelis-commenter-1@example.test",
       "locale": "en-US",
       "role": "user",
       "user_id": "user-avelis-commenter-1"
     },
     {
-      "display_name": "Jamie Renn",
-      "email": "dorevia-author@example.test",
+      "display_name": "Ellis Okafor",
+      "email": "norvelara-author@example.test",
       "locale": "en-US",
       "role": "author",
-      "user_id": "user-dorevia-author"
+      "user_id": "user-norvelara-author"
     },
     {
-      "display_name": "Avery Dahl",
-      "email": "dorevia-commenter-0@example.test",
+      "display_name": "Jordan Bergstrom",
+      "email": "norvelara-commenter-0@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-dorevia-commenter-0"
+      "user_id": "user-norvelara-commenter-0"
     },
     {
-      "display_name": "Alex Onyeka",
-      "email": "dorevia-commenter-1@example.test",
+      "display_name": "Blake Tovin",
+      "email": "norvelara-commenter-1@example.test",
       "locale": "en-US",
       "role": "user",
-      "user_id": "user-dorevia-commenter-1"
+      "user_id": "user-norvelara-commenter-1"
     }
   ]
 }
