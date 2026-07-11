@@ -171,6 +171,14 @@
   }
 }
 
+/* Signal ticker crawl: the track holds its item list twice, so sliding by
+   exactly half its own width loops seamlessly. */
+@keyframes ticker-crawl {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Laser-sweep border glow for interactive cards: nothing about the box
    itself resizes or shifts. An inset box-shadow ring (in Card.tsx) reads as
    a "thicker" border without touching border-width, so layout never
