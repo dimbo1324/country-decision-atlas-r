@@ -4,10 +4,14 @@ import json
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from scripts.synthetic_data.archive.zip_archiver import create_zip_archive
+from scripts.synthetic_data.archive.zip_archiver import (
+    create_zip_archive,
+    write_archive_checksum,
+)
 from scripts.synthetic_data.core.artifact_validation import (
     validate_generated_documents,
 )
+from scripts.synthetic_data.core.dashboard import render_dashboard
 from scripts.synthetic_data.core.document_formats import ALL_DOCUMENT_FORMATS
 from scripts.synthetic_data.core.document_rendering.context import (
     GeneratedDocument,
@@ -37,6 +41,7 @@ from scripts.synthetic_data.core.manifest import (
     build_manifest,
     write_generation_summary,
     write_manifest,
+    write_manifest_checksum,
 )
 from scripts.synthetic_data.core.sql_fixture import (
     build_cleanup_sql,
@@ -140,7 +145,10 @@ class PackageResult:
     manifest_path: Path
     summary_path: Path
     validation_report_path: Path
+    dashboard_path: Path
+    manifest_checksum_path: Path
     zip_path: Path
+    package_checksum_path: Path
     artifact_errors: tuple[str, ...]
 
 
@@ -184,6 +192,12 @@ def package_dataset(
     summary_path = write_generation_summary(
         world=world, manifest=manifest, dataset_dir=dataset_dir
     )
+    manifest_checksum_path = write_manifest_checksum(
+        manifest_path, dataset_dir=dataset_dir
+    )
+    dashboard_path = render_dashboard(
+        world=world, manifest=manifest, dataset_dir=dataset_dir
+    )
 
     validation_report_path = dataset_dir / "reports" / "validation_report.json"
     validation_report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -213,13 +227,19 @@ def package_dataset(
         manifest_path,
         summary_path,
         validation_report_path,
+        manifest_checksum_path,
+        dashboard_path,
     ]
     create_zip_archive(all_paths, zip_path, arcname_root=dataset_dir)
+    package_checksum_path = write_archive_checksum(zip_path)
 
     return PackageResult(
         manifest_path=manifest_path,
         summary_path=summary_path,
         validation_report_path=validation_report_path,
+        dashboard_path=dashboard_path,
+        manifest_checksum_path=manifest_checksum_path,
         zip_path=zip_path,
+        package_checksum_path=package_checksum_path,
         artifact_errors=artifact_errors,
     )

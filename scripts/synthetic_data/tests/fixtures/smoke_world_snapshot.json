@@ -1,0 +1,1404 @@
+{
+  "articles": [
+    {
+      "article_id": "article-elvaron",
+      "author_id": "author-elvaron",
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "published_as_of": "2026-01-01",
+      "source_ids": [
+        "source-elvaron-civil_freedoms"
+      ],
+      "summary": "A synthetic overview of Elvaron, covering its civil freedoms trend and supporting sources.",
+      "title": "Elvaron: what changed and why it matters"
+    },
+    {
+      "article_id": "article-ivaraora",
+      "author_id": "author-ivaraora",
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "published_as_of": "2026-01-01",
+      "source_ids": [
+        "source-ivaraora-safety"
+      ],
+      "summary": "A synthetic overview of Ivaraora, covering its safety trend and supporting sources.",
+      "title": "Ivaraora: what changed and why it matters"
+    },
+    {
+      "article_id": "article-farenara",
+      "author_id": "author-farenara",
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "published_as_of": "2026-01-01",
+      "source_ids": [
+        "source-farenara-civil_freedoms"
+      ],
+      "summary": "A synthetic overview of Farenara, covering its civil freedoms trend and supporting sources.",
+      "title": "Farenara: what changed and why it matters"
+    },
+    {
+      "article_id": "article-avelis",
+      "author_id": "author-avelis",
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "published_as_of": "2026-01-01",
+      "source_ids": [
+        "source-avelis-safety"
+      ],
+      "summary": "A synthetic overview of Avelis, covering its safety trend and supporting sources.",
+      "title": "Avelis: what changed and why it matters"
+    },
+    {
+      "article_id": "article-dorevia",
+      "author_id": "author-dorevia",
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "published_as_of": "2026-01-01",
+      "source_ids": [
+        "source-dorevia-institutional_stability"
+      ],
+      "summary": "A synthetic overview of Dorevia, covering its institutional stability trend and supporting sources.",
+      "title": "Dorevia: what changed and why it matters"
+    }
+  ],
+  "authors": [
+    {
+      "author_id": "author-elvaron",
+      "bio": "Synthetic author focused on Elvaron coverage.",
+      "display_name": "Avery Renn",
+      "reputation": 65,
+      "specialization": "migration_openness",
+      "user_id": "user-elvaron-author"
+    },
+    {
+      "author_id": "author-ivaraora",
+      "bio": "Synthetic author focused on Ivaraora coverage.",
+      "display_name": "Morgan Marek",
+      "reputation": 69,
+      "specialization": "data_confidence",
+      "user_id": "user-ivaraora-author"
+    },
+    {
+      "author_id": "author-farenara",
+      "bio": "Synthetic author focused on Farenara coverage.",
+      "display_name": "Jordan Voss",
+      "reputation": 50,
+      "specialization": "civil_freedoms",
+      "user_id": "user-farenara-author"
+    },
+    {
+      "author_id": "author-avelis",
+      "bio": "Synthetic author focused on Avelis coverage.",
+      "display_name": "Morgan Tovin",
+      "reputation": 82,
+      "specialization": "institutional_stability",
+      "user_id": "user-avelis-author"
+    },
+    {
+      "author_id": "author-dorevia",
+      "bio": "Synthetic author focused on Dorevia coverage.",
+      "display_name": "Jamie Renn",
+      "reputation": 35,
+      "specialization": "migration_openness",
+      "user_id": "user-dorevia-author"
+    }
+  ],
+  "comments": [
+    {
+      "article_id": "article-elvaron",
+      "body": "This matches what I've read about Elvaron recently.",
+      "comment_id": "comment-elvaron-0",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "approved",
+      "user_id": "user-elvaron-commenter-0"
+    },
+    {
+      "article_id": "article-elvaron",
+      "body": "This matches what I've read about Elvaron recently.",
+      "comment_id": "comment-elvaron-1",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "pending",
+      "user_id": "user-elvaron-commenter-1"
+    },
+    {
+      "article_id": "article-elvaron",
+      "body": "This matches what I've read about Elvaron recently.",
+      "comment_id": "comment-elvaron-2",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "hidden",
+      "user_id": "user-elvaron-commenter-0"
+    },
+    {
+      "article_id": "article-ivaraora",
+      "body": "Not sure this fully reflects the current situation in Ivaraora.",
+      "comment_id": "comment-ivaraora-0",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "approved",
+      "user_id": "user-ivaraora-commenter-0"
+    },
+    {
+      "article_id": "article-ivaraora",
+      "body": "This matches what I've read about Ivaraora recently.",
+      "comment_id": "comment-ivaraora-1",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "pending",
+      "user_id": "user-ivaraora-commenter-1"
+    },
+    {
+      "article_id": "article-ivaraora",
+      "body": "Good summary of Ivaraora's trend this period.",
+      "comment_id": "comment-ivaraora-2",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "hidden",
+      "user_id": "user-ivaraora-commenter-0"
+    },
+    {
+      "article_id": "article-farenara",
+      "body": "Good summary of Farenara's trend this period.",
+      "comment_id": "comment-farenara-0",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "approved",
+      "user_id": "user-farenara-commenter-0"
+    },
+    {
+      "article_id": "article-farenara",
+      "body": "Good summary of Farenara's trend this period.",
+      "comment_id": "comment-farenara-1",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "pending",
+      "user_id": "user-farenara-commenter-1"
+    },
+    {
+      "article_id": "article-farenara",
+      "body": "Not sure this fully reflects the current situation in Farenara.",
+      "comment_id": "comment-farenara-2",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "hidden",
+      "user_id": "user-farenara-commenter-0"
+    },
+    {
+      "article_id": "article-avelis",
+      "body": "Not sure this fully reflects the current situation in Avelis.",
+      "comment_id": "comment-avelis-0",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "approved",
+      "user_id": "user-avelis-commenter-0"
+    },
+    {
+      "article_id": "article-avelis",
+      "body": "This matches what I've read about Avelis recently.",
+      "comment_id": "comment-avelis-1",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "pending",
+      "user_id": "user-avelis-commenter-1"
+    },
+    {
+      "article_id": "article-avelis",
+      "body": "Not sure this fully reflects the current situation in Avelis.",
+      "comment_id": "comment-avelis-2",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "hidden",
+      "user_id": "user-avelis-commenter-0"
+    },
+    {
+      "article_id": "article-dorevia",
+      "body": "Good summary of Dorevia's trend this period.",
+      "comment_id": "comment-dorevia-0",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "approved",
+      "user_id": "user-dorevia-commenter-0"
+    },
+    {
+      "article_id": "article-dorevia",
+      "body": "Not sure this fully reflects the current situation in Dorevia.",
+      "comment_id": "comment-dorevia-1",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "pending",
+      "user_id": "user-dorevia-commenter-1"
+    },
+    {
+      "article_id": "article-dorevia",
+      "body": "Good summary of Dorevia's trend this period.",
+      "comment_id": "comment-dorevia-2",
+      "created_as_of": "2026-01-01",
+      "moderation_status": "hidden",
+      "user_id": "user-dorevia-commenter-0"
+    }
+  ],
+  "countries": [
+    {
+      "archetype": "wealthy_restricted",
+      "code": "SYN-ELV-1",
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "events": [
+        {
+          "as_of": "2026-01-01",
+          "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+          "direction": "improved",
+          "event_id": "event-elvaron-civil_freedoms",
+          "metric": "civil_freedoms",
+          "summary": "Synthetic improved signal for civil_freedoms in Elvaron."
+        }
+      ],
+      "metric_history": [
+        {
+          "as_of": "2024-01-01",
+          "metrics": {
+            "civil_freedoms": 12,
+            "cost_of_living": 72,
+            "data_confidence": 52,
+            "digital_infrastructure": 72,
+            "economy": 75,
+            "institutional_stability": 80,
+            "migration_openness": 45,
+            "safety": 65
+          }
+        },
+        {
+          "as_of": "2025-01-01",
+          "metrics": {
+            "civil_freedoms": 14,
+            "cost_of_living": 72,
+            "data_confidence": 52,
+            "digital_infrastructure": 72,
+            "economy": 75,
+            "institutional_stability": 80,
+            "migration_openness": 45,
+            "safety": 65
+          }
+        },
+        {
+          "as_of": "2026-01-01",
+          "metrics": {
+            "civil_freedoms": 16,
+            "cost_of_living": 72,
+            "data_confidence": 52,
+            "digital_infrastructure": 72,
+            "economy": 75,
+            "institutional_stability": 80,
+            "migration_openness": 45,
+            "safety": 65
+          }
+        }
+      ],
+      "name": "Elvaron",
+      "risks": [
+        "civil_freedoms",
+        "migration_openness"
+      ],
+      "slug": "elvaron",
+      "sources": [
+        {
+          "confidence": 52,
+          "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+          "event_id": "event-elvaron-civil_freedoms",
+          "source_id": "source-elvaron-civil_freedoms",
+          "title": "Synthetic source for Elvaron civil_freedoms",
+          "url": "synthetic://syn-00a8d3d4a1ced7aa/elvaron/event-elvaron-civil_freedoms"
+        }
+      ],
+      "strengths": [
+        "institutional_stability",
+        "economy"
+      ],
+      "uncertainties": [
+        "data_confidence"
+      ]
+    },
+    {
+      "archetype": "affordable_unstable",
+      "code": "SYN-IVA-2",
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "events": [
+        {
+          "as_of": "2026-01-01",
+          "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+          "direction": "declined",
+          "event_id": "event-ivaraora-safety",
+          "metric": "safety",
+          "summary": "Synthetic declined signal for safety in Ivaraora."
+        }
+      ],
+      "metric_history": [
+        {
+          "as_of": "2024-01-01",
+          "metrics": {
+            "civil_freedoms": 39,
+            "cost_of_living": 35,
+            "data_confidence": 52,
+            "digital_infrastructure": 62,
+            "economy": 61,
+            "institutional_stability": 22,
+            "migration_openness": 61,
+            "safety": 43
+          }
+        },
+        {
+          "as_of": "2025-01-01",
+          "metrics": {
+            "civil_freedoms": 39,
+            "cost_of_living": 35,
+            "data_confidence": 52,
+            "digital_infrastructure": 62,
+            "economy": 61,
+            "institutional_stability": 22,
+            "migration_openness": 61,
+            "safety": 41
+          }
+        },
+        {
+          "as_of": "2026-01-01",
+          "metrics": {
+            "civil_freedoms": 39,
+            "cost_of_living": 35,
+            "data_confidence": 52,
+            "digital_infrastructure": 62,
+            "economy": 61,
+            "institutional_stability": 22,
+            "migration_openness": 61,
+            "safety": 39
+          }
+        }
+      ],
+      "name": "Ivaraora",
+      "risks": [
+        "institutional_stability",
+        "cost_of_living"
+      ],
+      "slug": "ivaraora",
+      "sources": [
+        {
+          "confidence": 52,
+          "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+          "event_id": "event-ivaraora-safety",
+          "source_id": "source-ivaraora-safety",
+          "title": "Synthetic source for Ivaraora safety",
+          "url": "synthetic://syn-00a8d3d4a1ced7aa/ivaraora/event-ivaraora-safety"
+        }
+      ],
+      "strengths": [
+        "digital_infrastructure"
+      ],
+      "uncertainties": [
+        "data_confidence"
+      ]
+    },
+    {
+      "archetype": "stable_technical_expensive",
+      "code": "SYN-FAR-3",
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "events": [
+        {
+          "as_of": "2026-01-01",
+          "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+          "direction": "declined",
+          "event_id": "event-farenara-civil_freedoms",
+          "metric": "civil_freedoms",
+          "summary": "Synthetic declined signal for civil_freedoms in Farenara."
+        }
+      ],
+      "metric_history": [
+        {
+          "as_of": "2024-01-01",
+          "metrics": {
+            "civil_freedoms": 76,
+            "cost_of_living": 87,
+            "data_confidence": 71,
+            "digital_infrastructure": 79,
+            "economy": 86,
+            "institutional_stability": 92,
+            "migration_openness": 60,
+            "safety": 84
+          }
+        },
+        {
+          "as_of": "2025-01-01",
+          "metrics": {
+            "civil_freedoms": 74,
+            "cost_of_living": 87,
+            "data_confidence": 71,
+            "digital_infrastructure": 79,
+            "economy": 86,
+            "institutional_stability": 92,
+            "migration_openness": 60,
+            "safety": 84
+          }
+        },
+        {
+          "as_of": "2026-01-01",
+          "metrics": {
+            "civil_freedoms": 73,
+            "cost_of_living": 87,
+            "data_confidence": 71,
+            "digital_infrastructure": 79,
+            "economy": 86,
+            "institutional_stability": 92,
+            "migration_openness": 60,
+            "safety": 84
+          }
+        }
+      ],
+      "name": "Farenara",
+      "risks": [
+        "migration_openness"
+      ],
+      "slug": "farenara",
+      "sources": [
+        {
+          "confidence": 71,
+          "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+          "event_id": "event-farenara-civil_freedoms",
+          "source_id": "source-farenara-civil_freedoms",
+          "title": "Synthetic source for Farenara civil_freedoms",
+          "url": "synthetic://syn-00a8d3d4a1ced7aa/farenara/event-farenara-civil_freedoms"
+        }
+      ],
+      "strengths": [
+        "institutional_stability",
+        "cost_of_living"
+      ],
+      "uncertainties": []
+    },
+    {
+      "archetype": "recovering_country",
+      "code": "SYN-AVE-4",
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "events": [
+        {
+          "as_of": "2026-01-01",
+          "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+          "direction": "improved",
+          "event_id": "event-avelis-safety",
+          "metric": "safety",
+          "summary": "Synthetic improved signal for safety in Avelis."
+        }
+      ],
+      "metric_history": [
+        {
+          "as_of": "2024-01-01",
+          "metrics": {
+            "civil_freedoms": 70,
+            "cost_of_living": 54,
+            "data_confidence": 62,
+            "digital_infrastructure": 45,
+            "economy": 42,
+            "institutional_stability": 36,
+            "migration_openness": 72,
+            "safety": 45
+          }
+        },
+        {
+          "as_of": "2025-01-01",
+          "metrics": {
+            "civil_freedoms": 70,
+            "cost_of_living": 54,
+            "data_confidence": 62,
+            "digital_infrastructure": 45,
+            "economy": 42,
+            "institutional_stability": 36,
+            "migration_openness": 72,
+            "safety": 49
+          }
+        },
+        {
+          "as_of": "2026-01-01",
+          "metrics": {
+            "civil_freedoms": 70,
+            "cost_of_living": 54,
+            "data_confidence": 62,
+            "digital_infrastructure": 45,
+            "economy": 42,
+            "institutional_stability": 36,
+            "migration_openness": 72,
+            "safety": 53
+          }
+        }
+      ],
+      "name": "Avelis",
+      "risks": [
+        "institutional_stability",
+        "economy"
+      ],
+      "slug": "avelis",
+      "sources": [
+        {
+          "confidence": 62,
+          "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+          "event_id": "event-avelis-safety",
+          "source_id": "source-avelis-safety",
+          "title": "Synthetic source for Avelis safety",
+          "url": "synthetic://syn-00a8d3d4a1ced7aa/avelis/event-avelis-safety"
+        }
+      ],
+      "strengths": [
+        "migration_openness",
+        "civil_freedoms"
+      ],
+      "uncertainties": []
+    },
+    {
+      "archetype": "free_small_market",
+      "code": "SYN-DOR-5",
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "events": [
+        {
+          "as_of": "2026-01-01",
+          "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+          "direction": "improved",
+          "event_id": "event-dorevia-institutional_stability",
+          "metric": "institutional_stability",
+          "summary": "Synthetic improved signal for institutional_stability in Dorevia."
+        }
+      ],
+      "metric_history": [
+        {
+          "as_of": "2024-01-01",
+          "metrics": {
+            "civil_freedoms": 78,
+            "cost_of_living": 50,
+            "data_confidence": 78,
+            "digital_infrastructure": 80,
+            "economy": 68,
+            "institutional_stability": 78,
+            "migration_openness": 55,
+            "safety": 91
+          }
+        },
+        {
+          "as_of": "2025-01-01",
+          "metrics": {
+            "civil_freedoms": 78,
+            "cost_of_living": 50,
+            "data_confidence": 78,
+            "digital_infrastructure": 80,
+            "economy": 68,
+            "institutional_stability": 79,
+            "migration_openness": 55,
+            "safety": 91
+          }
+        },
+        {
+          "as_of": "2026-01-01",
+          "metrics": {
+            "civil_freedoms": 78,
+            "cost_of_living": 50,
+            "data_confidence": 78,
+            "digital_infrastructure": 80,
+            "economy": 68,
+            "institutional_stability": 80,
+            "migration_openness": 55,
+            "safety": 91
+          }
+        }
+      ],
+      "name": "Dorevia",
+      "risks": [
+        "cost_of_living"
+      ],
+      "slug": "dorevia",
+      "sources": [
+        {
+          "confidence": 78,
+          "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+          "event_id": "event-dorevia-institutional_stability",
+          "source_id": "source-dorevia-institutional_stability",
+          "title": "Synthetic source for Dorevia institutional_stability",
+          "url": "synthetic://syn-00a8d3d4a1ced7aa/dorevia/event-dorevia-institutional_stability"
+        }
+      ],
+      "strengths": [
+        "safety",
+        "digital_infrastructure"
+      ],
+      "uncertainties": []
+    }
+  ],
+  "document_recipes": [
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "This is a synthetic profile for Elvaron, generated for local testing."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "When evaluating Elvaron, consider this factor: civil freedoms."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Elvaron stands out for institutional stability."
+        }
+      ],
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-elvaron-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Ivaraora is a fictional test country used for Country Decision Atlas development."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "For Ivaraora, a key limitation remains institutional stability."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Ivaraora stands out for digital infrastructure."
+        }
+      ],
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-ivaraora-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "This is a synthetic profile for Farenara, generated for local testing."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "For Farenara, a key limitation remains migration openness."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Farenara stands out for institutional stability."
+        }
+      ],
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-farenara-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Avelis is a fictional test country used for Country Decision Atlas development."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "When evaluating Avelis, consider this factor: institutional stability."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "A notable strength of Avelis is migration openness."
+        }
+      ],
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-avelis-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "This is a synthetic profile for Dorevia, generated for local testing."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "When evaluating Dorevia, consider this factor: cost of living."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Dorevia stands out for safety."
+        }
+      ],
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-dorevia-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "This overview of Elvaron is generated test data, not a real place."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "For Elvaron, the main limiting factor remains civil freedoms."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Elvaron performs strongly on institutional stability."
+        }
+      ],
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "document_type": "country_overview",
+      "locale": "en-US",
+      "recipe_id": "recipe-elvaron-en-US-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Ivaraora es un país ficticio usado solo para pruebas locales."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Al evaluar Ivaraora, conviene tener en cuenta el riesgo: institutional stability."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Ivaraora destaca especialmente en digital infrastructure."
+        }
+      ],
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "document_type": "country_overview",
+      "locale": "es-ES",
+      "recipe_id": "recipe-ivaraora-es-ES-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Этот обзор Farenara — сгенерированные тестовые данные, а не реальное место."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "При оценке Farenara стоит учитывать риск: migration openness."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Заметная сильная сторона Farenara — institutional stability."
+        }
+      ],
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "document_type": "country_overview",
+      "locale": "ru-RU",
+      "recipe_id": "recipe-farenara-ru-RU-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Avelis का यह विवरण जनित परीक्षण डेटा है, कोई वास्तविक जगह नहीं।"
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Avelis का मूल्यांकन करते समय इस जोखिम को ध्यान में रखें: institutional stability।"
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Avelis migration openness में अच्छा प्रदर्शन करता है।"
+        }
+      ],
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "document_type": "country_overview",
+      "locale": "hi-IN",
+      "recipe_id": "recipe-avelis-hi-IN-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Dorevia یک کشور خیالی است که فقط برای آزمایش محلی استفاده می‌شود."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "هنگام بررسی Dorevia باید ریسک زیر را در نظر گرفت: cost of living."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "یکی از نقاط قوت Dorevia، safety است."
+        }
+      ],
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "document_type": "country_overview",
+      "locale": "fa-IR",
+      "recipe_id": "recipe-dorevia-fa-IR-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Elvaron دولة خيالية تُستخدم فقط للاختبار المحلي."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "عند تقييم Elvaron، يجب مراعاة عامل الخطر: civil freedoms."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "من أبرز نقاط قوة Elvaron هو institutional stability."
+        }
+      ],
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "document_type": "country_overview",
+      "locale": "ar-SA",
+      "recipe_id": "recipe-elvaron-ar-SA-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Ivaraora是一个虚构国家，仅用于本地测试。"
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "对于Ivaraora，主要限制因素仍然是institutional stability。"
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Ivaraora在digital infrastructure方面表现突出。"
+        }
+      ],
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "document_type": "country_overview",
+      "locale": "zh-Hans-CN",
+      "recipe_id": "recipe-ivaraora-zh-Hans-CN-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Farenaraのこの概要は生成されたテストデータであり、実在の場所ではありません。"
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Farenaraを評価する際は、リスク要因：migration opennessに注意してください。"
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Farenaraはinstitutional stabilityの面で優れています。"
+        }
+      ],
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "document_type": "country_overview",
+      "locale": "ja-JP",
+      "recipe_id": "recipe-farenara-ja-JP-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Avelis은 로컬 테스트를 위해만 사용되는 가상의 국가입니다."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Avelis의 경우 주요 제한 요인은 여전히 institutional stability입니다."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Avelis의 두드러진 강점은 migration openness입니다."
+        }
+      ],
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "document_type": "country_overview",
+      "locale": "ko-KR",
+      "recipe_id": "recipe-avelis-ko-KR-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Dorevia hakkındaki bu özet, gerçek bir yer değil, üretilmiş test verisidir."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Dorevia değerlendirilirken şu risk faktörü dikkate alınmalıdır: cost of living."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Dorevia, safety konusunda güçlü bir performans gösteriyor."
+        }
+      ],
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "document_type": "country_overview",
+      "locale": "tr-TR",
+      "recipe_id": "recipe-dorevia-tr-TR-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Ringkasan Elvaron ini adalah data uji yang dihasilkan, bukan tempat nyata."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Bagi Elvaron, faktor pembatas utama tetap civil freedoms."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Elvaron tampil kuat pada aspek institutional stability."
+        }
+      ],
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "document_type": "country_overview",
+      "locale": "id-ID",
+      "recipe_id": "recipe-elvaron-id-ID-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Muhtasari huu wa Ivaraora ni data ya jaribio iliyotengenezwa, si mahali halisi."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Wakati wa kutathmini Ivaraora, zingatia hatari: institutional stability."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Ivaraora ina utendaji imara katika digital infrastructure."
+        }
+      ],
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "document_type": "country_overview",
+      "locale": "sw-KE",
+      "recipe_id": "recipe-ivaraora-sw-KE-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Farenara là một quốc gia hư cấu chỉ dùng để kiểm thử cục bộ."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Khi đánh giá Farenara, cần lưu ý yếu tố rủi ro: migration openness."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Farenara thể hiện tốt ở institutional stability."
+        }
+      ],
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "document_type": "country_overview",
+      "locale": "vi-VN",
+      "recipe_id": "recipe-farenara-vi-VN-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "ภาพรวมนี้ของAvelisเป็นข้อมูลทดสอบที่สร้างขึ้น ไม่ใช่สถานที่จริง"
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "เมื่อประเมินAvelis ควรคำนึงถึงปัจจัยเสี่ยง: institutional stability"
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Avelisมีผลงานโดดเด่นในด้าน migration openness"
+        }
+      ],
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "document_type": "country_overview",
+      "locale": "th-TH",
+      "recipe_id": "recipe-avelis-th-TH-country_overview"
+    },
+    {
+      "blocks": [
+        {
+          "block_id": "country_intro",
+          "text": "Dorevia பற்றிய இந்த சுருக்கம் உருவாக்கப்பட்ட சோதனை தரவு ஆகும், இது ஒரு உண்மையான இடம் அல்ல."
+        },
+        {
+          "block_id": "country_risk_summary",
+          "text": "Doreviaக்கு முக்கிய கட்டுப்பாட்டு காரணி இன்னும் cost of living ஆகும்."
+        },
+        {
+          "block_id": "country_strength_summary",
+          "text": "Dorevia safety என்பதில் வலுவான செயல்திறனை காட்டுகிறது."
+        }
+      ],
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "document_type": "country_overview",
+      "locale": "ta-IN",
+      "recipe_id": "recipe-dorevia-ta-IN-country_overview"
+    }
+  ],
+  "legal_signals": [
+    {
+      "affected_country_ids": [
+        "529c8c3f-b437-5dfa-960f-2008f234e06d"
+      ],
+      "confidence": 52,
+      "country_id": "529c8c3f-b437-5dfa-960f-2008f234e06d",
+      "effective_as_of": "2026-01-01",
+      "event_id": "event-elvaron-civil_freedoms",
+      "impact": "positive",
+      "signal_id": "legal-elvaron",
+      "source_id": "source-elvaron-civil_freedoms"
+    },
+    {
+      "affected_country_ids": [
+        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+      ],
+      "confidence": 52,
+      "country_id": "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+      "effective_as_of": "2026-01-01",
+      "event_id": "event-ivaraora-safety",
+      "impact": "negative",
+      "signal_id": "legal-ivaraora",
+      "source_id": "source-ivaraora-safety"
+    },
+    {
+      "affected_country_ids": [
+        "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f"
+      ],
+      "confidence": 71,
+      "country_id": "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+      "effective_as_of": "2026-01-01",
+      "event_id": "event-farenara-civil_freedoms",
+      "impact": "negative",
+      "signal_id": "legal-farenara",
+      "source_id": "source-farenara-civil_freedoms"
+    },
+    {
+      "affected_country_ids": [
+        "75abf449-5ddd-5a36-945c-795ef147846b"
+      ],
+      "confidence": 62,
+      "country_id": "75abf449-5ddd-5a36-945c-795ef147846b",
+      "effective_as_of": "2026-01-01",
+      "event_id": "event-avelis-safety",
+      "impact": "positive",
+      "signal_id": "legal-avelis",
+      "source_id": "source-avelis-safety"
+    },
+    {
+      "affected_country_ids": [
+        "ff833225-b83f-5d20-8af2-d7c68d9c1719"
+      ],
+      "confidence": 78,
+      "country_id": "ff833225-b83f-5d20-8af2-d7c68d9c1719",
+      "effective_as_of": "2026-01-01",
+      "event_id": "event-dorevia-institutional_stability",
+      "impact": "positive",
+      "signal_id": "legal-dorevia",
+      "source_id": "source-dorevia-institutional_stability"
+    }
+  ],
+  "metadata": {
+    "dataset_id": "syn-00a8d3d4a1ced7aa",
+    "fictional_notice": "SYNTHETIC TEST DATA - NOT REAL",
+    "generated_on": "2026-01-01",
+    "generator_version": "synthetic-world-v1",
+    "profile": "balanced",
+    "schema_version": "1.0",
+    "seed": 42017,
+    "source_config_checksum": "e3e9854b83f92d670a35a7d84185292210d3313d270ad58957a32a3ef57b30cd",
+    "supported_locales": [
+      "ar-SA",
+      "en-US",
+      "es-ES",
+      "fa-IR",
+      "hi-IN",
+      "id-ID",
+      "ja-JP",
+      "ko-KR",
+      "ru-RU",
+      "sw-KE",
+      "ta-IN",
+      "th-TH",
+      "tr-TR",
+      "vi-VN",
+      "zh-Hans-CN"
+    ]
+  },
+  "scenarios": [
+    {
+      "category": "comparison",
+      "expected_results": [
+        {
+          "check": "compare_view_shows_distinct_metrics:elvaron:ivaraora",
+          "description": "Comparison shows different metric profiles for Elvaron and Ivaraora."
+        }
+      ],
+      "initial_state": {
+        "user_role": "anonymous"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "529c8c3f-b437-5dfa-960f-2008f234e06d",
+        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+      ],
+      "risk_labels": [
+        "search"
+      ],
+      "scenario_id": "scenario-compare-elvaron-ivaraora",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "compare_countries",
+          "target": {
+            "country_slug_a": "elvaron",
+            "country_slug_b": "ivaraora"
+          }
+        }
+      ],
+      "title": "Compare Elvaron and Ivaraora"
+    },
+    {
+      "category": "source_review",
+      "expected_results": [
+        {
+          "check": "source_detail_shows_confidence:source-elvaron-civil_freedoms",
+          "description": "Source Synthetic source for Elvaron civil_freedoms opens and shows its confidence level."
+        },
+        {
+          "check": "comment_visible_with_status:comment-elvaron-0:approved",
+          "description": "New comment appears with moderation status approved."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "elvaron",
+        "user_role": "authenticated_user"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "529c8c3f-b437-5dfa-960f-2008f234e06d",
+        "article-elvaron",
+        "source-elvaron-civil_freedoms",
+        "comment-elvaron-0"
+      ],
+      "risk_labels": [
+        "moderation",
+        "authorization"
+      ],
+      "scenario_id": "scenario-source-comment-elvaron",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "open_article",
+          "target": {
+            "article_id": "article-elvaron"
+          }
+        },
+        {
+          "action": "open_source",
+          "target": {
+            "source_id": "source-elvaron-civil_freedoms"
+          }
+        },
+        {
+          "action": "add_comment",
+          "target": {
+            "article_id": "article-elvaron",
+            "comment_id": "comment-elvaron-0"
+          }
+        }
+      ],
+      "title": "Review a source and leave a comment on Elvaron"
+    },
+    {
+      "category": "change_notification",
+      "expected_results": [
+        {
+          "check": "what_changed_shows_event:event-elvaron-civil_freedoms",
+          "description": "'What changed' shows the civil_freedoms improved event with its legal signal."
+        },
+        {
+          "check": "fake_notification_queued:elvaron:event-elvaron-civil_freedoms",
+          "description": "A fake-mode notification is queued for the watchlisted change."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "elvaron",
+        "user_role": "authenticated_user"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "529c8c3f-b437-5dfa-960f-2008f234e06d",
+        "event-elvaron-civil_freedoms",
+        "legal-elvaron"
+      ],
+      "risk_labels": [
+        "freshness",
+        "notifications"
+      ],
+      "scenario_id": "scenario-watchlist-change-elvaron",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "add_to_watchlist",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "open_what_changed",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "trigger_notification",
+          "target": {
+            "channel": "fake",
+            "country_slug": "elvaron"
+          }
+        }
+      ],
+      "title": "Watch Elvaron and see the civil_freedoms change"
+    },
+    {
+      "category": "data_quality",
+      "expected_results": [
+        {
+          "check": "trust_panel_shows_low_confidence:elvaron",
+          "description": "Trust panel surfaces the low data_confidence (52) for Elvaron."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "elvaron",
+        "user_role": "anonymous"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "529c8c3f-b437-5dfa-960f-2008f234e06d"
+      ],
+      "risk_labels": [
+        "freshness",
+        "data_quality"
+      ],
+      "scenario_id": "scenario-data-quality-elvaron",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        },
+        {
+          "action": "open_trust_panel",
+          "target": {
+            "country_slug": "elvaron"
+          }
+        }
+      ],
+      "title": "Review incomplete or conflicting data for Elvaron"
+    }
+  ],
+  "users": [
+    {
+      "display_name": "Avery Renn",
+      "email": "elvaron-author@example.test",
+      "locale": "en-US",
+      "role": "author",
+      "user_id": "user-elvaron-author"
+    },
+    {
+      "display_name": "Morgan Voss",
+      "email": "elvaron-commenter-0@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-elvaron-commenter-0"
+    },
+    {
+      "display_name": "Taylor Marek",
+      "email": "elvaron-commenter-1@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-elvaron-commenter-1"
+    },
+    {
+      "display_name": "Morgan Marek",
+      "email": "ivaraora-author@example.test",
+      "locale": "en-US",
+      "role": "author",
+      "user_id": "user-ivaraora-author"
+    },
+    {
+      "display_name": "Riley Solis",
+      "email": "ivaraora-commenter-0@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-ivaraora-commenter-0"
+    },
+    {
+      "display_name": "Quinn Kade",
+      "email": "ivaraora-commenter-1@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-ivaraora-commenter-1"
+    },
+    {
+      "display_name": "Jordan Voss",
+      "email": "farenara-author@example.test",
+      "locale": "en-US",
+      "role": "author",
+      "user_id": "user-farenara-author"
+    },
+    {
+      "display_name": "Jamie Dahl",
+      "email": "farenara-commenter-0@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-farenara-commenter-0"
+    },
+    {
+      "display_name": "Sam Brix",
+      "email": "farenara-commenter-1@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-farenara-commenter-1"
+    },
+    {
+      "display_name": "Morgan Tovin",
+      "email": "avelis-author@example.test",
+      "locale": "en-US",
+      "role": "author",
+      "user_id": "user-avelis-author"
+    },
+    {
+      "display_name": "Jamie Onyeka",
+      "email": "avelis-commenter-0@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-avelis-commenter-0"
+    },
+    {
+      "display_name": "Taylor Voss",
+      "email": "avelis-commenter-1@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-avelis-commenter-1"
+    },
+    {
+      "display_name": "Jamie Renn",
+      "email": "dorevia-author@example.test",
+      "locale": "en-US",
+      "role": "author",
+      "user_id": "user-dorevia-author"
+    },
+    {
+      "display_name": "Avery Dahl",
+      "email": "dorevia-commenter-0@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-dorevia-commenter-0"
+    },
+    {
+      "display_name": "Alex Onyeka",
+      "email": "dorevia-commenter-1@example.test",
+      "locale": "en-US",
+      "role": "user",
+      "user_id": "user-dorevia-commenter-1"
+    }
+  ]
+}

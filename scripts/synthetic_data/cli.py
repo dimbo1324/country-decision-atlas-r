@@ -401,11 +401,16 @@ def _render_and_package(
     )
     report.line(
         f"rendered {len(documents)} documents -> manifest="
-        f"{result.manifest_path} zip={result.zip_path}"
+        f"{result.manifest_path} zip={result.zip_path} "
+        f"(sha256 in {result.package_checksum_path.name}) "
+        f"dashboard={result.dashboard_path}"
     )
     report.data["documents_rendered"] = len(documents)
     report.data["manifest_path"] = str(result.manifest_path)
+    report.data["manifest_checksum_path"] = str(result.manifest_checksum_path)
+    report.data["dashboard_path"] = str(result.dashboard_path)
     report.data["zip_path"] = str(result.zip_path)
+    report.data["package_checksum_path"] = str(result.package_checksum_path)
     report.data["artifact_errors"] = list(result.artifact_errors)
     if result.artifact_errors:
         print(
@@ -502,14 +507,19 @@ def _run_package(args: argparse.Namespace, report: _Report) -> int:
     )
     report.line(
         f"repackaged {len(documents)} existing documents -> manifest="
-        f"{result.manifest_path} zip={result.zip_path}"
+        f"{result.manifest_path} zip={result.zip_path} "
+        f"(sha256 in {result.package_checksum_path.name}) "
+        f"dashboard={result.dashboard_path}"
     )
     report.data.update(
         {
             "dataset_id": world.metadata.dataset_id,
             "documents_found": len(documents),
             "manifest_path": str(result.manifest_path),
+            "manifest_checksum_path": str(result.manifest_checksum_path),
+            "dashboard_path": str(result.dashboard_path),
             "zip_path": str(result.zip_path),
+            "package_checksum_path": str(result.package_checksum_path),
             "artifact_errors": list(result.artifact_errors),
         }
     )

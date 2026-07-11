@@ -77,7 +77,10 @@ def test_package_dataset_writes_manifest_report_summary_and_zip(
     assert result.manifest_path.exists()
     assert result.summary_path.exists()
     assert result.validation_report_path.exists()
+    assert result.dashboard_path.exists()
+    assert result.manifest_checksum_path.exists()
     assert result.zip_path.exists()
+    assert result.package_checksum_path.exists()
 
     manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
     assert manifest["dataset_id"] == world.metadata.dataset_id
@@ -118,6 +121,44 @@ def test_manifest_entries_have_correct_checksums(tmp_path: Path) -> None:
         digest = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
         assert entry["sha256"] == digest
         assert entry["size_bytes"] == artifact_path.stat().st_size
+
+
+def test_manifest_and_package_checksums_are_correct(tmp_path: Path) -> None:
+    world = _world()
+    corpus = load_locale_corpus()
+    _write_canonical_json(world, tmp_path)
+    documents = render_dataset_documents(
+        world=world,
+        locale_corpus=corpus,
+        dataset_dir=tmp_path,
+        formats=("json",),
+    )
+    world_errors = validate_world(world)
+
+    result = package_dataset(
+        world=world,
+        world_errors=world_errors,
+        dataset_dir=tmp_path,
+        documents=documents,
+    )
+
+    manifest_digest = hashlib.sha256(
+        result.manifest_path.read_bytes()
+    ).hexdigest()
+    manifest_checksum_line = result.manifest_checksum_path.read_text(
+        encoding="utf-8"
+    ).strip()
+    assert manifest_checksum_line == f"{manifest_digest}  manifest.json"
+
+    zip_digest = hashlib.sha256(result.zip_path.read_bytes()).hexdigest()
+    package_checksum_line = result.package_checksum_path.read_text(
+        encoding="utf-8"
+    ).strip()
+    assert package_checksum_line == f"{zip_digest}  {result.zip_path.name}"
+
+    with zipfile.ZipFile(result.zip_path) as archive:
+        assert "reports/manifest.sha256" in archive.namelist()
+        assert "reports/dashboard.html" in archive.namelist()
 
 
 def test_zip_package_contains_manifest_and_every_document(

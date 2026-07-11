@@ -11,7 +11,7 @@ from scripts.synthetic_data.core.world_models import SyntheticWorld
 from typing import cast
 
 
-def _sha256(path: Path) -> str:
+def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     digest.update(path.read_bytes())
     return digest.hexdigest()
@@ -24,7 +24,7 @@ def _file_entry(path: Path, *, dataset_dir: Path) -> dict[str, object]:
         "mode": "n/a",
         "locale": None,
         "size_bytes": path.stat().st_size,
-        "sha256": _sha256(path),
+        "sha256": sha256_file(path),
         "related_artifacts": [],
     }
 
@@ -38,7 +38,7 @@ def _document_entry(
         "mode": document.mode,
         "locale": document.locale,
         "size_bytes": document.size_bytes,
-        "sha256": _sha256(document.path),
+        "sha256": sha256_file(document.path),
         "related_artifacts": list(document.related_artifact_ids),
     }
 
@@ -127,3 +127,17 @@ def write_generation_summary(
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
+
+
+def write_manifest_checksum(manifest_path: Path, *, dataset_dir: Path) -> Path:
+    """A small integrity signal alongside the other reports: the
+    manifest's own sha256, in the standard `sha256sum`-compatible
+    `<hex>  <filename>` format, so a recipient can verify `manifest.json`
+    itself wasn't corrupted or altered without re-deriving every artifact
+    checksum by hand."""
+    checksum_path = dataset_dir / "reports" / "manifest.sha256"
+    checksum_path.parent.mkdir(parents=True, exist_ok=True)
+    checksum_path.write_text(
+        f"{sha256_file(manifest_path)}  manifest.json\n", encoding="utf-8"
+    )
+    return checksum_path
