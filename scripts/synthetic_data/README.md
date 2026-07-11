@@ -142,6 +142,48 @@ one country strictly best on every dimension.
 pipeline (`test_balanced_profile_world_is_unchanged_across_this_change`)
 — every other profile is a bias applied on top of the same generator.
 
+## Scale (`--scale`)
+
+Spec section 19's "too large and slow a dataset" risk names volume
+profiles as the mitigation. `--scale` (`generate`/`plan`) controls how many
+locales and scenario variants per category get built, independent of
+`--countries` (still 4 or 5) and `--formats` (unchanged, still your own
+choice of output formats):
+
+| Scale | Locales | Scenario variants/category | Use |
+| --- | --- | --- | --- |
+| `large` (default) | all 15 | 2 | Original, full-coverage behavior — unchanged unless `--scale` is passed. |
+| `medium` | 8 (`en-US`, `es-ES`, `ru-RU`, `ar-SA`, `zh-Hans-CN`, `ja-JP`, `th-TH`, `ta-IN`) | 2 | Faster local runs that still cover Latin/Cyrillic/RTL/CJK/Thai/Tamil. |
+| `small` | 3 (`en-US`, `ar-SA`, `zh-Hans-CN`) | 1 | Load-testing/CI: smallest dataset that still proves RTL and CJK render. |
+
+Locale subsets are a fixed, hand-picked list (not a blind prefix slice), so
+even `small` keeps script diversity. `world.metadata.supported_locales`
+always reflects exactly what a given run built, and validation checks
+document-recipe coverage against that same set — a reduced-scale dataset
+never claims 15-locale coverage it doesn't have.
+
+## Translation preview (`translate`)
+
+A derived, fake-by-default test mode (spec section 8.3, "translation test
+modes"): takes an already-generated dataset's `en-US` (or other) document
+recipe blocks and produces a *separate* fake-translated copy — it never
+edits or replaces the canonical source text.
+
+```powershell
+python -m scripts.synthetic_data.cli translate --dataset <dataset_id> --target-locale ar-SA
+```
+
+Writes `translations/<target_locale>.json` inside the dataset directory
+(not part of `manifest.json`/the package ZIP). Each record keeps the
+source locale/text, target locale, translated text, provider name+version
+(`fake-shuffle-mt`), seed, generation date, a `fake_synthetic_preview`
+status, and the same `SYNTHETIC TEST DATA - NOT REAL` marker as every other
+artifact. The "translation" is a deterministic word-shuffle, not a real MT
+call — no network, no LLM, nothing leaves the machine. Swapping in a real
+provider is out of scope for this task and gated behind the project's
+integration-tranche rule (`TELEGRAM_MODE=fake`-style fake-by-default
+seams only, until explicitly approved).
+
 ## Locales
 
 All 15 locales get their own hand-written (not machine-translated) text
@@ -272,6 +314,15 @@ python -m scripts.synthetic_data.cli prune --keep-last 5 --confirm
 # Print the canonical SyntheticWorld JSON Schema
 python -m scripts.synthetic_data.cli schema
 
+# Generate a smaller, faster dataset for load-testing/CI (see Scale below)
+python -m scripts.synthetic_data.cli generate --scale small --seed 42017
+
+# Compare two datasets (countries/metrics/scenario mix)
+python -m scripts.synthetic_data.cli diff --dataset-a <id-a> --dataset-b <id-b>
+
+# Build a fake-translated preview of a dataset's en-US text (see below)
+python -m scripts.synthetic_data.cli translate --dataset <dataset_id> --target-locale ar-SA
+
 # Load / clean up a dataset's SQL fixture against a local database
 $env:APP_ENV = "local"
 $env:DATABASE_URL = "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
@@ -322,7 +373,7 @@ UUID generated after the fact.
 py -3.12 -m pytest scripts/synthetic_data/tests -q
 ```
 
-197 tests as of this writing, covering: determinism across seeds/profiles,
+270 tests as of this writing, covering: determinism across seeds/profiles,
 referential integrity (every id resolves), the real-country/PII deny-list,
 SQL fixture idempotency and cleanup isolation against a live local
 Postgres (manual verification — see below), production-guard fail-closed
@@ -358,14 +409,12 @@ python -m scripts.synthetic_data.cli cleanup-sql --dataset <dataset_id> --confir
 
 ## Known limitations / deferred work
 
-- **No translation-testing adapter.** All 15 locales already get
-  hand-written (not machine-translated) text, which covers the core goal
-  of exercising the full Unicode pipeline. A separate fake-by-default (or
-  local-model) adapter that tests the app's own neural-translation layer
-  against this synthetic corpus — always storing source/target text,
-  provider/version, and a "synthetic, not source of truth" marker — is
-  intentionally deferred to the integration tranche; it must never mutate
-  canonical facts.
+- **Translation preview is fake-by-default only.** `translate` proves the
+  derived-artifact pipeline (source/target text, provider/version, seed,
+  status, marking — see above) but its "translation" is a deterministic
+  word-shuffle, not a real machine-translation call. Wiring in an actual
+  neural-translation provider (local model or external) is out of scope
+  here and gated behind the project's integration-tranche rule.
 - **No full-text search integration.** Unicode normalization (NFC/NFD) is
   covered at the unit-test level for Vietnamese text; there is no
   synthetic-corpus-backed test against the application's real search
@@ -378,6 +427,6 @@ python -m scripts.synthetic_data.cli cleanup-sql --dataset <dataset_id> --confir
   decision.
 
 Further work (new domain entities, new world profiles, new document
-formats, the translation-testing adapter, load-volume datasets) should be
-scoped as separate, individually-planned tasks rather than folded into
-this pipeline silently.
+formats, a real translation provider, a plugin registry for
+archetypes/locales/document types) should be scoped as separate,
+individually-planned tasks rather than folded into this pipeline silently.

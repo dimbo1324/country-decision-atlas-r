@@ -19,6 +19,7 @@ def validate_world(
     world: SyntheticWorld,
     *,
     forbidden_country_names: Collection[str] = (),
+    expected_locales: Collection[str] = REQUIRED_LOCALES,
 ) -> tuple[str, ...]:
     errors: list[str] = []
     country_ids: set[str] = set()
@@ -131,6 +132,7 @@ def validate_world(
         country_ids=country_ids,
         event_ids_by_country=event_ids_by_country,
         source_ids_by_country=source_ids_by_country,
+        expected_locales=expected_locales,
     )
     return tuple(errors)
 
@@ -142,6 +144,7 @@ def _validate_content(
     country_ids: set[str],
     event_ids_by_country: dict[str, set[str]],
     source_ids_by_country: dict[str, set[str]],
+    expected_locales: Collection[str],
 ) -> None:
     user_ids: set[str] = set()
     for user in world.users:
@@ -272,7 +275,7 @@ def _validate_content(
                     f"{recipe.recipe_id}: block {block.block_id} resolved "
                     "to empty text"
                 )
-    missing_locales = set(REQUIRED_LOCALES) - recipe_locales
+    missing_locales = set(expected_locales) - recipe_locales
     if missing_locales:
         errors.append(
             "world is missing a document recipe for locales: "
@@ -321,9 +324,12 @@ def ensure_world_valid(
     world: SyntheticWorld,
     *,
     forbidden_country_names: Collection[str] = (),
+    expected_locales: Collection[str] = REQUIRED_LOCALES,
 ) -> None:
     errors = validate_world(
-        world, forbidden_country_names=forbidden_country_names
+        world,
+        forbidden_country_names=forbidden_country_names,
+        expected_locales=expected_locales,
     )
     if errors:
         raise WorldValidationError("; ".join(errors))

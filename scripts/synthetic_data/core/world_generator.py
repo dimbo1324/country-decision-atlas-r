@@ -14,6 +14,7 @@ from scripts.synthetic_data.core.document_recipes import (
     resolve_localized_document_recipe,
 )
 from scripts.synthetic_data.core.locale_corpus import (
+    REQUIRED_LOCALES,
     LocaleCorpus,
     load_locale_corpus,
 )
@@ -41,11 +42,51 @@ _HISTORY_DATES = ("2024-01-01", "2025-01-01", "2026-01-01")
 
 
 @dataclass(frozen=True)
+class ScaleProfile:
+    locale_codes: tuple[str, ...]
+    scenario_variants_per_category: int
+
+
+# Spec section 19's "too large and slow a dataset" risk names volume
+# profiles as the mitigation. `small`/`medium` trade full 15-locale/Unicode
+# coverage for a faster, smaller dataset meant for load-testing and CI, not
+# for exercising every script (spec section 8.3) at once; `large` is the
+# default and reproduces the original, always-15-locales behavior exactly.
+# Locale subsets are deliberately hand-picked (not a blind prefix slice) to
+# keep script diversity (Latin, Cyrillic, RTL, CJK, Thai, Tamil) even at
+# small scale.
+SCALE_PROFILES: dict[str, ScaleProfile] = {
+    "small": ScaleProfile(
+        locale_codes=("en-US", "ar-SA", "zh-Hans-CN"),
+        scenario_variants_per_category=1,
+    ),
+    "medium": ScaleProfile(
+        locale_codes=(
+            "en-US",
+            "es-ES",
+            "ru-RU",
+            "ar-SA",
+            "zh-Hans-CN",
+            "ja-JP",
+            "th-TH",
+            "ta-IN",
+        ),
+        scenario_variants_per_category=2,
+    ),
+    "large": ScaleProfile(
+        locale_codes=REQUIRED_LOCALES,
+        scenario_variants_per_category=2,
+    ),
+}
+
+
+@dataclass(frozen=True)
 class WorldGenerationOptions:
     seed: int
     profile: str
     country_count: int | None = None
     generated_on: str | None = None
+    scale: str = "large"
 
 
 class WorldGenerator:
@@ -61,6 +102,12 @@ class WorldGenerator:
         )
 
     def generate(self, options: WorldGenerationOptions) -> SyntheticWorld:
+        scale_profile = SCALE_PROFILES.get(options.scale)
+        if scale_profile is None:
+            raise ValueError(
+                f"unknown scale {options.scale!r}; expected one of "
+                f"{sorted(SCALE_PROFILES)}"
+            )
         profile = self._input_data.profile_by_slug(options.profile)
         country_count = (
             self._input_data.default_country_count
@@ -111,6 +158,11 @@ class WorldGenerator:
             for country in countries
             for recipe_input in self._input_data.document_recipes
         )
+        scaled_packs = tuple(
+            pack
+            for pack in self._locale_corpus.packs
+            if pack.locale in scale_profile.locale_codes
+        )
         localized_document_recipes = tuple(
             resolve_localized_document_recipe(
                 country=countries[index % len(countries)],
@@ -119,12 +171,13 @@ class WorldGenerator:
                     "localized_document_recipe", text_pack.locale
                 ),
             )
-            for index, text_pack in enumerate(self._locale_corpus.packs)
+            for index, text_pack in enumerate(scaled_packs)
         )
         scenarios = generate_scenarios(
             profile=profile.slug,
             countries=countries,
             content_by_country=content_by_country,
+            variants_per_category=scale_profile.scenario_variants_per_category,
         )
 
         world = SyntheticWorld(
@@ -135,10 +188,7 @@ class WorldGenerator:
                 seed=options.seed,
                 profile=profile.slug,
                 supported_locales=tuple(
-                    sorted(
-                        {"en-US"}
-                        | {pack.locale for pack in self._locale_corpus.packs}
-                    )
+                    sorted({"en-US"} | {pack.locale for pack in scaled_packs})
                 ),
                 source_config_checksum=self._input_data.source_checksum,
                 generated_on=options.generated_on or date.today().isoformat(),
@@ -169,6 +219,7 @@ class WorldGenerator:
         ensure_world_valid(
             world,
             forbidden_country_names=self._input_data.forbidden_country_names,
+            expected_locales=world.metadata.supported_locales,
         )
         return world
 

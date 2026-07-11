@@ -17,15 +17,16 @@ def generate_scenarios(
     profile: str,
     countries: tuple[SyntheticCountry, ...],
     content_by_country: dict[str, CountryContent],
+    variants_per_category: int = _VARIANTS_PER_CATEGORY,
 ) -> tuple[SyntheticScenario, ...]:
     """Build the scenario catalog required by spec section 23 stage 3, with
-    up to `_VARIANTS_PER_CATEGORY` variants per category (comparison,
+    up to `variants_per_category` variants per category (comparison,
     source_review, change_notification, data_quality) so manual and
     automated QA has more than one instance to exercise per run. The first
     variant of each category always matches the original single-variant
     behavior (countries[0] as the primary actor, weakest data_confidence
     country first for data_quality), so this stays a pure addition."""
-    variant_count = min(_VARIANTS_PER_CATEGORY, len(countries))
+    variant_count = min(variants_per_category, len(countries))
     comparisons = tuple(
         _comparison_scenario(
             profile=profile, country_a=country_a, country_b=country_b

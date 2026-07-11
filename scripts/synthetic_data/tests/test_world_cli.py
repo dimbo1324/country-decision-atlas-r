@@ -702,3 +702,189 @@ def test_diff_json_flag_prints_a_single_parseable_json_object(
     assert payload["is_identical"] is False
     assert payload["countries_added"]
     assert payload["countries_removed"]
+
+
+def test_generate_with_small_scale_reduces_locales_and_scenarios(
+    tmp_path: Path,
+) -> None:
+    output_root = tmp_path / "output_data"
+
+    exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "42017",
+            "--scale",
+            "small",
+            "--output-root",
+            str(output_root),
+            "--formats",
+            "json",
+        ]
+    )
+
+    assert exit_code == 0
+    dataset_dir = next(output_root.iterdir())
+    payload = json.loads(
+        (dataset_dir / "canonical" / "synthetic_world.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    report = json.loads(
+        (dataset_dir / "reports" / "validation_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert set(payload["metadata"]["supported_locales"]) == {
+        "en-US",
+        "ar-SA",
+        "zh-Hans-CN",
+    }
+    assert len(payload["scenarios"]) == 4
+    assert report["world_errors"] == []
+
+
+def test_generate_rejects_an_unknown_scale() -> None:
+    exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "42017",
+            "--scale",
+            "huge",
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_plan_json_reports_scale_and_locale_count(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    capsys.readouterr()
+
+    exit_code = cli.main(
+        [
+            "plan",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            "42017",
+            "--scale",
+            "medium",
+            "--json",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["scale"] == "medium"
+    assert len(payload["supported_locales"]) == 8
+
+
+def test_translate_writes_records_for_a_generated_dataset(
+    tmp_path: Path,
+) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42017)
+
+    exit_code = cli.main(
+        [
+            "translate",
+            "--dataset",
+            dataset_id,
+            "--target-locale",
+            "ar-SA",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    output_path = tmp_path / dataset_id / "translations" / "ar-SA.json"
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    assert payload["dataset_id"] == dataset_id
+    assert payload["source_locale"] == "en-US"
+    assert payload["target_locale"] == "ar-SA"
+    assert payload["records"]
+    for record in payload["records"]:
+        assert record["translated_text"] != record["source_text"]
+        assert record["status"] == "fake_synthetic_preview"
+
+
+def test_translate_dry_run_does_not_write_a_file(tmp_path: Path) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42018)
+
+    exit_code = cli.main(
+        [
+            "translate",
+            "--dataset",
+            dataset_id,
+            "--target-locale",
+            "ar-SA",
+            "--output-root",
+            str(tmp_path),
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+    assert not (tmp_path / dataset_id / "translations").exists()
+
+
+def test_translate_requires_target_locale(tmp_path: Path) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42019)
+
+    exit_code = cli.main(
+        [
+            "translate",
+            "--dataset",
+            dataset_id,
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_translate_rejects_unknown_dataset(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        [
+            "translate",
+            "--dataset",
+            "syn-ghost",
+            "--target-locale",
+            "ar-SA",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2
+    assert "not found" in capsys.readouterr().err
+
+
+def test_translate_rejects_same_source_and_target_locale(
+    tmp_path: Path,
+) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42020)
+
+    exit_code = cli.main(
+        [
+            "translate",
+            "--dataset",
+            dataset_id,
+            "--target-locale",
+            "en-US",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2

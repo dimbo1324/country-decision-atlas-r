@@ -17,6 +17,7 @@ def _generate_world(
     country_count: int | None = None,
     generated_on: str | None = "2026-01-01",
     profile: str = "balanced",
+    scale: str = "large",
 ) -> SyntheticWorld:
     return WorldGenerator(input_data=load_world_input()).generate(
         WorldGenerationOptions(
@@ -24,6 +25,7 @@ def _generate_world(
             profile=profile,
             country_count=country_count,
             generated_on=generated_on,
+            scale=scale,
         )
     )
 
@@ -355,3 +357,88 @@ def test_every_profile_passes_the_semantic_validator_across_many_seeds() -> (
                 forbidden_country_names=input_data.forbidden_country_names,
             )
             assert not errors, (profile, seed, errors)
+
+
+def test_default_scale_is_large_and_matches_pre_scale_behavior() -> None:
+    world = _generate_world()
+
+    assert set(world.metadata.supported_locales) == {
+        "en-US",
+        *REQUIRED_LOCALES,
+    }
+    counts: dict[str, int] = {}
+    for scenario in world.scenarios:
+        counts[scenario.category] = counts.get(scenario.category, 0) + 1
+    assert counts == {
+        "comparison": 2,
+        "source_review": 2,
+        "change_notification": 2,
+        "data_quality": 2,
+    }
+
+
+def test_small_scale_reduces_locales_and_scenario_variants() -> None:
+    world = _generate_world(scale="small")
+
+    assert set(world.metadata.supported_locales) == {
+        "en-US",
+        "ar-SA",
+        "zh-Hans-CN",
+    }
+    counts: dict[str, int] = {}
+    for scenario in world.scenarios:
+        counts[scenario.category] = counts.get(scenario.category, 0) + 1
+    assert counts == {
+        "comparison": 1,
+        "source_review": 1,
+        "change_notification": 1,
+        "data_quality": 1,
+    }
+
+
+def test_medium_scale_reduces_locales_but_keeps_two_scenario_variants() -> None:
+    world = _generate_world(scale="medium")
+
+    assert len(world.metadata.supported_locales) == 8
+    counts: dict[str, int] = {}
+    for scenario in world.scenarios:
+        counts[scenario.category] = counts.get(scenario.category, 0) + 1
+    assert counts == {
+        "comparison": 2,
+        "source_review": 2,
+        "change_notification": 2,
+        "data_quality": 2,
+    }
+
+
+def test_unknown_scale_raises_value_error() -> None:
+    try:
+        _generate_world(scale="huge")
+    except ValueError as error:
+        assert "huge" in str(error)
+    else:
+        raise AssertionError("expected ValueError for an unknown scale")
+
+
+def test_small_and_medium_scale_worlds_pass_the_semantic_validator() -> None:
+    input_data = load_world_input()
+    for scale in ("small", "medium", "large"):
+        for seed in range(8000, 8005):
+            world = WorldGenerator(input_data=input_data).generate(
+                WorldGenerationOptions(
+                    seed=seed, profile="balanced", scale=scale
+                )
+            )
+            errors = validate_world(
+                world,
+                forbidden_country_names=input_data.forbidden_country_names,
+                expected_locales=world.metadata.supported_locales,
+            )
+            assert not errors, (scale, seed, errors)
+
+
+def test_small_scale_world_is_still_byte_for_byte_reproducible() -> None:
+    first = _generate_world(seed=9999, scale="small")
+    second = _generate_world(seed=9999, scale="small")
+
+    assert first.to_dict() == second.to_dict()

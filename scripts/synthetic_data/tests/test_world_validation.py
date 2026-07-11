@@ -306,3 +306,27 @@ def test_validator_rejects_world_missing_a_locale_recipe() -> None:
     assert any(
         "missing a document recipe for locales" in error for error in errors
     )
+
+
+def test_validator_accepts_a_narrowed_expected_locales_set() -> None:
+    """A dataset generated at a reduced `--scale` never claims coverage for
+    locales it did not build recipes for, so validation must check against
+    the caller's actual expected set rather than always demanding all 15."""
+    world, input_data = _world()
+    trimmed_recipes = tuple(
+        recipe for recipe in world.document_recipes if recipe.locale != "ta-IN"
+    )
+    invalid_world = world.model_copy(
+        update={"document_recipes": trimmed_recipes}
+    )
+    remaining_locales = {recipe.locale for recipe in trimmed_recipes}
+
+    errors = validate_world(
+        invalid_world,
+        forbidden_country_names=input_data.forbidden_country_names,
+        expected_locales=remaining_locales,
+    )
+
+    assert not any(
+        "missing a document recipe for locales" in error for error in errors
+    )

@@ -53,7 +53,12 @@ from scripts.synthetic_data.core.sql_loader import (  # noqa: E402
     ensure_not_production,
     execute_sql_file,
 )
+from scripts.synthetic_data.core.translation_adapter import (  # noqa: E402
+    TranslationAdapterError,
+    generate_translation_preview,
+)
 from scripts.synthetic_data.core.world_generator import (  # noqa: E402
+    SCALE_PROFILES,
     WorldGenerationOptions,
     WorldGenerator,
 )
@@ -84,6 +89,7 @@ _WORLD_COMMANDS = frozenset(
         "prune",
         "schema",
         "diff",
+        "translate",
     }
 )
 # `dataset_packager` transitively imports reportlab/python-docx/openpyxl —
@@ -226,6 +232,17 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         help="Override the configuration country count; only 4 or 5 are allowed.",
     )
     parser.add_argument(
+        "--scale",
+        default="large",
+        help=(
+            "Volume profile for generate/plan: how many locales and "
+            "scenario variants per category to build. One of "
+            f"{', '.join(sorted(SCALE_PROFILES))}. `large` (default) is "
+            "the full, original behavior; `small`/`medium` trade "
+            "locale/Unicode coverage for a faster dataset (load-testing, CI)."
+        ),
+    )
+    parser.add_argument(
         "--output-root",
         type=Path,
         default=DEFAULT_OUTPUT_DATA_ROOT,
@@ -287,6 +304,16 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         "--dataset-b",
         default=None,
         help="Second dataset_id to compare; required by diff.",
+    )
+    parser.add_argument(
+        "--source-locale",
+        default="en-US",
+        help="Locale to translate from; used by translate (default: en-US).",
+    )
+    parser.add_argument(
+        "--target-locale",
+        default=None,
+        help="Locale to fake-translate into; required by translate.",
     )
     _add_output_flags(parser)
     return parser
@@ -476,7 +503,9 @@ def _run_render(args: argparse.Namespace, report: _Report) -> int:
         world = SyntheticWorld.model_validate_json(
             canonical_path.read_text(encoding="utf-8")
         )
-        errors = validate_world(world)
+        errors = validate_world(
+            world, expected_locales=world.metadata.supported_locales
+        )
         if args.dry_run:
             report.line(
                 f"[dry-run] would re-render {dataset_dir} "
@@ -522,7 +551,9 @@ def _run_package(args: argparse.Namespace, report: _Report) -> int:
     except ValueError as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
-    errors = validate_world(world)
+    errors = validate_world(
+        world, expected_locales=world.metadata.supported_locales
+    )
     if args.dry_run:
         report.line(f"[dry-run] would repackage {dataset_dir}")
         report.data.update({"dry_run": True, "dataset_dir": str(dataset_dir)})
@@ -736,6 +767,88 @@ def _run_diff(args: argparse.Namespace, report: _Report) -> int:
     return 0 if diff.is_identical else 1
 
 
+def _run_translate(args: argparse.Namespace, report: _Report) -> int:
+    if not args.dataset:
+        print(
+            "ERROR: translate requires --dataset <dataset_id>",
+            file=sys.stderr,
+        )
+        return 2
+    if not args.target_locale:
+        print(
+            "ERROR: translate requires --target-locale <locale>",
+            file=sys.stderr,
+        )
+        return 2
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+
+    try:
+        world = _load_world(dataset_dir)
+        records = generate_translation_preview(
+            world,
+            source_locale=args.source_locale,
+            target_locale=args.target_locale,
+            seed=world.metadata.seed,
+        )
+    except (OSError, ValueError, TranslationAdapterError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    output_path = dataset_dir / "translations" / f"{args.target_locale}.json"
+    if args.dry_run:
+        report.line(
+            f"[dry-run] would write {len(records)} translation records "
+            f"({args.source_locale} -> {args.target_locale}) -> {output_path}"
+        )
+        report.data.update(
+            {
+                "dry_run": True,
+                "dataset_id": world.metadata.dataset_id,
+                "source_locale": args.source_locale,
+                "target_locale": args.target_locale,
+                "record_count": len(records),
+                "output_path": str(output_path),
+            }
+        )
+        report.emit()
+        return 0
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "dataset_id": world.metadata.dataset_id,
+        "source_locale": args.source_locale,
+        "target_locale": args.target_locale,
+        "provider_name": records[0].provider_name,
+        "provider_version": records[0].provider_version,
+        "generated_on": records[0].generated_on,
+        "seed": records[0].seed,
+        "records": [record.model_dump(mode="json") for record in records],
+    }
+    output_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    report.line(
+        f"wrote {len(records)} translation records "
+        f"({args.source_locale} -> {args.target_locale}) -> {output_path}"
+    )
+    report.data.update(
+        {
+            "dataset_id": world.metadata.dataset_id,
+            "source_locale": args.source_locale,
+            "target_locale": args.target_locale,
+            "record_count": len(records),
+            "output_path": str(output_path),
+        }
+    )
+    report.emit()
+    return 0
+
+
 def _run_schema() -> int:
     schema = SyntheticWorld.model_json_schema()
     print(json.dumps(schema, indent=2, ensure_ascii=False, sort_keys=True))
@@ -853,6 +966,8 @@ def _run_world(argv: list[str]) -> int:
         return _run_prune(args, report)
     if args.command == "diff":
         return _run_diff(args, report)
+    if args.command == "translate":
+        return _run_translate(args, report)
     if args.command == "schema":
         return _run_schema()
     if args.command in ("load-sql", "cleanup-sql"):
@@ -883,28 +998,33 @@ def _run_world(argv: list[str]) -> int:
                 seed=seed,
                 profile=args.profile,
                 country_count=args.countries,
+                scale=args.scale,
             )
         )
         errors = validate_world(
             world,
             forbidden_country_names=input_data.forbidden_country_names,
+            expected_locales=world.metadata.supported_locales,
         )
         if errors:
             raise WorldValidationError("; ".join(errors))
         report.line(
             f"dataset_id={world.metadata.dataset_id} seed={seed} "
-            f"profile={world.metadata.profile} countries={len(world.countries)} "
+            f"profile={world.metadata.profile} scale={args.scale} "
+            f"countries={len(world.countries)} "
             f"users={len(world.users)} authors={len(world.authors)} "
             f"articles={len(world.articles)} comments={len(world.comments)} "
             f"legal_signals={len(world.legal_signals)} "
             f"document_recipes={len(world.document_recipes)} "
-            f"scenarios={len(world.scenarios)}"
+            f"scenarios={len(world.scenarios)} "
+            f"locales={len(world.metadata.supported_locales)}"
         )
         report.data.update(
             {
                 "dataset_id": world.metadata.dataset_id,
                 "seed": seed,
                 "profile": world.metadata.profile,
+                "scale": args.scale,
                 "countries": len(world.countries),
                 "users": len(world.users),
                 "authors": len(world.authors),
@@ -913,6 +1033,7 @@ def _run_world(argv: list[str]) -> int:
                 "legal_signals": len(world.legal_signals),
                 "document_recipes": len(world.document_recipes),
                 "scenarios": len(world.scenarios),
+                "supported_locales": list(world.metadata.supported_locales),
             }
         )
         if args.command == "plan" or args.dry_run:
