@@ -577,3 +577,128 @@ def test_render_reports_known_dataset_ids_when_not_found(
 
     assert exit_code == 2
     assert "not found" in capsys.readouterr().err
+
+
+def test_diff_requires_both_dataset_flags() -> None:
+    exit_code = cli.main(["diff", "--dataset-a", "syn-a"])
+
+    assert exit_code == 2
+
+
+def test_diff_reports_unknown_dataset_id(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        [
+            "diff",
+            "--dataset-a",
+            "syn-ghost-a",
+            "--dataset-b",
+            "syn-ghost-b",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2
+    assert "syn-ghost-a" in capsys.readouterr().err
+
+
+def _generate_json_dataset(
+    output_root: Path, *, seed: int, profile: str = "balanced"
+) -> str:
+    before = (
+        {path.name for path in output_root.iterdir()}
+        if output_root.exists()
+        else set()
+    )
+    exit_code = cli.main(
+        [
+            "generate",
+            "--world-input",
+            str(DEFAULT_WORLD_INPUT_FILE),
+            "--seed",
+            str(seed),
+            "--profile",
+            profile,
+            "--output-root",
+            str(output_root),
+            "--formats",
+            "json",
+        ]
+    )
+    assert exit_code == 0
+    after = {path.name for path in output_root.iterdir()}
+    (new_dataset_id,) = after - before
+    return new_dataset_id
+
+
+def test_diff_of_identical_dataset_reports_zero_exit_code(
+    tmp_path: Path,
+) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=9001)
+
+    exit_code = cli.main(
+        [
+            "diff",
+            "--dataset-a",
+            dataset_id,
+            "--dataset-b",
+            dataset_id,
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+
+
+def test_diff_of_different_seeds_lists_added_and_removed_countries(
+    tmp_path: Path,
+) -> None:
+    dataset_id_a = _generate_json_dataset(tmp_path, seed=9001)
+    dataset_id_b = _generate_json_dataset(tmp_path, seed=9002)
+
+    exit_code = cli.main(
+        [
+            "diff",
+            "--dataset-a",
+            dataset_id_a,
+            "--dataset-b",
+            dataset_id_b,
+            "--output-root",
+            str(tmp_path),
+            "--json",
+        ]
+    )
+
+    assert exit_code == 1
+
+
+def test_diff_json_flag_prints_a_single_parseable_json_object(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    dataset_id_a = _generate_json_dataset(tmp_path, seed=9101)
+    dataset_id_b = _generate_json_dataset(tmp_path, seed=9102)
+    capsys.readouterr()
+
+    exit_code = cli.main(
+        [
+            "diff",
+            "--dataset-a",
+            dataset_id_a,
+            "--dataset-b",
+            dataset_id_b,
+            "--output-root",
+            str(tmp_path),
+            "--json",
+        ]
+    )
+
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id_a"] == dataset_id_a
+    assert payload["dataset_id_b"] == dataset_id_b
+    assert payload["is_identical"] is False
+    assert payload["countries_added"]
+    assert payload["countries_removed"]

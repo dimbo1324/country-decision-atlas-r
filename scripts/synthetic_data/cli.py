@@ -13,6 +13,9 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from scripts.synthetic_data.core.dataset_diff import (  # noqa: E402
+    diff_worlds,
+)
 from scripts.synthetic_data.core.dataset_discovery import (  # noqa: E402
     available_dataset_ids,
     find_dataset_dir,
@@ -80,6 +83,7 @@ _WORLD_COMMANDS = frozenset(
         "package",
         "prune",
         "schema",
+        "diff",
     }
 )
 # `dataset_packager` transitively imports reportlab/python-docx/openpyxl —
@@ -274,6 +278,16 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Number of newest datasets to keep; required by prune.",
     )
+    parser.add_argument(
+        "--dataset-a",
+        default=None,
+        help="First dataset_id to compare; required by diff.",
+    )
+    parser.add_argument(
+        "--dataset-b",
+        default=None,
+        help="Second dataset_id to compare; required by diff.",
+    )
     _add_output_flags(parser)
     return parser
 
@@ -370,6 +384,30 @@ def _dataset_not_found_error(args: argparse.Namespace) -> str:
     return (
         f"dataset {args.dataset!r} not found under {args.output_root} "
         f"(also checked {DEFAULT_OUTPUT_DATA_ROOT}){suffix}"
+    )
+
+
+def _resolve_named_dataset_dir(
+    dataset_id: str, args: argparse.Namespace
+) -> Path | None:
+    return find_dataset_dir(dataset_id, primary_root=args.output_root)
+
+
+def _named_dataset_not_found_error(
+    dataset_id: str, args: argparse.Namespace
+) -> str:
+    known = available_dataset_ids(args.output_root, DEFAULT_OUTPUT_DATA_ROOT)
+    suffix = f"; known dataset ids: {', '.join(known)}" if known else ""
+    return (
+        f"dataset {dataset_id!r} not found under {args.output_root} "
+        f"(also checked {DEFAULT_OUTPUT_DATA_ROOT}){suffix}"
+    )
+
+
+def _load_world(dataset_dir: Path) -> SyntheticWorld:
+    canonical_path = dataset_dir / "canonical" / "synthetic_world.json"
+    return SyntheticWorld.model_validate_json(
+        canonical_path.read_text(encoding="utf-8")
     )
 
 
@@ -591,6 +629,113 @@ def _run_prune(args: argparse.Namespace, report: _Report) -> int:
     return 0
 
 
+def _run_diff(args: argparse.Namespace, report: _Report) -> int:
+    if not args.dataset_a or not args.dataset_b:
+        print(
+            "ERROR: diff requires --dataset-a <id> and --dataset-b <id>",
+            file=sys.stderr,
+        )
+        return 2
+    dataset_dir_a = _resolve_named_dataset_dir(args.dataset_a, args)
+    if dataset_dir_a is None:
+        print(
+            f"ERROR: {_named_dataset_not_found_error(args.dataset_a, args)}",
+            file=sys.stderr,
+        )
+        return 2
+    dataset_dir_b = _resolve_named_dataset_dir(args.dataset_b, args)
+    if dataset_dir_b is None:
+        print(
+            f"ERROR: {_named_dataset_not_found_error(args.dataset_b, args)}",
+            file=sys.stderr,
+        )
+        return 2
+
+    try:
+        world_a = _load_world(dataset_dir_a)
+        world_b = _load_world(dataset_dir_b)
+    except (OSError, ValueError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    diff = diff_worlds(world_a, world_b)
+
+    if diff.is_identical:
+        report.line(
+            f"{diff.dataset_id_a} and {diff.dataset_id_b} are equivalent: "
+            "same countries, metrics, and scenario mix."
+        )
+    else:
+        report.line(
+            f"comparing {diff.dataset_id_a} (a) vs {diff.dataset_id_b} (b)"
+        )
+        for slug in diff.countries_added:
+            report.line(f"  + country only in b: {slug}")
+        for slug in diff.countries_removed:
+            report.line(f"  - country only in a: {slug}")
+        for country_diff in diff.countries_changed:
+            report.line(
+                f"  ~ {country_diff.slug}: archetype "
+                f"{country_diff.archetype_a} -> {country_diff.archetype_b}"
+                if country_diff.archetype_a != country_diff.archetype_b
+                else f"  ~ {country_diff.slug}:"
+            )
+            for metric_change in country_diff.metric_changes:
+                report.line(
+                    f"      {metric_change.metric}: "
+                    f"{metric_change.value_a} -> {metric_change.value_b}"
+                )
+        for category_diff in diff.scenario_category_diffs:
+            report.line(
+                f"  scenarios[{category_diff.category}]: "
+                f"{category_diff.count_a} -> {category_diff.count_b}"
+            )
+
+    report.data.update(
+        {
+            "dataset_id_a": diff.dataset_id_a,
+            "dataset_id_b": diff.dataset_id_b,
+            "profile_a": diff.profile_a,
+            "profile_b": diff.profile_b,
+            "seed_a": diff.seed_a,
+            "seed_b": diff.seed_b,
+            "is_identical": diff.is_identical,
+            "countries_added": list(diff.countries_added),
+            "countries_removed": list(diff.countries_removed),
+            "countries_changed": [
+                {
+                    "slug": country_diff.slug,
+                    "name_a": country_diff.name_a,
+                    "name_b": country_diff.name_b,
+                    "archetype_a": country_diff.archetype_a,
+                    "archetype_b": country_diff.archetype_b,
+                    "metric_changes": [
+                        {
+                            "metric": metric_change.metric,
+                            "value_a": metric_change.value_a,
+                            "value_b": metric_change.value_b,
+                        }
+                        for metric_change in country_diff.metric_changes
+                    ],
+                }
+                for country_diff in diff.countries_changed
+            ],
+            "scenario_count_a": diff.scenario_count_a,
+            "scenario_count_b": diff.scenario_count_b,
+            "scenario_category_diffs": [
+                {
+                    "category": category_diff.category,
+                    "count_a": category_diff.count_a,
+                    "count_b": category_diff.count_b,
+                }
+                for category_diff in diff.scenario_category_diffs
+            ],
+        }
+    )
+    report.emit()
+    return 0 if diff.is_identical else 1
+
+
 def _run_schema() -> int:
     schema = SyntheticWorld.model_json_schema()
     print(json.dumps(schema, indent=2, ensure_ascii=False, sort_keys=True))
@@ -706,6 +851,8 @@ def _run_world(argv: list[str]) -> int:
         return _run_list(args, report)
     if args.command == "prune":
         return _run_prune(args, report)
+    if args.command == "diff":
+        return _run_diff(args, report)
     if args.command == "schema":
         return _run_schema()
     if args.command in ("load-sql", "cleanup-sql"):

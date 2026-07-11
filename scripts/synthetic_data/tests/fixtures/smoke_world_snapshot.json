@@ -1144,6 +1144,49 @@
       "title": "Compare Elvaron and Ivaraora"
     },
     {
+      "category": "comparison",
+      "expected_results": [
+        {
+          "check": "compare_view_shows_distinct_metrics:farenara:avelis",
+          "description": "Comparison shows different metric profiles for Farenara and Avelis."
+        }
+      ],
+      "initial_state": {
+        "user_role": "anonymous"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "2080cea5-5fa0-5ff0-964c-4c7a9d220f2f",
+        "75abf449-5ddd-5a36-945c-795ef147846b"
+      ],
+      "risk_labels": [
+        "search"
+      ],
+      "scenario_id": "scenario-compare-farenara-avelis",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "farenara"
+          }
+        },
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "avelis"
+          }
+        },
+        {
+          "action": "compare_countries",
+          "target": {
+            "country_slug_a": "farenara",
+            "country_slug_b": "avelis"
+          }
+        }
+      ],
+      "title": "Compare Farenara and Avelis"
+    },
+    {
       "category": "source_review",
       "expected_results": [
         {
@@ -1199,6 +1242,63 @@
         }
       ],
       "title": "Review a source and leave a comment on Elvaron"
+    },
+    {
+      "category": "source_review",
+      "expected_results": [
+        {
+          "check": "source_detail_shows_confidence:source-ivaraora-safety",
+          "description": "Source Synthetic source for Ivaraora safety opens and shows its confidence level."
+        },
+        {
+          "check": "comment_visible_with_status:comment-ivaraora-0:approved",
+          "description": "New comment appears with moderation status approved."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "ivaraora",
+        "user_role": "authenticated_user"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+        "article-ivaraora",
+        "source-ivaraora-safety",
+        "comment-ivaraora-0"
+      ],
+      "risk_labels": [
+        "moderation",
+        "authorization"
+      ],
+      "scenario_id": "scenario-source-comment-ivaraora",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "open_article",
+          "target": {
+            "article_id": "article-ivaraora"
+          }
+        },
+        {
+          "action": "open_source",
+          "target": {
+            "source_id": "source-ivaraora-safety"
+          }
+        },
+        {
+          "action": "add_comment",
+          "target": {
+            "article_id": "article-ivaraora",
+            "comment_id": "comment-ivaraora-0"
+          }
+        }
+      ],
+      "title": "Review a source and leave a comment on Ivaraora"
     },
     {
       "category": "change_notification",
@@ -1257,6 +1357,62 @@
       "title": "Watch Elvaron and see the civil_freedoms change"
     },
     {
+      "category": "change_notification",
+      "expected_results": [
+        {
+          "check": "what_changed_shows_event:event-ivaraora-safety",
+          "description": "'What changed' shows the safety declined event with its legal signal."
+        },
+        {
+          "check": "fake_notification_queued:ivaraora:event-ivaraora-safety",
+          "description": "A fake-mode notification is queued for the watchlisted change."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "ivaraora",
+        "user_role": "authenticated_user"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7",
+        "event-ivaraora-safety",
+        "legal-ivaraora"
+      ],
+      "risk_labels": [
+        "freshness",
+        "notifications"
+      ],
+      "scenario_id": "scenario-watchlist-change-ivaraora",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "add_to_watchlist",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "open_what_changed",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "trigger_notification",
+          "target": {
+            "channel": "fake",
+            "country_slug": "ivaraora"
+          }
+        }
+      ],
+      "title": "Watch Ivaraora and see the safety change"
+    },
+    {
       "category": "data_quality",
       "expected_results": [
         {
@@ -1292,6 +1448,43 @@
         }
       ],
       "title": "Review incomplete or conflicting data for Elvaron"
+    },
+    {
+      "category": "data_quality",
+      "expected_results": [
+        {
+          "check": "trust_panel_shows_low_confidence:ivaraora",
+          "description": "Trust panel surfaces the low data_confidence (52) for Ivaraora."
+        }
+      ],
+      "initial_state": {
+        "country_slug": "ivaraora",
+        "user_role": "anonymous"
+      },
+      "profile": "balanced",
+      "related_artifacts": [
+        "3bf0d113-b456-57b6-ba1a-e1493aba8fd7"
+      ],
+      "risk_labels": [
+        "freshness",
+        "data_quality"
+      ],
+      "scenario_id": "scenario-data-quality-ivaraora",
+      "steps": [
+        {
+          "action": "open_country",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        },
+        {
+          "action": "open_trust_panel",
+          "target": {
+            "country_slug": "ivaraora"
+          }
+        }
+      ],
+      "title": "Review incomplete or conflicting data for Ivaraora"
     }
   ],
   "users": [

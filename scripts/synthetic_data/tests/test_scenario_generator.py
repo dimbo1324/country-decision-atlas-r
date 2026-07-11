@@ -157,3 +157,81 @@ def test_all_scenarios_have_steps_and_expected_results() -> None:
         assert scenario.expected_results
         assert scenario.related_artifacts
         assert scenario.risk_labels
+
+
+def test_each_category_gets_two_variants_with_five_countries() -> None:
+    world = _generated_world()
+    content_by_country = _content_by_country(world)
+
+    scenarios = generate_scenarios(
+        profile="balanced",
+        countries=world.countries,
+        content_by_country=content_by_country,
+    )
+
+    counts: dict[str, int] = {}
+    for scenario in scenarios:
+        counts[scenario.category] = counts.get(scenario.category, 0) + 1
+    assert counts == {
+        "comparison": 2,
+        "source_review": 2,
+        "change_notification": 2,
+        "data_quality": 2,
+    }
+
+
+def test_comparison_variants_use_disjoint_country_pairs() -> None:
+    world = _generated_world()
+    content_by_country = _content_by_country(world)
+
+    scenarios = generate_scenarios(
+        profile="balanced",
+        countries=world.countries,
+        content_by_country=content_by_country,
+    )
+    comparisons = [s for s in scenarios if s.category == "comparison"]
+
+    all_countries_used = [
+        country_id
+        for scenario in comparisons
+        for country_id in scenario.related_artifacts
+    ]
+    assert len(all_countries_used) == len(set(all_countries_used))
+
+
+def test_scenario_ids_are_unique_across_all_variants() -> None:
+    world = _generated_world()
+    content_by_country = _content_by_country(world)
+
+    scenarios = generate_scenarios(
+        profile="balanced",
+        countries=world.countries,
+        content_by_country=content_by_country,
+    )
+
+    scenario_ids = [scenario.scenario_id for scenario in scenarios]
+    assert len(scenario_ids) == len(set(scenario_ids))
+
+
+def test_data_quality_variants_target_the_two_weakest_countries() -> None:
+    world = _generated_world()
+    content_by_country = _content_by_country(world)
+
+    scenarios = generate_scenarios(
+        profile="balanced",
+        countries=world.countries,
+        content_by_country=content_by_country,
+    )
+    data_quality_scenarios = [
+        s for s in scenarios if s.category == "data_quality"
+    ]
+
+    expected_weakest = sorted(
+        world.countries,
+        key=lambda country: country.current_metrics["data_confidence"],
+    )[:2]
+    expected_ids = {country.country_id for country in expected_weakest}
+    actual_ids = {
+        scenario.related_artifacts[0] for scenario in data_quality_scenarios
+    }
+    assert actual_ids == expected_ids

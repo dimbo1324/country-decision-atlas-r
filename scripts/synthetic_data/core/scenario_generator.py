@@ -9,36 +9,85 @@ from scripts.synthetic_data.core.world_models import (
 )
 
 
+_VARIANTS_PER_CATEGORY = 2
+
+
 def generate_scenarios(
     *,
     profile: str,
     countries: tuple[SyntheticCountry, ...],
     content_by_country: dict[str, CountryContent],
 ) -> tuple[SyntheticScenario, ...]:
-    """Build the base scenario catalog required by spec section 23 stage 3:
-    comparison, source/comment, watchlist+notification, and a data-quality
-    scenario targeting whichever generated country has the weakest
-    data_confidence (always exists, regardless of seed or profile)."""
-    return (
-        _comparison_scenario(profile=profile, countries=countries),
+    """Build the scenario catalog required by spec section 23 stage 3, with
+    up to `_VARIANTS_PER_CATEGORY` variants per category (comparison,
+    source_review, change_notification, data_quality) so manual and
+    automated QA has more than one instance to exercise per run. The first
+    variant of each category always matches the original single-variant
+    behavior (countries[0] as the primary actor, weakest data_confidence
+    country first for data_quality), so this stays a pure addition."""
+    variant_count = min(_VARIANTS_PER_CATEGORY, len(countries))
+    comparisons = tuple(
+        _comparison_scenario(
+            profile=profile, country_a=country_a, country_b=country_b
+        )
+        for country_a, country_b in _distinct_country_pairs(
+            countries, variant_count
+        )
+    )
+    source_reviews = tuple(
         _source_and_comment_scenario(
             profile=profile,
-            country=countries[0],
-            content=content_by_country[countries[0].slug],
-        ),
+            country=country,
+            content=content_by_country[country.slug],
+        )
+        for country in countries[:variant_count]
+    )
+    change_notifications = tuple(
         _watchlist_change_scenario(
             profile=profile,
-            country=countries[0],
-            content=content_by_country[countries[0].slug],
-        ),
-        _data_quality_scenario(profile=profile, countries=countries),
+            country=country,
+            content=content_by_country[country.slug],
+        )
+        for country in countries[:variant_count]
+    )
+    data_quality_scenarios = tuple(
+        _data_quality_scenario(profile=profile, country=country)
+        for country in _weakest_countries(countries, variant_count)
+    )
+    return (
+        comparisons
+        + source_reviews
+        + change_notifications
+        + data_quality_scenarios
     )
 
 
+def _distinct_country_pairs(
+    countries: tuple[SyntheticCountry, ...], variant_count: int
+) -> tuple[tuple[SyntheticCountry, SyntheticCountry], ...]:
+    pair_count = min(variant_count, len(countries) // 2)
+    return tuple(
+        (countries[2 * index], countries[2 * index + 1])
+        for index in range(pair_count)
+    )
+
+
+def _weakest_countries(
+    countries: tuple[SyntheticCountry, ...], variant_count: int
+) -> tuple[SyntheticCountry, ...]:
+    ordered = sorted(
+        countries,
+        key=lambda country: country.current_metrics["data_confidence"],
+    )
+    return tuple(ordered[:variant_count])
+
+
 def _comparison_scenario(
-    *, profile: str, countries: tuple[SyntheticCountry, ...]
+    *,
+    profile: str,
+    country_a: SyntheticCountry,
+    country_b: SyntheticCountry,
 ) -> SyntheticScenario:
-    country_a, country_b = countries[0], countries[1]
     return SyntheticScenario(
         scenario_id=f"scenario-compare-{country_a.slug}-{country_b.slug}",
         title=f"Compare {country_a.name} and {country_b.name}",
@@ -200,40 +249,36 @@ def _watchlist_change_scenario(
 
 
 def _data_quality_scenario(
-    *, profile: str, countries: tuple[SyntheticCountry, ...]
+    *, profile: str, country: SyntheticCountry
 ) -> SyntheticScenario:
-    weakest = min(
-        countries,
-        key=lambda country: country.current_metrics["data_confidence"],
-    )
-    confidence = weakest.current_metrics["data_confidence"]
+    confidence = country.current_metrics["data_confidence"]
     return SyntheticScenario(
-        scenario_id=f"scenario-data-quality-{weakest.slug}",
-        title=f"Review incomplete or conflicting data for {weakest.name}",
+        scenario_id=f"scenario-data-quality-{country.slug}",
+        title=f"Review incomplete or conflicting data for {country.name}",
         category="data_quality",
         profile=profile,
         initial_state={
             "user_role": "anonymous",
-            "country_slug": weakest.slug,
+            "country_slug": country.slug,
         },
         steps=(
             ScenarioStep(
-                action="open_country", target={"country_slug": weakest.slug}
+                action="open_country", target={"country_slug": country.slug}
             ),
             ScenarioStep(
                 action="open_trust_panel",
-                target={"country_slug": weakest.slug},
+                target={"country_slug": country.slug},
             ),
         ),
         expected_results=(
             ScenarioExpectedResult(
                 description=(
                     f"Trust panel surfaces the low data_confidence "
-                    f"({confidence}) for {weakest.name}."
+                    f"({confidence}) for {country.name}."
                 ),
-                check=f"trust_panel_shows_low_confidence:{weakest.slug}",
+                check=f"trust_panel_shows_low_confidence:{country.slug}",
             ),
         ),
-        related_artifacts=(weakest.country_id,),
+        related_artifacts=(country.country_id,),
         risk_labels=("freshness", "data_quality"),
     )
