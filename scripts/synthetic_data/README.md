@@ -395,6 +395,46 @@ pipeline. `--formats` accepts `json`, `markdown`, `xlsx`,
 `docx-copyable`/`docx-non-copyable`/`docx-mixed`/`docx` (all 3),
 `pdf-copyable`/`pdf-non-copyable`/`pdf-mixed`/`pdf` (all 3), or `all`.
 
+## Mock HTTP server (`mock_server`)
+
+A local FastAPI server that serves an already-generated dataset over HTTP,
+mimicking the shape of `apps/api`'s public read endpoints closely enough
+that `apps/web` can run entirely on synthetic data with no database at all
+— point `NEXT_PUBLIC_API_BASE_URL` at it instead of the real backend.
+
+```powershell
+python -m scripts.synthetic_data.cli generate --seed 42017
+python -m scripts.synthetic_data.mock_server --dataset <dataset_id> --port 8000
+```
+
+| Endpoint | Notes |
+| --- | --- |
+| `GET /api/v1/countries` | Paginated list. |
+| `GET /api/v1/countries/{slug}` | Country detail. |
+| `GET /api/v1/countries/{slug}/profile` | Backed by the country's generated article summary. |
+| `GET /api/v1/countries/{slug}/trust` | Fake trust score — reuses the `data_confidence` archetype metric. |
+| `GET /api/v1/countries/{slug}/cii` | Backed directly by `core/cii_preview.py`. |
+| `GET /api/v1/countries/compare?countries=a,b&scenario=<slug>` | Two-country CII comparison. |
+| `GET /api/v1/countries/{slug}/sources` | The country's own generated source(s). |
+| `GET /api/v1/search?q=` | Substring match over country names/articles/sources. |
+
+Every response carries an `X-Synthetic-Data: true` header, and the same
+`{"error": {"code","message","details"}}` error envelope as the real API
+(404 for an unknown country slug, 422 for a malformed `compare` request).
+CORS defaults to allowing `http://localhost:3000` (Next.js's dev port);
+override with repeatable `--cors-origin` flags.
+
+**Scoped deliberately** — endpoints without a faithful synthetic model
+behind them are left out rather than half-faked: `drift` and the
+aggregated `/card` read-model (no synthetic drift-snapshot data),
+`/scenarios`/`/methodology` (static real methodology content, not
+per-country synthetic data — mixing it in here risked exactly the kind of
+blurring the safety rules above forbid), `community`, `country-pairs`,
+`routes`, `evidence-items` (no matching synthetic entities). Response
+shapes are hand-mirrored from `packages/contracts/generated/types.ts` and
+`apps/api/app/schemas/*.py`, not regenerated automatically — if the real
+contract changes shape, this mock's schemas need a manual follow-up pass.
+
 ## Reproducibility
 
 The same `world_config.json` + `seed` + `profile` always produce the same
@@ -411,7 +451,7 @@ UUID generated after the fact.
 py -3.12 -m pytest scripts/synthetic_data/tests -q
 ```
 
-281 tests as of this writing, covering: determinism across seeds/profiles,
+302 tests as of this writing, covering: determinism across seeds/profiles,
 referential integrity (every id resolves), the real-country/PII deny-list,
 SQL fixture idempotency and cleanup isolation against a live local
 Postgres (manual verification — see below), production-guard fail-closed
