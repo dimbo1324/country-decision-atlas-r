@@ -13,6 +13,9 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from scripts.synthetic_data.core.cii_preview import (  # noqa: E402
+    generate_cii_preview,
+)
 from scripts.synthetic_data.core.dataset_diff import (  # noqa: E402
     diff_worlds,
 )
@@ -90,6 +93,7 @@ _WORLD_COMMANDS = frozenset(
         "schema",
         "diff",
         "translate",
+        "cii-preview",
     }
 )
 # `dataset_packager` transitively imports reportlab/python-docx/openpyxl —
@@ -849,6 +853,83 @@ def _run_translate(args: argparse.Namespace, report: _Report) -> int:
     return 0
 
 
+def _run_cii_preview(args: argparse.Namespace, report: _Report) -> int:
+    if not args.dataset:
+        print(
+            "ERROR: cii-preview requires --dataset <dataset_id>",
+            file=sys.stderr,
+        )
+        return 2
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+
+    try:
+        world = _load_world(dataset_dir)
+    except (OSError, ValueError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    previews = generate_cii_preview(world, seed=world.metadata.seed)
+    output_path = dataset_dir / "reports" / "cii_preview.json"
+
+    if args.dry_run:
+        report.line(
+            f"[dry-run] would write {len(previews)} CII previews -> "
+            f"{output_path}"
+        )
+        report.data.update(
+            {
+                "dry_run": True,
+                "dataset_id": world.metadata.dataset_id,
+                "country_count": len(previews),
+                "output_path": str(output_path),
+            }
+        )
+        report.emit()
+        return 0
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "dataset_id": world.metadata.dataset_id,
+        "formula_version": previews[0].formula_version if previews else None,
+        "aggregation_method": (
+            previews[0].aggregation_method if previews else None
+        ),
+        "seed": world.metadata.seed,
+        "countries": [preview.model_dump(mode="json") for preview in previews],
+    }
+    output_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    for preview in previews:
+        report.line(
+            f"{preview.country_name} ({preview.country_slug}): "
+            f"overall_score={preview.overall_score} "
+            f"confidence={preview.confidence}"
+        )
+    report.data.update(
+        {
+            "dataset_id": world.metadata.dataset_id,
+            "country_count": len(previews),
+            "output_path": str(output_path),
+            "countries": [
+                {
+                    "country_slug": preview.country_slug,
+                    "overall_score": preview.overall_score,
+                    "confidence": preview.confidence,
+                }
+                for preview in previews
+            ],
+        }
+    )
+    report.emit()
+    return 0
+
+
 def _run_schema() -> int:
     schema = SyntheticWorld.model_json_schema()
     print(json.dumps(schema, indent=2, ensure_ascii=False, sort_keys=True))
@@ -968,6 +1049,8 @@ def _run_world(argv: list[str]) -> int:
         return _run_diff(args, report)
     if args.command == "translate":
         return _run_translate(args, report)
+    if args.command == "cii-preview":
+        return _run_cii_preview(args, report)
     if args.command == "schema":
         return _run_schema()
     if args.command in ("load-sql", "cleanup-sql"):

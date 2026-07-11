@@ -888,3 +888,74 @@ def test_translate_rejects_same_source_and_target_locale(
     )
 
     assert exit_code == 2
+
+
+def test_cii_preview_writes_a_report_for_a_generated_dataset(
+    tmp_path: Path,
+) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42021)
+
+    exit_code = cli.main(
+        [
+            "cii-preview",
+            "--dataset",
+            dataset_id,
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    output_path = tmp_path / dataset_id / "reports" / "cii_preview.json"
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    assert payload["dataset_id"] == dataset_id
+    assert payload["formula_version"] == "syn-cii-preview-v1"
+    assert len(payload["countries"]) == 5
+    for country in payload["countries"]:
+        assert 0.0 <= country["overall_score"] <= 100.0
+        assert country["confidence"] in {"high", "medium", "low"}
+        assert all(
+            score["metric_slug"].startswith("syn_")
+            for score in country["metric_scores"]
+        )
+
+
+def test_cii_preview_dry_run_does_not_write_a_file(tmp_path: Path) -> None:
+    dataset_id = _generate_json_dataset(tmp_path, seed=42022)
+
+    exit_code = cli.main(
+        [
+            "cii-preview",
+            "--dataset",
+            dataset_id,
+            "--output-root",
+            str(tmp_path),
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+    assert not (tmp_path / dataset_id / "reports" / "cii_preview.json").exists()
+
+
+def test_cii_preview_requires_dataset_flag() -> None:
+    exit_code = cli.main(["cii-preview"])
+
+    assert exit_code == 2
+
+
+def test_cii_preview_rejects_unknown_dataset(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = cli.main(
+        [
+            "cii-preview",
+            "--dataset",
+            "syn-ghost",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2
+    assert "not found" in capsys.readouterr().err

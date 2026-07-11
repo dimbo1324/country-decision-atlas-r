@@ -184,6 +184,40 @@ provider is out of scope for this task and gated behind the project's
 integration-tranche rule (`TELEGRAM_MODE=fake`-style fake-by-default
 seams only, until explicitly approved).
 
+## CII score preview (`cii-preview`)
+
+A derived, JSON-only preview of what a CII (Country Index) card/comparison
+matrix could look like for a synthetic country — for frontend/QA work
+against believable numbers, without touching the real
+`cii_metric_definitions`/`country_metric_values`/`country_cii_scores`
+tables or `scripts/synthetic_data/core/sql_fixture.py` at all.
+
+```powershell
+python -m scripts.synthetic_data.cli cii-preview --dataset <dataset_id>
+```
+
+Writes `reports/cii_preview.json` inside the dataset directory. It uses
+its own, entirely separate `syn_`-prefixed metric catalog (`syn_economy`,
+`syn_cost_of_living`, `syn_safety`, `syn_civil_freedoms`,
+`syn_institutional_stability`, `syn_digital_infrastructure`,
+`syn_migration_openness` — 7 of the 8 archetype dimensions, made-up
+weights) so a dashboard can never confuse a fake score with a real one.
+`data_confidence` is deliberately excluded from the score and surfaced
+only as a `confidence` (`high`/`medium`/`low`) label instead — it measures
+data quality, not country quality, matching the real product's rule that
+derived trust-style metrics never mix into CII. The overall score is a
+geometric mean (same shape as the real formula), rounded to 2 decimals.
+
+This was scoped deliberately as JSON-only after review: the real CII
+tables have no scope/tenancy column to separate synthetic from real rows,
+two of the real product's data-quality checks scan `cii_metric_definitions`
+and `scenario_metric_weights` globally with no per-dataset filter, and the
+trust/drift screens don't even read CII tables (they read
+`sources`/`evidence_items`/`legal_signals`/`country_platform_metrics`
+instead). Writing real rows into the production CII tables would require
+a schema migration and changes to `apps/api` repositories — a separate,
+owner-approved episode, not a change to this script.
+
 ## Locales
 
 All 15 locales get their own hand-written (not machine-translated) text
@@ -260,9 +294,10 @@ covered (documented gaps, not oversights):
   manual test scripts.
 - `country_metric_values`/`cii_metric_definitions` — the real CII
   calculation uses a fixed global metric set that doesn't map 1:1 onto
-  the 8 synthetic archetype dimensions; filling it with synthetic values
-  risks the product invariant that CII's core math is never touched by
-  the generator. Left for a separate, owner-approved task.
+  the 8 synthetic archetype dimensions, and those tables have no scope
+  column to separate synthetic from real rows. See "CII score preview"
+  above for the JSON-only alternative that ships instead; writing real
+  rows into these tables is left for a separate, owner-approved task.
 - Search indexing (`search_documents`) — a separate existing dev-tools
   step (`rebuild_search_index.py --all`), not part of the fixture.
 
@@ -323,6 +358,9 @@ python -m scripts.synthetic_data.cli diff --dataset-a <id-a> --dataset-b <id-b>
 # Build a fake-translated preview of a dataset's en-US text (see below)
 python -m scripts.synthetic_data.cli translate --dataset <dataset_id> --target-locale ar-SA
 
+# Build a fake CII score preview for a dataset (JSON-only, see below)
+python -m scripts.synthetic_data.cli cii-preview --dataset <dataset_id>
+
 # Load / clean up a dataset's SQL fixture against a local database
 $env:APP_ENV = "local"
 $env:DATABASE_URL = "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
@@ -373,7 +411,7 @@ UUID generated after the fact.
 py -3.12 -m pytest scripts/synthetic_data/tests -q
 ```
 
-270 tests as of this writing, covering: determinism across seeds/profiles,
+281 tests as of this writing, covering: determinism across seeds/profiles,
 referential integrity (every id resolves), the real-country/PII deny-list,
 SQL fixture idempotency and cleanup isolation against a live local
 Postgres (manual verification — see below), production-guard fail-closed
