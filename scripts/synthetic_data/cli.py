@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import secrets
 import sys
@@ -37,6 +38,10 @@ from scripts.synthetic_data.core.paths import (  # noqa: E402
 from scripts.synthetic_data.core.random_content import (  # noqa: E402
     RandomContentFactory,
 )
+from scripts.synthetic_data.core.sql_loader import (  # noqa: E402
+    SqlLoaderError,
+    execute_sql_file,
+)
 from scripts.synthetic_data.core.world_generator import (  # noqa: E402
     WorldGenerationOptions,
     WorldGenerator,
@@ -55,7 +60,9 @@ from scripts.synthetic_data.core.world_validation import (  # noqa: E402
 
 
 _ALL_FORMATS_ALIAS = "all"
-_WORLD_COMMANDS = frozenset({"validate", "plan", "generate", "render"})
+_WORLD_COMMANDS = frozenset(
+    {"validate", "plan", "generate", "render", "load-sql", "cleanup-sql"}
+)
 
 
 def _parse_formats(raw: str) -> list[FileFormat]:
@@ -177,7 +184,26 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--dataset",
         default=None,
-        help="Existing dataset_id to re-render documents for (render command).",
+        help=(
+            "Existing dataset_id to re-render documents for (render), or "
+            "load/cleanup SQL for (load-sql/cleanup-sql)."
+        ),
+    )
+    parser.add_argument(
+        "--confirm",
+        action="store_true",
+        help=(
+            "Required explicit confirmation for load-sql/cleanup-sql — "
+            "these connect to a real database."
+        ),
+    )
+    parser.add_argument(
+        "--database-url",
+        default=None,
+        help=(
+            "Postgres connection string for load-sql/cleanup-sql "
+            "(default: the DATABASE_URL environment variable)."
+        ),
     )
     return parser
 
@@ -334,11 +360,54 @@ def _run_render(args: argparse.Namespace) -> int:
         return 2
 
 
+def _run_sql_command(args: argparse.Namespace) -> int:
+    if not args.dataset:
+        print(
+            f"ERROR: {args.command} requires --dataset <dataset_id>",
+            file=sys.stderr,
+        )
+        return 2
+    if not args.confirm:
+        print(
+            f"ERROR: {args.command} requires --confirm — it connects to a "
+            "real database and modifies rows.",
+            file=sys.stderr,
+        )
+        return 2
+    database_url = args.database_url or os.environ.get("DATABASE_URL")
+    if not database_url:
+        print(
+            "ERROR: no database URL given (--database-url or DATABASE_URL "
+            "environment variable)",
+            file=sys.stderr,
+        )
+        return 2
+
+    dataset_dir = args.output_root / args.dataset
+    sql_filename = (
+        "seed_synthetic_world.sql"
+        if args.command == "load-sql"
+        else "cleanup_synthetic_world.sql"
+    )
+    sql_path = dataset_dir / "sql" / sql_filename
+    try:
+        execute_sql_file(sql_path, database_url=database_url)
+    except SqlLoaderError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+    print(
+        f"{args.command}: applied {sql_path} to {database_url.split('@')[-1]}"
+    )
+    return 0
+
+
 def _run_world(argv: list[str]) -> int:
     parser = build_world_arg_parser()
     args = parser.parse_args(argv)
     if args.command == "render":
         return _run_render(args)
+    if args.command in ("load-sql", "cleanup-sql"):
+        return _run_sql_command(args)
     try:
         input_data = load_world_input(args.world_input)
         if args.command == "validate":

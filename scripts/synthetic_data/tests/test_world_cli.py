@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import pytest
 from pathlib import Path
 from scripts.synthetic_data import cli
 from scripts.synthetic_data.core.paths import DEFAULT_WORLD_INPUT_FILE
@@ -159,6 +160,66 @@ def test_world_command_rejects_an_invalid_country_count() -> None:
             str(DEFAULT_WORLD_INPUT_FILE),
             "--countries",
             "3",
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_load_sql_without_dataset_flag_fails_cleanly() -> None:
+    exit_code = cli.main(["load-sql", "--confirm"])
+
+    assert exit_code == 2
+
+
+def test_load_sql_without_confirm_flag_fails_cleanly(tmp_path: Path) -> None:
+    exit_code = cli.main(
+        [
+            "load-sql",
+            "--dataset",
+            "syn-doesnotmatter",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_load_sql_refuses_in_production(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("APP_ENV", "production")
+    monkeypatch.setenv("DATABASE_URL", "postgresql://unreachable-host/db")
+
+    exit_code = cli.main(
+        [
+            "load-sql",
+            "--dataset",
+            "syn-doesnotmatter",
+            "--output-root",
+            str(tmp_path),
+            "--confirm",
+        ]
+    )
+
+    assert exit_code == 2
+
+
+def test_load_sql_without_database_url_fails_cleanly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("APP_ENV", "local")
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    exit_code = cli.main(
+        [
+            "load-sql",
+            "--dataset",
+            "syn-doesnotmatter",
+            "--output-root",
+            str(tmp_path),
+            "--confirm",
         ]
     )
 

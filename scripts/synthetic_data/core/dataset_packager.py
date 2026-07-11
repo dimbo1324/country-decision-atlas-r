@@ -37,6 +37,10 @@ from scripts.synthetic_data.core.manifest import (
     write_generation_summary,
     write_manifest,
 )
+from scripts.synthetic_data.core.sql_fixture import (
+    build_cleanup_sql,
+    build_seed_sql,
+)
 from scripts.synthetic_data.core.world_models import SyntheticWorld
 
 
@@ -116,11 +120,20 @@ def package_dataset(
     artifact_errors = tuple(validate_generated_documents(documents))
     all_errors = world_errors + artifact_errors
 
+    sql_dir = dataset_dir / "sql"
+    sql_dir.mkdir(parents=True, exist_ok=True)
+    seed_sql_path = sql_dir / "seed_synthetic_world.sql"
+    cleanup_sql_path = sql_dir / "cleanup_synthetic_world.sql"
+    seed_sql_path.write_text(build_seed_sql(world), encoding="utf-8")
+    cleanup_sql_path.write_text(build_cleanup_sql(world), encoding="utf-8")
+
     world_level_files = [
         path
         for path in (
             dataset_dir / "canonical" / "synthetic_world.json",
             dataset_dir / "canonical" / "scenarios.json",
+            seed_sql_path,
+            cleanup_sql_path,
         )
         if path.exists()
     ]
