@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 import type { LocaleCode } from "../../shared/api/countries";
 import type { LegalSignalTimelineEvent } from "../../shared/api/legal-signals";
 import { routes } from "../../shared/lib/routes";
@@ -88,14 +88,12 @@ export function TimelineEventCard({
           <span>Доказательство: {event.evidence.claim}</span>
         )}
         <Link
-          href={routes.countryWithLocale(event.country_slug, locale)}
+          href={routes.country(event.country_slug)}
           className="internalLink"
         >
           Карточка страны: {event.country_name} →
         </Link>
-        <Link
-          href={`/sources?country_slug=${event.country_slug}&locale=${locale}`}
-        >
+        <Link href={routes.sourcesForCountry(event.country_slug)}>
           Все источники страны
         </Link>
       </div>

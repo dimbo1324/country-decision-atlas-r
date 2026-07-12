@@ -1,7 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { getPathname, useRouter } from "../../i18n/navigation";
 import {
   createBoardPost,
   submitBoardPost,
@@ -33,6 +35,7 @@ const initialPayload: CreateMigrationBoardPostRequest = {
 
 export function MigrationBoardFormView() {
   const { user, isLoading } = useAuth();
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [payload, setPayload] = useState<CreateMigrationBoardPostRequest>({
@@ -52,7 +55,7 @@ export function MigrationBoardFormView() {
     return (
       <ErrorState
         error="Войдите, чтобы создать запись на доске переезда."
-        backHref={routes.login}
+        backHref={getPathname({ href: routes.login, locale })}
         backLabel="Войти"
       />
     );

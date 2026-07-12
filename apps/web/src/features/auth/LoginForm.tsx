@@ -1,89 +1,116 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Button,
+  Field,
+  FieldError,
+  FieldLabel,
+} from "@country-decision-atlas/ui";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Link, useRouter } from "../../i18n/navigation";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 
+const loginSchema = z.object({
+  email: z.string().min(1, "emailRequired").email("emailInvalid"),
+  password: z.string().min(1, "passwordRequired"),
+});
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+const inputClass =
+  "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
+
 export function LoginForm() {
+  const t = useTranslations("auth");
   const { login } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) });
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+  async function onSubmit(values: LoginFormValues) {
+    setSubmitError(null);
     try {
-      await login(email, password);
+      await login(values.email, values.password);
       router.push(routes.account);
     } catch (err: unknown) {
       if (isApiError(err)) {
-        const code = err.error?.code;
-        if (code === "feature_disabled") {
-          setError("Авторизация временно отключена.");
-        } else {
-          setError("Неверный email или пароль.");
-        }
+        setSubmitError(
+          err.error?.code === "feature_disabled"
+            ? t("loginErrorDisabled")
+            : t("loginErrorDefault"),
+        );
       } else {
-        setError("Не удалось войти. Попробуйте ещё раз.");
+        setSubmitError(t("loginErrorGeneric"));
       }
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
   return (
     <form
-      className="authForm"
-      onSubmit={handleSubmit}
+      className="flex max-w-sm flex-col gap-5"
+      onSubmit={handleSubmit(onSubmit)}
       data-testid="login-form"
+      noValidate
     >
-      <label className="formGroup">
-        <span className="formLabel">Email</span>
+      <Field>
+        <FieldLabel htmlFor="login-email">{t("email")}</FieldLabel>
         <input
+          id="login-email"
           type="email"
-          className="formInput"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
+          className={inputClass}
           data-testid="login-email"
+          {...register("email")}
         />
-      </label>
-      <label className="formGroup">
-        <span className="formLabel">Пароль</span>
+        <FieldError>
+          {errors.email && t(errors.email.message as Parameters<typeof t>[0])}
+        </FieldError>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="login-password">{t("password")}</FieldLabel>
         <input
+          id="login-password"
           type="password"
-          className="formInput"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
+          className={inputClass}
           data-testid="login-password"
+          {...register("password")}
         />
-      </label>
-      {error && (
+        <FieldError>
+          {errors.password &&
+            t(errors.password.message as Parameters<typeof t>[0])}
+        </FieldError>
+      </Field>
+      {submitError && (
         <p
-          className="formError"
+          className="font-quote text-terra3 text-sm italic"
           data-testid="login-error"
         >
-          {error}
+          {submitError}
         </p>
       )}
-      <button
+      <Button
         type="submit"
-        className="runButton"
         disabled={isSubmitting}
         data-testid="login-submit"
       >
-        {isSubmitting ? "Входим…" : "Войти"}
-      </button>
-      <p className="authFormFooter">
-        Нет аккаунта? <Link href={routes.register}>Зарегистрироваться</Link>
+        {isSubmitting ? t("loginSubmitting") : t("loginSubmit")}
+      </Button>
+      <p className="text-c3 text-sm">
+        {t("noAccount")}{" "}
+        <Link
+          href={routes.register}
+          className="text-gold3 hover:text-gold"
+        >
+          {t("registerLink")}
+        </Link>
       </p>
     </form>
   );

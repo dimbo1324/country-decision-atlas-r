@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "countries": "Countries",
+    "decision": "Decision",
+    "migrationBoard": "Migration Board",
+    "legalSignals": "Legal Signals",
+    "sources": "Sources",
+    "dataQuality": "Data Quality",
+    "moderation": "Moderation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Account",
+    "watchlist": "Watchlist",
+    "email": "Email",
+    "password": "Password",
+    "displayName": "Name",
+    "loginSubmit": "Sign in",
+    "loginSubmitting": "Signing in…",
+    "registerSubmit": "Register",
+    "registerSubmitting": "Registering…",
+    "noAccount": "No account?",
+    "hasAccount": "Already have an account?",
+    "registerLink": "Register",
+    "loginLink": "Sign in",
+    "loginErrorDefault": "Incorrect email or password.",
+    "loginErrorDisabled": "Sign-in is temporarily disabled.",
+    "loginErrorGeneric": "Could not sign in. Please try again.",
+    "registerErrorEmailTaken": "An account with this email already exists.",
+    "registerErrorWeakPassword": "Password is too short.",
+    "registerErrorInvalidEmail": "Invalid email.",
+    "registerErrorDisabled": "Registration is temporarily disabled.",
+    "registerErrorGeneric": "Could not register. Please try again.",
+    "emailRequired": "Enter an email.",
+    "emailInvalid": "Invalid email format.",
+    "passwordRequired": "Enter a password.",
+    "passwordTooShort": "Password must be at least 12 characters.",
+    "displayNameRequired": "Enter a name."
+  },
+  "footer": {
+    "disclaimer": "This is a data-quality indicator, not a recommendation. Not legal advice.",
+    "refLabel": "REF"
+  },
+  "locale": {
+    "switchTo": "Switch language to {locale}"
+  },
+  "search": {
+    "placeholder": "Search the platform…",
+    "submit": "Search",
+    "paletteTrigger": "Quick jump",
+    "paletteTitle": "Quick jump",
+    "paletteEmpty": "No results found",
+    "sectionSections": "Sections",
+    "sectionActions": "Actions"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred. Try reloading the page.",
+    "retry": "Retry"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "This page does not exist or has been moved.",
+    "backHome": "Back home"
+  }
+}

@@ -1,3 +1,6 @@
+// Bare, locale-agnostic pathnames. Locale prefixing is handled entirely by
+// the `Link`/`useRouter` from `i18n/navigation` (next-intl) at the call
+// site — these routes must not embed `?locale=` themselves anymore.
 export const routes = {
   home: "/",
   countries: "/countries",
@@ -18,17 +21,7 @@ export const routes = {
   migrationBoardNew: "/migration-board/new",
   migrationBoardPost: (id: string) => `/migration-board/${id}`,
   watchlist: "/watchlist",
-  legalSignalsForCountry: (slug: string, locale: string) =>
-    `/legal-signals?country_slug=${slug}&locale=${locale}`,
-  sourcesForCountry: (slug: string, locale: string) =>
-    `/sources?country_slug=${slug}&locale=${locale}`,
-  countryWithLocale: (slug: string, locale: string) =>
-    `/countries/${slug}?locale=${locale}`,
+  legalSignalsForCountry: (slug: string) =>
+    `/legal-signals?country_slug=${slug}`,
+  sourcesForCountry: (slug: string) => `/sources?country_slug=${slug}`,
 };
-
-export function withLocale(href: string, locale: string) {
-  const [pathname, query = ""] = href.split("?", 2);
-  const params = new URLSearchParams(query);
-  params.set("locale", locale);
-  return `${pathname}?${params.toString()}`;
-}

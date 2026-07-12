@@ -1,6 +1,6 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { Link } from "../../i18n/navigation";
 import type { SearchResultItem } from "../../shared/api/search";
-import { withLocale } from "../../shared/lib/routes";
 import { Badge } from "../../shared/ui/Badge";
 
 const ENTITY_TYPE_LABELS: Record<SearchResultItem["entity_type"], string> = {
@@ -19,15 +19,8 @@ function stripHighlightTags(snippet: string): string {
   return snippet.replace(/<[^>]+>/g, "");
 }
 
-export function SearchResultCard({
-  item,
-  locale,
-}: {
-  item: SearchResultItem;
-  locale: string;
-}) {
+export function SearchResultCard({ item }: { item: SearchResultItem }) {
   const isExternalPath = !item.path.startsWith("/");
-  const href = isExternalPath ? item.path : withLocale(item.path, locale);
 
   return (
     <div
@@ -40,13 +33,23 @@ export function SearchResultCard({
           <Badge variant="default">{item.country_slug}</Badge>
         )}
       </div>
-      <Link
-        href={href}
-        className="searchResultTitle"
-        data-testid="search-result-link"
-      >
-        {item.title}
-      </Link>
+      {isExternalPath ? (
+        <NextLink
+          href={item.path}
+          className="searchResultTitle"
+          data-testid="search-result-link"
+        >
+          {item.title}
+        </NextLink>
+      ) : (
+        <Link
+          href={item.path}
+          className="searchResultTitle"
+          data-testid="search-result-link"
+        >
+          {item.title}
+        </Link>
+      )}
       <p className="searchResultSnippet">{stripHighlightTags(item.snippet)}</p>
     </div>
   );

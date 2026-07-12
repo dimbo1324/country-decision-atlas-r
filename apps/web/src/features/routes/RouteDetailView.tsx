@@ -1,6 +1,5 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 
-import type { LocaleCode } from "../../shared/api/countries";
 import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { routes } from "../../shared/lib/routes";
@@ -41,10 +40,9 @@ const STATUS_LABELS: Record<string, string> = {
 
 type RouteDetailViewProps = {
   route: RouteDetailResponse;
-  locale: LocaleCode;
 };
 
-export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
+export function RouteDetailView({ route }: RouteDetailViewProps) {
   return (
     <article
       className="routeDetail"
@@ -65,7 +63,7 @@ export function RouteDetailView({ route, locale }: RouteDetailViewProps) {
           </span>
         </div>
         <Link
-          href={routes.countryWithLocale(route.country_slug, locale)}
+          href={routes.country(route.country_slug)}
           className="internalLink"
         >
           Назад к стране

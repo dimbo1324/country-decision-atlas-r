@@ -1,16 +1,14 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 
-import type { LocaleCode } from "../../shared/api/countries";
 import type { RouteListItem } from "../../shared/api/routes";
 import { routeDetailPath } from "./route-links";
 import { RouteEligibilityBadges } from "./RouteEligibilityBadges";
 
 type RouteCardProps = {
   route: RouteListItem;
-  locale: LocaleCode;
 };
 
-export function RouteCard({ route, locale }: RouteCardProps) {
+export function RouteCard({ route }: RouteCardProps) {
   return (
     <article
       className="routeCard"
@@ -25,7 +23,7 @@ export function RouteCard({ route, locale }: RouteCardProps) {
           </div>
         </div>
         <Link
-          href={routeDetailPath(route.id, locale)}
+          href={routeDetailPath(route.id)}
           className="internalLink"
         >
           Открыть

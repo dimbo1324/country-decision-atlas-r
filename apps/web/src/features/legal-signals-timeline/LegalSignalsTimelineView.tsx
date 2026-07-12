@@ -1,6 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../i18n/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import {
   countriesApi,
@@ -10,7 +12,6 @@ import {
   legalSignalsApi,
   type LegalSignalTimelineResponse,
 } from "../../shared/api/legal-signals";
-import { resolveLocale } from "../../shared/lib/locale";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { TimelineEmptyState } from "./TimelineEmptyState";
@@ -21,7 +22,7 @@ import { TimelineYearGroup } from "./TimelineYearGroup";
 function LegalSignalsTimelineViewInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const locale = resolveLocale(searchParams.get("locale"));
+  const locale = useAppLocale();
   const filters = useMemo<TimelineFilterValues>(
     () => ({
       countrySlug: searchParams.get("country_slug") ?? "",
@@ -79,7 +80,6 @@ function LegalSignalsTimelineViewInner() {
     const next = new URLSearchParams(searchParams.toString());
     if (value) next.set(keys[name], value);
     else next.delete(keys[name]);
-    next.set("locale", locale);
     router.push(`/legal-signals?${next.toString()}`);
   }
 

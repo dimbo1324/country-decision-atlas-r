@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
+import { getPathname } from "../../i18n/navigation";
 import {
   acceptContactRequest,
   archiveBoardPost,
@@ -23,6 +25,7 @@ import { migrationBoardErrorMessage } from "./errorMessage";
 
 export function AccountMigrationBoardView() {
   const { user, isLoading: authLoading } = useAuth();
+  const locale = useLocale();
   const [posts, setPosts] = useState<MyMigrationBoardPostListResponse | null>(
     null,
   );
@@ -76,7 +79,7 @@ export function AccountMigrationBoardView() {
     return (
       <ErrorState
         error="Войдите, чтобы видеть свои записи."
-        backHref={routes.login}
+        backHref={getPathname({ href: routes.login, locale })}
         backLabel="Войти"
       />
     );

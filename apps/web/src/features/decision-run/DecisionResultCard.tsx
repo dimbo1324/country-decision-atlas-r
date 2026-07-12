@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
@@ -197,7 +197,7 @@ export function DecisionResultCard({
 
       <div className="entityLinkRow">
         <Link
-          href={routes.countryWithLocale(result.country.slug, locale)}
+          href={routes.country(result.country.slug)}
           className="internalLink"
         >
           Карточка страны →

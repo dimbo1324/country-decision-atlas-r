@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "countries": "Страны",
+    "decision": "Подбор",
+    "migrationBoard": "Доска переезда",
+    "legalSignals": "Правовые сигналы",
+    "sources": "Источники",
+    "dataQuality": "Качество данных",
+    "moderation": "Модерация",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signOut": "Выйти",
+    "account": "Кабинет",
+    "watchlist": "Watchlist",
+    "email": "Email",
+    "password": "Пароль",
+    "displayName": "Имя",
+    "loginSubmit": "Войти",
+    "loginSubmitting": "Входим…",
+    "registerSubmit": "Зарегистрироваться",
+    "registerSubmitting": "Регистрируем…",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "registerLink": "Зарегистрироваться",
+    "loginLink": "Войти",
+    "loginErrorDefault": "Неверный email или пароль.",
+    "loginErrorDisabled": "Авторизация временно отключена.",
+    "loginErrorGeneric": "Не удалось войти. Попробуйте ещё раз.",
+    "registerErrorEmailTaken": "Аккаунт с таким email уже существует.",
+    "registerErrorWeakPassword": "Пароль слишком короткий.",
+    "registerErrorInvalidEmail": "Некорректный email.",
+    "registerErrorDisabled": "Регистрация временно отключена.",
+    "registerErrorGeneric": "Не удалось зарегистрироваться. Попробуйте ещё раз.",
+    "emailRequired": "Введите email.",
+    "emailInvalid": "Некорректный формат email.",
+    "passwordRequired": "Введите пароль.",
+    "passwordTooShort": "Пароль должен быть не короче 12 символов.",
+    "displayNameRequired": "Введите имя."
+  },
+  "footer": {
+    "disclaimer": "Это индикатор качества данных, а не рекомендация. Не является юридической консультацией.",
+    "refLabel": "REF"
+  },
+  "locale": {
+    "switchTo": "Переключить язык на {locale}"
+  },
+  "search": {
+    "placeholder": "Поиск по платформе…",
+    "submit": "Найти",
+    "paletteTrigger": "Быстрый переход",
+    "paletteTitle": "Быстрый переход",
+    "paletteEmpty": "Ничего не найдено",
+    "sectionSections": "Разделы",
+    "sectionActions": "Действия"
+  },
+  "error": {
+    "title": "Что-то пошло не так",
+    "message": "Произошла непредвиденная ошибка. Попробуйте обновить страницу.",
+    "retry": "Повторить"
+  },
+  "notFound": {
+    "title": "Страница не найдена",
+    "message": "Такой страницы не существует или она была перемещена.",
+    "backHome": "На главную"
+  }
+}

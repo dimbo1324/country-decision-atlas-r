@@ -225,7 +225,10 @@ test("methodology page shows glossary section", async ({ page }) => {
 test("methodology page shows legal disclaimer", async ({ page }) => {
   await page.goto("/methodology");
   await expectPageReady(page);
-  const disclaimer = page.locator(".disclaimer-notice");
+  // The AppFooter (Stage 3) now also carries a disclaimer on every page, so
+  // this page legitimately has two — assert at least one is visible rather
+  // than assuming a single match.
+  const disclaimer = page.locator(".disclaimer-notice").first();
   await expect(disclaimer).toBeVisible();
   await expectNoAppCrash(page);
 });
@@ -237,16 +240,16 @@ test("decision page shows disclaimer after results load", async ({ page }) => {
 });
 
 test("locale=ru preserved on methodology page", async ({ page }) => {
-  await page.goto("/methodology?locale=ru");
+  await page.goto("/ru/methodology");
   await expectPageReady(page);
-  await expect(page).toHaveURL(/locale=ru/);
+  await expect(page).toHaveURL(/\/ru\/methodology/);
   await expectNoAppCrash(page);
 });
 
 test("legal signals page shows disclaimer", async ({ page }) => {
   await page.goto("/legal-signals");
   await expectPageReady(page);
-  const disclaimer = page.locator(".disclaimer-notice");
+  const disclaimer = page.locator(".disclaimer-notice").first();
   await expect(disclaimer).toBeVisible();
   await expectNoAppCrash(page);
 });

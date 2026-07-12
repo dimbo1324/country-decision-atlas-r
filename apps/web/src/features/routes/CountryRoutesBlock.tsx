@@ -107,7 +107,6 @@ export function CountryRoutesBlock({
               <RouteCard
                 key={route.id}
                 route={route}
-                locale={locale}
               />
             ))}
           </div>

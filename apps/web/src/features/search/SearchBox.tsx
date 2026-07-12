@@ -1,44 +1,44 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@country-decision-atlas/ui";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { normalizeLocale } from "../../shared/lib/locale";
+import { useRouter } from "../../i18n/navigation";
 
-export function SearchBox() {
+export function SearchBox({ className }: { className?: string }) {
+  const t = useTranslations("search");
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const locale = normalizeLocale(searchParams.get("locale"));
   const [value, setValue] = useState("");
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const query = value.trim();
     if (!query) return;
-    router.push(`/search?q=${encodeURIComponent(query)}&locale=${locale}`);
+    router.push(`/search?q=${encodeURIComponent(query)}`);
   }
 
   return (
     <form
-      className="searchBox"
       role="search"
       onSubmit={handleSubmit}
       data-testid="search-box-form"
+      className={cn("border-warm flex items-center border", className)}
     >
       <input
         type="search"
-        className="searchBoxInput"
-        placeholder="Поиск по платформе…"
+        placeholder={t("placeholder")}
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        aria-label="Поиск по платформе"
+        aria-label={t("placeholder")}
         data-testid="search-box-input"
+        className="text-c1 placeholder:text-c4 font-body w-40 bg-transparent px-3 py-2 text-sm outline-none xl:w-56"
       />
       <button
         type="submit"
-        className="searchBoxSubmit"
         data-testid="search-box-submit"
+        className="font-mono text-c3 hover:text-gold3 border-warm border-l px-3 py-2 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
       >
-        Найти
+        {t("submit")}
       </button>
     </form>
   );

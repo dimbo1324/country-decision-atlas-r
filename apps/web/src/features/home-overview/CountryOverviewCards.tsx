@@ -1,13 +1,10 @@
-import Link from "next/link";
-import type { LocaleCode } from "../../shared/api/countries";
+import { Link } from "../../i18n/navigation";
 import type { CountryOverviewCard } from "../../shared/api/home";
 
 export function CountryOverviewCards({
   countries,
-  locale,
 }: {
   countries: CountryOverviewCard[];
-  locale: LocaleCode;
 }) {
   return (
     <section
@@ -16,7 +13,7 @@ export function CountryOverviewCards({
     >
       <div className="homeSectionHeading">
         <h2 id="home-countries-title">Обзор стран</h2>
-        <Link href={`/countries?locale=${locale}`}>Перейти к странам</Link>
+        <Link href="/countries">Перейти к странам</Link>
       </div>
       <div
         className="homeCountryCards"
@@ -58,7 +55,7 @@ export function CountryOverviewCards({
                 <dd>{confidenceLabel(country.confidence)}</dd>
               </div>
             </dl>
-            <Link href={`/countries/${country.slug}?locale=${locale}`}>
+            <Link href={`/countries/${country.slug}`}>
               Открыть карточку страны
             </Link>
           </article>

@@ -1,16 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@country-decision-atlas/ui";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "../../i18n/navigation";
 import { useAuth } from "../auth/AuthProvider";
-import { normalizeLocale } from "../lib/locale";
-import { routes, withLocale } from "../lib/routes";
+import { routes } from "../lib/routes";
 
-export function AuthNav() {
+interface AuthNavProps {
+  className?: string;
+  onNavigate?: () => void;
+}
+
+const linkClass =
+  "font-mono text-c3 hover:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300";
+
+export function AuthNav({ className, onNavigate }: AuthNavProps) {
+  const t = useTranslations("auth");
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const locale = normalizeLocale(searchParams.get("locale"));
 
   if (isLoading) {
     return null;
@@ -19,43 +26,47 @@ export function AuthNav() {
   if (!user) {
     return (
       <Link
-        href={withLocale(routes.login, locale)}
-        className="navLink"
+        href={routes.login}
+        onClick={onNavigate}
+        className={cn(linkClass, className)}
         data-testid="nav-sign-in-link"
       >
-        Войти
+        {t("signIn")}
       </Link>
     );
   }
 
   async function handleLogout() {
     await logout();
+    onNavigate?.();
     router.push(routes.home);
   }
 
   return (
-    <div className="authNav">
+    <div className={cn("flex items-center gap-5", className)}>
       <Link
-        href={withLocale(routes.account, locale)}
-        className="navLink"
+        href={routes.account}
+        onClick={onNavigate}
+        className={linkClass}
         data-testid="nav-account-link"
       >
-        Кабинет
+        {t("account")}
       </Link>
       <Link
-        href={withLocale(routes.watchlist, locale)}
-        className="navLink"
+        href={routes.watchlist}
+        onClick={onNavigate}
+        className={linkClass}
         data-testid="nav-watchlist-link"
       >
-        Watchlist
+        {t("watchlist")}
       </Link>
       <button
         type="button"
-        className="navLink"
+        className={linkClass}
         onClick={handleLogout}
         data-testid="nav-logout-button"
       >
-        Выйти
+        {t("signOut")}
       </button>
     </div>
   );

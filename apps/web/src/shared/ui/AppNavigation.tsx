@@ -1,64 +1,84 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@country-decision-atlas/ui";
+import { useTranslations } from "next-intl";
+import NextLink from "next/link";
+import { Link, usePathname } from "../../i18n/navigation";
 import { useAuth } from "../auth/AuthProvider";
-import { normalizeLocale } from "../lib/locale";
-import { routes, withLocale } from "../lib/routes";
+import { ADMIN_ROLES, MODERATION_ROLES, hasRole } from "../auth/roles";
+import { routes } from "../lib/routes";
 
-const NAV_ITEMS = [
-  { label: "Страны", href: routes.countries },
-  { label: "Подбор", href: routes.decision },
-  { label: "Доска переезда", href: routes.migrationBoard },
-  { label: "Правовые сигналы", href: routes.legalSignals },
-  { label: "Источники", href: routes.sources },
-];
+interface AppNavigationProps {
+  className?: string;
+  onNavigate?: () => void;
+}
 
-const ADMIN_ROLES = new Set(["editor", "admin", "owner"]);
-const MODERATION_ROLES = new Set(["moderator", "admin", "owner"]);
-
-export function AppNavigation() {
+export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
+  const t = useTranslations("nav");
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const locale = normalizeLocale(searchParams.get("locale"));
   const { user } = useAuth();
-  const canSeeDataQuality = user !== null && ADMIN_ROLES.has(user.role);
-  const canSeeMigrationBoardModeration =
-    user !== null && MODERATION_ROLES.has(user.role);
+
+  const navItems = [
+    { label: t("countries"), href: routes.countries },
+    { label: t("decision"), href: routes.decision },
+    { label: t("migrationBoard"), href: routes.migrationBoard },
+    { label: t("legalSignals"), href: routes.legalSignals },
+    { label: t("sources"), href: routes.sources },
+  ];
+
+  const canSeeDataQuality = hasRole(user, ADMIN_ROLES);
+  const canSeeMigrationBoardModeration = hasRole(user, MODERATION_ROLES);
 
   return (
-    <nav className="appNav">
-      {NAV_ITEMS.map((item) => (
-        <Link
-          key={item.href}
-          href={withLocale(item.href, locale)}
-          className="navLink"
-          data-active={
-            pathname === item.href || pathname.startsWith(item.href + "/")
-          }
-        >
-          {item.label}
-        </Link>
-      ))}
+    <nav
+      data-testid="app-nav"
+      className={cn("flex items-center gap-6", className)}
+    >
+      {navItems.map((item) => {
+        const isActive =
+          pathname === item.href || pathname.startsWith(`${item.href}/`);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            data-active={isActive}
+            className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 relative py-1.5 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
+          >
+            {item.label}
+            <span
+              className={cn(
+                "bg-gold absolute inset-x-0 -bottom-0.5 h-px origin-left transition-transform duration-300",
+                isActive ? "scale-x-100" : "scale-x-0",
+              )}
+            />
+          </Link>
+        );
+      })}
       {canSeeDataQuality && (
-        <Link
-          href={withLocale(routes.dataQuality, locale)}
-          className="navLink"
+        // Plain next/link: /internal/** is deliberately outside the
+        // [locale] tree (Stage 12's own shell), so it must never be
+        // locale-prefixed.
+        <NextLink
+          href={routes.dataQuality}
+          onClick={onNavigate}
           data-testid="nav-data-quality-link"
           data-active={pathname === routes.dataQuality}
+          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
         >
-          Качество данных
-        </Link>
+          {t("dataQuality")}
+        </NextLink>
       )}
       {canSeeMigrationBoardModeration && (
-        <Link
-          href={withLocale(routes.migrationBoardModeration, locale)}
-          className="navLink"
+        <NextLink
+          href={routes.migrationBoardModeration}
+          onClick={onNavigate}
           data-testid="nav-migration-board-moderation-link"
           data-active={pathname === routes.migrationBoardModeration}
+          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
         >
-          Модерация
-        </Link>
+          {t("moderation")}
+        </NextLink>
       )}
     </nav>
   );

@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
 
-const DECISION_URL = "/decision?locale=ru";
+const DECISION_URL = "/ru/decision";
 const RELOCATION_SLUG = "relocation_residence";
 const BUSINESS_SLUG = "business_self_employment";
 

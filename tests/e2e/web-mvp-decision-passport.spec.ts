@@ -20,8 +20,15 @@ test.describe("Decision Passport", () => {
 
     await page.getByTestId("passport-link").click();
     await expect(page).toHaveURL(/\/decision\/passports\/.+/);
-    await expect(page.getByTestId("decision-passport-page")).toBeVisible();
-    await expect(page.getByTestId("decision-results")).toBeVisible();
+    // Next.js 15 streaming SSR sometimes leaves an orphaned hidden
+    // placeholder div for this route's Suspense boundary (confirmed via
+    // the raw response: its $RC relocation call targets a different
+    // boundary), so testids here can match a real but `hidden`, invisible
+    // second node — .first() picks the rendered one.
+    await expect(
+      page.getByTestId("decision-passport-page").first(),
+    ).toBeVisible();
+    await expect(page.getByTestId("decision-results").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -41,9 +48,12 @@ test.describe("Decision Passport", () => {
     await page.getByTestId("passport-link").click();
     await expect(page).toHaveURL(/\/decision\/passports\/.+/);
 
-    await expect(page.getByRole("note")).toBeVisible();
-    await expect(page.getByTestId("passport-methodology")).toBeVisible();
-    await expect(page.locator(".decisionWinnerBlock")).toBeVisible();
+    await expect(page.locator(".disclaimer-notice").first()).toBeVisible();
+    // Same orphaned-hidden-placeholder streaming quirk as the previous test.
+    await expect(
+      page.getByTestId("passport-methodology").first(),
+    ).toBeVisible();
+    await expect(page.locator(".decisionWinnerBlock").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 
@@ -65,7 +75,7 @@ test.describe("Decision Passport", () => {
   test("unknown passport token shows error state, not a crash", async ({
     page,
   }) => {
-    await page.goto("/decision/passports/unknown-token-value?locale=ru");
+    await page.goto("/ru/decision/passports/unknown-token-value");
     await expect(
       page.getByText(/недоступен|not found|error/i).first(),
     ).toBeVisible();

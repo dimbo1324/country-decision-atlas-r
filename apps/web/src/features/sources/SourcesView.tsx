@@ -1,14 +1,14 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { useSearchParams } from "next/navigation";
+import { Link } from "../../i18n/navigation";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { SourceListResponse } from "../../shared/api/sources";
 import type { EvidenceItem } from "../../shared/api/evidence";
 import { countriesApi, sourcesApi, evidenceApi } from "../../shared/api";
-import { normalizeLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -44,7 +44,7 @@ const SOURCE_TYPES = [
 
 function SourcesViewInner() {
   const searchParams = useSearchParams();
-  const locale = normalizeLocale(searchParams.get("locale"));
+  const locale = useAppLocale();
 
   const [countries, setCountries] = useState<CountryListResponse | null>(null);
   const [sources, setSources] = useState<SourceListResponse | null>(null);
@@ -353,7 +353,7 @@ function SourcesViewInner() {
                       </a>
                       {country && (
                         <Link
-                          href={routes.countryWithLocale(country.slug, locale)}
+                          href={routes.country(country.slug)}
                           className="internalLink"
                         >
                           Страна: {country.name} →

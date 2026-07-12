@@ -1,16 +1,13 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 
 type CountryHeaderProps = {
   country: CountryReadModelResponse["country"];
-  locale?: string;
 };
 
-export function CountryHeader({ country, locale = "ru" }: CountryHeaderProps) {
-  const localeParam = `?locale=${locale}`;
-
+export function CountryHeader({ country }: CountryHeaderProps) {
   return (
     <div className="countryHeaderBlock">
       <header className="pageHeader">
@@ -26,25 +23,25 @@ export function CountryHeader({ country, locale = "ru" }: CountryHeaderProps) {
       </header>
       <div className="quickActions">
         <Link
-          href={`${routes.countries}${localeParam}`}
+          href={routes.countries}
           className="quickAction"
         >
           ← Все страны
         </Link>
         <Link
-          href={`${routes.decision}${localeParam}`}
+          href={routes.decision}
           className="quickAction quickActionPrimary"
         >
           Запустить подбор
         </Link>
         <Link
-          href={`${routes.legalSignals}${localeParam}`}
+          href={routes.legalSignals}
           className="quickAction"
         >
           Правовые сигналы
         </Link>
         <Link
-          href={`${routes.sources}${localeParam}`}
+          href={routes.sources}
           className="quickAction"
         >
           Источники

@@ -1,18 +1,16 @@
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
 
 type CountryEvidenceSummaryProps = {
   evidenceSummary: CountryReadModelResponse["evidence_summary"];
   countrySlug: string;
-  locale: string;
   sourceSummary?: string | null;
 };
 
 export function CountryEvidenceSummary({
   evidenceSummary,
   countrySlug,
-  locale,
   sourceSummary,
 }: CountryEvidenceSummaryProps) {
   return (
@@ -53,13 +51,13 @@ export function CountryEvidenceSummary({
 
       <div className="cardActions">
         <Link
-          href={routes.legalSignalsForCountry(countrySlug, locale)}
+          href={routes.legalSignalsForCountry(countrySlug)}
           className="internalLink"
         >
           Правовые сигналы →
         </Link>
         <Link
-          href={routes.sourcesForCountry(countrySlug, locale)}
+          href={routes.sourcesForCountry(countrySlug)}
           className="internalLink"
         >
           Все источники →

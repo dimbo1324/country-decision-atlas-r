@@ -1,3 +1,4 @@
+import { getPathname } from "../../i18n/navigation";
 import type { MatrixCell as MatrixCellType } from "../../shared/api/cii";
 
 type Props = {
@@ -17,7 +18,10 @@ const LABEL_CLASS: Record<string, string> = {
 export function MatrixCell({ cell, locale }: Props) {
   const cellClass =
     LABEL_CLASS[cell.score_label ?? "missing"] ?? "matrixCellMissing";
-  const href = `/countries/${cell.country_slug}?locale=${locale}`;
+  const href = getPathname({
+    href: `/countries/${cell.country_slug}`,
+    locale,
+  });
 
   return (
     <td

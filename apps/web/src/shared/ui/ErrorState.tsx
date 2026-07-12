@@ -10,6 +10,11 @@ type ApiErrorShape = {
 
 type ErrorStateProps = {
   error?: ApiErrorShape | string;
+  /** Plain next/link, not next-intl's — this component also renders from
+   * /internal/** pages that sit outside NextIntlClientProvider, where the
+   * intl Link would throw. Callers inside the [locale] tree must pass an
+   * already-prefixed path (e.g. via `getPathname({ href, locale })` from
+   * `i18n/navigation`), not a bare route. */
   backHref?: string;
   backLabel?: string;
 };

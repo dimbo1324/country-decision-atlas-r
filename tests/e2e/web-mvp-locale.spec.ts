@@ -9,44 +9,58 @@ test.describe("locale preservation", () => {
       "data-active",
       "true",
     );
-    const decisionLink = page.locator("nav.appNav a[href*='/decision']");
-    await expect(decisionLink).toHaveAttribute("href", /locale=ru/);
+    const decisionLink = page.locator(
+      "nav a[href*='/decision']:not([href*='passports'])",
+    );
+    await expect(decisionLink.first()).toHaveAttribute(
+      "href",
+      /^\/ru\/decision/,
+    );
   });
 
   test("locale switcher preserves the current route", async ({ page }) => {
-    await page.goto(`${e2eRoutes.countries}?locale=ru`);
+    await page.goto(e2eRoutes.country("uruguay", "ru"));
     await page.getByTestId("locale-switch-en").click();
-    await expect(page).toHaveURL(/\/countries\?locale=en/);
-    const sourcesLink = page.locator("nav.appNav a[href*='/sources']");
-    await expect(sourcesLink).toHaveAttribute("href", /locale=en/);
+    await expect(page).toHaveURL(/\/en\/countries\/uruguay/);
+    const sourcesLink = page.locator("nav a[href*='/sources']");
+    await expect(sourcesLink.first()).toHaveAttribute("href", /^\/en\/sources/);
   });
 
   test("locale=ru is preserved when navigating from countries list to country card", async ({
     page,
   }) => {
-    await page.goto(`${e2eRoutes.countries}?locale=ru`);
+    await page.goto(e2eRoutes.country("uruguay", "ru"));
     await expect(page.locator("h1")).toBeVisible();
+
+    const countriesLink = page.getByRole("link", { name: "Страны" }).first();
+    await countriesLink.click();
+    await expectPageReady(page);
+    expect(page.url()).toContain("/ru/countries");
 
     const countryCardLink = page
       .getByRole("link", { name: /карточка страны/i })
       .first();
     await expect(countryCardLink).toBeVisible();
     const href = await countryCardLink.getAttribute("href");
-    expect(href).toContain("locale=ru");
+    expect(href).toMatch(/^\/ru\/countries\//);
 
     await countryCardLink.click();
     await expectPageReady(page);
-    expect(page.url()).toContain("locale=ru");
+    expect(page.url()).toContain("/ru/countries/");
     await expectNoAppCrash(page);
   });
 
   test("locale=en is preserved in navigation links", async ({ page }) => {
-    await page.goto(`${e2eRoutes.countries}?locale=en`);
+    await page.goto(e2eRoutes.country("uruguay", "en"));
+    await expectPageReady(page);
+    const countriesLink = page.getByRole("link", { name: "Countries" }).first();
+    await countriesLink.click();
+    await expectPageReady(page);
     const countryCardLink = page
       .getByRole("link", { name: /карточка страны/i })
       .first();
     const href = await countryCardLink.getAttribute("href");
-    expect(href).toContain("locale=en");
+    expect(href).toMatch(/^\/en\/countries\//);
   });
 
   test("/countries/uruguay?locale=ru opens and shows locale status", async ({

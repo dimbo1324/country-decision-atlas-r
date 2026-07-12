@@ -12,17 +12,16 @@ import {
   type AdminMigrationBoardPostListResponse,
   type MigrationBoardReportListResponse,
 } from "../../shared/api";
-import { useAuth } from "../../shared/auth/AuthProvider";
+import { MODERATION_ROLES } from "../../shared/auth/roles";
+import { useAuthGuard } from "../../shared/auth/useAuthGuard";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
 
-const MODERATION_ROLES = new Set(["moderator", "admin", "owner"]);
-
 export function MigrationBoardModerationView() {
-  const { user, isLoading: authLoading } = useAuth();
+  const { status } = useAuthGuard(MODERATION_ROLES);
   const [posts, setPosts] =
     useState<AdminMigrationBoardPostListResponse | null>(null);
   const [reports, setReports] =
@@ -40,14 +39,14 @@ export function MigrationBoardModerationView() {
   }
 
   useEffect(() => {
-    if (!user || !MODERATION_ROLES.has(user.role)) {
+    if (status !== "ok") {
       setIsLoading(false);
       return;
     }
     reload()
       .catch((err: unknown) => setError(err))
       .finally(() => setIsLoading(false));
-  }, [user]);
+  }, [status]);
 
   async function action(fn: () => Promise<unknown>) {
     setError(null);
@@ -59,11 +58,11 @@ export function MigrationBoardModerationView() {
     }
   }
 
-  if (authLoading || isLoading) {
+  if (status === "loading" || (status === "ok" && isLoading)) {
     return <LoadingState message="Загрузка модерации…" />;
   }
 
-  if (!user || !MODERATION_ROLES.has(user.role)) {
+  if (status !== "ok") {
     return (
       <ErrorState
         error="Недостаточно прав для модерации."

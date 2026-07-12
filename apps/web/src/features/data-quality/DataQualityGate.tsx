@@ -7,21 +7,21 @@ import {
   type DataQualityReport,
 } from "../../shared/api/data-quality";
 import { isApiError } from "../../shared/api/http";
-import { useAuth } from "../../shared/auth/AuthProvider";
+import { DATA_QUALITY_ROLES } from "../../shared/auth/roles";
+import { useAuthGuard } from "../../shared/auth/useAuthGuard";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { DataQualityReportView } from "./DataQualityReportView";
 
-const ALLOWED_ROLES = new Set(["editor", "admin", "owner"]);
-
 export function DataQualityGate() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { status } = useAuthGuard(DATA_QUALITY_ROLES);
   const [report, setReport] = useState<DataQualityReport | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isAllowed = user !== null && ALLOWED_ROLES.has(user.role);
+  const isAuthLoading = status === "loading";
+  const isAllowed = status === "ok";
 
   useEffect(() => {
     if (isAuthLoading || !isAllowed) {
@@ -50,7 +50,7 @@ export function DataQualityGate() {
     return <LoadingState message="Загрузка…" />;
   }
 
-  if (!user) {
+  if (status === "unauthenticated") {
     return (
       <div
         className="notice"
@@ -62,7 +62,7 @@ export function DataQualityGate() {
     );
   }
 
-  if (!isAllowed) {
+  if (status === "forbidden") {
     return (
       <div
         className="notice"

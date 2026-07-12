@@ -100,7 +100,7 @@ test.describe("Country expansion closeout — three countries", () => {
   test("/compare Argentina+Uruguay does not crash", async ({ page }) => {
     await page.goto(
       e2eRoutes.compare +
-        "?countries=argentina%2Curuguay&scenario=relocation_residence&locale=ru",
+        "?countries=argentina%2Curuguay&scenario=relocation_residence",
     );
     await expectNoAppCrash(page);
     await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
@@ -109,7 +109,7 @@ test.describe("Country expansion closeout — three countries", () => {
   test("/compare Argentina+Russia does not crash", async ({ page }) => {
     await page.goto(
       e2eRoutes.compare +
-        "?countries=argentina%2Crussia&scenario=business_self_employment&locale=ru",
+        "?countries=argentina%2Crussia&scenario=business_self_employment",
     );
     await expectNoAppCrash(page);
     await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });

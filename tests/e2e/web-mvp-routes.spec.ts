@@ -14,7 +14,7 @@ test.describe("Route Explorer smoke", () => {
   test("route detail opens from country page", async ({ page }) => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await page.getByTestId("route-card").first().getByRole("link").click();
-    await expect(page).toHaveURL(/\/routes\/[^?]+\?locale=ru/);
+    await expect(page).toHaveURL(/\/ru\/routes\/[^/?]+$/);
     await expect(page.getByTestId("route-detail")).toBeVisible();
     await expect(page.locator("h1")).toBeVisible();
     await expectNoAppCrash(page);
@@ -78,7 +78,7 @@ test.describe("Route detail page", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     await page.getByTestId("route-card").first().getByRole("link").click();
-    await expect(page).toHaveURL(/\/routes\/[^?]+\?locale=ru/);
+    await expect(page).toHaveURL(/\/ru\/routes\/[^/?]+$/);
     await expect(page.getByTestId("route-detail")).toBeVisible();
   });
 
@@ -130,7 +130,7 @@ test.describe("Route detail page", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     await page.getByTestId("route-card").first().getByRole("link").click();
-    await expect(page).toHaveURL(/locale=ru/);
+    await expect(page).toHaveURL(/\/ru\//);
     await expectNoAppCrash(page);
   });
 });

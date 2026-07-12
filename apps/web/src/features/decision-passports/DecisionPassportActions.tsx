@@ -15,7 +15,7 @@ type DecisionPassportActionsProps = {
 
 function buildFullUrl(path: string, locale: SupportedLocale): string {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  return `${origin}${path}?locale=${locale}`;
+  return `${origin}/${locale}${path}`;
 }
 
 export function DecisionPassportActions({

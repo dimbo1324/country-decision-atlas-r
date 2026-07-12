@@ -1,6 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../i18n/navigation";
 import { Suspense, useEffect, useState } from "react";
 import {
   countriesApi,
@@ -8,7 +10,6 @@ import {
 } from "../../shared/api/countries";
 import { isApiError } from "../../shared/api/http";
 import { searchApi, type SearchResponse } from "../../shared/api/search";
-import { resolveLocale } from "../../shared/lib/locale";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { SearchFilters } from "./SearchFilters";
@@ -21,7 +22,7 @@ function parseTypes(typesParam: string): string[] {
 function SearchViewInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const locale = resolveLocale(searchParams.get("locale"));
+  const locale = useAppLocale();
   const q = searchParams.get("q") ?? "";
   const typesParam = searchParams.get("types") ?? "";
   const countrySlugParam = searchParams.get("country_slug") ?? "";
@@ -90,7 +91,6 @@ function SearchViewInner() {
   }, [q, locale, selectedTypes, countrySlug]);
 
   function pushParams(next: URLSearchParams) {
-    next.set("locale", locale);
     router.push(`/search?${next.toString()}`);
   }
 
@@ -201,7 +201,6 @@ function SearchViewInner() {
                 <SearchResultCard
                   key={item.id}
                   item={item}
-                  locale={locale}
                 />
               ))}
             </div>

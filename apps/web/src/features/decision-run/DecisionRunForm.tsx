@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { ScenarioListResponse } from "../../shared/api/scenarios";
@@ -16,8 +16,7 @@ import {
   decisionApi,
   personasApi,
 } from "../../shared/api";
-import { trackEvent } from "../../shared/analytics/client";
-import { normalizeLocale } from "../../shared/lib/locale";
+import { useAnalyticsEvent } from "../../shared/analytics/useAnalyticsEvent";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -52,8 +51,8 @@ const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
 };
 
 function DecisionFormInner() {
-  const searchParams = useSearchParams();
-  const locale = normalizeLocale(searchParams.get("locale"));
+  const locale = useAppLocale();
+  const trackAnalyticsEvent = useAnalyticsEvent();
 
   const [countries, setCountries] = useState<CountryListResponse | null>(null);
   const [scenarios, setScenarios] = useState<ScenarioListResponse | null>(null);
@@ -219,11 +218,9 @@ function DecisionFormInner() {
   async function handleRun() {
     if (candidateCountrySlugs.length === 0) return;
     if (customWeightsBlocked) return;
-    void trackEvent({
+    trackAnalyticsEvent({
       event_type: "decision_started",
       source: "web",
-      path: "/decision",
-      locale,
       scenario_slug: scenarioSlug,
       persona_slug: selectedPersonaSlug || undefined,
       metadata: {
@@ -403,11 +400,9 @@ function DecisionFormInner() {
               const personaSlug = e.target.value;
               setSelectedPersonaSlug(personaSlug);
               if (personaSlug) {
-                void trackEvent({
+                trackAnalyticsEvent({
                   event_type: "persona_selected",
                   source: "web",
-                  path: "/decision",
-                  locale,
                   persona_slug: personaSlug,
                 });
               }

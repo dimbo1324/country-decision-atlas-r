@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { Suspense, useEffect, useState } from "react";
+import { Link } from "../../i18n/navigation";
 import { homeApi, type HomeOverviewResponse } from "../../shared/api/home";
-import { resolveLocale } from "../../shared/lib/locale";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { CountryOverviewCards } from "./CountryOverviewCards";
@@ -15,8 +14,7 @@ import { LatestLegalEventsPanel } from "./LatestLegalEventsPanel";
 import { ScenarioWinnersPanel } from "./ScenarioWinnersPanel";
 
 function HomeOverviewViewInner() {
-  const searchParams = useSearchParams();
-  const locale = resolveLocale(searchParams.get("locale"));
+  const locale = useAppLocale();
   const [overview, setOverview] = useState<HomeOverviewResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,13 +59,13 @@ function HomeOverviewViewInner() {
         </p>
         <div className="homeActions">
           <Link
-            href={`/decision?locale=${locale}`}
+            href="/decision"
             className="homeActionPrimary"
           >
             Запустить подбор
           </Link>
           <Link
-            href={`/compare?locale=${locale}`}
+            href="/compare"
             className="homeActionSecondary"
           >
             Открыть матрицу
@@ -82,10 +80,7 @@ function HomeOverviewViewInner() {
       {isEmpty && <HomeOverviewEmptyState />}
       {overview && !isEmpty && (
         <>
-          <CountryOverviewCards
-            countries={countriesSummary}
-            locale={locale}
-          />
+          <CountryOverviewCards countries={countriesSummary} />
           <ScenarioWinnersPanel winners={scenarioWinners} />
           <HomeMatrixPreview matrix={overview.matrix_preview} />
           <div className="homeOverviewGrid">
@@ -97,24 +92,16 @@ function HomeOverviewViewInner() {
             data-testid="home-quick-links"
             aria-label="Основные разделы"
           >
-            <Link
-              href={`${overview.links?.countries_url ?? "/countries"}?locale=${locale}`}
-            >
+            <Link href={overview.links?.countries_url ?? "/countries"}>
               Перейти к странам
             </Link>
-            <Link
-              href={`${overview.links?.decision_url ?? "/decision"}?locale=${locale}`}
-            >
+            <Link href={overview.links?.decision_url ?? "/decision"}>
               Запустить decision
             </Link>
-            <Link
-              href={`${overview.links?.compare_url ?? "/compare"}?locale=${locale}`}
-            >
+            <Link href={overview.links?.compare_url ?? "/compare"}>
               Открыть матрицу
             </Link>
-            <Link
-              href={`${overview.links?.legal_signals_url ?? "/legal-signals"}?locale=${locale}`}
-            >
+            <Link href={overview.links?.legal_signals_url ?? "/legal-signals"}>
               Открыть правовые сигналы
             </Link>
           </nav>
