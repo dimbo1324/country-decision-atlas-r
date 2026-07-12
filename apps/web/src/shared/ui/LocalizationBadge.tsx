@@ -1,3 +1,4 @@
+import { Badge, type BadgeVariant, cn } from "@country-decision-atlas/ui";
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 import {
   getLocalizationBadgeLabel,
@@ -12,6 +13,16 @@ type LocalizationBadgeProps = {
   compact?: boolean;
 };
 
+const VARIANT_MAP: Record<string, BadgeVariant> = {
+  localizationBadgeStale: "warning",
+  localizationBadgeMissing: "default",
+  localizationBadgeFallback: "info",
+  localizationBadgeMachine: "info",
+  localizationBadgeReviewed: "trust",
+  localizationBadgeOriginal: "positive",
+  localizationBadgeNeedsReview: "warning",
+};
+
 export function LocalizationBadge({
   localization,
   compact = false,
@@ -20,21 +31,19 @@ export function LocalizationBadge({
   const label = getLocalizationBadgeLabel(localization);
   if (!label) return null;
   const title = getLocalizationBadgeTitle(localization);
-  const variant = getLocalizationBadgeVariant(localization);
-  const className = [
-    "localizationBadge",
-    compact ? "localizationBadgeCompact" : "",
-    variant,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const variant =
+    VARIANT_MAP[getLocalizationBadgeVariant(localization)] ?? "default";
   return (
-    <span
-      className={className}
+    <Badge
+      variant={variant}
       title={title ?? undefined}
-      data-testid="localization-badge"
     >
-      {label}
-    </span>
+      <span
+        data-testid="localization-badge"
+        className={cn(compact && "text-[8px]")}
+      >
+        {label}
+      </span>
+    </Badge>
   );
 }

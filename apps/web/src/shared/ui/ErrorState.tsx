@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ErrorState as ErrorStateShell } from "@country-decision-atlas/ui";
 
 type ApiErrorShape = {
   error?: {
@@ -30,24 +31,24 @@ export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
     message.toLowerCase().includes("failed to fetch");
 
   return (
-    <div className="errorState">
-      <strong className="errorTitle">
-        {isBackendDown ? "Backend недоступен" : "Что-то пошло не так"}
-      </strong>
-      {code && <span className="errorCode">{code}</span>}
-      <span className="errorMessage">
-        {isBackendDown
+    <ErrorStateShell
+      title={isBackendDown ? "Backend недоступен" : "Что-то пошло не так"}
+      code={code}
+      message={
+        isBackendDown
           ? "API недоступен. Убедитесь, что backend запущен, и повторите попытку."
-          : message}
-      </span>
-      {backHref && (
-        <Link
-          href={backHref}
-          className="errorBack"
-        >
-          {backLabel ?? "Назад"}
-        </Link>
-      )}
-    </div>
+          : message
+      }
+      action={
+        backHref && (
+          <Link
+            href={backHref}
+            className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
+          >
+            {backLabel ?? "Назад"}
+          </Link>
+        )
+      }
+    />
   );
 }

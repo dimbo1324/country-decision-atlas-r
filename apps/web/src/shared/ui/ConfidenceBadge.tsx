@@ -1,13 +1,15 @@
+import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
+
 type Confidence = "low" | "medium" | "high" | string;
 
 type ConfidenceBadgeProps = {
   confidence: Confidence;
 };
 
-const CONFIDENCE_VARIANT: Record<string, string> = {
-  high: "badge--trust",
-  medium: "badge--info",
-  low: "badge--warning",
+const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {
+  high: "trust",
+  medium: "info",
+  low: "warning",
 };
 
 const CONFIDENCE_LABELS: Record<string, string> = {
@@ -17,7 +19,7 @@ const CONFIDENCE_LABELS: Record<string, string> = {
 };
 
 export function ConfidenceBadge({ confidence }: ConfidenceBadgeProps) {
-  const cls = CONFIDENCE_VARIANT[confidence] ?? "badge--default";
+  const variant = CONFIDENCE_VARIANT[confidence] ?? "default";
   const label = CONFIDENCE_LABELS[confidence] ?? confidence;
-  return <span className={`badge ${cls}`}>Достоверность: {label}</span>;
+  return <Badge variant={variant}>Достоверность: {label}</Badge>;
 }

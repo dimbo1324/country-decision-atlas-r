@@ -1,3 +1,5 @@
+import { LoadingState as LoadingStateShell } from "@country-decision-atlas/ui";
+
 type LoadingStateProps = {
   message?: string;
 };
@@ -5,21 +7,5 @@ type LoadingStateProps = {
 export function LoadingState({
   message = "Загрузка данных…",
 }: LoadingStateProps) {
-  return (
-    <div className="loadingState">
-      <span
-        className="loadingDot"
-        aria-hidden="true"
-      />
-      <span
-        className="loadingDot"
-        aria-hidden="true"
-      />
-      <span
-        className="loadingDot"
-        aria-hidden="true"
-      />
-      <p className="loadingMessage">{message}</p>
-    </div>
-  );
+  return <LoadingStateShell message={message} />;
 }

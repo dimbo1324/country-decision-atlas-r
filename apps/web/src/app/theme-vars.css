@@ -1,0 +1,11 @@
+/*
+ * Bridges next/font's generated font-variable names to the `--ui-font-*`
+ * indirection that packages/ui's theme.css reads. Kept as its own tiny file
+ * (rather than inlined) so the mapping is obvious and easy to drop once a
+ * given family is swapped or self-hosted differently.
+ */
+:root {
+  --ui-font-display: var(--font-playfair);
+  --ui-font-body: var(--font-crimson);
+  --ui-font-quote: var(--font-imfell);
+}

@@ -1,3 +1,5 @@
+import { EmptyState as EmptyStateShell } from "@country-decision-atlas/ui";
+
 type EmptyStateProps = {
   message?: string;
 };
@@ -5,5 +7,5 @@ type EmptyStateProps = {
 export function EmptyState({
   message = "Данные отсутствуют.",
 }: EmptyStateProps) {
-  return <p className="notice emptyNotice">{message}</p>;
+  return <EmptyStateShell message={message} />;
 }

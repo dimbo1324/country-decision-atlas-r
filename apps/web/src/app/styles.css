@@ -8,15 +8,10 @@ body {
   min-height: 100%;
 }
 
-body {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  line-height: 1.5;
-}
+/* Font-family and line-height now come from the design-system theme
+   (packages/ui/theme.css, layer "base") — an unlayered rule here would
+   always win the cascade over a layered one regardless of import order,
+   so this file must not redeclare either property. */
 
 a {
   color: inherit;

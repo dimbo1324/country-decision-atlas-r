@@ -16,6 +16,7 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["@country-decision-atlas/ui"],
   async headers() {
     return [
       {

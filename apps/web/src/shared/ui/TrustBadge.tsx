@@ -1,3 +1,5 @@
+import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
+
 type TrustLabel =
   | "very_high"
   | "high"
@@ -12,13 +14,13 @@ type TrustBadgeProps = {
   score?: number | null;
 };
 
-const TRUST_VARIANT: Record<string, string> = {
-  very_high: "badge--trust",
-  high: "badge--trust",
-  medium: "badge--info",
-  low: "badge--warning",
-  very_low: "badge--warning",
-  insufficient_data: "badge--default",
+const TRUST_VARIANT: Record<string, BadgeVariant> = {
+  very_high: "trust",
+  high: "trust",
+  medium: "info",
+  low: "warning",
+  very_low: "warning",
+  insufficient_data: "default",
 };
 
 const TRUST_LABELS: Record<string, string> = {
@@ -31,15 +33,15 @@ const TRUST_LABELS: Record<string, string> = {
 };
 
 export function TrustBadge({ label, score }: TrustBadgeProps) {
-  const cls = TRUST_VARIANT[label] ?? "badge--default";
+  const variant = TRUST_VARIANT[label] ?? "default";
   const text = TRUST_LABELS[label] ?? label;
   return (
-    <span
-      className={`badge ${cls}`}
+    <Badge
+      variant={variant}
       title="Индикатор качества данных"
     >
       Доверие: {text}
       {score != null && ` (${score.toFixed(0)})`}
-    </span>
+    </Badge>
   );
 }
