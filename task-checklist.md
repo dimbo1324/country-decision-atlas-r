@@ -56,14 +56,43 @@ background task) rather than a separate branch.
       the plan's own "Паттерн для разработчика (данные)" section requires
       this, and mixing old/new fetch patterns on the same rescinned page
       would be inconsistent.
-- [ ] `country-card/*` components are pure presentational (props from one
+- [+] `country-card/*` components are pure presentational (props from one
       server-fetched `CountryReadModelResponse`) — stay server-rendered via
-      RSC prefetch of `/countries/{slug}/card`, per the plan's "RSC-префетч
-      карточки + ленивые клиентские подзапросы тяжёлых секций" pattern.
-      Given the Stage 5 HydrationBoundary/force-dynamic duplicate-DOM bug,
-      this RSC-prefetch layer will be tested specifically against that
-      regression before being trusted (build + Playwright strict-mode h1
-      check), not assumed safe by analogy.
+      the page's existing plain `await countriesApi.getCountryCard(...)`
+      (no `HydrationBoundary`, matches the plan's "RSC-префетч карточки +
+      ленивые клиентские подзапросы тяжёлых секций" pattern without
+      introducing the known-risky prefetch API).
+- [+] **THIRD occurrence of the duplicate-DOM bug class found and fixed.**
+      After wiring all 6 lazy `useNearViewport`-gated sections into the
+      dossier page, `document.querySelectorAll('[data-testid="country-card"]')`
+      returned 2 in the live DOM on a real `pnpm build && pnpm start` run —
+      same signature as the Stage 5 bugs (raw server HTML had only 1
+      occurrence; this is client-side post-hydration duplication). This
+      page had `export const dynamic = "force-dynamic";` — carried over
+      from before Stage 6 touched it — and now had *six* new client
+      components each calling `setState` on mount (via `useNearViewport`'s
+      `IntersectionObserver` callback), on top of `WatchlistButton`'s
+      already-fixed one. Removed the `force-dynamic` export entirely:
+      confirmed via `next build` output that the route still compiles as
+      `ƒ (Dynamic)` without it (the route already can't be statically
+      prerendered — it does a runtime `await getLocale()` and per-slug
+      data fetch — so the explicit directive was redundant, not load-
+      bearing). Re-verified with a throwaway Playwright spec against a
+      fresh browser context (not the long-lived manual browser-tool tab,
+      which was carrying stale webpack chunk references across several
+      server restarts in this session and gave a false positive on retest
+      — `page.goto` + `.count()` in a clean context is the ground truth):
+      `country-card` count and `h1` count both back to 1. **How this
+      generalizes:** `force-dynamic` is a *necessary* condition for this
+      bug class in this Next 15/React 19 combination, but not sufficient
+      by itself (`/search` and the home page both keep `force-dynamic`
+      with no client mount-`setState` issue) — the trigger is
+      `force-dynamic` + *any* post-mount client `setState` anywhere in
+      that route's subtree. Any future force-dynamic page gaining a new
+      client component with a mount effect needs this exact check
+      (`pnpm build && pnpm start`, count the testid in a fresh browser
+      context) before being trusted, and dropping `force-dynamic` should
+      be the first thing tried if the route doesn't genuinely need it.
 - [ ] Heavy sections (`trust-surface`, `country-drift`, `platform-intelligence`,
       `data-journal`, `what-changed`, `community`, `routes`) become
       independent client components with their own `useQuery`, each

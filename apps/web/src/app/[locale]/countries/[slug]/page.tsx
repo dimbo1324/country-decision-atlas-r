@@ -27,8 +27,6 @@ import { TrustSurfaceBlock } from "../../../../features/trust-surface";
 import { WatchlistButton } from "../../../../features/watchlist";
 import { CountryWhatChanged } from "../../../../features/what-changed";
 
-export const dynamic = "force-dynamic";
-
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
