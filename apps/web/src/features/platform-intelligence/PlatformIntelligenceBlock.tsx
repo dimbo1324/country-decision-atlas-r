@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api";
-import type { PlatformMetricListResponse } from "../../shared/api/platform-metrics";
 import type { LocaleCode } from "../../shared/api/countries";
-import { getCountryPlatformMetrics } from "../../shared/api/platform-metrics";
+import { countryPlatformMetricsQuery } from "../../entities/platform-intelligence/api";
+import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { PlatformMetricCard } from "./PlatformMetricCard";
 import { PlatformMetricEmptyState } from "./PlatformMetricEmptyState";
@@ -19,43 +20,23 @@ export function PlatformIntelligenceBlock({
   countrySlug,
   locale,
 }: PlatformIntelligenceBlockProps) {
-  const [data, setData] = useState<PlatformMetricListResponse | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isNear = useNearViewport(sectionRef);
 
-  useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-    setError(null);
-    getCountryPlatformMetrics(countrySlug, locale)
-      .then((res) => {
-        if (isMounted) {
-          setData(res);
-        }
-      })
-      .catch((err: unknown) => {
-        if (isMounted) {
-          setData(null);
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [countrySlug, locale]);
+  const { data, error, isPending, isError } = useQuery({
+    ...countryPlatformMetricsQuery(countrySlug, locale),
+    enabled: isNear,
+  });
 
-  if (isLoading) {
+  if (!isNear || isPending) {
     return (
-      <div className="notice">Загрузка данных платформенного интеллекта...</div>
+      <div ref={sectionRef}>
+        <Skeleton lines={4} />
+      </div>
     );
   }
 
-  if (error !== null) {
+  if (isError) {
     return (
       <div data-testid="platform-intelligence-error">
         <ErrorState error={isApiError(error) ? error : undefined} />
@@ -73,11 +54,14 @@ export function PlatformIntelligenceBlock({
   const scenarioMetrics = items.filter((m) => m.scenario_slug !== null);
 
   return (
-    <div data-testid="platform-intelligence-block">
+    <div
+      className="flex flex-col gap-6"
+      data-testid="platform-intelligence-block"
+    >
       {globalMetrics.length > 0 && (
-        <div className="platformMetricGroup">
-          <h3 className="platformMetricGroupTitle">Глобальные показатели</h3>
-          <div className="platformMetricGrid">
+        <div className="flex flex-col gap-3">
+          <Kicker>Глобальные показатели</Kicker>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {globalMetrics.map((metric) => (
               <PlatformMetricCard
                 key={metric.metric_key}
@@ -88,9 +72,9 @@ export function PlatformIntelligenceBlock({
         </div>
       )}
       {scenarioMetrics.length > 0 && (
-        <div className="platformMetricGroup">
-          <h3 className="platformMetricGroupTitle">Риски по сценариям</h3>
-          <div className="platformMetricGrid">
+        <div className="flex flex-col gap-3">
+          <Kicker>Риски по сценариям</Kicker>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {scenarioMetrics.map((metric) => (
               <PlatformMetricCard
                 key={`${metric.metric_key}-${metric.scenario_slug}`}

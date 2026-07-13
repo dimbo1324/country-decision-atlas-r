@@ -1,3 +1,4 @@
+import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
 import type { RouteEligibility } from "../../shared/api/routes";
 
 const LABELS: Record<keyof RouteEligibility, string> = {
@@ -16,10 +17,10 @@ const VALUE_LABELS = {
   unknown: "Неизвестно",
 };
 
-const VALUE_CLASSES = {
-  yes: "routeEligibilityYes",
-  no: "routeEligibilityNo",
-  unknown: "routeEligibilityUnknown",
+const VALUE_VARIANT: Record<keyof typeof VALUE_LABELS, BadgeVariant> = {
+  yes: "trust",
+  no: "negative",
+  unknown: "default",
 };
 
 export function RouteEligibilityBadges({
@@ -36,15 +37,14 @@ export function RouteEligibilityBadges({
   const visibleEntries = compact ? entries.slice(0, 4) : entries;
 
   return (
-    <div className="routeEligibility">
+    <div className="flex flex-wrap gap-2">
       {visibleEntries.map(([key, value]) => (
-        <span
+        <Badge
           key={key}
-          className={`routeEligibilityBadge ${VALUE_CLASSES[value]}`}
+          variant={VALUE_VARIANT[value]}
         >
-          <span>{LABELS[key]}</span>
-          <strong>{VALUE_LABELS[value]}</strong>
-        </span>
+          {LABELS[key]}: {VALUE_LABELS[value]}
+        </Badge>
       ))}
     </div>
   );

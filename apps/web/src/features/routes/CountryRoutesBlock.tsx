@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
+import { useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api/http";
 import type { LocaleCode } from "../../shared/api/countries";
-import type { RouteListResponse } from "../../shared/api/routes";
-import { routesApi } from "../../shared/api/routes";
+import { countryRoutesQuery } from "../../entities/routes/api";
+import { useNearViewport } from "../../shared/lib/useNearViewport";
+import { ErrorState } from "../../shared/ui/ErrorState";
 import { RouteCard } from "./RouteCard";
 import { RouteEmptyState } from "./RouteEmptyState";
 import { RouteFilters, type RouteFilterValues } from "./RouteFilters";
@@ -26,53 +28,14 @@ export function CountryRoutesBlock({
   countrySlug,
   locale,
 }: CountryRoutesBlockProps) {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isNear = useNearViewport(sectionRef);
   const [filters, setFilters] = useState<RouteFilterValues>(DEFAULT_FILTERS);
-  const [data, setData] = useState<RouteListResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const requestParams = useMemo(
-    () => ({
-      locale,
-      route_type: filters.route_type,
-      allows_work: filters.allows_work,
-      allows_family: filters.allows_family,
-      leads_to_pr: filters.leads_to_pr,
-      limit: 50,
-      offset: 0,
-    }),
-    [filters, locale],
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-    setError(null);
-    routesApi
-      .listCountryRoutes(countrySlug, requestParams)
-      .then((response) => {
-        if (isMounted) {
-          setData(response);
-        }
-      })
-      .catch((err: unknown) => {
-        if (isMounted) {
-          const message = isApiError(err)
-            ? err.error.message
-            : "Маршруты сейчас недоступны.";
-          setError(message ?? "Маршруты сейчас недоступны.");
-          setData(null);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [countrySlug, requestParams]);
+  const { data, error, isPending, isError } = useQuery({
+    ...countryRoutesQuery(countrySlug, locale, filters),
+    enabled: isNear,
+  });
 
   function updateFilter(name: keyof RouteFilterValues, value: string) {
     setFilters((current) => ({ ...current, [name]: value }));
@@ -84,25 +47,36 @@ export function CountryRoutesBlock({
 
   return (
     <div
-      className="routeBlock"
+      className="flex flex-col gap-5"
       data-testid="country-routes-block"
+      ref={sectionRef}
     >
       <RouteFilters
         filters={filters}
         onChange={updateFilter}
         onReset={resetFilters}
       />
-      {isLoading && <div className="notice">Загрузка маршрутов…</div>}
-      {!isLoading && error && <div className="notice errorNotice">{error}</div>}
-      {!isLoading && !error && data?.items.length === 0 && <RouteEmptyState />}
-      {!isLoading && !error && data && data.items.length > 0 && (
+      {(!isNear || isPending) && <Skeleton lines={3} />}
+      {isNear && isError && (
+        <ErrorState
+          error={
+            isApiError(error)
+              ? error
+              : { error: { code: "unknown", message: "Маршруты сейчас недоступны." } }
+          }
+        />
+      )}
+      {isNear && !isPending && !isError && data?.items.length === 0 && (
+        <RouteEmptyState />
+      )}
+      {isNear && !isPending && !isError && data && data.items.length > 0 && (
         <>
           {data.pagination.total > data.items.length && (
-            <p className="notice">
+            <Kicker>
               Показано {data.items.length} из {data.pagination.total} маршрутов
-            </p>
+            </Kicker>
           )}
-          <div className="routeGrid">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {data.items.map((route) => (
               <RouteCard
                 key={route.id}

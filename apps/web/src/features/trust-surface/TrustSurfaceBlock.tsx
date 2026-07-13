@@ -1,69 +1,51 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-
-import {
-  isApiError,
-  type CountryTrustResponse,
-  type LocaleCode,
-} from "../../shared/api";
-import { getCountryTrust } from "../../shared/api/trust";
-import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
+import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Badge, ProgressRing, Skeleton } from "@country-decision-atlas/ui";
+import { isApiError, type LocaleCode } from "../../shared/api";
+import { countryTrustQuery } from "../../entities/trust-surface/api";
+import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
-import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
-import { TrustBadge } from "../../shared/ui/TrustBadge";
+import { Link } from "../../i18n/navigation";
 
 type TrustSurfaceBlockProps = {
   countrySlug: string;
   locale: LocaleCode;
 };
 
+const TRUST_LABEL_ACCENT: Record<string, "sage" | "gold" | "terra"> = {
+  high: "sage",
+  medium: "gold",
+  low: "terra",
+};
+
 export function TrustSurfaceBlock({
   countrySlug,
   locale,
 }: TrustSurfaceBlockProps) {
-  const [data, setData] = useState<CountryTrustResponse | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isNotComputed, setIsNotComputed] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isNear = useNearViewport(sectionRef);
 
-  useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-    setError(null);
-    setIsNotComputed(false);
-    getCountryTrust(countrySlug, locale)
-      .then((res) => {
-        if (isMounted) {
-          setData(res);
-        }
-      })
-      .catch((err: unknown) => {
-        if (isMounted) {
-          setData(null);
-          if (isApiError(err) && err.error?.code === "trust_not_found") {
-            setIsNotComputed(true);
-          } else {
-            setError(err);
-          }
-        }
-      })
-      .finally(() => {
-        if (isMounted) setIsLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [countrySlug, locale]);
+  const { data, error, isPending, isError } = useQuery({
+    ...countryTrustQuery(countrySlug, locale),
+    enabled: isNear,
+  });
 
-  if (isLoading) {
-    return <div className="notice">Загрузка индикатора доверия...</div>;
+  const notComputed =
+    isError && isApiError(error) && error.error?.code === "trust_not_found";
+
+  if (!isNear || isPending) {
+    return (
+      <div ref={sectionRef}>
+        <Skeleton lines={3} />
+      </div>
+    );
   }
 
-  if (error !== null) {
+  if (isError && !notComputed) {
     return (
       <div data-testid="trust-surface-error">
         <ErrorState error={isApiError(error) ? error : undefined} />
@@ -71,14 +53,14 @@ export function TrustSurfaceBlock({
     );
   }
 
-  if (!data || isNotComputed) {
+  if (!data || notComputed) {
     return (
-      <div
-        className="notice"
+      <p
+        className="text-c4 text-sm"
         data-testid="trust-surface-empty"
       >
         Данные о доверии к источникам ещё не вычислены для этой страны.
-      </div>
+      </p>
     );
   }
 
@@ -91,32 +73,45 @@ export function TrustSurfaceBlock({
     return "Высокая";
   })();
 
+  const accent = TRUST_LABEL_ACCENT[data.trust_label] ?? "gold";
+
   return (
-    <div data-testid="trust-surface-block">
-      <div className="trustBadgeRow">
-        <TrustBadge
-          label={data.trust_label}
-          score={data.trust_score ?? undefined}
-        />
-        <FreshnessBadge status={data.freshness_status} />
-        {data.confidence && <ConfidenceBadge confidence={data.confidence} />}
+    <div
+      className="flex flex-col gap-5"
+      data-testid="trust-surface-block"
+    >
+      <div className="flex flex-wrap items-center gap-6">
+        {data.trust_score != null && (
+          <ProgressRing
+            value={Math.round(data.trust_score)}
+            label={data.trust_label}
+            size={128}
+            accent={accent}
+            active
+            mode="static"
+          />
+        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="default">Свежесть: {data.freshness_status}</Badge>
+          {data.confidence && (
+            <Badge variant="trust">Уверенность: {data.confidence}</Badge>
+          )}
+        </div>
       </div>
       <LastVerifiedAt date={data.last_verified_at ?? undefined} />
       <p
-        className="infoNote"
+        className="text-c3 text-sm"
         data-testid="contradiction-context"
       >
         Противоречивость данных:{" "}
-        <span className="metaChip">{contradictionLabel}</span>
+        <Badge variant="default">{contradictionLabel}</Badge>
       </p>
-      <p className="infoNote">
-        <Link
-          href="/methodology"
-          className="internalLink"
-        >
-          О методологии →
-        </Link>
-      </p>
+      <Link
+        href="/methodology"
+        className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
+      >
+        О методологии →
+      </Link>
       <DisclaimerNotice text={data.disclaimer} />
     </div>
   );

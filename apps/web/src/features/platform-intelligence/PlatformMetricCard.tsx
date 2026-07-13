@@ -1,3 +1,4 @@
+import { Badge, Card } from "@country-decision-atlas/ui";
 import type { PlatformMetric } from "../../shared/api/platform-metrics";
 import { PlatformMetricLabelBadge } from "./PlatformMetricLabelBadge";
 
@@ -17,27 +18,30 @@ export function PlatformMetricCard({ metric }: PlatformMetricCardProps) {
 
   return (
     <div
-      className="platformMetricCard"
       data-testid="platform-metric-card"
       data-metric-key={metric.metric_key}
     >
-      <div className="platformMetricHeader">
-        <span className="platformMetricName">{metricName}</span>
+    <Card
+      interactive={false}
+      className="flex flex-col gap-3"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-display text-sm font-semibold">{metricName}</span>
         {metric.scenario_slug && (
-          <span className="platformMetricScenario">{metric.scenario_slug}</span>
+          <Badge variant="default">{metric.scenario_slug}</Badge>
         )}
       </div>
-      <div className="platformMetricBody">
+      <div className="flex items-center gap-3">
         {isInsufficient ? (
           <span
-            className="platformMetricInsufficient"
+            className="text-c4 text-sm"
             data-testid="platform-metric-insufficient"
           >
             Недостаточно данных
           </span>
         ) : (
           <span
-            className="platformMetricValue"
+            className="font-display text-gold3 text-2xl font-bold"
             data-testid="platform-metric-value"
           >
             {metric.value !== null && metric.value !== undefined
@@ -47,12 +51,11 @@ export function PlatformMetricCard({ metric }: PlatformMetricCardProps) {
         )}
         <PlatformMetricLabelBadge label={metric.label} />
       </div>
-      <div className="platformMetricMeta">
-        <span className="platformMetricConfidence">{metric.confidence}</span>
-        <span className="platformMetricFreshness">
-          {metric.freshness_status}
-        </span>
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="trust">{metric.confidence}</Badge>
+        <Badge variant="default">{metric.freshness_status}</Badge>
       </div>
+    </Card>
     </div>
   );
 }

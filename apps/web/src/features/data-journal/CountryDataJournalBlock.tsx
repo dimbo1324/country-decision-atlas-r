@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api";
-import { getCountryDataJournal } from "../../shared/api/data-journal";
-import type { CountryDataJournalResponse } from "../../shared/api/data-journal";
 import type { LocaleCode } from "../../shared/api/countries";
-import { getFeatures } from "../../shared/api/feature-flags";
-import { isFeatureEnabled } from "../../shared/lib/features";
+import { countryDataJournalQuery } from "../../entities/data-journal/api";
+import { useFeatureEnabled } from "../../shared/features/FeatureProvider";
+import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { DataJournalEmptyState } from "./DataJournalEmptyState";
 import { DataJournalEntryCard } from "./DataJournalEntryCard";
@@ -21,55 +21,31 @@ export function CountryDataJournalBlock({
   countrySlug,
   locale,
 }: CountryDataJournalBlockProps) {
-  const [data, setData] = useState<CountryDataJournalResponse | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isNear = useNearViewport(sectionRef);
+  const isEnabled = useFeatureEnabled("data_journal_enabled");
 
-  useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-    setError(null);
-    Promise.all([
-      getFeatures("public"),
-      getCountryDataJournal(countrySlug, locale, 10, 0),
-    ])
-      .then(([features, journal]) => {
-        if (isMounted) {
-          setIsEnabled(isFeatureEnabled(features, "data_journal_enabled"));
-          setData(journal);
-        }
-      })
-      .catch((err: unknown) => {
-        if (isMounted) {
-          setData(null);
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [countrySlug, locale]);
+  const { data, error, isPending, isError } = useQuery({
+    ...countryDataJournalQuery(countrySlug, locale),
+    enabled: isNear && isEnabled,
+  });
 
-  if (isLoading) {
-    return <div className="notice">Загрузка обновлений данных...</div>;
+  if (!isEnabled) return null;
+
+  if (!isNear || isPending) {
+    return (
+      <div ref={sectionRef}>
+        <Skeleton lines={3} />
+      </div>
+    );
   }
 
-  if (error !== null) {
+  if (isError) {
     return (
       <div data-testid="data-journal-error">
         <ErrorState error={isApiError(error) ? error : undefined} />
       </div>
     );
-  }
-
-  if (!isEnabled) {
-    return null;
   }
 
   const items = data?.items ?? [];
@@ -80,7 +56,7 @@ export function CountryDataJournalBlock({
 
   return (
     <div
-      className="sourceGrid"
+      className="grid grid-cols-1 gap-4 md:grid-cols-2"
       data-testid="data-journal-block"
     >
       {items.map((entry) => (

@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { CountryDriftHistoryItem } from "../../shared/api/country-drift";
 import { CountryDriftBadge } from "./CountryDriftBadge";
 
@@ -11,17 +12,17 @@ export function DriftHistoryMiniList({ items }: DriftHistoryMiniListProps) {
   }
   return (
     <ul
-      className="driftHistoryMiniList"
+      className="flex flex-col gap-2"
       data-testid="drift-history-mini-list"
     >
       {items.map((item) => (
         <li
           key={`${item.period_start}-${item.period_end}`}
-          className="driftHistoryRow"
+          className="flex items-center justify-between gap-3"
         >
-          <span className="metaChip">
+          <Badge variant="default">
             {item.period_start} — {item.period_end}
-          </span>
+          </Badge>
           <CountryDriftBadge label={item.label} />
         </li>
       ))}

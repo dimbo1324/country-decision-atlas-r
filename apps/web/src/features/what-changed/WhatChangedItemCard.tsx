@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import { Badge, Card } from "@country-decision-atlas/ui";
 import type { WhatChangedItem } from "../../shared/api/what-changed";
 
 type WhatChangedItemCardProps = {
@@ -17,27 +17,29 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
   const occurredAt = new Date(item.occurred_at).toLocaleDateString("ru-RU");
 
   return (
-    <article
-      className="sourceCard"
-      data-testid="what-changed-item"
+    <div data-testid="what-changed-item">
+    <Card
+      interactive={false}
+      className="flex flex-col gap-2"
     >
-      <div className="sourceCardHeader">
-        <h3>{item.title}</h3>
-        <span className="metaChip">{occurredAt}</span>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="font-display text-base font-semibold">{item.title}</h3>
+        <Badge variant="default">{occurredAt}</Badge>
       </div>
-      <p>{item.summary}</p>
-      <div className="sourceMeta">
-        <span className="metaChip">
+      <p className="text-c3 text-sm leading-relaxed">{item.summary}</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="default">
           {IMPORTANCE_LABELS[item.importance] ?? item.importance}
-        </span>
-        <span>{item.source}</span>
+        </Badge>
+        <span className="text-c4 text-xs">{item.source}</span>
       </div>
       <Link
         href={item.path}
-        className="internalLink"
+        className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
       >
         Подробнее →
       </Link>
-    </article>
+    </Card>
+    </div>
   );
 }

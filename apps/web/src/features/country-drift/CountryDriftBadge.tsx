@@ -1,3 +1,5 @@
+import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
+
 type DriftLabel =
   | "insufficient_data"
   | "negative"
@@ -10,12 +12,12 @@ type CountryDriftBadgeProps = {
   label: DriftLabel;
 };
 
-const DRIFT_VARIANT: Record<string, string> = {
-  positive: "badge--trust",
-  mildly_positive: "badge--info",
-  stable: "badge--default",
-  negative: "badge--warning",
-  insufficient_data: "badge--default",
+const DRIFT_VARIANT: Record<string, BadgeVariant> = {
+  positive: "trust",
+  mildly_positive: "info",
+  stable: "default",
+  negative: "warning",
+  insufficient_data: "default",
 };
 
 const DRIFT_LABELS: Record<string, string> = {
@@ -27,14 +29,12 @@ const DRIFT_LABELS: Record<string, string> = {
 };
 
 export function CountryDriftBadge({ label }: CountryDriftBadgeProps) {
-  const cls = DRIFT_VARIANT[label] ?? "badge--default";
-  const text = DRIFT_LABELS[label] ?? label;
   return (
-    <span
-      className={`badge ${cls}`}
+    <Badge
+      variant={DRIFT_VARIANT[label] ?? "default"}
       title="Индикатор тренда на основе правовых сигналов"
     >
-      {text}
-    </span>
+      {DRIFT_LABELS[label] ?? label}
+    </Badge>
   );
 }

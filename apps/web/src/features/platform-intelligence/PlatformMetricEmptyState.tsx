@@ -1,10 +1,9 @@
+import { EmptyState } from "../../shared/ui/EmptyState";
+
 export function PlatformMetricEmptyState() {
   return (
-    <p
-      className="notice"
-      data-testid="platform-intelligence-empty"
-    >
-      Метрики платформенного интеллекта ещё не вычислены для этой страны.
-    </p>
+    <div data-testid="platform-intelligence-empty">
+      <EmptyState message="Метрики платформенного интеллекта ещё не вычислены для этой страны." />
+    </div>
   );
 }
