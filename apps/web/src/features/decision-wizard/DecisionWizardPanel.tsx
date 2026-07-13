@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Button, Card, Kicker } from "@country-decision-atlas/ui";
 
 import type { CountryListResponse } from "../../shared/api/countries";
 import type {
   DecisionWizardAnswers,
   DecisionWizardRecommendation,
 } from "../../shared/api/decision";
-import { decisionApi } from "../../shared/api";
+import { useResolveWizardMutation } from "../../entities/decision/api";
 import { trackEvent } from "../../shared/analytics/client";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import {
@@ -67,10 +68,9 @@ export function DecisionWizardPanel({
     business_priority: "medium",
     timeframe: "unknown",
   });
-  const [isResolving, setIsResolving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [recommendation, setRecommendation] =
     useState<DecisionWizardRecommendation | null>(null);
+  const resolveWizard = useResolveWizardMutation();
 
   function updateAnswer<Key extends keyof DecisionWizardAnswers>(
     key: Key,
@@ -94,11 +94,9 @@ export function DecisionWizardPanel({
   }
 
   async function handleResolve() {
-    setIsResolving(true);
-    setError(null);
     setRecommendation(null);
     try {
-      const res = await decisionApi.resolveWizard({
+      const res = await resolveWizard.mutateAsync({
         ...answers,
         origin_country_slug: effectiveOriginSlug,
       });
@@ -117,39 +115,37 @@ export function DecisionWizardPanel({
       });
       setRecommendation(res);
     } catch {
-      setError(labels.unavailable);
-    } finally {
-      setIsResolving(false);
+      // handled via resolveWizard.isError below
     }
   }
 
   return (
-    <section
-      className="decisionWizard"
-      data-testid="decision-wizard"
+    <div data-testid="decision-wizard">
+    <Card
+      interactive={false}
+      className="flex flex-col gap-4"
     >
-      <div className="decisionWizardHeader">
-        <div>
-          <h2 className="decisionWizardTitle">{labels.title}</h2>
-          <p className="formHint">{labels.hint}</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <Kicker>{labels.title}</Kicker>
+          <p className="text-c3 text-sm">{labels.hint}</p>
         </div>
-        <button
-          type="button"
-          className="decisionWizardToggle"
+        <Button
+          variant="ghost"
           aria-expanded={isOpen}
           onClick={toggleOpen}
           data-testid="decision-wizard-toggle"
         >
           {isOpen ? labels.close : labels.open}
-        </button>
+        </Button>
       </div>
 
       {isOpen && (
         <div
-          className="decisionWizardPanel"
+          className="flex flex-col gap-6"
           data-testid="decision-wizard-panel"
         >
-          <div className="decisionWizardGrid">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <DecisionWizardStep
               label={labels.goal}
               value={answers.primary_goal}
@@ -180,7 +176,7 @@ export function DecisionWizardPanel({
             />
           </div>
 
-          <div className="decisionWizardGrid decisionWizardPriorityGrid">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <DecisionWizardStep
               label={labels.workPriority}
               value={answers.work_priority}
@@ -211,24 +207,22 @@ export function DecisionWizardPanel({
             />
           </div>
 
-          <button
-            type="button"
-            className="runButton"
+          <Button
             onClick={handleResolve}
-            disabled={isResolving}
-            aria-busy={isResolving}
+            disabled={resolveWizard.isPending}
+            aria-busy={resolveWizard.isPending}
             data-testid="decision-wizard-apply"
           >
-            {isResolving ? labels.applying : labels.apply}
-          </button>
+            {resolveWizard.isPending ? labels.applying : labels.apply}
+          </Button>
 
-          {error && (
+          {resolveWizard.isError && (
             <p
-              className="formError"
               role="alert"
+              className="text-terra3 text-sm"
               data-testid="decision-wizard-error"
             >
-              {error}
+              {labels.unavailable}
             </p>
           )}
           {recommendation && (
@@ -239,6 +233,7 @@ export function DecisionWizardPanel({
           )}
         </div>
       )}
-    </section>
+    </Card>
+    </div>
   );
 }

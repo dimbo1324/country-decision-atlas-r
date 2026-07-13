@@ -15,10 +15,14 @@ export function DecisionWeightSlider({
   onChange,
 }: DecisionWeightSliderProps) {
   return (
-    <div className="decisionWeightSlider">
-      <div className="decisionWeightSliderHeader">
-        <span>{DECISION_CRITERIA_LABELS[criterion]}</span>
-        <span>{value}</span>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-c2 text-sm">
+          {DECISION_CRITERIA_LABELS[criterion]}
+        </span>
+        <span className="font-display text-gold3 text-sm font-bold">
+          {value}
+        </span>
       </div>
       <input
         type="range"
@@ -29,6 +33,7 @@ export function DecisionWeightSlider({
         onChange={(e) => onChange(criterion, Number(e.target.value))}
         aria-label={DECISION_CRITERIA_LABELS[criterion]}
         data-testid={`decision-weight-slider-${criterion}`}
+        className="accent-gold h-1 w-full cursor-pointer"
       />
     </div>
   );

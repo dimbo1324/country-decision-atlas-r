@@ -1,3 +1,4 @@
+import { RadioCards } from "@country-decision-atlas/ui";
 import type { DecisionWizardOption } from "./decision-wizard-labels";
 
 type DecisionWizardStepProps<T extends string> = {
@@ -16,23 +17,19 @@ export function DecisionWizardStep<T extends string>({
   onChange,
 }: DecisionWizardStepProps<T>) {
   return (
-    <label className="formGroup">
-      <span className="formLabel">{label}</span>
-      <select
-        className="formSelect"
+    <div
+      className="flex flex-col gap-2"
+      data-testid={testId}
+    >
+      <span className="font-mono text-c3 text-[10px] tracking-[0.2em] uppercase">
+        {label}
+      </span>
+      <RadioCards
+        name={testId}
         value={value}
-        onChange={(event) => onChange(event.target.value as T)}
-        data-testid={testId}
-      >
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+        onChange={(next) => onChange(next as T)}
+        options={options}
+      />
+    </div>
   );
 }

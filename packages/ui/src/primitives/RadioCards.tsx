@@ -41,6 +41,7 @@ export function RadioCards({
             role="radio"
             aria-checked={checked}
             name={name}
+            data-testid={`${name}-option-${option.value}`}
             onClick={() => onChange(option.value)}
             className={cn(
               "bg-bg2 flex flex-col gap-1 border p-4 text-left transition-colors duration-300",

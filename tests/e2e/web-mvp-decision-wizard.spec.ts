@@ -12,12 +12,12 @@ test.describe("Decision wizard", () => {
     await page.getByTestId("decision-wizard-toggle").click();
     await expect(page.getByTestId("decision-wizard-panel")).toBeVisible();
     await page
-      .getByTestId("decision-wizard-primary-goal")
-      .selectOption("business");
-    await page.getByTestId("decision-wizard-budget").selectOption("high");
+      .getByTestId("decision-wizard-primary-goal-option-business")
+      .click();
+    await page.getByTestId("decision-wizard-budget-option-high").click();
     await page
-      .getByTestId("decision-wizard-business_priority")
-      .selectOption("high");
+      .getByTestId("decision-wizard-business_priority-option-high")
+      .click();
     await page.getByTestId("decision-wizard-apply").click();
 
     await expect(page.getByTestId("decision-wizard-result")).toBeVisible({
@@ -47,8 +47,8 @@ test.describe("Decision wizard", () => {
 
     await page.getByTestId("decision-wizard-toggle").click();
     await page
-      .getByTestId("decision-wizard-family")
-      .selectOption("family_with_children");
+      .getByTestId("decision-wizard-family-option-family_with_children")
+      .click();
     await page.getByTestId("decision-wizard-apply").click();
     await expect(page.getByTestId("decision-wizard-result")).toBeVisible({
       timeout: 20_000,

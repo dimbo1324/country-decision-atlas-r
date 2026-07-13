@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { DecisionWizardRecommendation } from "../../shared/api/decision";
 
 type DecisionWizardSummaryProps = {
@@ -20,31 +21,32 @@ export function DecisionWizardSummary({
 }: DecisionWizardSummaryProps) {
   return (
     <div
-      className="decisionWizardResult"
+      className="border-warm flex flex-col gap-4 border-t pt-4"
       data-testid="decision-wizard-result"
     >
-      <div className="decisionWizardResultTop">
-        <span
-          className="badge"
-          data-testid="decision-wizard-confidence"
-        >
-          {labels.confidence}: {recommendation.confidence}
+      <div className="flex flex-wrap items-center gap-3">
+        <span data-testid="decision-wizard-confidence">
+          <Badge variant="trust">
+            {labels.confidence}: {recommendation.confidence}
+          </Badge>
         </span>
-        <span>
+        <span className="text-c2 text-sm">
           {labels.scenario}:{" "}
-          <strong>{recommendation.recommended_scenario_slug}</strong>
+          <strong className="text-c1">
+            {recommendation.recommended_scenario_slug}
+          </strong>
         </span>
-        <span>
+        <span className="text-c2 text-sm">
           {labels.persona}:{" "}
-          <strong>
+          <strong className="text-c1">
             {recommendation.recommended_persona_slug ?? labels.noPersona}
           </strong>
         </span>
       </div>
-      <div className="decisionWizardSummaryBlock">
-        <strong>{labels.explanation}</strong>
+      <div className="flex flex-col gap-2">
+        <strong className="text-c2 text-sm">{labels.explanation}</strong>
         <ul
-          className="pointsList"
+          className="text-c3 flex flex-col gap-1 text-sm"
           data-testid="decision-wizard-explanation"
         >
           {recommendation.explanation.map((item) => (
@@ -53,16 +55,16 @@ export function DecisionWizardSummary({
         </ul>
       </div>
       {recommendation.warnings.length > 0 && (
-        <div className="decisionWizardSummaryBlock">
-          <strong>{labels.warnings}</strong>
+        <div className="flex flex-col gap-2">
+          <strong className="text-c2 text-sm">{labels.warnings}</strong>
           <ul
-            className="warningsList"
+            className="flex flex-col gap-1"
             data-testid="decision-wizard-warnings"
           >
             {recommendation.warnings.map((warning) => (
               <li
                 key={warning}
-                className="warningItem"
+                className="text-terra3 text-sm"
               >
                 {labels.warningLabels[warning] ?? warning}
               </li>
@@ -71,7 +73,7 @@ export function DecisionWizardSummary({
         </div>
       )}
       <p
-        className="formHint"
+        className="text-c4 text-xs"
         data-testid="decision-wizard-manual-note"
       >
         {labels.manualNote}

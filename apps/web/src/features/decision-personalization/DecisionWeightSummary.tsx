@@ -4,12 +4,12 @@ type DecisionWeightSummaryProps = {
 
 export function DecisionWeightSummary({ sum }: DecisionWeightSummaryProps) {
   return (
-    <div className="decisionWeightSummary">
-      <span>Сумма приоритетов: {sum}</span>
+    <div className="flex flex-col gap-1">
+      <span className="text-c3 text-sm">Сумма приоритетов: {sum}</span>
       {sum === 0 && (
         <p
-          className="decisionWeightWarning"
           role="alert"
+          className="text-terra3 text-sm"
         >
           Сумма приоритетов должна быть больше нуля.
         </p>

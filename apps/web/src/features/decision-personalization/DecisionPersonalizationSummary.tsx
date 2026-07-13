@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { DecisionPersonalizationResponse } from "../../shared/api/decision";
 import {
   DECISION_CRITERIA_LABELS,
@@ -28,31 +29,39 @@ export function DecisionPersonalizationSummary({
 
   return (
     <div
-      className="decisionPersonalizationResult"
+      className="flex flex-col gap-3"
       data-testid="decision-personalization-result"
     >
-      <p>Результат адаптирован под ваши приоритеты</p>
-      <div className="resultMetaRow">
-        <span>Режим расчёта:</span>
-        <span className="metaChip">{personalization.weight_mode}</span>
+      <p className="text-c2 text-sm">
+        Результат адаптирован под ваши приоритеты
+      </p>
+      <div className="flex items-center gap-2">
+        <span className="text-c4 text-xs">Режим расчёта:</span>
+        <Badge variant="default">{personalization.weight_mode}</Badge>
       </div>
       {personalization.persona_slug && (
-        <div className="resultMetaRow">
-          <span>Персона:</span>
-          <strong>{personalization.persona_slug}</strong>
+        <div className="flex items-center gap-2">
+          <span className="text-c4 text-xs">Персона:</span>
+          <strong className="text-c1 text-sm">
+            {personalization.persona_slug}
+          </strong>
         </div>
       )}
-      <p className="formLabel">Главные приоритеты</p>
-      <ul>
+      <p className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+        Главные приоритеты
+      </p>
+      <ul className="text-c3 flex flex-col gap-1 text-sm">
         {topWeights.map((item) => (
           <li key={item.criterion}>
             {labelFor(item.criterion)}: {Math.round(item.weight * 100)}%
           </li>
         ))}
       </ul>
-      <details className="decisionEffectiveWeights">
-        <summary>Все приоритеты</summary>
-        <ul>
+      <details>
+        <summary className="font-mono text-c3 hover:text-gold cursor-pointer text-[9px] tracking-[0.15em] uppercase transition-colors duration-300">
+          Все приоритеты
+        </summary>
+        <ul className="text-c3 mt-2 flex flex-col gap-1 text-sm">
           {sortedWeights.map((item) => (
             <li key={item.criterion}>
               {labelFor(item.criterion)}: {Math.round(item.weight * 100)}%
