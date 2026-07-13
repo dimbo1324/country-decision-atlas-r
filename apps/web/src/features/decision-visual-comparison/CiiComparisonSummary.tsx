@@ -1,3 +1,4 @@
+import { Badge, Card } from "@country-decision-atlas/ui";
 import type { ComparedCountry } from "../../shared/api/cii";
 
 type Props = {
@@ -12,31 +13,32 @@ export function CiiComparisonSummary({
   aggregationMethod,
 }: Props) {
   return (
-    <div className="ciiCompareSummary">
-      <div className="ciiCompareSummaryRow">
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {countries.map((c) => (
-          <div
+          <Card
             key={c.slug}
-            className="ciiCompareSummaryCard"
+            interactive={false}
+            className="flex flex-col gap-2"
           >
-            <span className="ciiCompareSummaryName">{c.name}</span>
+            <span className="text-c2 text-sm font-semibold">{c.name}</span>
             {c.cii_score != null ? (
-              <span className="ciiCompareSummaryScore">
+              <span className="font-display text-gold3 text-2xl font-bold">
                 {c.cii_score.toFixed(1)}
               </span>
             ) : (
-              <span className="ciiCompareSummaryScore ciiCompareMissing">
+              <span className="font-display text-c4 text-2xl font-bold">
                 —
               </span>
             )}
             {c.cii_confidence != null && (
-              <span className="metaChip">{c.cii_confidence}</span>
+              <Badge variant="trust">{c.cii_confidence}</Badge>
             )}
-          </div>
+          </Card>
         ))}
       </div>
       {(formulaVersion != null || aggregationMethod != null) && (
-        <p className="ciiCompareMeta">
+        <p className="text-c4 text-xs">
           {[formulaVersion, aggregationMethod].filter(Boolean).join(" · ")}
         </p>
       )}

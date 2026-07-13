@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { ComparedMetric, ComparedCountry } from "../../shared/api/cii";
 
 type Props = {
@@ -9,23 +10,23 @@ export function CiiMetricWinnerList({ metrics, countries }: Props) {
   const nameBySlug = Object.fromEntries(countries.map((c) => [c.slug, c.name]));
 
   return (
-    <ul className="ciiWinnerList">
+    <ul className="flex flex-col gap-2">
       {metrics.map((m) => (
         <li
           key={m.metric_slug}
-          className="ciiWinnerItem"
+          className="flex items-center justify-between gap-3"
         >
-          <span className="ciiWinnerMetricName">{m.metric_name}</span>
-          <span className="ciiWinnerBadgeWrap">
+          <span className="text-c3 text-sm">{m.metric_name}</span>
+          <span className="flex items-center gap-2">
             {m.winner_country_slug != null ? (
-              <span className="metaChip ciiWinnerBadge">
+              <Badge variant="trust">
                 {nameBySlug[m.winner_country_slug] ?? m.winner_country_slug}
-              </span>
+              </Badge>
             ) : (
-              <span className="metaChip ciiWinnerTie">—</span>
+              <Badge variant="default">—</Badge>
             )}
             {m.delta != null && (
-              <span className="ciiWinnerDelta">Δ {m.delta.toFixed(1)}</span>
+              <span className="text-c4 text-xs">Δ {m.delta.toFixed(1)}</span>
             )}
           </span>
         </li>

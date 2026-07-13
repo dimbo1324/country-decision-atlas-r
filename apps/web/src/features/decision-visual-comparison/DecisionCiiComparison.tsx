@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  type CiiCountryComparisonResponse,
-  ciiApi,
-} from "../../shared/api/cii";
+import { useQuery } from "@tanstack/react-query";
+import { Kicker, Skeleton } from "@country-decision-atlas/ui";
+import { compareCiiQuery } from "../../entities/decision/api";
 import { CiiComparisonEmptyState } from "./CiiComparisonEmptyState";
 import { CiiComparisonSummary } from "./CiiComparisonSummary";
 import { CiiCompareSpiderChart } from "./CiiCompareSpiderChart";
@@ -24,61 +22,24 @@ export function DecisionCiiComparison({
   locale,
   personaSlug,
 }: Props) {
-  const [data, setData] = useState<CiiCountryComparisonResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (countrySlugs.length !== 2) {
-      setLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    setData(null);
-
-    ciiApi
-      .compareCountriesCii({
-        countries: countrySlugs,
-        scenario: scenarioSlug,
-        locale,
-        persona: personaSlug,
-      })
-      .then((res) => {
-        if (!cancelled) {
-          setData(res);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError("Не удалось загрузить данные CII для сравнения");
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [countrySlugs, scenarioSlug, locale, personaSlug]);
+  const { data, isPending, isError } = useQuery(
+    compareCiiQuery({
+      countries: countrySlugs,
+      scenario: scenarioSlug,
+      locale,
+      persona: personaSlug,
+    }),
+  );
 
   if (countrySlugs.length !== 2) return null;
 
-  if (loading) {
-    return (
-      <div className="ciiCompareBlock">
-        <p className="ciiCompareLoadingText">Загрузка CII-сравнения…</p>
-      </div>
-    );
+  if (isPending) {
+    return <Skeleton lines={4} />;
   }
 
-  if (error || data == null) {
+  if (isError || data == null) {
     return (
-      <div className="ciiCompareBlock">
-        <CiiComparisonEmptyState message={error ?? undefined} />
-      </div>
+      <CiiComparisonEmptyState message="Не удалось загрузить данные CII для сравнения" />
     );
   }
 
@@ -87,40 +48,36 @@ export function DecisionCiiComparison({
   const { formula_version, aggregation_method } = data;
 
   if (countries.length === 0 || metrics.length === 0) {
-    return (
-      <div className="ciiCompareBlock">
-        <CiiComparisonEmptyState />
-      </div>
-    );
+    return <CiiComparisonEmptyState />;
   }
 
   return (
     <section
-      className="ciiCompareBlock"
+      className="flex flex-col gap-5"
       aria-label="CII сравнение стран"
     >
-      <h3 className="ciiCompareTitle">
-        Сценарные веса CII: {countries.map((c) => c.name).join(" vs ")}
-      </h3>
-      {data.scenario?.title && (
-        <p className="ciiCompareScenarioLabel">
-          Сценарий: {data.scenario.title}
-        </p>
-      )}
-      {data.applied_persona && (
-        <p
-          className="ciiCompareScenarioLabel"
-          data-testid="cii-persona-note"
-        >
-          Персона: {data.applied_persona.name}
-        </p>
-      )}
+      <div className="flex flex-col gap-1">
+        <Kicker>
+          Сценарные веса CII: {countries.map((c) => c.name).join(" vs ")}
+        </Kicker>
+        {data.scenario?.title && (
+          <p className="text-c3 text-sm">Сценарий: {data.scenario.title}</p>
+        )}
+        {data.applied_persona && (
+          <p
+            className="text-c3 text-sm"
+            data-testid="cii-persona-note"
+          >
+            Персона: {data.applied_persona.name}
+          </p>
+        )}
+      </div>
       <CiiComparisonSummary
         countries={countries}
         formulaVersion={formula_version}
         aggregationMethod={aggregation_method}
       />
-      <div className="ciiCompareChartArea">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <CiiCompareSpiderChart
           metrics={metrics}
           countries={countries}

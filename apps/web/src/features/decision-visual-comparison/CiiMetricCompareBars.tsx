@@ -5,20 +5,19 @@ type Props = {
   countries: ComparedCountry[];
 };
 
-const COUNTRY_COLORS = ["#1a6abf", "#b85c00"];
+const COUNTRY_COLOR_CLASS = ["bg-blue", "bg-terra"];
 
 export function CiiMetricCompareBars({ metrics, countries }: Props) {
   return (
-    <div className="ciiCompareBars">
-      <div className="ciiCompareBarsLegend">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-4">
         {countries.map((c, i) => (
           <span
             key={c.slug}
-            className="ciiBarsLegendItem"
+            className="text-c3 flex items-center gap-2 text-xs"
           >
             <span
-              className="ciiBarsLegendDot"
-              style={{ background: COUNTRY_COLORS[i] ?? "#888" }}
+              className={`h-2 w-2 rounded-full ${COUNTRY_COLOR_CLASS[i] ?? "bg-c4"}`}
             />
             {c.name}
           </span>
@@ -27,17 +26,15 @@ export function CiiMetricCompareBars({ metrics, countries }: Props) {
       {metrics.map((m) => (
         <div
           key={m.metric_slug}
-          className="ciiBarRow"
+          className="flex flex-col gap-1"
         >
-          <span className="ciiBarLabel">
+          <span className="font-mono text-c4 flex items-center gap-2 text-[9px] tracking-[0.15em] uppercase">
             {m.metric_name}
             {m.weight != null && (
-              <span className="ciiBarWeight">
-                {Math.round(m.weight * 100)}%
-              </span>
+              <span className="text-c3">{Math.round(m.weight * 100)}%</span>
             )}
           </span>
-          <div className="ciiBarTrack">
+          <div className="flex flex-col gap-1">
             {(m.values ?? []).map((v, i) => {
               const pct =
                 v.effective_value != null
@@ -46,15 +43,12 @@ export function CiiMetricCompareBars({ metrics, countries }: Props) {
               return (
                 <div
                   key={v.country_slug}
-                  className="ciiBarItem"
+                  className="bg-bg4 h-2 w-full"
                   title={`${countries[i]?.name ?? v.country_slug}: ${v.effective_value?.toFixed(1) ?? "—"}`}
                 >
                   <div
-                    className="ciiBarFill"
-                    style={{
-                      width: `${pct}%`,
-                      background: COUNTRY_COLORS[i] ?? "#888",
-                    }}
+                    className={`h-full ${COUNTRY_COLOR_CLASS[i] ?? "bg-c4"}`}
+                    style={{ width: `${pct}%` }}
                   />
                 </div>
               );
