@@ -54,73 +54,80 @@ export function CountryCiiBlock({
 
   return (
     <div data-testid="cii-block">
-    <Card
-      accent={overallAccent}
-      interactive={false}
-      className="flex flex-col gap-6"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <ProgressRing
-          value={Math.round(cii.overall_score)}
-          label="CII из 100"
-          size={128}
-          accent={overallAccent}
-          active
-          mode="static"
-        />
-        <div className="flex flex-1 flex-wrap items-center gap-2">
-          <Badge variant="trust">
-            Уверенность: {cii.confidence ?? "н/д"}
-          </Badge>
-          <Badge variant={cii.drift != null && cii.drift > 0 ? "positive" : "default"}>
-            Динамика: {cii.drift != null ? `${cii.drift > 0 ? "+" : ""}${cii.drift.toFixed(1)}` : "н/д"}
-          </Badge>
-          <Badge variant="default">Версия {cii.version}</Badge>
-          {cii.aggregation_method && (
-            <Badge variant="default">{cii.aggregation_method}</Badge>
-          )}
-        </div>
-        <AIExplainNumberButton
-          numberType="cii_score"
-          countrySlug={countrySlug}
-          value={cii.overall_score}
-          locale={locale}
-        />
-      </div>
-
-      {metrics.length > 0 && (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="aspect-square w-full max-w-[320px] justify-self-center">
-            <RadarChart
-              axes={metrics.map(metricLabel)}
-              series={[
-                {
-                  label: "CII",
-                  values: metrics.map((m) => m.score),
-                  accent: overallAccent,
-                },
-              ]}
-              active
-              mode="static"
-            />
-          </div>
-          <CriteriaWeightBars
+      <Card
+        accent={overallAccent}
+        interactive={false}
+        className="flex flex-col gap-6"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <ProgressRing
+            value={Math.round(cii.overall_score)}
+            label="CII из 100"
+            size={128}
+            accent={overallAccent}
             active
-            criteria={metrics.map((m) => ({
-              label: metricLabel(m),
-              contribution: Math.round(m.score - 50),
-              accent: scoreAccent(m.score),
-            }))}
+            mode="static"
+          />
+          <div className="flex flex-1 flex-wrap items-center gap-2">
+            <Badge variant="trust">
+              Уверенность: {cii.confidence ?? "н/д"}
+            </Badge>
+            <Badge
+              variant={
+                cii.drift != null && cii.drift > 0 ? "positive" : "default"
+              }
+            >
+              Динамика:{" "}
+              {cii.drift != null
+                ? `${cii.drift > 0 ? "+" : ""}${cii.drift.toFixed(1)}`
+                : "н/д"}
+            </Badge>
+            <Badge variant="default">Версия {cii.version}</Badge>
+            {cii.aggregation_method && (
+              <Badge variant="default">{cii.aggregation_method}</Badge>
+            )}
+          </div>
+          <AIExplainNumberButton
+            numberType="cii_score"
+            countrySlug={countrySlug}
+            value={cii.overall_score}
+            locale={locale}
           />
         </div>
-      )}
 
-      <p className="text-c4 font-mono text-[9px] leading-relaxed tracking-[0.05em] uppercase">
-        CII — составной индекс: верховенство права, экон. свобода, полит.
-        стабильность, безопасность, антикоррупция, цифровой доступ. Выше =
-        лучше.
-      </p>
-    </Card>
+        {metrics.length > 0 && (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="aspect-square w-full max-w-[320px] justify-self-center">
+              <RadarChart
+                axes={metrics.map(metricLabel)}
+                series={[
+                  {
+                    label: "CII",
+                    values: metrics.map((m) => m.score),
+                    accent: overallAccent,
+                  },
+                ]}
+                active
+                mode="static"
+              />
+            </div>
+            <CriteriaWeightBars
+              active
+              criteria={metrics.map((m) => ({
+                label: metricLabel(m),
+                contribution: Math.round(m.score - 50),
+                accent: scoreAccent(m.score),
+              }))}
+            />
+          </div>
+        )}
+
+        <p className="text-c4 font-mono text-[9px] leading-relaxed tracking-[0.05em] uppercase">
+          CII — составной индекс: верховенство права, экон. свобода, полит.
+          стабильность, безопасность, антикоррупция, цифровой доступ. Выше =
+          лучше.
+        </p>
+      </Card>
     </div>
   );
 }

@@ -57,7 +57,12 @@ export function CountryRoutesBlock({
           error={
             isApiError(error)
               ? error
-              : { error: { code: "unknown", message: "Маршруты сейчас недоступны." } }
+              : {
+                  error: {
+                    code: "unknown",
+                    message: "Маршруты сейчас недоступны.",
+                  },
+                }
           }
         />
       )}

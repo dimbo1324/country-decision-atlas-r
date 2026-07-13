@@ -108,7 +108,9 @@ function QuestionCard({
       className="flex flex-col gap-4"
     >
       <div className="flex items-center justify-between gap-2">
-        <h5 className="font-display text-base font-semibold">{question.title}</h5>
+        <h5 className="font-display text-base font-semibold">
+          {question.title}
+        </h5>
         <Badge variant="default">{question.status}</Badge>
       </div>
       <p className="text-c3 text-sm leading-relaxed">{question.body}</p>
@@ -120,7 +122,9 @@ function QuestionCard({
           >
             <p className="text-c2 text-sm">{answer.body}</p>
             <div className="flex flex-wrap gap-2">
-              {answer.source_backed && <Badge variant="trust">source-backed</Badge>}
+              {answer.source_backed && (
+                <Badge variant="trust">source-backed</Badge>
+              )}
               {answer.consensus?.controversial && (
                 <Badge variant="warning">controversial</Badge>
               )}
@@ -151,7 +155,10 @@ function QuestionCard({
                   } catch (error: unknown) {
                     onStatus({
                       kind: "error",
-                      message: errorMessage(error, "Vote could not be submitted."),
+                      message: errorMessage(
+                        error,
+                        "Vote could not be submitted.",
+                      ),
                     });
                   }
                 }}
@@ -178,7 +185,10 @@ function QuestionCard({
                   } catch (error: unknown) {
                     onStatus({
                       kind: "error",
-                      message: errorMessage(error, "Vote could not be submitted."),
+                      message: errorMessage(
+                        error,
+                        "Vote could not be submitted.",
+                      ),
                     });
                   }
                 }}
@@ -220,7 +230,10 @@ export function CommunityCountryBlock({
   );
   const questions = questionsData?.items ?? [];
 
-  const [status, setStatus] = useState<StatusState>({ kind: "idle", message: "" });
+  const [status, setStatus] = useState<StatusState>({
+    kind: "idle",
+    message: "",
+  });
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
   const [reportType, setReportType] = useState<ReportType>("outdated");
@@ -329,8 +342,8 @@ export function CommunityCountryBlock({
             Community intelligence
           </h3>
           <p className="text-c3 text-sm leading-relaxed">
-            Human experience is separated from trusted source-backed content
-            and appears publicly only after moderation.
+            Human experience is separated from trusted source-backed content and
+            appears publicly only after moderation.
           </p>
         </div>
         <div data-testid="community-review-badge">
@@ -345,7 +358,11 @@ export function CommunityCountryBlock({
 
       {status.kind !== "idle" && (
         <p
-          className={status.kind === "error" ? "text-terra3 text-sm" : "text-sage3 text-sm"}
+          className={
+            status.kind === "error"
+              ? "text-terra3 text-sm"
+              : "text-sage3 text-sm"
+          }
           role={status.kind === "error" ? "alert" : "status"}
           data-testid="community-status"
         >
@@ -469,8 +486,8 @@ export function CommunityCountryBlock({
           >
             <Kicker accent="plum">Reality gap preview</Kicker>
             <p className="text-c4 text-xs">
-              Limited community input only; no trusted ERG score is
-              calculated yet.
+              Limited community input only; no trusted ERG score is calculated
+              yet.
             </p>
             <form
               className="flex flex-col gap-3"

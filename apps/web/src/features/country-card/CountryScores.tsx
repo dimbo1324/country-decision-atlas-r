@@ -1,4 +1,9 @@
-import { Badge, Card, GaugeArc, scoreLabelStyle } from "@country-decision-atlas/ui";
+import {
+  Badge,
+  Card,
+  GaugeArc,
+  scoreLabelStyle,
+} from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";

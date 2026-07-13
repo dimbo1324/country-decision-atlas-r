@@ -1,4 +1,8 @@
-import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   communityApi,
   type CommunityAnswerCreate,
@@ -11,7 +15,8 @@ import {
 export function communityQuestionsQuery(countrySlug: string) {
   return queryOptions({
     queryKey: ["community", "questions", countrySlug] as const,
-    queryFn: () => communityApi.listCommunityQuestions({ country_slug: countrySlug }),
+    queryFn: () =>
+      communityApi.listCommunityQuestions({ country_slug: countrySlug }),
     staleTime: 30_000,
   });
 }

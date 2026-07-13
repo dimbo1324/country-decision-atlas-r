@@ -62,7 +62,9 @@ test.describe("Country routes block", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     const card = page.getByTestId("route-card").first();
-    await expect(card.getByTestId("route-eligibility-badge").first()).toBeVisible();
+    await expect(
+      card.getByTestId("route-eligibility-badge").first(),
+    ).toBeVisible();
   });
 
   test("route card has detail link", async ({ page }) => {

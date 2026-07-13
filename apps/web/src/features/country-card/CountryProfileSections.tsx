@@ -44,7 +44,9 @@ export function CountryProfileSections({
 
   const items: AccordionItem[] = filled.map((s) => ({
     title: s.label,
-    content: <p className="text-c3 text-sm leading-relaxed">{profile[s.key]}</p>,
+    content: (
+      <p className="text-c3 text-sm leading-relaxed">{profile[s.key]}</p>
+    ),
   }));
 
   return (

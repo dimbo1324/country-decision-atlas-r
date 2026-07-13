@@ -18,28 +18,28 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
 
   return (
     <div data-testid="what-changed-item">
-    <Card
-      interactive={false}
-      className="flex flex-col gap-2"
-    >
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="font-display text-base font-semibold">{item.title}</h3>
-        <Badge variant="default">{occurredAt}</Badge>
-      </div>
-      <p className="text-c3 text-sm leading-relaxed">{item.summary}</p>
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="default">
-          {IMPORTANCE_LABELS[item.importance] ?? item.importance}
-        </Badge>
-        <span className="text-c4 text-xs">{item.source}</span>
-      </div>
-      <Link
-        href={item.path}
-        className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
+      <Card
+        interactive={false}
+        className="flex flex-col gap-2"
       >
-        Подробнее →
-      </Link>
-    </Card>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-display text-base font-semibold">{item.title}</h3>
+          <Badge variant="default">{occurredAt}</Badge>
+        </div>
+        <p className="text-c3 text-sm leading-relaxed">{item.summary}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="default">
+            {IMPORTANCE_LABELS[item.importance] ?? item.importance}
+          </Badge>
+          <span className="text-c4 text-xs">{item.source}</span>
+        </div>
+        <Link
+          href={item.path}
+          className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
+        >
+          Подробнее →
+        </Link>
+      </Card>
     </div>
   );
 }

@@ -26,6 +26,11 @@ const SCORE_LABEL_STYLE: Record<ScoreLabel, ScoreLabelStyle> = {
 /** Single source of truth for the weak…excellent 5-band score colour
  * semantics — used by the country dossier's scenario scores and the
  * comparison matrix so both surfaces agree on what "strong" looks like. */
-export function scoreLabelStyle(label: string | null | undefined): ScoreLabelStyle {
-  return SCORE_LABEL_STYLE[(label as ScoreLabel) ?? "missing"] ?? SCORE_LABEL_STYLE.missing;
+export function scoreLabelStyle(
+  label: string | null | undefined,
+): ScoreLabelStyle {
+  return (
+    SCORE_LABEL_STYLE[(label as ScoreLabel) ?? "missing"] ??
+    SCORE_LABEL_STYLE.missing
+  );
 }
