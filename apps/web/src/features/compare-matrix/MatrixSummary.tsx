@@ -91,9 +91,7 @@ export function MatrixSummary({ countries, scenarios, cells }: Props) {
           {countryBest.map(({ country, best }) => (
             <li key={country.slug}>
               <span className="text-c4">{country.name}:</span>{" "}
-              <span className="text-c1 font-semibold">
-                {best?.name ?? "—"}
-              </span>
+              <span className="text-c1 font-semibold">{best?.name ?? "—"}</span>
             </li>
           ))}
         </ul>

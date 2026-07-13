@@ -31,8 +31,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
             </Badge>
             {passport.expires_at && (
               <Badge variant="default">
-                Истекает:{" "}
-                {new Date(passport.expires_at).toLocaleString("ru")}
+                Истекает: {new Date(passport.expires_at).toLocaleString("ru")}
               </Badge>
             )}
             <Badge variant="trust">{passport.status}</Badge>

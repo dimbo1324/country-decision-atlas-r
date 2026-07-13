@@ -84,30 +84,32 @@ export function DecisionResults({ response }: DecisionResultsProps) {
 
       {winner && (
         <div data-testid="decision-winner-block">
-        <Card
-          accent="gold"
-          interactive={false}
-          className="flex flex-col gap-2"
-        >
-          <Kicker>Рекомендуемый вариант</Kicker>
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-display text-2xl font-bold">
-              {winner.country.name}
-            </span>
-            <span className="font-display text-gold3 text-2xl font-bold">
-              {formatScore(winner.persona_adjusted_score ?? winner.score)}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="default">{winner.score_label}</Badge>
-            {winner.confidence && (
-              <ConfidenceBadge confidence={winner.confidence} />
+          <Card
+            accent="gold"
+            interactive={false}
+            className="flex flex-col gap-2"
+          >
+            <Kicker>Рекомендуемый вариант</Kicker>
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="font-display text-2xl font-bold">
+                {winner.country.name}
+              </span>
+              <span className="font-display text-gold3 text-2xl font-bold">
+                {formatScore(winner.persona_adjusted_score ?? winner.score)}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="default">{winner.score_label}</Badge>
+              {winner.confidence && (
+                <ConfidenceBadge confidence={winner.confidence} />
+              )}
+            </div>
+            {winner.summary && (
+              <p className="text-c3 text-sm leading-relaxed">
+                {winner.summary}
+              </p>
             )}
-          </div>
-          {winner.summary && (
-            <p className="text-c3 text-sm leading-relaxed">{winner.summary}</p>
-          )}
-        </Card>
+          </Card>
         </div>
       )}
 

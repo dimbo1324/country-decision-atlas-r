@@ -389,9 +389,11 @@ function DecisionFormInner() {
         {!runDecision.isPending && resolvedRunError !== null && (
           <ErrorState error={resolvedRunError} />
         )}
-        {!runDecision.isPending && resolvedRunError === null && result === null && (
-          <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
-        )}
+        {!runDecision.isPending &&
+          resolvedRunError === null &&
+          result === null && (
+            <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
+          )}
         {result !== null && <DecisionResults response={result} />}
         {result !== null && lastDecisionRequest !== null && (
           <DecisionPassportActions

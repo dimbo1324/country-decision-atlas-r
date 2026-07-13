@@ -25,7 +25,9 @@ export function CompareMatrixView({ locale }: Props) {
   }
 
   if (isError || !data) {
-    return <MatrixEmptyState message="Не удалось загрузить матрицу сравнения." />;
+    return (
+      <MatrixEmptyState message="Не удалось загрузить матрицу сравнения." />
+    );
   }
 
   const countries = data.countries ?? [];

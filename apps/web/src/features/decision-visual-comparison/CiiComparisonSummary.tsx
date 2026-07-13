@@ -27,9 +27,7 @@ export function CiiComparisonSummary({
                 {c.cii_score.toFixed(1)}
               </span>
             ) : (
-              <span className="font-display text-c4 text-2xl font-bold">
-                —
-              </span>
+              <span className="font-display text-c4 text-2xl font-bold">—</span>
             )}
             {c.cii_confidence != null && (
               <Badge variant="trust">{c.cii_confidence}</Badge>

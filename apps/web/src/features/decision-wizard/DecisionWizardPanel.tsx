@@ -121,119 +121,121 @@ export function DecisionWizardPanel({
 
   return (
     <div data-testid="decision-wizard">
-    <Card
-      interactive={false}
-      className="flex flex-col gap-4"
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <Kicker>{labels.title}</Kicker>
-          <p className="text-c3 text-sm">{labels.hint}</p>
-        </div>
-        <Button
-          variant="ghost"
-          aria-expanded={isOpen}
-          onClick={toggleOpen}
-          data-testid="decision-wizard-toggle"
-        >
-          {isOpen ? labels.close : labels.open}
-        </Button>
-      </div>
-
-      {isOpen && (
-        <div
-          className="flex flex-col gap-6"
-          data-testid="decision-wizard-panel"
-        >
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <DecisionWizardStep
-              label={labels.goal}
-              value={answers.primary_goal}
-              options={labels.primaryGoalOptions}
-              onChange={(value) => updateAnswer("primary_goal", value)}
-              testId="decision-wizard-primary-goal"
-            />
-            <DecisionWizardStep
-              label={labels.budget}
-              value={answers.budget_level}
-              options={labels.budgetOptions}
-              onChange={(value) => updateAnswer("budget_level", value)}
-              testId="decision-wizard-budget"
-            />
-            <DecisionWizardStep
-              label={labels.family}
-              value={answers.family_status}
-              options={labels.familyOptions}
-              onChange={(value) => updateAnswer("family_status", value)}
-              testId="decision-wizard-family"
-            />
-            <DecisionWizardStep
-              label={labels.timeframe}
-              value={answers.timeframe}
-              options={labels.timeframeOptions}
-              onChange={(value) => updateAnswer("timeframe", value)}
-              testId="decision-wizard-timeframe"
-            />
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <Kicker>{labels.title}</Kicker>
+            <p className="text-c3 text-sm">{labels.hint}</p>
           </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <DecisionWizardStep
-              label={labels.workPriority}
-              value={answers.work_priority}
-              options={labels.levelOptions}
-              onChange={(value) => updateAnswer("work_priority", value)}
-              testId="decision-wizard-work_priority"
-            />
-            <DecisionWizardStep
-              label={labels.safetyPriority}
-              value={answers.safety_priority}
-              options={labels.levelOptions}
-              onChange={(value) => updateAnswer("safety_priority", value)}
-              testId="decision-wizard-safety_priority"
-            />
-            <DecisionWizardStep
-              label={labels.citizenshipPriority}
-              value={answers.citizenship_priority}
-              options={labels.levelOptions}
-              onChange={(value) => updateAnswer("citizenship_priority", value)}
-              testId="decision-wizard-citizenship_priority"
-            />
-            <DecisionWizardStep
-              label={labels.businessPriority}
-              value={answers.business_priority}
-              options={labels.levelOptions}
-              onChange={(value) => updateAnswer("business_priority", value)}
-              testId="decision-wizard-business_priority"
-            />
-          </div>
-
           <Button
-            onClick={handleResolve}
-            disabled={resolveWizard.isPending}
-            aria-busy={resolveWizard.isPending}
-            data-testid="decision-wizard-apply"
+            variant="ghost"
+            aria-expanded={isOpen}
+            onClick={toggleOpen}
+            data-testid="decision-wizard-toggle"
           >
-            {resolveWizard.isPending ? labels.applying : labels.apply}
+            {isOpen ? labels.close : labels.open}
           </Button>
-
-          {resolveWizard.isError && (
-            <p
-              role="alert"
-              className="text-terra3 text-sm"
-              data-testid="decision-wizard-error"
-            >
-              {labels.unavailable}
-            </p>
-          )}
-          {recommendation && (
-            <DecisionWizardSummary
-              recommendation={recommendation}
-              labels={labels}
-            />
-          )}
         </div>
-      )}
-    </Card>
+
+        {isOpen && (
+          <div
+            className="flex flex-col gap-6"
+            data-testid="decision-wizard-panel"
+          >
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <DecisionWizardStep
+                label={labels.goal}
+                value={answers.primary_goal}
+                options={labels.primaryGoalOptions}
+                onChange={(value) => updateAnswer("primary_goal", value)}
+                testId="decision-wizard-primary-goal"
+              />
+              <DecisionWizardStep
+                label={labels.budget}
+                value={answers.budget_level}
+                options={labels.budgetOptions}
+                onChange={(value) => updateAnswer("budget_level", value)}
+                testId="decision-wizard-budget"
+              />
+              <DecisionWizardStep
+                label={labels.family}
+                value={answers.family_status}
+                options={labels.familyOptions}
+                onChange={(value) => updateAnswer("family_status", value)}
+                testId="decision-wizard-family"
+              />
+              <DecisionWizardStep
+                label={labels.timeframe}
+                value={answers.timeframe}
+                options={labels.timeframeOptions}
+                onChange={(value) => updateAnswer("timeframe", value)}
+                testId="decision-wizard-timeframe"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <DecisionWizardStep
+                label={labels.workPriority}
+                value={answers.work_priority}
+                options={labels.levelOptions}
+                onChange={(value) => updateAnswer("work_priority", value)}
+                testId="decision-wizard-work_priority"
+              />
+              <DecisionWizardStep
+                label={labels.safetyPriority}
+                value={answers.safety_priority}
+                options={labels.levelOptions}
+                onChange={(value) => updateAnswer("safety_priority", value)}
+                testId="decision-wizard-safety_priority"
+              />
+              <DecisionWizardStep
+                label={labels.citizenshipPriority}
+                value={answers.citizenship_priority}
+                options={labels.levelOptions}
+                onChange={(value) =>
+                  updateAnswer("citizenship_priority", value)
+                }
+                testId="decision-wizard-citizenship_priority"
+              />
+              <DecisionWizardStep
+                label={labels.businessPriority}
+                value={answers.business_priority}
+                options={labels.levelOptions}
+                onChange={(value) => updateAnswer("business_priority", value)}
+                testId="decision-wizard-business_priority"
+              />
+            </div>
+
+            <Button
+              onClick={handleResolve}
+              disabled={resolveWizard.isPending}
+              aria-busy={resolveWizard.isPending}
+              data-testid="decision-wizard-apply"
+            >
+              {resolveWizard.isPending ? labels.applying : labels.apply}
+            </Button>
+
+            {resolveWizard.isError && (
+              <p
+                role="alert"
+                className="text-terra3 text-sm"
+                data-testid="decision-wizard-error"
+              >
+                {labels.unavailable}
+              </p>
+            )}
+            {recommendation && (
+              <DecisionWizardSummary
+                recommendation={recommendation}
+                labels={labels}
+              />
+            )}
+          </div>
+        )}
+      </Card>
     </div>
   );
 }
