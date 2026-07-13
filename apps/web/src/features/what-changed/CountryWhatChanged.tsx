@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import type { LocaleCode } from "../../shared/api/countries";
 import { isApiError } from "../../shared/api/http";
 import { countryWhatChangedQuery } from "../../entities/what-changed/api";
-import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { WhatChangedItemCard } from "./WhatChangedItemCard";
@@ -20,20 +18,12 @@ export function CountryWhatChanged({
   countrySlug,
   locale,
 }: CountryWhatChangedProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isNear = useNearViewport(sectionRef);
+  const { data, error, isPending, isError } = useQuery(
+    countryWhatChangedQuery(countrySlug, locale),
+  );
 
-  const { data, error, isPending, isError } = useQuery({
-    ...countryWhatChangedQuery(countrySlug, locale),
-    enabled: isNear,
-  });
-
-  if (!isNear || isPending) {
-    return (
-      <div ref={sectionRef}>
-        <Skeleton lines={3} />
-      </div>
-    );
+  if (isPending) {
+    return <Skeleton lines={3} />;
   }
 
   if (isError) {

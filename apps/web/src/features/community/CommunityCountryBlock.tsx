@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Badge,
@@ -21,7 +21,6 @@ import {
   useCreateUserStoryRatingMutation,
 } from "../../entities/community/api";
 import { isApiError, type CommunityQuestion } from "../../shared/api";
-import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { EmptyState } from "../../shared/ui/EmptyState";
 
 type CommunityCountryBlockProps = {
@@ -214,14 +213,11 @@ function QuestionCard({
 export function CommunityCountryBlock({
   countrySlug,
 }: CommunityCountryBlockProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isNear = useNearViewport(sectionRef);
   const identityId = useMemo(() => anonymousIdentity("community"), []);
 
-  const { data: questionsData, isPending } = useQuery({
-    ...communityQuestionsQuery(countrySlug),
-    enabled: isNear,
-  });
+  const { data: questionsData, isPending } = useQuery(
+    communityQuestionsQuery(countrySlug),
+  );
   const questions = questionsData?.items ?? [];
 
   const [status, setStatus] = useState<StatusState>({ kind: "idle", message: "" });
@@ -324,7 +320,6 @@ export function CommunityCountryBlock({
 
   return (
     <div
-      ref={sectionRef}
       className="flex flex-col gap-6"
       data-testid="community-country-block"
     >
@@ -356,7 +351,7 @@ export function CommunityCountryBlock({
         </p>
       )}
 
-      {!isNear || isPending ? (
+      {isPending ? (
         <Skeleton lines={4} />
       ) : (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

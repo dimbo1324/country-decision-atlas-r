@@ -1,11 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Badge, ProgressRing, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError, type LocaleCode } from "../../shared/api";
 import { countryTrustQuery } from "../../entities/trust-surface/api";
-import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
@@ -26,23 +24,15 @@ export function TrustSurfaceBlock({
   countrySlug,
   locale,
 }: TrustSurfaceBlockProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isNear = useNearViewport(sectionRef);
-
-  const { data, error, isPending, isError } = useQuery({
-    ...countryTrustQuery(countrySlug, locale),
-    enabled: isNear,
-  });
+  const { data, error, isPending, isError } = useQuery(
+    countryTrustQuery(countrySlug, locale),
+  );
 
   const notComputed =
     isError && isApiError(error) && error.error?.code === "trust_not_found";
 
-  if (!isNear || isPending) {
-    return (
-      <div ref={sectionRef}>
-        <Skeleton lines={3} />
-      </div>
-    );
+  if (isPending) {
+    return <Skeleton lines={3} />;
   }
 
   if (isError && !notComputed) {

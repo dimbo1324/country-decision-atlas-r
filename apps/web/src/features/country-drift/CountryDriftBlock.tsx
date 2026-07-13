@@ -1,11 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@country-decision-atlas/ui";
 import { isApiError, type LocaleCode } from "../../shared/api";
 import { countryDriftQuery } from "../../entities/country-drift/api";
-import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -21,20 +19,12 @@ export function CountryDriftBlock({
   countrySlug,
   locale,
 }: CountryDriftBlockProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isNear = useNearViewport(sectionRef);
+  const { data, error, isPending, isError } = useQuery(
+    countryDriftQuery(countrySlug, locale),
+  );
 
-  const { data, error, isPending, isError } = useQuery({
-    ...countryDriftQuery(countrySlug, locale),
-    enabled: isNear,
-  });
-
-  if (!isNear || isPending) {
-    return (
-      <div ref={sectionRef}>
-        <Skeleton lines={3} />
-      </div>
-    );
+  if (isPending) {
+    return <Skeleton lines={3} />;
   }
 
   if (isError) {

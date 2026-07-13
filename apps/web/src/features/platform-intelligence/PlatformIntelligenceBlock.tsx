@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api";
 import type { LocaleCode } from "../../shared/api/countries";
 import { countryPlatformMetricsQuery } from "../../entities/platform-intelligence/api";
-import { useNearViewport } from "../../shared/lib/useNearViewport";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { PlatformMetricCard } from "./PlatformMetricCard";
 import { PlatformMetricEmptyState } from "./PlatformMetricEmptyState";
@@ -20,20 +18,12 @@ export function PlatformIntelligenceBlock({
   countrySlug,
   locale,
 }: PlatformIntelligenceBlockProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isNear = useNearViewport(sectionRef);
+  const { data, error, isPending, isError } = useQuery(
+    countryPlatformMetricsQuery(countrySlug, locale),
+  );
 
-  const { data, error, isPending, isError } = useQuery({
-    ...countryPlatformMetricsQuery(countrySlug, locale),
-    enabled: isNear,
-  });
-
-  if (!isNear || isPending) {
-    return (
-      <div ref={sectionRef}>
-        <Skeleton lines={4} />
-      </div>
-    );
+  if (isPending) {
+    return <Skeleton lines={4} />;
   }
 
   if (isError) {

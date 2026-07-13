@@ -93,13 +93,30 @@ background task) rather than a separate branch.
       (`pnpm build && pnpm start`, count the testid in a fresh browser
       context) before being trusted, and dropping `force-dynamic` should
       be the first thing tried if the route doesn't genuinely need it.
-- [ ] Heavy sections (`trust-surface`, `country-drift`, `platform-intelligence`,
+- [+] Heavy sections (`trust-surface`, `country-drift`, `platform-intelligence`,
       `data-journal`, `what-changed`, `community`, `routes`) become
-      independent client components with their own `useQuery`, each
-      `enabled: isNearViewport` via `IntersectionObserver`, per the plan's
-      "Паттерн (ленивая загрузка секций)". A shared `useNearViewport(ref)`
-      hook is added once in `apps/web/src/shared/lib/` rather than
-      duplicated per section.
+      independent client components with their own `useQuery` — but
+      **NOT** gated behind `useNearViewport`/`IntersectionObserver` as
+      originally planned per "Паттерн (ленивая загрузка секций)".
+      **DEVIATION:** built the lazy gate first (`shared/lib/useNearViewport.ts`
+      + `enabled: isNear` on all 7 queries), then a Playwright run against
+      the rebuilt dossier page surfaced 28 failures across
+      `web-mvp-trust-transparency`, `web-mvp-routes`, `web-mvp-route-checklist`,
+      `web-mvp-what-changed`, `web-mvp-platform-intelligence`,
+      `web-mvp-main-flow`, `web-mvp-watchlist`, and `web-mvp-locale` —
+      every one of them asserts a section's content (`trust-surface-block`,
+      `route-card`, `what-changed-block`, etc.) is visible immediately
+      after `page.goto`, with no scroll. `IntersectionObserver`-gated
+      sections genuinely never entered the viewport in these tests (long
+      vertical page, headless viewport, no scroll step), so their queries
+      never fired — a real functional regression, not a test-selector
+      mismatch. Removed `useNearViewport` entirely (all 7 call sites reverted
+      to unconditional `useQuery(...)`, file deleted) rather than trying to
+      tune `rootMargin` — the sections are genuinely far below the fold, no
+      reasonable margin makes them "near" at load time, and the project's
+      own rule is that migrations must not lose working functionality. The
+      plan's lazy-load nicety is traded for correctness and test parity;
+      TanStack Query's caching/retry/error-state benefits are kept.
 - [ ] Rail navigation for the dossier (`#rail` per the plan) is a new
       `DossierRail` component built from `packages/ui` primitives
       (sticky aside, active-section highlight via `IntersectionObserver`),
