@@ -24,6 +24,17 @@ test.describe("MVP page availability", () => {
     await expectNoAppCrash(page);
   });
 
+  test("/countries watchlist star prompts login when signed out", async ({
+    page,
+  }) => {
+    await page.goto(e2eRoutes.countries);
+    await expectHasMainHeading(page, /карточки стран для подбора/i);
+    await expect(
+      page.getByTestId("watchlist-star-login-required").first(),
+    ).toBeVisible();
+    await expectNoAppCrash(page);
+  });
+
   test("/countries/russia?locale=en opens", async ({ page }) => {
     await page.goto(e2eRoutes.country("russia", "en"));
     await expectHasMainHeading(page, /russia/i);

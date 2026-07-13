@@ -54,7 +54,9 @@
     "paletteTitle": "Quick jump",
     "paletteEmpty": "No results found",
     "sectionSections": "Sections",
-    "sectionActions": "Actions"
+    "sectionActions": "Actions",
+    "sectionResults": "Results",
+    "searching": "Searching…"
   },
   "error": {
     "title": "Something went wrong",

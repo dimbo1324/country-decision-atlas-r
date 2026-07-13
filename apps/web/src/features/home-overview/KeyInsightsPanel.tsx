@@ -1,48 +1,64 @@
-import Link from "next/link";
+import { Badge, Card, type BadgeVariant } from "@country-decision-atlas/ui";
+import { Link } from "../../i18n/navigation";
 import type { HomeKeyInsight } from "../../shared/api/home";
 
-const severityLabels: Record<string, string> = {
+const SEVERITY_LABELS: Record<string, string> = {
   info: "Информация",
   positive: "Сильная сторона",
   warning: "Требует внимания",
   risk: "Риск",
 };
 
+const SEVERITY_VARIANT: Record<string, BadgeVariant> = {
+  info: "info",
+  positive: "positive",
+  warning: "warning",
+  risk: "negative",
+};
+
 export function KeyInsightsPanel({ insights }: { insights: HomeKeyInsight[] }) {
   return (
-    <section
-      className="homeOverviewSection"
-      aria-labelledby="home-insights-title"
-    >
-      <div className="homeSectionHeading">
-        <h2 id="home-insights-title">Ключевые выводы</h2>
-      </div>
+    <section aria-labelledby="home-insights-title">
+      <h2
+        id="home-insights-title"
+        className="font-display mb-5 text-2xl font-semibold"
+      >
+        Ключевые выводы
+      </h2>
       <div
-        className="homeKeyInsights"
+        className="flex flex-col gap-3"
         data-testid="home-key-insights"
       >
         {insights.length === 0 ? (
-          <span>Выводы появятся после обновления аналитических данных.</span>
+          <p className="text-c3 text-sm">
+            Выводы появятся после обновления аналитических данных.
+          </p>
         ) : (
           insights.map((insight) => (
-            <article
-              className={`homeInsight homeInsight${capitalize(insight.severity)}`}
+            <Link
               key={`${insight.kind}:${insight.target_url}`}
+              href={insight.target_url}
             >
-              <span>
-                {severityLabels[insight.severity] ?? insight.severity}
-              </span>
-              <h3>{insight.title}</h3>
-              <p>{insight.summary}</p>
-              <Link href={insight.target_url}>Подробнее</Link>
-            </article>
+              <Card
+                interactive={false}
+                className="flex flex-col gap-2"
+              >
+                <Badge
+                  variant={SEVERITY_VARIANT[insight.severity] ?? "default"}
+                >
+                  {SEVERITY_LABELS[insight.severity] ?? insight.severity}
+                </Badge>
+                <h3 className="font-display text-base font-semibold">
+                  {insight.title}
+                </h3>
+                <p className="text-c3 text-sm leading-relaxed">
+                  {insight.summary}
+                </p>
+              </Card>
+            </Link>
           ))
         )}
       </div>
     </section>
   );
-}
-
-function capitalize(value: string) {
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }

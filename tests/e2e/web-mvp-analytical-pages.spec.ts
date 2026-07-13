@@ -212,7 +212,7 @@ test.describe("accessibility semantics", () => {
   }) => {
     await page.goto("/countries");
     await expect(page.locator("h1")).toBeVisible();
-    const cardLinks = page.getByRole("link", { name: /карточка страны/i });
+    const cardLinks = page.getByRole("link", { name: /открыть досье/i });
     await expect(cardLinks.first()).toBeVisible();
   });
 

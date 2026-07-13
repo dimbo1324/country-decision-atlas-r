@@ -1,7 +1,7 @@
 import NextLink from "next/link";
+import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { SearchResultItem } from "../../shared/api/search";
-import { Badge } from "../../shared/ui/Badge";
 
 const ENTITY_TYPE_LABELS: Record<SearchResultItem["entity_type"], string> = {
   country: "Страна",
@@ -21,36 +21,31 @@ function stripHighlightTags(snippet: string): string {
 
 export function SearchResultCard({ item }: { item: SearchResultItem }) {
   const isExternalPath = !item.path.startsWith("/");
+  const LinkComponent = isExternalPath ? NextLink : Link;
 
   return (
-    <div
-      className="searchResultCard"
-      data-testid="search-result-card"
-    >
-      <div className="searchResultCardHeader">
-        <Badge variant="info">{ENTITY_TYPE_LABELS[item.entity_type]}</Badge>
-        {item.country_slug && (
-          <Badge variant="default">{item.country_slug}</Badge>
-        )}
-      </div>
-      {isExternalPath ? (
-        <NextLink
+    <div data-testid="search-result-card">
+      <Card
+        interactive={false}
+        className="flex flex-col gap-2"
+      >
+        <div className="flex items-center gap-2">
+          <Badge variant="info">{ENTITY_TYPE_LABELS[item.entity_type]}</Badge>
+          {item.country_slug && (
+            <Badge variant="default">{item.country_slug}</Badge>
+          )}
+        </div>
+        <LinkComponent
           href={item.path}
-          className="searchResultTitle"
+          className="font-display text-gold3 hover:text-gold text-base font-semibold transition-colors duration-300"
           data-testid="search-result-link"
         >
           {item.title}
-        </NextLink>
-      ) : (
-        <Link
-          href={item.path}
-          className="searchResultTitle"
-          data-testid="search-result-link"
-        >
-          {item.title}
-        </Link>
-      )}
-      <p className="searchResultSnippet">{stripHighlightTags(item.snippet)}</p>
+        </LinkComponent>
+        <p className="text-c3 text-sm leading-relaxed">
+          {stripHighlightTags(item.snippet)}
+        </p>
+      </Card>
     </div>
   );
 }

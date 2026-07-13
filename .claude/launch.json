@@ -33,7 +33,10 @@
         "--port",
         "8000"
       ],
-      "port": 8000
+      "port": 8000,
+      "env": {
+        "APP_ENV": "local"
+      }
     },
     {
       "name": "notifier",

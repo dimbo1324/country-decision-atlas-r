@@ -1,17 +1,15 @@
 "use client";
 
-import { useAppLocale } from "../../shared/lib/useAppLocale";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "../../i18n/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ErrorState, LoadingState } from "@country-decision-atlas/ui";
+import { parseAsString, useQueryState } from "nuqs";
+import { Suspense } from "react";
 import {
-  countriesApi,
-  type CountryListResponse,
-} from "../../shared/api/countries";
-import { isApiError } from "../../shared/api/http";
-import { searchApi, type SearchResponse } from "../../shared/api/search";
-import { ErrorState } from "../../shared/ui/ErrorState";
-import { LoadingState } from "../../shared/ui/LoadingState";
+  COUNTRY_CATALOG_PAGE_SIZE,
+  countryListQuery,
+} from "../../entities/country/api";
+import { searchQuery } from "../../entities/search/api";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { SearchFilters } from "./SearchFilters";
 import { SearchResultCard } from "./SearchResultCard";
 
@@ -20,132 +18,80 @@ function parseTypes(typesParam: string): string[] {
 }
 
 function SearchViewInner() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const locale = useAppLocale();
-  const q = searchParams.get("q") ?? "";
-  const typesParam = searchParams.get("types") ?? "";
-  const countrySlugParam = searchParams.get("country_slug") ?? "";
-
-  const [inputValue, setInputValue] = useState(q);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>(() =>
-    parseTypes(typesParam),
+  const [q, setQ] = useQueryState("q", parseAsString.withDefault(""));
+  const [typesParam, setTypesParam] = useQueryState(
+    "types",
+    parseAsString.withDefault(""),
   );
-  const [countrySlug, setCountrySlug] = useState(countrySlugParam);
-  const [result, setResult] = useState<SearchResponse | null>(null);
-  const [countries, setCountries] = useState<CountryListResponse["items"]>([]);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [countrySlug, setCountrySlug] = useQueryState(
+    "country_slug",
+    parseAsString.withDefault(""),
+  );
+  const selectedTypes = parseTypes(typesParam);
+  const trimmedQuery = q.trim();
 
-  useEffect(() => {
-    setInputValue(q);
-  }, [q]);
+  const { data: countries } = useQuery({
+    ...countryListQuery(locale, { limit: COUNTRY_CATALOG_PAGE_SIZE }),
+  });
 
-  useEffect(() => {
-    setSelectedTypes(parseTypes(typesParam));
-  }, [typesParam]);
-
-  useEffect(() => {
-    setCountrySlug(countrySlugParam);
-  }, [countrySlugParam]);
-
-  useEffect(() => {
-    countriesApi
-      .listCountries({ locale, limit: 100 })
-      .then((response) => setCountries(response.items))
-      .catch(() => setCountries([]));
-  }, [locale]);
-
-  useEffect(() => {
-    if (!q.trim()) {
-      setResult(null);
-      setError(null);
-      setIsLoading(false);
-      return;
-    }
-    let active = true;
-    setIsLoading(true);
-    setError(null);
-    searchApi
-      .search({
-        q,
-        locale,
-        types: selectedTypes.length > 0 ? selectedTypes.join(",") : undefined,
-        countrySlug: countrySlug || undefined,
-      })
-      .then((response) => {
-        if (active) setResult(response);
-      })
-      .catch((err: unknown) => {
-        if (active) {
-          setResult(null);
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [q, locale, selectedTypes, countrySlug]);
-
-  function pushParams(next: URLSearchParams) {
-    router.push(`/search?${next.toString()}`);
-  }
+  const {
+    data: result,
+    isFetching,
+    isError,
+  } = useQuery({
+    ...searchQuery({
+      q: trimmedQuery,
+      locale,
+      types: selectedTypes.length > 0 ? selectedTypes.join(",") : undefined,
+      countrySlug: countrySlug || undefined,
+    }),
+    enabled: trimmedQuery.length > 0,
+  });
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const next = new URLSearchParams(searchParams.toString());
-    const trimmed = inputValue.trim();
-    if (trimmed) next.set("q", trimmed);
-    else next.delete("q");
-    pushParams(next);
+    const form = new FormData(event.currentTarget);
+    const nextQuery = String(form.get("q") ?? "").trim();
+    void setQ(nextQuery || null);
   }
 
   function handleToggleType(type: string) {
     const nextTypes = selectedTypes.includes(type)
       ? selectedTypes.filter((item) => item !== type)
       : [...selectedTypes, type];
-    setSelectedTypes(nextTypes);
-    const next = new URLSearchParams(searchParams.toString());
-    if (nextTypes.length > 0) next.set("types", nextTypes.join(","));
-    else next.delete("types");
-    pushParams(next);
+    void setTypesParam(nextTypes.length > 0 ? nextTypes.join(",") : null);
   }
 
   function handleCountryChange(nextCountrySlug: string) {
-    setCountrySlug(nextCountrySlug);
-    const next = new URLSearchParams(searchParams.toString());
-    if (nextCountrySlug) next.set("country_slug", nextCountrySlug);
-    else next.delete("country_slug");
-    pushParams(next);
+    void setCountrySlug(nextCountrySlug || null);
   }
 
   const items = result?.items ?? [];
 
   return (
     <div
-      className="searchPageContainer"
+      className="flex flex-col gap-6"
       data-testid="search-page"
     >
       <form
-        className="searchPageForm"
+        className="border-warm flex border"
         onSubmit={handleSubmit}
         data-testid="search-page-form"
       >
         <input
           type="search"
-          className="searchBoxInput"
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
+          name="q"
+          defaultValue={q}
+          key={q}
+          className="text-c1 placeholder:text-c4 font-body w-full bg-transparent px-4 py-3 text-sm outline-none"
           placeholder="Поиск по платформе…"
           aria-label="Поиск по платформе"
           data-testid="search-page-input"
         />
         <button
           type="submit"
-          className="searchBoxSubmit"
+          className="font-mono text-c3 hover:text-gold3 border-warm border-l px-5 py-3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
           data-testid="search-page-submit"
         >
           Найти
@@ -155,46 +101,51 @@ function SearchViewInner() {
       <SearchFilters
         selectedTypes={selectedTypes}
         countrySlug={countrySlug}
-        countries={countries}
+        countries={countries?.items ?? []}
         onToggleType={handleToggleType}
         onCountryChange={handleCountryChange}
       />
 
-      {!q.trim() && (
-        <div
-          className="notice"
+      {!trimmedQuery && (
+        <p
+          className="text-c3 text-sm"
           data-testid="search-prompt"
         >
           Введите запрос, чтобы начать поиск.
-        </div>
+        </p>
       )}
 
-      {q.trim() !== "" && isLoading && <LoadingState message="Идёт поиск…" />}
+      {trimmedQuery !== "" && isFetching && (
+        <LoadingState message="Идёт поиск…" />
+      )}
 
-      {q.trim() !== "" && !isLoading && error !== null && (
+      {trimmedQuery !== "" && !isFetching && isError && (
         <div data-testid="search-error">
-          <ErrorState error={isApiError(error) ? error : undefined} />
+          <ErrorState
+            title="Поиск недоступен"
+            message="Не удалось выполнить поиск. Попробуйте ещё раз."
+          />
         </div>
       )}
 
-      {q.trim() !== "" && !isLoading && error === null && result && (
+      {trimmedQuery !== "" && !isFetching && !isError && result && (
         <>
           <div
-            className="resultCount"
+            className="font-mono text-c3 text-[10px] tracking-[0.15em] uppercase"
             data-testid="search-result-count"
           >
             Результатов: {result.total}
           </div>
           {items.length === 0 ? (
-            <div
-              className="emptyNotice"
+            <p
+              className="text-c3 text-sm"
               data-testid="search-empty-state"
             >
               Ничего не найдено по запросу «{result.query}».
-            </div>
+            </p>
           ) : (
             <div
-              className="searchResultList"
+              className="flex flex-col gap-3"
               data-testid="search-result-list"
             >
               {items.map((item) => (

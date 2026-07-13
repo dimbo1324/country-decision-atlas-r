@@ -2,6 +2,11 @@ import { queryOptions } from "@tanstack/react-query";
 import { apiClient, unwrap } from "../../shared/api/client";
 import type { SupportedLocale } from "../../shared/lib/locale";
 
+/** Catalog grid page size (Stage 5). Offset-based, matching the actual
+ * `Pagination{limit,offset,total}` contract — not keyset, despite the
+ * frontend plan's wording (see task-checklist.md design decisions). */
+export const COUNTRY_CATALOG_PAGE_SIZE = 24;
+
 /**
  * Reference implementation of the plan's "one module per domain" data
  * pattern: a `queryOptions` factory usable both from a Server Component

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { FeatureProvider } from "../shared/features/FeatureProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -21,8 +22,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <FeatureProvider>{children}</FeatureProvider>
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <FeatureProvider>{children}</FeatureProvider>
+      </QueryClientProvider>
+    </NuqsAdapter>
   );
 }

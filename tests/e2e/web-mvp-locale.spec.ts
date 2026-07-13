@@ -38,7 +38,7 @@ test.describe("locale preservation", () => {
     expect(page.url()).toContain("/ru/countries");
 
     const countryCardLink = page
-      .getByRole("link", { name: /карточка страны/i })
+      .getByRole("link", { name: /открыть досье/i })
       .first();
     await expect(countryCardLink).toBeVisible();
     const href = await countryCardLink.getAttribute("href");
@@ -57,7 +57,7 @@ test.describe("locale preservation", () => {
     await countriesLink.click();
     await expectPageReady(page);
     const countryCardLink = page
-      .getByRole("link", { name: /карточка страны/i })
+      .getByRole("link", { name: /открыть досье/i })
       .first();
     const href = await countryCardLink.getAttribute("href");
     expect(href).toMatch(/^\/en\/countries\//);

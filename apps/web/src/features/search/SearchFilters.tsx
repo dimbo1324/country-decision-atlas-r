@@ -31,32 +31,37 @@ export function SearchFilters({
 }) {
   return (
     <div
-      className="filterBar searchFilters"
+      className="border-warm bg-bg2 flex flex-col gap-4 border p-4 sm:flex-row sm:items-start sm:justify-between"
       data-testid="search-filters"
     >
-      <div className="filterGroup">
-        <span className="filterLabel">Тип результата</span>
-        <div className="searchTypeFilterList">
+      <div className="flex flex-col gap-2">
+        <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Тип результата
+        </span>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
           {ENTITY_TYPE_OPTIONS.map((option) => (
             <label
               key={option.value}
-              className="searchTypeFilterOption"
+              className="text-c2 flex cursor-pointer items-center gap-1.5 text-xs"
             >
               <input
                 type="checkbox"
                 checked={selectedTypes.includes(option.value)}
                 onChange={() => onToggleType(option.value)}
                 data-testid={`search-type-filter-${option.value}`}
+                className="accent-gold"
               />
               {option.label}
             </label>
           ))}
         </div>
       </div>
-      <label className="filterGroup">
-        <span className="filterLabel">Страна</span>
+      <label className="flex flex-col gap-2">
+        <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Страна
+        </span>
         <select
-          className="filterSelect"
+          className="border-warm bg-bg3 text-c2 border px-3 py-2 text-sm outline-none"
           value={countrySlug}
           onChange={(event) => onCountryChange(event.target.value)}
           data-testid="search-country-filter"

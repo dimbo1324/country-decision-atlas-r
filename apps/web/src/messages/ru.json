@@ -54,7 +54,9 @@
     "paletteTitle": "Быстрый переход",
     "paletteEmpty": "Ничего не найдено",
     "sectionSections": "Разделы",
-    "sectionActions": "Действия"
+    "sectionActions": "Действия",
+    "sectionResults": "Результаты",
+    "searching": "Ищем…"
   },
   "error": {
     "title": "Что-то пошло не так",

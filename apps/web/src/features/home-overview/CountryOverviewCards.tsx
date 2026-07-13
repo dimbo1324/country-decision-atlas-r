@@ -1,5 +1,23 @@
+import {
+  Badge,
+  Card,
+  ProgressRing,
+  type BadgeVariant,
+} from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryOverviewCard } from "../../shared/api/home";
+
+const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {
+  high: "positive",
+  medium: "warning",
+  low: "negative",
+};
+
+const CONFIDENCE_LABEL: Record<string, string> = {
+  high: "Высокая",
+  medium: "Средняя",
+  low: "Низкая",
+};
 
 export function CountryOverviewCards({
   countries,
@@ -7,78 +25,86 @@ export function CountryOverviewCards({
   countries: CountryOverviewCard[];
 }) {
   return (
-    <section
-      className="homeOverviewSection"
-      aria-labelledby="home-countries-title"
-    >
-      <div className="homeSectionHeading">
-        <h2 id="home-countries-title">Обзор стран</h2>
-        <Link href="/countries">Перейти к странам</Link>
+    <section aria-labelledby="home-countries-title">
+      <div className="mb-5 flex items-end justify-between gap-4">
+        <h2
+          id="home-countries-title"
+          className="font-display text-2xl font-semibold"
+        >
+          Обзор стран
+        </h2>
+        <Link
+          href="/countries"
+          className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
+        >
+          Перейти к странам →
+        </Link>
       </div>
       <div
-        className="homeCountryCards"
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         data-testid="home-country-cards"
       >
         {countries.map((country) => (
-          <article
-            className="homeOverviewCard"
+          <Link
             key={country.slug}
+            href={`/countries/${country.slug}`}
           >
-            <div className="homeCountryOverviewHeader">
-              <div>
-                <h3>{country.name}</h3>
-                <span>{country.iso2}</span>
+            <Card className="flex h-full flex-col gap-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-display text-lg leading-snug font-semibold">
+                    {country.name}
+                  </h3>
+                  {country.iso2 && (
+                    <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+                      {country.iso2}
+                    </span>
+                  )}
+                </div>
+                {country.confidence && (
+                  <Badge
+                    variant={
+                      CONFIDENCE_VARIANT[country.confidence] ?? "default"
+                    }
+                  >
+                    {CONFIDENCE_LABEL[country.confidence] ?? country.confidence}
+                  </Badge>
+                )}
               </div>
-              <strong className={scoreClass(country.average_score)}>
-                {formatScore(country.average_score)}
-              </strong>
-            </div>
-            <dl className="homeCountryMetrics">
-              <div>
-                <dt>Сильнейший сценарий</dt>
-                <dd>
-                  {country.best_scenario_name ?? "Нет данных"}
-                  {country.best_score != null &&
-                    ` · ${country.best_score.toFixed(1)}`}
-                </dd>
+
+              <div className="flex items-center justify-center py-1">
+                <ProgressRing
+                  value={country.average_score ?? 0}
+                  label="Средний скор"
+                  size={104}
+                  accent="gold"
+                  active
+                  mode="static"
+                />
               </div>
-              <div>
-                <dt>Слабейший сценарий</dt>
-                <dd>
-                  {country.weakest_scenario_name ?? "Нет данных"}
-                  {country.weakest_score != null &&
-                    ` · ${country.weakest_score.toFixed(1)}`}
-                </dd>
-              </div>
-              <div>
-                <dt>Уверенность</dt>
-                <dd>{confidenceLabel(country.confidence)}</dd>
-              </div>
-            </dl>
-            <Link href={`/countries/${country.slug}`}>
-              Открыть карточку страны
-            </Link>
-          </article>
+
+              <dl className="text-c3 flex flex-col gap-1.5 text-xs">
+                <div className="flex items-center justify-between gap-2">
+                  <dt className="text-c4">Сильнейший сценарий</dt>
+                  <dd className="text-right">
+                    {country.best_scenario_name ?? "Нет данных"}
+                    {country.best_score != null &&
+                      ` · ${country.best_score.toFixed(1)}`}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <dt className="text-c4">Слабейший сценарий</dt>
+                  <dd className="text-right">
+                    {country.weakest_scenario_name ?? "Нет данных"}
+                    {country.weakest_score != null &&
+                      ` · ${country.weakest_score.toFixed(1)}`}
+                  </dd>
+                </div>
+              </dl>
+            </Card>
+          </Link>
         ))}
       </div>
     </section>
   );
-}
-
-function formatScore(score: number | null | undefined) {
-  return score == null ? "—" : score.toFixed(1);
-}
-
-function scoreClass(score: number | null | undefined) {
-  if (score == null) return "homeScoreMissing";
-  if (score >= 70) return "homeScoreStrong";
-  if (score >= 50) return "homeScoreModerate";
-  return "homeScoreWeak";
-}
-
-function confidenceLabel(confidence: string | null | undefined) {
-  if (confidence === "high") return "Высокая";
-  if (confidence === "medium") return "Средняя";
-  if (confidence === "low") return "Низкая";
-  return "Нет данных";
 }
