@@ -30,7 +30,7 @@ test.describe("locale preservation", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.country("uruguay", "ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const countriesLink = page.getByRole("link", { name: "Страны" }).first();
     await countriesLink.click();
@@ -74,13 +74,13 @@ test.describe("locale preservation", () => {
 
   test("/countries/russia?locale=ru opens", async ({ page }) => {
     await page.goto(e2eRoutes.country("russia", "ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 
   test("/decision?locale=ru runs decision successfully", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const runButton = page.getByRole("button", { name: /запустить подбор/i });
     await expect(runButton).toBeVisible();
