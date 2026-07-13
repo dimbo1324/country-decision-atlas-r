@@ -7,6 +7,10 @@ type LocaleCode = components["schemas"]["LocaleCode"];
 export type MethodologySection = components["schemas"]["MethodologySection"];
 export type MethodologyListResponse =
   components["schemas"]["MethodologyListResponse"];
+export type MethodologyParameter =
+  components["schemas"]["MethodologyParameter"];
+export type MethodologyParametersResponse =
+  components["schemas"]["MethodologyParametersResponse"];
 
 export function listMethodologySections(
   locale: LocaleCode = DEFAULT_LOCALE,
@@ -25,7 +29,14 @@ export function getMethodologySection(
   );
 }
 
+export function listMethodologyParameters(): Promise<MethodologyParametersResponse> {
+  return apiGet<MethodologyParametersResponse>(
+    "/api/v1/methodology/parameters",
+  );
+}
+
 export const methodologyApi = {
   listMethodologySections,
   getMethodologySection,
+  listMethodologyParameters,
 };

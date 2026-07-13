@@ -20,6 +20,7 @@ export { Counter } from "./primitives/Counter";
 export { MetricCard } from "./primitives/MetricCard";
 export { ChartFrame, MetricStat } from "./primitives/ChartFrame";
 export { DataTable, type DataTableColumn } from "./primitives/DataTable";
+export { VirtualList } from "./primitives/VirtualList";
 export { Drawer } from "./primitives/Drawer";
 export { Accordion, type AccordionItem } from "./primitives/Accordion";
 export { Toggle } from "./primitives/Toggle";
