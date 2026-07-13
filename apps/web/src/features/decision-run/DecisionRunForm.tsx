@@ -1,21 +1,26 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  AnalysisOverlay,
+  Button,
+  Card,
+  Field,
+  FieldLabel,
+} from "@country-decision-atlas/ui";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 
-import type { CountryListResponse } from "../../shared/api/countries";
-import type { ScenarioListResponse } from "../../shared/api/scenarios";
 import type {
   DecisionRunRequest,
   DecisionRunResponse,
 } from "../../shared/api/decision";
-import type { PersonaListResponse } from "../../shared/api/personas";
 import {
-  countriesApi,
-  scenariosApi,
-  decisionApi,
-  personasApi,
-} from "../../shared/api";
+  allCountriesQuery,
+  scenariosQuery,
+  personasQuery,
+  useRunDecisionMutation,
+} from "../../entities/decision/api";
 import { useAnalyticsEvent } from "../../shared/analytics/useAnalyticsEvent";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -54,10 +59,13 @@ function DecisionFormInner() {
   const locale = useAppLocale();
   const trackAnalyticsEvent = useAnalyticsEvent();
 
-  const [countries, setCountries] = useState<CountryListResponse | null>(null);
-  const [scenarios, setScenarios] = useState<ScenarioListResponse | null>(null);
-  const [personas, setPersonas] = useState<PersonaListResponse | null>(null);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const { data: countries, isPending: countriesPending } = useQuery(
+    allCountriesQuery(locale),
+  );
+  const { data: scenarios, isPending: scenariosPending } = useQuery(
+    scenariosQuery(locale),
+  );
+  const { data: personas } = useQuery(personasQuery(locale));
 
   const [originCountrySlug, setOriginCountrySlug] = useState("");
   const [candidateCountrySlugs, setCandidateCountrySlugs] = useState<string[]>([
@@ -79,65 +87,8 @@ function DecisionFormInner() {
   const [result, setResult] = useState<DecisionRunResponse | null>(null);
   const [lastDecisionRequest, setLastDecisionRequest] =
     useState<DecisionRunRequest | null>(null);
-  const [isRunning, setIsRunning] = useState(false);
   const [runError, setRunError] = useState<RunError>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoadError(null);
-
-    Promise.all([
-      countriesApi.listCountries({ locale }),
-      scenariosApi.listScenarios({ locale }),
-    ])
-      .then(([c, s]) => {
-        if (!cancelled) {
-          setCountries(c);
-          setScenarios(s);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setLoadError(
-            err instanceof Error ? err.message : "Не удалось загрузить данные",
-          );
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [locale]);
-
-  useEffect(() => {
-    let cancelled = false;
-    setPersonas(null);
-
-    personasApi
-      .listPersonas(locale)
-      .then((res) => {
-        if (!cancelled) {
-          setPersonas(res);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setPersonas({
-            items: [],
-            locale: {
-              requested_locale: locale,
-              resolved_locale: locale,
-              translation_status: "missing",
-            },
-          });
-          setSelectedPersonaSlug("");
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [locale]);
+  const runDecision = useRunDecisionMutation();
 
   function toggleCandidate(slug: string) {
     setCandidateCountrySlugs((prev) =>
@@ -227,7 +178,6 @@ function DecisionFormInner() {
         candidate_count: candidateCountrySlugs.length,
       },
     });
-    setIsRunning(true);
     setRunError(null);
     setResult(null);
     const decisionRequest: DecisionRunRequest = {
@@ -239,7 +189,7 @@ function DecisionFormInner() {
       ...(personalizationTouched ? { custom_weights: customWeights } : {}),
     };
     try {
-      const res = await decisionApi.runDecision(decisionRequest);
+      const res = await runDecision.mutateAsync(decisionRequest);
       setResult(res);
       setLastDecisionRequest(decisionRequest);
     } catch (err: unknown) {
@@ -252,14 +202,14 @@ function DecisionFormInner() {
             : "Произошла ошибка при запросе",
         );
       }
-    } finally {
-      setIsRunning(false);
     }
   }
 
-  if (loadError) return <ErrorState error={loadError} />;
-  if (!countries || !scenarios) {
+  if (countriesPending || scenariosPending) {
     return <LoadingState message="Загрузка стран и сценариев…" />;
+  }
+  if (!countries || !scenarios) {
+    return <ErrorState error="Не удалось загрузить данные" />;
   }
 
   const decisionReadyScenarios = scenarios.items.filter((s) =>
@@ -281,8 +231,12 @@ function DecisionFormInner() {
         : runError;
 
   return (
-    <div className="decisionLayout">
-      <div className="decisionForm">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <AnalysisOverlay active={runDecision.isPending} />
+      <Card
+        interactive={false}
+        className="flex flex-col gap-6"
+      >
         <DecisionWizard
           locale={locale}
           countries={countries}
@@ -295,16 +249,11 @@ function DecisionFormInner() {
           onApply={handleAiDecisionApply}
         />
 
-        <div className="formGroup">
-          <label
-            className="formLabel"
-            htmlFor="origin-select"
-          >
-            Страна отправления
-          </label>
+        <Field>
+          <FieldLabel htmlFor="origin-select">Страна отправления</FieldLabel>
           <select
             id="origin-select"
-            className="formSelect"
+            className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
             value={originCountrySlug}
             onChange={(e) => setOriginCountrySlug(e.target.value)}
             data-testid="origin-select"
@@ -319,23 +268,24 @@ function DecisionFormInner() {
               </option>
             ))}
           </select>
-          <p className="formHint">
+          <p className="text-c4 text-xs">
             Страна отправления влияет только на контекст, не на базовый рейтинг
           </p>
-        </div>
+        </Field>
 
-        <div className="formGroup">
-          <label className="formLabel">Страны-кандидаты</label>
-          <div className="checkboxList">
+        <Field>
+          <FieldLabel>Страны-кандидаты</FieldLabel>
+          <div className="flex flex-col gap-2">
             {countries.items.map((c) => (
               <label
                 key={c.slug}
-                className="checkboxLabel"
+                className="text-c2 flex items-center gap-2 text-sm"
               >
                 <input
                   type="checkbox"
                   checked={candidateCountrySlugs.includes(c.slug)}
                   onChange={() => toggleCandidate(c.slug)}
+                  className="accent-gold"
                 />
                 {c.name}
               </label>
@@ -343,32 +293,27 @@ function DecisionFormInner() {
           </div>
           {candidateCountrySlugs.length === 0 && (
             <p
-              className="formError"
               role="alert"
+              className="text-terra3 text-sm"
             >
               Выберите хотя бы одну страну-кандидат.
             </p>
           )}
-        </div>
+        </Field>
 
-        <div className="formGroup">
-          <label
-            className="formLabel"
-            htmlFor="scenario-select"
-          >
-            Сценарий
-          </label>
+        <Field>
+          <FieldLabel htmlFor="scenario-select">Сценарий</FieldLabel>
           {noScenariosAvailable ? (
             <p
-              className="formError"
               role="alert"
+              className="text-terra3 text-sm"
             >
               Готовые сценарии подбора пока отсутствуют.
             </p>
           ) : (
             <select
               id="scenario-select"
-              className="formSelect"
+              className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
               value={scenarioSlug}
               onChange={(e) => setScenarioSlug(e.target.value)}
               data-testid="decision-scenario-select"
@@ -383,18 +328,13 @@ function DecisionFormInner() {
               ))}
             </select>
           )}
-        </div>
+        </Field>
 
-        <div className="formGroup">
-          <label
-            className="formLabel"
-            htmlFor="persona-select"
-          >
-            Персона
-          </label>
+        <Field>
+          <FieldLabel htmlFor="persona-select">Персона</FieldLabel>
           <select
             id="persona-select"
-            className="formSelect"
+            className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
             value={selectedPersonaSlug}
             onChange={(e) => {
               const personaSlug = e.target.value;
@@ -419,10 +359,10 @@ function DecisionFormInner() {
               </option>
             ))}
           </select>
-          <p className="formHint">
+          <p className="text-c4 text-xs">
             Рейтинг будет адаптирован под выбранный профиль.
           </p>
-        </div>
+        </Field>
 
         <DecisionWeightSliders
           weights={customWeights}
@@ -430,28 +370,26 @@ function DecisionFormInner() {
           onReset={handleWeightReset}
         />
 
-        <button
-          className="runButton"
+        <Button
           onClick={handleRun}
           disabled={
-            isRunning ||
+            runDecision.isPending ||
             candidateCountrySlugs.length === 0 ||
             noScenariosAvailable ||
             customWeightsBlocked
           }
-          aria-busy={isRunning}
+          aria-busy={runDecision.isPending}
           data-testid="decision-run-button"
         >
-          {isRunning ? "Выполняется подбор…" : "Запустить подбор"}
-        </button>
-      </div>
+          {runDecision.isPending ? "Выполняется подбор…" : "Запустить подбор"}
+        </Button>
+      </Card>
 
-      <div>
-        {isRunning && <LoadingState message="Выполняется движок подбора…" />}
-        {!isRunning && resolvedRunError !== null && (
+      <div className="flex flex-col gap-6">
+        {!runDecision.isPending && resolvedRunError !== null && (
           <ErrorState error={resolvedRunError} />
         )}
-        {!isRunning && resolvedRunError === null && result === null && (
+        {!runDecision.isPending && resolvedRunError === null && result === null && (
           <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
         )}
         {result !== null && <DecisionResults response={result} />}

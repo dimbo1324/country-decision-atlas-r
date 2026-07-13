@@ -13,16 +13,16 @@ export function DecisionWarnings({ warnings }: DecisionWarningsProps) {
 
   return (
     <ul
-      className="warningsList"
+      className="flex flex-col gap-2"
       role="list"
     >
       {warnings.map((w) => (
         <li
           key={`${w.level}-${w.message}`}
-          className="warningItem"
+          className="flex items-start gap-2"
         >
           <ImpactLevelBadge level={w.level} />
-          <span>{w.message}</span>
+          <span className="text-c3 text-sm">{w.message}</span>
         </li>
       ))}
     </ul>

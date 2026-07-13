@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import type { CountryTrustResponse } from "../../shared/api/trust";
-import { getCountryTrust } from "../../shared/api/trust";
+import { useQuery } from "@tanstack/react-query";
+import type { components } from "@country-decision-atlas/contracts/generated/types";
+import { countryTrustQuery } from "../../entities/trust-surface/api";
 import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { TrustBadge } from "../../shared/ui/TrustBadge";
+
+type LocaleCode = components["schemas"]["LocaleCode"];
 
 type DecisionCountryTrustBadgeProps = {
   countrySlug: string;
@@ -16,31 +17,18 @@ export function DecisionCountryTrustBadge({
   countrySlug,
   locale,
 }: DecisionCountryTrustBadgeProps) {
-  const [trust, setTrust] = useState<CountryTrustResponse | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-    getCountryTrust(
-      countrySlug,
-      locale as Parameters<typeof getCountryTrust>[1],
-    )
-      .then((r) => {
-        if (mounted) setTrust(r);
-      })
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
-  }, [countrySlug, locale]);
+  const { data: trust } = useQuery(
+    countryTrustQuery(countrySlug, locale as LocaleCode),
+  );
 
   if (!trust) return null;
 
   return (
     <div
-      className="decisionTrustContext"
+      className="flex items-center gap-2"
       data-testid="decision-trust-context"
     >
-      <span className="trustContextLabel">Качество данных:</span>
+      <span className="text-c4 text-xs">Качество данных:</span>
       <TrustBadge
         label={trust.trust_label}
         score={trust.trust_score ?? undefined}

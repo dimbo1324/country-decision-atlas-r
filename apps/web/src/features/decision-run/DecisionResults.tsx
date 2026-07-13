@@ -1,3 +1,4 @@
+import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
@@ -28,47 +29,53 @@ export function DecisionResults({ response }: DecisionResultsProps) {
 
   return (
     <div
-      className="decisionResults"
+      className="flex flex-col gap-6"
       data-testid="decision-results"
     >
       {isFallback && (
-        <div className="fallbackBanner">
+        <p className="border-terra2/60 text-terra3 border px-4 py-3 text-sm">
           Русский перевод частично отсутствует. Показана английская
           fallback-версия.
-        </div>
+        </p>
       )}
 
-      <div className="decisionResultsMeta">
-        <div className="resultMetaRow">
-          <span>Сценарий:</span>
-          <strong>{scenario.title}</strong>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-c4 text-xs">Сценарий:</span>
+          <strong className="text-c1 text-sm">{scenario.title}</strong>
         </div>
-        <div className="resultMetaRow">
-          <span>Отправление:</span>
-          <strong>{origin_country ? origin_country.name : "Не указано"}</strong>
+        <div className="flex items-center gap-2">
+          <span className="text-c4 text-xs">Отправление:</span>
+          <strong className="text-c1 text-sm">
+            {origin_country ? origin_country.name : "Не указано"}
+          </strong>
         </div>
-        <div className="resultMetaRow">
-          <span>Создано:</span>
-          <span>{new Date(meta.generated_at).toLocaleString("ru")}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-c4 text-xs">Создано:</span>
+          <span className="text-c3 text-sm">
+            {new Date(meta.generated_at).toLocaleString("ru")}
+          </span>
         </div>
-        <div className="resultMetaRow">
-          <span>Перевод:</span>
-          <span className="metaChip">{locale.translation_status}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-c4 text-xs">Перевод:</span>
+          <Badge variant="default">{locale.translation_status}</Badge>
         </div>
       </div>
 
       {applied_persona && (
         <div
-          className="decisionPersonaMeta"
+          className="flex flex-col gap-2"
           data-testid="decision-persona-meta"
         >
-          <div className="resultMetaRow">
-            <span>Рейтинг адаптирован под профиль:</span>
-            <strong>{applied_persona.name}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-c4 text-xs">
+              Рейтинг адаптирован под профиль:
+            </span>
+            <strong className="text-c1 text-sm">{applied_persona.name}</strong>
           </div>
-          <div className="resultMetaRow">
-            <span>Режим ранжирования:</span>
-            <span className="metaChip">{ranking_mode}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-c4 text-xs">Режим ранжирования:</span>
+            <Badge variant="default">{ranking_mode}</Badge>
           </div>
         </div>
       )}
@@ -76,31 +83,37 @@ export function DecisionResults({ response }: DecisionResultsProps) {
       <DecisionPersonalizationSummary personalization={personalization} />
 
       {winner && (
-        <div className="decisionWinnerBlock">
-          <p className="decisionWinnerLabel">Рекомендуемый вариант</p>
-          <div className="decisionWinnerHeader">
-            <span className="decisionWinnerName">{winner.country.name}</span>
-            <span className="decisionWinnerScore">
+        <Card
+          accent="gold"
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Рекомендуемый вариант</Kicker>
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-display text-2xl font-bold">
+              {winner.country.name}
+            </span>
+            <span className="font-display text-gold3 text-2xl font-bold">
               {formatScore(winner.persona_adjusted_score ?? winner.score)}
             </span>
           </div>
-          <div className="metaRow">
-            <span className="metaChip">{winner.score_label}</span>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="default">{winner.score_label}</Badge>
             {winner.confidence && (
               <ConfidenceBadge confidence={winner.confidence} />
             )}
           </div>
           {winner.summary && (
-            <p className="decisionWinnerSummary">{winner.summary}</p>
+            <p className="text-c3 text-sm leading-relaxed">{winner.summary}</p>
           )}
-        </div>
+        </Card>
       )}
 
       {results.length === 0 ? (
         <EmptyState message="Результаты подбора не получены." />
       ) : (
-        <div className="resultList">
-          <h3 className="resultListTitle">Полный рейтинг</h3>
+        <div className="flex flex-col gap-4">
+          <h3 className="font-display text-lg font-semibold">Полный рейтинг</h3>
           {results.map((result) => (
             <DecisionResultCard
               key={result.country.id}

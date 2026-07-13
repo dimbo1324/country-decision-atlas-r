@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
@@ -17,17 +18,17 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
   }
 
   return (
-    <div className="sourceList">
+    <div className="flex flex-col gap-3">
       {sources.map((source) => (
         <div
           key={source.id}
-          className="sourceCard"
+          className="border-warm flex flex-col gap-2 border-l-2 pl-3"
         >
-          <div className="sourceCardHeader">
-            <span className="sourceTitle">{source.title}</span>
-            <div className="metaRow">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-c2 text-sm">{source.title}</span>
+            <div className="flex flex-wrap gap-2">
               {source.source_type && (
-                <span className="metaChip">{source.source_type}</span>
+                <Badge variant="default">{source.source_type}</Badge>
               )}
               {source.confidence && (
                 <ConfidenceBadge confidence={source.confidence} />
@@ -42,7 +43,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
             href={source.url}
             target="_blank"
             rel="noreferrer"
-            className="sourceLink"
+            className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
             Открыть источник ↗
           </a>

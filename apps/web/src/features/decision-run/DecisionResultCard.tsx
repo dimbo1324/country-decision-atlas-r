@@ -1,3 +1,4 @@
+import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import type { SupportedLocale } from "../../shared/lib/locale";
@@ -49,20 +50,25 @@ export function DecisionResultCard({
   originContextStatus,
 }: DecisionResultCardProps) {
   return (
-    <div className="resultCard">
-      <div className="resultCardHeader">
+    <Card
+      interactive={false}
+      className="flex flex-col gap-4"
+    >
+      <div className="flex flex-wrap items-center gap-2">
         <span
-          className="resultRank"
+          className="font-display text-gold3 text-xl font-bold"
           aria-label={`Место ${result.rank}`}
         >
           #{result.rank}
         </span>
-        <span className="resultCountryName">{result.country.name}</span>
-        <span className="resultScore">{formatScore(result.score)}</span>
-        <span className="metaChip">{result.score_label}</span>
-        {result.confidence && (
-          <ConfidenceBadge confidence={result.confidence} />
-        )}
+        <span className="font-display text-lg font-semibold">
+          {result.country.name}
+        </span>
+        <span className="font-display text-c1 ml-auto text-xl font-bold">
+          {formatScore(result.score)}
+        </span>
+        <Badge variant="default">{result.score_label}</Badge>
+        {result.confidence && <ConfidenceBadge confidence={result.confidence} />}
         <LocalizationBadge
           localization={result.localization}
           compact
@@ -74,15 +80,17 @@ export function DecisionResultCard({
         locale={locale}
       />
 
-      {result.summary && <p className="resultSummary">{result.summary}</p>}
+      {result.summary && (
+        <p className="text-c3 text-sm leading-relaxed">{result.summary}</p>
+      )}
 
       {result.persona_adjusted_score != null && (
         <div
-          className="resultPersonaScores"
+          className="flex flex-wrap gap-4 text-sm"
           data-testid="persona-adjusted-score"
         >
-          <span>Базовая оценка: {formatScore(result.score)}</span>
-          <span>
+          <span className="text-c3">Базовая оценка: {formatScore(result.score)}</span>
+          <span className="text-c2 font-semibold">
             Оценка с учетом персоны:{" "}
             {formatScore(result.persona_adjusted_score)}
           </span>
@@ -90,9 +98,11 @@ export function DecisionResultCard({
       )}
 
       {result.strengths.length > 0 && (
-        <div className="resultSection resultSectionPositive">
-          <h4 className="resultSectionTitle">Сильные стороны</h4>
-          <ul className="pointsList pointsListPositive">
+        <div className="flex flex-col gap-2">
+          <h4 className="font-mono text-sage3 text-[9px] tracking-[0.2em] uppercase">
+            Сильные стороны
+          </h4>
+          <ul className="text-c3 flex flex-col gap-1 text-sm">
             {result.strengths.map((s) => (
               <li key={s.message}>{s.message}</li>
             ))}
@@ -101,9 +111,11 @@ export function DecisionResultCard({
       )}
 
       {result.weaknesses.length > 0 && (
-        <div className="resultSection resultSectionNegative">
-          <h4 className="resultSectionTitle">Слабые стороны</h4>
-          <ul className="pointsList pointsListNegative">
+        <div className="flex flex-col gap-2">
+          <h4 className="font-mono text-terra3 text-[9px] tracking-[0.2em] uppercase">
+            Слабые стороны
+          </h4>
+          <ul className="text-c3 flex flex-col gap-1 text-sm">
             {result.weaknesses.map((w) => (
               <li key={w.message}>{w.message}</li>
             ))}
@@ -112,62 +124,68 @@ export function DecisionResultCard({
       )}
 
       {result.risk_warnings.length > 0 && (
-        <div className="resultSection resultSectionRisk">
-          <h4 className="resultSectionTitle">Риски</h4>
+        <div className="flex flex-col gap-2">
+          <h4 className="font-mono text-terra3 text-[9px] tracking-[0.2em] uppercase">
+            Риски
+          </h4>
           <DecisionWarnings warnings={result.risk_warnings} />
         </div>
       )}
 
       <div
-        className="resultSection"
+        className="flex flex-col gap-2"
         data-testid="origin-aware-context"
       >
-        <h4 className="resultSectionTitle">Контекст маршрута</h4>
+        <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Контекст маршрута
+        </h4>
         {!originContextStatus || originContextStatus === "not_requested" ? (
           <p
-            className="formHint"
+            className="text-c4 text-sm"
             data-testid="origin-context-not-requested"
           >
             Укажите страну отправления, чтобы увидеть контекст маршрута.
           </p>
         ) : result.country_pair_context ? (
           <div
-            className="originPairContext"
+            className="flex flex-col gap-2"
             data-testid="origin-pair-context"
           >
-            <div className="metaRow">
-              <span className="metaChip">
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="default">
                 {COMPATIBILITY_LABELS[
                   result.country_pair_context.compatibility_label
                 ] ?? result.country_pair_context.compatibility_label}
-              </span>
+              </Badge>
               <ConfidenceBadge
                 confidence={result.country_pair_context.confidence}
               />
-              <span className="metaChip">
+              <Badge variant="default">
                 Данные:{" "}
                 {FRESHNESS_LABELS[
                   result.country_pair_context.freshness_status
                 ] ?? result.country_pair_context.freshness_status}
-              </span>
+              </Badge>
             </div>
             {result.country_pair_context.practical_summary && (
-              <p className="resultSummary">
+              <p className="text-c3 text-sm">
                 {result.country_pair_context.practical_summary}
               </p>
             )}
             {(result.country_pair_context.key_notes ?? []).length > 0 && (
-              <ul className="pointsList">
+              <ul className="text-c3 flex flex-col gap-1 text-sm">
                 {(result.country_pair_context.key_notes ?? []).map((note) => (
                   <li key={note.type}>
-                    <strong>{NOTE_TYPE_LABELS[note.type] ?? note.type}:</strong>{" "}
+                    <strong className="text-c2">
+                      {NOTE_TYPE_LABELS[note.type] ?? note.type}:
+                    </strong>{" "}
                     {note.message}
                   </li>
                 ))}
               </ul>
             )}
             {(result.country_pair_context.source_ids ?? []).length > 0 && (
-              <p className="formHint">
+              <p className="text-c4 text-xs">
                 Источников:{" "}
                 {(result.country_pair_context.source_ids ?? []).length}
               </p>
@@ -175,7 +193,7 @@ export function DecisionResultCard({
           </div>
         ) : (
           <p
-            className="formHint"
+            className="text-c4 text-sm"
             data-testid="origin-pair-context-empty"
           >
             Пока нет данных по этому маршруту.
@@ -184,25 +202,27 @@ export function DecisionResultCard({
       </div>
 
       {result.breakdown.length > 0 && (
-        <div className="resultSection">
-          <h4 className="resultSectionTitle">Разбор оценки</h4>
+        <div className="flex flex-col gap-2">
+          <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+            Разбор оценки
+          </h4>
           <DecisionBreakdown breakdown={result.breakdown} />
         </div>
       )}
 
-      <div className="resultSection">
-        <h4 className="resultSectionTitle">Источники</h4>
+      <div className="flex flex-col gap-2">
+        <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Источники
+        </h4>
         <DecisionSources sources={result.sources} />
       </div>
 
-      <div className="entityLinkRow">
-        <Link
-          href={routes.country(result.country.slug)}
-          className="internalLink"
-        >
-          Карточка страны →
-        </Link>
-      </div>
-    </div>
+      <Link
+        href={routes.country(result.country.slug)}
+        className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
+      >
+        Карточка страны →
+      </Link>
+    </Card>
   );
 }

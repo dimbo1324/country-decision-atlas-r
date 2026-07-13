@@ -4,8 +4,20 @@ import { decisionApi } from "../../shared/api/decision";
 import { scenariosApi } from "../../shared/api/scenarios";
 import { personasApi } from "../../shared/api/personas";
 import { ciiApi } from "../../shared/api/cii";
+import { countriesApi } from "../../shared/api/countries";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
+
+/** The decision form needs every country as an origin/candidate option,
+ * not a paginated page of them — a generous limit is safe given the
+ * platform's demo-scale country count. */
+export function allCountriesQuery(locale: LocaleCode) {
+  return queryOptions({
+    queryKey: ["country", "list", "all", locale] as const,
+    queryFn: () => countriesApi.listCountries({ locale, limit: 200 }),
+    staleTime: 5 * 60_000,
+  });
+}
 
 export function scenariosQuery(locale: LocaleCode) {
   return queryOptions({
