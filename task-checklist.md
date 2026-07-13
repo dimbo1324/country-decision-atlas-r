@@ -1,136 +1,117 @@
-# Task: Frontend Stage 7 (decision mechanics)
+# Task: Frontend Stage 8 (knowledge & transparency)
 
-Source plan: `docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md`, §7 Этап 7.
-Branch: `feat/frontend-stage7-decision-mechanics` (fresh off `main` — Stage 6
-merged, `58b9b62`).
+Source plan: `docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md`, §7 Этап 8.
+Branch: `feat/frontend-stage8-knowledge-transparency` (fresh off `main` —
+Stage 7 merged, `f06eab1`).
 
-Owner instruction: implement in a separate branch, push to `origin/main`
-once done and tests pass.
+Owner instruction: implement Stage 8 (legal signals, sources, methodology,
+glossary) in a separate branch; push to `origin/main` once done and tests
+pass.
 
-## Preparation (carried over from Stage 6+7 planning, still valid)
+## Preparation
 
-- [+] Full file inventory already done via research agent during Stage 6
-      planning: `features/decision-wizard`, `decision-run`,
-      `decision-personalization`, `decision-passports`,
-      `decision-visual-comparison`, `compare-matrix` + their route pages.
-      100% raw `useEffect`+fetch, zero TanStack Query, confirmed.
-- [-] `packages/ui/src/charts/PassportCard.tsx` — evaluated, NOT reused (see
-      Design decisions below: prop shape mismatch with real read-only data).
-- [+] `packages/ui/src/shell/AnalysisOverlay.tsx` already built (Stage 6,
-      reuses `ProgressRing`) — reused as-is.
-- [+] `packages/ui/src/lib/scoreLabel.ts` (`scoreLabelStyle`) already built
-      (Stage 6, for the dossier's `CountryScores`) — reused for
-      `compare-matrix`'s `MatrixCell` instead of a second hand-maintained
-      5-band mapping.
-- [+] Contract shapes confirmed: `DecisionRunResponse`,
-      `DecisionPersonalizationResponse`, `CompareMatrixResponse`,
-      `CiiCountryComparisonResponse`, `Scenario`, `Persona`,
-      `PersonaWeightProfile`, `DecisionPassportCreateResponse`,
-      `DecisionPassportResponse` (doubles as the public token-read shape).
+- [ ] Research pass done (Explore agent + direct reads): confirmed all four
+      MVP surfaces exist and are pre-reskin (raw `useEffect`+fetch or plain
+      RSC `await`, legacy CSS-module classes, no design-system primitives
+      except badges). No dedicated glossary page/feature exists yet — new
+      build, not a reskin. `LegalSignalTimeline` SVG chart already exists in
+      `packages/ui` (Stage 4) but has zero consumers. `@tanstack/react-virtual`
+      confirmed as a genuinely new dependency.
+- [ ] Contract shapes confirmed: `LegalSignalDetailListResponse`,
+      `LegalSignalTimelineResponse`/`LegalSignalTimelineEvent`,
+      `SourceListResponse`, `EvidenceItemListResponse`/`EvidenceListResponse`,
+      `MethodologyListResponse`/`MethodologySection`,
+      `MethodologyParametersResponse`/`MethodologyParameter` (no existing FE
+      consumer), `GlossaryListResponse`/`GlossaryTerm`.
+- [ ] Existing Playwright coverage inventoried across 5 spec files
+      (`web-mvp-legal-signals-timeline`, `web-mvp-argentina-legal-timeline`,
+      `web-mvp-analytical-pages`, `web-mvp-trust-transparency`,
+      `web-mvp-pages`) — selectors/testids/heading text catalogued so the
+      reskin preserves or deliberately migrates each one.
 
 ## Design decisions
 
-- [+] All 6 feature domains migrated their raw `useEffect`+fetch to
-      TanStack Query `useQuery`/`useMutation`, matching Stage 5/6's
-      established pattern — one `entities/*/api.ts` module per domain.
-- [+] `AnalysisOverlay` shown during the `decision/run` mutation.
-- [-] URL-persisted wizard/weight state via `nuqs` — NOT implemented this
-      stage. Deferred: not required for correctness, existing local state
-      already worked, and adding it risked scope creep beyond the
-      TanStack Query migration that was the actual bulk of the plan. Noted
-      as follow-up if the owner wants shareable decision links.
-- [-] Radix `Slider` for weight sliders — tried, then explicitly REVERTED
-      to native `<input type="range">`. ~10 existing E2E assertions across
-      3 spec files use Playwright `.fill(exactValue)` on the slider testid
-      to drive real computed-result checks; Radix's ARIA `div[role=slider]`
-      does not support `.fill()`. Kept native input with `accent-gold`
-      Tailwind styling instead of rewriting the assertions to synthesize
-      keyboard/pointer sequences.
-- [-] Debounced live recompute on weight change — NOT implemented. Not
-      present in the original plan's blocking requirements once the
-      Slider decision above was reverted (native range input's own
-      `onChange` already batches fine); left as-is to avoid scope creep.
-- [~] `CiiCompareSpiderChart.tsx` replaced with `packages/ui`'s
-      `RadarChart` — done, clean fit (N metrics as axes, one series per
-      country).
-      `CiiMetricCompareBars.tsx` NOT replaced with `CriteriaWeightBars` —
-      real shape mismatch found: that primitive is signed single-value
-      diverging bars, doesn't fit 2-country side-by-side grouped bars.
-      Kept hand-rolled, reskinned visually only.
-- [+] `compare-matrix`'s `MatrixCell` 5-band colour logic replaced by the
-      shared `scoreLabelStyle` helper.
-- [-] `PassportCard` reuse for the public token page — evaluated and
-      REJECTED. Its prop shape is an interactive tax-treaty/nomad-mode
-      toggle demo card that live-recomputes a score; no such recompute
-      endpoint exists for the real `DecisionPassportResponse` (read-only).
-      Faking that interactivity would misrepresent real data. Kept the
-      existing `DecisionResults` + methodology `<dl>` structure, reskinned
-      visually instead.
-- [+] `/decision/passports/[token]/page.tsx` stayed a plain RSC `await`.
-- [+] `force-dynamic` scrutiny applied: removed the redundant
-      `export const dynamic = "force-dynamic"` from `compare/page.tsx`
-      after confirming via `pnpm build` output (`ƒ (Dynamic)`, auto-detected
-      due to `await getLocale()`) and a duplicate-`<h1>` Playwright check
-      that it wasn't load-bearing. Kept on the passport token page (real
-      per-token RSC `await`, no reason to touch it).
-- [+] Preserved every existing `data-testid`; where markup genuinely
-      changed (RadioCards instead of native `<select>`, retired CSS-class
-      selectors), updated the corresponding test files instead of the
-      component (same rule as Stage 6).
+- [ ] `/legal-signals` keeps its current role as the filterable feed
+      (heading "Лента правовых сигналов" preserved, year-grouped via the
+      `timeline` endpoint) — migrated onto TanStack Query + nuqs + design
+      system, NOT restructured into a separate flat/grouped split. A new
+      `/legal-signals/timeline` route is ADDED for the dedicated
+      `LegalSignalTimeline` SVG chart view (plan's "таймлайн-режим"),
+      sharing filters via nuqs. Rationale: minimizes restructuring of a
+      route ~15 existing e2e assertions depend on; the plan's wording
+      ("реестр + таймлайн-режим (legal-signals/timeline)") is satisfied by
+      treating the existing grouped feed as the registry and adding the
+      chart as the distinct new mode, rather than rebuilding the feed as a
+      flat table.
+- [ ] Country/type/impact/year filter `<select>`s stay native HTML
+      `<select>` elements (styled with design tokens), not Radix `Select`.
+      Rationale: same precedent as Stage 7's Slider reversion — ~6 existing
+      e2e assertions use `#timeline-country`/`#src-country` id lookups and
+      `.toHaveValue(...)`, which native selects support and Radix's
+      non-native listbox does not.
+- [ ] Sources page evidence detail moves from inline per-card expand to a
+      `Drawer` (design-system pattern used everywhere since Stage 6) — no
+      existing e2e asserts the old inline-expand behavior/testid, so this
+      is a safe upgrade, not a deviation requiring a testid migration.
+- [ ] Legal signal detail (evidence + affected countries) also uses `Drawer`
+      per the plan's explicit wording for this domain.
+- [ ] `@tanstack/react-virtual` added to `packages/ui` (new `VirtualList`
+      primitive) and used by the sources registry list. Applied with a
+      generous overscan and un-capped natural height (no internal
+      scroll-clipping) so the small synthetic-data item counts this repo
+      ships with always render in full — virtualization exists and is
+      real for scale, but is verified not to hide any row that existing or
+      new e2e depends on.
+- [ ] Glossary gets its own full page (`/glossary`, new) per the plan,
+      but the existing `data-testid="glossary-section"` teaser stays on
+      `/methodology` (e2e locks its visibility there) as a compact
+      cross-link into the full page, not a duplicate full listing.
+- [ ] `GlossaryTerm` popover component: new `GlossaryProvider` (client,
+      per-locale fetch of the full glossary list — no pagination in the
+      contract, so one fetch covers it) mounted in `[locale]/layout.tsx`;
+      `GlossaryTerm` consumes it by slug and degrades to plain text if the
+      slug isn't found. Wired into methodology's related-terms list and
+      into the country dossier's CII section label (minimum 2 surfaces per
+      the plan's acceptance criterion).
+- [ ] `routes.ts` gains `methodology`, `methodologyParameters`, `glossary`,
+      `legalSignalsTimeline` entries (previously missing).
 
 ## Implementation
 
-- [+] `entities/decision/api.ts`: `allCountriesQuery`, `scenariosQuery`,
-      `personasQuery`, `useRunDecisionMutation`, `useResolveWizardMutation`,
-      `compareCiiQuery`, `matrixQuery`.
-- [+] `entities/decision-passports/api.ts`: `useCreateDecisionPassportMutation`,
-      `getPublicPassport` (plain async fn for the RSC page).
-- [+] Reskinned `decision-wizard/*`: `RadioCards` steps (added a per-option
-      `data-testid` to the shared `RadioCards` primitive), `useMutation`
-      for resolve.
-- [+] Reskinned `decision-personalization/*`: native range sliders (see
-      deviation above), `Card`/`Badge`/`Button`.
-- [+] Reskinned `decision-run/*`: `AnalysisOverlay` during run,
-      `Card`/`Field`/`FieldLabel`/`Badge`, `DataTable` for
-      `DecisionBreakdown`, `DecisionCountryTrustBadge` migrated onto the
-      Stage-6-built `countryTrustQuery`.
-- [+] Reskinned `decision-visual-comparison/*`: `RadarChart` for the spider
-      chart, hand-rolled bars kept (see deviation above).
-- [+] Reskinned `compare-matrix/*` onto `scoreLabelStyle` + `DataTable`-style
-      table, migrated to `matrixQuery`.
-- [+] Reskinned `decision-passports/*` (`DecisionPassportActions`) onto
-      `useCreateDecisionPassportMutation` + `Button`; reskinned the public
-      token page (see deviation above, no `PassportCard`).
-- [+] Reskinned `app/[locale]/decision/page.tsx` and
-      `app/[locale]/compare/page.tsx` shells (Kicker/heading pattern).
+- [ ] `entities/legal-signals/api.ts`, `entities/sources/api.ts`,
+      `entities/methodology/api.ts`, `entities/glossary/api.ts` —
+      `queryOptions` factories wrapping the existing typed `shared/api/*`
+      modules (Pattern B, matching `entities/decision/api.ts`).
+- [ ] `shared/api/methodology.ts` gains `listMethodologyParameters` (new
+      frontend consumer for an endpoint that had zero callers).
+- [ ] Reskin `features/legal-signals-timeline/*` onto Card/Badge/nuqs/Query;
+      add `features/legal-signals-chart/` for the new `/legal-signals/timeline`
+      SVG-chart route; evidence Drawer.
+- [ ] Reskin `features/sources/*` onto Card/Badge/nuqs/Query + VirtualList +
+      Drawer.
+- [ ] Reskin `/methodology` page onto `Accordion` + Playfair/Crimson/IM Fell
+      typography; add `/methodology/parameters` (DataTable).
+- [ ] New `/glossary` page + `features/glossary/*`.
+- [ ] `GlossaryProvider` + `GlossaryTerm` component; wire into methodology
+      and country dossier CII section.
+- [ ] Update `routes.ts` and `tests/e2e/helpers/routes.ts`.
+- [ ] Update the 5 affected Playwright spec files for new testids/selectors
+      while preserving all existing text/heading assertions; add a new
+      spec file for `/glossary` and `/methodology/parameters` smoke coverage.
 
 ## Verification
 
-- [+] `pnpm --filter web typecheck` / `lint` — clean.
-- [+] `pnpm build` — compiles clean; duplicate-`<h1>` check done for
-      `/compare` after removing `force-dynamic`.
-- [+] Manual browser + full Playwright coverage across wizard → run →
-      result → compare → matrix → passport → public passport link (via
-      the existing E2E suite, not a separate manual pass).
-- [+] `npx playwright test` (full suite, 285 specs) — 285/285 passing at
-      `--workers=2` (the reliable baseline; default worker count produces
-      resource-contention flakiness under this Docker+build load,
-      documented repeatedly since Stage 5).
-- [+] `python dev_tools_scripts_runner.py full-check` — clean except two
-      known pre-existing, unrelated failures: `pytest (scripts/synthetic_data)`
-      (missing `arabic_reshaper` in that venv) and `go test -race` (no CGO
-      toolchain on this Windows machine; the `-race` gate is enforced in
-      CI's `ubuntu-latest`, not locally). A transient `pnpm quality` /
-      `pre-commit` Prettier formatting gap on 8 already-edited files was
-      found and fixed (`prettier --write`); re-run confirmed clean.
+- [ ] `pnpm --filter web typecheck` / `lint` — clean.
+- [ ] `pnpm --filter ui typecheck` / `lint` — clean.
+- [ ] `pnpm build` — compiles clean.
+- [ ] `npx playwright test` — affected specs green, no regressions.
+- [ ] `python dev_tools_scripts_runner.py` (full gate) or documented
+      pre-existing exceptions only.
 
 ## Completion
 
-- [+] Commits: 7 total on the feature branch (query-migration slices per
-      domain + a bug-fix/testid-parity commit + a formatting-fix commit).
-- [+] Merge to `main` (fast-forward), push to `origin/main`.
-- [+] Final report.
-- Deferred/out-of-scope, documented above rather than silently dropped:
-  nuqs URL state for wizard/weights, debounced live recompute, Radix
-  Slider, `CriteriaWeightBars` for the 2-country comparison,
-  `PassportCard` reuse on the token page.
+- [ ] Commits: logical slices (entities/data layer, legal-signals reskin,
+      sources reskin, methodology + parameters, glossary + popover, e2e
+      parity fixes).
+- [ ] Merge to `main` (fast-forward), push to `origin/main`.
+- [ ] Final report.
