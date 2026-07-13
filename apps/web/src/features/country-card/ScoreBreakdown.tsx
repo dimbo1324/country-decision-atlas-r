@@ -1,3 +1,4 @@
+import { DataTable } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 
 type ScoreBreakdownItem = NonNullable<
@@ -30,50 +31,46 @@ export function ScoreBreakdown({
   }
 
   return (
-    <div className="breakdownBlock">
-      <div className="breakdownWrap">
-        <table className="breakdownTable">
-          <thead>
-            <tr>
-              <th>Критерий</th>
-              <th>Оценка</th>
-              <th>Вес</th>
-              <th>Взвешенная</th>
-              <th>Достоверность</th>
-            </tr>
-          </thead>
-          <tbody>
-            {breakdowns.map((b) => (
-              <tr key={b.criterion}>
-                <td>{b.criterion}</td>
-                <td>{b.score}</td>
-                <td>{b.weight}</td>
-                <td>{b.weighted_score}</td>
-                <td>{b.confidence ?? "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="flex flex-col gap-4">
+      <DataTable
+        columns={[
+          { header: "Критерий" },
+          { header: "Оценка", numeric: true, align: "right" },
+          { header: "Вес", numeric: true, align: "right" },
+          { header: "Взвешенная", numeric: true, align: "right" },
+          { header: "Достоверность", align: "right" },
+        ]}
+        rows={breakdowns.map((b) => [
+          b.criterion,
+          String(b.score),
+          String(b.weight),
+          String(b.weighted_score),
+          b.confidence ?? "—",
+        ])}
+      />
 
       {linkedSources.length > 0 && (
         <div
-          className="supportingSourcesList"
+          className="flex flex-col gap-2"
           data-testid="supporting-sources"
         >
-          <p className="sectionTitle">Подтверждающие источники</p>
+          <p className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+            Подтверждающие источники
+          </p>
           {linkedSources.map((s) => (
             <div
               key={s.id}
-              className="sourceLinkCard"
+              className="border-warm flex flex-col gap-1 border-l-2 pl-3"
             >
-              <span className="sourceLinkTitle">{s.title}</span>
-              <div className="metaRow">
+              <span className="text-c2 text-sm">{s.title}</span>
+              <div className="flex flex-wrap gap-2">
                 {s.source_type && (
-                  <span className="metaChip">{s.source_type}</span>
+                  <span className="font-mono text-c4 text-[8px] tracking-[0.15em] uppercase">
+                    {s.source_type}
+                  </span>
                 )}
                 {s.confidence && (
-                  <span className="metaChip">
+                  <span className="font-mono text-c4 text-[8px] tracking-[0.15em] uppercase">
                     Достоверность: {s.confidence}
                   </span>
                 )}
@@ -82,7 +79,7 @@ export function ScoreBreakdown({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="externalLink"
+                className="text-gold3 hover:text-gold text-xs transition-colors duration-300"
               >
                 Открыть источник ↗
               </a>

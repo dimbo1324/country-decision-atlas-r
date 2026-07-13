@@ -2,12 +2,15 @@ export { cn } from "./lib/cn";
 export { ACCENTS, type Accent } from "./lib/accents";
 export { readCssVar, withAlpha } from "./lib/color";
 export type { Confidence } from "./lib/confidence";
+export { scoreLabelStyle, type ScoreLabel } from "./lib/scoreLabel";
 
 export { useCanvasLoop, lerp } from "./hooks/useCanvasLoop";
 export { useReducedMotion } from "./hooks/useReducedMotion";
 
 export { BackgroundTexture } from "./shell/BackgroundTexture";
 export { BackgroundFX } from "./shell/BackgroundFX";
+export { AnalysisOverlay } from "./shell/AnalysisOverlay";
+export { DossierRail, type DossierRailSection } from "./shell/DossierRail";
 
 export { Card } from "./primitives/Card";
 export { Button } from "./primitives/Button";

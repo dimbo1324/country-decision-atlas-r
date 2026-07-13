@@ -1,3 +1,4 @@
+import { Badge, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
@@ -9,40 +10,40 @@ type CountryHeaderProps = {
 
 export function CountryHeader({ country }: CountryHeaderProps) {
   return (
-    <div className="countryHeaderBlock">
-      <header className="pageHeader">
-        <p className="eyebrow">{country.region ?? "Страна"}</p>
-        <h1>{country.name}</h1>
-        <div className="metaRow">
+    <div className="flex flex-col gap-5">
+      <header className="flex flex-col gap-3">
+        <Kicker>{country.region ?? "Страна"}</Kicker>
+        <h1 className="font-display text-4xl font-bold">{country.name}</h1>
+        <div className="flex flex-wrap items-center gap-2">
           {country.iso_code && (
-            <span className="metaChip">ISO: {country.iso_code}</span>
+            <Badge variant="default">ISO: {country.iso_code}</Badge>
           )}
-          <span className="metaChip">Статус: {country.status}</span>
+          <Badge variant="default">Статус: {country.status}</Badge>
           <LocalizationBadge localization={country.localization} />
         </div>
       </header>
-      <div className="quickActions">
+      <div className="flex flex-wrap gap-4">
         <Link
           href={routes.countries}
-          className="quickAction"
+          className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
           ← Все страны
         </Link>
         <Link
           href={routes.decision}
-          className="quickAction quickActionPrimary"
+          className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
           Запустить подбор
         </Link>
         <Link
           href={routes.legalSignals}
-          className="quickAction"
+          className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
           Правовые сигналы
         </Link>
         <Link
           href={routes.sources}
-          className="quickAction"
+          className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
           Источники
         </Link>

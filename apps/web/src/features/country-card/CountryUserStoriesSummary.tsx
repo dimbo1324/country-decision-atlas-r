@@ -1,30 +1,45 @@
+import { Counter } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 
 type CountryUserStoriesSummaryProps = {
   userStoriesSummary: CountryReadModelResponse["user_stories_summary"];
 };
 
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="font-display text-gold3 text-3xl font-bold">
+        <Counter
+          value={value}
+          active
+        />
+      </span>
+      <span className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 export function CountryUserStoriesSummary({
   userStoriesSummary,
 }: CountryUserStoriesSummaryProps) {
   return (
-    <div className="summaryGrid">
-      <div className="summaryItem">
-        <span className="summaryValue">{userStoriesSummary.total}</span>
-        <span className="summaryLabel">Всего историй</span>
-      </div>
-      <div className="summaryItem">
-        <span className="summaryValue">{userStoriesSummary.synthetic}</span>
-        <span className="summaryLabel">Синтетические</span>
-      </div>
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <Stat
+        value={userStoriesSummary.total}
+        label="Всего историй"
+      />
+      <Stat
+        value={userStoriesSummary.synthetic}
+        label="Синтетические"
+      />
       {userStoriesSummary.average_satisfaction_score !== null &&
         userStoriesSummary.average_satisfaction_score !== undefined && (
-          <div className="summaryItem">
-            <span className="summaryValue">
-              {userStoriesSummary.average_satisfaction_score}
-            </span>
-            <span className="summaryLabel">Ср. удовлетворённость</span>
-          </div>
+          <Stat
+            value={userStoriesSummary.average_satisfaction_score}
+            label="Ср. удовлетворённость"
+          />
         )}
     </div>
   );

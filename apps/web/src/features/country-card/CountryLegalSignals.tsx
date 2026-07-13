@@ -1,3 +1,4 @@
+import { Badge, Card } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import {
@@ -23,24 +24,31 @@ export function CountryLegalSignals({
 
   return (
     <div
-      className="signalList"
+      className="flex flex-col gap-4"
       data-testid="country-legal-signals"
     >
       {legalSignals.map((signal) => (
-        <div
+        <Card
           key={signal.id}
-          className="signalCard"
+          interactive={false}
+          className="flex flex-col gap-3"
         >
-          <div className="signalCardHeader">
-            <span className="signalTitle">{signal.title}</span>
-            <span className="metaChip">{signal.signal_type}</span>
-            <LocalizationBadge
-              localization={signal.localization}
-              compact
-            />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-display text-base font-semibold">
+              {signal.title}
+            </span>
+            <div className="flex items-center gap-2">
+              <Badge variant="default">{signal.signal_type}</Badge>
+              <LocalizationBadge
+                localization={signal.localization}
+                compact
+              />
+            </div>
           </div>
-          {signal.summary && <p className="signalSummary">{signal.summary}</p>}
-          <div className="metaRow">
+          {signal.summary && (
+            <p className="text-c3 text-sm leading-relaxed">{signal.summary}</p>
+          )}
+          <div className="flex flex-wrap gap-2">
             {signal.impact_direction && (
               <ImpactDirectionBadge direction={signal.impact_direction} />
             )}
@@ -51,17 +59,17 @@ export function CountryLegalSignals({
               <ConfidenceBadge confidence={signal.confidence} />
             )}
             {signal.published_date && (
-              <span className="metaChip">
+              <Badge variant="default">
                 Опубликовано: {formatDate(signal.published_date)}
-              </span>
+              </Badge>
             )}
             {signal.effective_date && (
-              <span className="metaChip">
+              <Badge variant="default">
                 Действует с: {formatDate(signal.effective_date)}
-              </span>
+              </Badge>
             )}
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );

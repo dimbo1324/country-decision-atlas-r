@@ -1,3 +1,4 @@
+import { Counter, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
@@ -8,6 +9,22 @@ type CountryEvidenceSummaryProps = {
   sourceSummary?: string | null;
 };
 
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="font-display text-gold3 text-3xl font-bold">
+        <Counter
+          value={value}
+          active
+        />
+      </span>
+      <span className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 export function CountryEvidenceSummary({
   evidenceSummary,
   countrySlug,
@@ -15,50 +32,44 @@ export function CountryEvidenceSummary({
 }: CountryEvidenceSummaryProps) {
   return (
     <div
-      className="evidenceTraceability"
+      className="flex flex-col gap-5"
       data-testid="evidence-traceability"
     >
       {sourceSummary && (
-        <p className="evidenceSourceSummary">{sourceSummary}</p>
+        <p className="text-c3 text-sm leading-relaxed">{sourceSummary}</p>
       )}
 
-      <div className="summaryGrid">
-        <div className="summaryItem">
-          <span className="summaryValue">{evidenceSummary.total}</span>
-          <span className="summaryLabel">Всего доказательств</span>
-        </div>
-        <div className="summaryItem">
-          <span className="summaryValue">
-            {evidenceSummary.high_confidence}
-          </span>
-          <span className="summaryLabel">Высокая достоверность</span>
-        </div>
-        <div className="summaryItem">
-          <span className="summaryValue">
-            {evidenceSummary.medium_confidence}
-          </span>
-          <span className="summaryLabel">Средняя достоверность</span>
-        </div>
-        <div className="summaryItem">
-          <span className="summaryValue">{evidenceSummary.low_confidence}</span>
-          <span className="summaryLabel">Низкая достоверность</span>
-        </div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Stat
+          value={evidenceSummary.total}
+          label="Всего доказательств"
+        />
+        <Stat
+          value={evidenceSummary.high_confidence}
+          label="Высокая достоверность"
+        />
+        <Stat
+          value={evidenceSummary.medium_confidence}
+          label="Средняя достоверность"
+        />
+        <Stat
+          value={evidenceSummary.low_confidence}
+          label="Низкая достоверность"
+        />
       </div>
 
-      <div className="traceChain">
-        Трассировка: карточка → оценка → доказательство → источник
-      </div>
+      <Kicker>Карточка → оценка → доказательство → источник</Kicker>
 
-      <div className="cardActions">
+      <div className="flex flex-wrap gap-4">
         <Link
           href={routes.legalSignalsForCountry(countrySlug)}
-          className="internalLink"
+          className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
           Правовые сигналы →
         </Link>
         <Link
           href={routes.sourcesForCountry(countrySlug)}
-          className="internalLink"
+          className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
           Все источники →
         </Link>

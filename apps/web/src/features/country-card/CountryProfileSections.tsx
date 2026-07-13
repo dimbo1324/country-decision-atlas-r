@@ -1,3 +1,4 @@
+import { Accordion, type AccordionItem } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
@@ -41,20 +42,15 @@ export function CountryProfileSections({
   if (filled.length === 0)
     return <EmptyState message="Разделы профиля отсутствуют." />;
 
+  const items: AccordionItem[] = filled.map((s) => ({
+    title: s.label,
+    content: <p className="text-c3 text-sm leading-relaxed">{profile[s.key]}</p>,
+  }));
+
   return (
-    <div className="sectionStack">
-      <div className="metaRow">
-        <LocalizationBadge localization={profile.localization} />
-      </div>
-      {filled.map((s) => (
-        <div
-          key={s.key}
-          className="profileSection"
-        >
-          <h3 className="sectionTitle">{s.label}</h3>
-          <p>{profile[s.key]}</p>
-        </div>
-      ))}
+    <div className="flex flex-col gap-4">
+      <LocalizationBadge localization={profile.localization} />
+      <Accordion items={items} />
     </div>
   );
 }
