@@ -1,23 +1,38 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-
+import { FormEvent, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  communityApi,
-  isApiError,
-  type CommunityAnswer,
-  type CommunityQuestion,
-} from "../../shared/api";
+  Badge,
+  Button,
+  Card,
+  Field,
+  FieldLabel,
+  Kicker,
+  Skeleton,
+} from "@country-decision-atlas/ui";
+import {
+  communityQuestionsQuery,
+  communityAnswersQuery,
+  useCreateCommunityQuestionMutation,
+  useCreateCommunityAnswerMutation,
+  useVoteCommunityAnswerMutation,
+  useCreateDataErrorReportMutation,
+  useCreateUserStoryRatingMutation,
+} from "../../entities/community/api";
+import { isApiError, type CommunityQuestion } from "../../shared/api";
+import { useNearViewport } from "../../shared/lib/useNearViewport";
+import { EmptyState } from "../../shared/ui/EmptyState";
 
 type CommunityCountryBlockProps = {
   countrySlug: string;
 };
 
-type AnswersByQuestion = Record<string, CommunityAnswer[]>;
 type StatusState = {
   kind: "idle" | "success" | "error";
   message: string;
 };
+
 type ReportType =
   | "outdated"
   | "wrong"
@@ -45,75 +60,187 @@ function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+const TEXTAREA_CLASS =
+  "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
+const INPUT_CLASS =
+  "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
+
+function QuestionCard({
+  question,
+  identityId,
+  onStatus,
+}: {
+  question: CommunityQuestion;
+  identityId: string;
+  onStatus: (status: StatusState) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const { data: answers } = useQuery(communityAnswersQuery(question.id));
+  const createAnswer = useCreateCommunityAnswerMutation(question.id);
+  const voteAnswer = useVoteCommunityAnswerMutation(question.id);
+
+  async function submitAnswer() {
+    const body = draft.trim();
+    if (!body) return;
+    try {
+      const created = await createAnswer.mutateAsync({
+        body,
+        source_ids: [],
+        evidence_item_ids: [],
+        created_by_identity_type: "anonymous_session",
+        created_by_identity_id: identityId,
+      });
+      setDraft("");
+      onStatus({
+        kind: "success",
+        message: `Answer received with status ${created.status}; moderation is required before publication.`,
+      });
+    } catch (error: unknown) {
+      onStatus({
+        kind: "error",
+        message: errorMessage(error, "Answer could not be submitted."),
+      });
+    }
+  }
+
+  return (
+    <Card
+      interactive={false}
+      className="flex flex-col gap-4"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <h5 className="font-display text-base font-semibold">{question.title}</h5>
+        <Badge variant="default">{question.status}</Badge>
+      </div>
+      <p className="text-c3 text-sm leading-relaxed">{question.body}</p>
+      <div className="flex flex-col gap-3">
+        {(answers ?? []).map((answer) => (
+          <div
+            key={answer.id}
+            className="border-warm flex flex-col gap-2 border-l-2 pl-3"
+          >
+            <p className="text-c2 text-sm">{answer.body}</p>
+            <div className="flex flex-wrap gap-2">
+              {answer.source_backed && <Badge variant="trust">source-backed</Badge>}
+              {answer.consensus?.controversial && (
+                <Badge variant="warning">controversial</Badge>
+              )}
+              {answer.consensus && (
+                <Badge variant="default">
+                  consensus {Math.round(answer.consensus.score)}
+                </Badge>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={async () => {
+                  try {
+                    const summary = await voteAnswer.mutateAsync({
+                      answerId: answer.id,
+                      payload: {
+                        vote_type: "up",
+                        identity_type: "anonymous_session",
+                        identity_id: identityId,
+                      },
+                    });
+                    onStatus({
+                      kind: "success",
+                      message: `Vote recorded. Consensus score: ${Math.round(summary.score)}.`,
+                    });
+                  } catch (error: unknown) {
+                    onStatus({
+                      kind: "error",
+                      message: errorMessage(error, "Vote could not be submitted."),
+                    });
+                  }
+                }}
+              >
+                Up
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={async () => {
+                  try {
+                    const summary = await voteAnswer.mutateAsync({
+                      answerId: answer.id,
+                      payload: {
+                        vote_type: "helpful",
+                        identity_type: "anonymous_session",
+                        identity_id: identityId,
+                      },
+                    });
+                    onStatus({
+                      kind: "success",
+                      message: `Vote recorded. Consensus score: ${Math.round(summary.score)}.`,
+                    });
+                  } catch (error: unknown) {
+                    onStatus({
+                      kind: "error",
+                      message: errorMessage(error, "Vote could not be submitted."),
+                    });
+                  }
+                }}
+              >
+                Helpful
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-2">
+        <textarea
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          placeholder="Add an answer for moderation"
+          aria-label="Community answer"
+          className={TEXTAREA_CLASS}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={submitAnswer}
+          disabled={!draft.trim()}
+        >
+          Submit answer
+        </Button>
+      </div>
+    </Card>
+  );
+}
+
 export function CommunityCountryBlock({
   countrySlug,
 }: CommunityCountryBlockProps) {
-  const [questions, setQuestions] = useState<CommunityQuestion[]>([]);
-  const [answers, setAnswers] = useState<AnswersByQuestion>({});
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState<StatusState>({
-    kind: "idle",
-    message: "",
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isNear = useNearViewport(sectionRef);
+  const identityId = useMemo(() => anonymousIdentity("community"), []);
+
+  const { data: questionsData, isPending } = useQuery({
+    ...communityQuestionsQuery(countrySlug),
+    enabled: isNear,
   });
+  const questions = questionsData?.items ?? [];
+
+  const [status, setStatus] = useState<StatusState>({ kind: "idle", message: "" });
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
-  const [answerDrafts, setAnswerDrafts] = useState<Record<string, string>>({});
   const [reportType, setReportType] = useState<ReportType>("outdated");
   const [reportMessage, setReportMessage] = useState("");
   const [ratingComment, setRatingComment] = useState("");
   const [realityGapScore, setRealityGapScore] = useState(50);
 
-  const identityId = useMemo(() => anonymousIdentity("community"), []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadCommunity() {
-      setLoading(true);
-      try {
-        const response = await communityApi.listCommunityQuestions({
-          country_slug: countrySlug,
-          limit: 20,
-        });
-        if (cancelled) return;
-        setQuestions(response.items);
-        const answerPairs = await Promise.all(
-          response.items.map(async (question) => {
-            const rows = await communityApi.listCommunityAnswers(question.id);
-            return [question.id, rows] as const;
-          }),
-        );
-        if (!cancelled) {
-          setAnswers(Object.fromEntries(answerPairs));
-        }
-      } catch (error: unknown) {
-        if (!cancelled) {
-          setStatus({
-            kind: "error",
-            message: errorMessage(
-              error,
-              "Community content is temporarily unavailable.",
-            ),
-          });
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadCommunity();
-    return () => {
-      cancelled = true;
-    };
-  }, [countrySlug]);
+  const createQuestion = useCreateCommunityQuestionMutation(countrySlug);
+  const createReport = useCreateDataErrorReportMutation();
+  const createRating = useCreateUserStoryRatingMutation();
 
   async function submitQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus({ kind: "idle", message: "" });
     try {
-      const created = await communityApi.createCommunityQuestion({
+      const created = await createQuestion.mutateAsync({
         country_slug: countrySlug,
         route_id: null,
         legal_signal_id: null,
@@ -137,56 +264,11 @@ export function CommunityCountryBlock({
     }
   }
 
-  async function submitAnswer(questionId: string) {
-    const body = answerDrafts[questionId]?.trim();
-    if (!body) return;
-    setStatus({ kind: "idle", message: "" });
-    try {
-      const created = await communityApi.createCommunityAnswer(questionId, {
-        body,
-        source_ids: [],
-        evidence_item_ids: [],
-        created_by_identity_type: "anonymous_session",
-        created_by_identity_id: identityId,
-      });
-      setAnswerDrafts((current) => ({ ...current, [questionId]: "" }));
-      setStatus({
-        kind: "success",
-        message: `Answer received with status ${created.status}; moderation is required before publication.`,
-      });
-    } catch (error: unknown) {
-      setStatus({
-        kind: "error",
-        message: errorMessage(error, "Answer could not be submitted."),
-      });
-    }
-  }
-
-  async function voteAnswer(answerId: string, voteType: "up" | "helpful") {
-    setStatus({ kind: "idle", message: "" });
-    try {
-      const summary = await communityApi.voteCommunityAnswer(answerId, {
-        vote_type: voteType,
-        identity_type: "anonymous_session",
-        identity_id: identityId,
-      });
-      setStatus({
-        kind: "success",
-        message: `Vote recorded. Consensus score: ${Math.round(summary.score)}.`,
-      });
-    } catch (error: unknown) {
-      setStatus({
-        kind: "error",
-        message: errorMessage(error, "Vote could not be submitted."),
-      });
-    }
-  }
-
   async function submitReport(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus({ kind: "idle", message: "" });
     try {
-      const created = await communityApi.createDataErrorReport({
+      const created = await createReport.mutateAsync({
         entity_type: "country",
         entity_id: null,
         country_slug: countrySlug,
@@ -213,7 +295,7 @@ export function CommunityCountryBlock({
     event.preventDefault();
     setStatus({ kind: "idle", message: "" });
     try {
-      const created = await communityApi.createUserStoryRating({
+      const created = await createRating.mutateAsync({
         user_story_id: null,
         country_slug: countrySlug,
         route_id: null,
@@ -242,28 +324,31 @@ export function CommunityCountryBlock({
 
   return (
     <div
-      className="communityBlock"
+      ref={sectionRef}
+      className="flex flex-col gap-6"
       data-testid="community-country-block"
     >
-      <div className="sectionHeaderBlock">
-        <div className="sectionHeaderMain">
-          <h3 className="sectionHeaderTitle">Community intelligence</h3>
-          <p className="sectionHeaderDesc">
-            Human experience is separated from trusted source-backed content and
-            appears publicly only after moderation.
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h3 className="font-display text-xl font-semibold">
+            Community intelligence
+          </h3>
+          <p className="text-c3 text-sm leading-relaxed">
+            Human experience is separated from trusted source-backed content
+            and appears publicly only after moderation.
           </p>
         </div>
-        <span
-          className="badge"
-          data-testid="community-review-badge"
+        <Badge
+          variant="default"
+          title="review gate"
         >
           review gate
-        </span>
+        </Badge>
       </div>
 
       {status.kind !== "idle" && (
         <p
-          className={status.kind === "error" ? "formError" : "formHint"}
+          className={status.kind === "error" ? "text-terra3 text-sm" : "text-sage3 text-sm"}
           role={status.kind === "error" ? "alert" : "status"}
           data-testid="community-status"
         >
@@ -271,222 +356,166 @@ export function CommunityCountryBlock({
         </p>
       )}
 
-      <div className="communityGrid">
-        <section
-          className="communityPanel"
-          data-testid="community-qna-panel"
-        >
-          <h4>Q&A</h4>
-          {loading ? (
-            <p className="formHint">Loading community questions...</p>
-          ) : questions.length === 0 ? (
-            <p
-              className="formHint"
-              data-testid="community-empty"
-            >
-              No published community questions yet.
-            </p>
-          ) : (
-            <div className="communityQuestionList">
-              {questions.map((question) => (
-                <article
-                  className="communityQuestion"
-                  key={question.id}
-                >
-                  <div className="communityQuestionHeader">
-                    <h5>{question.title}</h5>
-                    <span className="badge">{question.status}</span>
-                  </div>
-                  <p>{question.body}</p>
-                  <div className="communityAnswerList">
-                    {(answers[question.id] ?? []).map((answer) => (
-                      <div
-                        className="communityAnswer"
-                        key={answer.id}
-                      >
-                        <p>{answer.body}</p>
-                        <div className="metaRow">
-                          {answer.source_backed && (
-                            <span className="badge">source-backed</span>
-                          )}
-                          {answer.consensus?.controversial && (
-                            <span className="badge metaChipWarn">
-                              controversial
-                            </span>
-                          )}
-                          {answer.consensus && (
-                            <span className="metaChip">
-                              consensus {Math.round(answer.consensus.score)}
-                            </span>
-                          )}
-                        </div>
-                        <div className="communityActions">
-                          <button
-                            type="button"
-                            onClick={() => voteAnswer(answer.id, "up")}
-                          >
-                            Up
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => voteAnswer(answer.id, "helpful")}
-                          >
-                            Helpful
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="communityInlineForm">
-                    <textarea
-                      value={answerDrafts[question.id] ?? ""}
-                      onChange={(event) =>
-                        setAnswerDrafts((current) => ({
-                          ...current,
-                          [question.id]: event.target.value,
-                        }))
-                      }
-                      placeholder="Add an answer for moderation"
-                      aria-label="Community answer"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => submitAnswer(question.id)}
-                      disabled={!answerDrafts[question.id]?.trim()}
-                    >
-                      Submit answer
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-
-          <form
-            className="communityForm"
-            onSubmit={submitQuestion}
+      {!isNear || isPending ? (
+        <Skeleton lines={4} />
+      ) : (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <section
+            className="flex flex-col gap-4 lg:col-span-2"
+            data-testid="community-qna-panel"
           >
-            <label>
-              <span className="formLabel">Question title</span>
-              <input
-                value={questionTitle}
-                onChange={(event) => setQuestionTitle(event.target.value)}
-                required
-                maxLength={300}
-                data-testid="community-question-title"
-              />
-            </label>
-            <label>
-              <span className="formLabel">Question details</span>
-              <textarea
-                value={questionBody}
-                onChange={(event) => setQuestionBody(event.target.value)}
-                required
-                maxLength={4000}
-                data-testid="community-question-body"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={!questionTitle.trim() || !questionBody.trim()}
-              data-testid="community-question-submit"
-            >
-              Submit for review
-            </button>
-          </form>
-        </section>
+            <Kicker>Q&A</Kicker>
+            {questions.length === 0 ? (
+              <div data-testid="community-empty">
+                <EmptyState message="No published community questions yet." />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {questions.map((question) => (
+                  <QuestionCard
+                    key={question.id}
+                    question={question}
+                    identityId={identityId}
+                    onStatus={setStatus}
+                  />
+                ))}
+              </div>
+            )}
 
-        <section
-          className="communityPanel"
-          data-testid="community-report-panel"
-        >
-          <h4>Report data issue</h4>
-          <form
-            className="communityForm"
-            onSubmit={submitReport}
-          >
-            <label>
-              <span className="formLabel">Issue type</span>
-              <select
-                value={reportType}
-                onChange={(event) =>
-                  setReportType(event.target.value as ReportType)
-                }
-                data-testid="community-report-type"
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={submitQuestion}
+            >
+              <Field>
+                <FieldLabel>Question title</FieldLabel>
+                <input
+                  value={questionTitle}
+                  onChange={(event) => setQuestionTitle(event.target.value)}
+                  required
+                  maxLength={300}
+                  data-testid="community-question-title"
+                  className={INPUT_CLASS}
+                />
+              </Field>
+              <Field>
+                <FieldLabel>Question details</FieldLabel>
+                <textarea
+                  value={questionBody}
+                  onChange={(event) => setQuestionBody(event.target.value)}
+                  required
+                  maxLength={4000}
+                  data-testid="community-question-body"
+                  className={TEXTAREA_CLASS}
+                />
+              </Field>
+              <Button
+                type="submit"
+                disabled={!questionTitle.trim() || !questionBody.trim()}
+                data-testid="community-question-submit"
               >
-                <option value="outdated">Outdated</option>
-                <option value="wrong">Wrong</option>
-                <option value="missing_source">Missing source</option>
-                <option value="contradiction">Contradiction</option>
-                <option value="translation_issue">Translation issue</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
-            <label>
-              <span className="formLabel">Message</span>
-              <textarea
-                value={reportMessage}
-                onChange={(event) => setReportMessage(event.target.value)}
-                required
-                maxLength={2000}
-                data-testid="community-report-message"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={!reportMessage.trim()}
-              data-testid="community-report-submit"
-            >
-              Send to review
-            </button>
-          </form>
-        </section>
+                Submit for review
+              </Button>
+            </form>
+          </section>
 
-        <section
-          className="communityPanel"
-          data-testid="community-rating-panel"
-        >
-          <h4>Reality gap preview</h4>
-          <p className="formHint">
-            Limited community input only; no trusted ERG score is calculated
-            yet.
-          </p>
-          <form
-            className="communityForm"
-            onSubmit={submitRating}
+          <section
+            className="flex flex-col gap-4"
+            data-testid="community-report-panel"
           >
-            <label>
-              <span className="formLabel">Experience score</span>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={realityGapScore}
-                onChange={(event) =>
-                  setRealityGapScore(Number(event.target.value))
-                }
-                data-testid="community-rating-score"
-              />
-              <span className="summaryValue">{realityGapScore}</span>
-            </label>
-            <label>
-              <span className="formLabel">Optional note</span>
-              <textarea
-                value={ratingComment}
-                onChange={(event) => setRatingComment(event.target.value)}
-                maxLength={2000}
-                data-testid="community-rating-comment"
-              />
-            </label>
-            <button
-              type="submit"
-              data-testid="community-rating-submit"
+            <Kicker accent="terra">Report data issue</Kicker>
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={submitReport}
             >
-              Submit limited input
-            </button>
-          </form>
-        </section>
-      </div>
+              <Field>
+                <FieldLabel>Issue type</FieldLabel>
+                <select
+                  value={reportType}
+                  onChange={(event) =>
+                    setReportType(event.target.value as ReportType)
+                  }
+                  data-testid="community-report-type"
+                  className={INPUT_CLASS}
+                >
+                  <option value="outdated">Outdated</option>
+                  <option value="wrong">Wrong</option>
+                  <option value="missing_source">Missing source</option>
+                  <option value="contradiction">Contradiction</option>
+                  <option value="translation_issue">Translation issue</option>
+                  <option value="other">Other</option>
+                </select>
+              </Field>
+              <Field>
+                <FieldLabel>Message</FieldLabel>
+                <textarea
+                  value={reportMessage}
+                  onChange={(event) => setReportMessage(event.target.value)}
+                  required
+                  maxLength={2000}
+                  data-testid="community-report-message"
+                  className={TEXTAREA_CLASS}
+                />
+              </Field>
+              <Button
+                type="submit"
+                disabled={!reportMessage.trim()}
+                data-testid="community-report-submit"
+              >
+                Send to review
+              </Button>
+            </form>
+          </section>
+
+          <section
+            className="flex flex-col gap-4"
+            data-testid="community-rating-panel"
+          >
+            <Kicker accent="plum">Reality gap preview</Kicker>
+            <p className="text-c4 text-xs">
+              Limited community input only; no trusted ERG score is
+              calculated yet.
+            </p>
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={submitRating}
+            >
+              <Field>
+                <FieldLabel>Experience score</FieldLabel>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={realityGapScore}
+                  onChange={(event) =>
+                    setRealityGapScore(Number(event.target.value))
+                  }
+                  data-testid="community-rating-score"
+                  className="w-full"
+                />
+                <span className="font-display text-gold3 text-sm font-bold">
+                  {realityGapScore}
+                </span>
+              </Field>
+              <Field>
+                <FieldLabel>Optional note</FieldLabel>
+                <textarea
+                  value={ratingComment}
+                  onChange={(event) => setRatingComment(event.target.value)}
+                  maxLength={2000}
+                  data-testid="community-rating-comment"
+                  className={TEXTAREA_CLASS}
+                />
+              </Field>
+              <Button
+                type="submit"
+                data-testid="community-rating-submit"
+              >
+                Submit limited input
+              </Button>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

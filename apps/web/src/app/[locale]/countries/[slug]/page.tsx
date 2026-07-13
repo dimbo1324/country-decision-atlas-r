@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import { getLocale } from "next-intl/server";
+import { Card, DossierRail, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../i18n/navigation";
 import { countriesApi } from "../../../../shared/api";
 import { asSupportedLocale } from "../../../../shared/lib/locale";
@@ -31,6 +33,59 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+const RAIL_SECTIONS = [
+  { id: "overview", label: "Обзор" },
+  { id: "cii", label: "CII" },
+  { id: "platform-intelligence", label: "Платформенный интеллект" },
+  { id: "trust", label: "Доверие" },
+  { id: "drift", label: "Тренды" },
+  { id: "scores", label: "Скоры" },
+  { id: "routes", label: "Маршруты" },
+  { id: "migration-board", label: "Доска переезда" },
+  { id: "profile", label: "Профиль" },
+  { id: "what-changed", label: "Что изменилось" },
+  { id: "data-journal", label: "Журнал данных" },
+  { id: "legal-signals", label: "Правовые сигналы" },
+  { id: "sources", label: "Источники" },
+  { id: "evidence", label: "Доказательства" },
+  { id: "user-stories", label: "Истории" },
+  { id: "community", label: "Community" },
+  { id: "locale-status", label: "Перевод" },
+];
+
+function DossierSection({
+  id,
+  title,
+  description,
+  testId,
+  children,
+}: {
+  id: string;
+  title: string;
+  description?: string;
+  testId?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      data-testid={testId}
+      className="scroll-mt-24"
+    >
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <h2 className="font-display text-xl font-semibold">{title}</h2>
+        {description && (
+          <p className="text-c3 text-sm leading-relaxed">{description}</p>
+        )}
+        {children}
+      </Card>
+    </section>
+  );
+}
+
 export default async function CountryPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = asSupportedLocale(await getLocale());
@@ -44,28 +99,23 @@ export default async function CountryPage({ params }: PageProps) {
         ? err.message
         : (err as { error?: { code?: string; message?: string } });
     return (
-      <div className="pageShell">
+      <div className="flex flex-col gap-6">
         <nav
-          className="breadcrumbs"
           aria-label="Навигация"
+          className="text-c4 flex items-center gap-2 text-xs"
         >
           <Link
             href={routes.countries}
-            className="breadcrumbLink"
+            className="hover:text-gold transition-colors duration-300"
           >
             Страны
           </Link>
-          <span
-            className="breadcrumbSep"
-            aria-hidden="true"
-          >
-            /
-          </span>
-          <span className="breadcrumbCurrent">{slug}</span>
+          <span aria-hidden="true">/</span>
+          <span>{slug}</span>
         </nav>
-        <header className="pageHeader">
-          <p className="eyebrow">Страна</p>
-          <h1>{slug}</h1>
+        <header className="flex flex-col gap-3">
+          <Kicker>Страна</Kicker>
+          <h1 className="font-display text-3xl font-bold">{slug}</h1>
         </header>
         <ErrorState
           error={errProp}
@@ -79,31 +129,26 @@ export default async function CountryPage({ params }: PageProps) {
   const isFallback = card.locale.translation_status === "fallback";
 
   return (
-    <div className="pageShell">
+    <div className="flex flex-col gap-6">
       <nav
-        className="breadcrumbs"
         aria-label="Навигация"
+        className="text-c4 flex items-center gap-2 text-xs"
       >
         <Link
           href={routes.countries}
-          className="breadcrumbLink"
+          className="hover:text-gold transition-colors duration-300"
         >
           Страны
         </Link>
-        <span
-          className="breadcrumbSep"
-          aria-hidden="true"
-        >
-          /
-        </span>
-        <span className="breadcrumbCurrent">{card.country.name}</span>
+        <span aria-hidden="true">/</span>
+        <span>{card.country.name}</span>
       </nav>
 
       {isFallback && (
-        <div className="fallbackBanner">
+        <p className="border-terra2/60 text-terra3 border px-4 py-3 text-sm">
           Русский перевод частично отсутствует. Показана английская
           fallback-версия.
-        </div>
+        </p>
       )}
 
       <CountryHeader country={card.country} />
@@ -112,181 +157,199 @@ export default async function CountryPage({ params }: PageProps) {
         <WatchlistButton countrySlug={card.country.slug} />
       </div>
 
-      <div
-        className="cardSections"
-        data-testid="country-card"
-      >
-        {card.profile?.executive_summary && (
-          <section className="cardSection cardSectionHighlight">
-            <h2 className="cardSectionTitle">Обзор</h2>
-            <p className="executiveSummaryText">
-              {card.profile.executive_summary}
-            </p>
-          </section>
-        )}
-
-        <section
-          className="cardSection"
-          data-testid="cii-section"
+      <div className="flex gap-8">
+        <div
+          className="flex min-w-0 flex-1 flex-col gap-8"
+          data-testid="country-card"
         >
-          <h2 className="cardSectionTitle">
-            Индекс инвестиционной привлекательности (CII)
-          </h2>
-          <CountryCiiBlock
-            cii={card.cii}
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          {card.profile?.executive_summary && (
+            <section
+              id="overview"
+              className="scroll-mt-24"
+            >
+              <Card
+                accent="gold"
+                interactive={false}
+              >
+                <h2 className="font-display mb-3 text-xl font-semibold">
+                  Обзор
+                </h2>
+                <p className="text-c2 text-sm leading-relaxed">
+                  {card.profile.executive_summary}
+                </p>
+              </Card>
+            </section>
+          )}
 
-        <section
-          className="cardSection"
-          data-testid="platform-intelligence-section"
-        >
-          <h2 className="cardSectionTitle">Платформенный интеллект</h2>
-          <PlatformIntelligenceBlock
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="cii"
+            title="Индекс инвестиционной привлекательности (CII)"
+            testId="cii-section"
+          >
+            <CountryCiiBlock
+              cii={card.cii}
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="trust-surface-section"
-        >
-          <h2 className="cardSectionTitle">Качество данных</h2>
-          <TrustSurfaceBlock
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="platform-intelligence"
+            title="Платформенный интеллект"
+            testId="platform-intelligence-section"
+          >
+            <PlatformIntelligenceBlock
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="country-drift-section"
-        >
-          <h2 className="cardSectionTitle">Направление изменений</h2>
-          <CountryDriftBlock
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="trust"
+            title="Качество данных"
+            testId="trust-surface-section"
+          >
+            <TrustSurfaceBlock
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Оценки сценариев</h2>
-          <CountryScores
-            scores={card.scores}
-            sources={card.sources}
-          />
-        </section>
+          <DossierSection
+            id="drift"
+            title="Направление изменений"
+            testId="country-drift-section"
+          >
+            <CountryDriftBlock
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Маршруты</h2>
-          <CountryRoutesBlock
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="scores"
+            title="Оценки сценариев"
+          >
+            <CountryScores
+              scores={card.scores}
+              sources={card.sources}
+            />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="country-migration-board-section"
-        >
-          <h2 className="cardSectionTitle">
-            Люди, планирующие это направление
-          </h2>
-          <CountryMigrationBoardBlock countrySlug={card.country.slug} />
-        </section>
+          <DossierSection
+            id="routes"
+            title="Маршруты"
+          >
+            <CountryRoutesBlock
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Профиль страны</h2>
-          <CountryProfileSections
-            profile={card.profile}
-            skipExecutiveSummary
-          />
-        </section>
+          <DossierSection
+            id="migration-board"
+            title="Люди, планирующие это направление"
+            testId="country-migration-board-section"
+          >
+            <CountryMigrationBoardBlock countrySlug={card.country.slug} />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="what-changed-section"
-        >
-          <h2 className="cardSectionTitle">Что изменилось</h2>
-          <CountryWhatChanged
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="profile"
+            title="Профиль страны"
+          >
+            <CountryProfileSections
+              profile={card.profile}
+              skipExecutiveSummary
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Последние обновления данных</h2>
-          <CountryDataJournalBlock
-            countrySlug={card.country.slug}
-            locale={locale}
-          />
-        </section>
+          <DossierSection
+            id="what-changed"
+            title="Что изменилось"
+            testId="what-changed-section"
+          >
+            <CountryWhatChanged
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Правовые сигналы</h2>
-          <p className="cardSectionDesc">
-            Правовые сигналы — структурированные изменения и риски, способные
-            повлиять на переезд, бизнес, безопасность или долгосрочное
-            планирование.
-          </p>
-          <CountryLegalSignals legalSignals={card.legal_signals} />
-          <div className="entityLinkRow">
+          <DossierSection
+            id="data-journal"
+            title="Последние обновления данных"
+          >
+            <CountryDataJournalBlock
+              countrySlug={card.country.slug}
+              locale={locale}
+            />
+          </DossierSection>
+
+          <DossierSection
+            id="legal-signals"
+            title="Правовые сигналы"
+            description="Правовые сигналы — структурированные изменения и риски, способные повлиять на переезд, бизнес, безопасность или долгосрочное планирование."
+          >
+            <CountryLegalSignals legalSignals={card.legal_signals} />
             <Link
               href={routes.legalSignalsForCountry(card.country.slug)}
-              className="internalLink"
+              className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
             >
               Все правовые сигналы для {card.country.name} →
             </Link>
-          </div>
-        </section>
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Данные с источниками</h2>
-          <CountrySources sources={card.sources} />
-          <div className="entityLinkRow">
+          <DossierSection
+            id="sources"
+            title="Данные с источниками"
+          >
+            <CountrySources sources={card.sources} />
             <Link
               href={routes.sourcesForCountry(card.country.slug)}
-              className="internalLink"
+              className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
             >
               Все источники для {card.country.name} →
             </Link>
-          </div>
-        </section>
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Доказательства и источники</h2>
-          <CountryEvidenceSummary
-            evidenceSummary={card.evidence_summary}
-            countrySlug={card.country.slug}
-            sourceSummary={card.profile?.source_summary}
-          />
-        </section>
+          <DossierSection
+            id="evidence"
+            title="Доказательства и источники"
+          >
+            <CountryEvidenceSummary
+              evidenceSummary={card.evidence_summary}
+              countrySlug={card.country.slug}
+              sourceSummary={card.profile?.source_summary}
+            />
+          </DossierSection>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Пользовательские истории</h2>
-          <CountryUserStoriesSummary
-            userStoriesSummary={card.user_stories_summary}
-          />
-        </section>
+          <DossierSection
+            id="user-stories"
+            title="Пользовательские истории"
+          >
+            <CountryUserStoriesSummary
+              userStoriesSummary={card.user_stories_summary}
+            />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="community-section"
-        >
-          <h2 className="cardSectionTitle">Community</h2>
-          <CommunityCountryBlock countrySlug={card.country.slug} />
-        </section>
+          <DossierSection
+            id="community"
+            title="Community"
+            testId="community-section"
+          >
+            <CommunityCountryBlock countrySlug={card.country.slug} />
+          </DossierSection>
 
-        <section
-          className="cardSection"
-          data-testid="locale-status"
-        >
-          <h2 className="cardSectionTitle">Статус перевода</h2>
-          <LocaleStatusBadge locale={card.locale} />
-        </section>
+          <DossierSection
+            id="locale-status"
+            title="Статус перевода"
+            testId="locale-status"
+          >
+            <LocaleStatusBadge locale={card.locale} />
+          </DossierSection>
+        </div>
+
+        <DossierRail sections={RAIL_SECTIONS} />
       </div>
     </div>
   );
