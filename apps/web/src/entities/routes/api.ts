@@ -33,5 +33,6 @@ export function countryRoutesQuery(
         offset: 0,
       }),
     staleTime: 60_000,
+    retry: false,
   });
 }

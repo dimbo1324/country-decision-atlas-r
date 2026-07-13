@@ -333,12 +333,14 @@ export function CommunityCountryBlock({
             and appears publicly only after moderation.
           </p>
         </div>
-        <Badge
-          variant="default"
-          title="review gate"
-        >
-          review gate
-        </Badge>
+        <div data-testid="community-review-badge">
+          <Badge
+            variant="default"
+            title="review gate"
+          >
+            review gate
+          </Badge>
+        </div>
       </div>
 
       {status.kind !== "idle" && (

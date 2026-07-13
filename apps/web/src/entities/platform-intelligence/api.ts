@@ -13,5 +13,6 @@ export function countryPlatformMetricsQuery(
     queryFn: () =>
       platformMetricsApi.getCountryPlatformMetrics(countrySlug, locale),
     staleTime: 60_000,
+    retry: false,
   });
 }

@@ -37,14 +37,19 @@ export function RouteEligibilityBadges({
   const visibleEntries = compact ? entries.slice(0, 4) : entries;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div
+      className="flex flex-wrap gap-2"
+      data-testid="route-eligibility"
+    >
       {visibleEntries.map(([key, value]) => (
-        <Badge
+        <span
           key={key}
-          variant={VALUE_VARIANT[value]}
+          data-testid="route-eligibility-badge"
         >
-          {LABELS[key]}: {VALUE_LABELS[value]}
-        </Badge>
+          <Badge variant={VALUE_VARIANT[value]}>
+            {LABELS[key]}: {VALUE_LABELS[value]}
+          </Badge>
+        </span>
       ))}
     </div>
   );

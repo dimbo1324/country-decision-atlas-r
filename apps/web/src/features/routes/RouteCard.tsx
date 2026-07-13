@@ -19,7 +19,9 @@ export function RouteCard({ route }: RouteCardProps) {
         <div className="flex flex-col gap-2">
           <h3 className="font-display text-base font-semibold">{route.title}</h3>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="default">{route.route_type}</Badge>
+            <span data-testid="route-type-badge">
+              <Badge variant="default">{route.route_type}</Badge>
+            </span>
             <Badge variant="default">{route.legal_status}</Badge>
           </div>
         </div>

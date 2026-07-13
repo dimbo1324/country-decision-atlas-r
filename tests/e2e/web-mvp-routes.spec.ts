@@ -55,14 +55,14 @@ test.describe("Country routes block", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     const card = page.getByTestId("route-card").first();
-    await expect(card.locator(".metaChip").first()).toBeVisible();
+    await expect(card.getByTestId("route-type-badge")).toBeVisible();
   });
 
   test("route cards have eligibility badges", async ({ page }) => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     const card = page.getByTestId("route-card").first();
-    await expect(card.locator(".routeEligibilityBadge").first()).toBeVisible();
+    await expect(card.getByTestId("route-eligibility-badge").first()).toBeVisible();
   });
 
   test("route card has detail link", async ({ page }) => {
@@ -102,7 +102,7 @@ test.describe("Route detail page", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     await page.getByTestId("route-card").first().getByRole("link").click();
-    await expect(page.locator(".routeEligibility").first()).toBeVisible();
+    await expect(page.getByTestId("route-eligibility").first()).toBeVisible();
   });
 
   test("route detail has documents section", async ({ page }) => {

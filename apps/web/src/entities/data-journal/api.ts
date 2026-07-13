@@ -12,5 +12,6 @@ export function countryDataJournalQuery(
     queryKey: ["country", countrySlug, "data-journal", locale] as const,
     queryFn: () => dataJournalApi.getCountryDataJournal(countrySlug, locale),
     staleTime: 60_000,
+    retry: false,
   });
 }

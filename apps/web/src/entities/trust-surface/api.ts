@@ -9,5 +9,6 @@ export function countryTrustQuery(countrySlug: string, locale: LocaleCode) {
     queryKey: ["country", countrySlug, "trust", locale] as const,
     queryFn: () => trustApi.getCountryTrust(countrySlug, locale),
     staleTime: 60_000,
+    retry: false,
   });
 }

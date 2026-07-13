@@ -19,5 +19,6 @@ export function countryWhatChangedQuery(
         limit: DISPLAY_LIMIT,
       }),
     staleTime: 60_000,
+    retry: false,
   });
 }
