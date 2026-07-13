@@ -8,6 +8,7 @@ import {
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
+import { GlossaryTerm } from "../../shared/ui/GlossaryTerm";
 import { AIExplainNumberButton } from "../ai-assistant";
 
 type CiiData = NonNullable<CountryReadModelResponse["cii"]>;
@@ -123,9 +124,9 @@ export function CountryCiiBlock({
         )}
 
         <p className="text-c4 font-mono text-[9px] leading-relaxed tracking-[0.05em] uppercase">
-          CII — составной индекс: верховенство права, экон. свобода, полит.
-          стабильность, безопасность, антикоррупция, цифровой доступ. Выше =
-          лучше.
+          <GlossaryTerm slug="cii">CII</GlossaryTerm> — составной индекс:
+          верховенство права, экон. свобода, полит. стабильность, безопасность,
+          антикоррупция, цифровой доступ. Выше = лучше.
         </p>
       </Card>
     </div>
