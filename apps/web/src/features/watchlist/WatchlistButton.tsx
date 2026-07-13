@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { isApiError } from "../../shared/api/http";
 import { watchlistsApi } from "../../shared/api/watchlists";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { hasSessionHint } from "../../shared/auth/session";
 import { routes } from "../../shared/lib/routes";
 
 type WatchlistButtonState =
@@ -17,9 +18,20 @@ type WatchlistButtonState =
 
 export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
   const { user, isLoading: isAuthLoading } = useAuth();
-  const [state, setState] = useState<WatchlistButtonState>("loading");
+  // Visitors with no session hint can't possibly have a saved watchlist, so
+  // this must not start at "loading" and flip via a mount effect: any
+  // client-side setState here — however brief — duplicates SSR content on
+  // force-dynamic pages (see memory episode_gotchas_backend_tooling.md).
+  const [state, setState] = useState<WatchlistButtonState>(() =>
+    hasSessionHint() ? "loading" : "login-required",
+  );
 
   useEffect(() => {
+    // No session hint means the initializer above already set
+    // "login-required" correctly — running this effect anyway would call a
+    // redundant setState on mount, which is enough by itself to duplicate
+    // SSR content on force-dynamic pages, independent of what value is set.
+    if (!hasSessionHint()) return;
     if (isAuthLoading) return;
     if (!user) {
       setState("login-required");
