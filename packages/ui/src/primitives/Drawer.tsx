@@ -34,6 +34,12 @@ export function Drawer({
 
   const accentClasses = ACCENTS[accent];
 
+  // `document` doesn't exist during SSR — client components still render
+  // once on the server for the initial HTML, so a portal target resolved
+  // eagerly at render time (rather than inside an effect) would crash that
+  // pass. The drawer is always closed on first paint anyway.
+  if (typeof document === "undefined") return null;
+
   // Portalled to document.body: an ancestor with `transform` (a pager
   // track, a card-glow wrapper, etc.) becomes the containing block for
   // `position: fixed` descendants — the drawer would be boxed into that
