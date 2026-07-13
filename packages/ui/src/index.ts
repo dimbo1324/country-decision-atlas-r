@@ -1,6 +1,7 @@
 export { cn } from "./lib/cn";
 export { ACCENTS, type Accent } from "./lib/accents";
 export { readCssVar, withAlpha } from "./lib/color";
+export type { Confidence } from "./lib/confidence";
 
 export { useCanvasLoop, lerp } from "./hooks/useCanvasLoop";
 export { useReducedMotion } from "./hooks/useReducedMotion";
@@ -71,3 +72,33 @@ export { EmptyState } from "./primitives/EmptyState";
 export { LoadingState } from "./primitives/LoadingState";
 export { Skeleton } from "./primitives/Skeleton";
 export { ErrorState } from "./primitives/ErrorState";
+
+export type {
+  ChartMode,
+  ChartDatum,
+  DonutSegment,
+  HeatmapData,
+  RankFlowSeries,
+  DriftBoardRow,
+  PassportData,
+  LegalSignalEvent,
+  CriteriaWeight,
+} from "./charts/types";
+export { accentCssVar } from "./charts/types";
+export {
+  ChartVisibilityProvider,
+  useChartVisible,
+} from "./charts/useChartVisibility";
+export { RadarChart, type RadarSeries } from "./charts/RadarChart";
+export { SparklineChart } from "./charts/SparklineChart";
+export { DivergingMeter } from "./charts/DivergingMeter";
+export { ProgressRing } from "./charts/ProgressRing";
+export { GaugeArc } from "./charts/GaugeArc";
+export { DonutChart } from "./charts/DonutChart";
+export { Heatmap } from "./charts/Heatmap";
+export { RankFlow } from "./charts/RankFlow";
+export { BarColumns } from "./charts/BarColumns";
+export { DriftBoard } from "./charts/DriftBoard";
+export { PassportCard } from "./charts/PassportCard";
+export { LegalSignalTimeline } from "./charts/LegalSignalTimeline";
+export { CriteriaWeightBars } from "./charts/CriteriaWeightBars";

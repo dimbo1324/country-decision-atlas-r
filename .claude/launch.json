@@ -40,6 +40,12 @@
       "runtimeExecutable": "go",
       "runtimeArgs": ["run", "./cmd/notifier"],
       "cwd": "apps/notifier"
+    },
+    {
+      "name": "ui-storybook",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@country-decision-atlas/ui", "storybook"],
+      "port": 6006
     }
   ]
 }

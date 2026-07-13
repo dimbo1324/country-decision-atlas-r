@@ -4,10 +4,31 @@ import { type ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "../lib/cn";
+import { Badge } from "./Badge";
+import type { Confidence } from "../lib/confidence";
+
+const CONFIDENCE_LABEL: Record<Confidence, string> = {
+  low: "Уверенность: низкая",
+  medium: "Уверенность: средняя",
+  high: "Уверенность: высокая",
+};
+
+const CONFIDENCE_VARIANT: Record<
+  Confidence,
+  "negative" | "warning" | "positive"
+> = {
+  low: "negative",
+  medium: "warning",
+  high: "positive",
+};
 
 interface ChartFrameProps {
   title: string;
   live?: boolean;
+  /** Data-transparency annotations (design-system §6): verification date
+   * and confidence, shown next to the metric they describe. */
+  verifiedAt?: string;
+  confidence?: Confidence;
   children: ReactNode;
   className?: string;
   expandable?: boolean;
@@ -16,21 +37,43 @@ interface ChartFrameProps {
 function FrameHeader({
   title,
   live,
+  verifiedAt,
+  confidence,
   expanded,
   expandable,
   onToggle,
 }: {
   title: string;
   live: boolean;
+  verifiedAt?: string;
+  confidence?: Confidence;
   expanded: boolean;
   expandable: boolean;
   onToggle: () => void;
 }) {
   return (
-    <div className="mb-4 flex items-center justify-between gap-4">
-      <span className="font-mono text-c3 truncate text-[10px] tracking-[0.2em] uppercase">
-        {title}
-      </span>
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
+        <span className="font-mono text-c3 truncate text-[10px] tracking-[0.2em] uppercase">
+          {title}
+        </span>
+        {verifiedAt && (
+          <Badge
+            variant="default"
+            title="Дата верификации данных"
+          >
+            Проверено {verifiedAt}
+          </Badge>
+        )}
+        {confidence && (
+          <Badge
+            variant={CONFIDENCE_VARIANT[confidence]}
+            title="Уровень уверенности платформы в этом показателе"
+          >
+            {CONFIDENCE_LABEL[confidence]}
+          </Badge>
+        )}
+      </div>
       <div className="flex shrink-0 items-center gap-4">
         {live && (
           <span className="font-mono text-gold3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase">
@@ -133,10 +176,18 @@ export function ChartFrame({
   );
 }
 
-export function MetricStat({ value, label }: { value: ReactNode; label: string }) {
+export function MetricStat({
+  value,
+  label,
+}: {
+  value: ReactNode;
+  label: string;
+}) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="font-display text-gold3 text-3xl font-bold">{value}</span>
+      <span className="font-display text-gold3 text-3xl font-bold">
+        {value}
+      </span>
       <span className="font-mono text-c3 text-[10px] tracking-[0.15em] uppercase">
         {label}
       </span>

@@ -30,9 +30,39 @@ export const Live: Story = {
 };
 
 export const Expandable: Story = {
-  args: { title: "Развернуть для деталей (нажмите на иконку)", expandable: true, live: false },
+  args: {
+    title: "Развернуть для деталей (нажмите на иконку)",
+    expandable: true,
+    live: false,
+  },
   render: (args) => (
     <div style={{ width: 360, height: 220 }}>
+      <ChartFrame {...args}>
+        <div
+          style={{
+            display: "flex",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--color-c4)",
+          }}
+        >
+          график
+        </div>
+      </ChartFrame>
+    </div>
+  ),
+};
+
+export const WithTransparencyBadges: Story = {
+  args: {
+    title: "CII · профиль страны",
+    live: false,
+    verifiedAt: "2026-06",
+    confidence: "high",
+  },
+  render: (args) => (
+    <div style={{ width: 420, height: 220 }}>
       <ChartFrame {...args}>
         <div
           style={{

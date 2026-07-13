@@ -39,15 +39,47 @@ export function useCanvasLoop(
       paint();
       frameRef.current = requestAnimationFrame(tick);
     };
-    // Paint synchronously on mount instead of waiting for the first rAF tick:
-    // a fresh mount (e.g. the fullscreen chart overlay, which remounts this
+
+    const stop = () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+    };
+
+    // Paint synchronously instead of waiting for the first rAF tick: a fresh
+    // mount (e.g. the fullscreen chart overlay, which remounts this
     // component into a portal) must show a correct frame immediately, not an
     // empty canvas for one frame while the first rAF callback is pending.
-    paint();
-    frameRef.current = requestAnimationFrame(tick);
+    const start = () => {
+      if (frameRef.current !== null) return;
+      paint();
+      frameRef.current = requestAnimationFrame(tick);
+    };
+
+    // A hidden browser tab has no visible pixels to paint, so a *transition*
+    // to hidden stops the loop instead of drawing into the void every frame —
+    // resumes with a fresh paint on the transition back to visible. The
+    // initial mount always starts regardless of the current
+    // visibilityState: headless/automated browsers (Playwright, this
+    // project's own Storybook preview under browser automation) commonly
+    // report "hidden" for an unfocused-but-still-rendering tab, and gating
+    // the first start on that would silently stop every canvas chart from
+    // ever drawing under CI/E2E.
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, ref]);

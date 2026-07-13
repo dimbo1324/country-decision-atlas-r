@@ -26,6 +26,7 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "d3-scale": "^4.0.2",
     "lucide-react": "^0.469.0",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.6.0"
@@ -40,6 +41,7 @@
     "@storybook/react": "^8.4.7",
     "@storybook/react-vite": "^8.4.7",
     "@tailwindcss/vite": "^4.0.0",
+    "@types/d3-scale": "^4.0.9",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
