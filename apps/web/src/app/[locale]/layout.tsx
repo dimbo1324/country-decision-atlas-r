@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "../../i18n/routing";
+import { GlossaryProvider } from "../../shared/glossary/GlossaryProvider";
 import { AppShell } from "../../shared/ui/AppShell";
 
 type LocaleLayoutProps = {
@@ -23,7 +24,9 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <AppShell>{children}</AppShell>
+      <GlossaryProvider>
+        <AppShell>{children}</AppShell>
+      </GlossaryProvider>
     </NextIntlClientProvider>
   );
 }
