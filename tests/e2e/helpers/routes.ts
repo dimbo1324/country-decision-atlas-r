@@ -34,8 +34,15 @@ export const e2eRoutes = {
   compare: withLocale("/compare"),
   legalSignals: (params?: Record<string, string>) =>
     pathWithQuery("/legal-signals", params),
+  legalSignalsTimeline: (params?: Record<string, string>) =>
+    pathWithQuery("/legal-signals/timeline", params),
   sources: (params?: Record<string, string>) =>
     pathWithQuery("/sources", params),
+  methodology: (locale?: string) => withLocale("/methodology", locale),
+  methodologyParameters: (locale?: string) =>
+    withLocale("/methodology/parameters", locale),
+  glossary: (params?: Record<string, string>) =>
+    pathWithQuery("/glossary", params),
   search: (params?: Record<string, string>) => pathWithQuery("/search", params),
   dataQuality: "/internal/data-quality",
   migrationBoard: withLocale("/migration-board"),

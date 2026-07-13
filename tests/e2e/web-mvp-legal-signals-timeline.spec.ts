@@ -11,8 +11,10 @@ test.describe("legal signals timeline", () => {
     ).toBeVisible({
       timeout: 10_000,
     });
-    await expect(page.locator(".timelineYearTitle").first()).toBeVisible();
-    const eventCards = page.locator(".timelineEventCard");
+    await expect(
+      page.locator('[data-testid="timeline-year-heading"]').first(),
+    ).toBeVisible();
+    const eventCards = page.locator('[data-testid="legal-signal-event-card"]');
     await expect(eventCards.getByText(/россия|russia/i).first()).toBeVisible();
     await expect(
       eventCards.getByText(/уругвай|uruguay/i).first(),

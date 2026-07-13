@@ -56,7 +56,7 @@ test.describe("Argentina legal signals and timeline", () => {
     ).toBeVisible({
       timeout: 15_000,
     });
-    const eventCards = page.locator(".timelineEventCard");
+    const eventCards = page.locator('[data-testid="legal-signal-event-card"]');
     await expect(eventCards.first()).toBeVisible({ timeout: 15_000 });
     await expectNoAppCrash(page);
   });
@@ -73,7 +73,7 @@ test.describe("Argentina legal signals and timeline", () => {
       timeout: 15_000,
     });
     const impactBadge = page
-      .locator(".timelineEventCard")
+      .locator('[data-testid="legal-signal-event-card"]')
       .filter({ hasText: /положительное|негативное|нейтральное|смешанное/i });
     await expect(impactBadge.first()).toBeVisible({ timeout: 15_000 });
     await expectNoAppCrash(page);

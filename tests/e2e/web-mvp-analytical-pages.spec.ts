@@ -12,14 +12,16 @@ test.describe("legal signals page", () => {
     );
     await expectHasMainHeading(page, /лента правовых сигналов/i);
 
-    await expect(page.locator(".filterBar")).toBeVisible();
+    await expect(
+      page.locator('[data-testid="timeline-filters"]'),
+    ).toBeVisible();
 
     const countrySelect = page.locator("#timeline-country");
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("russia");
 
     const hasItems = await page
-      .locator(".timelineGroups")
+      .locator('[data-testid="legal-signals-timeline"]')
       .isVisible()
       .catch(() => false);
     const hasEmpty = await page
@@ -62,7 +64,7 @@ test.describe("legal signals page", () => {
     );
     await expectHasMainHeading(page, /лента правовых сигналов/i);
     const hasItems = await page
-      .locator(".timelineGroups")
+      .locator('[data-testid="legal-signals-timeline"]')
       .isVisible()
       .catch(() => false);
     if (hasItems) {
@@ -82,14 +84,14 @@ test.describe("sources page", () => {
     );
     await expectHasMainHeading(page, /источники доказательств/i);
 
-    await expect(page.locator(".filterBar")).toBeVisible();
+    await expect(page.locator('[data-testid="sources-filters"]')).toBeVisible();
 
     const countrySelect = page.locator("#src-country");
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("uruguay");
 
     const hasItems = await page
-      .locator(".sourceList")
+      .locator('[data-testid="sources-list"]')
       .waitFor({ timeout: 10_000 })
       .then(() => true)
       .catch(() => false);
@@ -119,11 +121,13 @@ test.describe("sources page", () => {
     await expectHasMainHeading(page, /источники доказательств/i);
 
     const hasItems = await page
-      .locator(".sourceList")
+      .locator('[data-testid="sources-list"]')
       .isVisible()
       .catch(() => false);
     if (hasItems) {
-      const externalLinks = page.locator("a.externalLink");
+      const externalLinks = page.locator(
+        '[data-testid="source-external-link"]',
+      );
       const count = await externalLinks.count();
       if (count > 0) {
         const first = externalLinks.first();
@@ -140,7 +144,7 @@ test.describe("sources page", () => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
     await expectHasMainHeading(page, /источники доказательств/i);
     const hasItems = await page
-      .locator(".sourceList")
+      .locator('[data-testid="sources-list"]')
       .isVisible()
       .catch(() => false);
     if (hasItems) {
