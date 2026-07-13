@@ -1,40 +1,38 @@
+import { scoreLabelStyle } from "@country-decision-atlas/ui";
+
 const BANDS = [
-  { label: "weak", text: "Слабый (0–30)", className: "matrixCellWeak" },
-  {
-    label: "limited",
-    text: "Ограниченный (30–50)",
-    className: "matrixCellLimited",
-  },
-  {
-    label: "moderate",
-    text: "Средний (50–70)",
-    className: "matrixCellModerate",
-  },
-  { label: "strong", text: "Сильный (70–85)", className: "matrixCellStrong" },
-  {
-    label: "excellent",
-    text: "Отличный (85–100)",
-    className: "matrixCellExcellent",
-  },
+  { label: "weak", text: "Слабый (0–30)" },
+  { label: "limited", text: "Ограниченный (30–50)" },
+  { label: "moderate", text: "Средний (50–70)" },
+  { label: "strong", text: "Сильный (70–85)" },
+  { label: "excellent", text: "Отличный (85–100)" },
 ];
 
 export function MatrixLegend() {
   return (
     <div
-      className="matrixLegend"
+      className="flex flex-col gap-3"
       data-testid="compare-matrix-legend"
     >
-      <h3 className="matrixLegendTitle">Легенда</h3>
-      <div className="matrixLegendBands">
-        {BANDS.map((b) => (
-          <div
-            key={b.label}
-            className="matrixLegendItem"
-          >
-            <span className={`matrixLegendDot ${b.className}`} />
-            <span>{b.text}</span>
-          </div>
-        ))}
+      <h3 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+        Легенда
+      </h3>
+      <div className="flex flex-wrap gap-4">
+        {BANDS.map((b) => {
+          const { accent } = scoreLabelStyle(b.label);
+          return (
+            <div
+              key={b.label}
+              className="flex items-center gap-2"
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: `var(--color-${accent})` }}
+              />
+              <span className="text-c3 text-xs">{b.text}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

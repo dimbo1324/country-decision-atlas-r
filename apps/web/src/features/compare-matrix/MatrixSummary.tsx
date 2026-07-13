@@ -65,34 +65,35 @@ export function MatrixSummary({ countries, scenarios, cells }: Props) {
 
   return (
     <div
-      className="matrixSummary"
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2"
       data-testid="compare-matrix-summary"
     >
-      <h3 className="matrixSummaryTitle">Сводка</h3>
-      <div className="matrixSummarySection">
-        <h4 className="matrixSummarySectionTitle">Лучшая страна по сценарию</h4>
-        <ul className="matrixSummaryList">
+      <div className="flex flex-col gap-2">
+        <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Лучшая страна по сценарию
+        </h4>
+        <ul className="text-c3 flex flex-col gap-1 text-sm">
           {scenarioWinners.map(({ scenario, winner }) => (
-            <li
-              key={scenario.slug}
-              className="matrixSummaryItem"
-            >
-              <span className="matrixSummaryScenario">{scenario.name}:</span>{" "}
-              <span className="matrixSummaryValue">{winner?.name ?? "—"}</span>
+            <li key={scenario.slug}>
+              <span className="text-c4">{scenario.name}:</span>{" "}
+              <span className="text-c1 font-semibold">
+                {winner?.name ?? "—"}
+              </span>
             </li>
           ))}
         </ul>
       </div>
-      <div className="matrixSummarySection">
-        <h4 className="matrixSummarySectionTitle">Лучший сценарий по стране</h4>
-        <ul className="matrixSummaryList">
+      <div className="flex flex-col gap-2">
+        <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+          Лучший сценарий по стране
+        </h4>
+        <ul className="text-c3 flex flex-col gap-1 text-sm">
           {countryBest.map(({ country, best }) => (
-            <li
-              key={country.slug}
-              className="matrixSummaryItem"
-            >
-              <span className="matrixSummaryScenario">{country.name}:</span>{" "}
-              <span className="matrixSummaryValue">{best?.name ?? "—"}</span>
+            <li key={country.slug}>
+              <span className="text-c4">{country.name}:</span>{" "}
+              <span className="text-c1 font-semibold">
+                {best?.name ?? "—"}
+              </span>
             </li>
           ))}
         </ul>

@@ -25,24 +25,21 @@ export function CountryScenarioMatrix({
 
   return (
     <div
-      className="matrixTableWrapper"
+      className="overflow-x-auto"
       data-testid="compare-matrix"
     >
       <table
-        className="matrixTable"
+        className="w-full border-collapse"
         data-testid="compare-matrix-table"
       >
         <thead>
           <tr>
-            <th
-              className="matrixCornerCell"
-              scope="col"
-            />
+            <th scope="col" />
             {scenarios.map((s) => (
               <th
                 key={s.slug}
-                className="matrixScenarioHeader"
                 scope="col"
+                className="font-mono text-c4 border-warm border-b px-3 py-2 text-[8px] font-normal tracking-[0.15em] uppercase"
               >
                 {s.name}
               </th>
@@ -56,8 +53,8 @@ export function CountryScenarioMatrix({
               data-testid={`matrix-row-${country.slug}`}
             >
               <th
-                className="matrixCountryHeader"
                 scope="row"
+                className="border-warm border-r px-3 py-2 text-left text-sm font-semibold"
               >
                 {country.name}
               </th>
@@ -67,10 +64,10 @@ export function CountryScenarioMatrix({
                   return (
                     <td
                       key={scenario.slug}
-                      className="matrixCell matrixCellMissing"
+                      className="border-warm text-c4 border p-3 text-center"
                       data-testid="compare-matrix-cell"
                     >
-                      <span className="matrixCellScore">—</span>
+                      —
                     </td>
                   );
                 }
