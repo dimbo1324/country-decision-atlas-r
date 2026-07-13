@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@country-decision-atlas/ui";
 
 import type { DecisionRunRequest } from "../../shared/api/decision";
-import type { DecisionPassportCreateResponse } from "../../shared/api/decision-passports";
-import { decisionPassportsApi } from "../../shared/api";
+import { useCreateDecisionPassportMutation } from "../../entities/decision-passports/api";
 import { isApiError } from "../../shared/api/http";
 import type { SupportedLocale } from "../../shared/lib/locale";
 
@@ -22,34 +22,25 @@ export function DecisionPassportActions({
   decisionRequest,
   locale,
 }: DecisionPassportActionsProps) {
-  const [isCreating, setIsCreating] = useState(false);
-  const [passport, setPassport] =
-    useState<DecisionPassportCreateResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const createPassport = useCreateDecisionPassportMutation();
   const [copied, setCopied] = useState(false);
 
   async function handleCreate() {
-    setIsCreating(true);
-    setError(null);
     setCopied(false);
-    try {
-      const response = await decisionPassportsApi.createDecisionPassport({
-        decision_request: decisionRequest,
-        locale,
-      });
-      setPassport(response);
-    } catch (err: unknown) {
-      setError(
-        isApiError(err)
-          ? err.error.message
-          : "Не удалось создать Decision Passport. Попробуйте ещё раз.",
-      );
-    } finally {
-      setIsCreating(false);
-    }
+    createPassport.mutate({
+      decision_request: decisionRequest,
+      locale,
+    });
   }
 
+  const passport = createPassport.data;
   const fullUrl = passport ? buildFullUrl(passport.path, locale) : null;
+  const error =
+    createPassport.isError && isApiError(createPassport.error)
+      ? createPassport.error.error.message
+      : createPassport.isError
+        ? "Не удалось создать Decision Passport. Попробуйте ещё раз."
+        : null;
 
   async function handleCopy() {
     if (!fullUrl) return;
@@ -73,28 +64,23 @@ export function DecisionPassportActions({
   }
 
   return (
-    <div
-      className="decisionPassportActions"
-      data-testid="decision-passport-actions"
-    >
-      <button
-        type="button"
-        className="runButton"
+    <div data-testid="decision-passport-actions">
+      <Button
         onClick={handleCreate}
-        disabled={isCreating}
-        aria-busy={isCreating}
+        disabled={createPassport.isPending}
+        aria-busy={createPassport.isPending}
         aria-label="Создать Decision Passport"
         data-testid="create-passport-button"
       >
-        {isCreating
+        {createPassport.isPending
           ? "Создаём Decision Passport…"
           : "Создать Decision Passport"}
-      </button>
+      </Button>
 
       {error && (
         <p
-          className="formError"
           role="alert"
+          className="text-terra3 mt-2 text-sm"
           data-testid="passport-error"
         >
           {error}
@@ -103,25 +89,26 @@ export function DecisionPassportActions({
 
       {passport && fullUrl && (
         <div
-          className="passportLinkBlock"
+          className="mt-4 flex flex-col gap-2"
           data-testid="passport-link-block"
         >
           <a
             href={fullUrl}
             data-testid="passport-link"
             aria-label="Открыть Decision Passport"
+            className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
             {fullUrl}
           </a>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={handleCopy}
             aria-label="Скопировать ссылку на Decision Passport"
             data-testid="copy-passport-link"
           >
             {copied ? "Скопировано" : "Скопировать ссылку"}
-          </button>
-          <p className="formHint">
+          </Button>
+          <p className="text-c4 text-xs">
             Decision Passport — это сохранённый снимок результата, а не
             консультация.
           </p>

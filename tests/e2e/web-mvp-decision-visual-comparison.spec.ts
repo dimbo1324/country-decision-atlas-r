@@ -36,7 +36,7 @@ test.describe("decision visual comparison (CII)", () => {
       timeout: 20_000,
     });
 
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+    await expect(page.getByTestId("cii-compare-block")).toBeVisible({
       timeout: 15_000,
     });
 
@@ -53,7 +53,7 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiSpiderChart")).toBeVisible({
+    await expect(page.getByTestId("cii-spider-chart")).toBeVisible({
       timeout: 15_000,
     });
 
@@ -70,7 +70,7 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiCompareBars")).toBeVisible({
+    await expect(page.getByTestId("cii-compare-bars")).toBeVisible({
       timeout: 15_000,
     });
 
@@ -87,7 +87,7 @@ test.describe("decision visual comparison (CII)", () => {
     await expect(page.locator("[data-testid='decision-results']")).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.locator(".ciiWinnerList")).toBeVisible({
+    await expect(page.getByTestId("cii-winner-list")).toBeVisible({
       timeout: 15_000,
     });
 

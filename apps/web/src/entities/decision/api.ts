@@ -9,12 +9,13 @@ import { countriesApi } from "../../shared/api/countries";
 type LocaleCode = components["schemas"]["LocaleCode"];
 
 /** The decision form needs every country as an origin/candidate option,
- * not a paginated page of them — a generous limit is safe given the
- * platform's demo-scale country count. */
+ * not a paginated page of them — 100 is the API's actual max `limit`
+ * (validated server-side), safely above the platform's demo-scale
+ * country count. */
 export function allCountriesQuery(locale: LocaleCode) {
   return queryOptions({
     queryKey: ["country", "list", "all", locale] as const,
-    queryFn: () => countriesApi.listCountries({ locale, limit: 200 }),
+    queryFn: () => countriesApi.listCountries({ locale, limit: 100 }),
     staleTime: 5 * 60_000,
   });
 }

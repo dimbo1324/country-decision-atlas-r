@@ -24,7 +24,10 @@ export function CiiCompareSpiderChart({ metrics, countries }: Props) {
   }));
 
   return (
-    <div className="aspect-square w-full">
+    <div
+      className="aspect-square w-full"
+      data-testid="cii-spider-chart"
+    >
       <RadarChart
         axes={axes}
         series={series}

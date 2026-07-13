@@ -50,6 +50,7 @@ export function DecisionResultCard({
   originContextStatus,
 }: DecisionResultCardProps) {
   return (
+    <div data-testid="result-card">
     <Card
       interactive={false}
       className="flex flex-col gap-4"
@@ -224,5 +225,6 @@ export function DecisionResultCard({
         Карточка страны →
       </Link>
     </Card>
+    </div>
   );
 }

@@ -59,7 +59,7 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
     timeout: 20_000,
   });
   await expect(page.getByText("Полный рейтинг")).toBeVisible();
-  await expect(page.locator(".resultCard").first()).toBeVisible();
+  await expect(page.getByTestId("result-card").first()).toBeVisible();
   await expectNoAppCrash(page);
 
   await page

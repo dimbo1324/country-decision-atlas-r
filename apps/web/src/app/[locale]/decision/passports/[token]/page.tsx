@@ -1,4 +1,5 @@
 import { getLocale } from "next-intl/server";
+import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../../i18n/navigation";
 import { DecisionResults } from "../../../../../features/decision-run";
 import { decisionPassportsApi } from "../../../../../shared/api";
@@ -18,66 +19,91 @@ export default async function DecisionPassportPage({ params }: PageProps) {
     const passport = await decisionPassportsApi.getDecisionPassport(token);
     return (
       <div
-        className="pageShell"
+        className="flex flex-col gap-6"
         data-testid="decision-passport-page"
       >
-        <header className="pageHeader">
-          <p className="eyebrow">Decision Passport</p>
-          <h1>Decision Passport</h1>
-          <div className="routeBadges">
-            <span className="metaChip">
+        <header className="flex flex-col gap-3">
+          <Kicker>Decision Passport</Kicker>
+          <h1 className="font-display text-3xl font-bold">Decision Passport</h1>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="default">
               Создан: {new Date(passport.generated_at).toLocaleString("ru")}
-            </span>
+            </Badge>
             {passport.expires_at && (
-              <span className="metaChip">
-                Истекает: {new Date(passport.expires_at).toLocaleString("ru")}
-              </span>
+              <Badge variant="default">
+                Истекает:{" "}
+                {new Date(passport.expires_at).toLocaleString("ru")}
+              </Badge>
             )}
-            <span className="metaChip">{passport.status}</span>
+            <Badge variant="trust">{passport.status}</Badge>
           </div>
         </header>
 
         <DecisionResults response={passport.decision_result} />
 
-        <section
-          className="cardSection"
-          data-testid="passport-methodology"
-        >
-          <h2 className="cardSectionTitle">Методология</h2>
-          <dl className="routeFacts">
-            <div>
-              <dt>Версия движка</dt>
-              <dd>{passport.methodology_snapshot.decision_engine_version}</dd>
-            </div>
-            <div>
-              <dt>Сценарий</dt>
-              <dd>{passport.methodology_snapshot.scenario_slug}</dd>
-            </div>
-            {passport.methodology_snapshot.persona_slug && (
+        <section data-testid="passport-methodology">
+          <Card
+            interactive={false}
+            className="flex flex-col gap-3"
+          >
+            <h2 className="font-display text-lg font-semibold">Методология</h2>
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <dt>Персона</dt>
-                <dd>{passport.methodology_snapshot.persona_slug}</dd>
+                <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                  Версия движка
+                </dt>
+                <dd className="text-c2 text-sm">
+                  {passport.methodology_snapshot.decision_engine_version}
+                </dd>
               </div>
-            )}
-            {passport.methodology_snapshot.origin_country_slug && (
               <div>
-                <dt>Страна отправления</dt>
-                <dd>{passport.methodology_snapshot.origin_country_slug}</dd>
+                <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                  Сценарий
+                </dt>
+                <dd className="text-c2 text-sm">
+                  {passport.methodology_snapshot.scenario_slug}
+                </dd>
               </div>
-            )}
-            <div>
-              <dt>Кастомные веса</dt>
-              <dd>
-                {passport.methodology_snapshot.custom_weights_applied
-                  ? "Да"
-                  : "Нет"}
-              </dd>
-            </div>
-            <div>
-              <dt>Режим ранжирования</dt>
-              <dd>{passport.methodology_snapshot.ranking_policy}</dd>
-            </div>
-          </dl>
+              {passport.methodology_snapshot.persona_slug && (
+                <div>
+                  <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                    Персона
+                  </dt>
+                  <dd className="text-c2 text-sm">
+                    {passport.methodology_snapshot.persona_slug}
+                  </dd>
+                </div>
+              )}
+              {passport.methodology_snapshot.origin_country_slug && (
+                <div>
+                  <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                    Страна отправления
+                  </dt>
+                  <dd className="text-c2 text-sm">
+                    {passport.methodology_snapshot.origin_country_slug}
+                  </dd>
+                </div>
+              )}
+              <div>
+                <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                  Кастомные веса
+                </dt>
+                <dd className="text-c2 text-sm">
+                  {passport.methodology_snapshot.custom_weights_applied
+                    ? "Да"
+                    : "Нет"}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
+                  Режим ранжирования
+                </dt>
+                <dd className="text-c2 text-sm">
+                  {passport.methodology_snapshot.ranking_policy}
+                </dd>
+              </div>
+            </dl>
+          </Card>
         </section>
       </div>
     );
@@ -87,10 +113,12 @@ export default async function DecisionPassportPage({ params }: PageProps) {
         ? err.message
         : (err as { error?: { code?: string; message?: string } });
     return (
-      <div className="pageShell">
-        <header className="pageHeader">
-          <p className="eyebrow">Decision Passport</p>
-          <h1>Decision Passport недоступен</h1>
+      <div className="flex flex-col gap-6">
+        <header className="flex flex-col gap-3">
+          <Kicker>Decision Passport</Kicker>
+          <h1 className="font-display text-3xl font-bold">
+            Decision Passport недоступен
+          </h1>
         </header>
         <ErrorState
           error={errProp}
@@ -99,7 +127,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
         />
         <Link
           href="/decision"
-          className="internalLink"
+          className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
           Запустить новый подбор
         </Link>

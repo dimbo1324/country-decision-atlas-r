@@ -9,7 +9,10 @@ const COUNTRY_COLOR_CLASS = ["bg-blue", "bg-terra"];
 
 export function CiiMetricCompareBars({ metrics, countries }: Props) {
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className="flex flex-col gap-4"
+      data-testid="cii-compare-bars"
+    >
       <div className="flex flex-wrap gap-4">
         {countries.map((c, i) => (
           <span

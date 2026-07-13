@@ -55,6 +55,7 @@ export function DecisionCiiComparison({
     <section
       className="flex flex-col gap-5"
       aria-label="CII сравнение стран"
+      data-testid="cii-compare-block"
     >
       <div className="flex flex-col gap-1">
         <Kicker>

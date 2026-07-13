@@ -39,6 +39,7 @@ export function CountryScenarioMatrix({
               <th
                 key={s.slug}
                 scope="col"
+                data-testid="matrix-scenario-header"
                 className="font-mono text-c4 border-warm border-b px-3 py-2 text-[8px] font-normal tracking-[0.15em] uppercase"
               >
                 {s.name}

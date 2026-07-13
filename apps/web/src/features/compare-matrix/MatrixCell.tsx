@@ -23,12 +23,17 @@ export function MatrixCell({ cell, locale }: Props) {
       data-testid="compare-matrix-cell"
       data-country={cell.country_slug}
       data-scenario={cell.scenario_slug}
+      data-score-band={cell.score_label ?? "missing"}
     >
       <a
         href={href}
+        data-testid="matrix-cell-link"
         className="flex flex-col items-center gap-0.5 px-3 py-2 transition-opacity duration-300 hover:opacity-80"
       >
-        <span className="font-display text-c1 text-sm font-bold">
+        <span
+          className="font-display text-c1 text-sm font-bold"
+          data-testid="matrix-cell-score"
+        >
           {cell.cii_score != null ? cell.cii_score.toFixed(1) : "—"}
         </span>
         {cell.confidence_label && cell.confidence_label !== "missing" && (

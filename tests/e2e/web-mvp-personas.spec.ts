@@ -73,7 +73,7 @@ test.describe("Persona decision flow", () => {
     await expect(page.getByTestId("decision-persona-meta")).toContainText(
       "Предприниматель",
     );
-    await expect(page.locator(".ciiCompareBlock")).toBeVisible({
+    await expect(page.getByTestId("cii-compare-block")).toBeVisible({
       timeout: 15_000,
     });
     await expectNoAppCrash(page);

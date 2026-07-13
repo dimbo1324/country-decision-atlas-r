@@ -83,6 +83,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
       <DecisionPersonalizationSummary personalization={personalization} />
 
       {winner && (
+        <div data-testid="decision-winner-block">
         <Card
           accent="gold"
           interactive={false}
@@ -107,6 +108,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
             <p className="text-c3 text-sm leading-relaxed">{winner.summary}</p>
           )}
         </Card>
+        </div>
       )}
 
       {results.length === 0 ? (

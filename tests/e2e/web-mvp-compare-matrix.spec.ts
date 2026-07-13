@@ -56,7 +56,7 @@ test.describe("compare matrix page", () => {
     ).toBeVisible({
       timeout: 10_000,
     });
-    const headers = page.locator(".matrixScenarioHeader");
+    const headers = page.getByTestId("matrix-scenario-header");
     await expect(headers).toHaveCount(5);
     await expectNoAppCrash(page);
   });
@@ -68,7 +68,7 @@ test.describe("compare matrix page", () => {
     ).toBeVisible({
       timeout: 10_000,
     });
-    const firstScore = page.locator(".matrixCellScore").first();
+    const firstScore = page.getByTestId("matrix-cell-score").first();
     const text = await firstScore.textContent();
     expect(text).toMatch(/\d+\.\d+|—/);
     await expectNoAppCrash(page);
@@ -101,7 +101,7 @@ test.describe("compare matrix page", () => {
     ).toBeVisible({
       timeout: 10_000,
     });
-    const firstLink = page.locator(".matrixCellLink").first();
+    const firstLink = page.getByTestId("matrix-cell-link").first();
     const href = await firstLink.getAttribute("href");
     expect(href).toMatch(/\/countries\//);
     await expectNoAppCrash(page);
@@ -123,7 +123,7 @@ test.describe("compare matrix page", () => {
     });
     const hasHeatmap = await page
       .locator(
-        ".matrixCellWeak, .matrixCellLimited, .matrixCellModerate, .matrixCellStrong, .matrixCellExcellent",
+        '[data-score-band="weak"], [data-score-band="limited"], [data-score-band="moderate"], [data-score-band="strong"], [data-score-band="excellent"]',
       )
       .count();
     expect(hasHeatmap).toBeGreaterThan(0);

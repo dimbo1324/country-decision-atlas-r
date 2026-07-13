@@ -10,7 +10,10 @@ export function CiiMetricWinnerList({ metrics, countries }: Props) {
   const nameBySlug = Object.fromEntries(countries.map((c) => [c.slug, c.name]));
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul
+      className="flex flex-col gap-2"
+      data-testid="cii-winner-list"
+    >
       {metrics.map((m) => (
         <li
           key={m.metric_slug}

@@ -53,7 +53,9 @@ test.describe("Decision Passport", () => {
     await expect(
       page.getByTestId("passport-methodology").first(),
     ).toBeVisible();
-    await expect(page.locator(".decisionWinnerBlock").first()).toBeVisible();
+    await expect(
+      page.getByTestId("decision-winner-block").first(),
+    ).toBeVisible();
     await expectNoAppCrash(page);
   });
 
