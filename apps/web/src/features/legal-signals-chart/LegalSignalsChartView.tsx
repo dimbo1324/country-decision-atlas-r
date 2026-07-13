@@ -1,20 +1,23 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { ChartFrame, LegalSignalTimeline } from "@country-decision-atlas/ui";
 import { parseAsString, useQueryState } from "nuqs";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { countryListQuery } from "../../entities/country/api";
 import { legalSignalTimelineQuery } from "../../entities/legal-signals/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
-import { LegalSignalEvidenceDrawer } from "./LegalSignalEvidenceDrawer";
-import { TimelineEmptyState } from "./TimelineEmptyState";
-import { TimelineFilters, type TimelineFilterValues } from "./TimelineFilters";
-import { TimelineLegend } from "./TimelineLegend";
-import { TimelineYearGroup } from "./TimelineYearGroup";
+import { EmptyState } from "../../shared/ui/EmptyState";
+import {
+  TimelineFilters,
+  type TimelineFilterValues,
+} from "../legal-signals-timeline/TimelineFilters";
+import { TimelineLegend } from "../legal-signals-timeline/TimelineLegend";
+import { adaptTimelineEvents } from "./adaptTimelineEvents";
 
-function LegalSignalsTimelineViewInner() {
+function LegalSignalsChartViewInner() {
   const locale = useAppLocale();
   const [countrySlug, setCountrySlug] = useQueryState(
     "country_slug",
@@ -33,10 +36,6 @@ function LegalSignalsTimelineViewInner() {
     parseAsString.withDefault(""),
   );
   const [year, setYear] = useQueryState("year", parseAsString.withDefault(""));
-  const [evidenceSignal, setEvidenceSignal] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
 
   const filters: TimelineFilterValues = {
     countrySlug,
@@ -61,6 +60,7 @@ function LegalSignalsTimelineViewInner() {
       impactLevel: impactLevel || undefined,
       yearFrom: year ? Number(year) : undefined,
       yearTo: year ? Number(year) : undefined,
+      limit: 100,
     }),
   );
 
@@ -78,11 +78,15 @@ function LegalSignalsTimelineViewInner() {
     setters[name](value || null);
   }
 
+  const events = timeline
+    ? adaptTimelineEvents(timeline.groups.flatMap((group) => group.events))
+    : [];
+
   return (
     <div className="flex flex-col gap-6">
       <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-        Временная карта правовых, миграционных, политических и деловых
-        изменений.
+        Визуальная шкала времени тех же событий — та же выборка, что и в
+        реестре, в виде горизонтальной хронологии.
       </p>
       <TimelineFilters
         filters={filters}
@@ -91,48 +95,36 @@ function LegalSignalsTimelineViewInner() {
         onChange={updateFilter}
       />
       <TimelineLegend />
-      {isError && (
-        <ErrorState error="Не удалось загрузить ленту правовых сигналов." />
-      )}
+      {isError && <ErrorState error="Не удалось загрузить временную шкалу." />}
       {isPending && !isError && (
-        <LoadingState message="Загрузка временной карты изменений…" />
+        <LoadingState message="Загрузка временной шкалы…" />
       )}
-      {!isPending && !isError && timeline && timeline.groups.length === 0 && (
-        <TimelineEmptyState />
+      {!isPending && !isError && events.length === 0 && (
+        <EmptyState message="По выбранным фильтрам событий не найдено." />
       )}
-      {!isPending && !isError && timeline && timeline.groups.length > 0 && (
-        <div
-          className="flex flex-col gap-8"
-          data-testid="legal-signals-timeline"
-        >
-          <div className="font-mono text-c3 text-[10px] tracking-[0.15em] uppercase">
-            Событий: {timeline.total}
-          </div>
-          {timeline.groups.map((group) => (
-            <TimelineYearGroup
-              key={group.year}
-              group={group}
-              locale={locale}
-              onShowEvidence={(id, title) => setEvidenceSignal({ id, title })}
+      {!isPending && !isError && events.length > 0 && (
+        <div data-testid="legal-signals-timeline-chart">
+          <ChartFrame
+            title={`События: ${events.length}`}
+            live={false}
+          >
+            <LegalSignalTimeline
+              events={events}
+              active
+              width={960}
+              height={220}
             />
-          ))}
+          </ChartFrame>
         </div>
       )}
-      <LegalSignalEvidenceDrawer
-        signalId={evidenceSignal?.id ?? null}
-        signalTitle={evidenceSignal?.title}
-        onClose={() => setEvidenceSignal(null)}
-      />
     </div>
   );
 }
 
-export function LegalSignalsTimelineView() {
+export function LegalSignalsChartView() {
   return (
-    <Suspense
-      fallback={<LoadingState message="Загрузка временной карты изменений…" />}
-    >
-      <LegalSignalsTimelineViewInner />
+    <Suspense fallback={<LoadingState message="Загрузка временной шкалы…" />}>
+      <LegalSignalsChartViewInner />
     </Suspense>
   );
 }

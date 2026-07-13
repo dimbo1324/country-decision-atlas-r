@@ -1,30 +1,27 @@
+import { Kicker } from "@country-decision-atlas/ui";
+import { ImpactDirectionBadge } from "../../shared/ui/ImpactBadge";
+
 const directions = [
-  ["positive", "Положительное"],
-  ["negative", "Негативное"],
-  ["neutral", "Нейтральное"],
-  ["mixed", "Смешанное"],
-  ["uncertain", "Неопределённое"],
+  "positive",
+  "negative",
+  "neutral",
+  "mixed",
+  "uncertain",
 ] as const;
 
 export function TimelineLegend() {
   return (
     <div
-      className="timelineLegend"
+      className="flex flex-wrap items-center gap-3"
       data-testid="legal-signals-timeline-legend"
     >
-      <strong>Направление влияния</strong>
-      {directions.map(([value, label]) => (
-        <span
-          key={value}
-          className={`timelineLegendItem timelineEvent${capitalize(value)}`}
-        >
-          {label}
-        </span>
+      <Kicker>Направление влияния</Kicker>
+      {directions.map((direction) => (
+        <ImpactDirectionBadge
+          key={direction}
+          direction={direction}
+        />
       ))}
     </div>
   );
-}
-
-function capitalize(value: string) {
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }
