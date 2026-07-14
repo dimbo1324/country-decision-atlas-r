@@ -49,6 +49,7 @@ export const e2eRoutes = {
   migrationBoardNew: withLocale("/migration-board/new"),
   accountMigrationBoard: withLocale("/account/migration-board"),
   migrationBoardModeration: "/internal/migration-board-moderation",
+  communityModeration: "/internal/community-moderation",
   login: withLocale("/login"),
   register: withLocale("/register"),
   account: withLocale("/account"),

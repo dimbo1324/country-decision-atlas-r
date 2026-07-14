@@ -1,6 +1,21 @@
+import type { Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
+
+function uniqueEmail(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
+}
+
+async function registerViaUi(page: Page, email: string) {
+  await page.goto(e2eRoutes.register);
+  await page.getByTestId("register-email").fill(email);
+  await page.getByTestId("register-display-name").fill("Community User");
+  await page
+    .getByTestId("register-password")
+    .fill("a-very-strong-password-123");
+  await page.getByTestId("register-submit").click();
+}
 
 test.describe("community intelligence surface", () => {
   test("country page exposes moderated community actions", async ({ page }) => {
@@ -52,6 +67,45 @@ test.describe("community intelligence surface", () => {
       },
     );
 
+    await expectNoAppCrash(page);
+  });
+
+  test("reality-gap form exposes six independent rating axes", async ({
+    page,
+  }) => {
+    await page.goto(e2eRoutes.country("uruguay", "en"));
+    await expectPageReady(page);
+
+    const axes = [
+      "official_expectation_score",
+      "real_experience_score",
+      "bureaucracy_score",
+      "cost_surprise_score",
+      "banking_difficulty_score",
+      "safety_feeling_score",
+    ];
+    for (const axis of axes) {
+      await expect(page.getByTestId(`community-rating-${axis}`)).toBeVisible();
+    }
+
+    const firstAxis = page.getByTestId(`community-rating-${axes[0]}`);
+    const secondAxis = page.getByTestId(`community-rating-${axes[1]}`);
+    await firstAxis.fill("10");
+    await secondAxis.fill("90");
+    await expect(firstAxis).toHaveValue("10");
+    await expect(secondAxis).toHaveValue("90");
+  });
+
+  test("regular user cannot moderate community submissions", async ({
+    page,
+  }) => {
+    const email = uniqueEmail("community-regular");
+    await registerViaUi(page, email);
+    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
+
+    await page.goto(e2eRoutes.communityModeration);
+    await expect(page.getByTestId("community-moderation")).toHaveCount(0);
+    await expect(page.locator("body")).toContainText(/недостаточно прав/i);
     await expectNoAppCrash(page);
   });
 });

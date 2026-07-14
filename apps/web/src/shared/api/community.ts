@@ -1,6 +1,7 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { apiGet, apiPost, queryString } from "./http";
+import { csrfHeaders } from "../auth/session";
+import { apiGet, apiPatch, apiPost, queryString } from "./http";
 
 export type CommunityQuestion = components["schemas"]["CommunityQuestion"];
 export type CommunityQuestionCreate =
@@ -18,6 +19,12 @@ export type DataErrorReportCreate =
 export type UserStoryRating = components["schemas"]["UserStoryRating"];
 export type UserStoryRatingCreate =
   components["schemas"]["UserStoryRatingCreate"];
+export type CommunityStatusUpdateRequest =
+  components["schemas"]["CommunityStatusUpdateRequest"];
+export type DataErrorReportStatusUpdateRequest =
+  components["schemas"]["DataErrorReportStatusUpdateRequest"];
+export type UserStoryRatingStatusUpdateRequest =
+  components["schemas"]["UserStoryRatingStatusUpdateRequest"];
 
 export function listCommunityQuestions(params: {
   country_slug?: string;
@@ -84,6 +91,86 @@ export function createUserStoryRating(
   );
 }
 
+export function listAdminCommunityQuestions(
+  status?: string,
+): Promise<CommunityQuestion[]> {
+  return apiGet<CommunityQuestion[]>(
+    `/api/v1/admin/community/questions${queryString({ status })}`,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function updateCommunityQuestionStatus(
+  questionId: string,
+  payload: CommunityStatusUpdateRequest,
+): Promise<CommunityQuestion> {
+  return apiPatch<CommunityQuestion, CommunityStatusUpdateRequest>(
+    `/api/v1/admin/community/questions/${questionId}/status`,
+    payload,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function listAdminCommunityAnswers(
+  status?: string,
+): Promise<CommunityAnswer[]> {
+  return apiGet<CommunityAnswer[]>(
+    `/api/v1/admin/community/answers${queryString({ status })}`,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function updateCommunityAnswerStatus(
+  answerId: string,
+  payload: CommunityStatusUpdateRequest,
+): Promise<CommunityAnswer> {
+  return apiPatch<CommunityAnswer, CommunityStatusUpdateRequest>(
+    `/api/v1/admin/community/answers/${answerId}/status`,
+    payload,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function listAdminDataErrorReports(
+  status?: string,
+): Promise<DataErrorReport[]> {
+  return apiGet<DataErrorReport[]>(
+    `/api/v1/admin/community/data-error-reports${queryString({ status })}`,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function updateDataErrorReportStatus(
+  reportId: string,
+  payload: DataErrorReportStatusUpdateRequest,
+): Promise<DataErrorReport> {
+  return apiPatch<DataErrorReport, DataErrorReportStatusUpdateRequest>(
+    `/api/v1/admin/community/data-error-reports/${reportId}/status`,
+    payload,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function listAdminUserStoryRatings(
+  status?: string,
+): Promise<UserStoryRating[]> {
+  return apiGet<UserStoryRating[]>(
+    `/api/v1/admin/community/user-story-ratings${queryString({ status })}`,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function updateUserStoryRatingStatus(
+  ratingId: string,
+  payload: UserStoryRatingStatusUpdateRequest,
+): Promise<UserStoryRating> {
+  return apiPatch<UserStoryRating, UserStoryRatingStatusUpdateRequest>(
+    `/api/v1/admin/community/user-story-ratings/${ratingId}/status`,
+    payload,
+    { headers: csrfHeaders() },
+  );
+}
+
 export const communityApi = {
   listCommunityQuestions,
   listCommunityAnswers,
@@ -92,4 +179,12 @@ export const communityApi = {
   voteCommunityAnswer,
   createDataErrorReport,
   createUserStoryRating,
+  listAdminCommunityQuestions,
+  updateCommunityQuestionStatus,
+  listAdminCommunityAnswers,
+  updateCommunityAnswerStatus,
+  listAdminDataErrorReports,
+  updateDataErrorReportStatus,
+  listAdminUserStoryRatings,
+  updateUserStoryRatingStatus,
 };

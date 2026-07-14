@@ -17,6 +17,7 @@ export const routes = {
   search: "/search",
   dataQuality: "/internal/data-quality",
   migrationBoardModeration: "/internal/migration-board-moderation",
+  communityModeration: "/internal/community-moderation",
   login: "/login",
   register: "/register",
   account: "/account",

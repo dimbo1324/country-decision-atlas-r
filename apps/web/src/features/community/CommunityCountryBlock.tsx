@@ -9,6 +9,7 @@ import {
   Field,
   FieldLabel,
   Kicker,
+  RadarChart,
   Skeleton,
 } from "@country-decision-atlas/ui";
 import {
@@ -63,6 +64,15 @@ const TEXTAREA_CLASS =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
 const INPUT_CLASS =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
+
+const RATING_AXES = [
+  { field: "official_expectation_score", label: "Official expectation" },
+  { field: "real_experience_score", label: "Real experience" },
+  { field: "bureaucracy_score", label: "Bureaucracy" },
+  { field: "cost_surprise_score", label: "Cost surprise" },
+  { field: "banking_difficulty_score", label: "Banking difficulty" },
+  { field: "safety_feeling_score", label: "Safety feeling" },
+] as const;
 
 function QuestionCard({
   question,
@@ -239,7 +249,16 @@ export function CommunityCountryBlock({
   const [reportType, setReportType] = useState<ReportType>("outdated");
   const [reportMessage, setReportMessage] = useState("");
   const [ratingComment, setRatingComment] = useState("");
-  const [realityGapScore, setRealityGapScore] = useState(50);
+  const [ratingScores, setRatingScores] = useState<
+    Record<(typeof RATING_AXES)[number]["field"], number>
+  >({
+    official_expectation_score: 50,
+    real_experience_score: 50,
+    bureaucracy_score: 50,
+    cost_surprise_score: 50,
+    banking_difficulty_score: 50,
+    safety_feeling_score: 50,
+  });
 
   const createQuestion = useCreateCommunityQuestionMutation(countrySlug);
   const createReport = useCreateDataErrorReportMutation();
@@ -308,12 +327,7 @@ export function CommunityCountryBlock({
         user_story_id: null,
         country_slug: countrySlug,
         route_id: null,
-        official_expectation_score: realityGapScore,
-        real_experience_score: realityGapScore,
-        bureaucracy_score: realityGapScore,
-        cost_surprise_score: realityGapScore,
-        banking_difficulty_score: realityGapScore,
-        safety_feeling_score: realityGapScore,
+        ...ratingScores,
         comment: ratingComment || null,
         created_by_identity_type: "anonymous_session",
         created_by_identity_id: identityId,
@@ -489,27 +503,43 @@ export function CommunityCountryBlock({
               Limited community input only; no trusted ERG score is calculated
               yet.
             </p>
+            <RadarChart
+              axes={RATING_AXES.map((axis) => axis.label)}
+              series={[
+                {
+                  label: "Your input",
+                  values: RATING_AXES.map((axis) => ratingScores[axis.field]),
+                  accent: "gold",
+                },
+              ]}
+              active
+            />
             <form
               className="flex flex-col gap-3"
               onSubmit={submitRating}
             >
-              <Field>
-                <FieldLabel>Experience score</FieldLabel>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={realityGapScore}
-                  onChange={(event) =>
-                    setRealityGapScore(Number(event.target.value))
-                  }
-                  data-testid="community-rating-score"
-                  className="w-full"
-                />
-                <span className="font-display text-gold3 text-sm font-bold">
-                  {realityGapScore}
-                </span>
-              </Field>
+              {RATING_AXES.map((axis) => (
+                <Field key={axis.field}>
+                  <FieldLabel>{axis.label}</FieldLabel>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={ratingScores[axis.field]}
+                    onChange={(event) =>
+                      setRatingScores((current) => ({
+                        ...current,
+                        [axis.field]: Number(event.target.value),
+                      }))
+                    }
+                    data-testid={`community-rating-${axis.field}`}
+                    className="w-full"
+                  />
+                  <span className="font-display text-gold3 text-sm font-bold">
+                    {ratingScores[axis.field]}
+                  </span>
+                </Field>
+              ))}
               <Field>
                 <FieldLabel>Optional note</FieldLabel>
                 <textarea
