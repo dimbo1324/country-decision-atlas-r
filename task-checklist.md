@@ -1,145 +1,163 @@
-# Task: Frontend Stage 8 (knowledge & transparency)
+# Task: Frontend Stage 9 (личный кабинет — безопасность, watchlist, лента, поездки)
 
-Source plan: `docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md`, §7 Этап 8.
-Branch: `feat/frontend-stage8-knowledge-transparency` (fresh off `main` —
-Stage 7 merged, `f06eab1`).
+Source plan: `docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md`, §7 Этап 9.
+Branch: `feat/frontend-stage9-account-trips` (fresh off `main` — Stage 8
+merged, `e65de69`).
 
-Owner instruction: implement Stage 8 (legal signals, sources, methodology,
-glossary) in a separate branch; push to `origin/main` once done and tests
-pass.
+Owner instruction: verify Stage 8 first (owner implemented it locally
+yesterday, outside this session), then implement Stage 9 in a separate
+branch.
 
 ## Preparation
 
-- [+] Research pass done (Explore agent + direct reads): confirmed all four
-      MVP surfaces exist and are pre-reskin (raw `useEffect`+fetch or plain
-      RSC `await`, legacy CSS-module classes, no design-system primitives
-      except badges). No dedicated glossary page/feature exists yet — new
-      build, not a reskin. `LegalSignalTimeline` SVG chart already exists in
-      `packages/ui` (Stage 4) but has zero consumers. `@tanstack/react-virtual`
-      confirmed as a genuinely new dependency.
-- [+] Contract shapes confirmed: `LegalSignalDetailListResponse`,
-      `LegalSignalTimelineResponse`/`LegalSignalTimelineEvent`,
-      `SourceListResponse`, `EvidenceItemListResponse`/`EvidenceListResponse`,
-      `MethodologyListResponse`/`MethodologySection`,
-      `MethodologyParametersResponse`/`MethodologyParameter` (no existing FE
-      consumer), `GlossaryListResponse`/`GlossaryTerm`.
-- [+] Existing Playwright coverage inventoried across 5 spec files
-      (`web-mvp-legal-signals-timeline`, `web-mvp-argentina-legal-timeline`,
-      `web-mvp-analytical-pages`, `web-mvp-trust-transparency`,
-      `web-mvp-pages`) — selectors/testids/heading text catalogued so the
-      reskin preserves or deliberately migrates each one.
+- [ ] Stage 8 independently verified in this session before starting (see
+      the Stage 8 verification note below, not part of Stage 9's own
+      checklist items).
+- [+] Research pass done (Explore agent): `features/auth/AccountView.tsx`
+      and `features/watchlist/WatchlistView.tsx` are raw `useEffect`+fetch,
+      legacy CSS-module classes, no design-system primitives — reskin
+      targets, not net-new. `WatchlistButton.tsx` already uses Pattern B
+      (`entities/watchlist/api.ts`) — mostly reusable as-is.
+      Subscriptions/feed and the entire trip planner (trips, waypoints,
+      checklist+import, reminders, warnings, share, export, annotations,
+      what-changed, public shared-trip page) are net-new frontend surface
+      on top of already-complete backend contracts — zero existing
+      `shared/api/subscriptions.ts` / `shared/api/feed.ts` /
+      `shared/api/trips.ts`.
+- [+] Contract shapes confirmed present in
+      `packages/contracts/generated/types.ts`: `AuthSession`,
+      `SecurityNotification`, `TelegramLinkStatusResponse`,
+      `WatchlistItem`/`WatchlistResponse`, `SubscriptionResponse`/
+      `SubscriptionListResponse`/`SubscriptionFeedResponse`, `TripSummary`/
+      `TripDetail`/`TripDetailResponse`/`TripListResponse`/
+      `TripCreateRequest`/`TripCreateFromPassportRequest`, `TripWaypoint`
+      (+create/update/reorder requests), `TripChecklistItem` (+create/
+      update/import requests — distinct from the pre-existing
+      `RouteChecklistItem` used by Migration Board, do not conflate),
+      `TripReminder`(+create), `TripWarning`/`TripWhatChangedResponse`,
+      `TripAnnotation`(+create/update), `TripShareResponse`/
+      `SharedTripResponse`(+waypoints/checklist).
+- [+] `@dnd-kit/core` + `@dnd-kit/sortable` confirmed absent repo-wide —
+      genuinely new dependency per the plan. `date-fns` also absent;
+      needed for reminder-date formatting per the plan.
+- [+] RHF+Zod+`Field` convention already established in
+      `features/auth/LoginForm.tsx`/`RegisterForm.tsx` — the template to
+      extend to Stage 9 forms (Telegram code, revoke-all password, trip
+      create/edit, waypoint edit, reminder create). `AccountView.tsx`/
+      `WatchlistView.tsx` predate this convention and don't use it yet.
+- [+] Existing Playwright coverage inventoried: `web-mvp-session-security.spec.ts`
+      (httpOnly cookie checks, revoke-all password-confirm flow, CSRF
+      403 check), `web-mvp-watchlist.spec.ts` (unauthenticated/empty states,
+      toggle button, notification-preference persistence),
+      `web-mvp-auth-rbac.spec.ts` (shares `e2eRoutes.account`/`login`).
+      No existing specs for Telegram linking specifically, subscriptions,
+      feed, or trips — all net-new test surface.
 
 ## Design decisions
 
-- [+] `/legal-signals` keeps its current role as the filterable feed
-      (heading "Лента правовых сигналов" preserved, year-grouped via the
-      `timeline` endpoint) — migrated onto TanStack Query + nuqs + design
-      system, NOT restructured into a separate flat/grouped split. A new
-      `/legal-signals/timeline` route is ADDED for the dedicated
-      `LegalSignalTimeline` SVG chart view (plan's "таймлайн-режим"),
-      sharing filters via nuqs.
-- [+] Country/type/impact/year filter `<select>`s stay native HTML
-      `<select>` elements (styled with design tokens), not Radix `Select`.
-      Same precedent as Stage 7's Slider reversion — existing e2e assertions
-      use `#timeline-country`/`#src-country` id lookups and
-      `.toHaveValue(...)`, which native selects support and Radix's
-      non-native listbox does not.
-- [+] Sources page evidence detail moves from inline per-card expand to a
-      `Drawer` — no existing e2e asserted the old inline-expand
-      testid/behavior, so this was a safe upgrade.
-- [+] Legal signal detail (evidence + affected countries) also uses `Drawer`.
-- [+] `@tanstack/react-virtual` added to `packages/ui` (new `VirtualList`
-      primitive) and used by the sources registry list. Verified in the
-      browser that all 20 demo source rows render (no hidden rows).
-- [+] Glossary gets its own full page (`/glossary`, new) per the plan; the
-      existing `data-testid="glossary-section"` teaser stays on
-      `/methodology` (e2e locks its visibility there) as a compact
-      cross-link into the full page, not a duplicate full listing.
-- [~] `GlossaryTerm` popover component: `GlossaryProvider` (client,
-      per-locale fetch of the full glossary list) mounted in
-      `[locale]/layout.tsx`; `GlossaryTerm` consumes it by slug and degrades
-      to plain text if the slug isn't found. Ended up wired into **three**
-      surfaces, not the two originally planned: the methodology page's
-      compact term-chip teaser, the full `/glossary` page's related-terms
-      cross-links, and the country dossier's CII block (glossary slug
-      `cii` — corrected from the originally-guessed `what_is_cii`, which is
-      actually a *methodology section* slug, a different namespace).
-- [+] `routes.ts` gains `methodology`, `methodologyParameters`, `glossary`,
-      `legalSignalsTimeline` entries (previously missing).
+- [ ] `AccountView.tsx` reskinned in place onto design-system primitives
+      (`Card`/`Field`/`Button`/`Badge`) + `DataTable` for the sessions
+      list; revoke-all's current inline password toggle becomes a `Dialog`
+      confirmation (plan explicitly calls for Dialog-confirmed terracotta
+      destructive actions) — this changes the revoke-all DOM shape, so
+      `web-mvp-session-security.spec.ts`'s `revoke-all-password-input`
+      lookup needs updating to open the Dialog first; preserve the
+      underlying CSRF/password-confirm behavior and testids where the
+      element itself doesn't move.
+- [ ] Migrate `AccountView.tsx`'s data fetching from raw
+      `useEffect`+`Promise.all` to `entities/account/api.ts`
+      (`queryOptions` + mutations for sessions/telegram/security
+      notifications), matching Pattern B.
+- [ ] `WatchlistView.tsx` reskinned onto the country-catalog card grid
+      pattern (Stage 5 precedent) + drift summary block; migrated onto
+      `entities/watchlist/api.ts`'s existing `myWatchlistQuery` (reuse, no
+      new query needed for the list itself).
+- [ ] New `entities/subscriptions/api.ts` + `shared/api/subscriptions.ts`
+      wrapping `me/subscriptions` CRUD + `me/subscriptions/feed`;
+      `features/subscriptions/*` (management UI) and `features/feed/*`
+      (`TimelineList` grouped by day, type icons, dossier links) + new
+      `/subscriptions` (or folded into `/account`) and no dedicated
+      `/feed` route unless the plan's routing implies one — confirm during
+      implementation which shell hosts the feed.
+- [ ] New `entities/trips/api.ts` + `shared/api/trips.ts` covering the
+      full surface: trips CRUD, waypoints CRUD + reorder, checklist CRUD +
+      import, reminders CRUD, warnings (read), share enable/disable,
+      export, annotations CRUD, what-changed.
+- [ ] New `features/trips/*`: trip list (`/trips`) + detail (`/trips/[id]`)
+      with waypoints (dnd-kit sortable, keyboard-accessible drag),
+      checklist (optimistic toggle + Sonner rollback toast per the plan's
+      optimistic-CRUD pattern), reminders (date-fns formatted list),
+      warnings/what-changed (terracotta callouts per plan), share/export
+      actions.
+- [ ] New public `app/[locale]/trips/shared/[token]/page.tsx` — read-only,
+      plain RSC `await`, same precedent as Stage 7's public passport page
+      (no `HydrationBoundary`, no client mutations).
+- [ ] `@dnd-kit/core` + `@dnd-kit/sortable` added to `apps/web/package.json`;
+      `date-fns` added alongside. Both justified per the plan's explicit
+      component/library table for this stage — no substitution found that
+      avoids them without hand-rolling drag reordering or date formatting.
+- [ ] Optimistic-CRUD pattern (checklist toggles, watchlist star, future
+      subscription toggles): `onMutate` optimistic update + `onError`
+      rollback + Sonner terracotta toast, matching the plan's explicit
+      pattern note — apply consistently across watchlist/checklist/
+      subscriptions, not just one surface.
+- [ ] `routes.ts` (`apps/web/src/shared/lib/routes.ts`) and
+      `tests/e2e/helpers/routes.ts` gain `trips`, `tripDetail(id)`,
+      `tripSharedPublic(token)`, `subscriptions`/`feed` entries.
+- [ ] Preserve every existing `data-testid` from `AccountView`/
+      `WatchlistView`/`WatchlistButton`; where markup genuinely changes
+      (Dialog-wrapped revoke-all, card-grid watchlist), update the
+      corresponding spec file instead of forcing old markup to survive.
 
 ## Implementation
 
-- [+] `entities/legal-signals/api.ts`, `entities/sources/api.ts`,
-      `entities/methodology/api.ts`, `entities/glossary/api.ts` —
-      `queryOptions` factories wrapping the existing typed `shared/api/*`
-      modules (Pattern B, matching `entities/decision/api.ts`).
-- [+] `shared/api/methodology.ts` gains `listMethodologyParameters` (new
-      frontend consumer for an endpoint that had zero callers).
-- [+] Reskin `features/legal-signals-timeline/*` onto Card/Badge/nuqs/Query;
-      added `features/legal-signals-chart/` for the new `/legal-signals/timeline`
-      SVG-chart route; evidence Drawer.
-- [+] Reskin `features/sources/*` onto Card/Badge/nuqs/Query + VirtualList +
-      Drawer.
-- [+] Reskin `/methodology` page onto `Accordion` + Playfair/Crimson/IM Fell
-      typography; added `/methodology/parameters` (DataTable, 24 rows).
-- [+] New `/glossary` page + `features/glossary/*` (19 terms, alphabetical
-      grouping, q/category nuqs filters).
-- [+] `GlossaryProvider` + `GlossaryTerm` component; wired into methodology,
-      the full glossary page, and the country dossier CII section.
-- [+] Updated `routes.ts` and `tests/e2e/helpers/routes.ts`.
-- [+] Updated the affected Playwright spec files for new testids/selectors
-      while preserving all existing text/heading assertions; added
-      `web-mvp-knowledge-transparency.spec.ts` for `/glossary`,
-      `/methodology/parameters`, `/legal-signals/timeline`, and the term
-      popover.
-- [+] Unplanned fix found during manual verification (not by any failing
-      test — Next.js was silently swallowing it on background prefetch
-      requests): `packages/ui`'s shared `Drawer` primitive called
-      `createPortal(..., document.body)` unconditionally on every render,
-      including the server-rendered pass client components still get for
-      initial HTML, where `document` doesn't exist. No page rendered
-      `Drawer` before Stage 8's two new evidence drawers, so this never
-      surfaced previously. Fixed with an SSR guard (`typeof document ===
-      "undefined"` → render nothing); this is a `packages/ui` primitive fix,
-      not scope creep, since my own new code was the first real consumer to
-      trigger it.
+- [ ] `entities/account/api.ts`: sessions list/revoke/revoke-all query +
+      mutations, Telegram link/unlink/status, security-notifications
+      list/ack.
+- [ ] `entities/subscriptions/api.ts`: list/create/delete subscriptions,
+      feed query.
+- [ ] `entities/trips/api.ts`: trips CRUD, waypoints CRUD+reorder,
+      checklist CRUD+import, reminders CRUD, warnings, what-changed,
+      share enable/disable, export, annotations CRUD.
+- [ ] `shared/api/subscriptions.ts`, `shared/api/trips.ts` (typed wrappers,
+      matching `shared/api/watchlists.ts`'s existing style).
+- [ ] Reskin `features/auth/AccountView.tsx` onto Card/Field/DataTable/
+      Dialog + `entities/account/api.ts`.
+- [ ] Reskin `features/watchlist/WatchlistView.tsx` onto the catalog-card
+      grid + drift summary + `entities/watchlist/api.ts`.
+- [ ] New `features/subscriptions/*`, `features/feed/*`.
+- [ ] New `features/trips/*` (list, detail, waypoints dnd-kit, checklist,
+      reminders, warnings, share/export UI).
+- [ ] New route pages: `app/[locale]/trips/page.tsx`,
+      `app/[locale]/trips/[id]/page.tsx`,
+      `app/[locale]/trips/shared/[token]/page.tsx`; wire `/subscriptions`
+      and/or `/feed` per the design decision above.
+- [ ] Update `routes.ts` and `tests/e2e/helpers/routes.ts`.
+- [ ] Update `web-mvp-session-security.spec.ts` and
+      `web-mvp-watchlist.spec.ts` for markup changes; add new spec
+      file(s) for Telegram linking, subscriptions/feed, and trips
+      (CRUD, waypoint reorder, checklist optimistic toggle + rollback,
+      reminders, share link, public shared-trip page).
 
 ## Verification
 
-- [+] `pnpm --filter web typecheck` / `lint` — clean.
-- [+] `pnpm --filter ui typecheck` / `lint` — clean.
-- [+] `pnpm build` — compiles clean, all new routes present.
-- [+] Manual browser verification of every new/changed surface
-      (`/legal-signals`, `/legal-signals/timeline`, `/sources`,
-      `/methodology`, `/methodology/parameters`, `/glossary`, country
-      dossier CII block, evidence Drawer open/close, glossary popover) —
-      no console errors, correct data counts (26 legal-signal events, 20
-      sources, 12 methodology sections, 19 glossary terms).
-- [+] Targeted Playwright run (78 tests across the 6 touched/new spec
-      files) — 78/78 passed.
-- [+] Full Playwright suite, clean Docker/DB environment (via
-      `dev_tools_scripts_runner.py full-check`) — 293/293 passed. (An
-      earlier ad-hoc full-suite run against an already-mutated dev database
-      showed 5-6 unrelated flaky failures in decision-passport/locale/
-      migration-board/route-checklist/session-security/watchlist specs —
-      none in Stage 8 domains; confirmed as test-data pollution from
-      repeated runs, not a regression, once the clean-environment run came
-      back 293/293 green.)
-- [+] `python dev_tools_scripts_runner.py full-check` — full gate: 78 OK,
-      1 SKIP (proto codegen, intentionally skipped per script design), 1
-      FAIL. The FAIL is `go test -race`: `-race requires cgo; enable cgo by
-      setting CGO_ENABLED=1` — this Windows machine has no CGO toolchain.
-      Confirmed pre-existing and environment-only, not a regression: `go
-      test ./...` (no `-race`) passes 100% clean, and zero Go files changed
-      in this branch. Identical documented exception as Stage 7's checklist
-      (`task-checklist.md` history); the actual `-race` gate is enforced in
-      CI's `ubuntu-latest`, per `.ai/project/11-commands.md`.
+- [ ] `pnpm --filter web typecheck` / `lint`
+- [ ] `pnpm --filter ui typecheck` / `lint` (if `packages/ui` gains any
+      new primitive along the way)
+- [ ] `pnpm build` — check all new routes compile, no duplicate-DOM
+      regressions on any `force-dynamic` page touched.
+- [ ] Manual browser check: account (profile/telegram/sessions/revoke),
+      watchlist, subscriptions/feed, trip CRUD + waypoint drag-reorder +
+      checklist optimistic toggle + reminders + share link + public
+      shared-trip page, both locales, mobile viewport (dnd-kit keyboard
+      fallback check).
+- [ ] Full Playwright suite (`npx playwright test --workers=2` — the
+      established clean baseline for this environment) — must stay green;
+      update specs only where markup genuinely changed.
+- [ ] `python dev_tools_scripts_runner.py full-check`
 
 ## Completion
 
-- [+] Commits: 9 logical slices (task checklist, entities + VirtualList,
-      glossary provider/component, legal-signals reskin + new timeline
-      route, sources reskin, methodology + parameters, glossary page +
-      dossier wiring, e2e selector/spec updates, Drawer SSR fix).
-- [+] Merge to `main` (fast-forward), push to `origin/main`.
-- [+] Final report.
+- [ ] Commit(s)
+- [ ] Merge to `main`, push
+- [ ] Final report
