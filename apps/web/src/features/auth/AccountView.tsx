@@ -1,77 +1,126 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Badge,
+  Button,
+  Card,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+  DataTable,
+  Field,
+  FieldError,
+  FieldLabel,
+  Kicker,
+  toast,
+} from "@country-decision-atlas/ui";
+import { useState } from "react";
 import { Link, useRouter } from "../../i18n/navigation";
 import {
-  authApi,
-  type AuthSession,
-  type SecurityNotification,
-  type TelegramLinkStatusResponse,
-} from "../../shared/api/auth";
+  sessionsQuery,
+  securityNotificationsQuery,
+  telegramStatusQuery,
+  useAcknowledgeSecurityNotificationMutation,
+  useLinkTelegramMutation,
+  useRevokeAllSessionsMutation,
+  useRevokeSessionMutation,
+  useUnlinkTelegramMutation,
+} from "../../entities/account/api";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 
-export function AccountView() {
-  const { user, isLoading, logout } = useAuth();
-  const router = useRouter();
-  const [sessions, setSessions] = useState<AuthSession[]>([]);
-  const [notifications, setNotifications] = useState<SecurityNotification[]>(
-    [],
-  );
-  const [telegramStatus, setTelegramStatus] =
-    useState<TelegramLinkStatusResponse | null>(null);
-  const [linkCode, setLinkCode] = useState("");
-  const [telegramError, setTelegramError] = useState<string | null>(null);
-  const [loadError, setLoadError] = useState<unknown | null>(null);
-  const [revokeAllPassword, setRevokeAllPassword] = useState("");
-  const [revokeAllError, setRevokeAllError] = useState<string | null>(null);
-  const [showRevokeAllConfirm, setShowRevokeAllConfirm] = useState(false);
+const inputClass =
+  "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-  useEffect(() => {
-    if (!user) return;
-    let active = true;
-    Promise.all([
-      authApi.listSessions(),
-      authApi.getTelegramLinkStatus(),
-      authApi.listSecurityNotifications(),
-    ])
-      .then(([sessionResponse, linkStatus, notificationResponse]) => {
-        if (!active) return;
-        setSessions(sessionResponse.items ?? []);
-        setTelegramStatus(linkStatus);
-        setNotifications(notificationResponse.items ?? []);
-      })
-      .catch((err: unknown) => {
-        if (active) setLoadError(err);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user]);
+const telegramLinkSchema = z.object({
+  code: z.string().min(1, "Введите код из /web_link"),
+});
+type TelegramLinkValues = z.infer<typeof telegramLinkSchema>;
 
-  async function handleLogout() {
-    await logout();
-    router.push(routes.home);
-  }
+const revokeAllSchema = z.object({
+  currentPassword: z.string().min(1, "Введите пароль"),
+});
+type RevokeAllValues = z.infer<typeof revokeAllSchema>;
 
-  async function handleRevokeSession(sessionId: string) {
-    await authApi.revokeSession(sessionId);
-    setSessions((prev) => prev.filter((session) => session.id !== sessionId));
-  }
+function TelegramLinkForm() {
+  const linkTelegram = useLinkTelegramMutation();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TelegramLinkValues>({
+    resolver: zodResolver(telegramLinkSchema),
+  });
 
-  async function handleRevokeAll(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setRevokeAllError(null);
+  async function onSubmit(values: TelegramLinkValues) {
     try {
-      await authApi.revokeAllSessions(revokeAllPassword);
-      setSessions([]);
-      setShowRevokeAllConfirm(false);
-      setRevokeAllPassword("");
+      await linkTelegram.mutateAsync(values.code);
+      reset();
+      toast.success("Telegram привязан.");
     } catch (err: unknown) {
-      setRevokeAllError(
+      toast.error(
+        isApiError(err)
+          ? (err.error?.message ?? "Не удалось привязать Telegram.")
+          : "Не удалось привязать Telegram.",
+      );
+    }
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex max-w-sm flex-col gap-4"
+      noValidate
+    >
+      <Field>
+        <FieldLabel htmlFor="telegram-link-code">Код из /web_link</FieldLabel>
+        <input
+          id="telegram-link-code"
+          type="text"
+          className={inputClass}
+          data-testid="telegram-link-code-input"
+          {...register("code")}
+        />
+        <FieldError>{errors.code?.message}</FieldError>
+      </Field>
+      <Button
+        type="submit"
+        disabled={linkTelegram.isPending}
+        data-testid="telegram-link-submit"
+      >
+        {linkTelegram.isPending ? "Привязываем…" : "Привязать Telegram"}
+      </Button>
+    </form>
+  );
+}
+
+function RevokeAllSessionsDialog() {
+  const [open, setOpen] = useState(false);
+  const revokeAll = useRevokeAllSessionsMutation();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<RevokeAllValues>({ resolver: zodResolver(revokeAllSchema) });
+
+  async function onSubmit(values: RevokeAllValues) {
+    try {
+      await revokeAll.mutateAsync(values.currentPassword);
+      reset();
+      setOpen(false);
+      toast.success("Все сессии отозваны.");
+    } catch (err: unknown) {
+      toast.error(
         isApiError(err)
           ? (err.error?.message ?? "Не удалось отозвать сессии.")
           : "Не удалось отозвать сессии.",
@@ -79,37 +128,80 @@ export function AccountView() {
     }
   }
 
-  async function handleAcknowledgeNotification(notificationId: string) {
-    await authApi.acknowledgeSecurityNotification(notificationId);
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== notificationId),
-    );
-  }
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <DialogTrigger asChild>
+        <Button
+          variant="ghost"
+          className="text-terra3 hover:text-terra2"
+        >
+          Отозвать все сессии
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        title="Отозвать все сессии"
+        description="Это действие завершит все активные сессии, включая текущую. Подтвердите пароль."
+      >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+          noValidate
+        >
+          <Field>
+            <FieldLabel htmlFor="revoke-all-password">Пароль</FieldLabel>
+            <input
+              id="revoke-all-password"
+              type="password"
+              className={inputClass}
+              data-testid="revoke-all-password-input"
+              {...register("currentPassword")}
+            />
+            <FieldError>{errors.currentPassword?.message}</FieldError>
+          </Field>
+          <div className="flex gap-3">
+            <Button
+              type="submit"
+              disabled={revokeAll.isPending}
+              data-testid="revoke-all-confirm-submit"
+            >
+              {revokeAll.isPending
+                ? "Отзываем…"
+                : "Подтвердить отзыв всех сессий"}
+            </Button>
+            <DialogClose asChild>
+              <Button variant="ghost">Отмена</Button>
+            </DialogClose>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
-  async function handleLinkTelegram(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setTelegramError(null);
-    try {
-      const link = await authApi.linkTelegram(linkCode);
-      setTelegramStatus({
-        linked: true,
-        telegram_user_id: link.telegram_user_id,
-      });
-      setLinkCode("");
-    } catch (err: unknown) {
-      if (isApiError(err)) {
-        setTelegramError(
-          err.error?.message ?? "Не удалось привязать Telegram.",
-        );
-      } else {
-        setTelegramError("Не удалось привязать Telegram.");
-      }
-    }
-  }
+export function AccountView() {
+  const { user, isLoading, logout } = useAuth();
+  const router = useRouter();
 
-  async function handleUnlinkTelegram() {
-    await authApi.unlinkTelegram();
-    setTelegramStatus({ linked: false });
+  const sessions = useQuery({ ...sessionsQuery(), enabled: Boolean(user) });
+  const notifications = useQuery({
+    ...securityNotificationsQuery(),
+    enabled: Boolean(user),
+  });
+  const telegramStatus = useQuery({
+    ...telegramStatusQuery(),
+    enabled: Boolean(user),
+  });
+
+  const revokeSession = useRevokeSessionMutation();
+  const acknowledgeNotification = useAcknowledgeSecurityNotificationMutation();
+  const unlinkTelegram = useUnlinkTelegramMutation();
+
+  async function handleLogout() {
+    await logout();
+    router.push(routes.home);
   }
 
   if (isLoading) {
@@ -128,178 +220,146 @@ export function AccountView() {
     );
   }
 
+  const loadError =
+    sessions.error ?? notifications.error ?? telegramStatus.error;
+  const sessionItems = sessions.data?.items ?? [];
+  const notificationItems = notifications.data?.items ?? [];
+
   return (
     <div
-      className="searchPageContainer"
+      className="flex flex-col gap-8"
       data-testid="account-view"
     >
-      <div className="accountSection">
-        <p className="accountSectionTitle">Профиль</p>
-        <div className="accountField">
-          <span className="accountFieldLabel">Email</span>
-          <span data-testid="account-email">{user.email}</span>
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Профиль</Kicker>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <span className="text-c4 text-xs">Email</span>
+            <span data-testid="account-email">{user.email}</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-c4 text-xs">Имя</span>
+            <span data-testid="account-display-name">{user.display_name}</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-c4 text-xs">Роль</span>
+            <span data-testid="account-role">{user.role}</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-c4 text-xs">Статус</span>
+            <span data-testid="account-status">{user.status}</span>
+          </div>
         </div>
-        <div className="accountField">
-          <span className="accountFieldLabel">Имя</span>
-          <span data-testid="account-display-name">{user.display_name}</span>
-        </div>
-        <div className="accountField">
-          <span className="accountFieldLabel">Роль</span>
-          <span data-testid="account-role">{user.role}</span>
-        </div>
-        <div className="accountField">
-          <span className="accountFieldLabel">Статус</span>
-          <span data-testid="account-status">{user.status}</span>
-        </div>
-        <button
-          type="button"
-          className="runButton"
+        <Button
+          variant="ghost"
           onClick={handleLogout}
         >
           Выйти
-        </button>
-      </div>
+        </Button>
+      </Card>
 
-      {loadError !== null && (
+      {loadError !== null && loadError !== undefined && (
         <ErrorState error={isApiError(loadError) ? loadError : undefined} />
       )}
 
-      {notifications.length > 0 && (
-        <div
-          className="accountSection"
+      {notificationItems.length > 0 && (
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
           data-testid="security-notifications"
         >
-          <p className="accountSectionTitle">Уведомления безопасности</p>
-          {notifications.map((notification) => (
+          <Kicker>Уведомления безопасности</Kicker>
+          {notificationItems.map((notification) => (
             <div
-              className="sessionRow"
               key={notification.id}
+              className="border-warm flex items-center justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0"
               data-testid="new-device-notification"
             >
-              <span>
+              <span className="text-c2 text-sm">
                 Вход с нового устройства: {notification.device_label ?? "?"}
                 {notification.ip_display ? ` (${notification.ip_display})` : ""}
                 , {new Date(notification.created_at).toLocaleString("ru-RU")}.
                 Это были вы?
               </span>
-              <button
-                type="button"
-                className="runButton"
-                onClick={() => handleAcknowledgeNotification(notification.id)}
+              <Button
+                variant="ghost"
+                onClick={() => acknowledgeNotification.mutate(notification.id)}
               >
                 Подтвердить
-              </button>
+              </Button>
             </div>
           ))}
-        </div>
+        </Card>
       )}
 
-      <div className="accountSection">
-        <p className="accountSectionTitle">Telegram</p>
-        {telegramStatus?.linked ? (
-          <>
-            <p data-testid="telegram-linked-state">Telegram привязан.</p>
-            <button
-              type="button"
-              className="runButton"
-              onClick={handleUnlinkTelegram}
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Telegram</Kicker>
+        {telegramStatus.data?.linked ? (
+          <div className="flex items-center gap-4">
+            <Badge
+              variant="default"
+              data-testid="telegram-linked-state"
+            >
+              Telegram привязан
+            </Badge>
+            <Button
+              variant="ghost"
+              onClick={() => unlinkTelegram.mutate()}
               data-testid="telegram-unlink-button"
             >
               Отвязать Telegram
-            </button>
-          </>
+            </Button>
+          </div>
         ) : (
-          <form
-            onSubmit={handleLinkTelegram}
-            className="authForm"
-          >
-            <label className="formGroup">
-              <span className="formLabel">Код из /web_link</span>
-              <input
-                type="text"
-                className="formInput"
-                value={linkCode}
-                onChange={(event) => setLinkCode(event.target.value)}
-                required
-                data-testid="telegram-link-code-input"
-              />
-            </label>
-            {telegramError && <p className="formError">{telegramError}</p>}
-            <button
-              type="submit"
-              className="runButton"
-              data-testid="telegram-link-submit"
-            >
-              Привязать Telegram
-            </button>
-          </form>
+          <TelegramLinkForm />
         )}
-      </div>
+      </Card>
 
-      <div className="accountSection">
-        <p className="accountSectionTitle">Активные сессии</p>
-        {sessions.length === 0 ? (
-          <p className="notice">Нет активных сессий.</p>
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Активные сессии</Kicker>
+        {sessionItems.length === 0 ? (
+          <p className="text-c3 text-sm">Нет активных сессий.</p>
         ) : (
           <div data-testid="session-list">
-            {sessions.map((session) => (
-              <div
-                className="sessionRow"
-                key={session.id}
-              >
-                <span>
+            <DataTable
+              columns={[
+                { header: "Устройство" },
+                { header: "Дата" },
+                { header: "" },
+              ]}
+              rows={sessionItems.map((session) => [
+                <span key="device">
                   {session.device_label ?? "Неизвестное устройство"}
                   {session.ip_display ? ` · ${session.ip_display}` : ""}
-                  {" · "}
-                  {new Date(session.created_at).toLocaleString("ru-RU")}
                   {session.is_current ? " · текущая сессия" : ""}
-                </span>
-                <button
-                  type="button"
-                  className="runButton"
-                  onClick={() => handleRevokeSession(session.id)}
+                </span>,
+                <span key="date">
+                  {new Date(session.created_at).toLocaleString("ru-RU")}
+                </span>,
+                <Button
+                  key="revoke"
+                  variant="ghost"
+                  onClick={() => revokeSession.mutate(session.id)}
                 >
                   Отозвать
-                </button>
-              </div>
-            ))}
+                </Button>,
+              ])}
+            />
           </div>
         )}
-        {showRevokeAllConfirm ? (
-          <form
-            onSubmit={handleRevokeAll}
-            className="authForm"
-          >
-            <label className="formGroup">
-              <span className="formLabel">Подтвердите пароль</span>
-              <input
-                type="password"
-                className="formInput"
-                value={revokeAllPassword}
-                onChange={(event) => setRevokeAllPassword(event.target.value)}
-                required
-                data-testid="revoke-all-password-input"
-              />
-            </label>
-            {revokeAllError && <p className="formError">{revokeAllError}</p>}
-            <button
-              type="submit"
-              className="runButton"
-              data-testid="revoke-all-confirm-submit"
-            >
-              Подтвердить отзыв всех сессий
-            </button>
-          </form>
-        ) : (
-          <button
-            type="button"
-            className="runButton"
-            onClick={() => setShowRevokeAllConfirm(true)}
-          >
-            Отозвать все сессии
-          </button>
-        )}
-      </div>
+        <div>
+          <RevokeAllSessionsDialog />
+        </div>
+      </Card>
     </div>
   );
 }
