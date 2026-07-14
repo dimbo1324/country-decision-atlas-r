@@ -25,6 +25,10 @@ export const routes = {
   migrationBoardNew: "/migration-board/new",
   migrationBoardPost: (id: string) => `/migration-board/${id}`,
   watchlist: "/watchlist",
+  subscriptions: "/subscriptions",
+  trips: "/trips",
+  tripDetail: (id: string) => `/trips/${id}`,
+  tripSharedPublic: (token: string) => `/trips/shared/${token}`,
   legalSignalsForCountry: (slug: string) =>
     `/legal-signals?country_slug=${slug}`,
   sourcesForCountry: (slug: string) => `/sources?country_slug=${slug}`,

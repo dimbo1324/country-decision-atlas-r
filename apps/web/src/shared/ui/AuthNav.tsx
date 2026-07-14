@@ -60,6 +60,14 @@ export function AuthNav({ className, onNavigate }: AuthNavProps) {
       >
         {t("watchlist")}
       </Link>
+      <Link
+        href={routes.subscriptions}
+        onClick={onNavigate}
+        className={linkClass}
+        data-testid="nav-subscriptions-link"
+      >
+        {t("subscriptions")}
+      </Link>
       <button
         type="button"
         className={linkClass}

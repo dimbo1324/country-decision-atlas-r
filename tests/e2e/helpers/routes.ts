@@ -53,4 +53,10 @@ export const e2eRoutes = {
   register: withLocale("/register"),
   account: withLocale("/account"),
   watchlist: withLocale("/watchlist"),
+  subscriptions: withLocale("/subscriptions"),
+  trips: withLocale("/trips"),
+  tripDetail: (id: string, locale?: string) =>
+    withLocale(`/trips/${id}`, locale),
+  tripSharedPublic: (token: string, locale?: string) =>
+    withLocale(`/trips/shared/${token}`, locale),
 };
