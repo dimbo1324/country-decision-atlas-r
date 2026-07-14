@@ -1,141 +1,148 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
+import { Link } from "../../i18n/navigation";
 import {
-  createContactRequest,
-  getBoardPost,
-  reportPost,
-  type MigrationBoardPostDetail,
-} from "../../shared/api";
+  boardPostQuery,
+  useCreateContactRequestMutation,
+  useReportPostMutation,
+} from "../../entities/migration-board/api";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
 
+const textareaClass =
+  "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
+
 export function MigrationBoardDetailView({ postId }: { postId: string }) {
   const { user } = useAuth();
-  const [post, setPost] = useState<MigrationBoardPostDetail | null>(null);
+  const post = useQuery(boardPostQuery(postId));
   const [message, setMessage] = useState("");
   const [reportDetails, setReportDetails] = useState("");
   const [status, setStatus] = useState<string | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    getBoardPost(postId)
-      .then((response) => {
-        if (active) setPost(response);
-      })
-      .catch((err: unknown) => {
-        if (active) setError(err);
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [postId]);
+  const createContactRequest = useCreateContactRequestMutation();
+  const reportPost = useReportPostMutation();
 
   async function sendContactRequest() {
     setStatus(null);
-    setError(null);
     try {
-      await createContactRequest(postId, { message });
+      await createContactRequest.mutateAsync({ postId, payload: { message } });
       setMessage("");
       setStatus("Contact request отправлен.");
-    } catch (err: unknown) {
-      setError(err);
+    } catch {
+      // surfaced via createContactRequest.error below
     }
   }
 
   async function sendReport() {
     setStatus(null);
-    setError(null);
     try {
-      await reportPost(postId, {
-        reason: "other",
-        details: reportDetails || null,
+      await reportPost.mutateAsync({
+        postId,
+        payload: { reason: "other", details: reportDetails || null },
       });
       setReportDetails("");
       setStatus("Жалоба отправлена на модерацию.");
-    } catch (err: unknown) {
-      setError(err);
+    } catch {
+      // surfaced via reportPost.error below
     }
   }
 
-  if (isLoading) {
+  if (post.isPending) {
     return <LoadingState message="Загрузка записи…" />;
   }
 
-  if (error && !post) {
-    return <ErrorState error={migrationBoardErrorMessage(error)} />;
+  if (post.isError) {
+    return <ErrorState error={migrationBoardErrorMessage(post.error)} />;
   }
 
-  if (!post) {
-    return <ErrorState error="Запись не найдена." />;
-  }
+  const detail = post.data;
 
   return (
     <div
-      className="searchPageContainer"
+      className="flex flex-col gap-6"
       data-testid="migration-board-detail"
     >
-      {error !== null && (
-        <ErrorState error={migrationBoardErrorMessage(error)} />
+      {(createContactRequest.error ?? reportPost.error) != null && (
+        <ErrorState
+          error={migrationBoardErrorMessage(
+            createContactRequest.error ?? reportPost.error,
+          )}
+        />
       )}
-      {status && <p className="notice">{status}</p>}
-      <section className="accountSection">
-        <p className="eyebrow">{post.destination_country.name}</p>
-        <h2>{post.title}</h2>
-        <p>{post.summary}</p>
-        <div className="badgeRow">
-          <span className="badge">{post.author.display_name}</span>
-          <span className="badge">{post.timeline_window}</span>
-          <span className="badge">{post.migration_stage}</span>
-          <span className="badge">{post.companion_goal}</span>
+      {status && <p className="text-c3 text-sm">{status}</p>}
+
+      <Card
+        interactive={false}
+        className="flex flex-col gap-3"
+      >
+        <Kicker>{detail.destination_country.name}</Kicker>
+        <h2 className="font-display text-2xl font-semibold">{detail.title}</h2>
+        <p className="text-c3 text-sm">{detail.summary}</p>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="default">{detail.author.display_name}</Badge>
+          <Badge variant="default">{detail.timeline_window}</Badge>
+          <Badge variant="default">{detail.migration_stage}</Badge>
+          <Badge variant="default">{detail.companion_goal}</Badge>
         </div>
-        <p>
+        <p className="text-c3 text-sm">
           Направление:{" "}
-          <Link href={routes.country(post.destination_country.slug)}>
-            {post.destination_country.name}
+          <Link
+            href={routes.country(detail.destination_country.slug)}
+            className="text-gold3 hover:text-gold"
+          >
+            {detail.destination_country.name}
           </Link>
-          {post.origin_country ? ` из ${post.origin_country.name}` : ""}
+          {detail.origin_country ? ` из ${detail.origin_country.name}` : ""}
         </p>
-        {post.route && (
-          <p>
+        {detail.route && (
+          <p className="text-c3 text-sm">
             Route:{" "}
-            <Link href={`/routes/${post.route.id}`}>{post.route.title}</Link>
+            <Link
+              href={`/routes/${detail.route.id}`}
+              className="text-gold3 hover:text-gold"
+            >
+              {detail.route.title}
+            </Link>
           </p>
         )}
-        {(post.tags ?? []).length > 0 && (
-          <div className="badgeRow">
-            {(post.tags ?? []).map((tag) => (
-              <span
-                className="badge"
+        {(detail.tags ?? []).length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {(detail.tags ?? []).map((tag) => (
+              <Badge
                 key={tag}
+                variant="default"
               >
                 {tag}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
-      </section>
+      </Card>
 
-      <section className="accountSection">
-        <p className="accountSectionTitle">Contact request</p>
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Contact request</Kicker>
         {!user ? (
-          <p className="notice">
-            <Link href={routes.login}>Войдите</Link>, чтобы отправить request
-            через платформу.
+          <p className="text-c3 text-sm">
+            <Link
+              href={routes.login}
+              className="text-gold3 hover:text-gold"
+            >
+              Войдите
+            </Link>
+            , чтобы отправить request через платформу.
           </p>
-        ) : post.contact_requests_enabled ? (
+        ) : detail.contact_requests_enabled ? (
           <>
             <textarea
-              className="formInput"
+              className={textareaClass}
               rows={4}
               minLength={20}
               maxLength={800}
@@ -144,46 +151,51 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               placeholder="Коротко опишите, почему хотите связаться."
               data-testid="migration-board-contact-message"
             />
-            <button
-              type="button"
-              className="runButton"
+            <p className="text-c4 text-xs">
+              Не публикуйте контакты (email, телефон, Telegram) в открытом
+              тексте.
+            </p>
+            <Button
               onClick={() => void sendContactRequest()}
-              disabled={message.length < 20}
+              disabled={message.length < 20 || createContactRequest.isPending}
               data-testid="migration-board-contact-submit"
             >
               Отправить request
-            </button>
+            </Button>
           </>
         ) : (
-          <p className="notice">Автор отключил contact requests.</p>
+          <p className="text-c3 text-sm">Автор отключил contact requests.</p>
         )}
-      </section>
+      </Card>
 
-      <section className="accountSection">
-        <p className="accountSectionTitle">Жалоба</p>
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Жалоба</Kicker>
         {!user ? (
-          <p className="notice">Жалобы доступны после входа.</p>
+          <p className="text-c3 text-sm">Жалобы доступны после входа.</p>
         ) : (
           <>
             <textarea
-              className="formInput"
+              className={textareaClass}
               rows={3}
               value={reportDetails}
               onChange={(event) => setReportDetails(event.target.value)}
               placeholder="Опишите проблему без персональных данных."
               data-testid="migration-board-report-message"
             />
-            <button
-              type="button"
-              className="secondaryButton"
+            <Button
+              variant="ghost"
               onClick={() => void sendReport()}
+              disabled={reportPost.isPending}
               data-testid="migration-board-report-submit"
             >
               Пожаловаться
-            </button>
+            </Button>
           </>
         )}
-      </section>
+      </Card>
     </div>
   );
 }

@@ -1,19 +1,29 @@
 "use client";
 
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-  listBoardPosts,
-  type BoardPostFilters,
-  type MigrationBoardPostListResponse,
-} from "../../shared/api";
+  Badge,
+  Button,
+  Card,
+  Field,
+  FieldLabel,
+} from "@country-decision-atlas/ui";
+import { Link } from "../../i18n/navigation";
+import { boardPostsQuery } from "../../entities/migration-board/api";
+import type { BoardPostFilters } from "../../shared/api/migrationBoard";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
+
+const selectClass =
+  "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
+const inputClass =
+  "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
 const TIMELINES = [
   ["", "Любой срок"],
@@ -44,138 +54,132 @@ export function MigrationBoardListView() {
     timeline_window: "",
     companion_goal: "",
   });
-  const [data, setData] = useState<MigrationBoardPostListResponse | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let active = true;
-    setIsLoading(true);
-    setError(null);
-    listBoardPosts({ ...filters, limit: 40 })
-      .then((response) => {
-        if (active) setData(response);
-      })
-      .catch((err: unknown) => {
-        if (active) setError(err);
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [filters]);
+  const posts = useQuery(boardPostsQuery({ ...filters, limit: 40 }));
 
-  if (isLoading) {
+  if (posts.isPending) {
     return <LoadingState message="Загрузка доски переезда…" />;
   }
 
-  if (error) {
-    return <ErrorState error={migrationBoardErrorMessage(error)} />;
+  if (posts.isError) {
+    return <ErrorState error={migrationBoardErrorMessage(posts.error)} />;
   }
 
-  const items = data?.items ?? [];
+  const items = posts.data.items ?? [];
 
   return (
     <div
-      className="searchPageContainer"
+      className="flex flex-col gap-6"
       data-testid="migration-board-page"
     >
-      <div className="toolbar">
-        <input
-          className="formInput"
-          placeholder="Страна назначения, например uruguay"
-          value={filters.destination_country ?? ""}
-          onChange={(event) =>
-            setFilters((current) => ({
-              ...current,
-              destination_country: event.target.value,
-            }))
-          }
-          data-testid="migration-board-destination-filter"
-        />
-        <input
-          className="formInput"
-          placeholder="Страна отправления"
-          value={filters.origin_country ?? ""}
-          onChange={(event) =>
-            setFilters((current) => ({
-              ...current,
-              origin_country: event.target.value,
-            }))
-          }
-        />
-        <select
-          className="formInput"
-          value={filters.timeline_window ?? ""}
-          onChange={(event) =>
-            setFilters((current) => ({
-              ...current,
-              timeline_window: event.target.value,
-            }))
-          }
-          data-testid="migration-board-timeline-filter"
-        >
-          {TIMELINES.map(([value, label]) => (
-            <option
-              key={value}
-              value={value}
-            >
-              {label}
-            </option>
-          ))}
-        </select>
-        <select
-          className="formInput"
-          value={filters.companion_goal ?? ""}
-          onChange={(event) =>
-            setFilters((current) => ({
-              ...current,
-              companion_goal: event.target.value,
-            }))
-          }
-          data-testid="migration-board-goal-filter"
-        >
-          {GOALS.map(([value, label]) => (
-            <option
-              key={value}
-              value={value}
-            >
-              {label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Card
+        interactive={false}
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        <Field>
+          <FieldLabel htmlFor="board-destination-filter">
+            Страна назначения
+          </FieldLabel>
+          <input
+            id="board-destination-filter"
+            className={inputClass}
+            placeholder="например uruguay"
+            value={filters.destination_country ?? ""}
+            onChange={(event) =>
+              setFilters((current) => ({
+                ...current,
+                destination_country: event.target.value,
+              }))
+            }
+            data-testid="migration-board-destination-filter"
+          />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="board-origin-filter">
+            Страна отправления
+          </FieldLabel>
+          <input
+            id="board-origin-filter"
+            className={inputClass}
+            value={filters.origin_country ?? ""}
+            onChange={(event) =>
+              setFilters((current) => ({
+                ...current,
+                origin_country: event.target.value,
+              }))
+            }
+          />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="board-timeline-filter">Срок</FieldLabel>
+          <select
+            id="board-timeline-filter"
+            className={selectClass}
+            value={filters.timeline_window ?? ""}
+            onChange={(event) =>
+              setFilters((current) => ({
+                ...current,
+                timeline_window: event.target.value,
+              }))
+            }
+            data-testid="migration-board-timeline-filter"
+          >
+            {TIMELINES.map(([value, label]) => (
+              <option
+                key={value}
+                value={value}
+              >
+                {label}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="board-goal-filter">Цель</FieldLabel>
+          <select
+            id="board-goal-filter"
+            className={selectClass}
+            value={filters.companion_goal ?? ""}
+            onChange={(event) =>
+              setFilters((current) => ({
+                ...current,
+                companion_goal: event.target.value,
+              }))
+            }
+            data-testid="migration-board-goal-filter"
+          >
+            {GOALS.map(([value, label]) => (
+              <option
+                key={value}
+                value={value}
+              >
+                {label}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </Card>
 
-      <div className="notice">
+      <p className="text-c3 text-sm">
         Контакты, email и Telegram не публикуются. Записи появляются в общем
         списке только после модерации и подтверждения рисков.
-      </div>
+      </p>
 
-      <div className="toolbar">
+      <div className="flex flex-wrap gap-3">
         {authLoading ? null : user ? (
           <>
-            <Link
-              className="runButton"
-              href={routes.migrationBoardNew}
-            >
-              Создать запись
+            <Link href={routes.migrationBoardNew}>
+              <Button>Создать запись</Button>
             </Link>
-            <Link
-              className="secondaryButton"
-              href={routes.accountMigrationBoard}
-            >
-              Мои записи
+            <Link href={routes.accountMigrationBoard}>
+              <Button variant="ghost">Мои записи</Button>
             </Link>
           </>
         ) : (
-          <Link
-            className="runButton"
-            href={routes.login}
-            data-testid="migration-board-login-cta"
-          >
-            Войти, чтобы создать запись
+          <Link href={routes.login}>
+            <Button data-testid="migration-board-login-cta">
+              Войти, чтобы создать запись
+            </Button>
           </Link>
         )}
       </div>
@@ -184,23 +188,28 @@ export function MigrationBoardListView() {
         <EmptyState message="Пока нет опубликованных записей." />
       ) : (
         <div
-          className="cardGrid"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           data-testid="migration-board-list"
         >
           {items.map((post) => (
             <Link
-              className="summaryCard"
               href={routes.migrationBoardPost(post.id)}
               key={post.id}
             >
-              <p className="eyebrow">{post.destination_country.name}</p>
-              <h2>{post.title}</h2>
-              <p>{post.summary}</p>
-              <div className="badgeRow">
-                <span className="badge">{post.timeline_window}</span>
-                <span className="badge">{post.companion_goal}</span>
-                <span className="badge">{post.author.display_name}</span>
-              </div>
+              <Card className="flex h-full flex-col gap-3">
+                <span className="text-c4 text-xs">
+                  {post.destination_country.name}
+                </span>
+                <span className="font-display text-lg font-semibold">
+                  {post.title}
+                </span>
+                <p className="text-c3 line-clamp-3 text-sm">{post.summary}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="default">{post.timeline_window}</Badge>
+                  <Badge variant="default">{post.companion_goal}</Badge>
+                  <Badge variant="default">{post.author.display_name}</Badge>
+                </div>
+              </Card>
             </Link>
           ))}
         </div>

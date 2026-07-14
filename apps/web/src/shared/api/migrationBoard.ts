@@ -313,4 +313,11 @@ export const migrationBoardApi = {
   blockUser,
   unblockUser,
   listBlockedUsers,
+  listAdminBoardPosts,
+  approveAdminBoardPost,
+  rejectAdminBoardPost,
+  hideAdminBoardPost,
+  listAdminBoardReports,
+  resolveAdminBoardReport,
+  dismissAdminBoardReport,
 };

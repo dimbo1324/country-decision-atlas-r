@@ -1,11 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import {
-  listBoardPosts,
-  type MigrationBoardPostListResponse,
-} from "../../shared/api";
+import { useQuery } from "@tanstack/react-query";
+import { boardPostsQuery } from "../../entities/migration-board/api";
+import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
 
 export function CountryMigrationBoardBlock({
@@ -13,47 +10,34 @@ export function CountryMigrationBoardBlock({
 }: {
   countrySlug: string;
 }) {
-  const [data, setData] = useState<MigrationBoardPostListResponse | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    listBoardPosts({ destination_country: countrySlug, limit: 3 })
-      .then((response) => {
-        if (active) setData(response);
-      })
-      .catch(() => {
-        if (active) setData({ items: [], total: 0, limit: 3, offset: 0 });
-      });
-    return () => {
-      active = false;
-    };
-  }, [countrySlug]);
-
-  const items = data?.items ?? [];
+  const posts = useQuery(
+    boardPostsQuery({ destination_country: countrySlug, limit: 3 }),
+  );
+  const items = posts.data?.items ?? [];
 
   return (
     <div data-testid="country-migration-board-block">
       {items.length === 0 ? (
-        <p className="notice">
+        <p className="text-c3 text-sm">
           Пока нет опубликованных записей для этой страны.
         </p>
       ) : (
-        <div className="sectionStack">
+        <div className="flex flex-col gap-2">
           {items.map((post) => (
             <Link
-              className="internalLink"
               href={routes.migrationBoardPost(post.id)}
               key={post.id}
+              className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
             >
               {post.title}
             </Link>
           ))}
         </div>
       )}
-      <div className="entityLinkRow">
+      <div className="mt-3">
         <Link
           href={`${routes.migrationBoard}?destination=${countrySlug}`}
-          className="internalLink"
+          className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
           Все записи по направлению
         </Link>

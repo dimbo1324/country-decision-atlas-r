@@ -1,21 +1,19 @@
 "use client";
 
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
-import { useEffect, useState } from "react";
-import { getPathname } from "../../i18n/navigation";
+import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
+import { Link, getPathname } from "../../i18n/navigation";
 import {
-  acceptContactRequest,
-  archiveBoardPost,
-  cancelContactRequest,
-  declineContactRequest,
-  listIncomingContactRequests,
-  listMyBoardPosts,
-  listOutgoingContactRequests,
-  submitBoardPost,
-  type ContactRequestListResponse,
-  type MyMigrationBoardPostListResponse,
-} from "../../shared/api";
+  myBoardPostsQuery,
+  incomingContactRequestsQuery,
+  outgoingContactRequestsQuery,
+  useAcceptContactRequestMutation,
+  useArchiveBoardPostMutation,
+  useCancelContactRequestMutation,
+  useDeclineContactRequestMutation,
+  useSubmitBoardPostMutation,
+} from "../../entities/migration-board/api";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -26,52 +24,24 @@ import { migrationBoardErrorMessage } from "./errorMessage";
 export function AccountMigrationBoardView() {
   const { user, isLoading: authLoading } = useAuth();
   const locale = useLocale();
-  const [posts, setPosts] = useState<MyMigrationBoardPostListResponse | null>(
-    null,
-  );
-  const [incoming, setIncoming] = useState<ContactRequestListResponse | null>(
-    null,
-  );
-  const [outgoing, setOutgoing] = useState<ContactRequestListResponse | null>(
-    null,
-  );
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  async function reload() {
-    setError(null);
-    const [postData, incomingData, outgoingData] = await Promise.all([
-      listMyBoardPosts(),
-      listIncomingContactRequests(),
-      listOutgoingContactRequests(),
-    ]);
-    setPosts(postData);
-    setIncoming(incomingData);
-    setOutgoing(outgoingData);
-  }
+  const posts = useQuery({ ...myBoardPostsQuery(), enabled: Boolean(user) });
+  const incoming = useQuery({
+    ...incomingContactRequestsQuery(),
+    enabled: Boolean(user),
+  });
+  const outgoing = useQuery({
+    ...outgoingContactRequestsQuery(),
+    enabled: Boolean(user),
+  });
 
-  useEffect(() => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    reload()
-      .catch((err: unknown) => setError(err))
-      .finally(() => setIsLoading(false));
-  }, [user]);
+  const submitPost = useSubmitBoardPostMutation();
+  const archivePost = useArchiveBoardPostMutation();
+  const acceptRequest = useAcceptContactRequestMutation();
+  const declineRequest = useDeclineContactRequestMutation();
+  const cancelRequest = useCancelContactRequestMutation();
 
-  async function action(fn: () => Promise<unknown>) {
-    setError(null);
-    try {
-      await fn();
-      await reload();
-    } catch (err: unknown) {
-      setError(err);
-    }
-  }
-
-  if (authLoading || isLoading) {
+  if (authLoading) {
     return <LoadingState message="Загрузка migration board…" />;
   }
 
@@ -85,136 +55,155 @@ export function AccountMigrationBoardView() {
     );
   }
 
+  if (posts.isPending || incoming.isPending || outgoing.isPending) {
+    return <LoadingState message="Загрузка migration board…" />;
+  }
+
+  const loadError = posts.error ?? incoming.error ?? outgoing.error;
+  const postItems = posts.data?.items ?? [];
+  const incomingItems = incoming.data?.items ?? [];
+  const outgoingItems = outgoing.data?.items ?? [];
+
   return (
     <div
-      className="searchPageContainer"
+      className="flex flex-col gap-8"
       data-testid="account-migration-board"
     >
-      {error !== null && (
-        <ErrorState error={migrationBoardErrorMessage(error)} />
+      {loadError != null && (
+        <ErrorState error={migrationBoardErrorMessage(loadError)} />
       )}
-      <div className="toolbar">
-        <Link
-          className="runButton"
-          href={routes.migrationBoardNew}
-        >
-          Создать запись
+      <div className="flex flex-wrap gap-3">
+        <Link href={routes.migrationBoardNew}>
+          <Button>Создать запись</Button>
         </Link>
-        <Link
-          className="secondaryButton"
-          href={routes.migrationBoard}
-        >
-          Публичная доска
+        <Link href={routes.migrationBoard}>
+          <Button variant="ghost">Публичная доска</Button>
         </Link>
       </div>
-      <section className="accountSection">
-        <p className="accountSectionTitle">Мои записи</p>
-        {(posts?.items ?? []).length === 0 ? (
+
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Мои записи</Kicker>
+        {postItems.length === 0 ? (
           <EmptyState message="Записей пока нет." />
         ) : (
-          <div className="cardGrid">
-            {posts?.items.map((post) => (
-              <div
-                className="summaryCard"
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {postItems.map((post) => (
+              <Card
                 key={post.id}
+                interactive={false}
+                className="flex flex-col gap-3"
               >
-                <p className="eyebrow">{post.destination_country.name}</p>
-                <h2>{post.title}</h2>
-                <p>{post.summary}</p>
-                <div className="badgeRow">
-                  <span className="badge">{post.status}</span>
-                  <span className="badge">{post.moderation_status}</span>
+                <span className="text-c4 text-xs">
+                  {post.destination_country.name}
+                </span>
+                <span className="font-display text-lg font-semibold">
+                  {post.title}
+                </span>
+                <p className="text-c3 text-sm">{post.summary}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="default">{post.status}</Badge>
+                  <Badge variant="default">{post.moderation_status}</Badge>
                 </div>
-                <div className="toolbar">
-                  <button
-                    type="button"
-                    className="secondaryButton"
-                    onClick={() => void action(() => submitBoardPost(post.id))}
+                <div className="flex gap-3">
+                  <Button
+                    variant="ghost"
+                    onClick={() => submitPost.mutate(post.id)}
                     disabled={
-                      post.status === "review" || post.status === "published"
+                      post.status === "review" ||
+                      post.status === "published" ||
+                      submitPost.isPending
                     }
                     data-testid="migration-board-account-submit"
                   >
                     На модерацию
-                  </button>
-                  <button
-                    type="button"
-                    className="secondaryButton"
-                    onClick={() => void action(() => archiveBoardPost(post.id))}
-                    disabled={post.status === "archived"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => archivePost.mutate(post.id)}
+                    disabled={
+                      post.status === "archived" || archivePost.isPending
+                    }
                   >
                     Архив
-                  </button>
+                  </Button>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         )}
-      </section>
-      <section className="accountSection">
-        <p className="accountSectionTitle">Входящие requests</p>
-        {(incoming?.items ?? []).length === 0 ? (
-          <p className="notice">Нет входящих requests.</p>
+      </Card>
+
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Входящие requests</Kicker>
+        {incomingItems.length === 0 ? (
+          <p className="text-c3 text-sm">Нет входящих requests.</p>
         ) : (
-          incoming?.items.map((request) => (
+          incomingItems.map((request) => (
             <div
-              className="sessionRow"
               key={request.id}
+              className="border-warm flex items-center justify-between gap-4 border-b py-3 last:border-b-0"
             >
-              <span>
+              <span className="text-c2 text-sm">
                 {request.post_title} от {request.from_user_display_name}:{" "}
                 {request.status}
               </span>
-              <button
-                type="button"
-                className="secondaryButton"
-                onClick={() =>
-                  void action(() => acceptContactRequest(request.id))
-                }
-              >
-                Accept
-              </button>
-              <button
-                type="button"
-                className="secondaryButton"
-                onClick={() =>
-                  void action(() => declineContactRequest(request.id))
-                }
-              >
-                Decline
-              </button>
+              <div className="flex gap-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => acceptRequest.mutate(request.id)}
+                  disabled={acceptRequest.isPending}
+                >
+                  Accept
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => declineRequest.mutate(request.id)}
+                  disabled={declineRequest.isPending}
+                >
+                  Decline
+                </Button>
+              </div>
             </div>
           ))
         )}
-      </section>
-      <section className="accountSection">
-        <p className="accountSectionTitle">Исходящие requests</p>
-        {(outgoing?.items ?? []).length === 0 ? (
-          <p className="notice">Нет исходящих requests.</p>
+      </Card>
+
+      <Card
+        interactive={false}
+        className="flex flex-col gap-4"
+      >
+        <Kicker>Исходящие requests</Kicker>
+        {outgoingItems.length === 0 ? (
+          <p className="text-c3 text-sm">Нет исходящих requests.</p>
         ) : (
-          outgoing?.items.map((request) => (
+          outgoingItems.map((request) => (
             <div
-              className="sessionRow"
               key={request.id}
+              className="border-warm flex items-center justify-between gap-4 border-b py-3 last:border-b-0"
             >
-              <span>
+              <span className="text-c2 text-sm">
                 {request.post_title} для {request.to_user_display_name}:{" "}
                 {request.status}
               </span>
-              <button
-                type="button"
-                className="secondaryButton"
-                onClick={() =>
-                  void action(() => cancelContactRequest(request.id))
+              <Button
+                variant="ghost"
+                onClick={() => cancelRequest.mutate(request.id)}
+                disabled={
+                  request.status !== "pending" || cancelRequest.isPending
                 }
-                disabled={request.status !== "pending"}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           ))
         )}
-      </section>
+      </Card>
     </div>
   );
 }
