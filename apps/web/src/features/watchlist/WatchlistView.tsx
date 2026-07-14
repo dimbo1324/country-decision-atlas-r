@@ -79,58 +79,61 @@ export function WatchlistView() {
       data-testid="watchlist-list"
     >
       {items.map((item) => (
-        <Card
+        <div
           key={item.id}
-          interactive={false}
-          className="flex flex-col gap-4"
           data-testid="watchlist-item"
         >
-          <div className="flex items-center justify-between gap-3">
-            <Link
-              href={routes.country(item.country_slug)}
-              className="font-display text-lg font-semibold"
-            >
-              {item.country_name}
-            </Link>
-            <button
-              type="button"
-              onClick={() =>
-                toggle.mutate({
-                  countrySlug: item.country_slug,
-                  countryName: item.country_name,
-                  nextSaved: false,
-                })
-              }
-              disabled={toggle.isPending}
-              data-testid="watchlist-remove-button"
-              className="font-mono text-c3 hover:text-terra3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
-            >
-              Удалить
-            </button>
-          </div>
-          <Badge variant="default">{item.status}</Badge>
-          <div className="flex flex-col gap-2">
-            {NOTIFY_TOGGLES.map(({ field, label }) => (
-              <label
-                key={field}
-                className="text-c3 flex items-center gap-2 text-sm"
+          <Card
+            interactive={false}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <Link
+                href={routes.country(item.country_slug)}
+                className="font-display text-lg font-semibold"
               >
-                <input
-                  type="checkbox"
-                  className="accent-gold"
-                  checked={item[field]}
-                  onChange={(event) =>
-                    updatePreferences.mutate({
-                      countrySlug: item.country_slug,
-                      payload: { [field]: event.target.checked },
-                    })
-                  }
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-        </Card>
+                {item.country_name}
+              </Link>
+              <button
+                type="button"
+                onClick={() =>
+                  toggle.mutate({
+                    countrySlug: item.country_slug,
+                    countryName: item.country_name,
+                    nextSaved: false,
+                  })
+                }
+                disabled={toggle.isPending}
+                data-testid="watchlist-remove-button"
+                className="font-mono text-c3 hover:text-terra3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
+              >
+                Удалить
+              </button>
+            </div>
+            <Badge variant="default">{item.status}</Badge>
+            <div className="flex flex-col gap-2">
+              {NOTIFY_TOGGLES.map(({ field, label }) => (
+                <label
+                  key={field}
+                  className="text-c3 flex items-center gap-2 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-gold"
+                    checked={item[field]}
+                    onChange={(event) =>
+                      updatePreferences.mutate({
+                        countrySlug: item.country_slug,
+                        payload: { [field]: event.target.checked },
+                      })
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </Card>
+        </div>
       ))}
     </div>
   );

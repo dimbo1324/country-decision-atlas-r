@@ -266,33 +266,38 @@ export function AccountView() {
       )}
 
       {notificationItems.length > 0 && (
-        <Card
-          interactive={false}
-          className="flex flex-col gap-3"
-          data-testid="security-notifications"
-        >
-          <Kicker>Уведомления безопасности</Kicker>
-          {notificationItems.map((notification) => (
-            <div
-              key={notification.id}
-              className="border-warm flex items-center justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0"
-              data-testid="new-device-notification"
-            >
-              <span className="text-c2 text-sm">
-                Вход с нового устройства: {notification.device_label ?? "?"}
-                {notification.ip_display ? ` (${notification.ip_display})` : ""}
-                , {new Date(notification.created_at).toLocaleString("ru-RU")}.
-                Это были вы?
-              </span>
-              <Button
-                variant="ghost"
-                onClick={() => acknowledgeNotification.mutate(notification.id)}
+        <div data-testid="security-notifications">
+          <Card
+            interactive={false}
+            className="flex flex-col gap-3"
+          >
+            <Kicker>Уведомления безопасности</Kicker>
+            {notificationItems.map((notification) => (
+              <div
+                key={notification.id}
+                className="border-warm flex items-center justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0"
+                data-testid="new-device-notification"
               >
-                Подтвердить
-              </Button>
-            </div>
-          ))}
-        </Card>
+                <span className="text-c2 text-sm">
+                  Вход с нового устройства: {notification.device_label ?? "?"}
+                  {notification.ip_display
+                    ? ` (${notification.ip_display})`
+                    : ""}
+                  , {new Date(notification.created_at).toLocaleString("ru-RU")}.
+                  Это были вы?
+                </span>
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    acknowledgeNotification.mutate(notification.id)
+                  }
+                >
+                  Подтвердить
+                </Button>
+              </div>
+            ))}
+          </Card>
+        </div>
       )}
 
       <Card
@@ -302,12 +307,9 @@ export function AccountView() {
         <Kicker>Telegram</Kicker>
         {telegramStatus.data?.linked ? (
           <div className="flex items-center gap-4">
-            <Badge
-              variant="default"
-              data-testid="telegram-linked-state"
-            >
-              Telegram привязан
-            </Badge>
+            <span data-testid="telegram-linked-state">
+              <Badge variant="default">Telegram привязан</Badge>
+            </span>
             <Button
               variant="ghost"
               onClick={() => unlinkTelegram.mutate()}
