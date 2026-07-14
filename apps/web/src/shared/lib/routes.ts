@@ -24,6 +24,8 @@ export const routes = {
   account: "/account",
   accountMigrationBoard: "/account/migration-board",
   accountAuthorMetrics: "/account/author-metrics",
+  accountCountryProposals: "/account/country-proposals",
+  countryProposalWizard: (id: string) => `/account/country-proposals/${id}`,
   authorProfile: (userId: string) => `/authors/${userId}`,
   migrationBoard: "/migration-board",
   migrationBoardNew: "/migration-board/new",
