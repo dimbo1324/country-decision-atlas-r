@@ -3,10 +3,12 @@
     "countries": "Страны",
     "decision": "Подбор",
     "migrationBoard": "Доска переезда",
+    "userStories": "Истории",
     "legalSignals": "Правовые сигналы",
     "sources": "Источники",
     "dataQuality": "Качество данных",
     "moderation": "Модерация",
+    "communityModeration": "Модерация сообщества",
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню"
   },

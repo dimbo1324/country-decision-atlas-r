@@ -3,10 +3,12 @@
     "countries": "Countries",
     "decision": "Decision",
     "migrationBoard": "Migration Board",
+    "userStories": "Stories",
     "legalSignals": "Legal Signals",
     "sources": "Sources",
     "dataQuality": "Data Quality",
     "moderation": "Moderation",
+    "communityModeration": "Community Moderation",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },

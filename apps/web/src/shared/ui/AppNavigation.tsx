@@ -22,12 +22,14 @@ export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
     { label: t("countries"), href: routes.countries },
     { label: t("decision"), href: routes.decision },
     { label: t("migrationBoard"), href: routes.migrationBoard },
+    { label: t("userStories"), href: routes.userStories },
     { label: t("legalSignals"), href: routes.legalSignals },
     { label: t("sources"), href: routes.sources },
   ];
 
   const canSeeDataQuality = hasRole(user, ADMIN_ROLES);
   const canSeeMigrationBoardModeration = hasRole(user, MODERATION_ROLES);
+  const canSeeCommunityModeration = hasRole(user, MODERATION_ROLES);
 
   return (
     <nav
@@ -78,6 +80,17 @@ export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
           className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
         >
           {t("moderation")}
+        </NextLink>
+      )}
+      {canSeeCommunityModeration && (
+        <NextLink
+          href={routes.communityModeration}
+          onClick={onNavigate}
+          data-testid="nav-community-moderation-link"
+          data-active={pathname === routes.communityModeration}
+          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
+        >
+          {t("communityModeration")}
         </NextLink>
       )}
     </nav>

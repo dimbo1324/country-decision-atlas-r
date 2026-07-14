@@ -1,9 +1,12 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { apiGet, queryString } from "./http";
+import { apiGet, apiPost, queryString } from "./http";
 
+export type UserStory = components["schemas"]["UserStory"];
 export type UserStoryListResponse =
   components["schemas"]["UserStoryListResponse"];
+export type UserStoryResponse = components["schemas"]["UserStoryResponse"];
+export type UserStoryCreate = components["schemas"]["UserStoryCreate"];
 
 type ListUserStoriesParams = {
   originCountrySlug?: string;
@@ -37,6 +40,21 @@ export function listUserStories(
   );
 }
 
+export function getUserStory(storyId: string): Promise<UserStoryResponse> {
+  return apiGet<UserStoryResponse>(`/api/v1/user-stories/${storyId}`);
+}
+
+export function createUserStory(
+  payload: UserStoryCreate,
+): Promise<UserStoryResponse> {
+  return apiPost<UserStoryResponse, UserStoryCreate>(
+    "/api/v1/user-stories",
+    payload,
+  );
+}
+
 export const userStoriesApi = {
   listUserStories,
+  getUserStory,
+  createUserStory,
 };

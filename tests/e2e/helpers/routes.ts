@@ -43,6 +43,7 @@ export const e2eRoutes = {
     withLocale("/methodology/parameters", locale),
   glossary: (params?: Record<string, string>) =>
     pathWithQuery("/glossary", params),
+  userStories: withLocale("/user-stories"),
   search: (params?: Record<string, string>) => pathWithQuery("/search", params),
   dataQuality: "/internal/data-quality",
   migrationBoard: withLocale("/migration-board"),
