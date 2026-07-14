@@ -9,6 +9,11 @@ import { csrfHeaders } from "../../shared/auth/session";
 
 type WatchlistResponse = components["schemas"]["WatchlistResponse"];
 type WatchlistItem = components["schemas"]["WatchlistItem"];
+type WatchlistPreferencesUpdate = {
+  notify_legal_signals?: boolean;
+  notify_drift_changes?: boolean;
+  notify_route_updates?: boolean;
+};
 
 const WATCHLIST_QUERY_KEY = ["me", "watchlist"] as const;
 
@@ -87,6 +92,58 @@ export function useToggleWatchlistMutation() {
             (item) => item.country_slug !== countrySlug,
           );
           return { total: filtered.length, items: filtered };
+        },
+      );
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(WATCHLIST_QUERY_KEY, context.previous);
+      }
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: WATCHLIST_QUERY_KEY });
+    },
+  });
+}
+
+/** Optimistic per-country notification-preference toggle: flips the
+ * checkbox immediately, rolls back on error, matching the toggle
+ * mutation's onMutate/onError/onSettled shape above. */
+export function useUpdateWatchlistPreferencesMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      countrySlug,
+      payload,
+    }: {
+      countrySlug: string;
+      payload: WatchlistPreferencesUpdate;
+    }) =>
+      unwrap(
+        apiClient.PATCH("/api/v1/me/watchlist/countries/{country_slug}", {
+          params: { path: { country_slug: countrySlug } },
+          body: payload,
+          headers: csrfHeaders(),
+        }),
+      ),
+    onMutate: async ({ countrySlug, payload }) => {
+      await queryClient.cancelQueries({ queryKey: WATCHLIST_QUERY_KEY });
+      const previous =
+        queryClient.getQueryData<WatchlistResponse>(WATCHLIST_QUERY_KEY);
+      queryClient.setQueryData<WatchlistResponse>(
+        WATCHLIST_QUERY_KEY,
+        (current) => {
+          if (!current) return current;
+          return {
+            ...current,
+            items: (current.items ?? []).map((item) =>
+              item.country_slug === countrySlug
+                ? { ...item, ...payload }
+                : item,
+            ),
+          };
         },
       );
       return { previous };

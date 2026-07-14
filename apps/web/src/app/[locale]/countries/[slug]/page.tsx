@@ -152,7 +152,10 @@ export default async function CountryPage({ params }: PageProps) {
       <CountryHeader country={card.country} />
 
       <div data-testid="watchlist-button-container">
-        <WatchlistButton countrySlug={card.country.slug} />
+        <WatchlistButton
+          countrySlug={card.country.slug}
+          countryName={card.country.name}
+        />
       </div>
 
       <div className="flex gap-8">

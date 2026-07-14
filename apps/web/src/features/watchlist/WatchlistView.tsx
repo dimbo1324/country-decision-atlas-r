@@ -1,72 +1,37 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Badge, Card } from "@country-decision-atlas/ui";
+import { Link } from "../../i18n/navigation";
+import {
+  myWatchlistQuery,
+  useToggleWatchlistMutation,
+  useUpdateWatchlistPreferencesMutation,
+} from "../../entities/watchlist/api";
 import { isApiError } from "../../shared/api/http";
-import { watchlistsApi, type WatchlistItem } from "../../shared/api/watchlists";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
+import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 
+const NOTIFY_TOGGLES: {
+  field:
+    | "notify_legal_signals"
+    | "notify_drift_changes"
+    | "notify_route_updates";
+  label: string;
+}[] = [
+  { field: "notify_legal_signals", label: "Правовые сигналы" },
+  { field: "notify_drift_changes", label: "Изменение направления" },
+  { field: "notify_route_updates", label: "Обновления маршрутов" },
+];
+
 export function WatchlistView() {
   const { user, isLoading: isAuthLoading } = useAuth();
-  const [items, setItems] = useState<WatchlistItem[] | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-    let active = true;
-    setIsLoading(true);
-    watchlistsApi
-      .listWatchlist()
-      .then((response) => {
-        if (active) setItems(response.items ?? []);
-      })
-      .catch((err: unknown) => {
-        if (active) setError(err);
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user]);
-
-  async function handleRemove(countrySlug: string) {
-    await watchlistsApi.removeCountryFromWatchlist(countrySlug);
-    setItems(
-      (prev) =>
-        prev?.filter((item) => item.country_slug !== countrySlug) ?? null,
-    );
-  }
-
-  async function handleToggle(
-    countrySlug: string,
-    field:
-      | "notify_legal_signals"
-      | "notify_drift_changes"
-      | "notify_route_updates",
-    value: boolean,
-  ) {
-    const updated = await watchlistsApi.updateWatchlistPreferences(
-      countrySlug,
-      {
-        [field]: value,
-      },
-    );
-    setItems(
-      (prev) =>
-        prev?.map((item) =>
-          item.country_slug === countrySlug ? updated : item,
-        ) ?? null,
-    );
-  }
+  const watchlist = useQuery({ ...myWatchlistQuery(), enabled: Boolean(user) });
+  const toggle = useToggleWatchlistMutation();
+  const updatePreferences = useUpdateWatchlistPreferencesMutation();
 
   if (isAuthLoading) {
     return <LoadingState message="Загрузка…" />;
@@ -84,98 +49,88 @@ export function WatchlistView() {
     );
   }
 
-  if (isLoading) {
+  if (watchlist.isPending) {
     return <LoadingState message="Загрузка watchlist…" />;
   }
 
-  if (error) {
+  if (watchlist.isError) {
     return (
       <div data-testid="watchlist-error">
-        <ErrorState error={isApiError(error) ? error : undefined} />
+        <ErrorState
+          error={isApiError(watchlist.error) ? watchlist.error : undefined}
+        />
       </div>
     );
   }
 
-  if (!items || items.length === 0) {
+  const items = watchlist.data.items ?? [];
+
+  if (items.length === 0) {
     return (
-      <div
-        className="emptyNotice"
-        data-testid="watchlist-empty-state"
-      >
-        Watchlist пуст. Сохраните страну на странице страны.
+      <div data-testid="watchlist-empty-state">
+        <EmptyState message="Watchlist пуст. Сохраните страну на странице страны." />
       </div>
     );
   }
 
   return (
     <div
-      className="searchPageContainer"
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       data-testid="watchlist-list"
     >
       {items.map((item) => (
-        <div
-          className="watchlistCard"
+        <Card
           key={item.id}
+          interactive={false}
+          className="flex flex-col gap-4"
           data-testid="watchlist-item"
         >
-          <div className="watchlistCardHeader">
-            <Link href={routes.country(item.country_slug)}>
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              href={routes.country(item.country_slug)}
+              className="font-display text-lg font-semibold"
+            >
               {item.country_name}
             </Link>
             <button
               type="button"
-              className="runButton"
-              onClick={() => handleRemove(item.country_slug)}
+              onClick={() =>
+                toggle.mutate({
+                  countrySlug: item.country_slug,
+                  countryName: item.country_name,
+                  nextSaved: false,
+                })
+              }
+              disabled={toggle.isPending}
               data-testid="watchlist-remove-button"
+              className="font-mono text-c3 hover:text-terra3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
             >
               Удалить
             </button>
           </div>
-          <div className="watchlistToggleRow">
-            <label className="checkboxLabel">
-              <input
-                type="checkbox"
-                checked={item.notify_legal_signals}
-                onChange={(event) =>
-                  handleToggle(
-                    item.country_slug,
-                    "notify_legal_signals",
-                    event.target.checked,
-                  )
-                }
-              />
-              Правовые сигналы
-            </label>
-            <label className="checkboxLabel">
-              <input
-                type="checkbox"
-                checked={item.notify_drift_changes}
-                onChange={(event) =>
-                  handleToggle(
-                    item.country_slug,
-                    "notify_drift_changes",
-                    event.target.checked,
-                  )
-                }
-              />
-              Изменение направления
-            </label>
-            <label className="checkboxLabel">
-              <input
-                type="checkbox"
-                checked={item.notify_route_updates}
-                onChange={(event) =>
-                  handleToggle(
-                    item.country_slug,
-                    "notify_route_updates",
-                    event.target.checked,
-                  )
-                }
-              />
-              Обновления маршрутов
-            </label>
+          <Badge variant="default">{item.status}</Badge>
+          <div className="flex flex-col gap-2">
+            {NOTIFY_TOGGLES.map(({ field, label }) => (
+              <label
+                key={field}
+                className="text-c3 flex items-center gap-2 text-sm"
+              >
+                <input
+                  type="checkbox"
+                  className="accent-gold"
+                  checked={item[field]}
+                  onChange={(event) =>
+                    updatePreferences.mutate({
+                      countrySlug: item.country_slug,
+                      payload: { [field]: event.target.checked },
+                    })
+                  }
+                />
+                {label}
+              </label>
+            ))}
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );

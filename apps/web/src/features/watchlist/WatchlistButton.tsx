@@ -1,94 +1,36 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "../../i18n/navigation";
+import {
+  myWatchlistQuery,
+  useToggleWatchlistMutation,
+} from "../../entities/watchlist/api";
 import { isApiError } from "../../shared/api/http";
-import { watchlistsApi } from "../../shared/api/watchlists";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { hasSessionHint } from "../../shared/auth/session";
 import { routes } from "../../shared/lib/routes";
 
-type WatchlistButtonState =
-  | "loading"
-  | "saved"
-  | "unsaved"
-  | "error"
-  | "disabled"
-  | "login-required";
-
-export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
+export function WatchlistButton({
+  countrySlug,
+  countryName,
+}: {
+  countrySlug: string;
+  countryName: string;
+}) {
   const { user, isLoading: isAuthLoading } = useAuth();
   // Visitors with no session hint can't possibly have a saved watchlist, so
-  // this must not start at "loading" and flip via a mount effect: any
-  // client-side setState here — however brief — duplicates SSR content on
-  // force-dynamic pages (see memory episode_gotchas_backend_tooling.md).
-  const [state, setState] = useState<WatchlistButtonState>(() =>
-    hasSessionHint() ? "loading" : "login-required",
-  );
+  // the query must stay disabled until we know a session might exist: any
+  // client-side setState-equivalent state flip here — however brief —
+  // duplicates SSR content on force-dynamic pages (see memory
+  // episode_gotchas_backend_tooling.md).
+  const watchlist = useQuery({
+    ...myWatchlistQuery(),
+    enabled: hasSessionHint() && Boolean(user) && !isAuthLoading,
+  });
+  const toggle = useToggleWatchlistMutation();
 
-  useEffect(() => {
-    // No session hint means the initializer above already set
-    // "login-required" correctly — running this effect anyway would call a
-    // redundant setState on mount, which is enough by itself to duplicate
-    // SSR content on force-dynamic pages, independent of what value is set.
-    if (!hasSessionHint()) return;
-    if (isAuthLoading) return;
-    if (!user) {
-      setState("login-required");
-      return;
-    }
-    let active = true;
-    setState("loading");
-    watchlistsApi
-      .getCountryWatchlistStatus(countrySlug)
-      .then((response) => {
-        if (active) setState(response.saved ? "saved" : "unsaved");
-      })
-      .catch((err: unknown) => {
-        if (!active) return;
-        if (isApiError(err) && err.error?.code === "feature_disabled") {
-          setState("disabled");
-        } else {
-          setState("error");
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, [user, isAuthLoading, countrySlug]);
-
-  async function handleToggle() {
-    if (state === "saved") {
-      setState("loading");
-      try {
-        await watchlistsApi.removeCountryFromWatchlist(countrySlug);
-        setState("unsaved");
-      } catch {
-        setState("error");
-      }
-    } else if (state === "unsaved") {
-      setState("loading");
-      try {
-        await watchlistsApi.addCountryToWatchlist(countrySlug);
-        setState("saved");
-      } catch {
-        setState("error");
-      }
-    }
-  }
-
-  if (isAuthLoading || state === "loading") {
-    return (
-      <span
-        className="notice"
-        data-testid="watchlist-button-loading"
-      >
-        Загрузка…
-      </span>
-    );
-  }
-
-  if (state === "login-required") {
+  if (!hasSessionHint() || (!isAuthLoading && !user)) {
     return (
       <Link
         href={routes.login}
@@ -100,11 +42,24 @@ export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
     );
   }
 
-  if (state === "disabled") {
-    return null;
+  if (isAuthLoading || watchlist.isPending) {
+    return (
+      <span
+        className="notice"
+        data-testid="watchlist-button-loading"
+      >
+        Загрузка…
+      </span>
+    );
   }
 
-  if (state === "error") {
+  if (watchlist.isError) {
+    if (
+      isApiError(watchlist.error) &&
+      watchlist.error.error?.code === "feature_disabled"
+    ) {
+      return null;
+    }
     return (
       <span
         className="notice"
@@ -115,14 +70,21 @@ export function WatchlistButton({ countrySlug }: { countrySlug: string }) {
     );
   }
 
+  const saved = (watchlist.data.items ?? []).some(
+    (item) => item.country_slug === countrySlug,
+  );
+
   return (
     <button
       type="button"
       className="runButton"
-      onClick={handleToggle}
+      onClick={() =>
+        toggle.mutate({ countrySlug, countryName, nextSaved: !saved })
+      }
+      disabled={toggle.isPending}
       data-testid="watchlist-toggle-button"
     >
-      {state === "saved" ? "В watchlist ✓" : "Сохранить в watchlist"}
+      {saved ? "В watchlist ✓" : "Сохранить в watchlist"}
     </button>
   );
 }
