@@ -44,6 +44,9 @@ export const e2eRoutes = {
   glossary: (params?: Record<string, string>) =>
     pathWithQuery("/glossary", params),
   userStories: withLocale("/user-stories"),
+  accountAuthorMetrics: withLocale("/account/author-metrics"),
+  authorProfile: (userId: string, locale?: string) =>
+    withLocale(`/authors/${userId}`, locale),
   search: (params?: Record<string, string>) => pathWithQuery("/search", params),
   dataQuality: "/internal/data-quality",
   migrationBoard: withLocale("/migration-board"),

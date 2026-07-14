@@ -147,6 +147,30 @@ export async function apiPatch<TResponse, TBody>(
   return parseJsonSafe<TResponse>(response);
 }
 
+export async function apiPut<TResponse, TBody>(
+  path: string,
+  body: TBody,
+  options: RequestOptions = {},
+): Promise<TResponse> {
+  const response = await fetchWithTimeout(path, {
+    method: "PUT",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw await parseJsonSafe<ApiErrorResponse>(response);
+  }
+
+  return parseJsonSafe<TResponse>(response);
+}
+
 export async function apiDelete<TResponse>(
   path: string,
   options: RequestOptions = {},

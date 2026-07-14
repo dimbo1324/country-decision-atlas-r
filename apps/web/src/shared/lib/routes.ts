@@ -23,6 +23,8 @@ export const routes = {
   register: "/register",
   account: "/account",
   accountMigrationBoard: "/account/migration-board",
+  accountAuthorMetrics: "/account/author-metrics",
+  authorProfile: (userId: string) => `/authors/${userId}`,
   migrationBoard: "/migration-board",
   migrationBoardNew: "/migration-board/new",
   migrationBoardPost: (id: string) => `/migration-board/${id}`,
