@@ -1,21 +1,63 @@
-# Task: Frontend Stage 13 (полировка и выпуск) — что осталось
+# Task: Stage 13 stream 5 — i18n key-parity script
 
-Потоки 1–4 сделаны и смержены в `main` (legacy CSS удалён, ErrorBoundary
-+ аналитика, аудит бандла, аудит доступности). Осталось 5 потоков:
+Source: `task-checklist.md` handoff note from the Stage 13 polish stage —
+"Написать скрипт сверки ключей `apps/web/src/messages/en.json` и
+`ru.json` (падать при расхождении), подключить в quick-гейт."
+Branch: `feat/frontend-stage13-i18n-parity` (fresh off `main`).
 
-- [ ] **i18n-парность.** Написать скрипт сверки ключей `apps/web/src/messages/en.json`
-      и `ru.json` (падать при расхождении), подключить в quick-гейт.
-      Отдельно — вручную пройтись по ru/en текстам на всех 44 роутах.
-- [ ] **Vitest.** В репозитории пока нет вообще (ни конфига, ни зависимости).
-      Поставить `vitest` для `apps/web` и `packages/ui`, начать с тестов
-      на `shared/lib/*` и `entities/*/api.ts`.
-- [ ] **MSW + Storybook interaction-тесты.** Storybook уже есть в
-      `packages/ui`, MSW — нет. Добавить `msw` + `msw-storybook-addon`,
-      написать несколько `play`-историй для ключевых компонентов.
-- [ ] **Визуальная регрессия.** Playwright screenshot-тесты минимум для:
-      главная, каталог, досье страны, результат решения, паспорт.
-      Снимать baseline нужно на текущем состоянии (после потоков 1-4).
-- [ ] **Финальный проход.** После потоков 5-8: полный прогон Playwright,
-      сверка DoD этапа 13 по плану (`docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md`,
-      §7 Этап 13), обновить счётчик роутов в плане (сейчас 44, не 29+),
-      финальная отметка "мигрировано" по чек-листу этапа 0.
+## Preparation
+
+- [+] Confirmed `apps/web/src/messages/en.json` and `ru.json` are both
+      currently in sync (same nested key set) — the script's baseline
+      test case is "no diff, exit 0", not "immediately fails."
+- [+] Confirmed no existing i18n lint/parity tooling exists anywhere in
+      the repo (per Stage 13 Preparation research).
+- [+] Read `scripts/dev_tools/sync_agents_md.py` as the house style
+      reference for a standalone `dev_tools` script: `main(argv) -> int`,
+      `--check` flag convention, `raise SystemExit(main())` entry point.
+- [+] Read `scripts/dev_tools/full_check.py` Phase 3
+      (`phase_static_quality`) to find where to hook the check — ruff/
+      mypy/pytest run unconditionally before the `if self.profile ==
+      "quick": ... return` branch, so a step placed there runs on every
+      profile including quick, matching the ask.
+
+## Design decisions
+
+- [+] Script name: `scripts/dev_tools/i18n_parity_check.py`. Recursive
+      flat-key diff (dot-path keys, e.g. `auth.loginSubmit`) between the
+      two JSON files — reports every key present in one but missing in
+      the other, on both sides, not just a boolean pass/fail.
+- [+] `--check` is the only mode (no "fix" mode — there's no correct
+      auto-generated value for a missing translation, unlike
+      `sync-agents`'s regenerate-from-source-of-truth case). Running
+      with no flags also runs the check; `--check` is accepted as an
+      alias for consistency with `sync-agents` and CI clarity.
+- [+] Registered in `dev_tools_scripts_runner.py`'s script registry
+      (`ScriptInfo`) as `i18n-parity` so it's discoverable/runnable
+      standalone, matching every other dev-tools script.
+- [+] Wired into `full_check.py` Phase 3 as an unconditional
+      `run_gate_step`, right after `mypy` — runs on every profile
+      (quick/backend/frontend/full/ci), not just quick, since it's a
+      cheap, fast, pure-Python check with no reason to gate it further.
+
+## Implementation
+
+- [ ] `scripts/dev_tools/i18n_parity_check.py`
+- [ ] Register in `dev_tools_scripts_runner.py`
+- [ ] Wire into `scripts/dev_tools/full_check.py` Phase 3
+- [ ] Verify: intentionally break parity, confirm non-zero exit +
+      readable diff; restore, confirm exit 0.
+
+## Verification
+
+- [ ] `python dev_tools_scripts_runner.py i18n-parity` — clean run.
+- [ ] `python dev_tools_scripts_runner.py --profile quick` — includes
+      the new step, passes.
+- [ ] `python -m mypy scripts` / `python -m ruff check scripts` clean
+      on the new script.
+
+## Completion
+
+- [ ] Commit(s)
+- [ ] Merge to `main`, push — only once explicitly confirmed complete.
+- [ ] Final report
