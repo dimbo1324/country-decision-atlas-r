@@ -6,18 +6,14 @@ import {
 } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryOverviewCard } from "../../shared/api/home";
+import { capitalize } from "../../shared/lib/format";
+import { confidenceLabelRu } from "../../shared/ui/ConfidenceBadge";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {
   high: "positive",
   medium: "warning",
   low: "negative",
-};
-
-const CONFIDENCE_LABEL: Record<string, string> = {
-  high: "Высокая",
-  medium: "Средняя",
-  low: "Низкая",
 };
 
 export function CountryOverviewCards({
@@ -68,7 +64,7 @@ export function CountryOverviewCards({
                       CONFIDENCE_VARIANT[country.confidence] ?? "default"
                     }
                   >
-                    {CONFIDENCE_LABEL[country.confidence] ?? country.confidence}
+                    {capitalize(confidenceLabelRu(country.confidence))}
                   </Badge>
                 )}
               </div>

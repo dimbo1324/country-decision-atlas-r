@@ -18,6 +18,11 @@ const CONFIDENCE_LABELS: Record<string, string> = {
   low: "низкая",
 };
 
+/** Lowercase Russian confidence level, for reuse outside the badge. */
+export function confidenceLabelRu(confidence: string): string {
+  return CONFIDENCE_LABELS[confidence] ?? confidence;
+}
+
 export function ConfidenceBadge({ confidence }: ConfidenceBadgeProps) {
   const variant = CONFIDENCE_VARIANT[confidence] ?? "default";
   const label = CONFIDENCE_LABELS[confidence] ?? confidence;

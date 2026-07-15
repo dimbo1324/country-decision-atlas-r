@@ -8,6 +8,7 @@ import { countryWhatChangedQuery } from "../../entities/what-changed/api";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { WhatChangedItemCard } from "./WhatChangedItemCard";
+import { formatDate } from "../../shared/lib/format";
 
 type CountryWhatChangedProps = {
   countrySlug: string;
@@ -51,8 +52,7 @@ export function CountryWhatChanged({
     >
       {data && (
         <Kicker>
-          С {new Date(data.since).toLocaleDateString("ru-RU")} · всего
-          изменений: {data.summary.total}
+          С {formatDate(data.since)} · всего изменений: {data.summary.total}
         </Kicker>
       )}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

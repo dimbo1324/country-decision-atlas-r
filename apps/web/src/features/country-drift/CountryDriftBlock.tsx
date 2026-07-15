@@ -9,6 +9,7 @@ import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { CountryDriftBadge } from "./CountryDriftBadge";
 import { DriftHistoryMiniList } from "./DriftHistoryMiniList";
+import { formatDateTime } from "../../shared/lib/format";
 
 type CountryDriftBlockProps = {
   countrySlug: string;
@@ -71,7 +72,7 @@ export function CountryDriftBlock({
         className="text-c4 text-xs"
         data-testid="country-drift-computed-at"
       >
-        Рассчитано: {new Date(snapshot.computed_at).toLocaleString("ru")}
+        Рассчитано: {formatDateTime(snapshot.computed_at)}
       </p>
       <p className="text-c4 text-xs">
         Индикатор основан только на официальных правовых сигналах за выбранный

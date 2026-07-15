@@ -9,23 +9,11 @@ import { searchQuery } from "../../entities/search/api";
 import { useAuth } from "../auth/AuthProvider";
 import { useRouter } from "../../i18n/navigation";
 import { useAppLocale } from "../lib/useAppLocale";
+import { entityTypeLabel } from "../lib/entity-type-labels";
 import { routes } from "../lib/routes";
-import type { SearchResultItem } from "../api/search";
 
 const SEARCH_DEBOUNCE_MS = 280;
 const PALETTE_RESULT_LIMIT = 8;
-
-const ENTITY_TYPE_LABELS: Record<SearchResultItem["entity_type"], string> = {
-  country: "Страна",
-  route: "Маршрут",
-  route_checklist_item: "Пункт чек-листа",
-  legal_signal: "Правовой сигнал",
-  source: "Источник",
-  evidence_item: "Доказательство",
-  country_pair_compatibility: "Совместимость стран",
-  methodology: "Методология",
-  glossary_term: "Термин глоссария",
-};
 
 /** ⌘K shell: static navigation sections when the input is empty, live
  * debounced `/search` results once something is typed (Stage 5). */
@@ -155,8 +143,7 @@ export function CommandPalette() {
                     >
                       <span className="truncate">{item.title}</span>
                       <span className="font-mono text-c4 shrink-0 text-[8px] tracking-[0.15em] uppercase">
-                        {ENTITY_TYPE_LABELS[item.entity_type] ??
-                          item.entity_type}
+                        {entityTypeLabel(item.entity_type)}
                       </span>
                     </Command.Item>
                   ))}

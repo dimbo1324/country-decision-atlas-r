@@ -5,6 +5,7 @@ import { CreateTripFromPassportButton } from "../../../../../features/decision-p
 import { DecisionResults } from "../../../../../features/decision-run";
 import { decisionPassportsApi } from "../../../../../shared/api";
 import { ErrorState } from "../../../../../shared/ui/ErrorState";
+import { formatDateTime } from "../../../../../shared/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -28,11 +29,11 @@ export default async function DecisionPassportPage({ params }: PageProps) {
           <h1 className="font-display text-3xl font-bold">Decision Passport</h1>
           <div className="flex flex-wrap gap-2">
             <Badge variant="default">
-              Создан: {new Date(passport.generated_at).toLocaleString("ru")}
+              Создан: {formatDateTime(passport.generated_at)}
             </Badge>
             {passport.expires_at && (
               <Badge variant="default">
-                Истекает: {new Date(passport.expires_at).toLocaleString("ru")}
+                Истекает: {formatDateTime(passport.expires_at)}
               </Badge>
             )}
             <Badge variant="trust">{passport.status}</Badge>

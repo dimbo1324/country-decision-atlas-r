@@ -32,6 +32,11 @@ const TRUST_LABELS: Record<string, string> = {
   insufficient_data: "Недостаточно данных",
 };
 
+/** Russian trust level, for reuse outside the badge. */
+export function trustLabelRu(label: string): string {
+  return TRUST_LABELS[label] ?? label;
+}
+
 export function TrustBadge({ label, score }: TrustBadgeProps) {
   const variant = TRUST_VARIANT[label] ?? "default";
   const text = TRUST_LABELS[label] ?? label;

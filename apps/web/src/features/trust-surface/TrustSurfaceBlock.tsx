@@ -4,11 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge, ProgressRing, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError, type LocaleCode } from "../../shared/api";
 import { countryTrustQuery } from "../../entities/trust-surface/api";
+import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
+import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
 import { Link } from "../../i18n/navigation";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
+import { trustLabelRu } from "../../shared/ui/TrustBadge";
 
 type TrustSurfaceBlockProps = {
   countrySlug: string;
@@ -75,7 +78,7 @@ export function TrustSurfaceBlock({
         {data.trust_score != null && (
           <ProgressRing
             value={Math.round(data.trust_score)}
-            label={data.trust_label}
+            label={trustLabelRu(data.trust_label)}
             size={128}
             accent={accent}
             active
@@ -83,10 +86,8 @@ export function TrustSurfaceBlock({
           />
         )}
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="default">Свежесть: {data.freshness_status}</Badge>
-          {data.confidence && (
-            <Badge variant="trust">Уверенность: {data.confidence}</Badge>
-          )}
+          <FreshnessBadge status={data.freshness_status} />
+          {data.confidence && <ConfidenceBadge confidence={data.confidence} />}
         </div>
       </div>
       <LastVerifiedAt date={data.last_verified_at ?? undefined} />

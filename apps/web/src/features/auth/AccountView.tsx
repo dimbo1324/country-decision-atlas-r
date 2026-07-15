@@ -36,6 +36,7 @@ import { useAuth } from "../../shared/auth/AuthProvider";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
+import { formatDateTime } from "../../shared/lib/format";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -290,8 +291,7 @@ export function AccountView() {
                   {notification.ip_display
                     ? ` (${notification.ip_display})`
                     : ""}
-                  , {new Date(notification.created_at).toLocaleString("ru-RU")}.
-                  Это были вы?
+                  , {formatDateTime(notification.created_at)}. Это были вы?
                 </span>
                 <Button
                   variant="ghost"
@@ -351,9 +351,7 @@ export function AccountView() {
                   {session.ip_display ? ` · ${session.ip_display}` : ""}
                   {session.is_current ? " · текущая сессия" : ""}
                 </span>,
-                <span key="date">
-                  {new Date(session.created_at).toLocaleString("ru-RU")}
-                </span>,
+                <span key="date">{formatDateTime(session.created_at)}</span>,
                 <Button
                   key="revoke"
                   variant="ghost"

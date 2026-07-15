@@ -3,7 +3,7 @@ import type { DecisionRunResponse } from "../../shared/api/decision";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { EmptyState } from "../../shared/ui/EmptyState";
-import { formatScore } from "../../shared/lib/format";
+import { formatDateTime, formatScore } from "../../shared/lib/format";
 import { asSupportedLocale } from "../../shared/lib/locale";
 import { AIExplainNumberButton } from "../ai-assistant";
 import { DecisionResultCard } from "./DecisionResultCard";
@@ -55,7 +55,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         <div className="flex items-center gap-2">
           <span className="text-c4 text-xs">Создано:</span>
           <span className="text-c3 text-sm">
-            {new Date(meta.generated_at).toLocaleString("ru")}
+            {formatDateTime(meta.generated_at)}
           </span>
         </div>
         <div className="flex items-center gap-2">

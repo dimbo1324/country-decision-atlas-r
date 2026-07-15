@@ -2,18 +2,7 @@ import NextLink from "next/link";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { SearchResultItem } from "../../shared/api/search";
-
-const ENTITY_TYPE_LABELS: Record<SearchResultItem["entity_type"], string> = {
-  country: "Страна",
-  route: "Маршрут",
-  route_checklist_item: "Пункт чек-листа",
-  legal_signal: "Правовой сигнал",
-  source: "Источник",
-  evidence_item: "Доказательство",
-  country_pair_compatibility: "Совместимость стран",
-  methodology: "Методология",
-  glossary_term: "Термин глоссария",
-};
+import { entityTypeLabel } from "../../shared/lib/entity-type-labels";
 
 function stripHighlightTags(snippet: string): string {
   return snippet.replace(/<[^>]+>/g, "");
@@ -30,7 +19,7 @@ export function SearchResultCard({ item }: { item: SearchResultItem }) {
         className="flex flex-col gap-2"
       >
         <div className="flex items-center gap-2">
-          <Badge variant="info">{ENTITY_TYPE_LABELS[item.entity_type]}</Badge>
+          <Badge variant="info">{entityTypeLabel(item.entity_type)}</Badge>
           {item.country_slug && (
             <Badge variant="default">{item.country_slug}</Badge>
           )}

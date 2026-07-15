@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { WhatChangedItem } from "../../shared/api/what-changed";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
+import { formatDate } from "../../shared/lib/format";
 
 type WhatChangedItemCardProps = {
   item: WhatChangedItem;
@@ -15,7 +16,7 @@ const IMPORTANCE_LABELS: Record<string, string> = {
 };
 
 export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
-  const occurredAt = new Date(item.occurred_at).toLocaleDateString("ru-RU");
+  const occurredAt = formatDate(item.occurred_at);
 
   return (
     <div data-testid="what-changed-item">

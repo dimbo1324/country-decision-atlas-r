@@ -24,6 +24,7 @@ import { useAuthGuard } from "../../shared/auth/useAuthGuard";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
+import { formatDateTime } from "../../shared/lib/format";
 
 const selectClass =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
@@ -123,7 +124,7 @@ function UserDetailPanel({ user }: { user: AdminUser }) {
               >
                 {session.id.slice(0, 8)}… ·{" "}
                 {session.revoked_at ? "отозвана" : "активна"} · истекает{" "}
-                {new Date(session.expires_at).toLocaleString("ru")}
+                {formatDateTime(session.expires_at)}
               </li>
             ))}
           </ul>
