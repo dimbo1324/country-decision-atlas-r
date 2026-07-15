@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../../i18n/navigation";
+import { CreateTripFromPassportButton } from "../../../../../features/decision-passports";
 import { DecisionResults } from "../../../../../features/decision-run";
 import { decisionPassportsApi } from "../../../../../shared/api";
 import { ErrorState } from "../../../../../shared/ui/ErrorState";
@@ -37,6 +38,10 @@ export default async function DecisionPassportPage({ params }: PageProps) {
             <Badge variant="trust">{passport.status}</Badge>
           </div>
         </header>
+
+        <div data-testid="passport-trip-cta">
+          <CreateTripFromPassportButton token={token} />
+        </div>
 
         <DecisionResults response={passport.decision_result} />
 
