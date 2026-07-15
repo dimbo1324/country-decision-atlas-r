@@ -14,6 +14,7 @@ export const routes = {
   methodology: "/methodology",
   methodologyParameters: "/methodology/parameters",
   glossary: "/glossary",
+  scenarios: "/scenarios",
   userStories: "/user-stories",
   search: "/search",
   dataQuality: "/internal/data-quality",

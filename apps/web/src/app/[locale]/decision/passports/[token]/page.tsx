@@ -4,6 +4,8 @@ import { getPathname, Link } from "../../../../../i18n/navigation";
 import { CreateTripFromPassportButton } from "../../../../../features/decision-passports";
 import { DecisionResults } from "../../../../../features/decision-run";
 import { decisionPassportsApi } from "../../../../../shared/api";
+import { routes } from "../../../../../shared/lib/routes";
+import { AppBreadcrumbs } from "../../../../../shared/ui/AppBreadcrumbs";
 import { ErrorState } from "../../../../../shared/ui/ErrorState";
 import { formatDateTime } from "../../../../../shared/lib/format";
 
@@ -24,6 +26,12 @@ export default async function DecisionPassportPage({ params }: PageProps) {
         className="flex flex-col gap-6"
         data-testid="decision-passport-page"
       >
+        <AppBreadcrumbs
+          items={[
+            { label: "Подбор", href: routes.decision },
+            { label: "Паспорт решения" },
+          ]}
+        />
         <header className="flex flex-col gap-3">
           <Kicker>Decision Passport</Kicker>
           <h1 className="font-display text-3xl font-bold">Decision Passport</h1>
