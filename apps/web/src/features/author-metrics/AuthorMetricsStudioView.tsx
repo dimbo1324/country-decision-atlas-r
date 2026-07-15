@@ -256,9 +256,7 @@ function MetricRow({ metric }: { metric: MyAuthorMetricDefinition }) {
             <Button
               variant="ghost"
               onClick={() => archiveMetric.mutate(metric.id)}
-              disabled={
-                metric.status === "archived" || archiveMetric.isPending
-              }
+              disabled={metric.status === "archived" || archiveMetric.isPending}
             >
               Архив
             </Button>

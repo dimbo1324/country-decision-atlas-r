@@ -1,0 +1,1 @@
+export { ContradictionCandidatesAdminView } from "./ContradictionCandidatesAdminView";

@@ -30,6 +30,15 @@ export type AuthorReputationResponse =
   components["schemas"]["AuthorReputationResponse"];
 export type CountryAuthorMetricsResponse =
   components["schemas"]["CountryAuthorMetricsResponse"];
+export type AdminAuthorMetricDefinition =
+  components["schemas"]["AdminAuthorMetricDefinition"];
+export type AdminAuthorMetricListResponse =
+  components["schemas"]["AdminAuthorMetricListResponse"];
+export type ModerateAuthorMetricRequest =
+  components["schemas"]["ModerateAuthorMetricRequest"];
+export type ModerateAuthorMetricResponse =
+  components["schemas"]["ModerateAuthorMetricResponse"];
+export type PublicationStatus = components["schemas"]["PublicationStatus"];
 
 export function listMyAuthorMetrics(): Promise<MyAuthorMetricListResponse> {
   return apiGet<MyAuthorMetricListResponse>("/api/v1/me/author-metrics", {
@@ -145,6 +154,37 @@ export function listCountryAuthorMetrics(
   );
 }
 
+export function listAdminAuthorMetrics(
+  status?: PublicationStatus,
+): Promise<AdminAuthorMetricListResponse> {
+  const query = status ? `?status=${status}` : "";
+  return apiGet<AdminAuthorMetricListResponse>(
+    `/api/v1/admin/author-metrics${query}`,
+    { headers: csrfHeaders() },
+  );
+}
+
+export function approveAdminAuthorMetric(
+  definitionId: string,
+): Promise<ModerateAuthorMetricResponse> {
+  return apiPost<ModerateAuthorMetricResponse, Record<string, never>>(
+    `/api/v1/admin/author-metrics/${definitionId}/approve`,
+    {},
+    { headers: csrfHeaders() },
+  );
+}
+
+export function rejectAdminAuthorMetric(
+  definitionId: string,
+  payload: ModerateAuthorMetricRequest,
+): Promise<ModerateAuthorMetricResponse> {
+  return apiPost<ModerateAuthorMetricResponse, ModerateAuthorMetricRequest>(
+    `/api/v1/admin/author-metrics/${definitionId}/reject`,
+    payload,
+    { headers: csrfHeaders() },
+  );
+}
+
 export const authorMetricsApi = {
   listMyAuthorMetrics,
   getMyAuthorMetric,
@@ -158,4 +198,7 @@ export const authorMetricsApi = {
   listAuthorPublicMetrics,
   getAuthorReputation,
   listCountryAuthorMetrics,
+  listAdminAuthorMetrics,
+  approveAdminAuthorMetric,
+  rejectAdminAuthorMetric,
 };

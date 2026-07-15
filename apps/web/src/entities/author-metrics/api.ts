@@ -7,6 +7,8 @@ import { authorMetricsApi } from "../../shared/api/author-metrics";
 import type {
   AuthorMetricValueItem,
   CreateAuthorMetricRequest,
+  ModerateAuthorMetricRequest,
+  PublicationStatus,
   UpdateAuthorMetricRequest,
 } from "../../shared/api/author-metrics";
 
@@ -115,6 +117,46 @@ export function useUpsertAuthorMetricValuesMutation(definitionId: string) {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: myMetricValuesQueryKey(definitionId),
+      });
+    },
+  });
+}
+
+const ADMIN_METRICS_QUERY_KEY = ["author-metrics", "admin"] as const;
+
+export function adminAuthorMetricsQuery(status?: PublicationStatus) {
+  return queryOptions({
+    queryKey: [...ADMIN_METRICS_QUERY_KEY, status ?? "all"] as const,
+    queryFn: () => authorMetricsApi.listAdminAuthorMetrics(status),
+  });
+}
+
+export function useApproveAdminAuthorMetricMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (definitionId: string) =>
+      authorMetricsApi.approveAdminAuthorMetric(definitionId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ADMIN_METRICS_QUERY_KEY,
+      });
+    },
+  });
+}
+
+export function useRejectAdminAuthorMetricMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      definitionId,
+      payload,
+    }: {
+      definitionId: string;
+      payload: ModerateAuthorMetricRequest;
+    }) => authorMetricsApi.rejectAdminAuthorMetric(definitionId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ADMIN_METRICS_QUERY_KEY,
       });
     },
   });
