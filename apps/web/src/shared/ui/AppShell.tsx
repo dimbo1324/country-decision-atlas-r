@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { AppFooter } from "./AppFooter";
 import { AppHeader } from "./AppHeader";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
         <AppHeader />
       </Suspense>
       <main className="mx-auto w-full max-w-[1400px] flex-1 px-6 py-8">
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </main>
       <AppFooter />
     </div>

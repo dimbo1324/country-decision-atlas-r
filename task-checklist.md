@@ -77,11 +77,20 @@ every prior stage's discipline.
 - [+] Legacy-CSS reskin follows the exact `Kicker`/`Card`/`Field`/
       `Button` conventions used throughout Stages 9-12; no new
       primitives invented for this cleanup.
-- [ ] `ErrorBoundary` wraps at the `app/[locale]/layout.tsx` and
-      `app/internal/layout.tsx` boundaries (both root shells), reports
-      via the existing `trackEvent`/analytics client with
-      `type: "client_error"`, degrades to a plain retry UI — no crash
-      loop risk from the boundary itself.
+- [+] `ErrorBoundary` wraps at the `AppShell`/`InternalShell` level
+      (inside each shell's `<main>`, around `children`) rather than
+      directly in the two `layout.tsx` files — same effective coverage
+      of every route in both trees, but keeps the boundary co-located
+      with the shells it belongs to. Reports via the existing
+      low-level `trackEvent` client (not the `useAnalyticsEvent` hook —
+      hooks are unavailable in a class component, and error boundaries
+      must be class components) with `event_type: "client_error"`,
+      degrades to a plain retry UI. Verified end-to-end in a real
+      browser (dev server, temporary crash-trigger, reverted after):
+      the boundary catches the thrown error, renders the retry UI, and
+      the real `trackEvent` call resolves with a schema-valid payload
+      (`event_type`/`source`/`path`/`metadata` all present and passing
+      backend Pydantic validation `^[a-z][a-z0-9_]{1,63}$`).
 - [ ] Bundle-analyzer output only run locally (`ANALYZE=true next build`)
       — not wired into CI, since the plan doesn't ask for a CI budget
       gate, only a manual audit this stage.
@@ -157,6 +166,27 @@ every prior stage's discipline.
 - Verified independently end-to-end: `typecheck` clean, `lint` clean,
   `build` clean (all 44 routes compile), full Playwright suite
   **328/328 passed** at `--workers=2` against the live Docker stack.
+
+### Stream 2: Frontend observability (done)
+
+- `shared/ui/ErrorBoundary.tsx` (new) — class component
+  (`getDerivedStateFromError`/`componentDidCatch`, the only React API
+  shape error boundaries support), reports a `client_error` analytics
+  event via the existing low-level `trackEvent` client (message,
+  truncated stack, truncated component stack, current path), renders
+  a `Card`/`Kicker`/`Button` retry UI instead of a blank crash.
+- Wired into `AppShell.tsx` and `InternalShell.tsx`, wrapping
+  `children` inside each shell's `<main>` — covers every route in
+  both the `[locale]` and `internal` trees without duplicating the
+  boundary per-page.
+- Verified live in a browser: temporarily made a page throw on a
+  query-param trigger, confirmed the boundary renders the retry UI
+  and the real (non-mocked) `trackEvent` call resolves against the
+  live backend with a schema-valid `client_error` payload — then
+  reverted the temporary trigger (`git diff` on the touched file
+  confirmed clean afterward).
+- `typecheck`/`lint`/`build` clean; full Playwright suite unaffected
+  (**328/328** re-run passed with the boundary wrapping every page).
 
 ## Verification
 

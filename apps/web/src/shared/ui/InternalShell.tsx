@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const NAV_SECTIONS: {
   title: string;
@@ -86,7 +87,9 @@ export function InternalShell({ children }: { children: React.ReactNode }) {
             </div>
           ))}
         </nav>
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="min-w-0 flex-1">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
       </div>
     </div>
   );
