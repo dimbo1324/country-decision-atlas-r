@@ -1,6 +1,13 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import createBundleAnalyzer from "@next/bundle-analyzer";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+// Manual local audit only (`ANALYZE=true pnpm --filter web build`) -- not
+// wired into CI, the plan's Stage 13 bundle-audit item asks for a one-off
+// report, not a CI budget gate.
+const withBundleAnalyzer = createBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
@@ -49,4 +56,4 @@ const nextConfig = {
     ];
   },
 };
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

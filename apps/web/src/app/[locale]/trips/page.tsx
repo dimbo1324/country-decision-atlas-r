@@ -1,5 +1,5 @@
 import { Kicker } from "@country-decision-atlas/ui";
-import { TripListView } from "../../../features/trips";
+import { TripListView } from "../../../features/trips/TripListView";
 
 export const dynamic = "force-dynamic";
 

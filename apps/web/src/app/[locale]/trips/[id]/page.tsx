@@ -1,4 +1,4 @@
-import { TripDetailView } from "../../../../features/trips";
+import { TripDetailView } from "../../../../features/trips/TripDetailView";
 
 export const dynamic = "force-dynamic";
 

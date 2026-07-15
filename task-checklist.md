@@ -91,9 +91,19 @@ every prior stage's discipline.
       the real `trackEvent` call resolves with a schema-valid payload
       (`event_type`/`source`/`path`/`metadata` all present and passing
       backend Pydantic validation `^[a-z][a-z0-9_]{1,63}$`).
-- [ ] Bundle-analyzer output only run locally (`ANALYZE=true next build`)
+- [+] Bundle-analyzer output only run locally (`ANALYZE=true next build`)
       — not wired into CI, since the plan doesn't ask for a CI budget
-      gate, only a manual audit this stage.
+      gate, only a manual audit this stage. Audit surfaced two real,
+      fixed wins (see Implementation, Stream 3) and confirmed the
+      shared baseline (102 KB, React + Next.js runtime only) is
+      already lean — Next's automatic per-route chunking already
+      isolates most feature-specific weight without manual
+      intervention; the two real problems found were both *barrel
+      re-export leaks* (a page importing one named export from a
+      feature's `index.ts` pulled in a sibling export's heavy,
+      unrelated dependency because barrels without
+      `"sideEffects": false` don't guarantee per-export tree-shaking),
+      not missing lazy-loading per se.
 - [ ] i18n parity script lives in `scripts/dev_tools/` (matching the
       project's existing dev-tooling location) and is registered as a
       `--profile quick`-eligible check if lightweight enough; otherwise
@@ -187,6 +197,72 @@ every prior stage's discipline.
   confirmed clean afterward).
 - `typecheck`/`lint`/`build` clean; full Playwright suite unaffected
   (**328/328** re-run passed with the boundary wrapping every page).
+
+### Stream 3: Bundle analyzer + performance audit (done)
+
+- Added `@next/bundle-analyzer` as a devDependency, wired into
+  `next.config.mjs` behind `ANALYZE=true` (`createBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true" })`, composed with the
+  existing `withNextIntl` wrapper) — a manual local audit tool, not a
+  CI gate.
+- Ran `ANALYZE=true pnpm --filter web build` and parsed the generated
+  `apps/web/.next/analyze/client.html` treemap JSON directly (no
+  visual eyeballing) to rank chunks by parsed size and drill into
+  which packages/modules make up each one.
+- **Finding 1 (fixed)**: `/trips` (list page) shipped 306 KB First
+  Load JS — the highest of any route — despite the list view itself
+  having no chart/DnD dependency. Root cause: `apps/web/src/app/[locale]/trips/page.tsx`
+  imported `TripListView` through the barrel
+  `features/trips/index.ts`, which also re-exports `TripDetailView`;
+  `TripDetailView` pulls in `TripWaypoints` (`@dnd-kit/core` +
+  `@dnd-kit/sortable`, ~41 KB parsed) and `TripReminders` (`date-fns`,
+  ~14 KB parsed) directly (not lazily), and the barrel's lack of
+  `"sideEffects": false` meant webpack couldn't prove those modules
+  were unreachable from the list page's actual import, so it kept
+  them in a shared chunk pulled by both routes.
+  Fixed in two parts:
+  1. `TripDetailView.tsx` now lazy-loads `TripWaypoints` and
+     `TripReminders` via `next/dynamic()` with a `LoadingState`
+     fallback — they were never needed on first paint of the detail
+     page either (both are below-the-fold, interaction-only), so this
+     is a genuine lazy-chunk split, not just a barrel workaround.
+  2. Both `trips/page.tsx` and `trips/[id]/page.tsx` now import
+     directly from `./TripListView`/`./TripDetailView` instead of the
+     barrel, removing the ambiguity for webpack entirely.
+  **Measured result**: `/trips` 306 → 279 KB (**-27 KB**), `/trips/[id]`
+  213 → 170 KB (**-43 KB**).
+- **Finding 2 (fixed)**: `/authors/[userId]` (public author profile,
+  no admin UI) shipped 281 KB First Load JS. Root cause: same barrel
+  pattern — `features/author-metrics/index.ts` re-exports
+  `AuthorProfileView` (what the public page actually needs) alongside
+  `AuthorMetricsModerationView`, which pulls in `@tanstack/react-table`
+  (~48 KB parsed, needed only by the `/internal/author-metrics-moderation`
+  `ModerationQueue` instance). Fixed by importing directly from each
+  view's own file in all three consumer pages
+  (`account/author-metrics/page.tsx`, `authors/[userId]/page.tsx`,
+  `internal/author-metrics-moderation/page.tsx`) instead of the
+  barrel.
+  **Measured result**: `/authors/[userId]` 281 → 233 KB (**-48 KB**).
+- **Confirmed already healthy, no action needed**: the "First Load JS
+  shared by all" baseline is 102 KB total, made up of exactly
+  React/Next.js runtime chunks (`framework`, `react-dom-client`,
+  `react-server-dom-webpack` client, `main`) plus ~2 KB of genuinely
+  shared app code — no app-specific library (charts, tables, DnD) leaks
+  into the global baseline. Next's automatic per-route code splitting
+  is already doing its job; the two fixes above were barrel-import
+  leaks between *sibling* routes, not a missing-lazy-loading problem
+  at the framework level.
+- **Not exhaustively audited — left for a follow-up pass**: a
+  `grep`-level survey found 8 more feature barrels with 2+ named
+  exports used by routes of meaningfully different weight/role
+  (`ai-assistant`, `auth`, `community`, `country-proposals`,
+  `migration-board`, `search`, `watchlist`, `data-quality`) that
+  *could* have the same class of leak, but none showed up as
+  disproportionately large in the current First Load JS numbers the
+  way `/trips` and `/authors/[userId]` did, so they weren't chased
+  further this pass — flagged here rather than silently assumed clean.
+- `pnpm typecheck`/`lint`/`build` clean; full Playwright suite
+  **328/328 passed** at `--workers=2` after both fixes.
 
 ## Verification
 

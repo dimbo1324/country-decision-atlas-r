@@ -1,5 +1,5 @@
 import { Kicker } from "@country-decision-atlas/ui";
-import { AuthorMetricsModerationView } from "../../../features/author-metrics";
+import { AuthorMetricsModerationView } from "../../../features/author-metrics/AuthorMetricsModerationView";
 
 export const dynamic = "force-dynamic";
 

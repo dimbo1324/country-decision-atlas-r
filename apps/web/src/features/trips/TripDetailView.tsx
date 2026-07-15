@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link, useRouter } from "../../i18n/navigation";
@@ -10,10 +11,21 @@ import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { TripChecklist } from "./TripChecklist";
-import { TripReminders } from "./TripReminders";
 import { TripShareExport } from "./TripShareExport";
 import { TripWarnings } from "./TripWarnings";
-import { TripWaypoints } from "./TripWaypoints";
+
+// @dnd-kit (waypoint drag-reorder) and date-fns (reminder formatting) are
+// each ~35-40 KB parsed and only needed once a user opens a trip's detail
+// view, not on the trips list page they're navigated in from -- loaded as
+// separate on-demand chunks instead of the route's initial JS.
+const TripWaypoints = dynamic(
+  () => import("./TripWaypoints").then((m) => m.TripWaypoints),
+  { loading: () => <LoadingState message="Загрузка маршрута…" /> },
+);
+const TripReminders = dynamic(
+  () => import("./TripReminders").then((m) => m.TripReminders),
+  { loading: () => <LoadingState message="Загрузка напоминаний…" /> },
+);
 
 const TRIP_STATUS_LABELS: Record<string, string> = {
   draft: "Черновик",
