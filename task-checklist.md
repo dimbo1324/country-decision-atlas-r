@@ -34,7 +34,15 @@ Branch: `feat/frontend-stage13-i18n-parity` (fresh off `main`).
       alias for consistency with `sync-agents` and CI clarity.
 - [+] Registered in `dev_tools_scripts_runner.py`'s script registry
       (`ScriptInfo`) as `i18n-parity` so it's discoverable/runnable
-      standalone, matching every other dev-tools script.
+      standalone, matching every other dev-tools script. **Placed at the
+      end of `AVAILABLE_SCRIPTS`, not alongside `format-code`/
+      `ship-main`** — an existing test
+      (`test_interactive_help_browser_shows_manual_by_global_number`)
+      hardcodes the interactive menu's global position of `ship-main`
+      (types "3" expecting it), and inserting a new entry earlier in the
+      list silently shifted that number and broke the test. Appending at
+      the end preserves every existing script's position; fixed by
+      moving the registration, not by touching the test.
 - [+] Wired into `full_check.py` Phase 3 as an unconditional
       `run_gate_step`, right after `mypy` — runs on every profile
       (quick/backend/frontend/full/ci), not just quick, since it's a
@@ -42,22 +50,42 @@ Branch: `feat/frontend-stage13-i18n-parity` (fresh off `main`).
 
 ## Implementation
 
-- [ ] `scripts/dev_tools/i18n_parity_check.py`
-- [ ] Register in `dev_tools_scripts_runner.py`
-- [ ] Wire into `scripts/dev_tools/full_check.py` Phase 3
-- [ ] Verify: intentionally break parity, confirm non-zero exit +
-      readable diff; restore, confirm exit 0.
+- [+] `scripts/dev_tools/i18n_parity_check.py` — recursive dot-path key
+      diff between `en.json`/`ru.json`, exit 0 on match, exit 1 with a
+      full listing of one-sided keys on mismatch, exit 2 on missing/
+      malformed file.
+- [+] Registered in `dev_tools_scripts_runner.py` as `i18n-parity`
+      (aliases `i18n`, `messages-parity`), category `quality`.
+- [+] Wired into `scripts/dev_tools/full_check.py` Phase 3, runs on
+      every profile.
+- [+] Verified: temporarily added an orphan key to `en.json`, confirmed
+      exit 1 with a readable "Keys in en.json but missing from ru.json"
+      listing; reverted (`git checkout --`), confirmed exit 0 again on
+      the real files.
+- [+] Found and fixed a real regression during verification, not by the
+      task's ask: the first registration placement broke
+      `test_interactive_help_browser_shows_manual_by_global_number` (see
+      Design decisions) — caught by running the full pytest suite, not
+      by typecheck/lint, both of which stayed green throughout.
 
 ## Verification
 
-- [ ] `python dev_tools_scripts_runner.py i18n-parity` — clean run.
-- [ ] `python dev_tools_scripts_runner.py --profile quick` — includes
-      the new step, passes.
-- [ ] `python -m mypy scripts` / `python -m ruff check scripts` clean
-      on the new script.
+- [+] `python dev_tools_scripts_runner.py i18n-parity` — clean run
+      ("i18n key parity OK: 59 keys match in en.json and ru.json.").
+- [+] `python dev_tools_scripts_runner.py --profile quick` — includes
+      the new step (`[OK] i18n key parity`), full gate clean except the
+      pre-existing `arabic_reshaper` venv gap (`pytest
+      (scripts/synthetic_data)`), same known baseline issue as every
+      prior stage, not a regression.
+- [+] `python -m mypy scripts dev_tools_scripts_runner.py` — clean.
+- [+] `python -m ruff check` / `ruff format --check` on all 3 touched
+      files — clean.
+- [+] Full `pytest` suite (root `tests/`) — all passing, including the
+      regression test that the placement fix restored.
 
 ## Completion
 
-- [ ] Commit(s)
+- [+] Commit(s)
 - [ ] Merge to `main`, push — only once explicitly confirmed complete.
-- [ ] Final report
+- [+] Final report — given in the chat response accompanying this
+      checklist update.

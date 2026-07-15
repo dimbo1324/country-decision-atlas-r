@@ -1736,6 +1736,10 @@ class FullCheck:
             "mypy",
             py_args("-m", "mypy", "apps", "packages", "scripts", "tests"),
         )
+        self.run_gate_step(
+            "i18n key parity",
+            py_args("scripts/dev_tools/i18n_parity_check.py"),
+        )
         if self.profile in {"backend", "full", "ci"}:
             self.run_gate_step(
                 "ruff format --check",

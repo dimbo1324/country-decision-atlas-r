@@ -689,6 +689,44 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("translation-status", "i18n-status"),
         directory=ROOT_DIR / "scripts",
     ),
+    ScriptInfo(
+        title="i18n-parity",
+        filename="i18n_parity_check.py",
+        category="quality",
+        summary=Text(
+            en="Fail if apps/web/src/messages/en.json and ru.json key sets differ.",
+            ru="Падает, если наборы ключей en.json и ru.json расходятся.",
+        ),
+        description=Text(
+            en=(
+                "Recursively diffs the dot-path key sets of "
+                "apps/web/src/messages/en.json and ru.json and fails "
+                "(exit 1) listing every one-sided key (an orphan "
+                "translation present in only one locale). Read-only, no "
+                "fix mode — there is no correct auto-generated value for "
+                "a missing translation. Wired into full_check.py's Phase "
+                "3 static quality gate, so it runs on every profile "
+                "including --profile quick."
+            ),
+            ru=(
+                "Рекурсивно сравнивает наборы ключей (dot-path) в "
+                "apps/web/src/messages/en.json и ru.json и падает (exit "
+                "1), перечисляя каждый односторонний ключ (сиротская "
+                "строка, присутствующая только в одной локали). Только "
+                "чтение, без режима исправления — для отсутствующего "
+                "перевода нет корректного автоматически сгенерированного "
+                "значения. Подключён в Phase 3 static quality gate "
+                "full_check.py, поэтому запускается на любом профиле, "
+                "включая --profile quick."
+            ),
+        ),
+        cadence=Text(
+            en="Automatic, every quality-gate run; on-demand for a quick check.",
+            ru="Автоматически при каждом запуске quality gate; по требованию для быстрой проверки.",
+        ),
+        aliases=("i18n", "messages-parity"),
+        examples=("--check",),
+    ),
 ]
 
 DEFAULT_SCRIPT_TITLE = "full-check"
