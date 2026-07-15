@@ -1,91 +1,118 @@
-# Task: Stage 13 stream 5 — i18n key-parity script
+# Task: Stage 13 stream 6 — Vitest unit tests for apps/web and packages/ui
 
-Source: `task-checklist.md` handoff note from the Stage 13 polish stage —
-"Написать скрипт сверки ключей `apps/web/src/messages/en.json` и
-`ru.json` (падать при расхождении), подключить в quick-гейт."
-Branch: `feat/frontend-stage13-i18n-parity` (fresh off `main`).
+Source: Stage 13 handoff note — "Vitest. В репозитории пока нет вообще
+(ни конфига, ни зависимости). Поставить vitest для apps/web и packages/ui,
+начать с тестов на shared/lib/* и entities/*/api.ts."
+Branch: `feat/frontend-stage13-vitest` (fresh off `main`, after i18n-parity
+merge).
 
 ## Preparation
 
-- [+] Confirmed `apps/web/src/messages/en.json` and `ru.json` are both
-      currently in sync (same nested key set) — the script's baseline
-      test case is "no diff, exit 0", not "immediately fails."
-- [+] Confirmed no existing i18n lint/parity tooling exists anywhere in
-      the repo (per Stage 13 Preparation research).
-- [+] Read `scripts/dev_tools/sync_agents_md.py` as the house style
-      reference for a standalone `dev_tools` script: `main(argv) -> int`,
-      `--check` flag convention, `raise SystemExit(main())` entry point.
-- [+] Read `scripts/dev_tools/full_check.py` Phase 3
-      (`phase_static_quality`) to find where to hook the check — ruff/
-      mypy/pytest run unconditionally before the `if self.profile ==
-      "quick": ... return` branch, so a step placed there runs on every
-      profile including quick, matching the ask.
+- [+] Confirmed no vitest config/dependency exists anywhere in the repo.
+- [+] Surveyed `apps/web/src/shared/lib/*.ts` for pure-function candidates:
+      `features.ts`, `flagEmoji.ts`, `format.ts`, `locale.ts`,
+      `localization-labels.ts`, function-valued entries of `routes.ts` are
+      good candidates. `glossary-labels.ts` (static lookup) and
+      `useAppLocale.ts` (React hook) are out of scope for this pass.
+- [+] Surveyed `packages/ui/src/lib/*.ts`: `cn.ts`, `color.ts`
+      (`withAlpha`), `scoreLabel.ts` are good pure candidates.
+      `confidence.ts` is a type-only file (nothing to test). `accents.ts`
+      is a static lookup table (low value, skipped).
+- [+] Surveyed `apps/web/src/entities/*/api.ts` (29 subdirs): most are thin
+      Pattern-A wrappers whose only pure/testable surface is `queryKey`/
+      `enabled`/`staleTime` construction on the `*Query()` option builders
+      (not the `useXxxMutation` hooks themselves, which need React
+      rendering and are out of scope for this first pass). Picked a
+      representative subset: `decision/api.ts` (multi-query module with
+      `enabled` branching) and `admin-country-proposals/api.ts` (status
+      filter in queryKey).
 
 ## Design decisions
 
-- [+] Script name: `scripts/dev_tools/i18n_parity_check.py`. Recursive
-      flat-key diff (dot-path keys, e.g. `auth.loginSubmit`) between the
-      two JSON files — reports every key present in one but missing in
-      the other, on both sides, not just a boolean pass/fail.
-- [+] `--check` is the only mode (no "fix" mode — there's no correct
-      auto-generated value for a missing translation, unlike
-      `sync-agents`'s regenerate-from-source-of-truth case). Running
-      with no flags also runs the check; `--check` is accepted as an
-      alias for consistency with `sync-agents` and CI clarity.
-- [+] Registered in `dev_tools_scripts_runner.py`'s script registry
-      (`ScriptInfo`) as `i18n-parity` so it's discoverable/runnable
-      standalone, matching every other dev-tools script. **Placed at the
-      end of `AVAILABLE_SCRIPTS`, not alongside `format-code`/
-      `ship-main`** — an existing test
-      (`test_interactive_help_browser_shows_manual_by_global_number`)
-      hardcodes the interactive menu's global position of `ship-main`
-      (types "3" expecting it), and inserting a new entry earlier in the
-      list silently shifted that number and broke the test. Appending at
-      the end preserves every existing script's position; fixed by
-      moving the registration, not by touching the test.
-- [+] Wired into `full_check.py` Phase 3 as an unconditional
-      `run_gate_step`, right after `mypy` — runs on every profile
-      (quick/backend/frontend/full/ci), not just quick, since it's a
-      cheap, fast, pure-Python check with no reason to gate it further.
+- [+] One `vitest.config.ts` per workspace package (`apps/web`,
+      `packages/ui`), not a single root config — matches the existing
+      per-package `tsconfig`/lint setup, keeps each package's test run
+      independent and filterable via pnpm `--filter`.
+- [+] Test environment: `node` for pure `shared/lib`/`packages/ui/lib`
+      functions; `apps/web` config additionally needs React/JSX support
+      (via `@vitejs/plugin-react`) for future component tests, `packages/ui`
+      too since it's a component library, even though this first pass only
+      exercises plain functions.
+- [+] `entities/*/api.ts` tests call the exported `*Query()` builder
+      functions directly and assert on the returned plain object
+      (`queryKey`, `enabled`, `staleTime`) — no `QueryClient`/React
+      Testing Library involved, keeping this pass dependency-light.
+- [+] Not adding `msw`/component-render tests in this stream — that is
+      explicitly its own separate remaining stream ("MSW + Storybook
+      interaction-тесты") per the Stage 13 handoff list.
+- [+] `pnpm test` script added per-package; not wired into the quick/full
+      quality gate in this stream (scope is "add vitest + initial tests",
+      gate wiring is a natural follow-up but not asked for here — will
+      call this out explicitly in the final report as a gap, not silently
+      skip it).
 
 ## Implementation
 
-- [+] `scripts/dev_tools/i18n_parity_check.py` — recursive dot-path key
-      diff between `en.json`/`ru.json`, exit 0 on match, exit 1 with a
-      full listing of one-sided keys on mismatch, exit 2 on missing/
-      malformed file.
-- [+] Registered in `dev_tools_scripts_runner.py` as `i18n-parity`
-      (aliases `i18n`, `messages-parity`), category `quality`.
-- [+] Wired into `scripts/dev_tools/full_check.py` Phase 3, runs on
-      every profile.
-- [+] Verified: temporarily added an orphan key to `en.json`, confirmed
-      exit 1 with a readable "Keys in en.json but missing from ru.json"
-      listing; reverted (`git checkout --`), confirmed exit 0 again on
-      the real files.
-- [+] Found and fixed a real regression during verification, not by the
-      task's ask: the first registration placement broke
-      `test_interactive_help_browser_shows_manual_by_global_number` (see
-      Design decisions) — caught by running the full pytest suite, not
-      by typecheck/lint, both of which stayed green throughout.
+- [+] Added `vitest`, `@vitejs/plugin-react`, `jsdom` as devDependencies
+      to `apps/web`; added `vitest`, `jsdom` to `packages/ui` (it already
+      had `@vitejs/plugin-react`/`vite` for Storybook).
+- [+] Added `vitest.config.ts` to both packages (jsdom environment, React
+      plugin, `src/**/*.test.{ts,tsx}` include glob).
+- [+] Added `test`/`test:watch` scripts to both `package.json`.
+- [+] Wrote tests: `apps/web/src/shared/lib/{features,flagEmoji,format,
+      locale,localization-labels,routes}.test.ts` (49 tests total across
+      `apps/web`, including the 2 entities suites below).
+- [+] Wrote tests: `apps/web/src/entities/decision/api.test.ts`,
+      `apps/web/src/entities/admin-country-proposals/api.test.ts` —
+      mock the underlying `shared/api/*` client modules with `vi.mock`
+      and assert on the plain `queryKey`/`enabled`/`retry` fields
+      returned by each `*Query()` builder, plus that `queryFn` delegates
+      to the mocked client with the right arguments. Deliberately not
+      testing the `useXxxMutation` hooks — those need a `QueryClient` +
+      React rendering, out of scope for this pass.
+- [+] Wrote tests: `packages/ui/src/lib/{cn,color,scoreLabel}.test.ts`
+      (8 tests).
+- [+] `pnpm install` at repo root updated the lockfile (ran implicitly by
+      each `pnpm add -D`).
 
 ## Verification
 
-- [+] `python dev_tools_scripts_runner.py i18n-parity` — clean run
-      ("i18n key parity OK: 59 keys match in en.json and ru.json.").
-- [+] `python dev_tools_scripts_runner.py --profile quick` — includes
-      the new step (`[OK] i18n key parity`), full gate clean except the
-      pre-existing `arabic_reshaper` venv gap (`pytest
-      (scripts/synthetic_data)`), same known baseline issue as every
-      prior stage, not a regression.
-- [+] `python -m mypy scripts dev_tools_scripts_runner.py` — clean.
-- [+] `python -m ruff check` / `ruff format --check` on all 3 touched
-      files — clean.
-- [+] Full `pytest` suite (root `tests/`) — all passing, including the
-      regression test that the placement fix restored.
+- [+] `pnpm --filter @country-decision-atlas/web test` — 8 files, 49
+      tests, all green.
+- [+] `pnpm --filter @country-decision-atlas/ui test` — 3 files, 8 tests,
+      all green.
+- [+] `pnpm typecheck` (web) and `pnpm --filter @country-decision-atlas/ui
+      typecheck` — both clean. Found and fixed one real issue during
+      verification: the `isFeatureEnabled` test fixtures used partial
+      `FeatureFlag`/`FeatureFlagListResponse` object literals that failed
+      strict structural typing against the generated contract types;
+      fixed with a `flag()` fixture factory building fully-shaped
+      `FeatureFlag` objects instead of loosening the test's type
+      strictness.
+- [+] `pnpm lint` (web) and `pnpm --filter @country-decision-atlas/ui
+      lint` — both clean.
+- [+] `pnpm build` — clean, all 44 routes compiled, no regression in
+      bundle sizes vs the Stage 13 stream 3 baseline.
+- [-] Did not run the full Python/Docker/E2E quality gate
+      (`python dev_tools_scripts_runner.py`) — this stream is
+      frontend-only (new devDependencies + `.test.ts` files under
+      `apps/web`/`packages/ui`), doesn't touch backend, migrations, or
+      E2E specs, so it isn't expected to affect that gate; noting as an
+      explicit gap rather than silently skipping.
 
 ## Completion
 
-- [+] Commit(s)
+- [+] Commit(s).
 - [ ] Merge to `main`, push — only once explicitly confirmed complete.
 - [+] Final report — given in the chat response accompanying this
       checklist update.
+
+## Not done in this stream (deliberately out of scope)
+
+- Vitest is not wired into `dev_tools_scripts_runner.py` or the
+  quick/full quality gate — the ask was "add vitest + initial tests,"
+  gate wiring is a natural follow-up but wasn't requested here.
+- No MSW/component-render/Storybook interaction tests — that is its own
+  separate remaining Stage 13 stream.
+- Not all 29 `entities/*/api.ts` modules got coverage, only the 2
+  representative ones named above (`decision`, `admin-country-proposals`).
