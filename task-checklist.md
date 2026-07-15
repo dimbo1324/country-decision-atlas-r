@@ -1,118 +1,86 @@
-# Task: Stage 13 stream 6 — Vitest unit tests for apps/web and packages/ui
+# Task: Stage 13 streams 7-8 — MSW/Storybook play-tests + Playwright visual regression
 
-Source: Stage 13 handoff note — "Vitest. В репозитории пока нет вообще
-(ни конфига, ни зависимости). Поставить vitest для apps/web и packages/ui,
-начать с тестов на shared/lib/* и entities/*/api.ts."
-Branch: `feat/frontend-stage13-vitest` (fresh off `main`, after i18n-parity
-merge).
+Source: Stage 13 handoff list —
+"MSW + Storybook interaction-тесты. Storybook уже есть в packages/ui,
+MSW — нет. Добавить msw + msw-storybook-addon, написать несколько
+play-историй для ключевых компонентов." и
+"Визуальная регрессия. Playwright screenshot-тесты минимум для: главная,
+каталог, досье страны, результат решения, паспорт. Снимать baseline нужно
+на текущем состоянии (после потоков 1-4)."
+Branch: `feat/frontend-stage13-msw-visual-regression`, off
+`feat/frontend-stage13-vitest` (not yet merged to `main`) per owner
+instruction — both branches merge to `main` together once this stream is
+done.
 
 ## Preparation
 
-- [+] Confirmed no vitest config/dependency exists anywhere in the repo.
-- [+] Surveyed `apps/web/src/shared/lib/*.ts` for pure-function candidates:
-      `features.ts`, `flagEmoji.ts`, `format.ts`, `locale.ts`,
-      `localization-labels.ts`, function-valued entries of `routes.ts` are
-      good candidates. `glossary-labels.ts` (static lookup) and
-      `useAppLocale.ts` (React hook) are out of scope for this pass.
-- [+] Surveyed `packages/ui/src/lib/*.ts`: `cn.ts`, `color.ts`
-      (`withAlpha`), `scoreLabel.ts` are good pure candidates.
-      `confidence.ts` is a type-only file (nothing to test). `accents.ts`
-      is a static lookup table (low value, skipped).
-- [+] Surveyed `apps/web/src/entities/*/api.ts` (29 subdirs): most are thin
-      Pattern-A wrappers whose only pure/testable surface is `queryKey`/
-      `enabled`/`staleTime` construction on the `*Query()` option builders
-      (not the `useXxxMutation` hooks themselves, which need React
-      rendering and are out of scope for this first pass). Picked a
-      representative subset: `decision/api.ts` (multi-query module with
-      `enabled` branching) and `admin-country-proposals/api.ts` (status
-      filter in queryKey).
+- [ ] Confirm no existing `msw`/`msw-storybook-addon` dependency anywhere.
+- [ ] Survey `packages/ui/src/**/*.stories.tsx` for components with real
+      interactive/async behavior worth a `play` function (form inputs,
+      dialogs/drawers with open-close state, anything that fetches).
+      Most existing stories are static presentational snapshots with no
+      data-fetching — MSW's value is specifically for components that
+      call `fetch`, so the target set is narrow.
+- [ ] Confirm local dev stack (`docker compose up api redis`, migrations,
+      demo countries, search index) is up so Playwright can hit a real
+      running `apps/web` + API for baseline screenshots.
+- [ ] Read `playwright.config.ts` and an existing spec to match existing
+      conventions (`e2eRoutes`, `expectNoAppCrash`, testids).
 
 ## Design decisions
 
-- [+] One `vitest.config.ts` per workspace package (`apps/web`,
-      `packages/ui`), not a single root config — matches the existing
-      per-package `tsconfig`/lint setup, keeps each package's test run
-      independent and filterable via pnpm `--filter`.
-- [+] Test environment: `node` for pure `shared/lib`/`packages/ui/lib`
-      functions; `apps/web` config additionally needs React/JSX support
-      (via `@vitejs/plugin-react`) for future component tests, `packages/ui`
-      too since it's a component library, even though this first pass only
-      exercises plain functions.
-- [+] `entities/*/api.ts` tests call the exported `*Query()` builder
-      functions directly and assert on the returned plain object
-      (`queryKey`, `enabled`, `staleTime`) — no `QueryClient`/React
-      Testing Library involved, keeping this pass dependency-light.
-- [+] Not adding `msw`/component-render tests in this stream — that is
-      explicitly its own separate remaining stream ("MSW + Storybook
-      interaction-тесты") per the Stage 13 handoff list.
-- [+] `pnpm test` script added per-package; not wired into the quick/full
-      quality gate in this stream (scope is "add vitest + initial tests",
-      gate wiring is a natural follow-up but not asked for here — will
-      call this out explicitly in the final report as a gap, not silently
-      skip it).
+- [ ] MSW + play-stories are additive to `packages/ui`'s existing
+      Storybook setup (`msw-storybook-addon` registers a service worker
+      via `initialize()` in `.storybook/preview.tsx`, `mswLoader` +
+      per-story `parameters.msw.handlers`).
+- [ ] Visual regression is a **separate Playwright project/config**, not
+      added into `tests/e2e/` — `scripts/dev_tools/full_check.py`'s E2E
+      phase runs `pnpm web:mvp:check` → bare `playwright test` against
+      `playwright.config.ts`'s `testDir: "tests/e2e"`, which would sweep
+      up screenshot specs automatically. Pixel-level screenshot diffing
+      is OS/font-rendering-dependent (this repo's own docs already flag
+      the analogous Windows-vs-Linux-CI gap for `-race`/cgo); baselines
+      captured locally on Windows would spuriously fail in a Linux CI
+      runner. Keeping visual regression in its own `tests/visual/` +
+      `playwright.visual.config.ts`, run only via an explicit new
+      `web:mvp:visual` script, avoids silently making the existing gate
+      OS-fragile. This is a deliberate scope/risk call, documented here
+      and in the final report, not a silent omission.
+- [ ] `prefers-reduced-motion` is already respected repo-wide (Stage 13
+      stream 4) — visual regression sets `reducedMotion: "reduce"` at
+      the context/project level so chart count-up animations etc. don't
+      introduce nondeterminism.
+- [ ] 5 target pages/states, minimum per the ask: home (`/ru`), catalog
+      (`/ru/countries`), country dossier (`/ru/countries/russia`),
+      decision result (`/ru/decision` after running a decision), and a
+      decision passport (`/ru/decision/passports/[token]`).
 
 ## Implementation
 
-- [+] Added `vitest`, `@vitejs/plugin-react`, `jsdom` as devDependencies
-      to `apps/web`; added `vitest`, `jsdom` to `packages/ui` (it already
-      had `@vitejs/plugin-react`/`vite` for Storybook).
-- [+] Added `vitest.config.ts` to both packages (jsdom environment, React
-      plugin, `src/**/*.test.{ts,tsx}` include glob).
-- [+] Added `test`/`test:watch` scripts to both `package.json`.
-- [+] Wrote tests: `apps/web/src/shared/lib/{features,flagEmoji,format,
-      locale,localization-labels,routes}.test.ts` (49 tests total across
-      `apps/web`, including the 2 entities suites below).
-- [+] Wrote tests: `apps/web/src/entities/decision/api.test.ts`,
-      `apps/web/src/entities/admin-country-proposals/api.test.ts` —
-      mock the underlying `shared/api/*` client modules with `vi.mock`
-      and assert on the plain `queryKey`/`enabled`/`retry` fields
-      returned by each `*Query()` builder, plus that `queryFn` delegates
-      to the mocked client with the right arguments. Deliberately not
-      testing the `useXxxMutation` hooks — those need a `QueryClient` +
-      React rendering, out of scope for this pass.
-- [+] Wrote tests: `packages/ui/src/lib/{cn,color,scoreLabel}.test.ts`
-      (8 tests).
-- [+] `pnpm install` at repo root updated the lockfile (ran implicitly by
-      each `pnpm add -D`).
+- [ ] Add `msw`, `msw-storybook-addon` as devDependencies to
+      `packages/ui`.
+- [ ] Wire `msw-storybook-addon` into `.storybook/preview.tsx` /
+      `.storybook/main.ts`, generate the MSW service worker file.
+- [ ] Write play-function stories for a handful of key interactive
+      components (final list depends on the survey above).
+- [ ] Add `tests/visual/` + `playwright.visual.config.ts`, write
+      screenshot specs for the 5 target pages/states.
+- [ ] Add a `web:mvp:visual` script to root `package.json`.
+- [ ] Capture baseline screenshots (`--update-snapshots`), commit them.
 
 ## Verification
 
-- [+] `pnpm --filter @country-decision-atlas/web test` — 8 files, 49
-      tests, all green.
-- [+] `pnpm --filter @country-decision-atlas/ui test` — 3 files, 8 tests,
-      all green.
-- [+] `pnpm typecheck` (web) and `pnpm --filter @country-decision-atlas/ui
-      typecheck` — both clean. Found and fixed one real issue during
-      verification: the `isFeatureEnabled` test fixtures used partial
-      `FeatureFlag`/`FeatureFlagListResponse` object literals that failed
-      strict structural typing against the generated contract types;
-      fixed with a `flag()` fixture factory building fully-shaped
-      `FeatureFlag` objects instead of loosening the test's type
-      strictness.
-- [+] `pnpm lint` (web) and `pnpm --filter @country-decision-atlas/ui
-      lint` — both clean.
-- [+] `pnpm build` — clean, all 44 routes compiled, no regression in
-      bundle sizes vs the Stage 13 stream 3 baseline.
-- [-] Did not run the full Python/Docker/E2E quality gate
-      (`python dev_tools_scripts_runner.py`) — this stream is
-      frontend-only (new devDependencies + `.test.ts` files under
-      `apps/web`/`packages/ui`), doesn't touch backend, migrations, or
-      E2E specs, so it isn't expected to affect that gate; noting as an
-      explicit gap rather than silently skipping.
+- [ ] `pnpm --filter @country-decision-atlas/ui storybook` interaction
+      tests pass (via Storybook's test runner or manual play verification).
+- [ ] New visual regression spec passes against the freshly captured
+      baseline on a clean re-run (proves determinism on this machine).
+- [ ] `pnpm typecheck`, `pnpm lint`, `pnpm build` still green.
+- [ ] Existing `pnpm web:mvp:check` / `tests/e2e` suite unaffected
+      (spot-check a subset, not the full 40+ spec suite, given time cost).
 
 ## Completion
 
-- [+] Commit(s).
-- [ ] Merge to `main`, push — only once explicitly confirmed complete.
-- [+] Final report — given in the chat response accompanying this
-      checklist update.
-
-## Not done in this stream (deliberately out of scope)
-
-- Vitest is not wired into `dev_tools_scripts_runner.py` or the
-  quick/full quality gate — the ask was "add vitest + initial tests,"
-  gate wiring is a natural follow-up but wasn't requested here.
-- No MSW/component-render/Storybook interaction tests — that is its own
-  separate remaining Stage 13 stream.
-- Not all 29 `entities/*/api.ts` modules got coverage, only the 2
-  representative ones named above (`decision`, `admin-country-proposals`).
+- [ ] Commit(s).
+- [ ] Merge to `main`, push — only once explicitly confirmed, together
+      with the Vitest stream this branched from.
+- [ ] Final report.
