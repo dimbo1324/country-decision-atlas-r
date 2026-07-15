@@ -141,6 +141,8 @@ export function RankFlow({
     <canvas
       ref={canvasRef}
       className="h-full w-full"
+      role="img"
+      aria-label={`Изменение рангов по периодам (${columns.join(", ")}): ${series.map((serie) => `${serie.name} — ${serie.ranks.join(" → ")}`).join("; ")}.`}
       onMouseMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const y = event.clientY - rect.top;

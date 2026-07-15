@@ -111,6 +111,16 @@ every prior stage's discipline.
 - [ ] Vitest scope: `shared/lib/*` utilities and `entities/*/api.ts`
       hooks with clear pure-function surface first — not an attempt at
       full coverage of every component in one stage.
+- [+] Accessibility pass scope, decided after measuring rather than
+      guessing: the plan's DoD item 4 only requires contrast/keyboard/
+      reduced-motion to be **"verified and documented"**, not that
+      every finding be fixed — `text-c3`/`text-c4` alone appear 232 and
+      137 times respectively across the codebase, too large a surface
+      to bulk-edit safely without per-usage design judgment in this
+      pass. So: full computed contrast audit delivered as documentation
+      (exact ratios, not eyeballed); keyboard-nav, ARIA-chart-summary,
+      and reduced-motion get real fixes wherever a concrete,
+      bounded, low-risk gap was found — not a blind sweep.
 
 ## Implementation
 
@@ -263,6 +273,90 @@ every prior stage's discipline.
   further this pass — flagged here rather than silently assumed clean.
 - `pnpm typecheck`/`lint`/`build` clean; full Playwright suite
   **328/328 passed** at `--workers=2` after both fixes.
+
+### Stream 4: Accessibility pass (done — audited + bounded fixes, see scope note)
+
+**Contrast audit (computed, not eyeballed).** Wrote a small WCAG relative-
+luminance script and ran every text-token/background-token pair from
+`packages/ui/src/tokens/theme.css` (`--color-c1..c4`, all accent triads,
+`--color-bg/bg2/bg3/bg4`) through it. Full results are reproducible from
+the token file; the material findings:
+- **`--c3` on `bg2`/`bg3`/`bg4`: 4.25 / 4.47 / 4.00 : 1** — fails WCAG AA
+  for normal text (needs 4.5:1), passes for large text/UI components
+  (needs 3:1). This is exactly what the plan predicted
+  ("--c3 на --bg2 для мелкого текста"). `text-c3` is used **232 times**
+  across `apps/web/src` + `packages/ui/src`, nearly always for small
+  (`text-xs`/`text-[9-11px]`) meta/label text — the failing case, not
+  the passing one.
+- **`--c4` on any background: 1.75–1.98 : 1** — fails even the large-text/
+  UI-component floor (3:1) everywhere, badly. Used **137 times**, mostly
+  for the `font-mono text-[9px] tracking-[0.2em] uppercase` micro-label
+  convention used throughout every stage (section eyebrows, meta chips).
+  This is the more severe of the two findings.
+- Several accent "-2" shades used as **text** color (`blue2`, `terra2`,
+  `sage2`, `plum2`) fail AA-normal (2.0–3.2:1) but most pass AA-large/UI;
+  spot-checked usage and these are predominantly used for *borders*, not
+  text, in this codebase's actual components — lower real-world risk
+  than `c3`/`c4`, not separately itemized further.
+- **Not fixed this pass** (see scope note above): elevating `c3`→`c2` and
+  auditing every `c4` micro-label use for size/necessity touches
+  hundreds of call sites across 44 routes and both design-system-package
+  and app code — the audit is complete and exact; the remediation is
+  the explicit next-step handoff (see Completion).
+
+**Keyboard navigation.** Established convention (Radix-based primitives
+for `Dialog`/`Dropdown`/`Select`/`Popover`/`Tabs`, semantic `<button>`/
+`<a>` throughout) already covers most interactive paths for free. Found
+and fixed one real, concrete gap introduced in Stage 12:
+`packages/ui/src/primitives/ModerationQueue.tsx`'s row-click-to-open-
+detail behavior was a bare `onClick` on `<td>` elements — no keyboard
+equivalent, no focus indicator, no `tabIndex`. Fixed by making the row
+itself focusable (`tabIndex={0}`, `aria-label` naming the row via
+`detailTitle`) with an `onKeyDown` handler for Enter/Space — deliberately
+**not** `role="button"` on the `<tr>`, since the same row also contains
+real `<button>` elements for row actions and ARIA disallows interactive
+content inside a button-role element; the handler instead checks
+`event.target.closest("button, a")` and bails out so pressing Enter on a
+nested action button doesn't *also* pop the detail drawer. This affects
+every Stage-12 admin queue that passes `renderDetail`
+(author-metrics, country-proposals, contradiction-candidates, users).
+
+**ARIA chart summaries.** Confirmed **zero** of the 12 real chart
+components in `packages/ui/src/charts/` had any `aria-label`/text
+alternative — canvas-based charts in particular convey literally no
+information to a screen reader without one. Fixed all of them,
+matching each chart's actual accessible-content situation rather than
+applying one pattern everywhere:
+- **Canvas charts with no adjacent visible text**
+  (`RadarChart`, `Heatmap`, `RankFlow`, standalone `SparklineChart`):
+  added a synthesized `role="img" aria-label` text summary built from
+  the component's own data props (axis/series values, row/column
+  extremes, rank sequences) — the plan's literal example
+  ("CII 71 из 100, уверенность высокая") is exactly this shape.
+- **Decorative canvas/SVG where the value is already rendered as
+  visible text nearby** (`ProgressRing`, `GaugeArc`, `DonutChart`,
+  `DriftBoard`'s inline row sparkline): added `aria-hidden="true"` to
+  the canvas/SVG itself instead of a redundant duplicate description —
+  the value is already announced via the sibling text node.
+- **Div/span-based bar/meter charts** (`BarColumns`, `CriteriaWeightBars`,
+  `DivergingMeter`, `PassportCard`): confirmed already accessible by
+  construction — every value is a real visible DOM text node, not a
+  canvas pixel, so no change was needed.
+
+**Reduced-motion.** Confirmed 12 of 13 chart components already call
+`useReducedMotion()` and degrade correctly. Found and fixed the one
+exception: `PassportCard.tsx`'s `GlidingNumber` sub-component ran a
+700ms `requestAnimationFrame` count-up animation on every value change
+with no `prefers-reduced-motion` check at all — fixed to snap directly
+to the target value when reduced motion is requested, matching every
+other chart's established pattern.
+
+- `pnpm --filter ui typecheck`/`lint` clean; `pnpm --filter web
+  typecheck`/`lint`/`build` clean; full Playwright suite **328/328
+  passed** at `--workers=2` (5 workers=2-only failures on the first
+  pass, all confirmed passing in isolation — the same documented
+  resource-contention flake pattern, not a regression from these
+  changes).
 
 ## Verification
 

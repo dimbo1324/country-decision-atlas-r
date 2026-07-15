@@ -87,6 +87,7 @@ export function DonutChart({
           width={size}
           height={size}
           viewBox={`0 0 ${size} ${size}`}
+          aria-hidden="true"
         >
           <circle
             cx={size / 2}

@@ -79,6 +79,7 @@ function RowSparkline({
     <canvas
       ref={canvasRef}
       className="h-6 w-full"
+      aria-hidden="true"
     />
   );
 }

@@ -94,6 +94,7 @@ export function GaugeArc({
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
+        aria-hidden="true"
       >
         {/* Track with tick marks: an engraved dial, not a plain arc. */}
         <path

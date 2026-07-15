@@ -157,19 +157,47 @@ export function ModerationQueue<T>({
                 const rowActions = actions.filter(
                   (action) => action.isVisible?.(row.original) ?? true,
                 );
+                const openDetail = () =>
+                  renderDetail && setDetailRow(row.original);
                 return (
                   <tr
                     key={row.id}
-                    className="border-warm hover:bg-bg3/60 border-b transition-colors duration-200"
+                    className={cn(
+                      "border-warm hover:bg-bg3/60 border-b transition-colors duration-200",
+                      renderDetail && "cursor-pointer",
+                    )}
                     data-testid={`${testId}-row`}
+                    {...(renderDetail
+                      ? {
+                          tabIndex: 0,
+                          "aria-label": detailTitle
+                            ? `Открыть детали: ${detailTitle(row.original)}`
+                            : "Открыть детали",
+                          // Not role="button" -- the row also contains real
+                          // <button> action elements, and ARIA disallows
+                          // interactive content inside a button-role
+                          // element. Ignore keydowns that bubble up from
+                          // those nested buttons so pressing Enter/Space on
+                          // an action doesn't also open the detail drawer.
+                          onKeyDown: (event: React.KeyboardEvent) => {
+                            if (event.key !== "Enter" && event.key !== " ") {
+                              return;
+                            }
+                            const target = event.target as HTMLElement;
+                            if (target.closest("button, a")) {
+                              return;
+                            }
+                            event.preventDefault();
+                            openDetail();
+                          },
+                        }
+                      : {})}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
                         className="text-c2 px-3 py-3 text-sm"
-                        onClick={() =>
-                          renderDetail && setDetailRow(row.original)
-                        }
+                        onClick={openDetail}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

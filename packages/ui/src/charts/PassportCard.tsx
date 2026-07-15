@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Download, Link2, ShieldCheck } from "lucide-react";
 import { cn } from "../lib/cn";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 import { Toggle } from "../primitives/Toggle";
 import type { PassportData } from "./types";
 
@@ -20,10 +21,16 @@ interface PassportCardProps {
 function GlidingNumber({ value }: { value: number }) {
   const [display, setDisplay] = useState(value);
   const displayRef = useRef(value);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const from = displayRef.current;
     if (from === value) return;
+    if (reducedMotion) {
+      displayRef.current = value;
+      setDisplay(value);
+      return;
+    }
     const start = performance.now();
     const durationMs = 700;
     let frame: number;
@@ -37,7 +44,7 @@ function GlidingNumber({ value }: { value: number }) {
     };
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [value]);
+  }, [value, reducedMotion]);
 
   return <>{display}</>;
 }

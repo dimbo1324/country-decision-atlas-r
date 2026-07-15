@@ -188,6 +188,8 @@ export function SparklineChart({
     <canvas
       ref={canvasRef}
       className="h-full w-full"
+      role="img"
+      aria-label={`${yAxisLabel} по ${xAxisLabel}: ${values.join(", ")}.`}
       onMouseEnter={() => {
         hoveredRef.current = true;
       }}

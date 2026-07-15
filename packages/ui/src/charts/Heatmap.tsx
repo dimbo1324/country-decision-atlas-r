@@ -146,10 +146,20 @@ export function Heatmap({
     active && isVisible,
   );
 
+  // Canvas has no accessible content of its own; a full per-cell readout
+  // would be too long for a screen reader to be useful, so this gives the
+  // grid shape plus the extremes -- enough to know what the chart shows.
+  const flatValues = data.values.flat();
+  const max = flatValues.length ? Math.max(...flatValues) : 0;
+  const min = flatValues.length ? Math.min(...flatValues) : 0;
+  const summary = `Тепловая карта: ${data.rows.length} строк (${data.rows.join(", ")}), ${data.columns.length} столбцов (${data.columns.join(", ")}). Значения от ${min} до ${max}.`;
+
   return (
     <canvas
       ref={canvasRef}
       className="h-full w-full"
+      role="img"
+      aria-label={summary}
       onMouseMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         mouseRef.current = {

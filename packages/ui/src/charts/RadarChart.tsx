@@ -155,10 +155,21 @@ export function RadarChart({
     active && isVisible,
   );
 
+  // Canvas has no accessible content of its own -- everything drawn on it
+  // is invisible to screen readers unless summarized in an aria-label.
+  const summary = series
+    .map(
+      (serie) =>
+        `${serie.label}: ${axes.map((axis, i) => `${axis} ${Math.round(serie.values[i] ?? 0)}`).join(", ")}`,
+    )
+    .join("; ");
+
   return (
     <canvas
       ref={canvasRef}
       className="h-full w-full"
+      role="img"
+      aria-label={summary}
       onMouseEnter={() => {
         hoveredRef.current = true;
       }}

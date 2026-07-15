@@ -89,6 +89,7 @@ export function ProgressRing({
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         className="absolute inset-0"
+        aria-hidden="true"
       >
         <circle
           cx={size / 2}
