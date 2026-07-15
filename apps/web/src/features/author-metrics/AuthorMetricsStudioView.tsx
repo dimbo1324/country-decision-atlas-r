@@ -282,11 +282,18 @@ export function AuthorMetricsStudioView() {
   if (!user) {
     return (
       <div
-        className="notice"
+        className="border-warm flex flex-col gap-2 border px-4 py-4"
         data-testid="author-metrics-unauthenticated"
       >
-        Войдите, чтобы вести студию авторских метрик.{" "}
-        <Link href={routes.login}>Войти</Link>
+        <p className="text-c3 text-sm">
+          Войдите, чтобы вести студию авторских метрик.{" "}
+          <Link
+            href={routes.login}
+            className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
+          >
+            Войти
+          </Link>
+        </p>
       </div>
     );
   }

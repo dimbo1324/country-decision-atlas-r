@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import {
   myWatchlistQuery,
@@ -34,7 +35,7 @@ export function WatchlistButton({
     return (
       <Link
         href={routes.login}
-        className="internalLink"
+        className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         data-testid="watchlist-button-login-required"
       >
         Войдите, чтобы сохранить страну
@@ -45,7 +46,7 @@ export function WatchlistButton({
   if (isAuthLoading || watchlist.isPending) {
     return (
       <span
-        className="notice"
+        className="text-c3 text-sm"
         data-testid="watchlist-button-loading"
       >
         Загрузка…
@@ -62,7 +63,7 @@ export function WatchlistButton({
     }
     return (
       <span
-        className="notice"
+        className="text-c3 text-sm"
         data-testid="watchlist-button-error"
       >
         Не удалось загрузить статус watchlist.
@@ -75,9 +76,8 @@ export function WatchlistButton({
   );
 
   return (
-    <button
+    <Button
       type="button"
-      className="runButton"
       onClick={() =>
         toggle.mutate({ countrySlug, countryName, nextSaved: !saved })
       }
@@ -85,6 +85,6 @@ export function WatchlistButton({
       data-testid="watchlist-toggle-button"
     >
       {saved ? "В watchlist ✓" : "Сохранить в watchlist"}
-    </button>
+    </Button>
   );
 }

@@ -1,4 +1,5 @@
 import { getLocale } from "next-intl/server";
+import { Card, Kicker } from "@country-decision-atlas/ui";
 import { scenariosApi } from "../../../shared/api";
 import { asSupportedLocale } from "../../../shared/lib/locale";
 
@@ -12,31 +13,40 @@ export default async function ScenariosPage() {
     scenarios = await scenariosApi.listScenarios({ locale });
   } catch {
     return (
-      <main className="pageShell">
-        <header className="pageHeader">
-          <p className="eyebrow">Сценарии</p>
-          <h1>Сценарии подбора страны</h1>
+      <main className="flex flex-col gap-6">
+        <header className="flex flex-col gap-3">
+          <Kicker>Сценарии</Kicker>
+          <h1 className="font-display text-4xl font-bold">
+            Сценарии подбора страны
+          </h1>
         </header>
-        <p className="notice">Не удалось загрузить сценарии.</p>
+        <p className="text-c3 text-sm">Не удалось загрузить сценарии.</p>
       </main>
     );
   }
 
   return (
-    <main className="pageShell">
-      <header className="pageHeader">
-        <p className="eyebrow">Сценарии</p>
-        <h1>Сценарии подбора страны</h1>
+    <main className="flex flex-col gap-6">
+      <header className="flex flex-col gap-3">
+        <Kicker>Сценарии</Kicker>
+        <h1 className="font-display text-4xl font-bold">
+          Сценарии подбора страны
+        </h1>
       </header>
-      <section className="dataGrid">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {scenarios.items.map((scenario) => (
-          <article
-            className="dataCard"
+          <Card
+            interactive={false}
+            className="flex flex-col gap-1"
             key={scenario.slug}
           >
-            <span>{scenario.name}</span>
-            <small>{scenario.description ?? scenario.slug}</small>
-          </article>
+            <span className="text-c1 text-sm font-medium">
+              {scenario.name}
+            </span>
+            <small className="text-c3 text-xs">
+              {scenario.description ?? scenario.slug}
+            </small>
+          </Card>
         ))}
       </section>
     </main>

@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { RouteDetailResponse } from "../../shared/api/routes";
 import { RouteEmptyState } from "./RouteEmptyState";
 
@@ -22,7 +23,7 @@ export function RouteChecklistList({
 
   return (
     <ol
-      className="routeChecklist"
+      className="flex flex-col gap-3"
       data-testid="route-checklist-list"
     >
       {sorted.map((item) => {
@@ -35,30 +36,36 @@ export function RouteChecklistList({
         return (
           <li
             key={item.id}
-            className="routeChecklistItem"
+            className="border-warm flex flex-col gap-1.5 border-b pb-3 last:border-b-0 last:pb-0"
             data-testid="route-checklist-item"
           >
-            <div className="routeChecklistItemHeader">
-              <span className="routeChecklistStepOrder">{item.step_order}</span>
-              <strong>{item.title}</strong>
-              <span className="metaChip">
-                {item.is_required ? "Обязательно" : "По ситуации"}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-c4 font-mono text-xs">
+                {item.step_order}
               </span>
+              <strong className="text-c1 text-sm">{item.title}</strong>
+              <Badge variant="default">
+                {item.is_required ? "Обязательно" : "По ситуации"}
+              </Badge>
             </div>
-            {item.description && <p>{item.description}</p>}
+            {item.description && (
+              <p className="text-c2 text-sm leading-relaxed">
+                {item.description}
+              </p>
+            )}
             {item.document_note && (
-              <p className="routeChecklistNote">
+              <p className="text-c3 text-xs">
                 Документы: {item.document_note}
               </p>
             )}
             {item.cost_note && (
-              <p className="routeChecklistNote">Стоимость: {item.cost_note}</p>
+              <p className="text-c3 text-xs">Стоимость: {item.cost_note}</p>
             )}
             {item.timing_note && (
-              <p className="routeChecklistNote">Сроки: {item.timing_note}</p>
+              <p className="text-c3 text-xs">Сроки: {item.timing_note}</p>
             )}
             {item.official_requirement_note && (
-              <p className="routeChecklistNote">
+              <p className="text-c3 text-xs">
                 Официальное требование: {item.official_requirement_note}
               </p>
             )}
@@ -67,6 +74,7 @@ export function RouteChecklistList({
                 href={linkedSource.url}
                 target="_blank"
                 rel="noreferrer"
+                className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
                 data-testid="route-checklist-source-link"
               >
                 Источник: {linkedSource.title}
@@ -77,6 +85,7 @@ export function RouteChecklistList({
                 href={linkedEvidence.source_url}
                 target="_blank"
                 rel="noreferrer"
+                className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
                 data-testid="route-checklist-source-link"
               >
                 Источник:{" "}

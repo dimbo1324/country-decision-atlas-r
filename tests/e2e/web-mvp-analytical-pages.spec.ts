@@ -12,11 +12,16 @@ test.describe("legal signals page", () => {
     );
     await expectHasMainHeading(page, /лента правовых сигналов/i);
 
+    // Scoped to <main>: Next.js can leave a hidden Suspense streaming
+    // marker (a second, invisible copy of the boundary's content under a
+    // transient `id="S:0"` node) in the DOM alongside the real one, which
+    // trips Playwright's strict-mode element-count check on the bare
+    // testid selector even though only one copy is ever visible.
     await expect(
-      page.locator('[data-testid="timeline-filters"]'),
+      page.getByRole("main").getByTestId("timeline-filters"),
     ).toBeVisible();
 
-    const countrySelect = page.locator("#timeline-country");
+    const countrySelect = page.getByRole("main").locator("#timeline-country");
     await expect(countrySelect).toBeVisible();
     await expect(countrySelect).toHaveValue("russia");
 

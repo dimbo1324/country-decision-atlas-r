@@ -13,16 +13,19 @@ export function RouteSourcesList({ sources }: RouteSourcesListProps) {
   }
 
   return (
-    <div className="routeSources">
+    <div className="grid gap-2.5">
       {sources.map((source) => (
         <a
           key={source.id}
           href={source.url}
           target="_blank"
           rel="noreferrer"
+          className="border-warm flex flex-col gap-1 border-b pb-2.5 text-sm last:border-b-0"
         >
-          <strong>{source.title}</strong>
-          <span>
+          <strong className="text-c1 hover:text-gold3 transition-colors duration-200">
+            {source.title}
+          </strong>
+          <span className="text-c3 text-xs">
             {[source.source_type, source.publisher, source.confidence]
               .filter(Boolean)
               .join(" · ")}

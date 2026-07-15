@@ -1,3 +1,4 @@
+import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 
 import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
@@ -45,132 +46,169 @@ type RouteDetailViewProps = {
 export function RouteDetailView({ route }: RouteDetailViewProps) {
   return (
     <article
-      className="routeDetail"
+      className="flex flex-col gap-6"
       data-testid="route-detail"
     >
-      <header className="pageHeader">
-        <p className="eyebrow">Маршрут</p>
-        <h1>{route.title}</h1>
-        <div className="routeBadges">
-          <span className="metaChip">
+      <header className="flex flex-col gap-3">
+        <Kicker>Маршрут</Kicker>
+        <h1 className="font-display text-4xl font-bold">{route.title}</h1>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="default">
             {ROUTE_TYPE_LABELS[route.route_type] ?? route.route_type}
-          </span>
-          <span className="metaChip">
+          </Badge>
+          <Badge variant="default">
             {LEGAL_STATUS_LABELS[route.legal_status] ?? route.legal_status}
-          </span>
-          <span className="metaChip">
+          </Badge>
+          <Badge variant="default">
             {STATUS_LABELS[route.status] ?? route.status}
-          </span>
+          </Badge>
         </div>
         <Link
           href={routes.country(route.country_slug)}
-          className="internalLink"
+          className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
           Назад к стране
         </Link>
       </header>
 
-      <div className="routeDetailGrid">
-        <section className="cardSection cardSectionHighlight">
-          <h2 className="cardSectionTitle">Описание</h2>
-          {route.summary && <p>{route.summary}</p>}
-          {route.eligibility_summary && <p>{route.eligibility_summary}</p>}
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Описание</Kicker>
+          {route.summary && (
+            <p className="text-c1 text-sm leading-relaxed">{route.summary}</p>
+          )}
+          {route.eligibility_summary && (
+            <p className="text-c1 text-sm leading-relaxed">
+              {route.eligibility_summary}
+            </p>
+          )}
           <RouteEligibilityBadges eligibility={route.eligibility} />
-        </section>
+        </Card>
 
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Параметры</h2>
-          <dl className="routeFacts">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Параметры</Kicker>
+          <dl className="flex flex-col gap-2.5">
             {route.income_requirement_note && (
-              <div>
-                <dt>Доход</dt>
-                <dd>{route.income_requirement_note}</dd>
+              <div className="flex flex-col gap-0.5">
+                <dt className="text-c3 text-xs font-bold">Доход</dt>
+                <dd className="text-c1 text-sm">
+                  {route.income_requirement_note}
+                </dd>
               </div>
             )}
             {route.fees_note && (
-              <div>
-                <dt>Сборы</dt>
-                <dd>{route.fees_note}</dd>
+              <div className="flex flex-col gap-0.5">
+                <dt className="text-c3 text-xs font-bold">Сборы</dt>
+                <dd className="text-c1 text-sm">{route.fees_note}</dd>
               </div>
             )}
             {route.processing_time_note && (
-              <div>
-                <dt>Срок обработки</dt>
-                <dd>{route.processing_time_note}</dd>
+              <div className="flex flex-col gap-0.5">
+                <dt className="text-c3 text-xs font-bold">Срок обработки</dt>
+                <dd className="text-c1 text-sm">
+                  {route.processing_time_note}
+                </dd>
               </div>
             )}
             {route.stay_period_note && (
-              <div>
-                <dt>Срок пребывания</dt>
-                <dd>{route.stay_period_note}</dd>
+              <div className="flex flex-col gap-0.5">
+                <dt className="text-c3 text-xs font-bold">Срок пребывания</dt>
+                <dd className="text-c1 text-sm">{route.stay_period_note}</dd>
               </div>
             )}
             {route.renewal_note && (
-              <div>
-                <dt>Продление</dt>
-                <dd>{route.renewal_note}</dd>
+              <div className="flex flex-col gap-0.5">
+                <dt className="text-c3 text-xs font-bold">Продление</dt>
+                <dd className="text-c1 text-sm">{route.renewal_note}</dd>
               </div>
             )}
           </dl>
-        </section>
+        </Card>
       </div>
 
       {(route.tax_warning || route.legal_warning) && (
-        <section className="cardSection">
-          <h2 className="cardSectionTitle">Предупреждения</h2>
-          <div className="routeWarnings">
-            {route.tax_warning && <p>{route.tax_warning}</p>}
-            {route.legal_warning && <p>{route.legal_warning}</p>}
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Предупреждения</Kicker>
+          <div className="flex flex-col gap-2">
+            {route.tax_warning && (
+              <p className="border-gold3 text-c1 border-l-4 pl-2.5 text-sm">
+                {route.tax_warning}
+              </p>
+            )}
+            {route.legal_warning && (
+              <p className="border-gold3 text-c1 border-l-4 pl-2.5 text-sm">
+                {route.legal_warning}
+              </p>
+            )}
           </div>
-        </section>
+        </Card>
       )}
 
-      <section
-        className="cardSection"
-        data-testid="route-checklist-section"
-      >
-        <h2 className="cardSectionTitle">Практический чек-лист</h2>
-        <RouteChecklistList
-          checklist={route.checklist}
-          sources={route.sources}
-          evidence={route.evidence}
-        />
-        {route.checklist.length > 0 && (
-          <DisclaimerNotice text="Чек-лист носит справочный характер и не заменяет консультацию специалиста." />
-        )}
-      </section>
+      <div data-testid="route-checklist-section">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
+        >
+          <Kicker>Практический чек-лист</Kicker>
+          <RouteChecklistList
+            checklist={route.checklist}
+            sources={route.sources}
+            evidence={route.evidence}
+          />
+          {route.checklist.length > 0 && (
+            <DisclaimerNotice text="Чек-лист носит справочный характер и не заменяет консультацию специалиста." />
+          )}
+        </Card>
+      </div>
 
-      <section
-        className="cardSection"
-        data-testid="route-documents-section"
-      >
-        <h2 className="cardSectionTitle">Документы</h2>
-        <RouteDocumentsList documents={route.documents} />
-      </section>
+      <div data-testid="route-documents-section">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
+        >
+          <Kicker>Документы</Kicker>
+          <RouteDocumentsList documents={route.documents} />
+        </Card>
+      </div>
 
-      <section
-        className="cardSection"
-        data-testid="route-migration-board-section"
-      >
-        <h2 className="cardSectionTitle">Люди, рассматривающие этот маршрут</h2>
-        <RouteMigrationBoardBlock routeId={route.id} />
-      </section>
+      <div data-testid="route-migration-board-section">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
+        >
+          <Kicker>Люди, рассматривающие этот маршрут</Kicker>
+          <RouteMigrationBoardBlock routeId={route.id} />
+        </Card>
+      </div>
 
-      <section
-        className="cardSection"
-        data-testid="route-sources-section"
-      >
-        <h2 className="cardSectionTitle">Источники</h2>
-        <RouteSourcesList sources={route.sources} />
-      </section>
+      <div data-testid="route-sources-section">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
+        >
+          <Kicker>Источники</Kicker>
+          <RouteSourcesList sources={route.sources} />
+        </Card>
+      </div>
 
-      <section
-        className="cardSection"
-        data-testid="route-evidence-section"
-      >
-        <h2 className="cardSectionTitle">Доказательства</h2>
-        <RouteEvidenceList evidence={route.evidence} />
-      </section>
+      <div data-testid="route-evidence-section">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-3"
+        >
+          <Kicker>Доказательства</Kicker>
+          <RouteEvidenceList evidence={route.evidence} />
+        </Card>
+      </div>
     </article>
   );
 }

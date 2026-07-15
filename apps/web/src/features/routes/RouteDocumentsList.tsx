@@ -13,12 +13,19 @@ export function RouteDocumentsList({ documents }: RouteDocumentsListProps) {
   }
 
   return (
-    <ul className="routeDocuments">
+    <ul className="grid gap-2.5">
       {documents.map((document) => (
-        <li key={document.id}>
-          <strong>{document.name}</strong>
-          <span>{document.is_mandatory ? "Обязательный" : "По ситуации"}</span>
-          {document.note && <p>{document.note}</p>}
+        <li
+          key={document.id}
+          className="border-warm flex flex-col gap-1 border-b pb-2.5 text-sm last:border-b-0"
+        >
+          <strong className="text-c1">{document.name}</strong>
+          <span className="text-c3 text-xs">
+            {document.is_mandatory ? "Обязательный" : "По ситуации"}
+          </span>
+          {document.note && (
+            <p className="text-c3 text-xs leading-relaxed">{document.note}</p>
+          )}
         </li>
       ))}
     </ul>

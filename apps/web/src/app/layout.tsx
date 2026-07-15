@@ -8,7 +8,6 @@ import {
 import { AuthProvider } from "../shared/auth/AuthProvider";
 import { crimsonText, imFellEnglish, playfairDisplay } from "./fonts";
 import { Providers } from "./providers";
-import "./styles.css";
 import "@country-decision-atlas/ui/theme.css";
 import "./theme-vars.css";
 

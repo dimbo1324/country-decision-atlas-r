@@ -1,8 +1,10 @@
 import { getLocale } from "next-intl/server";
-import { getPathname, Link } from "../../../../i18n/navigation";
+import { Kicker } from "@country-decision-atlas/ui";
+import { getPathname } from "../../../../i18n/navigation";
 import { routesApi } from "../../../../shared/api/routes";
 import { asSupportedLocale } from "../../../../shared/lib/locale";
 import { routes } from "../../../../shared/lib/routes";
+import { AppBreadcrumbs } from "../../../../shared/ui/AppBreadcrumbs";
 import { DisclaimerNotice } from "../../../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../../../shared/ui/ErrorState";
 import { RouteDetailView } from "../../../../features/routes";
@@ -20,37 +22,14 @@ export default async function RoutePage({ params }: PageProps) {
   try {
     const route = await routesApi.getRoute(id, { locale });
     return (
-      <div className="pageShell">
-        <nav
-          className="breadcrumbs"
-          aria-label="Навигация"
-        >
-          <Link
-            href={routes.countries}
-            className="breadcrumbLink"
-          >
-            Страны
-          </Link>
-          <span
-            className="breadcrumbSep"
-            aria-hidden="true"
-          >
-            /
-          </span>
-          <Link
-            href={routes.country(route.country_slug)}
-            className="breadcrumbLink"
-          >
-            {route.country_slug}
-          </Link>
-          <span
-            className="breadcrumbSep"
-            aria-hidden="true"
-          >
-            /
-          </span>
-          <span className="breadcrumbCurrent">{route.title}</span>
-        </nav>
+      <div className="flex flex-col gap-6">
+        <AppBreadcrumbs
+          items={[
+            { label: "Страны", href: routes.countries },
+            { label: route.country_slug, href: routes.country(route.country_slug) },
+            { label: route.title },
+          ]}
+        />
         <RouteDetailView route={route} />
         <DisclaimerNotice />
       </div>
@@ -61,28 +40,16 @@ export default async function RoutePage({ params }: PageProps) {
         ? err.message
         : (err as { error?: { code?: string; message?: string } });
     return (
-      <div className="pageShell">
-        <nav
-          className="breadcrumbs"
-          aria-label="Навигация"
-        >
-          <Link
-            href={routes.countries}
-            className="breadcrumbLink"
-          >
-            Страны
-          </Link>
-          <span
-            className="breadcrumbSep"
-            aria-hidden="true"
-          >
-            /
-          </span>
-          <span className="breadcrumbCurrent">{id}</span>
-        </nav>
-        <header className="pageHeader">
-          <p className="eyebrow">Маршрут</p>
-          <h1>Маршрут не найден</h1>
+      <div className="flex flex-col gap-6">
+        <AppBreadcrumbs
+          items={[
+            { label: "Страны", href: routes.countries },
+            { label: id },
+          ]}
+        />
+        <header className="flex flex-col gap-3">
+          <Kicker>Маршрут</Kicker>
+          <h1 className="font-display text-4xl font-bold">Маршрут не найден</h1>
         </header>
         <ErrorState
           error={errProp}
