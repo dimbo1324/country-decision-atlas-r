@@ -59,6 +59,29 @@ test.describe("Decision Passport", () => {
     await expectNoAppCrash(page);
   });
 
+  test("passport page offers the trip CTA (login prompt for anonymous)", async ({
+    page,
+  }) => {
+    await page.goto(e2eRoutes.decision("ru"));
+    await page.getByTestId("origin-select").selectOption("russia");
+    await page.getByTestId("decision-run-button").click();
+    await expect(page.getByTestId("decision-results")).toBeVisible({
+      timeout: 20_000,
+    });
+    await page.getByTestId("create-passport-button").click();
+    await expect(page.getByTestId("passport-link-block")).toBeVisible({
+      timeout: 20_000,
+    });
+    await page.getByTestId("passport-link").click();
+    await expect(page).toHaveURL(/\/decision\/passports\/.+/);
+
+    await expect(page.getByTestId("passport-trip-cta").first()).toBeVisible();
+    await expect(
+      page.getByTestId("trip-from-passport-login-required").first(),
+    ).toBeVisible();
+    await expectNoAppCrash(page);
+  });
+
   test("copy link button works", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await page.getByTestId("decision-run-button").click();
