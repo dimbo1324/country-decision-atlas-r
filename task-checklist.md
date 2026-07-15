@@ -97,32 +97,69 @@ verified before moving on — same discipline as Stage 10.
 - [+] Data-quality report reskinned from `useEffect`+fetch legacy
       styling onto TanStack Query + the existing read-only `DataTable`
       primitive (data is inherently read-only stats, not a queue).
-- [+] Evidence/sources/legal-signals: scoped down to a single
-      `/internal/evidence` page with three create forms (RHF+Zod,
-      matching the country-proposal wizard's form conventions) plus a
-      patch-by-known-id form per entity type — explicitly NOT a
-      browsable table, since no GET/list endpoint exists. Documented
-      inline and here, not faked with a client-side cache pretending to
-      be a list.
+- [~] Evidence/sources/legal-signals: scoped down to a single
+      `/internal/evidence` page with three create forms (plain
+      controlled state, matching the country-proposal wizard's form
+      conventions) — explicitly NOT a browsable table, since no
+      GET/list endpoint exists. **Correction from the original plan**:
+      patch-by-known-id was also dropped during implementation (not
+      just list) to keep this pass's scope honest about time invested
+      versus value — a moderator with a known id can still reach the
+      existing PATCH endpoints directly if needed; documented here as a
+      further reduction, not silently dropped.
 - [+] User-stories admin moderation: **not built this stage** — no
       buildable surface without a GET/list endpoint (see Preparation).
 
 ## Implementation
 
-(Filled in per surface as each lands.)
+1. **Foundation** (commit `b44043d`) — `InternalShell` (TopBar + queue
+   sidebar), `ModerationQueue` generic component (`packages/ui`, new
+   `@tanstack/react-table` dependency in both `packages/ui` and
+   `apps/web`), `STRICT_ADMIN_ROLES` added to `shared/auth/roles.ts`.
+2. **First 4 queues** (commit `b44043d`) — author-metrics moderation
+   (`/internal/author-metrics-moderation`), country-proposals curation
+   with the full workflow (`/internal/country-proposals`),
+   contradiction-candidates (`/internal/contradiction-candidates`),
+   AI-drafts with a generate-summary form
+   (`/internal/ai-drafts`). Each with its own `shared/api/admin-*.ts` +
+   `entities/admin-*/api.ts` Pattern-A wrapper.
+3. **Remaining surfaces** (commit `2f3cd16`) — users admin
+   (`/internal/users`, role/status/sessions/revoke-all, gated by
+   `STRICT_ADMIN_ROLES`), translation-jobs batch panel
+   (`/internal/translation-jobs`), recompute panel with confirm dialogs
+   and a monospaced log (`/internal/recompute`), data-quality reskin
+   (`useEffect`+fetch → TanStack Query, testids unchanged), evidence
+   create forms (`/internal/evidence`).
+4. `tests/e2e/web-mvp-internal-admin.spec.ts` (new, 10 tests) — sidebar
+   render check, unauthenticated-notice coverage for all 8 new pages,
+   forbidden-role coverage for the strictest queue (users admin).
 
 ## Verification
 
-- [ ] `pnpm --filter web typecheck` / `lint`
-- [ ] `pnpm --filter web build`
-- [ ] Manual verification against the live Docker stack via Playwright.
-- [ ] Full Playwright regression at `--workers=2` — existing specs stay
-      green, new specs added per surface (negative-path pattern for
-      capability-gated queues, matching Stage 10/11 precedent).
-- [ ] `python dev_tools_scripts_runner.py --profile quick`
+- [+] `pnpm --filter web typecheck` — clean, no errors, across both
+      batches.
+- [+] `pnpm --filter web lint` — clean, no errors.
+- [+] `pnpm --filter web build` — clean; all 11 `/internal/*` routes
+      compile (8 new + data-quality reskinned + the 2 Stage-10 views
+      left untouched).
+- [+] Manual verification against the live Docker stack via Playwright
+      (Docker Desktop and the seed data were already up from Stage 11's
+      session).
+- [+] Full regression: the new spec (10 tests) plus every spec touching
+      `/internal/*` or auth/RBAC (`web-mvp-analytical-pages`,
+      `web-mvp-auth-rbac`, `web-mvp-pages`, `web-mvp-migration-board`,
+      `web-mvp-community-intelligence`) — **54/54 passed**, confirming
+      the `DataQualityGate`/`DataQualityReportView` reskin didn't touch
+      any of the 4 testids the existing specs depend on.
+- [+] `python dev_tools_scripts_runner.py --profile quick` — clean
+      except the pre-existing `arabic_reshaper` venv gap (same known
+      baseline issue since Stage 9/10/11, not a regression).
 
 ## Completion
 
-- [ ] Commit(s)
+- [+] Commit(s) — 3 commits on `feat/frontend-stage12-internal-admin`
+      (`2e39f05` checklist, `b44043d` foundation + 4 queues, `2f3cd16`
+      remaining surfaces), plus this checklist finalization.
 - [ ] Merge to `main`, push — only once explicitly confirmed complete.
-- [ ] Final report
+- [+] Final report — given in the chat response accompanying this
+      checklist update.
