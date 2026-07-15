@@ -368,12 +368,85 @@ other chart's established pattern.
 - [+] `python dev_tools_scripts_runner.py --profile quick` — clean
       except the pre-existing `arabic_reshaper` venv gap (same known
       baseline issue since Stage 9-12, not a regression).
-- [ ] Manual accessibility/contrast/reduced-motion checks — deferred to
-      Stream 4 (accessibility pass), not part of CSS removal.
+- [+] Manual accessibility/contrast/reduced-motion checks — done in
+      Stream 4: computed contrast audit, keyboard-nav fix, ARIA chart
+      summaries, reduced-motion fix. See Stream 4 above for exact
+      findings and what remains unfixed (contrast role elevation).
 
 ## Completion
 
-- [ ] Commit(s) — stream 1 (legacy CSS removal) landing now; streams
-      2-9 remain.
-- [ ] Merge to `main`, push — only once explicitly confirmed complete.
-- [ ] Final report — honest per-stream status against the DoD.
+- [+] Commit(s) — 4 of 9 streams landed on
+      `feat/frontend-stage13-polish` (`4f33d7f` legacy CSS removal,
+      `5631114` ErrorBoundary, `b9d924d` bundle analyzer,
+      `324e22c` accessibility), each independently verified
+      (`typecheck`/`lint`/`build`/328-test Playwright regression/quick
+      quality gate) before its own commit.
+- [ ] Merge to `main`, push — **not done, by design**: the owner asked
+      for streams 1-4 plus thorough documentation this pass, then
+      wants to continue streams 5-9 themselves before merging. Do not
+      merge until they confirm the stage is complete.
+- [+] Final report — see below.
+
+## Handoff: streams 5-9 remaining
+
+Streams 1-4 (legacy CSS, observability, bundle/perf, accessibility)
+are done, verified, and committed. The following five are **not
+started** — each was scoped in "Scope decision for this stage" above
+before any research confirmed feasibility; the notes below add what's
+now known so whoever picks these up doesn't have to re-derive it.
+
+**Stream 5 — i18n completeness.** Not started. `apps/web/src/messages/
+{en,ru}.json` are the two dictionaries; no parity-check script or lint
+rule exists yet (confirmed absent in Stage 13 Preparation research).
+Suggested approach: a small Node/TS script under `scripts/dev_tools/`
+that flat-diffs both JSON files' key sets (recursive, dot-path keys)
+and fails non-zero on any one-sided key — cheap to write, cheap to run,
+and matches the plan's literal ask ("no orphans outside the
+dictionaries") without needing a full next-intl ESLint plugin. Register
+it as a `--profile quick` step in `dev_tools_scripts_runner.py` once it
+exists. Separately: an actual ru/en *content* pass over all 44 routes
+(not just key-parity) to catch missing/stale translations is a manual
+QA pass, not a script — budget time for it separately.
+
+**Stream 6 — Vitest setup.** Not started, and confirmed genuinely
+greenfield: no `vitest` dependency, no config, anywhere in the repo.
+Needs: `vitest` + `@vitejs/plugin-react` (already a devDependency of
+`packages/ui` via Storybook's Vite setup, so precedent for the tooling
+exists) or `jsdom`/`happy-dom` for the test environment, a
+`vitest.config.ts` per workspace that needs it (`apps/web`,
+`packages/ui`), and `package.json` `test`/`test:watch` scripts. Scope
+recommendation from "Design decisions" above still holds: start with
+`shared/lib/*` pure utilities and `entities/*/api.ts` query-key/params
+logic (no React rendering needed, fastest to write and most stable),
+not component rendering tests — those would want Stream 7's MSW
+fixtures first anyway.
+
+**Stream 7 — MSW + Storybook interaction tests.** Not started.
+Storybook 8.4.7 already exists in `packages/ui` (`.storybook/`,
+`build-storybook` script) — this stream only needs `msw` added as a
+devDependency plus `msw-storybook-addon`, then a handful of interaction
+stories (`play` functions) on the highest-value components as the
+established pattern, not full coverage. Natural candidates given this
+session's work: `ModerationQueue` (now has the keyboard-interaction
+path worth regression-testing in isolation) and one or two chart
+components with the new ARIA labels.
+
+**Stream 8 — Visual regression.** Not started. No `toHaveScreenshot`/
+`toMatchSnapshot` usage exists anywhere in `tests/e2e/` (confirmed
+absent). The plan's explicit minimum is 5 screens: home, catalog,
+dossier (country page), decision result, passport. Playwright's
+built-in `expect(page).toHaveScreenshot()` needs a first baseline-
+generation run (`--update-snapshots`) committed alongside the test
+file; budget for the fact that Stage 13 streams 1-4 changed visual
+output on several routes this session (legacy CSS removal, bundle
+changes) so baselines should be captured *after* those land, not
+before — which they now have.
+
+**Stream 9 — Final full-suite pass + Stage-0 checklist.** Not started.
+Once streams 5-8 land: re-run the full Playwright suite one more time,
+confirm the DoD's 5 numbered criteria in the plan
+(`docs/_arch_/FRONTEND_IMPLEMENTATION_PLAN.md` §7 Этап 13) against
+actual current state (route count is 44, not the plan's stale "29+" —
+worth updating the plan doc itself in this final pass, not just
+checking it off), and do the Stage-0 checklist sweep confirming every
+route is marked "migrated" in whatever tracking doc Stage 0 established.
