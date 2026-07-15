@@ -23,7 +23,11 @@ describe("isFeatureEnabled", () => {
   it("returns true when the key is enabled in an {items} response", () => {
     const features = {
       items: [flag("trips", true)],
-      context: { access_tier: "public" as const, environment: "test", is_admin: false },
+      context: {
+        access_tier: "public" as const,
+        environment: "test",
+        is_admin: false,
+      },
     };
     expect(isFeatureEnabled(features, "trips")).toBe(true);
   });

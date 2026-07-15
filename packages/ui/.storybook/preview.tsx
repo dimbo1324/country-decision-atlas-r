@@ -1,6 +1,9 @@
 import type { Preview } from "@storybook/react";
 import type { ReactNode } from "react";
+import { initialize, mswLoader } from "msw-storybook-addon";
 import "../src/tokens/theme.css";
+
+initialize();
 
 function ArchiveStage({ children }: { children: ReactNode }) {
   return (
@@ -23,6 +26,7 @@ const preview: Preview = {
     layout: "fullscreen",
     backgrounds: { disable: true },
   },
+  loaders: [mswLoader],
   decorators: [
     (Story) => (
       <ArchiveStage>

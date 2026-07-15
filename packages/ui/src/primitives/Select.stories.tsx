@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./Select";
 
 const meta: Meta<typeof Select> = {
@@ -21,4 +22,20 @@ export const Default: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("combobox"));
+    const option = await body.findByRole("option", {
+      name: "ВНЖ/гражданство",
+    });
+    await userEvent.click(option);
+
+    await waitFor(() =>
+      expect(canvas.getByRole("combobox")).toHaveTextContent(
+        "ВНЖ/гражданство",
+      ),
+    );
+  },
 };

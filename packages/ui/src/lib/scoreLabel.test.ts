@@ -10,9 +10,7 @@ describe("scoreLabelStyle", () => {
   });
 
   it("falls back to 'missing' for an unrecognized label", () => {
-    expect(scoreLabelStyle("unrecognized")).toEqual(
-      scoreLabelStyle("missing"),
-    );
+    expect(scoreLabelStyle("unrecognized")).toEqual(scoreLabelStyle("missing"));
   });
 
   it("falls back to 'missing' for null or undefined", () => {

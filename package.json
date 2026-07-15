@@ -14,14 +14,16 @@
     "format:python": "python scripts/dev_tools/format_code.py python",
     "format:frontend": "python scripts/dev_tools/format_code.py frontend",
     "format:go": "python scripts/dev_tools/format_code.py go",
-    "format:prettier": "prettier --write \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"contracts/**/*.yaml\"",
-    "format:check": "prettier --check \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"contracts/**/*.yaml\"",
+    "format:prettier": "prettier --write \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"tests/visual/**/*.ts\" \"contracts/**/*.yaml\"",
+    "format:check": "prettier --check \"package.json\" \"apps/**/*.{ts,tsx,js,jsx,json,css}\" \"packages/**/*.{ts,json}\" \"tests/e2e/**/*.ts\" \"tests/visual/**/*.ts\" \"contracts/**/*.yaml\"",
     "ship:main": "python scripts/dev_tools/ship_main.py",
     "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build",
     "web:mvp:e2e": "playwright test",
     "web:mvp:e2e:headed": "playwright test --headed",
     "web:mvp:e2e:report": "playwright show-report local-artifacts/playwright-report",
-    "web:mvp:check": "pnpm typecheck && pnpm lint && pnpm build && pnpm runtime:bootstrap && playwright test"
+    "web:mvp:check": "pnpm typecheck && pnpm lint && pnpm build && pnpm runtime:bootstrap && playwright test",
+    "web:mvp:visual": "playwright test --config=playwright.visual.config.ts",
+    "web:mvp:visual:update": "playwright test --config=playwright.visual.config.ts --update-snapshots"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",

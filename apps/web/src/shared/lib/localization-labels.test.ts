@@ -139,9 +139,9 @@ describe("getLocalizationBadgeVariant", () => {
   });
 
   it("maps stale before other flags", () => {
-    expect(
-      getLocalizationBadgeVariant(meta({ has_stale_fields: true })),
-    ).toBe("localizationBadgeStale");
+    expect(getLocalizationBadgeVariant(meta({ has_stale_fields: true }))).toBe(
+      "localizationBadgeStale",
+    );
   });
 
   it("maps machine translation", () => {

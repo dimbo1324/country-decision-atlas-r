@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
 import { Button } from "./Button";
 
@@ -25,4 +26,19 @@ export const Default: Story = {
       </DialogContent>
     </Dialog>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Открыть диалог" }));
+    await waitFor(() =>
+      expect(body.getByRole("dialog")).toBeInTheDocument(),
+    );
+    expect(
+      body.getByText("Подтвердите действие"),
+    ).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(body.queryByRole("dialog")).toBeNull());
+  },
 };
