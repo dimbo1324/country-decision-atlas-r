@@ -1,11 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import {
-  dataQualityApi,
-  type DataQualityReport,
-} from "../../shared/api/data-quality";
+import { useQuery } from "@tanstack/react-query";
+import { dataQualityApi } from "../../shared/api/data-quality";
 import { isApiError } from "../../shared/api/http";
 import { DATA_QUALITY_ROLES } from "../../shared/auth/roles";
 import { useAuthGuard } from "../../shared/auth/useAuthGuard";
@@ -16,37 +13,13 @@ import { DataQualityReportView } from "./DataQualityReportView";
 
 export function DataQualityGate() {
   const { status } = useAuthGuard(DATA_QUALITY_ROLES);
-  const [report, setReport] = useState<DataQualityReport | null>(null);
-  const [error, setError] = useState<unknown | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const report = useQuery({
+    queryKey: ["admin", "data-quality", "report"] as const,
+    queryFn: () => dataQualityApi.getDataQualityReport(),
+    enabled: status === "ok",
+  });
 
-  const isAuthLoading = status === "loading";
-  const isAllowed = status === "ok";
-
-  useEffect(() => {
-    if (isAuthLoading || !isAllowed) {
-      setIsLoading(false);
-      return;
-    }
-    let active = true;
-    setIsLoading(true);
-    dataQualityApi
-      .getDataQualityReport()
-      .then((response) => {
-        if (active) setReport(response);
-      })
-      .catch((err: unknown) => {
-        if (active) setError(err);
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [isAuthLoading, isAllowed]);
-
-  if (isAuthLoading) {
+  if (status === "loading") {
     return <LoadingState message="Загрузка…" />;
   }
 
@@ -73,21 +46,19 @@ export function DataQualityGate() {
     );
   }
 
-  if (isLoading) {
+  if (report.isPending) {
     return <LoadingState message="Загрузка отчёта качества данных…" />;
   }
 
-  if (error) {
+  if (report.isError || !report.data) {
     return (
       <div data-testid="data-quality-error">
-        <ErrorState error={isApiError(error) ? error : undefined} />
+        <ErrorState
+          error={isApiError(report.error) ? report.error : undefined}
+        />
       </div>
     );
   }
 
-  if (!report) {
-    return null;
-  }
-
-  return <DataQualityReportView report={report} />;
+  return <DataQualityReportView report={report.data} />;
 }

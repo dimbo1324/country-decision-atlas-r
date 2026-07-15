@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { Badge, Card, DataTable, Kicker } from "@country-decision-atlas/ui";
 import type { DataQualityReport } from "../../shared/api/data-quality";
 import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
-import { SummaryCard } from "../../shared/ui/SummaryCard";
-import { SectionHeader } from "../../shared/ui/SectionHeader";
 
 interface Props {
   report: DataQualityReport;
@@ -14,89 +13,101 @@ interface Props {
 export function DataQualityReportView({ report }: Props) {
   return (
     <div
-      className="dqWrap"
+      className="flex flex-col gap-8"
       data-testid="data-quality-report"
     >
-      <div className="analyticalSummaryRow">
-        <SummaryCard
-          label="Статус"
-          value={report.overall_status}
-          detail={report.valid ? "данные готовы" : "обнаружены проблемы"}
-        />
-        <SummaryCard
-          label="Критические проблемы"
-          value={report.critical_issues_count}
-        />
-        <SummaryCard
-          label="Предупреждения"
-          value={report.warnings_count}
-        />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Статус</Kicker>
+          <StatusBadge status={report.overall_status} />
+        </Card>
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Критические проблемы</Kicker>
+          <span className="font-display text-2xl font-bold">
+            {report.critical_issues_count}
+          </span>
+        </Card>
+        <Card
+          interactive={false}
+          className="flex flex-col gap-2"
+        >
+          <Kicker>Предупреждения</Kicker>
+          <span className="font-display text-2xl font-bold">
+            {report.warnings_count}
+          </span>
+        </Card>
         {report.checked_at && (
-          <SummaryCard
-            label="Проверено"
-            value={formatDate(report.checked_at)}
-          />
+          <Card
+            interactive={false}
+            className="flex flex-col gap-2"
+          >
+            <Kicker>Проверено</Kicker>
+            <span className="text-c2 text-sm">
+              {formatDate(report.checked_at)}
+            </span>
+          </Card>
         )}
-      </div>
-
-      <div className="dqStatusRow">
-        <StatusBadge status={report.overall_status} />
-        {report.valid && <StatusBadge status="valid" />}
       </div>
 
       {report.checks && report.checks.length > 0 && (
-        <section className="cardSection">
-          <SectionHeader
-            title="Проверки"
-            eyebrow="Проверки качества"
-          />
-          <div className="checkList">
-            {report.checks.map((check) => (
-              <div
+        <div className="flex flex-col gap-3">
+          <Kicker>Проверки</Kicker>
+          <DataTable
+            columns={[{ header: "Код" }, { header: "Статус" }]}
+            rows={report.checks.map((check) => [
+              check.code,
+              <StatusBadge
                 key={check.code}
-                className="checkCard"
-              >
-                <span className="checkCode">{check.code}</span>
-                <StatusBadge status={check.status} />
-              </div>
-            ))}
-          </div>
-        </section>
+                status={check.status}
+              />,
+            ])}
+          />
+        </div>
       )}
 
-      <section className="cardSection">
-        <SectionHeader
-          title={`Проблемы (${report.issues?.length ?? 0})`}
-          eyebrow="Проблемы качества данных"
-        />
+      <div className="flex flex-col gap-3">
+        <Kicker>Проблемы ({report.issues?.length ?? 0})</Kicker>
         {!report.issues || report.issues.length === 0 ? (
           <EmptyState message="Проблем качества данных не найдено." />
         ) : (
-          <div className="dqIssueList">
+          <div className="flex flex-col gap-3">
             {report.issues.map((issue, i) => (
-              <div
+              <Card
                 key={`${issue.code}-${i}`}
-                className={`dqIssueCard dqSeverity-${issue.severity}`}
+                interactive={false}
+                className="flex flex-col gap-2"
               >
-                <div className="dqIssueHeader">
-                  <span className="dqIssueCode">{issue.code}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-c3 text-xs">
+                    {issue.code}
+                  </span>
                   <StatusBadge status={issue.severity} />
-                  <span className="metaChip">{issue.entity_type}</span>
+                  <Badge variant="default">{issue.entity_type}</Badge>
                   {issue.entity_id && (
-                    <span className="dqEntityId">{issue.entity_id}</span>
+                    <span className="text-c4 font-mono text-xs">
+                      {issue.entity_id}
+                    </span>
                   )}
                 </div>
-                <p className="dqIssueMessage">{issue.message}</p>
-              </div>
+                <p className="text-c2 text-sm leading-relaxed">
+                  {issue.message}
+                </p>
+              </Card>
             ))}
           </div>
         )}
-      </section>
+      </div>
 
-      <div className="entityLinkRow">
+      <div>
         <Link
           href={routes.countries}
-          className="internalLink"
+          className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
           ← Назад к странам
         </Link>
