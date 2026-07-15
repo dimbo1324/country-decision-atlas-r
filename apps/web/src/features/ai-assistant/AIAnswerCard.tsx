@@ -1,3 +1,4 @@
+import { Badge } from "@country-decision-atlas/ui";
 import type { AIAskResponse } from "../../shared/api/ai";
 import { AICitationsList } from "./AICitationsList";
 import { AIDisclaimer } from "./AIDisclaimer";
@@ -8,20 +9,35 @@ type AIAnswerCardProps = {
 };
 
 export function AIAnswerCard({ response }: AIAnswerCardProps) {
+  const citationCount = response.citations?.length ?? 0;
+  const isUncited = !response.refused && citationCount === 0;
+
   return (
     <article
-      className="resultCard"
+      className="flex flex-col gap-4"
       data-testid="ai-answer-card"
     >
       {response.refused ? (
         <AIRefusalState message={response.answer} />
+      ) : isUncited ? (
+        <div
+          className="border-warm flex flex-col gap-2 border px-4 py-3"
+          data-testid="ai-answer-uncited"
+        >
+          <Badge variant="warning">Без подтверждающих источников</Badge>
+          <p className="text-c3 text-sm leading-relaxed">{response.answer}</p>
+          <p className="text-c4 text-xs">
+            Этот ответ не подкреплён ссылками на опубликованные данные —
+            относитесь к нему как к непроверенному.
+          </p>
+        </div>
       ) : (
-        <p className="resultSummary">{response.answer}</p>
+        <p className="text-c1 text-sm leading-relaxed">{response.answer}</p>
       )}
       <AICitationsList citations={response.citations} />
       <AIDisclaimer text={response.disclaimer} />
       <p
-        className="formHint"
+        className="text-c4 font-mono text-[9px] tracking-[0.05em] uppercase"
         data-testid="ai-provider-meta"
       >
         Provider: {response.provider} · mode: {response.mode} · context:{" "}

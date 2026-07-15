@@ -5,7 +5,8 @@ type AIDisclaimerProps = {
 export function AIDisclaimer({ text }: AIDisclaimerProps) {
   return (
     <p
-      className="infoNote"
+      className="disclaimer-notice"
+      role="note"
       data-testid="ai-disclaimer"
     >
       {text}

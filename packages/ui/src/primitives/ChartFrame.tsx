@@ -32,6 +32,9 @@ interface ChartFrameProps {
   children: ReactNode;
   className?: string;
   expandable?: boolean;
+  /** Extra controls rendered in the header actions row, next to the
+   * expand/collapse button — e.g. an AI explain-number trigger. */
+  actions?: ReactNode;
 }
 
 function FrameHeader({
@@ -42,6 +45,7 @@ function FrameHeader({
   expanded,
   expandable,
   onToggle,
+  actions,
 }: {
   title: string;
   live: boolean;
@@ -50,6 +54,7 @@ function FrameHeader({
   expanded: boolean;
   expandable: boolean;
   onToggle: () => void;
+  actions?: ReactNode;
 }) {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -81,6 +86,7 @@ function FrameHeader({
             Онлайн
           </span>
         )}
+        {actions}
         {expandable && (
           <button
             type="button"
@@ -114,6 +120,7 @@ export function ChartFrame({
   children,
   className,
   expandable = true,
+  actions,
 }: ChartFrameProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -139,6 +146,7 @@ export function ChartFrame({
         expanded={false}
         expandable={expandable}
         onToggle={() => setExpanded(true)}
+        actions={actions}
       />
       <div className="relative min-h-0 flex-1">
         {expanded ? (
@@ -166,6 +174,7 @@ export function ChartFrame({
                 expanded
                 expandable
                 onToggle={() => setExpanded(false)}
+                actions={actions}
               />
               <div className="relative min-h-0 flex-1">{children}</div>
             </div>

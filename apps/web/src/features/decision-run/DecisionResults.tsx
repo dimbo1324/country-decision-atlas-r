@@ -4,6 +4,8 @@ import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { formatScore } from "../../shared/lib/format";
+import { asSupportedLocale } from "../../shared/lib/locale";
+import { AIExplainNumberButton } from "../ai-assistant";
 import { DecisionResultCard } from "./DecisionResultCard";
 import { DecisionPersonalizationSummary } from "../decision-personalization";
 
@@ -94,9 +96,18 @@ export function DecisionResults({ response }: DecisionResultsProps) {
               <span className="font-display text-2xl font-bold">
                 {winner.country.name}
               </span>
-              <span className="font-display text-gold3 text-2xl font-bold">
-                {formatScore(winner.persona_adjusted_score ?? winner.score)}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-display text-gold3 text-2xl font-bold">
+                  {formatScore(winner.persona_adjusted_score ?? winner.score)}
+                </span>
+                <AIExplainNumberButton
+                  numberType="decision_score"
+                  countrySlug={winner.country.slug}
+                  scenarioSlug={scenario.slug}
+                  value={winner.persona_adjusted_score ?? winner.score}
+                  locale={asSupportedLocale(locale.resolved_locale)}
+                />
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="default">{winner.score_label}</Badge>

@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Badge, Button, Field, FieldLabel } from "@country-decision-atlas/ui";
+import { useParseDecisionIntentMutation } from "../../entities/ai-assistant/api";
 import type { AIDecisionIntentResponse } from "../../shared/api/ai";
-import { aiApi, isApiError } from "../../shared/api";
+import { isApiError } from "../../shared/api";
 import type { SupportedLocale } from "../../shared/lib/locale";
+
+const inputClass =
+  "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
 type AIDecisionIntentHelperProps = {
   locale: SupportedLocale;
@@ -17,93 +22,91 @@ export function AIDecisionIntentHelper({
   const [text, setText] = useState(
     "Я хочу переехать с семьёй, бюджет ограничен, важна безопасность и путь к гражданству.",
   );
-  const [response, setResponse] = useState<AIDecisionIntentResponse | null>(
-    null,
-  );
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const parseDecisionIntent = useParseDecisionIntentMutation();
 
   async function handleSubmit() {
-    setError(null);
-    setIsLoading(true);
-    try {
-      const result = await aiApi.parseDecisionIntent({ text, locale });
-      setResponse(result);
-    } catch (err: unknown) {
-      if (isApiError(err)) {
-        setError(err.error?.message ?? "AI-подсказка временно недоступна.");
-      } else {
-        setError(err instanceof Error ? err.message : "Ошибка запроса.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    parseDecisionIntent.mutate({ text, locale });
   }
 
   return (
     <div
-      className="formGroup"
+      className="border-warm flex flex-col gap-3 border px-4 py-4"
       data-testid="ai-decision-helper"
     >
-      <label
-        className="formLabel"
-        htmlFor="ai-decision-intent"
-      >
-        Опишите вашу ситуацию
-      </label>
-      <textarea
-        id="ai-decision-intent"
-        className="formTextarea"
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        rows={4}
-        data-testid="ai-decision-intent-input"
-      />
-      <button
+      <Field>
+        <FieldLabel htmlFor="ai-decision-intent">
+          Опишите вашу ситуацию
+        </FieldLabel>
+        <textarea
+          id="ai-decision-intent"
+          className={inputClass}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          rows={4}
+          data-testid="ai-decision-intent-input"
+        />
+      </Field>
+      <Button
         type="button"
-        className="runButton"
-        onClick={handleSubmit}
-        disabled={isLoading || text.trim().length === 0}
+        onClick={() => void handleSubmit()}
+        disabled={parseDecisionIntent.isPending || text.trim().length === 0}
         data-testid="ai-decision-intent-submit"
       >
-        {isLoading ? "Подбираем…" : "Подобрать scenario/persona"}
-      </button>
-      {error && (
+        {parseDecisionIntent.isPending
+          ? "Подбираем…"
+          : "Подобрать scenario/persona"}
+      </Button>
+      {parseDecisionIntent.isError && (
         <p
-          className="formError"
+          className="text-terra3 text-sm"
           role="alert"
           data-testid="ai-decision-error"
         >
-          {error}
+          {isApiError(parseDecisionIntent.error)
+            ? (parseDecisionIntent.error.error?.message ??
+              "AI-подсказка временно недоступна.")
+            : "Ошибка запроса."}
         </p>
       )}
-      {response && (
+      {parseDecisionIntent.data && (
         <div
-          className="notice"
+          className="bg-bg2 flex flex-col gap-2 p-3 text-sm"
           data-testid="ai-decision-result"
         >
-          {response.refused ? (
-            <p>{response.refusal?.reason ?? "Недостаточно данных."}</p>
+          {parseDecisionIntent.data.refused ? (
+            <p className="text-c3">
+              {parseDecisionIntent.data.refusal?.reason ??
+                "Недостаточно данных."}
+            </p>
           ) : (
             <>
-              <p>
-                Scenario: <strong>{response.scenario_slug}</strong> · Persona:{" "}
-                <strong>{response.persona_slug}</strong>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="default">
+                  Scenario: {parseDecisionIntent.data.scenario_slug}
+                </Badge>
+                <Badge variant="default">
+                  Persona: {parseDecisionIntent.data.persona_slug}
+                </Badge>
+              </div>
+              <p className="text-c3">
+                Кандидаты:{" "}
+                {(parseDecisionIntent.data.candidate_country_slugs ?? []).join(
+                  ", ",
+                )}
               </p>
-              <p>
-                Кандидаты: {(response.candidate_country_slugs ?? []).join(", ")}
-              </p>
-              <button
+              <Button
                 type="button"
-                className="internalLink"
-                onClick={() => onApply(response)}
+                variant="ghost"
+                onClick={() => onApply(parseDecisionIntent.data!)}
                 data-testid="ai-decision-apply"
               >
                 Применить подсказки
-              </button>
+              </Button>
             </>
           )}
-          <p className="formHint">{response.disclaimer}</p>
+          <p className="text-c4 text-xs">
+            {parseDecisionIntent.data.disclaimer}
+          </p>
         </div>
       )}
     </div>

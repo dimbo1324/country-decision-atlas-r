@@ -107,28 +107,53 @@ merged, `37fe48e`).
    `AIAnswerCard`, `AIAskForm`, `AIAssistantView`, `AICitationsList`,
    `AIDecisionIntentHelper`, `AIDisclaimer`, `AIExplainNumberButton`,
    `AIRefusalState`.
-4. `apps/web/src/features/country-card/CountryCiiBlock.tsx` — updated
-   `AIExplainNumberButton` call site for the new icon-trigger shape (no
-   prop changes needed, same interface).
+4. `apps/web/src/features/country-card/CountryCiiBlock.tsx` — no changes
+   needed; `AIExplainNumberButton`'s public props are unchanged, only its
+   internals moved from a text link + inline panel to an icon trigger +
+   `Popover`.
 5. `apps/web/src/features/decision-run/DecisionResults.tsx` — added an
    `AIExplainNumberButton` (`numberType="decision_score"`) next to the
    winner's score, the plan's second explicit "минимум для CII и скоров
    сценариев" surface.
 6. `apps/web/src/app/[locale]/assistant/page.tsx` — reskinned route shell.
+7. `tests/e2e/web-mvp-ai-invariants.spec.ts` (new) — structural check that
+   a non-refused answer is always either cited or explicitly flagged
+   unverified (never plain trustworthy prose with neither), plus coverage
+   for the new decision-score explain button.
 
 ## Verification
 
-- [ ] `pnpm --filter web typecheck` / `lint`
-- [ ] `pnpm --filter web build`
-- [ ] Manual verification against the live Docker stack via Playwright.
-- [ ] Existing `web-mvp-ai-assistant.spec.ts` and
-      `web-mvp-ai-decision-helper.spec.ts` stay green with unchanged
-      testids; new coverage added for the no-citations-not-trustworthy
-      invariant and the decision-score explain button.
-- [ ] `python dev_tools_scripts_runner.py --profile quick`
+- [+] `pnpm --filter web typecheck` — clean, no errors.
+- [+] `pnpm --filter web lint` — clean, no errors.
+- [+] `pnpm --filter web build` — clean; `/assistant` route compiles
+      (7.04 kB, up from 2.72 kB pre-reskin, expected given the added
+      DS primitives and TanStack Query wiring).
+- [+] Manual verification against the live Docker stack via Playwright
+      (Docker Desktop and `.env` had reset between sessions — Docker
+      Desktop restarted, `.env` recreated from the tracked, secret-free
+      `.env.example` since local dev secrets are gitignored by design,
+      migrations/seed/search-index re-run).
+- [+] Existing `web-mvp-ai-assistant.spec.ts` (2 tests) and
+      `web-mvp-ai-decision-helper.spec.ts` (2 tests) stay green with
+      unchanged testids. New `web-mvp-ai-invariants.spec.ts` (2 tests)
+      covers the no-citations-not-trustworthy invariant and the
+      decision-score explain button. `web-mvp-main-flow.spec.ts` (which
+      exercises the decision run end-to-end) also re-run clean. **7/7
+      passed.**
+- [+] `python dev_tools_scripts_runner.py --profile quick` — clean except
+      the pre-existing `arabic_reshaper` venv gap (same known baseline
+      issue documented since Stage 9/10, not a regression). One
+      self-inflicted false failure along the way: recreating a local
+      `.env` (needed for the seed scripts, from the tracked
+      `.env.example`, no real secrets) made `pytest tests/config.py`
+      pick it up via `BaseSettings`' cwd-relative `.env` loading and
+      break `test_production_with_all_defaults_lists_every_unsafe_field`
+      — removed `.env` after seeding finished (Docker itself sets its
+      own env directly, doesn't need the repo-root file) and confirmed
+      the gate goes clean.
 
 ## Completion
 
-- [ ] Commit(s)
+- [+] Commit(s)
 - [ ] Merge to `main`, push — only once explicitly confirmed complete.
-- [ ] Final report
+- [+] Final report
