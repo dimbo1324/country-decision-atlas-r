@@ -11,6 +11,16 @@ function uniqueEmail(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
 }
 
+/** Signed-in nav links live inside the account dropdown in the top bar. */
+async function openAccountMenu(page: Page) {
+  await page.getByTestId("nav-account-menu-trigger").click();
+}
+
+async function logoutViaMenu(page: Page) {
+  await openAccountMenu(page);
+  await page.getByTestId("nav-logout-button").click();
+}
+
 async function registerViaUi(
   page: Page,
   email: string,
@@ -30,6 +40,7 @@ test.describe("anonymous auth state", () => {
     await page.goto(e2eRoutes.home);
     await expectPageReady(page);
     await expect(page.getByTestId("nav-sign-in-link")).toBeVisible();
+    await expect(page.getByTestId("nav-account-menu-trigger")).toHaveCount(0);
     await expect(page.getByTestId("nav-account-link")).toHaveCount(0);
     await expect(page.getByTestId("nav-watchlist-link")).toHaveCount(0);
     await expect(page.getByTestId("nav-data-quality-link")).toHaveCount(0);
@@ -73,7 +84,7 @@ test.describe("anonymous auth state", () => {
     await registerViaUi(page, email);
     await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
 
-    await page.getByTestId("nav-logout-button").click();
+    await logoutViaMenu(page);
     await expect(page.getByTestId("nav-sign-in-link")).toBeVisible();
 
     await page.goto(e2eRoutes.login);
@@ -106,7 +117,7 @@ test.describe("registration and account flow", () => {
     await registerViaUi(page, email);
     await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
 
-    await page.getByTestId("nav-logout-button").click();
+    await logoutViaMenu(page);
     await registerViaUi(page, email);
 
     await expect(page.getByTestId("register-error")).toBeVisible();
@@ -120,10 +131,11 @@ test.describe("registration and account flow", () => {
     await registerViaUi(page, email);
     await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
 
+    await expect(page.getByTestId("nav-sign-in-link")).toHaveCount(0);
+    await openAccountMenu(page);
     await expect(page.getByTestId("nav-account-link")).toBeVisible();
     await expect(page.getByTestId("nav-watchlist-link")).toBeVisible();
     await expect(page.getByTestId("nav-logout-button")).toBeVisible();
-    await expect(page.getByTestId("nav-sign-in-link")).toHaveCount(0);
 
     await page.getByTestId("nav-logout-button").click();
     await expect(page.getByTestId("nav-sign-in-link")).toBeVisible();
@@ -136,7 +148,9 @@ test.describe("registration and account flow", () => {
     await registerViaUi(page, email);
     await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
 
+    await openAccountMenu(page);
     await expect(page.getByTestId("nav-data-quality-link")).toHaveCount(0);
+    await page.keyboard.press("Escape");
 
     await page.goto(e2eRoutes.dataQuality);
     await expectHasMainHeading(page, /отчёт качества данных/i);

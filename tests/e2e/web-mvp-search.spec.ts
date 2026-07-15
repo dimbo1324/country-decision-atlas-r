@@ -15,14 +15,15 @@ test.describe("Search", () => {
     await expectNoAppCrash(page);
   });
 
-  test("header search box navigates to the search page on submit", async ({
+  test("command palette navigates to the full search page", async ({
     page,
   }) => {
     await page.goto(e2eRoutes.home);
     await expectPageReady(page);
 
-    await page.getByTestId("search-box-input").fill("residence");
-    await page.getByTestId("search-box-submit").click();
+    await page.getByTestId("command-palette-trigger").click();
+    await page.getByTestId("command-palette-input").fill("residence");
+    await page.getByTestId("command-palette-show-all").click();
 
     await expect(page).toHaveURL(/\/search\?q=residence/);
     await expect(page.getByTestId("search-page")).toBeVisible();

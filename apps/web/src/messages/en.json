@@ -60,7 +60,8 @@
     "sectionSections": "Sections",
     "sectionActions": "Actions",
     "sectionResults": "Results",
-    "searching": "Searching…"
+    "searching": "Searching…",
+    "showAllResults": "Show all results"
   },
   "error": {
     "title": "Something went wrong",

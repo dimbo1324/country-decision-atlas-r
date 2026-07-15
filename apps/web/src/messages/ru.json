@@ -60,7 +60,8 @@
     "sectionSections": "Разделы",
     "sectionActions": "Действия",
     "sectionResults": "Результаты",
-    "searching": "Ищем…"
+    "searching": "Ищем…",
+    "showAllResults": "Показать все результаты"
   },
   "error": {
     "title": "Что-то пошло не так",

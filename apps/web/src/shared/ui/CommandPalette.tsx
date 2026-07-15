@@ -101,7 +101,8 @@ export function CommandPalette() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="border-warm text-c3 hover:border-warm-hi hover:text-c1 font-mono hidden items-center gap-2 border px-3 py-2 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300 sm:inline-flex"
+        aria-label={t("paletteTrigger")}
+        className="border-warm text-c3 hover:border-warm-hi hover:text-c1 font-mono inline-flex items-center gap-2 border px-3 py-2 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         data-testid="command-palette-trigger"
       >
         <Search
@@ -109,8 +110,8 @@ export function CommandPalette() {
           height={13}
           strokeWidth={1.5}
         />
-        {t("paletteTrigger")}
-        <kbd className="text-c4 border-warm border px-1 py-0.5 text-[9px]">
+        <span className="hidden 2xl:inline">{t("paletteTrigger")}</span>
+        <kbd className="text-c4 border-warm hidden border px-1 py-0.5 text-[9px] 2xl:inline">
           ⌘K
         </kbd>
       </button>
@@ -159,6 +160,16 @@ export function CommandPalette() {
                       </span>
                     </Command.Item>
                   ))}
+                  <Command.Item
+                    value={`show-all:${debouncedQuery}`}
+                    onSelect={() =>
+                      go(`/search?q=${encodeURIComponent(debouncedQuery)}`)
+                    }
+                    data-testid="command-palette-show-all"
+                    className="text-gold3 data-[selected=true]:bg-bg3 data-[selected=true]:text-gold font-mono cursor-pointer px-3 py-2.5 text-[10px] tracking-[0.15em] uppercase outline-none"
+                  >
+                    {t("showAllResults")}
+                  </Command.Item>
                 </Command.Group>
               ) : (
                 sections.map((section) => (

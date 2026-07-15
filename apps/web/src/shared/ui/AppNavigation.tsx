@@ -2,10 +2,7 @@
 
 import { cn } from "@country-decision-atlas/ui";
 import { useTranslations } from "next-intl";
-import NextLink from "next/link";
 import { Link, usePathname } from "../../i18n/navigation";
-import { useAuth } from "../auth/AuthProvider";
-import { ADMIN_ROLES, MODERATION_ROLES, hasRole } from "../auth/roles";
 import { routes } from "../lib/routes";
 
 interface AppNavigationProps {
@@ -13,10 +10,11 @@ interface AppNavigationProps {
   onNavigate?: () => void;
 }
 
+/** Public sections only; signed-in and role-gated links live in AuthNav
+ * so the top bar keeps a bounded width for every role. */
 export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const { user } = useAuth();
 
   const navItems = [
     { label: t("countries"), href: routes.countries },
@@ -26,10 +24,6 @@ export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
     { label: t("legalSignals"), href: routes.legalSignals },
     { label: t("sources"), href: routes.sources },
   ];
-
-  const canSeeDataQuality = hasRole(user, ADMIN_ROLES);
-  const canSeeMigrationBoardModeration = hasRole(user, MODERATION_ROLES);
-  const canSeeCommunityModeration = hasRole(user, MODERATION_ROLES);
 
   return (
     <nav
@@ -57,42 +51,6 @@ export function AppNavigation({ className, onNavigate }: AppNavigationProps) {
           </Link>
         );
       })}
-      {canSeeDataQuality && (
-        // Plain next/link: /internal/** is deliberately outside the
-        // [locale] tree (Stage 12's own shell), so it must never be
-        // locale-prefixed.
-        <NextLink
-          href={routes.dataQuality}
-          onClick={onNavigate}
-          data-testid="nav-data-quality-link"
-          data-active={pathname === routes.dataQuality}
-          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
-        >
-          {t("dataQuality")}
-        </NextLink>
-      )}
-      {canSeeMigrationBoardModeration && (
-        <NextLink
-          href={routes.migrationBoardModeration}
-          onClick={onNavigate}
-          data-testid="nav-migration-board-moderation-link"
-          data-active={pathname === routes.migrationBoardModeration}
-          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
-        >
-          {t("moderation")}
-        </NextLink>
-      )}
-      {canSeeCommunityModeration && (
-        <NextLink
-          href={routes.communityModeration}
-          onClick={onNavigate}
-          data-testid="nav-community-moderation-link"
-          data-active={pathname === routes.communityModeration}
-          className="font-mono text-c3 hover:text-c1 data-[active=true]:text-c1 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300"
-        >
-          {t("communityModeration")}
-        </NextLink>
-      )}
     </nav>
   );
 }

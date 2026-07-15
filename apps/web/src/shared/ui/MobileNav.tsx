@@ -22,7 +22,7 @@ export function MobileNav() {
         <button
           type="button"
           aria-label={t("openMenu")}
-          className="border-warm text-c2 flex h-9 w-9 items-center justify-center border md:hidden"
+          className="border-warm text-c2 flex h-9 w-9 items-center justify-center border lg:hidden"
           data-testid="mobile-nav-trigger"
         >
           <Menu
