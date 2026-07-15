@@ -1,6 +1,7 @@
 import { cn } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { HomeMatrixPreview as HomeMatrixPreviewData } from "../../shared/api/home";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 const LABEL_CLASS: Record<string, string> = {
   excellent: "text-sage3",
@@ -40,7 +41,7 @@ export function HomeMatrixPreview({
           href="/compare"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Полная матрица →
+          Полная матрица <ArrowNext />
         </Link>
       </div>
       <div

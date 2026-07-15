@@ -1,6 +1,7 @@
 import { Badge, SignalTicker, cn } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { LatestLegalEvent } from "../../shared/api/home";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 const DIRECTION_LABELS: Record<string, string> = {
   positive: "Положительное",
@@ -45,7 +46,7 @@ export function LatestLegalEventsPanel({
           href="/legal-signals"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть правовые сигналы →
+          Открыть правовые сигналы <ArrowNext />
         </Link>
       </div>
       <div data-testid="home-latest-legal-events">

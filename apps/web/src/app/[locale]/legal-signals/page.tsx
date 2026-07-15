@@ -3,6 +3,7 @@ import { LegalSignalsTimelineView } from "../../../features/legal-signals-timeli
 import { Link } from "../../../i18n/navigation";
 import { routes } from "../../../shared/lib/routes";
 import { DisclaimerNotice } from "../../../shared/ui/DisclaimerNotice";
+import { ArrowNext } from "../../../shared/ui/LinkArrow";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default function LegalSignalsPage() {
             href={routes.legalSignalsTimeline}
             className="font-mono text-c3 hover:text-gold3 border-warm border px-4 py-2 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
           >
-            Таймлайн-график →
+            Таймлайн-график <ArrowNext />
           </Link>
         </div>
       </header>

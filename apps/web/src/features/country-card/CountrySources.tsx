@@ -4,6 +4,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatDate } from "../../shared/lib/format";
+import { ArrowExternal } from "../../shared/ui/LinkArrow";
 
 type CountrySourcesProps = {
   sources: CountryReadModelResponse["sources"];
@@ -60,7 +61,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
             rel="noreferrer"
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Открыть источник ↗
+            Открыть источник <ArrowExternal />
           </a>
         </Card>
       ))}

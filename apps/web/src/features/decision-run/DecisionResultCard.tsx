@@ -10,6 +10,7 @@ import { DecisionBreakdown } from "./DecisionBreakdown";
 import { DecisionCountryTrustBadge } from "./DecisionCountryTrustBadge";
 import { DecisionSources } from "./DecisionSources";
 import { DecisionWarnings } from "./DecisionWarnings";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 type DecisionCountryResult = DecisionRunResponse["results"][number];
 type OriginContextStatus = DecisionRunResponse["origin_context_status"];
@@ -226,7 +227,7 @@ export function DecisionResultCard({
           href={routes.country(result.country.slug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Карточка страны →
+          Карточка страны <ArrowNext />
         </Link>
       </Card>
     </div>

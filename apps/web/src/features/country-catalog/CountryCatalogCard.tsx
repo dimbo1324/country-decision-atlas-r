@@ -4,6 +4,7 @@ import type { components } from "@country-decision-atlas/contracts/generated/typ
 import { flagEmoji } from "../../shared/lib/flagEmoji";
 import { routes } from "../../shared/lib/routes";
 import { WatchlistStar } from "./WatchlistStar";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 type Country = components["schemas"]["Country"];
 
@@ -59,7 +60,7 @@ export function CountryCatalogCard({
           )}
         </div>
         <span className="font-mono text-gold3 mt-auto text-[10px] tracking-[0.15em] uppercase">
-          Открыть досье →
+          Открыть досье <ArrowNext />
         </span>
       </Link>
     </Card>

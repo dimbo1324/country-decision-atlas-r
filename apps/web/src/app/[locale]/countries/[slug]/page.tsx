@@ -26,6 +26,7 @@ import { CountryRoutesBlock } from "../../../../features/routes";
 import { TrustSurfaceBlock } from "../../../../features/trust-surface";
 import { WatchlistButton } from "../../../../features/watchlist";
 import { CountryWhatChanged } from "../../../../features/what-changed";
+import { ArrowNext } from "../../../../shared/ui/LinkArrow";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -296,7 +297,7 @@ export default async function CountryPage({ params }: PageProps) {
               href={routes.legalSignalsForCountry(card.country.slug)}
               className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
             >
-              Все правовые сигналы для {card.country.name} →
+              Все правовые сигналы для {card.country.name} <ArrowNext />
             </Link>
           </DossierSection>
 
@@ -309,7 +310,7 @@ export default async function CountryPage({ params }: PageProps) {
               href={routes.sourcesForCountry(card.country.slug)}
               className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
             >
-              Все источники для {card.country.name} →
+              Все источники для {card.country.name} <ArrowNext />
             </Link>
           </DossierSection>
 

@@ -3,6 +3,7 @@ import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
 import { GlossaryTerm } from "../../shared/ui/GlossaryTerm";
 import type { GlossaryTerm as GlossaryTermData } from "../../shared/api/glossary";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 export function MethodologyGlossaryTeaser({
   terms,
@@ -21,7 +22,7 @@ export function MethodologyGlossaryTeaser({
           href={routes.glossary}
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть полный глоссарий →
+          Открыть полный глоссарий <ArrowNext />
         </Link>
       </div>
       <p className="text-c3 max-w-2xl text-sm leading-relaxed">

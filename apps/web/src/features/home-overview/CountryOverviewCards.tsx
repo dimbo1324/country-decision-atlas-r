@@ -6,6 +6,7 @@ import {
 } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryOverviewCard } from "../../shared/api/home";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {
   high: "positive",
@@ -37,7 +38,7 @@ export function CountryOverviewCards({
           href="/countries"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Перейти к странам →
+          Перейти к странам <ArrowNext />
         </Link>
       </div>
       <div

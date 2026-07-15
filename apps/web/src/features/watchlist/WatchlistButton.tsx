@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { Check } from "lucide-react";
 import { Button } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import {
@@ -84,7 +85,20 @@ export function WatchlistButton({
       disabled={toggle.isPending}
       data-testid="watchlist-toggle-button"
     >
-      {saved ? "В watchlist ✓" : "Сохранить в watchlist"}
+      {saved ? (
+        <>
+          В watchlist{" "}
+          <Check
+            width={12}
+            height={12}
+            strokeWidth={1.5}
+            aria-hidden
+            className="inline-block align-[-1px]"
+          />
+        </>
+      ) : (
+        "Сохранить в watchlist"
+      )}
     </Button>
   );
 }

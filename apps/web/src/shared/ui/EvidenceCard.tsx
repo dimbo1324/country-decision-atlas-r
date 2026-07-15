@@ -3,6 +3,7 @@ import type { EvidenceItem } from "../api/evidence";
 import { ConfidenceBadge } from "./ConfidenceBadge";
 import { LocalizationBadge } from "./LocalizationBadge";
 import { formatDate } from "../lib/format";
+import { ArrowExternal } from "./LinkArrow";
 
 type EvidenceCardProps = {
   item: EvidenceItem;
@@ -63,7 +64,7 @@ export function EvidenceCard({
                 rel="noreferrer"
                 className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
               >
-                Открыть источник ↗
+                Открыть источник <ArrowExternal />
               </a>
             )}
           </div>

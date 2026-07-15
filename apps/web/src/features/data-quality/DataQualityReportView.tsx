@@ -5,6 +5,7 @@ import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
+import { ArrowBack } from "../../shared/ui/LinkArrow";
 
 interface Props {
   report: DataQualityReport;
@@ -109,7 +110,7 @@ export function DataQualityReportView({ report }: Props) {
           href={routes.countries}
           className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          ← Назад к странам
+          <ArrowBack /> Назад к странам
         </Link>
       </div>
     </div>

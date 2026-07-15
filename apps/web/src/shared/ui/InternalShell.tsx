@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { ArrowBack } from "./LinkArrow";
 
 const NAV_SECTIONS: {
   title: string;
@@ -49,7 +50,7 @@ export function InternalShell({ children }: { children: React.ReactNode }) {
           href="/"
           className="font-mono text-c3 hover:text-c1 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          ← Country Decision Atlas
+          <ArrowBack /> Country Decision Atlas
         </Link>
         <span className="font-mono text-c4 text-[10px] tracking-[0.3em] uppercase">
           Служебный контур

@@ -2,6 +2,7 @@ import { Counter, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 type CountryEvidenceSummaryProps = {
   evidenceSummary: CountryReadModelResponse["evidence_summary"];
@@ -65,13 +66,13 @@ export function CountryEvidenceSummary({
           href={routes.legalSignalsForCountry(countrySlug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Правовые сигналы →
+          Правовые сигналы <ArrowNext />
         </Link>
         <Link
           href={routes.sourcesForCountry(countrySlug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Все источники →
+          Все источники <ArrowNext />
         </Link>
       </div>
     </div>

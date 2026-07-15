@@ -1,5 +1,6 @@
 import { DataTable } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
+import { ArrowExternal } from "../../shared/ui/LinkArrow";
 
 type ScoreBreakdownItem = NonNullable<
   CountryReadModelResponse["scores"][number]["breakdowns"]
@@ -81,7 +82,7 @@ export function ScoreBreakdown({
                 rel="noreferrer"
                 className="text-gold3 hover:text-gold text-xs transition-colors duration-300"
               >
-                Открыть источник ↗
+                Открыть источник <ArrowExternal />
               </a>
             </div>
           ))}

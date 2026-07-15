@@ -106,7 +106,11 @@ export function AuthorProfileView({ userId }: { userId: string }) {
                 tag={metric.slug}
                 description={metric.methodology_ru || metric.methodology_en}
                 value={`${metric.scale_min}–${metric.scale_max}`}
-                unit={metric.polarity === "higher_is_better" ? "↑" : "↓"}
+                unit={
+                  metric.polarity === "higher_is_better"
+                    ? "выше — лучше"
+                    : "ниже — лучше"
+                }
                 accent="gold"
               />
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Badge,
@@ -59,7 +60,19 @@ function SessionAddedList({ items }: { items: string[] }) {
   return (
     <ul className="text-c3 flex flex-col gap-1 text-sm">
       {items.map((item, index) => (
-        <li key={index}>✓ {item}</li>
+        <li
+          key={index}
+          className="flex items-start gap-2"
+        >
+          <Check
+            width={12}
+            height={12}
+            strokeWidth={1.5}
+            aria-hidden
+            className="text-sage mt-1 shrink-0"
+          />
+          <span>{item}</span>
+        </li>
       ))}
     </ul>
   );

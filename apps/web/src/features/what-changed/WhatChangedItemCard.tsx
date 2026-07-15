@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { WhatChangedItem } from "../../shared/api/what-changed";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 type WhatChangedItemCardProps = {
   item: WhatChangedItem;
@@ -37,7 +38,7 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
           href={item.path}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Подробнее →
+          Подробнее <ArrowNext />
         </Link>
       </Card>
     </div>

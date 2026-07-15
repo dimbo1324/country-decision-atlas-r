@@ -3,6 +3,7 @@ import type { DecisionRunResponse } from "../../shared/api/decision";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
+import { ArrowExternal } from "../../shared/ui/LinkArrow";
 
 type DecisionSource = DecisionRunResponse["results"][number]["sources"][number];
 
@@ -45,7 +46,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
             rel="noreferrer"
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Открыть источник ↗
+            Открыть источник <ArrowExternal />
           </a>
         </div>
       ))}

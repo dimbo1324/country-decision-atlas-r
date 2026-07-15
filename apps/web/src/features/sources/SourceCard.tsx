@@ -7,6 +7,7 @@ import { formatDate } from "../../shared/lib/format";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
+import { ArrowNext, ArrowExternal } from "../../shared/ui/LinkArrow";
 
 type Source = SourceListResponse["items"][number];
 
@@ -69,14 +70,14 @@ export function SourceCard({
             data-testid="source-external-link"
             className="text-gold3 hover:text-gold transition-colors duration-300"
           >
-            Открыть источник ↗
+            Открыть источник <ArrowExternal />
           </a>
           {country && (
             <Link
               href={routes.country(country.slug)}
               className="text-c3 hover:text-c1 transition-colors duration-300"
             >
-              Страна: {country.name} →
+              Страна: {country.name} <ArrowNext />
             </Link>
           )}
           <button
@@ -85,7 +86,7 @@ export function SourceCard({
             data-testid="source-evidence-toggle"
             className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
           >
-            Доказательства →
+            Доказательства <ArrowNext />
           </button>
         </div>
       </Card>

@@ -1,6 +1,7 @@
 import { Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { ScenarioWinner } from "../../shared/api/home";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 function formatScore(score: number | null | undefined) {
   return score == null ? "—" : score.toFixed(1);
@@ -24,7 +25,7 @@ export function ScenarioWinnersPanel({
           href="/compare"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть матрицу →
+          Открыть матрицу <ArrowNext />
         </Link>
       </div>
       <div

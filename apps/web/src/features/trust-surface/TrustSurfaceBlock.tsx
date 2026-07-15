@@ -8,6 +8,7 @@ import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
 import { Link } from "../../i18n/navigation";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 type TrustSurfaceBlockProps = {
   countrySlug: string;
@@ -100,7 +101,7 @@ export function TrustSurfaceBlock({
         href="/methodology"
         className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
       >
-        О методологии →
+        О методологии <ArrowNext />
       </Link>
       <DisclaimerNotice text={data.disclaimer} />
     </div>

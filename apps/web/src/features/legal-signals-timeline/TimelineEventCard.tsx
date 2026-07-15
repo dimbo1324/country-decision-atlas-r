@@ -4,6 +4,7 @@ import type { LocaleCode } from "../../shared/api/countries";
 import type { LegalSignalTimelineEvent } from "../../shared/api/legal-signals";
 import { routes } from "../../shared/lib/routes";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 import {
   ImpactDirectionBadge,
   ImpactLevelBadge,
@@ -85,7 +86,7 @@ export function TimelineEventCard({
             href={routes.country(event.country_slug)}
             className="text-c3 hover:text-c1 transition-colors duration-300"
           >
-            Карточка страны: {event.country_name} →
+            Карточка страны: {event.country_name} <ArrowNext />
           </Link>
           <Link
             href={routes.sourcesForCountry(event.country_slug)}
@@ -99,7 +100,7 @@ export function TimelineEventCard({
             data-testid="legal-signal-evidence-toggle"
             className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
           >
-            Доказательства →
+            Доказательства <ArrowNext />
           </button>
         </div>
       </Card>

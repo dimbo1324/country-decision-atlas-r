@@ -3,6 +3,7 @@ import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { routes } from "../../shared/lib/routes";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
+import { ArrowBack } from "../../shared/ui/LinkArrow";
 
 type CountryHeaderProps = {
   country: CountryReadModelResponse["country"];
@@ -27,7 +28,7 @@ export function CountryHeader({ country }: CountryHeaderProps) {
           href={routes.countries}
           className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
-          ← Все страны
+          <ArrowBack /> Все страны
         </Link>
         <Link
           href={routes.decision}
