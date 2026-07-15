@@ -40,9 +40,7 @@ export default async function ScenariosPage() {
             className="flex flex-col gap-1"
             key={scenario.slug}
           >
-            <span className="text-c1 text-sm font-medium">
-              {scenario.name}
-            </span>
+            <span className="text-c1 text-sm font-medium">{scenario.name}</span>
             <small className="text-c3 text-xs">
               {scenario.description ?? scenario.slug}
             </small>

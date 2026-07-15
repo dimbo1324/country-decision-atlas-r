@@ -29,9 +29,7 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   // marker (a second, invisible DOM copy under a transient `id="S:0"`
   // node) alongside the real content, which trips a bare-testid
   // strict-mode check even though only one copy is ever visible.
-  await expect(
-    page.getByRole("main").getByTestId("country-card"),
-  ).toBeVisible({
+  await expect(page.getByRole("main").getByTestId("country-card")).toBeVisible({
     timeout: 15000,
   });
   await expect(page.locator("h1")).toBeVisible();

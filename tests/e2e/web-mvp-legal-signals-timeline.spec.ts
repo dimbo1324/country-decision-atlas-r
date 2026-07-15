@@ -9,9 +9,7 @@ import { e2eRoutes } from "./helpers/routes";
 // bare testid/id selectors even though only one copy is ever visible.
 
 test.describe("legal signals timeline", () => {
-  test("timeline renders year groups and country events", async ({
-    page,
-  }) => {
+  test("timeline renders year groups and country events", async ({ page }) => {
     await page.goto(e2eRoutes.legalSignals({ locale: "ru" }));
     await expectHasMainHeading(page, /лента правовых сигналов/i);
     const main = page.getByRole("main");

@@ -54,9 +54,7 @@ export function EvidenceCard({
         {(sourceTitle || sourceUrl || item.url) && (
           <div className="flex flex-wrap items-center gap-2">
             {sourceTitle && (
-              <span className="text-c2 text-sm font-medium">
-                {sourceTitle}
-              </span>
+              <span className="text-c2 text-sm font-medium">{sourceTitle}</span>
             )}
             {(sourceUrl ?? item.url) && (
               <a

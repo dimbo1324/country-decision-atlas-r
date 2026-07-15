@@ -54,9 +54,7 @@ export function RouteChecklistList({
               </p>
             )}
             {item.document_note && (
-              <p className="text-c3 text-xs">
-                Документы: {item.document_note}
-              </p>
+              <p className="text-c3 text-xs">Документы: {item.document_note}</p>
             )}
             {item.cost_note && (
               <p className="text-c3 text-xs">Стоимость: {item.cost_note}</p>

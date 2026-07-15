@@ -26,7 +26,10 @@ export default async function RoutePage({ params }: PageProps) {
         <AppBreadcrumbs
           items={[
             { label: "Страны", href: routes.countries },
-            { label: route.country_slug, href: routes.country(route.country_slug) },
+            {
+              label: route.country_slug,
+              href: routes.country(route.country_slug),
+            },
             { label: route.title },
           ]}
         />
@@ -42,10 +45,7 @@ export default async function RoutePage({ params }: PageProps) {
     return (
       <div className="flex flex-col gap-6">
         <AppBreadcrumbs
-          items={[
-            { label: "Страны", href: routes.countries },
-            { label: id },
-          ]}
+          items={[{ label: "Страны", href: routes.countries }, { label: id }]}
         />
         <header className="flex flex-col gap-3">
           <Kicker>Маршрут</Kicker>
