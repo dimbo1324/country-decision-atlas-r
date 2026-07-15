@@ -1740,6 +1740,10 @@ class FullCheck:
             "i18n key parity",
             py_args("scripts/dev_tools/i18n_parity_check.py"),
         )
+        self.run_gate_step(
+            "design-token contrast audit",
+            py_args("scripts/dev_tools/contrast_audit.py"),
+        )
         if self.profile in {"backend", "full", "ci"}:
             self.run_gate_step(
                 "ruff format --check",

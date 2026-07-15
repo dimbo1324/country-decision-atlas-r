@@ -27,10 +27,13 @@
   --color-bg3: #0e1018;
   --color-bg4: #191c27;
 
+  /* c3/c4 must stay >= 4.5:1 (WCAG AA, normal text) on every bg token —
+   * both are used overwhelmingly for small meta/label text. Verified by
+   * scripts/dev_tools/contrast_audit.py; keep it green when retuning. */
   --color-c1: #efe6d4;
   --color-c2: #c0b6a0;
-  --color-c3: #827a6a;
-  --color-c4: #494436;
+  --color-c3: #9a9280;
+  --color-c4: #8d8574;
   --color-c5: #2a2832;
 
   --color-gold: #d8aa4e;

@@ -727,6 +727,47 @@ AVAILABLE_SCRIPTS: list[ScriptInfo] = [
         aliases=("i18n", "messages-parity"),
         examples=("--check",),
     ),
+    ScriptInfo(
+        title="contrast-audit",
+        filename="contrast_audit.py",
+        category="quality",
+        summary=Text(
+            en="Fail if a text token drops below WCAG AA contrast on any background token.",
+            ru="Падает, если текстовый токен опускается ниже контраста WCAG AA на любом фоновом токене.",
+        ),
+        description=Text(
+            en=(
+                "Parses the color tokens from packages/ui/src/tokens/"
+                "theme.css and checks every text token (c1-c4) against "
+                "every background token (bg-bg4) for the WCAG AA normal-"
+                "text ratio of 4.5:1, printing the exact computed ratio "
+                "per pair. c3/c4 carry small meta/label text throughout "
+                "the app, so they are held to the same floor as body "
+                "text. Read-only; fails (exit 1) listing each pair below "
+                "minimum. Wired into full_check.py's Phase 3 static "
+                "quality gate, so it runs on every profile including "
+                "--profile quick."
+            ),
+            ru=(
+                "Разбирает цветовые токены из packages/ui/src/tokens/"
+                "theme.css и проверяет каждый текстовый токен (c1-c4) "
+                "против каждого фонового (bg-bg4) на соответствие WCAG "
+                "AA для обычного текста (4.5:1), печатая точное "
+                "вычисленное соотношение для каждой пары. c3/c4 несут "
+                "мелкий мета-текст по всему приложению, поэтому "
+                "удерживаются на том же пороге, что и основной текст. "
+                "Только чтение; падает (exit 1) с перечнем пар ниже "
+                "минимума. Подключён в Phase 3 static quality gate "
+                "full_check.py, поэтому запускается на любом профиле, "
+                "включая --profile quick."
+            ),
+        ),
+        cadence=Text(
+            en="Automatic, every quality-gate run; on-demand when retuning tokens.",
+            ru="Автоматически при каждом запуске quality gate; по требованию при настройке токенов.",
+        ),
+        aliases=("contrast", "wcag-audit"),
+    ),
 ]
 
 DEFAULT_SCRIPT_TITLE = "full-check"
