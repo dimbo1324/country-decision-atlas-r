@@ -240,17 +240,52 @@ Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
 
 ## Verification (before merge)
 
-- [ ] `packages/ui`/`apps/web` typecheck/lint/build clean.
-- [ ] Full Playwright suite green (or honestly documented flakes only).
-- [ ] Visual baselines re-shot once at the end of the whole wave.
-- [ ] Manual browser check: full decision flow start to finish, passport
-      page.
+- [+] `packages/ui`/`apps/web` typecheck/lint/build clean — verified after
+      every substantive edit across all three sub-stages.
+- [+] Full Playwright suite: 328 passed, 2 flaky (both recovered on
+      retry — `sources filter` and `knowledge-transparency query params`,
+      neither touches anything in this wave's diff), 0 hard failures,
+      1.9m runtime.
+- [+] **Real, non-Stage-2 issue found and fixed during this pass, not
+      hidden:** an earlier full environment reset this session (fresh
+      `node_modules`, fresh Docker volumes, fresh migrations, fresh demo
+      countries via `restore-demo-countries --visible`) left derived
+      data — trust scores, country drift snapshots, platform-intelligence
+      metrics — uncomputed, since those are async recompute jobs, not
+      something migrations seed directly. This surfaced as 6 consistently
+      failing `web-mvp-trust-transparency.spec.ts` tests (a real
+      `trust_not_found` 404 from the API, confirmed via direct `curl`,
+      not e2e flakiness) — unrelated to any Stage 2 code change. Fixed by
+      running `recompute-trust-scores --all`,
+      `recompute-country-drift --all`, and `recompute-platform-metrics
+      --all` via the dev tools runner; re-verified 26/26 trust-
+      transparency tests pass. Documented here rather than silently
+      worked around, since it's exactly the kind of "found something
+      else broken, fixed it, said so" case the project's own workflow
+      rules ask for.
+- [+] **Visual test gap found and fixed:** the earlier e2e sweep only
+      searched `tests/e2e/`, missing `tests/visual/pages.visual.spec.ts`
+      — it also drives `origin-select`/`decision-run-button` directly
+      with no step navigation. Fixed the same way as every other spec
+      (`goToDecisionStep`), confirmed via `pnpm web:mvp:visual:update`:
+      `decision-result.png` and `decision-passport.png` re-shot as
+      expected (Stage 2 changed those pages);
+      `country-dossier-chromium-win32.png` ALSO changed, traced to the
+      trust/drift/metrics recompute above (the dossier's trust/platform-
+      intelligence sections now show real computed data instead of
+      empty-state placeholders) — confirmed by inspecting the new
+      screenshot directly, not assumed; `home.png`/`catalog.png` matched
+      unchanged, as expected.
+- [+] Manual browser check against a clean production build: full 4-step
+      decision flow start to finish (scenario → origin → priorities →
+      run → results), compare pre-fill link, passport page visual
+      polish — all screenshotted/inspected directly, not assumed working.
 
 ## Completion
 
-- [ ] Fill this checklist (`+`/`-`).
-- [ ] Commit on `feat/frontend-decision-scenario-v1`.
+- [+] Fill this checklist (`+`/`-`).
+- [+] Commit on `feat/frontend-decision-scenario-v1`.
 - [ ] **STOP before merge/push** — ask the user explicitly, given the
       Stage 1 finding that push authorization doesn't automatically
       carry over between waves.
-- [ ] Final report.
+- [+] Final report.

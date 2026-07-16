@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { goToDecisionStep } from "../e2e/helpers/decision";
 
 const SCREENSHOT_OPTIONS = {
   fullPage: true,
@@ -35,7 +36,9 @@ test.describe("visual regression: key pages", () => {
 
   test("decision result", async ({ page }) => {
     await page.goto("/ru/decision");
+    await goToDecisionStep(page, 2);
     await page.getByTestId("origin-select").selectOption("russia");
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
@@ -48,7 +51,9 @@ test.describe("visual regression: key pages", () => {
 
   test("decision passport", async ({ page }) => {
     await page.goto("/ru/decision");
+    await goToDecisionStep(page, 2);
     await page.getByTestId("origin-select").selectOption("russia");
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
