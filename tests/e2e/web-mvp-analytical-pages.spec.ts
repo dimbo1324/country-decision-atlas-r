@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectHasMainHeading } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 import { API_BASE_URL } from "./helpers/env";
 
@@ -230,8 +231,16 @@ test.describe("accessibility semantics", () => {
   test("decision page form inputs have labels", async ({ page }) => {
     await page.goto("/decision");
     await expect(page.locator("h1").first()).toBeVisible();
+    // Scenario (step 1, the default) is a RadioCards radiogroup, labeled
+    // via aria-label rather than a <label for=...> association.
+    await expect(
+      page.getByRole("radiogroup", { name: /сценарий/i }),
+    ).toBeVisible();
+
+    await goToDecisionStep(page, 2);
     await expect(page.getByLabel(/страна отправления/i)).toBeVisible();
-    await expect(page.getByLabel(/сценарий/i)).toBeVisible();
+
+    await goToDecisionStep(page, 4);
     await expect(
       page.getByRole("button", { name: /запустить подбор/i }),
     ).toBeVisible();

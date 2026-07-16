@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { API_BASE_URL } from "./helpers/env";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test("platform features API returns seeded flags", async ({ request }) => {
@@ -74,6 +75,7 @@ test("data journal shows API error when journal endpoint fails", async ({
 test("old decision flow and persona selector still work", async ({ page }) => {
   await page.goto(e2eRoutes.decision());
   await expectPageReady(page);
+  await goToDecisionStep(page, 3);
   await expect(page.getByTestId("persona-selector")).toBeVisible();
   await expectNoAppCrash(page);
 });

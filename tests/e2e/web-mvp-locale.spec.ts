@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("locale preservation", () => {
@@ -82,6 +83,7 @@ test.describe("locale preservation", () => {
     await page.goto(e2eRoutes.decision("ru"));
     await expect(page.locator("h1").first()).toBeVisible();
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByRole("button", { name: /запустить подбор/i });
     await expect(runButton).toBeVisible();
     await runButton.click();

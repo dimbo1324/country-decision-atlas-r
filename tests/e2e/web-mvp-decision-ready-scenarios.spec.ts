@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("decision-ready scenario filtering", () => {
@@ -12,7 +13,11 @@ test.describe("decision-ready scenario filtering", () => {
     const select = page.getByTestId("decision-scenario-select");
     await expect(select).toBeVisible();
 
-    const optionTexts = await select.locator("option").allTextContents();
+    // Scenario picker is a RadioCards group (packages/ui/src/primitives/RadioCards.tsx),
+    // one role="radio" button per option -- not a native <select>.
+    const optionTexts = await select
+      .locator('[role="radio"]')
+      .allTextContents();
     const lower = optionTexts.map((t) => t.toLowerCase());
 
     expect(lower.some((t) => t.includes("family relocation"))).toBe(false);
@@ -41,7 +46,9 @@ test.describe("decision-ready scenario filtering", () => {
     const select = page.getByTestId("decision-scenario-select");
     await expect(select).toBeVisible();
 
-    const optionTexts = await select.locator("option").allTextContents();
+    const optionTexts = await select
+      .locator('[role="radio"]')
+      .allTextContents();
     const lower = optionTexts.map((t) => t.toLowerCase());
 
     expect(lower.some((t) => t.includes("family relocation"))).toBe(false);
@@ -55,6 +62,7 @@ test.describe("decision-ready scenario filtering", () => {
   }) => {
     await page.goto(e2eRoutes.decision("en"));
     await expect(page.locator("h1").first()).toBeVisible();
+    await goToDecisionStep(page, 4);
 
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).toBeVisible();
@@ -83,6 +91,7 @@ test.describe("decision-ready scenario filtering", () => {
   }) => {
     await page.goto(e2eRoutes.decision("en"));
     await expect(page.locator("h1").first()).toBeVisible();
+    await goToDecisionStep(page, 4);
     await expect(page.getByTestId("decision-run-button")).not.toBeDisabled();
     await expectNoAppCrash(page);
   });

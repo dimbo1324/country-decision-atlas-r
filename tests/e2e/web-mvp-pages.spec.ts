@@ -4,6 +4,7 @@ import {
   expectPageReady,
   expectHasMainHeading,
 } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("MVP page availability", () => {
@@ -62,6 +63,7 @@ test.describe("MVP page availability", () => {
   test("/decision?locale=en shows decision form", async ({ page }) => {
     await page.goto(e2eRoutes.decision("en"));
     await expectHasMainHeading(page, /запустить подбор страны/i);
+    await goToDecisionStep(page, 4);
     await expect(
       page.getByRole("button", { name: /запустить подбор/i }),
     ).toBeVisible();
@@ -71,6 +73,7 @@ test.describe("MVP page availability", () => {
   test("/decision?locale=ru shows decision form", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await expectHasMainHeading(page, /запустить подбор страны/i);
+    await goToDecisionStep(page, 4);
     await expect(
       page.getByRole("button", { name: /запустить подбор/i }),
     ).toBeVisible();

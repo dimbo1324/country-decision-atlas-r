@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("Origin-aware decision context", () => {
@@ -8,8 +9,11 @@ test.describe("Origin-aware decision context", () => {
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 2);
     await expect(page.getByTestId("origin-select")).toBeVisible();
     await page.getByTestId("origin-select").selectOption("russia");
+
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
 
     await expect(page.getByTestId("decision-results")).toBeVisible({
@@ -24,7 +28,10 @@ test.describe("Origin-aware decision context", () => {
   test("old flow without origin still works", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 2);
     await expect(page.getByTestId("origin-select")).toHaveValue("");
+
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
 
     await expect(page.getByTestId("decision-results")).toBeVisible({
@@ -39,8 +46,13 @@ test.describe("Origin-aware decision context", () => {
   test("persona still works together with origin", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 2);
     await page.getByTestId("origin-select").selectOption("russia");
+
+    await goToDecisionStep(page, 3);
     await page.getByTestId("persona-selector").selectOption({ index: 1 });
+
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
 
     await expect(page.getByTestId("decision-results")).toBeVisible({
@@ -53,9 +65,14 @@ test.describe("Origin-aware decision context", () => {
   test("custom weights still work together with origin", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 2);
     await page.getByTestId("origin-select").selectOption("russia");
+
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
     await page.getByTestId("decision-weight-slider-business_score").fill("80");
+
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
 
     await expect(page.getByTestId("decision-results")).toBeVisible({

@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 async function runDecision(page: import("@playwright/test").Page) {
+  await goToDecisionStep(page, 4);
   const runButton = page.getByTestId("decision-run-button");
   await expect(runButton).toBeVisible();
   await expect(runButton).not.toBeDisabled();
@@ -15,6 +17,7 @@ async function runDecision(page: import("@playwright/test").Page) {
 test.describe("Persona decision flow", () => {
   test("/decision shows persona selector", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
 
     const selector = page.getByTestId("persona-selector");
     await expect(selector).toBeVisible();
@@ -27,6 +30,7 @@ test.describe("Persona decision flow", () => {
 
   test("selector contains family persona", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
 
     await expect(page.getByTestId("persona-selector")).toContainText("Семья");
     await expectNoAppCrash(page);
@@ -46,6 +50,7 @@ test.describe("Persona decision flow", () => {
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 3);
     await page.getByTestId("persona-selector").selectOption("family");
     await runDecision(page);
 
@@ -67,6 +72,7 @@ test.describe("Persona decision flow", () => {
   test("decision with entrepreneur works", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 3);
     await page.getByTestId("persona-selector").selectOption("entrepreneur");
     await runDecision(page);
 
@@ -84,6 +90,7 @@ test.describe("Persona decision flow", () => {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
 
     await expect(page.getByTestId("persona-selector")).toBeVisible();
     await expectNoAppCrash(page);

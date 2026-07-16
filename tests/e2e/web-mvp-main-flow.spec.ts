@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectHasMainHeading } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test("main MVP user flow: home → countries → Russia → Uruguay → decision → result → country card", async ({
@@ -50,11 +51,17 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
     .getByRole("link", { name: "Подбор", exact: true })
     .click();
   await expectHasMainHeading(page, /запустить подбор страны/i);
+  // Scenario picker (step 1, the default) is a RadioCards group, not a
+  // native <select> -- checked via its testid, not an accessible-name
+  // combobox role.
+  await expect(page.getByTestId("decision-scenario-select")).toBeVisible();
+
+  await goToDecisionStep(page, 2);
   await expect(
     page.getByRole("combobox", { name: /страна отправления/i }),
   ).toBeVisible();
-  await expect(page.getByRole("combobox", { name: /сценарий/i })).toBeVisible();
 
+  await goToDecisionStep(page, 4);
   const runButton = page.getByRole("button", { name: /запустить подбор/i });
   await expect(runButton).toBeVisible();
   await runButton.click();

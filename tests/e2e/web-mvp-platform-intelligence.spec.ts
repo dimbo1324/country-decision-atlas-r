@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { API_BASE_URL } from "./helpers/env";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test("platform-metrics API returns 200 with feature enabled", async ({
@@ -97,6 +98,7 @@ test("decision page still shows ranking after platform intelligence added", asyn
 }) => {
   await page.goto(e2eRoutes.decision());
   await expectPageReady(page);
+  await goToDecisionStep(page, 4);
   await page.getByTestId("decision-run-button").click();
   await page.waitForTimeout(3000);
   await expectNoAppCrash(page);

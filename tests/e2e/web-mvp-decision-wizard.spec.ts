@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("Decision wizard", () => {
@@ -25,9 +26,15 @@ test.describe("Decision wizard", () => {
     });
     await expect(page.getByTestId("decision-wizard-explanation")).toBeVisible();
     await expect(page.getByTestId("decision-wizard-manual-note")).toBeVisible();
-    await expect(page.getByTestId("decision-scenario-select")).toHaveValue(
-      "business_self_employment",
-    );
+
+    await goToDecisionStep(page, 1);
+    await expect(
+      page.getByTestId(
+        "decision-scenario-select-option-business_self_employment",
+      ),
+    ).toHaveAttribute("aria-checked", "true");
+
+    await goToDecisionStep(page, 3);
     await expect(page.getByTestId("persona-selector")).toHaveValue("investor");
 
     await page.getByTestId("decision-weights-panel").locator("summary").click();
@@ -35,6 +42,7 @@ test.describe("Decision wizard", () => {
       page.getByTestId("decision-weight-slider-business_score"),
     ).not.toHaveValue("10");
 
+    await goToDecisionStep(page, 4);
     await page.getByTestId("decision-run-button").click();
     await expect(page.getByTestId("decision-results")).toBeVisible({
       timeout: 20_000,
@@ -54,10 +62,15 @@ test.describe("Decision wizard", () => {
       timeout: 20_000,
     });
 
+    await goToDecisionStep(page, 3);
     await page.getByTestId("persona-selector").selectOption("");
+
+    await goToDecisionStep(page, 1);
     await page
-      .getByTestId("decision-scenario-select")
-      .selectOption("relocation_residence");
+      .getByTestId("decision-scenario-select-option-relocation_residence")
+      .click();
+
+    await goToDecisionStep(page, 4);
     await expect(page.getByTestId("decision-run-button")).not.toBeDisabled();
     await expectNoAppCrash(page);
   });

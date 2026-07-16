@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 async function runDecision(page: import("@playwright/test").Page) {
+  await goToDecisionStep(page, 4);
   const runButton = page.getByTestId("decision-run-button");
   await expect(runButton).toBeVisible();
   await expect(runButton).not.toBeDisabled();
@@ -15,6 +17,7 @@ async function runDecision(page: import("@playwright/test").Page) {
 test.describe("Decision personalization sliders", () => {
   test("/decision opens", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await expect(page.getByTestId("decision-weights-panel")).toBeVisible();
     await expectNoAppCrash(page);
   });
@@ -23,6 +26,7 @@ test.describe("Decision personalization sliders", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
 
     await page.getByTestId("decision-weights-panel").locator("summary").click();
     await expect(
@@ -33,6 +37,7 @@ test.describe("Decision personalization sliders", () => {
 
   test("user can change safety slider", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
     const slider = page.getByTestId("decision-weight-slider-safety_score");
@@ -43,6 +48,7 @@ test.describe("Decision personalization sliders", () => {
 
   test("decision run succeeds with custom weights", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
     const slider = page.getByTestId("decision-weight-slider-safety_score");
@@ -54,6 +60,7 @@ test.describe("Decision personalization sliders", () => {
 
   test("result shows personalized calculation message", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
     const slider = page.getByTestId("decision-weight-slider-safety_score");
@@ -68,6 +75,7 @@ test.describe("Decision personalization sliders", () => {
 
   test("reset priorities works", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
     const slider = page.getByTestId("decision-weight-slider-safety_score");
@@ -81,6 +89,7 @@ test.describe("Decision personalization sliders", () => {
 
   test("all-zero weights are blocked client-side", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
     const criteria = [
@@ -96,12 +105,14 @@ test.describe("Decision personalization sliders", () => {
       await page.getByTestId(`decision-weight-slider-${criterion}`).fill("0");
     }
 
+    await goToDecisionStep(page, 4);
     await expect(page.getByTestId("decision-run-button")).toBeDisabled();
     await expectNoAppCrash(page);
   });
 
   test("persona + custom weights works together", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
     await page.getByTestId("persona-selector").selectOption("family");
     await page.getByTestId("decision-weights-panel").locator("summary").click();
 
@@ -118,6 +129,7 @@ test.describe("Decision personalization sliders", () => {
   test("mobile layout does not crash", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(e2eRoutes.decision("ru"));
+    await goToDecisionStep(page, 3);
 
     await expect(page.getByTestId("decision-weights-panel")).toBeVisible();
     await expectNoAppCrash(page);

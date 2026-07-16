@@ -16,6 +16,7 @@ interface RadioCardsProps {
   onChange: (value: string) => void;
   accent?: Accent;
   className?: string;
+  ariaLabel?: string;
 }
 
 export function RadioCards({
@@ -25,11 +26,13 @@ export function RadioCards({
   onChange,
   accent = "gold",
   className,
+  ariaLabel,
 }: RadioCardsProps) {
   const accentClasses = ACCENTS[accent];
   return (
     <div
       role="radiogroup"
+      aria-label={ariaLabel}
       className={cn("grid grid-cols-1 gap-3 sm:grid-cols-2", className)}
     >
       {options.map((option) => {
@@ -45,7 +48,9 @@ export function RadioCards({
             onClick={() => onChange(option.value)}
             className={cn(
               "bg-bg2 flex flex-col gap-1 border p-4 text-left transition-colors duration-300",
-              checked ? cn("border-transparent", accentClasses.bg + "/10") : "border-warm",
+              checked
+                ? cn("border-transparent", accentClasses.bg + "/10")
+                : "border-warm",
               checked && accentClasses.border,
             )}
             style={
@@ -63,7 +68,9 @@ export function RadioCards({
               {option.label}
             </span>
             {option.description && (
-              <span className="text-c3 text-xs leading-relaxed">{option.description}</span>
+              <span className="text-c3 text-xs leading-relaxed">
+                {option.description}
+              </span>
             )}
           </button>
         );

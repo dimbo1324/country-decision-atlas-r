@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("decision visual comparison (CII)", () => {
@@ -9,6 +10,7 @@ test.describe("decision visual comparison (CII)", () => {
     await page.goto(e2eRoutes.decision("ru"));
     await expect(page.locator("h1").first()).toBeVisible();
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).toBeVisible();
     await expect(runButton).not.toBeDisabled();
@@ -28,6 +30,7 @@ test.describe("decision visual comparison (CII)", () => {
     await page.goto(e2eRoutes.decision("ru"));
     await expect(page.locator("h1").first()).toBeVisible();
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
     await runButton.click();
@@ -46,6 +49,7 @@ test.describe("decision visual comparison (CII)", () => {
   test("CII spider chart is rendered", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
     await runButton.click();
@@ -63,6 +67,7 @@ test.describe("decision visual comparison (CII)", () => {
   test("CII metric bars are rendered", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
     await runButton.click();
@@ -80,6 +85,7 @@ test.describe("decision visual comparison (CII)", () => {
   test("CII winner list is rendered", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
     await runButton.click();
@@ -97,6 +103,7 @@ test.describe("decision visual comparison (CII)", () => {
   test("page does not crash on reload after decision run", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
     await runButton.click();

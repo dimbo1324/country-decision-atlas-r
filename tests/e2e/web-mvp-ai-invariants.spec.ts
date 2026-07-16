@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("AI assistant UI invariants", () => {
@@ -39,6 +40,7 @@ test.describe("AI assistant UI invariants", () => {
     await page.goto(e2eRoutes.decision("ru"));
     await expectPageReady(page);
 
+    await goToDecisionStep(page, 4);
     const runButton = page.getByRole("button", { name: /запустить подбор/i });
     await expect(runButton).toBeVisible();
     await runButton.click();

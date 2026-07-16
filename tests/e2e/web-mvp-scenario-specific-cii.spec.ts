@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectNoAppCrash } from "./helpers/assertions";
+import { goToDecisionStep } from "./helpers/decision";
 
 const DECISION_URL = "/ru/decision";
 const RELOCATION_SLUG = "relocation_residence";
@@ -9,8 +10,11 @@ async function runDecision(
   page: import("@playwright/test").Page,
   scenarioSlug: string,
 ) {
-  const select = page.locator('[data-testid="decision-scenario-select"]');
-  await select.selectOption(scenarioSlug);
+  await goToDecisionStep(page, 1);
+  await page
+    .locator(`[data-testid="decision-scenario-select-option-${scenarioSlug}"]`)
+    .click();
+  await goToDecisionStep(page, 4);
   const btn = page.locator('[data-testid="decision-run-button"]');
   await btn.click();
   await page.waitForTimeout(2000);

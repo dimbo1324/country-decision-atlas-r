@@ -90,36 +90,91 @@ Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
 
 ## 2.1 — Decision wizard: 4 horizontal steps
 
-- [ ] New step-wizard structure in `DecisionRunForm.tsx`: stepper header
+- [+] New step-wizard structure in `DecisionRunForm.tsx`: stepper header
       (Цель / Откуда / Приоритеты / Запуск), step content conditionally
-      rendered, Prev/Next + direct step-jump.
-- [ ] Step 1 «Цель»: scenario picker converted to `RadioCards`.
-- [ ] Step 2 «Откуда»: origin-select + candidate checkboxes (unchanged
+      rendered, Prev/Next + direct step-jump (non-linear — clicking any
+      step button jumps straight there, not just sequential). Step state
+      via `useQueryState("step", parseAsInteger.withDefault(1))`.
+- [+] Step 1 «Цель»: scenario picker converted to `RadioCards`, wrapped in
+      a `data-testid="decision-scenario-select"` container so the
+      existing testid stays queryable; individual options get
+      `decision-scenario-select-option-<slug>` for free via RadioCards'
+      own naming.
+- [+] Step 2 «Откуда»: origin-select + candidate checkboxes (unchanged
       elements, just relocated).
-- [ ] Step 3 «Приоритеты»: persona-select + existing
-      `DecisionWeightSliders` (unchanged, already collapsed by default).
-- [ ] Step 4 «Запуск»: summary of current selections (scenario, origin,
-      candidates, persona, weights-touched) + run button.
-- [ ] `DecisionWizard` (guided quiz) + `AIDecisionIntentHelper` stay
-      always-visible above the stepper, fully untouched.
-- [ ] typecheck/lint/prettier clean.
+- [+] Step 3 «Приоритеты»: persona-select + existing
+      `DecisionWeightSliders` (unchanged, already collapsed by default —
+      the plan's "свернуто по умолчанию" was already satisfied, no new
+      work needed).
+- [+] Step 4 «Запуск»: summary `<dl>` of current selections (scenario,
+      origin, candidate count, persona, weights-touched) + run button.
+- [+] `DecisionWizard` (guided quiz) + `AIDecisionIntentHelper` stay
+      always-visible above the stepper, fully untouched — verified via
+      the existing `web-mvp-decision-wizard.spec.ts` suite.
+- [+] typecheck/lint/prettier clean (packages/ui + apps/web).
+- [+] **Accessibility fix found and fixed, not just tested around:**
+      `RadioCards` had no way to associate a visible label with its
+      `role="radiogroup"` — a pre-existing gap also present in the
+      already-shipped `DecisionWizardStep`'s own RadioCards usage, not
+      something this wave introduced but newly exposed by an accessibility
+      test that specifically probes the flat form. Added an `ariaLabel`
+      prop to `RadioCards` (`packages/ui/src/primitives/RadioCards.tsx`),
+      applied as `aria-label` on the radiogroup div; `DecisionRunForm`
+      now passes `ariaLabel="Сценарий"`.
 
 ## 2.1 — e2e updates for step navigation
 
-- [ ] `web-mvp-decision-ready-scenarios.spec.ts`: option-text reads via
-      RadioCards, run-button tests get a step-4 jump.
-- [ ] `web-mvp-decision-personalization.spec.ts`: weight-slider tests
-      get a step-3 jump before the existing `<details>` open.
-- [ ] `web-mvp-decision-wizard.spec.ts`: post-apply assertions on
-      scenario/persona read RadioCards state instead of `<select>` value
-      where applicable.
-- [ ] `web-mvp-scenario-specific-cii.spec.ts`, `web-mvp-origin-aware-decision.spec.ts`,
-      `web-mvp-personas.spec.ts`, `web-mvp-decision-passport.spec.ts`,
-      `web-mvp-platform-foundations.spec.ts`: step jumps added where fields
-      moved.
-- [ ] Spot-check `web-mvp-main-flow.spec.ts`, `web-mvp-ai-invariants.spec.ts`,
-      `web-mvp-locale.spec.ts`, `web-mvp-localization-badges.spec.ts`,
-      `web-mvp-pages.spec.ts` for incidental breakage.
+- [+] Added `tests/e2e/helpers/decision.ts` (`goToDecisionStep(page, n)`)
+      — one shared helper for the repeated "jump to step N" pattern,
+      used across every file below instead of duplicating the click.
+- [+] `web-mvp-decision-ready-scenarios.spec.ts`: option-text reads via
+      `[role="radio"]` instead of `<option>`; run-button tests get a
+      step-4 jump.
+- [+] `web-mvp-decision-personalization.spec.ts`: all 9 tests get a
+      step-3 jump before touching persona/weights; `runDecision` helper
+      centralizes the step-4 jump for the 3 tests that also run.
+- [+] `web-mvp-decision-wizard.spec.ts`: post-apply scenario assertion
+      reads RadioCards `aria-checked` instead of `<select>` `.toHaveValue`;
+      persona/weights checks get a step-3 jump; manual-override test
+      clicks the RadioCards option directly instead of `.selectOption()`.
+- [+] `web-mvp-scenario-specific-cii.spec.ts`: single shared `runDecision`
+      helper fixed once, cascading to all 8 tests.
+- [+] `web-mvp-origin-aware-decision.spec.ts`, `web-mvp-personas.spec.ts`,
+      `web-mvp-decision-passport.spec.ts`,
+      `web-mvp-platform-foundations.spec.ts`,
+      `web-mvp-decision-visual-comparison.spec.ts` (6 tests, same shared
+      pattern), `web-mvp-platform-intelligence.spec.ts`: step jumps added
+      wherever origin/persona/weights/run fields moved.
+- [+] Found beyond the original spot-check list (a broader grep for the
+      run button's own accessible-name text, not just testids, surfaced
+      these): `web-mvp-main-flow.spec.ts` (scenario check switched from a
+      combobox-role lookup to the RadioCards testid, since RadioCards
+      carries no combobox role), `web-mvp-pages.spec.ts` (2 tests),
+      `web-mvp-locale.spec.ts` (1 test), `web-mvp-ai-invariants.spec.ts`
+      (1 test) — all needed a step jump before their role-based run-button
+      lookup.
+- [+] `web-mvp-analytical-pages.spec.ts`'s "decision page form inputs have
+      labels" accessibility test: scenario check switched from
+      `getByLabel` (which doesn't apply to a `role="radiogroup"` without
+      the new `aria-label`) to `getByRole("radiogroup", {name: ...})`,
+      exercising the accessibility fix above rather than working around
+      it.
+- [+] Full verification: all 15 touched/spot-checked decision-related
+      spec files run together against a clean production build — 102
+      passed, 1 flake (confirmed transient via isolated re-run: 14/14
+      passed in under 12s total). One test
+      (`web-mvp-locale.spec.ts` "locale=ru is preserved...") reproduced a
+      consistent 3/3 failure at one point during investigation — root
+      caused to leaving a manually-started `next dev` preview server
+      running, which Playwright's `reuseExistingServer` config silently
+      reused instead of its own production build; dev-mode's slower
+      client-side transition timing let `page.url()` observe a stale URL
+      mid-navigation. Not a code bug — confirmed by a clean production
+      rebuild + 3/3 pass. Documented here since it's the second time this
+      exact dev/production `.next` mixing has caused confusing failures
+      this session (first at the end of Stage 1.3) — worth remembering
+      going forward: never leave a `preview_start` dev server running
+      during an e2e verification pass.
 
 ## 2.2 — Result card deck
 

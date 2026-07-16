@@ -2,12 +2,15 @@
 
 import { Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { parseAsInteger, useQueryState } from "nuqs";
 import {
   AnalysisOverlay,
   Button,
   Card,
+  cn,
   Field,
   FieldLabel,
+  RadioCards,
 } from "@country-decision-atlas/ui";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 
@@ -55,6 +58,9 @@ const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
     "Настройка приоритетов временно недоступна.",
 };
 
+const STEP_LABELS = ["Цель", "Откуда", "Приоритеты", "Запуск"] as const;
+const STEP_COUNT = STEP_LABELS.length;
+
 function DecisionFormInner() {
   const locale = useAppLocale();
   const trackAnalyticsEvent = useAnalyticsEvent();
@@ -66,6 +72,9 @@ function DecisionFormInner() {
     scenariosQuery(locale),
   );
   const { data: personas } = useQuery(personasQuery(locale));
+
+  const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
+  const currentStep = Math.min(Math.max(step, 1), STEP_COUNT);
 
   const [originCountrySlug, setOriginCountrySlug] = useState("");
   const [candidateCountrySlugs, setCandidateCountrySlugs] = useState<string[]>([
@@ -230,6 +239,20 @@ function DecisionFormInner() {
         ? DECISION_PERSONALIZATION_ERROR_MESSAGES[runErrorCode]
         : runError;
 
+  const selectedScenarioName = decisionReadyScenarios.find(
+    (s) => s.slug === scenarioSlug,
+  )?.name;
+  const selectedOriginName = countries.items.find(
+    (c) => c.slug === originCountrySlug,
+  )?.name;
+  const selectedPersonaName = personas?.items?.find(
+    (p) => p.slug === selectedPersonaSlug,
+  )?.name;
+
+  function goToStep(next: number) {
+    void setStep(Math.min(Math.max(next, 1), STEP_COUNT));
+  }
+
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <AnalysisOverlay active={runDecision.isPending} />
@@ -249,140 +272,258 @@ function DecisionFormInner() {
           onApply={handleAiDecisionApply}
         />
 
-        <Field>
-          <FieldLabel htmlFor="origin-select">Страна отправления</FieldLabel>
-          <select
-            id="origin-select"
-            className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
-            value={originCountrySlug}
-            onChange={(e) => setOriginCountrySlug(e.target.value)}
-            data-testid="origin-select"
-          >
-            <option value="">Не указано</option>
-            {countries.items.map((c) => (
-              <option
-                key={c.slug}
-                value={c.slug}
-              >
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <p className="text-c4 text-xs">
-            Страна отправления влияет только на контекст, не на базовый рейтинг
-          </p>
-        </Field>
-
-        <Field>
-          <FieldLabel>Страны-кандидаты</FieldLabel>
-          <div className="flex flex-col gap-2">
-            {countries.items.map((c) => (
-              <label
-                key={c.slug}
-                className="text-c2 flex items-center gap-2 text-sm"
-              >
-                <input
-                  type="checkbox"
-                  checked={candidateCountrySlugs.includes(c.slug)}
-                  onChange={() => toggleCandidate(c.slug)}
-                  className="accent-gold"
-                />
-                {c.name}
-              </label>
-            ))}
-          </div>
-          {candidateCountrySlugs.length === 0 && (
-            <p
-              role="alert"
-              className="text-terra3 text-sm"
-            >
-              Выберите хотя бы одну страну-кандидат.
-            </p>
-          )}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="scenario-select">Сценарий</FieldLabel>
-          {noScenariosAvailable ? (
-            <p
-              role="alert"
-              className="text-terra3 text-sm"
-            >
-              Готовые сценарии подбора пока отсутствуют.
-            </p>
-          ) : (
-            <select
-              id="scenario-select"
-              className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
-              value={scenarioSlug}
-              onChange={(e) => setScenarioSlug(e.target.value)}
-              data-testid="decision-scenario-select"
-            >
-              {decisionReadyScenarios.map((s) => (
-                <option
-                  key={s.slug}
-                  value={s.slug}
-                >
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          )}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="persona-select">Персона</FieldLabel>
-          <select
-            id="persona-select"
-            className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
-            value={selectedPersonaSlug}
-            onChange={(e) => {
-              const personaSlug = e.target.value;
-              setSelectedPersonaSlug(personaSlug);
-              if (personaSlug) {
-                trackAnalyticsEvent({
-                  event_type: "persona_selected",
-                  source: "web",
-                  persona_slug: personaSlug,
-                });
-              }
-            }}
-            data-testid="persona-selector"
-          >
-            <option value="">Без персонализации</option>
-            {(personas?.items ?? []).map((persona) => (
-              <option
-                key={persona.slug}
-                value={persona.slug}
-              >
-                {persona.name}
-              </option>
-            ))}
-          </select>
-          <p className="text-c4 text-xs">
-            Рейтинг будет адаптирован под выбранный профиль.
-          </p>
-        </Field>
-
-        <DecisionWeightSliders
-          weights={customWeights}
-          onChange={handleWeightChange}
-          onReset={handleWeightReset}
-        />
-
-        <Button
-          onClick={handleRun}
-          disabled={
-            runDecision.isPending ||
-            candidateCountrySlugs.length === 0 ||
-            noScenariosAvailable ||
-            customWeightsBlocked
-          }
-          aria-busy={runDecision.isPending}
-          data-testid="decision-run-button"
+        <div
+          className="flex flex-col gap-6"
+          data-testid="decision-run-wizard"
         >
-          {runDecision.isPending ? "Выполняется подбор…" : "Запустить подбор"}
-        </Button>
+          <div
+            role="tablist"
+            aria-label="Шаги подбора"
+            className="flex flex-wrap items-center gap-2"
+          >
+            {STEP_LABELS.map((label, index) => {
+              const stepNumber = index + 1;
+              const isActive = stepNumber === currentStep;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => goToStep(stepNumber)}
+                  data-testid={`decision-step-${stepNumber}`}
+                  className={cn(
+                    "border-warm flex items-center gap-2 border px-3 py-1.5 text-left transition-colors duration-300",
+                    isActive
+                      ? "border-gold2 bg-gold/10 text-gold3"
+                      : "text-c3 hover:text-c1",
+                  )}
+                >
+                  <span className="font-mono text-[9px] tracking-[0.15em]">
+                    {stepNumber}
+                  </span>
+                  <span className="text-xs font-semibold">{label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {currentStep === 1 && (
+            <div
+              className="flex flex-col gap-2"
+              data-testid="decision-step-panel-1"
+            >
+              <FieldLabel>Сценарий</FieldLabel>
+              {noScenariosAvailable ? (
+                <p
+                  role="alert"
+                  className="text-terra3 text-sm"
+                >
+                  Готовые сценарии подбора пока отсутствуют.
+                </p>
+              ) : (
+                <div data-testid="decision-scenario-select">
+                  <RadioCards
+                    name="decision-scenario-select"
+                    value={scenarioSlug}
+                    onChange={setScenarioSlug}
+                    ariaLabel="Сценарий"
+                    options={decisionReadyScenarios.map((s) => ({
+                      value: s.slug,
+                      label: s.name,
+                    }))}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div
+              className="flex flex-col gap-6"
+              data-testid="decision-step-panel-2"
+            >
+              <Field>
+                <FieldLabel htmlFor="origin-select">
+                  Страна отправления
+                </FieldLabel>
+                <select
+                  id="origin-select"
+                  className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
+                  value={originCountrySlug}
+                  onChange={(e) => setOriginCountrySlug(e.target.value)}
+                  data-testid="origin-select"
+                >
+                  <option value="">Не указано</option>
+                  {countries.items.map((c) => (
+                    <option
+                      key={c.slug}
+                      value={c.slug}
+                    >
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-c4 text-xs">
+                  Страна отправления влияет только на контекст, не на базовый
+                  рейтинг
+                </p>
+              </Field>
+
+              <Field>
+                <FieldLabel>Страны-кандидаты</FieldLabel>
+                <div className="flex flex-col gap-2">
+                  {countries.items.map((c) => (
+                    <label
+                      key={c.slug}
+                      className="text-c2 flex items-center gap-2 text-sm"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={candidateCountrySlugs.includes(c.slug)}
+                        onChange={() => toggleCandidate(c.slug)}
+                        className="accent-gold"
+                      />
+                      {c.name}
+                    </label>
+                  ))}
+                </div>
+                {candidateCountrySlugs.length === 0 && (
+                  <p
+                    role="alert"
+                    className="text-terra3 text-sm"
+                  >
+                    Выберите хотя бы одну страну-кандидат.
+                  </p>
+                )}
+              </Field>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div
+              className="flex flex-col gap-6"
+              data-testid="decision-step-panel-3"
+            >
+              <Field>
+                <FieldLabel htmlFor="persona-select">Персона</FieldLabel>
+                <select
+                  id="persona-select"
+                  className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
+                  value={selectedPersonaSlug}
+                  onChange={(e) => {
+                    const personaSlug = e.target.value;
+                    setSelectedPersonaSlug(personaSlug);
+                    if (personaSlug) {
+                      trackAnalyticsEvent({
+                        event_type: "persona_selected",
+                        source: "web",
+                        persona_slug: personaSlug,
+                      });
+                    }
+                  }}
+                  data-testid="persona-selector"
+                >
+                  <option value="">Без персонализации</option>
+                  {(personas?.items ?? []).map((persona) => (
+                    <option
+                      key={persona.slug}
+                      value={persona.slug}
+                    >
+                      {persona.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-c4 text-xs">
+                  Рейтинг будет адаптирован под выбранный профиль.
+                </p>
+              </Field>
+
+              <DecisionWeightSliders
+                weights={customWeights}
+                onChange={handleWeightChange}
+                onReset={handleWeightReset}
+              />
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            <div
+              className="flex flex-col gap-4"
+              data-testid="decision-step-panel-4"
+            >
+              <dl className="border-warm flex flex-col gap-2 border p-4 text-sm">
+                <div className="flex justify-between gap-2">
+                  <dt className="text-c4">Сценарий</dt>
+                  <dd className="text-c1 text-right">
+                    {selectedScenarioName ?? "—"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-c4">Отправление</dt>
+                  <dd className="text-c1 text-right">
+                    {selectedOriginName ?? "Не указано"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-c4">Кандидаты</dt>
+                  <dd className="text-c1 text-right">
+                    {candidateCountrySlugs.length > 0
+                      ? candidateCountrySlugs.length
+                      : "не выбраны"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-c4">Персона</dt>
+                  <dd className="text-c1 text-right">
+                    {selectedPersonaName ?? "Без персонализации"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-c4">Приоритеты</dt>
+                  <dd className="text-c1 text-right">
+                    {personalizationTouched ? "Настроены" : "По умолчанию"}
+                  </dd>
+                </div>
+              </dl>
+
+              <Button
+                onClick={handleRun}
+                disabled={
+                  runDecision.isPending ||
+                  candidateCountrySlugs.length === 0 ||
+                  noScenariosAvailable ||
+                  customWeightsBlocked
+                }
+                aria-busy={runDecision.isPending}
+                data-testid="decision-run-button"
+              >
+                {runDecision.isPending
+                  ? "Выполняется подбор…"
+                  : "Запустить подбор"}
+              </Button>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => goToStep(currentStep - 1)}
+              disabled={currentStep === 1}
+              data-testid="decision-step-prev"
+            >
+              Назад
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => goToStep(currentStep + 1)}
+              disabled={currentStep === STEP_COUNT}
+              data-testid="decision-step-next"
+            >
+              Далее
+            </Button>
+          </div>
+        </div>
       </Card>
 
       <div className="flex flex-col gap-6">
