@@ -1,243 +1,163 @@
-# Task: Frontend redesign — Этап 1 (Волна «Навигация и обзор»)
+# Task: Frontend redesign — Этап 2 (Волна «Сценарий решения»)
 
-Source: owner-provided plan (pasted in chat), §1. Follows Этап 0
-(`c622288`, merged). Branch: `feat/frontend-navigation-overview-v1`, fresh
-off `main`.
+Source: owner-provided plan (pasted in chat). Follows Этап 1 (`2584a5f`,
+merged to main). Branch: `feat/frontend-decision-scenario-v1`, fresh off
+`main`.
 
-Three sub-waves: 1.1 dossier tabs (main work), 1.2 catalog card redesign,
-1.3 home page horizontal deck.
+Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
+2.3 passport visual polish.
 
-## 1.1 — Country dossier: tabs behind `web_dossier_v2`
+## Pre-implementation investigation (verified, not assumed)
 
-### Current state (verified, not assumed — see Stage 0's exploration)
+- `DecisionRunForm.tsx` is currently ONE flat form (`grid lg:grid-cols-2`)
+  with an existing collapsible `DecisionWizard` (8-question guided quiz,
+  `features/decision-wizard/`, separate concept from "4 steps" — it
+  pre-fills the flat form's fields via `onApply`, stays untouched and
+  always-visible above the new stepper) plus `AIDecisionIntentHelper`
+  (same treatment), then manual fields: origin-select, candidate
+  checkboxes, scenario-select (native `<select>`), persona-select
+  (native `<select>`), `DecisionWeightSliders` (already a `<details>`
+  accordion, closed by default — the plan's "свернуто по умолчанию" for
+  Приоритеты is already satisfied by this existing component, no new
+  work needed there), run button.
+- `decision-scenario-select` is currently a native `<select>`.
+  `DecisionWizardStep` (the existing quiz's own option picker) already
+  uses `RadioCards` with testid pattern `${name}-option-${value}` — same
+  primitive/pattern the plan asks for in step 1, proven and reusable.
+  Switching the flat form's scenario field to RadioCards breaks every
+  test using `.selectOption()`/`.locator("option")` on
+  `decision-scenario-select` — confirmed via a full e2e catalog (see
+  below), not assumed.
+- Full e2e catalog (via Explore subagent, cross-checked against source):
+  `origin-select`, `decision-scenario-select`, `persona-selector`,
+  `decision-run-button` are all currently visible/interactable with
+  **zero prior clicks** in most decision specs (fill fields → click run,
+  no step navigation). `decision-weights-panel`/`decision-weight-slider-*`
+  already require an explicit `<details>` open first — existing
+  precedent for "click to reveal" in this exact form. Files touching
+  these testids: `web-mvp-decision-personalization`,
+  `web-mvp-decision-wizard`, `web-mvp-decision-ready-scenarios`,
+  `web-mvp-scenario-specific-cii`, `web-mvp-origin-aware-decision`,
+  `web-mvp-personas`, `web-mvp-decision-passport`,
+  `web-mvp-platform-foundations`, plus incidental checks in
+  `web-mvp-main-flow`, `web-mvp-ai-invariants`, `web-mvp-locale`,
+  `web-mvp-localization-badges`, `web-mvp-pages`.
+- **Hard constraints for 2.2** (must stay visible with zero clicks after
+  restructuring, confirmed via the same e2e catalog): `result-card`
+  (main-flow.spec.ts), `persona-adjusted-score` (personas.spec.ts),
+  `ai-explain-number-button` nested inside `decision-winner-block`
+  (ai-invariants.spec.ts). `origin-pair-context`/`origin-pair-context-empty`
+  have **zero** e2e coverage — free to move behind an accordion.
+  `decision-winner-block` itself needs no restructuring — the plan's own
+  text says it "уже есть" (already exists) as the big-winner-on-top
+  treatment.
+- `/compare` currently has no query-param pre-fill mechanism at all
+  (`CompareMatrixView` always renders the full matrix) — building the
+  "compare top-2/3" pre-fill is new, contained work (client-side filter
+  of an already-fetched dataset), not wiring up an existing feature.
+- Real passport page (`decision/passports/[token]/page.tsx`) currently
+  reuses plain `Card`/`Badge` primitives, not `PassportCard`.
+  `PassportCard` (packages/ui/src/charts/PassportCard.tsx) is the
+  web-prototype's mockup component with **live recompute toggles** —
+  the plan explicitly says port only decorative fragments (perforated
+  edge, stamp), not the component, and explicitly not the toggles, since
+  the real passport is an immutable snapshot (matches invariant #4 in
+  `02_Реестр_инвариантов.md`: methodology/results carry a version, no
+  silent recompute).
 
-- `apps/web/src/app/[locale]/countries/[slug]/page.tsx`: Server Component,
-  RSC-fetches `card` via `countriesApi.getCountryCard(slug, locale)`, then
-  renders **17** sections as a flat vertical stack, each wrapped in a
-  `DossierSection` helper (`id` + `scroll-mt-24` + `Card`), plus an existing
-  `<DossierRail sections={RAIL_SECTIONS} />` (scrollspy nav, already
-  working, already used a second place — the country-proposal wizard).
-- `DossierRail` (`packages/ui/src/shell/DossierRail.tsx`) takes a flat
-  `{id,label}[]` and needs no changes — feeding it a filtered subset per
-  active tab is enough.
-- `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent`
-  (`packages/ui/src/primitives/Tabs.tsx`) are thin Radix wrappers with the
-  full controlled `value`/`onValueChange` API already available — no
-  primitive changes needed.
-- `useFeatureEnabled(key)` (`apps/web/src/shared/features/FeatureProvider.tsx`)
-  is the proven gating pattern (one real precedent:
-  `CountryDataJournalBlock.tsx`) — returns `false` while `/platform/features`
-  is still loading, which is exactly the safe default (old layout) with no
-  extra code needed.
+## Design decisions (reasoned, not silently assumed)
 
-### Tab grouping (my own reasoned mapping — the plan's grouping didn't
-account for 2 of the 17 real sections, `profile` and `locale-status`,
-since it was written against an outdated "13 sections" premise)
+- Step navigation: a horizontal stepper header (4 clickable step
+  buttons, direct non-linear jump allowed — not strictly sequential)
+  plus Prev/Next buttons. No global keyboard arrow-key hijacking (same
+  reasoning as Stage 1.3's HorizontalPager — the steps contain real
+  form controls, e.g. `<select>`, that already use arrow keys
+  themselves; hijacking them globally would actively break those
+  controls, worse than the home-page case). Native buttons are
+  sufficiently keyboard-accessible on their own.
+- Step content is simple conditional rendering (no transform/slide
+  animation) — this is a controlled form wizard, not a content carousel;
+  animating it adds risk with no clear UX benefit the plan asked for.
+- Step state: `useQueryState("step", parseAsInteger.withDefault(1))`
+  (nuqs), matching the plan's `?step=2` and the established pattern from
+  `CountryCatalogView`'s pagination.
+- `decision-scenario-select` RadioCards wrapped in a
+  `data-testid="decision-scenario-select"` container div (RadioCards
+  itself has no container testid, only per-option) so existing
+  `.toBeVisible()` checks on that testid keep working; individual
+  options get `decision-scenario-select-option-<slug>` for free via
+  RadioCards' own naming.
 
-- **Обзор**: `overview` (exec summary), `cii`, `evidence`, `what-changed`,
-  `profile` (general country-profile text — fits as extended overview
-  content), `locale-status` (meta/translation status — not really
-  "content", grouped with overview as the closest fit)
-- **Оценки**: `scores`, `platform-intelligence`, `drift`
-- **Доверие**: `trust`, `sources`, `data-journal`
-- **Сигналы**: `legal-signals`, `routes`
-- **Сообщество**: `user-stories`, `community`, `migration-board`
+## 2.1 — Decision wizard: 4 horizontal steps
 
-### Implementation
+- [ ] New step-wizard structure in `DecisionRunForm.tsx`: stepper header
+      (Цель / Откуда / Приоритеты / Запуск), step content conditionally
+      rendered, Prev/Next + direct step-jump.
+- [ ] Step 1 «Цель»: scenario picker converted to `RadioCards`.
+- [ ] Step 2 «Откуда»: origin-select + candidate checkboxes (unchanged
+      elements, just relocated).
+- [ ] Step 3 «Приоритеты»: persona-select + existing
+      `DecisionWeightSliders` (unchanged, already collapsed by default).
+- [ ] Step 4 «Запуск»: summary of current selections (scenario, origin,
+      candidates, persona, weights-touched) + run button.
+- [ ] `DecisionWizard` (guided quiz) + `AIDecisionIntentHelper` stay
+      always-visible above the stepper, fully untouched.
+- [ ] typecheck/lint/prettier clean.
 
-- [+] `database/migrations/056_web_dossier_v2_flag.sql`: seeds
-      `web_dossier_v2` into `feature_flags` (disabled/internal by default)
-      plus a paired `feature_access_rules` row, matching migration 030's
-      convention exactly. sqlfluff-clean.
-- [+] Applied migration locally, confirmed idempotent (applied twice).
-- [+] Extracted the 17 sections' JSX into `CountryDossier.tsx`
-      (`apps/web/src/features/country-card/CountryDossier.tsx`) — one
-      `sections` array built once via `useMemo`, both the old (flat) and
-      new (tabbed) layouts render from it, so the two layouts cannot drift
-      out of sync. Every existing `data-testid` preserved exactly.
-- [+] `CountryDossier` component: Radix `Tabs`, `value` synced via
-      `useQueryState("tab", parseAsStringEnum(...))` (nuqs), 5
-      `TabsTrigger`s, each `TabsContent` a `grid lg:grid-cols-2` with wide
-      blocks (community, migration-board, sources, legal-signals) spanning
-      `lg:col-span-2`, `DossierRail` fed only the active tab's sections.
-- [+] `CountryPage` (`[slug]/page.tsx`, Server Component): unchanged
-      data-fetch; shrank from ~289 to ~99 lines — section rendering now
-      delegates entirely to `<CountryDossier card={card} locale={locale}>`,
-      which reads `useFeatureEnabled("web_dossier_v2")` client-side and
-      picks flat vs. tabbed. Flag check stays client-only, matching the
-      one proven precedent (`CountryDataJournalBlock`); no SSR threading
-      attempted.
-- [-] Update dossier-touching E2E specs to add "open tab X" steps: NOT
-      needed in practice — every existing spec still passes unchanged
-      because the flag defaults off (flat layout, identical DOM/testids to
-      before). Verified via a 20-file / 183-test regression run (183
-      passed, 1 pre-existing flaky, 0 new failures). No spec required a
-      non-default tab to reach its target testid.
-- [+] New E2E coverage for the flag: added
-      `"dossier renders the flat rail layout by default (web_dossier_v2
-      disabled)"` in `web-mvp-argentina-core-country.spec.ts` — asserts
-      the rail is present, `country-dossier-tabs`/`tablist` are absent.
-      The tabbed on-state was NOT covered by an automated spec — there is
-      no admin write endpoint for feature flags in this codebase (GET
-      `/platform/features` is read-only), so flipping the flag on inside
-      an E2E run isn't cleanly possible without direct DB access. Matches
-      the same negative-only coverage pattern already used for other
-      capability-gated surfaces (author-metrics, country-proposals,
-      migration-board). The on-state was verified manually instead: all 5
-      tabs, correct section grouping, `?tab=` deep-linking, zero console
-      errors, against a live DB flag flip (both `feature_flags` and
-      `feature_access_rules` rows, then reverted back to seeded defaults
-      after verification).
+## 2.1 — e2e updates for step navigation
 
-## 1.2 — Catalog card redesign
+- [ ] `web-mvp-decision-ready-scenarios.spec.ts`: option-text reads via
+      RadioCards, run-button tests get a step-4 jump.
+- [ ] `web-mvp-decision-personalization.spec.ts`: weight-slider tests
+      get a step-3 jump before the existing `<details>` open.
+- [ ] `web-mvp-decision-wizard.spec.ts`: post-apply assertions on
+      scenario/persona read RadioCards state instead of `<select>` value
+      where applicable.
+- [ ] `web-mvp-scenario-specific-cii.spec.ts`, `web-mvp-origin-aware-decision.spec.ts`,
+      `web-mvp-personas.spec.ts`, `web-mvp-decision-passport.spec.ts`,
+      `web-mvp-platform-foundations.spec.ts`: step jumps added where fields
+      moved.
+- [ ] Spot-check `web-mvp-main-flow.spec.ts`, `web-mvp-ai-invariants.spec.ts`,
+      `web-mvp-locale.spec.ts`, `web-mvp-localization-badges.spec.ts`,
+      `web-mvp-pages.spec.ts` for incidental breakage.
 
-- [-] `CountryCatalogCard.tsx`: add `ProgressRing` (CII, size~56) — SCOPED
-      OUT. Verified via `packages/contracts/generated/types.ts`: the
-      `Country`/`CountryListResponse` schemas returned by the catalog's
-      list endpoint carry no `cii_score` field at all (only the unrelated
-      `ComparedCountry` schema, used by `/compare`, has one). Rendering a
-      CII ring on the catalog card would need a backend/contract change
-      (new field on the list response, or an N+1 per-card fetch) — out of
-      scope for a frontend-only wave per `.ai/project/12-domain-rules.md`'s
-      contract-change rules. Flagging as backend follow-up, not attempting
-      a workaround (e.g. per-card fetch) that would introduce N+1 calls.
-- [-] Trend arrow from drift value — SCOPED OUT, same root cause: no
-      `country_drift` field on the list response either. Same reasoning
-      as the CII item above; both would ship together once the backend
-      adds an enrichment field.
-- [+] `WatchlistStar` — checked before touching: already a compact,
-      icon-only button (`Star` icon from lucide-react, absolutely
-      positioned, 8x8). No changes needed, no new variant added.
-- [-] Sticky filter/sort panel in `CountryCatalogView.tsx` — SCOPED OUT.
-      Read the file in full first: there is currently NO filter/sort UI at
-      all (only `useQueryState("page", ...)` pagination). The plan's
-      "make it sticky" premise assumes filters already exist; building
-      filter/sort UI from scratch is a materially larger, different task
-      (new query params, new API usage, new controls, new tests) than
-      "add position: sticky" and doesn't belong in this wave without an
-      explicit go-ahead. Flagging as its own follow-up task.
-- [+] Grid density: read current breakpoints first (`sm:grid-cols-2
-      lg:grid-cols-3`, no existing `xl:` step — plan's premise of an
-      existing `xl:grid-cols-3` didn't hold either). Added
-      `xl:grid-cols-4` to both the real items grid and the loading
-      skeleton (`CatalogSkeletonGrid`) in
-      `apps/web/src/features/country-catalog/CountryCatalogView.tsx`, so
-      the loading state's column count matches the loaded state's —
-      avoids a layout shift between skeleton and real content on wide
-      screens. Typecheck/lint/prettier all clean after the change.
+## 2.2 — Result card deck
 
-## 1.3 — Home page horizontal deck
+- [ ] `DecisionResultCard.tsx`: compact always-visible header (rank,
+      country, score, confidence, top strength line) under `result-card`;
+      `persona-adjusted-score` stays visible (test constraint); rest
+      (weaknesses, risks, route context, breakdown, sources, country-card
+      link) moves into an `Accordion`.
+- [ ] Compare top-2/3 link: `/compare?countries=slug1,slug2` pre-fill.
+- [ ] `CompareMatrixView`/`CountryScenarioMatrix`: read `countries` query
+      param, filter matrix client-side when present.
+- [ ] typecheck/lint/prettier clean.
+- [ ] Verify `result-card`, `persona-adjusted-score`,
+      `ai-explain-number-button`-inside-`decision-winner-block` all still
+      visible with zero clicks.
 
-- [+] Ported `HorizontalPager` + `MobileStack` from
-      `apps/web-prototype/src/components/shell/` into
-      `packages/ui/src/shell/` (genuinely new — neither existed there
-      before). Adapted, not verbatim: dropped the prototype's global
-      wheel/keydown scroll-hijacking (that pattern assumes the pager owns
-      the whole viewport with nothing else to scroll; here the deck sits
-      mid-page above a footer and quick-links nav, so hijacking the wheel
-      or arrow keys globally would fight normal page scrolling). Kept
-      click/dot/arrow navigation and touch swipe.
-- [+] Wrapped `CountryOverviewCards`/`ScenarioWinnersPanel`+
-      `HomeMatrixPreview`/`LatestLegalEventsPanel`+`KeyInsightsPanel` into
-      3 zones (`HomeDeck.tsx`), matching the plan's own "three zones" note.
-      Hero/CTA untouched.
-- [+] Mobile: `MobileStack`'s native scroll-snap. `prefers-reduced-motion`:
-      plain vertical stack, no paging UI at all — the same flat layout the
-      page had before the deck, so it doubles as the safest fallback.
-      Breakpoint switching is pure CSS in each component
-      (`min-[821px]:block` / `max-[820px]:flex`) with no JS resize
-      listener at all, which trivially satisfies "debounced resize" by not
-      needing one; the one resize-driven JS path that does exist
-      (`HorizontalPager`'s container-width measurement, see below) is
-      debounced, matching `BackgroundTexture.tsx`'s established pattern.
+## 2.3 — Passport visual polish
 
-### Real bugs found during verification (not caught by typecheck/lint)
+- [ ] Perforated-edge top border + circular stamp/seal ported as
+      decorative markup into the passport page header (not the
+      PassportCard component).
+- [ ] Mono-formatted REF/date/status metadata.
+- [ ] No live toggles, no recompute — page stays a pure server-rendered
+      snapshot.
 
-- [+] **Percentage-of-percentage transform unreliable.** The original
-      port computed the row's sliding transform as
-      `translateX(-${index * (100/n)}%)` on a row whose own `width` was
-      *also* a percentage (`${n*100}%`) set in the same inline style
-      object. In the Claude Browser preview tool this consistently
-      resolved to an identity transform (content never visually moved,
-      though `aria-hidden` and the style *string* were correct) — and
-      `ResizeObserver` never delivered a callback in that same tool either,
-      pointing at a stalled layout/paint pipeline specific to that
-      environment rather than a universal cross-browser bug. Rather than
-      trust an environment I couldn't fully verify, switched to measuring
-      the container in real pixels (`getBoundingClientRect`, read
-      synchronously on mount, not only from `ResizeObserver`'s first
-      callback which the same environment also never delivered) and
-      computing the transform/widths in pixels throughout. This is also
-      the standard, more portable technique production carousels use for
-      exactly this class of cross-engine reliability reason. Verified
-      working via the project's own Playwright/Chromium (not the preview
-      tool): clicking `pager-next` correctly flips `aria-hidden` and the
-      newly-active zone's content becomes reachable.
-- [+] **Duplicate DOM content from mounting both deck variants at once.**
-      `HomeDeck` originally rendered *both* `<HorizontalPager>` and
-      `<MobileStack>` simultaneously, relying on each one's own CSS
-      breakpoint class to hide itself at the "wrong" viewport. Both
-      received the *same* `slides` array, so every zone's inner content
-      (and every `data-testid` on it, e.g. `home-matrix-preview`) was
-      rendered twice in the DOM — CSS hid one copy visually, but Playwright
-      locators found both and threw "strict mode violation: resolved to 2
-      elements" (confirmed via the real Playwright run, not the preview
-      tool). Fixed by adding `useMediaQuery` (new hook,
-      `packages/ui/src/hooks/useMediaQuery.ts`, same shape as the existing
-      `useReducedMotion`) and conditionally mounting only one of
-      `HorizontalPager`/`MobileStack` at a time in `HomeDeck`, instead of
-      mounting both and hiding one with CSS.
+## Verification (before merge)
 
-## Verification (per wave, before merge)
-
-- [+] `packages/ui`/`apps/web` typecheck/lint/build clean — verified after
-      every substantive edit, not just once at the end; `pnpm build`
-      (production) also clean. Dossier page bundle:
-      `/[locale]/countries/[slug]` is 11.3 kB / 298 kB First Load JS;
-      home page `/[locale]` is 13.9 kB / 156 kB.
-- [+] Full Playwright suite: 328 passed, 0 hard failures, 2 flaky (both
-      fixed — see below), 1.9m runtime, `EXIT_CODE=0`. Flag off (default)
-      renders the old flat dossier layout everywhere, confirmed via the
-      dedicated negative-coverage test added in 1.1.
-- [+] Manual/scripted check in a real browser (project's own
-      Playwright/Chromium, not the Claude Browser preview tool — see the
-      1.3 section above for why): dossier page flag on/off, catalog page,
-      home page in all 3 deck states (desktop pager — clicked through all
-      3 zones; mobile scroll-snap at 390x844; `prefers-reduced-motion` —
-      confirmed 3 plain zone divs, 0 pager, 0 duplicate stack, all 5
-      analytical-block testids simultaneously visible with no clicking).
-- [+] **Bonus fixes found during this verification, not scoped to 1.3's
-      own diff but caught by running the full suite for real:** two
-      pre-existing "strict mode violation: resolved to 2 elements" flakes
-      on `country-card` (`/countries/[slug]`, unrelated to Stage 1.1/1.2's
-      own changes) and `sources-filters` (`/sources`, an entirely
-      untouched page) — the same transient force-dynamic
-      hydration-duplication bug class as the `h1` sweep in Stage 0
-      (`ca68ebf`). Fixed both with the same established `.first()`
-      pattern. A full codebase-wide sweep for remaining unguarded
-      instances of this bug class is explicitly out of scope for this
-      wave — flagging as pre-existing tech debt, not attempting to find
-      every instance.
-- [+] **Separately discovered, NOT fixed in this diff (flagged as a
-      background task instead):** `playwright.visual.config.ts`'s
-      context-level `use: { reducedMotion: "reduce" }` does not actually
-      propagate to `window.matchMedia` in pages under test (confirmed
-      empirically: reads `false`; an explicit per-page
-      `page.emulateMedia({reducedMotion:"reduce"})` reads `true`
-      correctly). This means the visual suite has never actually been
-      testing any component's reduced-motion fallback, including
-      `HomeDeck`'s — a pre-existing test-infrastructure gap, not
-      something this wave introduced or is positioned to fix cleanly.
-      The reduced-motion path itself was verified correct via the
-      explicit-`emulateMedia` workaround instead (see above).
-- [+] Visual baselines re-shot once at the end of the whole wave
-      (`pnpm web:mvp:visual:update`). Only `home.png` and `catalog.png`
-      actually changed pixel content (expected — 1.2's grid density and
-      1.3's deck); `country-dossier.png`/`decision-result.png`/
-      `decision-passport.png` matched their existing baselines exactly
-      (expected — dossier flag defaults off, decision pages untouched).
+- [ ] `packages/ui`/`apps/web` typecheck/lint/build clean.
+- [ ] Full Playwright suite green (or honestly documented flakes only).
+- [ ] Visual baselines re-shot once at the end of the whole wave.
+- [ ] Manual browser check: full decision flow start to finish, passport
+      page.
 
 ## Completion
 
-- [+] Fill this checklist (`+`/`-`).
-- [+] Final report.
+- [ ] Fill this checklist (`+`/`-`).
+- [ ] Commit on `feat/frontend-decision-scenario-v1`.
+- [ ] **STOP before merge/push** — ask the user explicitly, given the
+      Stage 1 finding that push authorization doesn't automatically
+      carry over between waves.
+- [ ] Final report.
