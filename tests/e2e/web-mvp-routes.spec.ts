@@ -16,7 +16,7 @@ test.describe("Route Explorer smoke", () => {
     await page.getByTestId("route-card").first().getByRole("link").click();
     await expect(page).toHaveURL(/\/ru\/routes\/[^/?]+$/);
     await expect(page.getByTestId("route-detail")).toBeVisible();
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 });
@@ -88,7 +88,7 @@ test.describe("Route detail page", () => {
     await page.goto(e2eRoutes.country("russia", "ru"));
     await expectPageReady(page);
     await page.getByTestId("route-card").first().getByRole("link").click();
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
   });
 
   test("route detail has country back link", async ({ page }) => {

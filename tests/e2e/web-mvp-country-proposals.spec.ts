@@ -1,22 +1,6 @@
-import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(page: Page, email: string) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Country Proposal User");
-  await page
-    .getByTestId("register-password")
-    .fill("a-very-strong-password-123");
-  await page.getByTestId("register-submit").click();
-  await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-}
 
 test.describe("country proposals studio", () => {
   test("/account/country-proposals without a session shows the unauthenticated notice", async ({
@@ -43,6 +27,7 @@ test.describe("country proposals studio", () => {
 
   test("a logged-in user without the contributor.countries capability sees a permission error, not a crash", async ({
     page,
+    seededUser,
   }) => {
     // contributor.countries is a capability-gated action (require_capability
     // on the country-contribution router, no role bypass -- confirmed in
@@ -54,9 +39,6 @@ test.describe("country proposals studio", () => {
     // reachable behavior for a freshly registered user attempting to
     // create a proposal, rather than a full wizard flow that would require
     // owner-level test setup this suite doesn't have.
-    const email = uniqueEmail("country-proposal-no-capability-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.accountCountryProposals);
     await expect(page.getByTestId("country-proposals-list-view")).toBeVisible();
 

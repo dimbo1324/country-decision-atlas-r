@@ -1,23 +1,7 @@
-import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { API_BASE_URL } from "./helpers/env";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(page: Page, email: string) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Author Metrics User");
-  await page
-    .getByTestId("register-password")
-    .fill("a-very-strong-password-123");
-  await page.getByTestId("register-submit").click();
-  await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-}
 
 test.describe("author metrics studio", () => {
   test("/account/author-metrics without a session shows the unauthenticated notice", async ({
@@ -32,6 +16,7 @@ test.describe("author metrics studio", () => {
 
   test("a logged-in user without the author.metrics capability sees a permission error, not a crash", async ({
     page,
+    seededUser,
   }) => {
     // author.metrics is a capability-gated action (require_capability, no
     // role bypass -- confirmed in apps/api/app/core/rbac.py) granted only
@@ -42,9 +27,6 @@ test.describe("author metrics studio", () => {
     // behavior for a freshly registered user rather than a full create
     // flow that would require owner-level test setup this suite doesn't
     // have.
-    const email = uniqueEmail("author-metrics-no-capability-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.accountAuthorMetrics);
     await expect(page.getByTestId("author-metrics-studio")).toBeVisible();
     await expect(page.locator("body")).toContainText(
@@ -55,10 +37,12 @@ test.describe("author metrics studio", () => {
 
   test("public author profile page renders for any user id without crashing", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("author-metrics-profile-user");
-    await registerViaUi(page, email);
-
+    // fetch() needs a real page origin to run from -- the seededUser
+    // fixture only sets cookies, it never navigates `page` (still
+    // about:blank at this point without a goto first).
+    await page.goto(e2eRoutes.account);
     const me = await page.evaluate(async (apiBaseUrl) => {
       const response = await fetch(`${apiBaseUrl}/api/v1/auth/me`, {
         credentials: "include",

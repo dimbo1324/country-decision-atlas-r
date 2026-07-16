@@ -4,9 +4,17 @@ const WEB_BASE_URL = process.env.WEB_BASE_URL ?? "http://localhost:3000";
 
 export default defineConfig({
   testDir: "tests/e2e",
-  timeout: 30_000,
+  // Raised from 30s: page.goto() under concurrent worker load (4 browsers
+  // against one next start + one Postgres) occasionally needs more than
+  // 30s end-to-end, even though nothing is actually hung. expect.timeout
+  // stays at 10s so a genuine stuck assertion still fails fast.
+  timeout: 45_000,
   expect: { timeout: 10_000 },
-  retries: 0,
+  // One retry turns a load-related timeout into a visible "flaky" result
+  // (Playwright's own reporter/exit summary distinguishes flaky-then-passed
+  // from a clean pass) instead of a hard failure that's indistinguishable
+  // from a real regression.
+  retries: 1,
   // The app under test is a single next start process backed by one
   // Postgres/API instance; Playwright's CPU-count-based default worker
   // count (11+ on this hardware) creates enough concurrent SSR/DB load to

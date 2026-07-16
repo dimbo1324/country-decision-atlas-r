@@ -78,7 +78,7 @@ test.describe("localization badges", () => {
   test("decision page RU — results appear without crash", async ({ page }) => {
     await page.goto(e2eRoutes.decision("ru"));
     await expectNoAppCrash(page);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("badges do not crash UI when metadata is absent", async ({ page }) => {

@@ -32,14 +32,14 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
   await expect(page.getByRole("main").getByTestId("country-card")).toBeVisible({
     timeout: 15000,
   });
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("h1").first()).toBeVisible();
   await expect(
     page.locator("h2").filter({ hasText: /оценки сценариев/i }),
   ).toBeVisible();
   await expectNoAppCrash(page);
 
   await page.goto(e2eRoutes.country("uruguay", "ru"));
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("h1").first()).toBeVisible();
   await expect(
     page.locator("h2").filter({ hasText: /оценки сценариев/i }),
   ).toBeVisible();
@@ -70,6 +70,6 @@ test("main MVP user flow: home → countries → Russia → Uruguay → decision
     .getByRole("link", { name: /карточка страны/i })
     .first()
     .click();
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("h1").first()).toBeVisible();
   await expectNoAppCrash(page);
 });

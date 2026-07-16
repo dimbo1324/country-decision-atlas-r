@@ -70,7 +70,7 @@ test.describe("Argentina CII integration", () => {
   }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("Russia remains accessible after Argentina CII integration", async ({

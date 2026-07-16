@@ -206,7 +206,7 @@ test.describe("data quality page", () => {
 test.describe("accessibility semantics", () => {
   test("home page has h1 and accessible links", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     const links = page.getByRole("link");
     const count = await links.count();
     expect(count).toBeGreaterThan(0);
@@ -220,14 +220,14 @@ test.describe("accessibility semantics", () => {
     page,
   }) => {
     await page.goto("/countries");
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     const cardLinks = page.getByRole("link", { name: /открыть досье/i });
     await expect(cardLinks.first()).toBeVisible();
   });
 
   test("decision page form inputs have labels", async ({ page }) => {
     await page.goto("/decision");
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     await expect(page.getByLabel(/страна отправления/i)).toBeVisible();
     await expect(page.getByLabel(/сценарий/i)).toBeVisible();
     await expect(

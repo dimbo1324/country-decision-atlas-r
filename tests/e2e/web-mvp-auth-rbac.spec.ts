@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import {
   expectHasMainHeading,
   expectNoAppCrash,
@@ -79,16 +79,19 @@ test.describe("anonymous auth state", () => {
     await expectNoAppCrash(page);
   });
 
-  test("login with wrong password shows an error", async ({ page }) => {
-    const email = uniqueEmail("wrong-password-user");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
+  test("login with wrong password shows an error", async ({
+    page,
+    seededUser,
+  }) => {
+    // Only the wrong-password login attempt below is the actual subject of
+    // this test -- having a valid account to try it against is pure setup,
+    // seeded via the API instead of a full UI registration.
+    await page.goto(e2eRoutes.account);
     await logoutViaMenu(page);
     await expect(page.getByTestId("nav-sign-in-link")).toBeVisible();
 
     await page.goto(e2eRoutes.login);
-    await page.getByTestId("login-email").fill(email);
+    await page.getByTestId("login-email").fill(seededUser.email);
     await page.getByTestId("login-password").fill("totally-wrong-password");
     await page.getByTestId("login-submit").click();
     await expect(page.getByTestId("login-error")).toBeVisible();
@@ -112,13 +115,14 @@ test.describe("registration and account flow", () => {
 
   test("registering with an already-used email shows an error", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("duplicate-user");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
+    // The already-registered account is pure setup, seeded via the API;
+    // only the second (duplicate) registration attempt via the UI form is
+    // the actual subject of this test.
+    await page.goto(e2eRoutes.account);
     await logoutViaMenu(page);
-    await registerViaUi(page, email);
+    await registerViaUi(page, seededUser.email);
 
     await expect(page.getByTestId("register-error")).toBeVisible();
     await expect(page).toHaveURL(new RegExp(e2eRoutes.register));
@@ -126,11 +130,9 @@ test.describe("registration and account flow", () => {
 
   test("logged-in nav exposes account, watchlist and logout controls", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("nav-state-user");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
+    await page.goto(e2eRoutes.account);
     await expect(page.getByTestId("nav-sign-in-link")).toHaveCount(0);
     await openAccountMenu(page);
     await expect(page.getByTestId("nav-account-link")).toBeVisible();
@@ -143,11 +145,9 @@ test.describe("registration and account flow", () => {
 
   test("regular user does not see the data-quality nav link or page", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("regular-role-user");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
+    await page.goto(e2eRoutes.account);
     await openAccountMenu(page);
     await expect(page.getByTestId("nav-data-quality-link")).toHaveCount(0);
     await page.keyboard.press("Escape");

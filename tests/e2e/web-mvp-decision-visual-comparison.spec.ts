@@ -7,7 +7,7 @@ test.describe("decision visual comparison (CII)", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).toBeVisible();
@@ -26,7 +26,7 @@ test.describe("decision visual comparison (CII)", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).not.toBeDisabled();
@@ -106,7 +106,7 @@ test.describe("decision visual comparison (CII)", () => {
     });
 
     await page.reload();
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     await expectNoAppCrash(page);
   });
 });

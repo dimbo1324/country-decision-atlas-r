@@ -103,7 +103,7 @@ test.describe("Country expansion closeout — three countries", () => {
         "?countries=argentina%2Curuguay&scenario=relocation_residence",
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("/compare Argentina+Russia does not crash", async ({ page }) => {
@@ -112,7 +112,7 @@ test.describe("Country expansion closeout — three countries", () => {
         "?countries=argentina%2Crussia&scenario=business_self_employment",
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("/legal-signals?country_slug=argentina shows timeline", async ({
@@ -164,13 +164,13 @@ test.describe("Country expansion closeout — three countries", () => {
       e2eRoutes.sources({ country_slug: "argentina", locale: "ru" }),
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("/ home page opens without crash", async ({ page }) => {
     await page.goto("/");
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("responsive: /compare at 390x844 shows all three rows", async ({

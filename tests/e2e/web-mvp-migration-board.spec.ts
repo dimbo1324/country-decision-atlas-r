@@ -1,20 +1,6 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(page: Page, email: string) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Migration Board User");
-  await page
-    .getByTestId("register-password")
-    .fill("a-very-strong-password-123");
-  await page.getByTestId("register-submit").click();
-}
 
 test.describe("migration board public surface", () => {
   test("/migration-board opens and renders filters", async ({ page }) => {
@@ -38,11 +24,8 @@ test.describe("migration board public surface", () => {
 
   test("logged-in user can create and submit a migration board post", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("migration-board-user");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
     await page.goto(e2eRoutes.migrationBoardNew);
     await expect(page.getByTestId("migration-board-new-form")).toBeVisible();
     await page.getByTestId("migration-board-destination-input").fill("uruguay");
@@ -72,11 +55,8 @@ test.describe("migration board public surface", () => {
 
   test("regular user cannot moderate migration board posts", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("migration-board-regular");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
     await page.goto(e2eRoutes.migrationBoardModeration);
     await expect(page.getByTestId("migration-board-moderation")).toHaveCount(0);
     await expect(page.locator("body")).toContainText(/недостаточно прав/i);

@@ -1,26 +1,6 @@
-import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(
-  page: Page,
-  email: string,
-  password = "a-very-strong-password-123",
-) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page
-    .getByTestId("register-display-name")
-    .fill("Runtime Watchlist User");
-  await page.getByTestId("register-password").fill(password);
-  await page.getByTestId("register-submit").click();
-  await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-}
 
 test.describe("watchlist page anonymous state", () => {
   test("/watchlist without a session shows the unauthenticated notice", async ({
@@ -45,10 +25,8 @@ test.describe("watchlist page anonymous state", () => {
 test.describe("watchlist authenticated flow", () => {
   test("empty watchlist shows the empty state after login", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("watchlist-empty-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.watchlist);
     await expect(page.getByTestId("watchlist-empty-state")).toBeVisible();
     await expectNoAppCrash(page);
@@ -56,10 +34,8 @@ test.describe("watchlist authenticated flow", () => {
 
   test("saving a country from its page adds it to the watchlist and removing clears it", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("watchlist-save-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.country("uruguay", "en"));
     await expectPageReady(page);
 
@@ -87,10 +63,8 @@ test.describe("watchlist authenticated flow", () => {
 
   test("toggling a notification preference persists after reload", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("watchlist-toggle-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.country("uruguay", "en"));
     await expectPageReady(page);
     const toggleButton = page.getByTestId("watchlist-toggle-button");

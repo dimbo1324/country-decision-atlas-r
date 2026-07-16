@@ -1,24 +1,7 @@
 import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(
-  page: Page,
-  email: string,
-  password = "a-very-strong-password-123",
-) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Trips User");
-  await page.getByTestId("register-password").fill(password);
-  await page.getByTestId("register-submit").click();
-  await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-}
 
 async function createTrip(page: Page, title: string) {
   await page.goto(e2eRoutes.trips);
@@ -42,27 +25,25 @@ test.describe("trips page anonymous state", () => {
 test.describe("trips authenticated flow", () => {
   test("empty trips list shows the empty state after login", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("trips-empty-user");
-    await registerViaUi(page, email);
-
     await page.goto(e2eRoutes.trips);
     await expect(page.getByTestId("trips-view")).toBeVisible();
     await expect(page.getByTestId("trips-empty-state")).toBeVisible();
   });
 
-  test("creating a trip navigates to its detail view", async ({ page }) => {
-    const email = uniqueEmail("trips-create-user");
-    await registerViaUi(page, email);
+  test("creating a trip navigates to its detail view", async ({
+    page,
+    seededUser,
+  }) => {
     await createTrip(page, "Move to Uruguay");
     await expect(page.getByTestId("trip-title")).toHaveText("Move to Uruguay");
   });
 
   test("adding, reordering (keyboard), and removing waypoints", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("trips-waypoints-user");
-    await registerViaUi(page, email);
     await createTrip(page, "Waypoints trip");
 
     await page.getByTestId("waypoint-country-select").selectOption("uruguay");
@@ -99,9 +80,10 @@ test.describe("trips authenticated flow", () => {
     await expect(page.getByTestId("waypoint-row")).toHaveCount(1);
   });
 
-  test("checklist: add, toggle, and remove an item", async ({ page }) => {
-    const email = uniqueEmail("trips-checklist-user");
-    await registerViaUi(page, email);
+  test("checklist: add, toggle, and remove an item", async ({
+    page,
+    seededUser,
+  }) => {
     await createTrip(page, "Checklist trip");
 
     await page.getByTestId("checklist-item-input").fill("Gather documents");
@@ -120,9 +102,7 @@ test.describe("trips authenticated flow", () => {
     await expect(page.getByTestId("checklist-item")).toHaveCount(0);
   });
 
-  test("reminders: create and cancel", async ({ page }) => {
-    const email = uniqueEmail("trips-reminders-user");
-    await registerViaUi(page, email);
+  test("reminders: create and cancel", async ({ page, seededUser }) => {
     await createTrip(page, "Reminders trip");
 
     const future = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -138,9 +118,8 @@ test.describe("trips authenticated flow", () => {
   test("share: enable creates a working public page, disable revokes it", async ({
     page,
     context,
+    seededUser,
   }) => {
-    const email = uniqueEmail("trips-share-user");
-    await registerViaUi(page, email);
     await createTrip(page, "Shared trip");
 
     await page.getByTestId("waypoint-country-select").selectOption("uruguay");
@@ -169,9 +148,10 @@ test.describe("trips authenticated flow", () => {
     await expect(page.getByTestId("trip-share-enable")).toBeVisible();
   });
 
-  test("deleting a trip removes it from the list", async ({ page }) => {
-    const email = uniqueEmail("trips-delete-user");
-    await registerViaUi(page, email);
+  test("deleting a trip removes it from the list", async ({
+    page,
+    seededUser,
+  }) => {
     await createTrip(page, "Trip to delete");
 
     await page.getByTestId("trip-delete-button").click();

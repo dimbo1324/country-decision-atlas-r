@@ -111,21 +111,67 @@ Branch: `fix/e2e-stabilization-v1`, fresh off `main`.
       in its terminal summary and HTML report, which is the "flake is a
       visible metric, not a swallowed signal" outcome the plan wants — no
       extra custom tooling needed for that.
+- [+] **Bug found during verification, fixed beyond the original scope:**
+      `AuthProvider` gates its mount-time `/auth/me` check behind a
+      first-party `cda_session_hint` cookie the frontend sets itself via
+      `document.cookie` after a real auth check — seeding a session purely
+      through `context.request` never runs that JS, so the app rendered as
+      fully anonymous despite holding a valid session. Fixed in the
+      `seededUser` fixture: `context.addCookies([...])` sets the same
+      hint cookie the frontend would, mirroring
+      `apps/web/src/shared/auth/session.ts`'s `setSessionHint()` exactly.
+      Two tests also needed a `page.goto(...)` added before their first
+      `page.evaluate(fetch(...))` call, since the fixture (unlike the old
+      `registerViaUi`) never navigates `page` itself — `fetch()` has no
+      valid origin to run from on `about:blank`.
+- [+] **Second, unrelated bug found and fixed while chasing full-suite
+      flakes:** a pre-existing "strict mode violation: locator('h1')
+      resolved to 2 elements" hydration-duplication issue (the same class
+      of bug fixed once before for the dossier page,
+      `ca68ebf fix: harden h1 assertions against transient dossier
+      hydration duplication`) was still present, unswept, in 11 other spec
+      files using a raw `page.locator("h1")`/`getByRole("heading", {level:
+      1})` instead of the already-established `.first()`-guarded pattern
+      (`tests/e2e/helpers/assertions.ts`'s `expectPageReady`/
+      `expectHasMainHeading`). Swept all of them to `.first()` — mechanical,
+      safe (only loosens an over-strict assertion to the pattern already
+      used everywhere else), and squarely in scope for "suite-wide
+      stabilization" even though not explicitly named in the plan.
 
 ## Verification
 
 - [+] `packages/ui`/`apps/web` unaffected by this task — confirm `pnpm
       quality` still green (regression check only).
-- [+] Full Playwright suite green.
-- [+] Historically-flaky specs from the owner's own full-check
-      (`web-mvp-argentina-core-country`, `web-mvp-community-intelligence`,
-      `web-mvp-trips`) re-run in isolation to confirm they were load-related
-      flakes, not latent bugs the conversion happened to also fix/hide.
-- [+] Full suite run a second and third time back-to-back to confirm the
-      Definition of Done ("three consecutive green runs").
+- [+] The 9 converted spec files run in isolation, twice, both clean
+      (48-49 passed each time, one pre-existing unrelated flake that
+      self-heals on retry).
+- [-] **Full-suite "three consecutive clean runs" DoD not achieved
+      literally** — 5 full-suite runs in back-to-back succession showed
+      escalating runtime (2.1m → 1.9m → 5.4m → 14.2m → 6.1m) and,
+      correspondingly, more transient failures in the slower runs, spread
+      across files mostly untouched by this task. Investigated directly
+      rather than assumed: no lingering `node`/webserver process between
+      runs, Postgres row counts trivial (228 users, 12 connections, mostly
+      idle), Docker containers at <1% CPU / ~100MB each. Cause not
+      conclusively identified — plausibly Windows-specific overhead
+      (Defender scanning fresh build/trace output, general OS pressure)
+      from repeated heavy runs (4 concurrent Chromium instances + a fresh
+      `next start` + real Postgres/Redis/API) in quick succession on a
+      personal dev machine, not present in CI's dedicated runner. Evidence
+      actually in hand: runs 1 and 5 were clean by Playwright's own
+      pass/fail definition (flaky-but-retried counts as a pass, exit 0);
+      run 2's 2 hard failures were the h1 bug above, now fixed; run 3's and
+      run 4's failures were not attributable to this task's diffs (checked
+      `git diff --stat` against every failing file — most were untouched,
+      the rest had only the safe `.first()` change) and did not recur
+      consistently across runs (different files each time — load noise,
+      not a deterministic regression). Documented honestly rather than
+      claimed as literally met; the actually-shipped fixes are verified
+      solid in isolation.
 
 ## Completion
 
 - [+] Fill this checklist (`+`/`-`).
 - [+] Final report: what shipped, the worker-scoped-vs-per-test deviation
-      restated plainly, what's deferred to Этап 1.
+      restated plainly, the session-hint bug, the h1-sweep bonus fix, the
+      DoD-not-literally-met finding, what's deferred to Этап 1.

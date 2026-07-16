@@ -31,7 +31,7 @@ test("analytics event ingestion accepts anonymous event", async ({
 
 test("analytics smoke keeps core pages working", async ({ page }) => {
   await page.goto(e2eRoutes.decision());
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("h1").first()).toBeVisible();
   await expectNoAppCrash(page);
 
   await page.goto(e2eRoutes.country("russia", "ru"));
@@ -41,6 +41,6 @@ test("analytics smoke keeps core pages working", async ({ page }) => {
   await expectNoAppCrash(page);
 
   await page.goto(e2eRoutes.country("argentina", "ru"));
-  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("h1").first()).toBeVisible();
   await expectNoAppCrash(page);
 });

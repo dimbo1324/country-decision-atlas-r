@@ -8,7 +8,7 @@ test.describe("Argentina legal signals and timeline", () => {
   }) => {
     await page.goto(e2eRoutes.country("argentina", "ru"));
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("/countries/argentina CII block still visible after legal signals", async ({
@@ -28,7 +28,7 @@ test.describe("Argentina legal signals and timeline", () => {
       e2eRoutes.legalSignals({ country_slug: "argentina", locale: "ru" }),
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("/legal-signals?country_slug=argentina renders timeline", async ({
@@ -103,7 +103,7 @@ test.describe("Argentina legal signals and timeline", () => {
       e2eRoutes.sources({ country_slug: "argentina", locale: "ru" }),
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 
   test("Argentina filter in /legal-signals does not crash", async ({
@@ -156,6 +156,6 @@ test.describe("Argentina legal signals and timeline", () => {
       e2eRoutes.legalSignals({ country_slug: "argentina", locale: "ru" }),
     );
     await expectNoAppCrash(page);
-    await expect(page.locator("h1")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 });
   });
 });

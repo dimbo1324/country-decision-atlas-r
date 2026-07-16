@@ -1,21 +1,6 @@
-import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./helpers/fixtures";
 import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
-
-function uniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10_000)}@example.local`;
-}
-
-async function registerViaUi(page: Page, email: string) {
-  await page.goto(e2eRoutes.register);
-  await page.getByTestId("register-email").fill(email);
-  await page.getByTestId("register-display-name").fill("Community User");
-  await page
-    .getByTestId("register-password")
-    .fill("a-very-strong-password-123");
-  await page.getByTestId("register-submit").click();
-}
 
 test.describe("community intelligence surface", () => {
   test("country page exposes moderated community actions", async ({ page }) => {
@@ -98,11 +83,8 @@ test.describe("community intelligence surface", () => {
 
   test("regular user cannot moderate community submissions", async ({
     page,
+    seededUser,
   }) => {
-    const email = uniqueEmail("community-regular");
-    await registerViaUi(page, email);
-    await expect(page).toHaveURL(new RegExp(e2eRoutes.account));
-
     await page.goto(e2eRoutes.communityModeration);
     await expect(page.getByTestId("community-moderation")).toHaveCount(0);
     await expect(page.locator("body")).toContainText(/недостаточно прав/i);

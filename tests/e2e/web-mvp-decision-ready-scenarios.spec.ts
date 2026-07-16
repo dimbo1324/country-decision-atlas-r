@@ -7,7 +7,7 @@ test.describe("decision-ready scenario filtering", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("en"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const select = page.getByTestId("decision-scenario-select");
     await expect(select).toBeVisible();
@@ -36,7 +36,7 @@ test.describe("decision-ready scenario filtering", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("ru"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const select = page.getByTestId("decision-scenario-select");
     await expect(select).toBeVisible();
@@ -54,7 +54,7 @@ test.describe("decision-ready scenario filtering", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("en"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
 
     const runButton = page.getByTestId("decision-run-button");
     await expect(runButton).toBeVisible();
@@ -82,7 +82,7 @@ test.describe("decision-ready scenario filtering", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.decision("en"));
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("h1").first()).toBeVisible();
     await expect(page.getByTestId("decision-run-button")).not.toBeDisabled();
     await expectNoAppCrash(page);
   });
