@@ -13,11 +13,7 @@ import { Compass, Grid3x3 } from "lucide-react";
 import { Link } from "../../i18n/navigation";
 import { homeOverviewQuery } from "../../entities/home/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
-import { CountryOverviewCards } from "./CountryOverviewCards";
-import { HomeMatrixPreview } from "./HomeMatrixPreview";
-import { KeyInsightsPanel } from "./KeyInsightsPanel";
-import { LatestLegalEventsPanel } from "./LatestLegalEventsPanel";
-import { ScenarioWinnersPanel } from "./ScenarioWinnersPanel";
+import { HomeDeck } from "./HomeDeck";
 
 function formatGeneratedAt(value: string | null | undefined): string {
   if (!value) return "—";
@@ -132,13 +128,13 @@ export function HomeOverviewView() {
       )}
       {overview && !isEmpty && (
         <>
-          <CountryOverviewCards countries={countriesSummary} />
-          <ScenarioWinnersPanel winners={scenarioWinners} />
-          <HomeMatrixPreview matrix={overview.matrix_preview} />
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <LatestLegalEventsPanel events={latestLegalEvents} />
-            <KeyInsightsPanel insights={keyInsights} />
-          </div>
+          <HomeDeck
+            countries={countriesSummary}
+            scenarioWinners={scenarioWinners}
+            matrix={overview.matrix_preview}
+            latestLegalEvents={latestLegalEvents}
+            keyInsights={keyInsights}
+          />
           <nav
             className="border-warm flex flex-wrap items-center justify-center gap-x-10 gap-y-3 border-t pt-8 pb-4"
             data-testid="home-quick-links"

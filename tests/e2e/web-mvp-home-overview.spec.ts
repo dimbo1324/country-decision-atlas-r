@@ -3,27 +3,46 @@ import { expectHasMainHeading, expectNoAppCrash } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("home visual overview", () => {
-  test("homepage overview renders analytical blocks", async ({ page }) => {
+  test("homepage overview renders analytical blocks across the deck", async ({
+    page,
+  }) => {
+    // The three analytical zones (countries / scenarios+matrix /
+    // legal+insights) render inside a horizontal deck (HomeDeck) on desktop
+    // viewports -- only the active zone is on-screen at a time, paged via
+    // the pager-next control, rather than all five blocks stacked at once.
     await page.goto(e2eRoutes.home);
     await expectHasMainHeading(page, /country decision atlas/i);
     await expect(page.locator('[data-testid="home-overview"]')).toBeVisible();
+    await expect(page.locator('[data-testid="home-deck"]')).toBeVisible();
+
     await expect(
       page.locator('[data-testid="home-country-cards"]'),
     ).toBeVisible({
       timeout: 10_000,
     });
     await expect(
+      page.locator('[data-testid="pager-slide-scenarios"]'),
+    ).toHaveAttribute("aria-hidden", "true");
+
+    await page.getByTestId("pager-next").click();
+    await expect(
+      page.locator('[data-testid="pager-slide-scenarios"]'),
+    ).not.toHaveAttribute("aria-hidden", "true");
+    await expect(
       page.locator('[data-testid="home-scenario-winners"]'),
     ).toBeVisible();
     await expect(
       page.locator('[data-testid="home-matrix-preview"]'),
     ).toBeVisible();
+
+    await page.getByTestId("pager-next").click();
     await expect(
       page.locator('[data-testid="home-latest-legal-events"]'),
     ).toBeVisible();
     await expect(
       page.locator('[data-testid="home-key-insights"]'),
     ).toBeVisible();
+
     await expectNoAppCrash(page);
   });
 

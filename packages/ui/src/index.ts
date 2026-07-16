@@ -6,11 +6,14 @@ export { scoreLabelStyle, type ScoreLabel } from "./lib/scoreLabel";
 
 export { useCanvasLoop, lerp } from "./hooks/useCanvasLoop";
 export { useReducedMotion } from "./hooks/useReducedMotion";
+export { useMediaQuery } from "./hooks/useMediaQuery";
 
 export { BackgroundTexture } from "./shell/BackgroundTexture";
 export { BackgroundFX } from "./shell/BackgroundFX";
 export { AnalysisOverlay } from "./shell/AnalysisOverlay";
 export { DossierRail, type DossierRailSection } from "./shell/DossierRail";
+export { HorizontalPager, type DeckSlide } from "./shell/HorizontalPager";
+export { MobileStack } from "./shell/MobileStack";
 
 export { Card } from "./primitives/Card";
 export { Button } from "./primitives/Button";

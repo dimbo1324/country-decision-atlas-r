@@ -128,16 +128,65 @@ since it was written against an outdated "13 sections" premise)
 
 ## 1.3 — Home page horizontal deck
 
-- [ ] Port `HorizontalPager` + `MobileStack` from
+- [+] Ported `HorizontalPager` + `MobileStack` from
       `apps/web-prototype/src/components/shell/` into
-      `packages/ui/src/shell/` (genuinely new — neither exists there yet,
-      confirmed in Stage 0's exploration pass).
-- [ ] Wrap `CountryOverviewCards`/`ScenarioWinnersPanel`/
-      `HomeMatrixPreview`/`LatestLegalEventsPanel`+`KeyInsightsPanel` in the
-      deck. Hero/CTA untouched (per the plan).
-- [ ] Mobile: scroll-snap degradation; `prefers-reduced-motion`: vertical
-      column (design-system §6.3: three zones, no scroll-offset caching,
-      debounced resize).
+      `packages/ui/src/shell/` (genuinely new — neither existed there
+      before). Adapted, not verbatim: dropped the prototype's global
+      wheel/keydown scroll-hijacking (that pattern assumes the pager owns
+      the whole viewport with nothing else to scroll; here the deck sits
+      mid-page above a footer and quick-links nav, so hijacking the wheel
+      or arrow keys globally would fight normal page scrolling). Kept
+      click/dot/arrow navigation and touch swipe.
+- [+] Wrapped `CountryOverviewCards`/`ScenarioWinnersPanel`+
+      `HomeMatrixPreview`/`LatestLegalEventsPanel`+`KeyInsightsPanel` into
+      3 zones (`HomeDeck.tsx`), matching the plan's own "three zones" note.
+      Hero/CTA untouched.
+- [+] Mobile: `MobileStack`'s native scroll-snap. `prefers-reduced-motion`:
+      plain vertical stack, no paging UI at all — the same flat layout the
+      page had before the deck, so it doubles as the safest fallback.
+      Breakpoint switching is pure CSS in each component
+      (`min-[821px]:block` / `max-[820px]:flex`) with no JS resize
+      listener at all, which trivially satisfies "debounced resize" by not
+      needing one; the one resize-driven JS path that does exist
+      (`HorizontalPager`'s container-width measurement, see below) is
+      debounced, matching `BackgroundTexture.tsx`'s established pattern.
+
+### Real bugs found during verification (not caught by typecheck/lint)
+
+- [+] **Percentage-of-percentage transform unreliable.** The original
+      port computed the row's sliding transform as
+      `translateX(-${index * (100/n)}%)` on a row whose own `width` was
+      *also* a percentage (`${n*100}%`) set in the same inline style
+      object. In the Claude Browser preview tool this consistently
+      resolved to an identity transform (content never visually moved,
+      though `aria-hidden` and the style *string* were correct) — and
+      `ResizeObserver` never delivered a callback in that same tool either,
+      pointing at a stalled layout/paint pipeline specific to that
+      environment rather than a universal cross-browser bug. Rather than
+      trust an environment I couldn't fully verify, switched to measuring
+      the container in real pixels (`getBoundingClientRect`, read
+      synchronously on mount, not only from `ResizeObserver`'s first
+      callback which the same environment also never delivered) and
+      computing the transform/widths in pixels throughout. This is also
+      the standard, more portable technique production carousels use for
+      exactly this class of cross-engine reliability reason. Verified
+      working via the project's own Playwright/Chromium (not the preview
+      tool): clicking `pager-next` correctly flips `aria-hidden` and the
+      newly-active zone's content becomes reachable.
+- [+] **Duplicate DOM content from mounting both deck variants at once.**
+      `HomeDeck` originally rendered *both* `<HorizontalPager>` and
+      `<MobileStack>` simultaneously, relying on each one's own CSS
+      breakpoint class to hide itself at the "wrong" viewport. Both
+      received the *same* `slides` array, so every zone's inner content
+      (and every `data-testid` on it, e.g. `home-matrix-preview`) was
+      rendered twice in the DOM — CSS hid one copy visually, but Playwright
+      locators found both and threw "strict mode violation: resolved to 2
+      elements" (confirmed via the real Playwright run, not the preview
+      tool). Fixed by adding `useMediaQuery` (new hook,
+      `packages/ui/src/hooks/useMediaQuery.ts`, same shape as the existing
+      `useReducedMotion`) and conditionally mounting only one of
+      `HorizontalPager`/`MobileStack` at a time in `HomeDeck`, instead of
+      mounting both and hiding one with CSS.
 
 ## Verification (per wave, before merge)
 
