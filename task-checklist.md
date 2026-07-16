@@ -178,18 +178,45 @@ Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
 
 ## 2.2 — Result card deck
 
-- [ ] `DecisionResultCard.tsx`: compact always-visible header (rank,
-      country, score, confidence, top strength line) under `result-card`;
-      `persona-adjusted-score` stays visible (test constraint); rest
-      (weaknesses, risks, route context, breakdown, sources, country-card
-      link) moves into an `Accordion`.
-- [ ] Compare top-2/3 link: `/compare?countries=slug1,slug2` pre-fill.
-- [ ] `CompareMatrixView`/`CountryScenarioMatrix`: read `countries` query
-      param, filter matrix client-side when present.
-- [ ] typecheck/lint/prettier clean.
-- [ ] Verify `result-card`, `persona-adjusted-score`,
-      `ai-explain-number-button`-inside-`decision-winner-block` all still
-      visible with zero clicks.
+- [+] `DecisionResultCard.tsx`: compact always-visible header (rank,
+      country, score, `score_label` badge, confidence, localization
+      badge) + trust badge + summary + `persona-adjusted-score` (kept
+      compact — hard test constraint) + one-line top strength, under
+      `result-card`. Rest moves into an `Accordion`
+      (`packages/ui/src/primitives/Accordion.tsx`, already existed,
+      single-open-at-a-time): route context, remaining strengths,
+      weaknesses, risks, breakdown, sources.
+- [+] **Route context placement resolved a real conflict, not silently**:
+      the plan names "контекст маршрута" as accordion content, but
+      `web-mvp-origin-aware-decision.spec.ts` asserts `origin-aware-context`
+      visible with zero clicks. `Accordion` opens item 0 by default, so
+      making route context accordion item 0 satisfies both — the plan's
+      structural intent and the existing test — with no compromise and no
+      test rewrite needed for that specific assertion.
+- [+] Country-card link kept in the compact area (not accordion) —
+      reasoned deviation: it's a simple "view more" navigation link with
+      no expand-state dependency, no reason to gate it behind a click.
+- [+] Compare top-2/3 link: `DecisionResults.tsx` adds
+      `data-testid="compare-top-results-link"`, linking to
+      `/compare?countries=slug1,slug2[,slug3]` using the top
+      `min(3, results.length)` ranked country slugs. Only shown when
+      `results.length >= 2` (a single result has nothing to compare).
+- [+] `CompareMatrixView.tsx`: reads a `countries` query param via
+      `useSearchParams`, filters the already-fetched matrix dataset
+      client-side (no new API call). Missing/empty param falls back to
+      the original unfiltered behavior — verified manually: `/compare`
+      alone still shows all 3 countries; `/compare?countries=uruguay,russia`
+      shows exactly those 2.
+- [+] typecheck/lint/prettier clean (packages/ui + apps/web).
+- [+] Verified against a clean production build: `result-card`,
+      `persona-adjusted-score` (personas.spec.ts, 1.2s),
+      `ai-explain-number-button`-inside-`decision-winner-block`
+      (ai-invariants.spec.ts) all confirmed visible with zero clicks.
+      `decision-visual-comparison.spec.ts` (8 tests) +
+      `scenario-specific-cii.spec.ts` (8 tests) +
+      `compare-matrix.spec.ts` (12 tests) all pass — CII-comparison
+      components and the compare page are unaffected by the result-card
+      restructuring, as expected since they're separate components.
 
 ## 2.3 — Passport visual polish
 

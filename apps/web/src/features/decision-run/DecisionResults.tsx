@@ -1,10 +1,12 @@
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
+import { Link } from "../../i18n/navigation";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { formatDateTime, formatScore } from "../../shared/lib/format";
 import { asSupportedLocale } from "../../shared/lib/locale";
+import { ArrowNext } from "../../shared/ui/LinkArrow";
 import { AIExplainNumberButton } from "../ai-assistant";
 import { DecisionResultCard } from "./DecisionResultCard";
 import { DecisionPersonalizationSummary } from "../decision-personalization";
@@ -128,7 +130,24 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         <EmptyState message="Результаты подбора не получены." />
       ) : (
         <div className="flex flex-col gap-4">
-          <h3 className="font-display text-lg font-semibold">Полный рейтинг</h3>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="font-display text-lg font-semibold">
+              Полный рейтинг
+            </h3>
+            {results.length >= 2 && (
+              <Link
+                href={`/compare?countries=${results
+                  .slice(0, 3)
+                  .map((r) => r.country.slug)
+                  .join(",")}`}
+                className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
+                data-testid="compare-top-results-link"
+              >
+                Сравнить топ-{Math.min(3, results.length)} бок-о-бок{" "}
+                <ArrowNext />
+              </Link>
+            )}
+          </div>
           {results.map((result) => (
             <DecisionResultCard
               key={result.country.id}
