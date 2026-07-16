@@ -35,7 +35,9 @@ test("analytics smoke keeps core pages working", async ({ page }) => {
   await expectNoAppCrash(page);
 
   await page.goto(e2eRoutes.country("russia", "ru"));
-  await expect(page.locator("[data-testid='country-card']")).toBeVisible({
+  await expect(
+    page.locator("[data-testid='country-card']").first(),
+  ).toBeVisible({
     timeout: 15_000,
   });
   await expectNoAppCrash(page);

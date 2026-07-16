@@ -89,7 +89,9 @@ test.describe("sources page", () => {
     );
     await expectHasMainHeading(page, /источники доказательств/i);
 
-    await expect(page.locator('[data-testid="sources-filters"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="sources-filters"]').first(),
+    ).toBeVisible();
 
     const countrySelect = page.locator("#src-country");
     await expect(countrySelect).toBeVisible();
