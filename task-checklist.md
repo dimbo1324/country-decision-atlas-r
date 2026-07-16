@@ -190,15 +190,54 @@ since it was written against an outdated "13 sections" premise)
 
 ## Verification (per wave, before merge)
 
-- [ ] `packages/ui`/`apps/web` typecheck/lint/build clean.
-- [ ] Full Playwright suite (flag off = default: old layout everywhere,
-      zero visible change to existing behavior; flag on: new layout works).
-- [ ] Manual check: dossier page with flag on and off, catalog page,
-      home page — in a real browser.
-- [ ] Visual baselines re-shot once at the end of the whole wave (per the
-      plan's own rule — not per commit).
+- [+] `packages/ui`/`apps/web` typecheck/lint/build clean — verified after
+      every substantive edit, not just once at the end; `pnpm build`
+      (production) also clean. Dossier page bundle:
+      `/[locale]/countries/[slug]` is 11.3 kB / 298 kB First Load JS;
+      home page `/[locale]` is 13.9 kB / 156 kB.
+- [+] Full Playwright suite: 328 passed, 0 hard failures, 2 flaky (both
+      fixed — see below), 1.9m runtime, `EXIT_CODE=0`. Flag off (default)
+      renders the old flat dossier layout everywhere, confirmed via the
+      dedicated negative-coverage test added in 1.1.
+- [+] Manual/scripted check in a real browser (project's own
+      Playwright/Chromium, not the Claude Browser preview tool — see the
+      1.3 section above for why): dossier page flag on/off, catalog page,
+      home page in all 3 deck states (desktop pager — clicked through all
+      3 zones; mobile scroll-snap at 390x844; `prefers-reduced-motion` —
+      confirmed 3 plain zone divs, 0 pager, 0 duplicate stack, all 5
+      analytical-block testids simultaneously visible with no clicking).
+- [+] **Bonus fixes found during this verification, not scoped to 1.3's
+      own diff but caught by running the full suite for real:** two
+      pre-existing "strict mode violation: resolved to 2 elements" flakes
+      on `country-card` (`/countries/[slug]`, unrelated to Stage 1.1/1.2's
+      own changes) and `sources-filters` (`/sources`, an entirely
+      untouched page) — the same transient force-dynamic
+      hydration-duplication bug class as the `h1` sweep in Stage 0
+      (`ca68ebf`). Fixed both with the same established `.first()`
+      pattern. A full codebase-wide sweep for remaining unguarded
+      instances of this bug class is explicitly out of scope for this
+      wave — flagging as pre-existing tech debt, not attempting to find
+      every instance.
+- [+] **Separately discovered, NOT fixed in this diff (flagged as a
+      background task instead):** `playwright.visual.config.ts`'s
+      context-level `use: { reducedMotion: "reduce" }` does not actually
+      propagate to `window.matchMedia` in pages under test (confirmed
+      empirically: reads `false`; an explicit per-page
+      `page.emulateMedia({reducedMotion:"reduce"})` reads `true`
+      correctly). This means the visual suite has never actually been
+      testing any component's reduced-motion fallback, including
+      `HomeDeck`'s — a pre-existing test-infrastructure gap, not
+      something this wave introduced or is positioned to fix cleanly.
+      The reduced-motion path itself was verified correct via the
+      explicit-`emulateMedia` workaround instead (see above).
+- [+] Visual baselines re-shot once at the end of the whole wave
+      (`pnpm web:mvp:visual:update`). Only `home.png` and `catalog.png`
+      actually changed pixel content (expected — 1.2's grid density and
+      1.3's deck); `country-dossier.png`/`decision-result.png`/
+      `decision-passport.png` matched their existing baselines exactly
+      (expected — dossier flag defaults off, decision pages untouched).
 
 ## Completion
 
-- [ ] Fill this checklist (`+`/`-`).
-- [ ] Final report.
+- [+] Fill this checklist (`+`/`-`).
+- [+] Final report.
