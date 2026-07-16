@@ -220,12 +220,23 @@ Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
 
 ## 2.3 — Passport visual polish
 
-- [ ] Perforated-edge top border + circular stamp/seal ported as
-      decorative markup into the passport page header (not the
-      PassportCard component).
-- [ ] Mono-formatted REF/date/status metadata.
-- [ ] No live toggles, no recompute — page stays a pure server-rendered
-      snapshot.
+- [+] Perforated-edge top border + circular rotated stamp/seal
+      (`ShieldCheck` in a dashed gold circle) ported as decorative markup
+      into the passport page header — plain JSX, no client component
+      needed, no state, matching the page's existing Server Component
+      structure.
+- [+] Mono-formatted REF (`passport.id.slice(0, 8)`, the passport's own
+      database id — not the URL access token, a deliberate choice to keep
+      "reference" and "shareable link" as distinct concepts even though
+      both happen to be visible together on a public page) + date/status
+      metadata, `font-mono` + letter-tracking matching `PassportCard`'s
+      own styling.
+- [+] No live toggles, no recompute — page is untouched as a pure
+      server-rendered snapshot; only decorative markup and formatting
+      changed.
+- [+] Verified visually via a real browser against a clean production
+      build (screenshot) and via `web-mvp-decision-passport.spec.ts`
+      (7/7 pass).
 
 ## Verification (before merge)
 

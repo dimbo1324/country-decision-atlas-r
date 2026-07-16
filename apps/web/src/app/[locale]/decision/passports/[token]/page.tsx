@@ -1,4 +1,5 @@
 import { getLocale } from "next-intl/server";
+import { ShieldCheck } from "lucide-react";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../../i18n/navigation";
 import { CreateTripFromPassportButton } from "../../../../../features/decision-passports";
@@ -32,21 +33,55 @@ export default async function DecisionPassportPage({ params }: PageProps) {
             { label: "Паспорт решения" },
           ]}
         />
-        <header className="flex flex-col gap-3">
-          <Kicker>Decision Passport</Kicker>
-          <h1 className="font-display text-3xl font-bold">Decision Passport</h1>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="default">
-              Создан: {formatDateTime(passport.generated_at)}
-            </Badge>
-            {passport.expires_at && (
-              <Badge variant="default">
-                Истекает: {formatDateTime(passport.expires_at)}
-              </Badge>
-            )}
-            <Badge variant="trust">{passport.status}</Badge>
+        {/* Decorative document fragments ported from
+            packages/ui/src/charts/PassportCard.tsx (the web-prototype's
+            mockup component) -- the perforated edge and stamp seal only,
+            not the component itself and not its live recompute toggles.
+            This page stays a plain server-rendered, immutable snapshot;
+            methodology_snapshot/status/generated_at below are exactly
+            what the API returned, never recalculated client-side. */}
+        <div className="border-warm bg-bg2 relative flex flex-col border">
+          <div
+            aria-hidden
+            className="border-warm h-[3px] w-full border-b"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(90deg, transparent 0 7px, rgb(239 230 212 / 0.14) 7px 10px)",
+            }}
+          />
+          <div className="flex items-start justify-between gap-4 p-6 pb-4">
+            <header className="flex flex-col gap-3">
+              <Kicker>Decision Passport</Kicker>
+              <h1 className="font-display text-3xl font-bold">
+                Decision Passport
+              </h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="font-mono text-c4 text-[9px] tracking-[0.25em] uppercase">
+                  REF · {passport.id.slice(0, 8)}
+                </span>
+                <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+                  Создан: {formatDateTime(passport.generated_at)}
+                </span>
+                {passport.expires_at && (
+                  <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+                    Истекает: {formatDateTime(passport.expires_at)}
+                  </span>
+                )}
+                <Badge variant="trust">{passport.status}</Badge>
+              </div>
+            </header>
+            <span
+              aria-hidden
+              className="border-gold2/70 text-gold flex h-14 w-14 shrink-0 rotate-6 items-center justify-center rounded-full border-2 border-dashed"
+            >
+              <ShieldCheck
+                width={22}
+                height={22}
+                strokeWidth={1.5}
+              />
+            </span>
           </div>
-        </header>
+        </div>
 
         <div data-testid="passport-trip-cta">
           <CreateTripFromPassportButton token={token} />
