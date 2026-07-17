@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "site_archetypes": [
+    {
+      "slug": "gov_portal",
+      "label": "Government portal",
+      "title_template": "{country} Government Portal",
+      "page_kinds": ["source", "notice"]
+    },
+    {
+      "slug": "news_portal",
+      "label": "News portal",
+      "title_template": "{country} Daily Wire",
+      "page_kinds": ["article", "source"]
+    },
+    {
+      "slug": "blog",
+      "label": "Independent blog",
+      "title_template": "{country} Field Notes",
+      "page_kinds": ["article"]
+    },
+    {
+      "slug": "wiki",
+      "label": "Reference wiki",
+      "title_template": "{country} Reference Wiki",
+      "page_kinds": ["source", "notice", "article"]
+    }
+  ],
+  "cross_site_links": {
+    "minimum": 1,
+    "maximum": 2
+  },
+  "anomaly_ratios": {
+    "not_found": 0.4,
+    "server_error": 0.3,
+    "redirect": 0.35,
+    "duplicate": 0.3,
+    "empty": 0.25,
+    "huge": 0.2,
+    "broken_encoding": 0.25
+  },
+  "huge_page_padding_paragraphs": 400
+}

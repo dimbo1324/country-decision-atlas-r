@@ -65,11 +65,11 @@ world_config.json + seed
         v
   SyntheticWorld  --validate_world()-->  core/world_validation.py
         |
-        +-------------+-------------+-------------------+
-        |             |             |                    |
-        v             v             v                    v
-  canonical JSON   SQL fixture   document renderers    manifest/ZIP
-  (json_renderer)  (sql_fixture)  (document_rendering/)  (packaging)
+        +-------------+-------------+--------------------+--------------+
+        |             |             |                     |              |
+        v             v             v                     v              v
+  canonical JSON   SQL fixture   document renderers    manifest/ZIP   website graph
+  (json_renderer)  (sql_fixture)  (document_rendering/)  (packaging)  (web/graph.py)
 ```
 
 | Layer | Responsibility | Key modules |
@@ -81,6 +81,7 @@ world_config.json + seed
 | `renderers` | JSON/TXT/XLSX/DOCX/PDF from canonical world + recipes | `core/document_rendering/`, `core/document_recipes.py` |
 | `packaging` | Manifest, checksums, ZIP, validation report | `core/dataset_packager.py`, `core/manifest.py`, `archive/zip_archiver.py` |
 | `sql` | Safe, idempotent, isolated DB fixtures | `core/sql_fixture.py`, `core/sql_loader.py` |
+| `web` | Browsable synthetic web (sites, pages, anomalies, a local server) | `web/graph.py`, `web/html_renderer.py`, `web/server.py`, see below |
 | `cli` | Commands, dry-run, discovery, pruning | `cli.py`, `core/dataset_discovery.py`, `core/dataset_prune.py` |
 
 A second, independent code path (`generators/`, invoked by the legacy
@@ -220,6 +221,97 @@ instead). Writing real rows into the production CII tables would require
 a schema migration and changes to `apps/api` repositories — a separate,
 owner-approved episode, not a change to this script.
 
+## Synthetic Web Environment (`web/`)
+
+A browsable, deterministic web of fictional sites rendered *over* an
+already-built `SyntheticWorld` — one site per country, real pages for the
+country's own source/article/legal-signal, cross-site links between homes,
+and deliberately broken pages for link-handling tests. Never invents world
+facts: every non-anomaly page is grounded in an entity the world already
+contains (spec-equivalent principle to the document renderers above).
+
+```text
+SyntheticWorld + already-rendered documents + web_config.json
+        |
+        v
+  build_web_graph()  (web/graph.py)  ---uses seed_factory.rng()--->  deterministic
+        |                                                             site/page/link
+        v                                                             assignment
+  assign_anomalies()  (web/anomalies.py)
+        |
+        v
+  WebGraph  --validate_web_graph()-->  web/validation.py
+        |
+        +----------------------+
+        |                      |
+        v                      v
+  render_web_graph()      create_app()
+  (web/html_renderer.py)  (web/server.py)
+  writes .html files      serves /sites/... and /files/...
+```
+
+**Site archetypes** (`input_data/web_config.json`): `gov_portal`,
+`news_portal`, `blog`, `wiki` — each declares which page kinds it
+publishes (`source`/`article`/`notice`) and a title template. A country's
+archetype is chosen deterministically from the seed, same mechanism as
+country archetypes in `world_config.json`.
+
+**Anomalies** (`web/anomalies.py`): for every site and every anomaly kind,
+one seeded coin flip (probability = `anomaly_ratios.<kind>` in
+`web_config.json`) decides whether that site gets one instance, linked
+from its home page:
+
+| Kind | HTTP behavior | Has a rendered file? |
+| --- | --- | --- |
+| `not_found` | 404 | No — the page never exists on disk. |
+| `server_error` | 500 | No — `web/server.py` recognizes the path from the graph and answers 500 without touching disk. |
+| `redirect` | 302 to a real page (plus a `<meta http-equiv="refresh">` fallback in the file itself, for non-HTTP access) | Yes. |
+| `duplicate` | 200, byte-identical to another page | Yes. |
+| `empty` | 200, near-zero content | Yes — the one page deliberately exempt from carrying the fictional-data notice, since being empty is the whole point. |
+| `huge` | 200, padded to `huge_page_padding_paragraphs` filler paragraphs | Yes. |
+| `broken_encoding` | 200, body bytes are latin-1 while the page declares `charset=utf-8` (genuine mojibake, not a bug) | Yes. |
+
+**Downloads**: a source/article/notice page links to up to 3 of its
+country's already-rendered documents (`documents/<locale>/...`) as
+`/files/<relative path>`, served by `web/server.py` with
+`Content-Disposition: attachment`. If no documents were rendered in the
+same run (`--formats web` alone, with no `pdf`/`docx`/etc.), pages simply
+have no download links — `render-web` on an existing dataset instead
+discovers whatever documents are already on disk
+(`core/dataset_packager.py`'s `discover_existing_documents`), so it can
+add real download links retroactively.
+
+**`SyntheticSource.url` is never touched.** `core/world_validation.py`
+requires it to always start with `synthetic://` — a hard invariant, not
+a placeholder waiting to be filled in. Instead, `web/graph.py`'s
+`source_page_urls()` produces a separate `source_id -> "/sites/..."`
+mapping, written to `<dataset>/websites/source_pages.json` and folded into
+`manifest.json` — "the real page for this source" is resolved through
+that mapping, not by mutating the canonical world.
+
+**One server, path-based routing** — `/sites/<site-slug>/...` and
+`/files/<relative document path>`, no nginx, no per-site container, no
+virtual hosts. `web/server.py` is a small FastAPI app (the project's
+existing `fastapi`/`uvicorn` dependencies, not new ones); `web/html_renderer.py`
+uses only stdlib string templating (no jinja2 or other new dependency).
+
+```powershell
+# Render a website alongside the usual document formats
+python scripts/synthetic_data.py generate --formats web,pdf --seed 42017
+
+# Re-render only the website layer for an existing dataset (picks up
+# whatever documents already exist on disk for download links)
+python scripts/synthetic_data.py render-web --dataset <dataset_id>
+
+# Browse it
+python scripts/synthetic_data.py serve --dataset <dataset_id> --port 8080
+# -> http://127.0.0.1:8080/sites/<site-slug>/index.html
+```
+
+`--formats web` is deliberately excluded from the `all` alias — building
+the site graph adds real time to every `generate` call, so it stays
+opt-in.
+
 ## Locales
 
 All 15 locales get their own hand-written (not machine-translated) text
@@ -272,6 +364,15 @@ subsetted to the codepoints the corpus actually uses.
     txt/  xlsx/
     docx/copyable/  docx/non_copyable/  docx/mixed/
     pdf/copyable/   pdf/non_copyable/   pdf/mixed/
+  websites/                            # only when --formats includes web
+    graph.json                         # the WebGraph, reloaded by `serve`
+    source_pages.json                  # source_id -> "/sites/..." mapping
+    <site-slug>/
+      index.html  about.html
+      sources/<source_id>.html
+      articles/<article_id>.html
+      notices/<signal_id>.html
+      anomalies/<kind>.html            # not_found/server_error: no file
   reports/
     validation_report.json
     generation_summary.md
@@ -338,6 +439,12 @@ python scripts/synthetic_data.py generate --formats json --seed 42017
 
 # Re-render an existing dataset's documents from its canonical JSON
 python scripts/synthetic_data.py render --dataset <dataset_id> --formats pdf,docx,xlsx,txt
+
+# Re-render only the website layer (see Synthetic Web Environment above)
+python scripts/synthetic_data.py render-web --dataset <dataset_id>
+
+# Serve an already-generated website locally
+python scripts/synthetic_data.py serve --dataset <dataset_id> --port 8080
 
 # Rebuild manifest + ZIP from files already on disk, without re-rendering
 python scripts/synthetic_data.py package --dataset <dataset_id>
@@ -453,13 +560,15 @@ UUID generated after the fact.
 py -3.12 -m pytest utils/synthetic_data/tests -q
 ```
 
-302 tests as of this writing, covering: determinism across seeds/profiles,
+341 tests as of this writing, covering: determinism across seeds/profiles,
 referential integrity (every id resolves), the real-country/PII deny-list,
 SQL fixture idempotency and cleanup isolation against a live local
 Postgres (manual verification — see below), production-guard fail-closed
 behavior, artifact structural validity (JSON schema, XLSX sheets,
 DOCX/PDF open + copyable/non-copyable/mixed properties), Unicode
-round-tripping for all 15 locales, CLI dry-run/error-path behavior, and a
+round-tripping for all 15 locales, CLI dry-run/error-path behavior, the
+website graph's determinism/link-resolution/anomaly-HTTP-status behavior
+(`test_web_*.py`), and a
 Stage-7 smoke test that bounds a full `generate --formats all` run's time
 (<120s) and package size (<25MB).
 

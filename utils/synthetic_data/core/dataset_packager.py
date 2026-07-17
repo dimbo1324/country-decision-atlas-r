@@ -158,10 +158,13 @@ def package_dataset(
     world_errors: tuple[str, ...],
     dataset_dir: Path,
     documents: list[GeneratedDocument],
+    extra_files: Collection[Path] = (),
 ) -> PackageResult:
     """Validate rendered artifacts, then write manifest, validation
     report, human summary, and the ZIP package (spec section 23, stage 5,
-    item 5)."""
+    item 5). `extra_files` folds in artifacts this function doesn't know
+    how to render itself -- currently the website layer's rendered pages
+    plus its graph.json/source_pages.json (utils/synthetic_data/web/)."""
     artifact_errors = tuple(validate_generated_documents(documents))
     all_errors = world_errors + artifact_errors
 
@@ -179,6 +182,7 @@ def package_dataset(
             dataset_dir / "canonical" / "scenarios.json",
             seed_sql_path,
             cleanup_sql_path,
+            *extra_files,
         )
         if path.exists()
     ]

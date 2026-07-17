@@ -31,6 +31,9 @@ from utils.synthetic_data.core.dataset_prune import (  # noqa: E402
 from utils.synthetic_data.core.document_formats import (  # noqa: E402
     ALL_DOCUMENT_FORMATS,
 )
+from utils.synthetic_data.core.document_rendering.context import (  # noqa: E402
+    GeneratedDocument,
+)
 from utils.synthetic_data.core.input_data import (  # noqa: E402
     InputDataError,
     load_input_data,
@@ -85,6 +88,8 @@ _WORLD_COMMANDS = frozenset(
         "plan",
         "generate",
         "render",
+        "render-web",
+        "serve",
         "load-sql",
         "cleanup-sql",
         "list",
@@ -316,6 +321,17 @@ def build_world_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Locale to fake-translate into; required by translate.",
     )
+    parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Host to bind for serve (default: 127.0.0.1).",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8080,
+        help="Port to bind for serve (default: 8080).",
+    )
     _add_output_flags(parser)
     return parser
 
@@ -373,6 +389,13 @@ def _resolve_seed(seed: int | None) -> int:
     return secrets.randbelow(2**63) if seed is None else seed
 
 
+_WEB_FORMAT = "web"
+# "web" is a valid --formats alias but deliberately excluded from what
+# "all" expands to: building the website graph adds real time to every
+# generate call, so it stays opt-in (spec: "generate --formats web").
+_KNOWN_DOCUMENT_FORMATS = (*ALL_DOCUMENT_FORMATS, _WEB_FORMAT)
+
+
 def _parse_document_formats(raw: str) -> tuple[str, ...]:
     normalized = raw.strip().lower()
     if normalized == _ALL_FORMATS_ALIAS:
@@ -380,7 +403,7 @@ def _parse_document_formats(raw: str) -> tuple[str, ...]:
     formats: list[str] = []
     for alias in normalized.split(","):
         alias = alias.strip()
-        if alias not in ALL_DOCUMENT_FORMATS:
+        if alias not in _KNOWN_DOCUMENT_FORMATS:
             raise ValueError(f"Unknown document format alias: {alias!r}")
         if alias not in formats:
             formats.append(alias)
@@ -439,6 +462,74 @@ def _load_world(dataset_dir: Path) -> SyntheticWorld:
     )
 
 
+def _render_website(
+    *,
+    world: SyntheticWorld,
+    dataset_dir: Path,
+    documents: list[GeneratedDocument],
+    report: _Report,
+) -> tuple[list[Path], tuple[str, ...]]:
+    """Builds and renders the synthetic web graph (utils/synthetic_data/web/)
+    for an already-written dataset. Shared by the `generate --formats web`
+    path and the standalone `render-web` command so the two can't drift.
+    Returns (extra_files_for_the_manifest, validation_errors) -- never
+    raises on a validation issue, matching how document artifact errors
+    are handled (warned about, recorded in validation_report.json, not
+    fatal)."""
+    from utils.synthetic_data.web.archetypes import load_web_config
+    from utils.synthetic_data.web.graph import build_web_graph, source_page_urls
+    from utils.synthetic_data.web.html_renderer import render_web_graph
+    from utils.synthetic_data.web.validation import validate_web_graph
+
+    web_config = load_web_config()
+    graph = build_web_graph(
+        world=world,
+        web_config=web_config,
+        seed=world.metadata.seed,
+        dataset_dir=dataset_dir,
+        documents=documents,
+    )
+    rendered_pages = render_web_graph(
+        graph=graph,
+        world=world,
+        dataset_dir=dataset_dir,
+        huge_page_padding_paragraphs=web_config.huge_page_padding_paragraphs,
+    )
+    websites_dir = dataset_dir / "websites"
+    graph_path = websites_dir / "graph.json"
+    graph_path.write_text(graph.model_dump_json(indent=2), encoding="utf-8")
+    source_pages_path = websites_dir / "source_pages.json"
+    source_pages_path.write_text(
+        json.dumps(source_page_urls(graph), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    downloadable_paths = {
+        document.path.relative_to(dataset_dir).as_posix()
+        for document in documents
+    }
+    web_errors = validate_web_graph(
+        graph, dataset_dir=dataset_dir, downloadable_paths=downloadable_paths
+    )
+    report.line(
+        f"rendered {len(rendered_pages)} website pages across "
+        f"{len(graph.sites)} sites -> {websites_dir}"
+    )
+    report.data["website_pages_rendered"] = len(rendered_pages)
+    report.data["website_sites"] = len(graph.sites)
+    report.data["website_errors"] = list(web_errors)
+    if web_errors:
+        print(
+            f"WARNING: {len(web_errors)} website validation issues; "
+            "see validation_report.json",
+            file=sys.stderr,
+        )
+    extra_files = [page.path for page in rendered_pages] + [
+        graph_path,
+        source_pages_path,
+    ]
+    return extra_files, web_errors
+
+
 def _render_and_package(
     *,
     world: SyntheticWorld,
@@ -453,17 +544,28 @@ def _render_and_package(
     )
 
     locale_corpus = load_locale_corpus()
+    document_formats = tuple(f for f in formats if f != _WEB_FORMAT)
     documents = render_dataset_documents(
         world=world,
         locale_corpus=locale_corpus,
         dataset_dir=dataset_dir,
-        formats=formats,
+        formats=document_formats,
     )
+    extra_files: list[Path] = []
+    web_errors: tuple[str, ...] = ()
+    if _WEB_FORMAT in formats:
+        extra_files, web_errors = _render_website(
+            world=world,
+            dataset_dir=dataset_dir,
+            documents=documents,
+            report=report,
+        )
     result = package_dataset(
         world=world,
-        world_errors=world_errors,
+        world_errors=world_errors + web_errors,
         dataset_dir=dataset_dir,
         documents=documents,
+        extra_files=extra_files,
     )
     report.line(
         f"rendered {len(documents)} documents -> manifest="
@@ -484,6 +586,92 @@ def _render_and_package(
             "issues; see validation_report.json",
             file=sys.stderr,
         )
+
+
+def _run_render_web(args: argparse.Namespace, report: _Report) -> int:
+    """Re-renders only the website layer for an already-generated dataset,
+    using whatever documents were already rendered on disk (unlike
+    `render --formats web`, which would render web with zero download
+    links since it never re-renders the recipe-based documents either)."""
+    if not args.dataset:
+        print(
+            "ERROR: render-web requires --dataset <dataset_id>", file=sys.stderr
+        )
+        return 2
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+
+    from utils.synthetic_data.core.dataset_packager import (
+        discover_existing_documents,
+        package_dataset,
+    )
+
+    try:
+        world = _load_world(dataset_dir)
+    except (ValueError, OSError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    if args.dry_run:
+        report.line(f"[dry-run] would re-render website for {dataset_dir}")
+        report.data.update({"dry_run": True, "dataset_dir": str(dataset_dir)})
+        report.emit()
+        return 0
+
+    documents = discover_existing_documents(
+        world=world, dataset_dir=dataset_dir
+    )
+    extra_files, web_errors = _render_website(
+        world=world, dataset_dir=dataset_dir, documents=documents, report=report
+    )
+    world_errors = validate_world(
+        world, expected_locales=world.metadata.supported_locales
+    )
+    result = package_dataset(
+        world=world,
+        world_errors=world_errors + web_errors,
+        dataset_dir=dataset_dir,
+        documents=documents,
+        extra_files=extra_files,
+    )
+    report.data["dataset_id"] = world.metadata.dataset_id
+    report.data["manifest_path"] = str(result.manifest_path)
+    report.emit()
+    return 0
+
+
+def _run_serve(args: argparse.Namespace, report: _Report) -> int:  # noqa: ARG001
+    # `report` is unused: serve blocks forever running the HTTP server, so
+    # there is no exit-time --json/--quiet summary to emit -- kept in the
+    # signature only for uniformity with every other _run_* dispatch target.
+    if not args.dataset:
+        print("ERROR: serve requires --dataset <dataset_id>", file=sys.stderr)
+        return 2
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+
+    from utils.synthetic_data.web.server import create_app, load_web_graph
+
+    try:
+        graph = load_web_graph(dataset_dir)
+    except FileNotFoundError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    import uvicorn
+
+    app = create_app(dataset_dir=dataset_dir, graph=graph)
+    print(
+        f"serving synthetic website for dataset {graph.dataset_id} "
+        f"({len(graph.sites)} sites) at http://{args.host}:{args.port}/sites/ "
+        "-- SYNTHETIC TEST DATA, NOT REAL"
+    )
+    uvicorn.run(app, host=args.host, port=args.port)
+    return 0
 
 
 def _run_render(args: argparse.Namespace, report: _Report) -> int:
@@ -1036,6 +1224,10 @@ def _run_world(argv: list[str]) -> int:
 
     if args.command == "render":
         return _run_render(args, report)
+    if args.command == "render-web":
+        return _run_render_web(args, report)
+    if args.command == "serve":
+        return _run_serve(args, report)
     if args.command == "package":
         return _run_package(args, report)
     if args.command == "list":
