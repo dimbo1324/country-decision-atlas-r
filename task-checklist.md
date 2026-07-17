@@ -104,25 +104,68 @@ Branch: `refactor/dev-tools-runner-modularize`, fresh off `main`.
 
 ## Implementation
 
-- [ ] Finalize JSON config (with `cadence_ref` support) under
-      `utils/dev_tools_scripts_runner/config/`.
-- [ ] `models.py` + `exceptions.py`.
-- [ ] `config_loader.py` + `registry.py`.
-- [ ] `execution.py` + `rendering.py`.
-- [ ] `interactive.py` + `main.py` + `__init__.py`.
-- [ ] Rewrite `dev_tools_scripts_runner.py` as the thin entry point.
-- [ ] Wire `utils/` into `pyproject.toml`, `format_code.py`,
-      `full_check.py`, `.pre-commit-config.yaml`.
-- [ ] Adapt `tests/test_dev_tools_scripts_runner.py` to the new package
-      (preserve every existing assertion's intent) + add config-validation
-      coverage + entry-point subprocess smoke test.
-- [ ] typecheck/lint/format clean for `utils/` and the updated test file.
-- [ ] `pytest tests/test_dev_tools_scripts_runner.py -v` green.
-- [ ] Manual parity check: `help`, `help <script>`, direct dispatch by
-      title/alias, unmatched-flags passthrough, interactive flow — output
-      compared against the pre-refactor behavior.
+- [+] Finalize JSON config (with `cadence_ref` support) under
+      `utils/dev_tools_scripts_runner/config/`. 8 categories, 19 scripts,
+      2 shared cadence entries (`recurring_job`, `recompute`).
+- [+] `models.py` + `exceptions.py`.
+- [+] `config_loader.py` + `registry.py`.
+- [+] `execution.py` + `rendering.py`.
+- [+] `interactive.py` + `main.py` + `__init__.py`.
+- [+] Rewrite `dev_tools_scripts_runner.py` as the thin entry point (8
+      lines: docstring + import + `if __name__ == "__main__"`).
+- [+] Wire `utils/` into `pyproject.toml` (`[tool.ruff] src`,
+      `per-file-ignores` for `RUF001`), `format_code.py` (`PYTHON_PATHS`),
+      `full_check.py` (ruff/mypy invocations), `.pre-commit-config.yaml`
+      (ruff hook `files:` regex).
+- [+] Adapt `tests/test_dev_tools_scripts_runner.py` to the new package
+      (all 26 original assertions preserved 1:1 via `CliApp`/`ScriptRunner`/
+      `ScriptRegistry` instead of module-global monkeypatching) + 10 new
+      `ConfigLoader` validation tests (unknown category ref, duplicate
+      identifiers, bare-filename check, path-traversal, cadence/cadence_ref
+      conflict, unresolvable cadence_ref, missing file, invalid JSON,
+      missing field, valid-config happy path) + 1 subprocess smoke test for
+      the entry-point shim itself. 34 tests total, all passing.
+- [+] typecheck/lint/format clean for `utils/` and the updated test file —
+      `ruff check`, `ruff format --check`, and `mypy` all clean (also
+      re-verified across the full project: `mypy apps packages scripts
+      tests utils` → 689 files, no issues).
+- [+] `pytest tests/test_dev_tools_scripts_runner.py -v` green (34 passed);
+      full `pytest tests -q` also green (no regressions elsewhere).
+- [+] Manual parity check: `help`, `help <script>`, direct dispatch by
+      alias (`sync-agents --check` actually ran and passed), unmatched-flags
+      passthrough (`--profile quick --doctor` correctly reached
+      `full-check`) — all match pre-refactor behavior. Interactive-flow
+      parity (category → script, alias shortcut, quit, unknown choice,
+      language toggle, help browser) is verified via the pytest suite's
+      mocked-`input()` tests rather than a live piped-stdin run: piped/
+      non-tty stdin deliberately routes to the non-interactive default-
+      script fallback by design (see
+      `test_main_bare_invocation_without_tty_runs_default_script_directly`),
+      so it cannot exercise the REPL at all — the pytest coverage is the
+      correct verification surface for that path, not a shortcut around it.
+
+## Bugs found and fixed as an in-scope byproduct
+
+- **Help-browser digit/catalog mismatch (real pre-existing bug).** The
+  original `_run_help_browser` indexed a typed digit into
+  `AVAILABLE_SCRIPTS` (flat declaration order), but `print_help_catalog`
+  numbers entries grouped by category. Because `i18n-parity`/
+  `contrast-audit` (category `quality`) were declared last in
+  `AVAILABLE_SCRIPTS` instead of next to `full-check`/`format-code`, typing
+  the number printed next to `i18n-parity` actually opened `ship-main`'s
+  manual. The existing test asserted this wrong behavior as correct.
+  Fixed via `ScriptRegistry.scripts_by_category_order()`, used by both the
+  renderer (printing) and the interactive shell (digit lookup), so the two
+  can never diverge again. Verified live (`help` catalog numbers `i18n-
+  parity` as #3; typing "3" in the interactive help browser opens
+  `i18n-parity`'s manual, confirmed via the updated pytest assertion).
+- **Investigated, ruled out as a non-issue**: a `�` glyph shown in place of
+  an em-dash for `help i18n-parity` in this shell. Confirmed via codepoint
+  inspection (`0x2014`, correct) and by reproducing the identical artifact
+  against the unmodified pre-refactor file — a pre-existing Windows-
+  console/Bash-tool display quirk, not data corruption introduced here.
 
 ## Completion
 
-- [ ] Fill this checklist (`+`/`-`).
-- [ ] Final report.
+- [+] Fill this checklist (`+`/`-`).
+- [+] Final report (below, and restated to the owner in chat).
