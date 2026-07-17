@@ -1,0 +1,10 @@
+{
+  "recurring_job": {
+    "en": "Recurring — intended for cron/systemd timer/CronJob once a deployment target exists; run manually until then.",
+    "ru": "Регулярно — предназначен для cron/systemd timer/CronJob после выбора деплой-цели; до этого запускается вручную."
+  },
+  "recompute": {
+    "en": "On-demand — the manual/CLI counterpart to the async recompute an admin endpoint enqueues.",
+    "ru": "По требованию — ручной/CLI аналог асинхронного пересчёта, который admin-эндпоинт ставит в очередь."
+  }
+}

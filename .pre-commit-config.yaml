@@ -35,10 +35,10 @@ repos:
     hooks:
       - id: ruff-check
         args: ["--fix"]
-        files: ^(apps|packages|scripts|tests)/.*\.py$
+        files: ^(apps|packages|scripts|tests|utils)/.*\.py$
         stages: [pre-commit]
       - id: ruff-format
-        files: ^(apps|packages|scripts|tests)/.*\.py$
+        files: ^(apps|packages|scripts|tests|utils)/.*\.py$
         stages: [pre-commit]
 
   - repo: local

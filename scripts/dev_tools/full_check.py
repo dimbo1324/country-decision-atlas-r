@@ -1711,6 +1711,7 @@ class FullCheck:
                     "packages",
                     "scripts",
                     "tests",
+                    "utils",
                     "--fix",
                 ),
             )
@@ -1724,17 +1725,27 @@ class FullCheck:
                     "packages",
                     "scripts",
                     "tests",
+                    "utils",
                 ),
             )
         self.run_gate_step(
             "ruff check",
             py_args(
-                "-m", "ruff", "check", "apps", "packages", "scripts", "tests"
+                "-m",
+                "ruff",
+                "check",
+                "apps",
+                "packages",
+                "scripts",
+                "tests",
+                "utils",
             ),
         )
         self.run_gate_step(
             "mypy",
-            py_args("-m", "mypy", "apps", "packages", "scripts", "tests"),
+            py_args(
+                "-m", "mypy", "apps", "packages", "scripts", "tests", "utils"
+            ),
         )
         self.run_gate_step(
             "i18n key parity",
@@ -1756,6 +1767,7 @@ class FullCheck:
                     "packages",
                     "scripts",
                     "tests",
+                    "utils",
                 ),
             )
             self.run_gate_step(

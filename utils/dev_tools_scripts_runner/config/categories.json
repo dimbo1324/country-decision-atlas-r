@@ -1,0 +1,90 @@
+[
+  {
+    "key": "quality",
+    "title": {
+      "en": "Quality Gate & Formatting",
+      "ru": "Контроль качества и форматирование"
+    },
+    "blurb": {
+      "en": "Run checks and auto-format code before you commit or push.",
+      "ru": "Проверки и автоформатирование перед коммитом и пушем."
+    }
+  },
+  {
+    "key": "release",
+    "title": {
+      "en": "Git & Release",
+      "ru": "Git и релиз"
+    },
+    "blurb": {
+      "en": "Ship already-reviewed work to main.",
+      "ru": "Публикация уже проверенных изменений в main."
+    }
+  },
+  {
+    "key": "jobs",
+    "title": {
+      "en": "Scheduled Data Jobs",
+      "ru": "Плановые джобы данных"
+    },
+    "blurb": {
+      "en": "Recurring background jobs (outbox relay, retention, reminders) — cron/systemd once deployed.",
+      "ru": "Регулярные фоновые джобы (relay, retention, напоминания) — cron/systemd после выбора деплой-цели."
+    }
+  },
+  {
+    "key": "backup",
+    "title": {
+      "en": "Backups & Recovery",
+      "ru": "Резервное копирование и восстановление"
+    },
+    "blurb": {
+      "en": "Postgres backups and periodic restore-integrity checks.",
+      "ru": "Бэкапы Postgres и периодическая проверка целостности восстановления."
+    }
+  },
+  {
+    "key": "recompute",
+    "title": {
+      "en": "Recompute Derived Data",
+      "ru": "Пересчёт производных данных"
+    },
+    "blurb": {
+      "en": "Manually re-trigger derived metrics normally enqueued from admin endpoints.",
+      "ru": "Ручной перезапуск пересчёта производных метрик, которые обычно ставятся в очередь из admin-эндпоинтов."
+    }
+  },
+  {
+    "key": "demo",
+    "title": {
+      "en": "Demo Dataset Management",
+      "ru": "Управление демо-набором"
+    },
+    "blurb": {
+      "en": "Restore or export the conserved demo countries (russia, uruguay, argentina).",
+      "ru": "Восстановление или экспорт консервированного демо-набора стран (russia, uruguay, argentina)."
+    }
+  },
+  {
+    "key": "assistant",
+    "title": {
+      "en": "AI Assistant Config",
+      "ru": "Конфигурация AI-ассистентов"
+    },
+    "blurb": {
+      "en": "Keep AGENTS.md in sync with the shared .ai/ rule modules.",
+      "ru": "Синхронизация AGENTS.md с общими модулями правил .ai/."
+    }
+  },
+  {
+    "key": "reports",
+    "title": {
+      "en": "Reports & Diagnostics",
+      "ru": "Отчёты и диагностика"
+    },
+    "blurb": {
+      "en": "Read-only status reports; nothing here changes data.",
+      "ru": "Отчёты только для чтения; ничего не изменяет данные."
+    }
+  }
+]

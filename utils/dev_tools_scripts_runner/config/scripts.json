@@ -1,0 +1,451 @@
+[
+  {
+    "title": "full-check",
+    "filename": "full_check.py",
+    "category": "quality",
+    "summary": {
+      "en": "Run the local quality gate: lint, types, tests, optional Docker/E2E.",
+      "ru": "Локальный quality gate: линт, типы, тесты, опционально Docker/E2E."
+    },
+    "description": {
+      "en": "Runs the local quality gate: toolchain checks, dependency install, static analysis (ruff/mypy/sqlfluff), pytest (including scripts/synthetic_data), and — on fuller profiles — the Docker stack, migrations, runtime smokes, and Playwright E2E. Accepts full_check.py's own flags unchanged: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. This is the default script: running the orchestrator with no arguments (non-interactively) runs it directly.",
+      "ru": "Запускает локальный quality gate: проверка тулчейна, установка зависимостей, статический анализ (ruff/mypy/sqlfluff), pytest (включая scripts/synthetic_data), а на более полных профилях — Docker-стек, миграции, runtime-смоки и Playwright E2E. Принимает собственные флаги full_check.py без изменений: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. Это скрипт по умолчанию: запуск оркестратора без аргументов (не в интерактивном режиме) выполняет именно его."
+    },
+    "cadence": {
+      "en": "Run before every merge; --profile quick is the minimum before every push.",
+      "ru": "Запускать перед каждым мерджем; --profile quick — минимум перед каждым push."
+    },
+    "aliases": [
+      "check",
+      "quality"
+    ],
+    "examples": [
+      "--profile quick",
+      "--profile full",
+      "--doctor",
+      "--fix"
+    ]
+  },
+  {
+    "title": "format-code",
+    "filename": "format_code.py",
+    "category": "quality",
+    "summary": {
+      "en": "Auto-format Python, frontend/contracts, and Go code.",
+      "ru": "Автоформатирование Python, frontend/contracts и Go."
+    },
+    "description": {
+      "en": "Runs ruff format (Python), prettier (frontend + contracts), and gofmt (Go notifier) in one pass. Accepts an optional positional target: python, frontend, go, or all (default).",
+      "ru": "Запускает ruff format (Python), prettier (frontend + contracts) и gofmt (Go notifier) за один проход. Принимает необязательный позиционный аргумент: python, frontend, go или all (по умолчанию)."
+    },
+    "cadence": {
+      "en": "On-demand, whenever code needs reformatting.",
+      "ru": "По требованию, когда нужно переформатировать код."
+    },
+    "aliases": [
+      "format",
+      "fmt"
+    ],
+    "examples": [
+      "",
+      "python",
+      "frontend",
+      "go"
+    ]
+  },
+  {
+    "title": "ship-main",
+    "filename": "ship_main.py",
+    "category": "release",
+    "summary": {
+      "en": "Format, commit, quick-gate, fast-forward, and push main.",
+      "ru": "Форматирование, коммит, quick-gate, fast-forward и push в main."
+    },
+    "description": {
+      "en": "A guided, opinionated publish flow: formats code, commits with the given message, runs the quick quality gate, fast-forwards local main from origin/main, and pushes. Requires --message \"type: why\". Intended only for already-reviewed, ready-to-ship work — it does not replace the branch → gate → merge workflow for feature work.",
+      "ru": "Управляемый сценарий публикации с фиксированными шагами: форматирует код, коммитит с указанным сообщением, прогоняет quick quality gate, делает fast-forward локального main от origin/main и пушит. Требует --message \"type: почему\". Предназначен только для уже проверенной, готовой к выпуску работы — не заменяет обычный цикл branch → gate → merge для фич."
+    },
+    "cadence": {
+      "en": "On-demand, only for already-reviewed, ready-to-ship work.",
+      "ru": "По требованию, только для уже проверенной, готовой к выпуску работы."
+    },
+    "aliases": [
+      "ship",
+      "push-main",
+      "publish"
+    ],
+    "examples": [
+      "--message \"docs: update notes\""
+    ]
+  },
+  {
+    "title": "dispatch-trip-reminders",
+    "filename": "dispatch_trip_reminders.py",
+    "category": "jobs",
+    "summary": {
+      "en": "Dispatch due trip reminders into the domain_events outbox.",
+      "ru": "Отправка назревших напоминаний о поездках в outbox domain_events."
+    },
+    "description": {
+      "en": "Dispatches due trip reminders into the domain_events outbox (transactional, idempotent, SKIP LOCKED — safe to run concurrently or re-run after a crash). Accepts --limit and --dry-run.",
+      "ru": "Отправляет назревшие напоминания о поездках в outbox domain_events (транзакционно, идемпотентно, SKIP LOCKED — безопасно запускать параллельно или повторно после сбоя). Принимает --limit и --dry-run."
+    },
+    "cadence_ref": "recurring_job",
+    "aliases": [
+      "dispatch-reminders",
+      "trip-reminders"
+    ],
+    "examples": [
+      "--dry-run",
+      "--limit 100"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "cleanup-retention",
+    "filename": "cleanup_retention.py",
+    "category": "jobs",
+    "summary": {
+      "en": "Delete rows past their configured retention window.",
+      "ru": "Удаление строк, вышедших за окно хранения (retention)."
+    },
+    "description": {
+      "en": "Deletes rows past their configured retention window from analytics_events, ai_interaction_logs, relayed domain_events, and expired/revoked auth_sessions. Windows come from methodology_config.py, not hardcoded here. Accepts --dry-run.",
+      "ru": "Удаляет строки, вышедшие за настроенное окно хранения, из analytics_events, ai_interaction_logs, доставленных domain_events и истёкших/отозванных auth_sessions. Окна хранения берутся из methodology_config.py, а не заданы в этом скрипте. Принимает --dry-run."
+    },
+    "cadence_ref": "recurring_job",
+    "aliases": [
+      "retention-cleanup",
+      "cleanup-retention.py"
+    ],
+    "examples": [
+      "--dry-run"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "cleanup-expired-sessions",
+    "filename": "cleanup_expired_auth_sessions.py",
+    "category": "jobs",
+    "summary": {
+      "en": "Mark expired auth sessions as revoked.",
+      "ru": "Пометка истёкших сессий как отозванных."
+    },
+    "description": {
+      "en": "Marks expired-but-not-yet-revoked auth_sessions as revoked (sets revoked_at). Complements cleanup-retention, which only deletes rows already past the retention window — this keeps the session listing/audit trail accurate in the meantime. Accepts --limit and --dry-run.",
+      "ru": "Помечает истёкшие, но ещё не отозванные auth_sessions как отозванные (устанавливает revoked_at). Дополняет cleanup-retention, которая удаляет только строки, уже вышедшие за окно хранения — это поддерживает точность списка сессий/аудита между удалениями. Принимает --limit и --dry-run."
+    },
+    "cadence_ref": "recurring_job",
+    "aliases": [
+      "cleanup-sessions",
+      "expired-sessions"
+    ],
+    "examples": [
+      "--dry-run",
+      "--limit 200"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "outbox-relay",
+    "filename": "outbox_relay.py",
+    "category": "jobs",
+    "summary": {
+      "en": "Relay pending domain_events to Kafka.",
+      "ru": "Доставка ожидающих domain_events в Kafka."
+    },
+    "description": {
+      "en": "Relays pending domain_events to Kafka using a short claim transaction, a publish step outside that transaction, and a short result transaction (P1-1, Аудит-эпизод 4) — so a Kafka outage never holds a long-lived DB transaction open. Reads DATABASE_URL/KAFKA_BROKERS/KAFKA_TOPIC directly from the environment, not from Settings. Accepts --batch-size, --max-attempts, --notify-after, --dry-run, --metrics-json, --metrics-output.",
+      "ru": "Доставляет ожидающие domain_events в Kafka: короткая транзакция захвата, публикация вне транзакции, короткая транзакция фиксации результата (P1-1, Аудит-эпизод 4) — сбой Kafka никогда не держит открытой долгую транзакцию БД. Читает DATABASE_URL/KAFKA_BROKERS/KAFKA_TOPIC напрямую из окружения, а не из Settings. Принимает --batch-size, --max-attempts, --notify-after, --dry-run, --metrics-json, --metrics-output."
+    },
+    "cadence_ref": "recurring_job",
+    "aliases": [
+      "relay",
+      "domain-events-relay"
+    ],
+    "examples": [
+      "--dry-run",
+      "--batch-size 50 --max-attempts 5"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "backup-postgres",
+    "filename": "backup_postgres.py",
+    "category": "backup",
+    "summary": {
+      "en": "Dump the running Postgres service to a timestamped file.",
+      "ru": "Дамп текущего сервиса Postgres в файл с меткой времени."
+    },
+    "description": {
+      "en": "Runs pg_dump against the running postgres service via `docker compose exec` and writes a timestamped .sql file to backups/postgres/. Accepts --output-dir, --service, and --dry-run.",
+      "ru": "Запускает pg_dump для работающего сервиса postgres через `docker compose exec` и записывает .sql-файл с меткой времени в backups/postgres/. Принимает --output-dir, --service и --dry-run."
+    },
+    "cadence_ref": "recurring_job",
+    "aliases": [
+      "backup-db",
+      "pg-backup"
+    ],
+    "examples": [
+      "--dry-run",
+      "--output-dir backups/postgres --service postgres"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "restore-postgres-check",
+    "filename": "restore_postgres_check.py",
+    "category": "backup",
+    "summary": {
+      "en": "Verify a backup restores cleanly in a scratch container.",
+      "ru": "Проверка, что бэкап восстанавливается в одноразовом контейнере."
+    },
+    "description": {
+      "en": "Restores a pg_dump backup into a disposable scratch Postgres container (never the real database), verifies schema_migrations is populated, then discards the container. Requires --backup-file. Accepts --dry-run.",
+      "ru": "Восстанавливает pg_dump-бэкап в одноразовом scratch-контейнере Postgres (никогда не в боевой базе), проверяет, что schema_migrations заполнена, затем удаляет контейнер. Требует --backup-file. Принимает --dry-run."
+    },
+    "cadence": {
+      "en": "Periodic backup-integrity check — run regularly against your latest backup.",
+      "ru": "Периодическая проверка целостности бэкапа — запускать регулярно на последнем бэкапе."
+    },
+    "aliases": [
+      "restore-check",
+      "pg-restore-check"
+    ],
+    "examples": [
+      "--backup-file backups/postgres/2026-07-11.sql --dry-run"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "recompute-author-reputation",
+    "filename": "recompute_author_reputation.py",
+    "category": "recompute",
+    "summary": {
+      "en": "Recompute derived author reputation scores.",
+      "ru": "Пересчёт производной репутации автора."
+    },
+    "description": {
+      "en": "Recomputes derived author reputation (coverage/freshness/sourcing scores, subscriber and published-metric counts) for one author or all authors with published metrics. Accepts --all or --author, and --dry-run.",
+      "ru": "Пересчитывает производную репутацию автора (оценки coverage/freshness/sourcing, число подписчиков и опубликованных метрик) для одного автора или всех авторов с опубликованными метриками. Принимает --all или --author, и --dry-run."
+    },
+    "cadence_ref": "recompute",
+    "aliases": [
+      "author-reputation",
+      "recompute-reputation"
+    ],
+    "examples": [
+      "--all --dry-run",
+      "--author <author_id>"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "recompute-country-drift",
+    "filename": "recompute_country_drift.py",
+    "category": "recompute",
+    "summary": {
+      "en": "Recompute country drift snapshots.",
+      "ru": "Пересчёт снапшотов дрейфа страны."
+    },
+    "description": {
+      "en": "Recomputes country drift snapshots for one country or all active countries. Accepts --all or --country, --dry-run, and --no-events. The idempotent single-country path for the 'recompute all' admin endpoint, which only enqueues a request rather than looping synchronously (P2-3, Аудит-эпизод 5).",
+      "ru": "Пересчитывает снапшоты дрейфа для одной страны или всех активных стран. Принимает --all или --country, --dry-run и --no-events. Идемпотентный путь для одной страны, лежащий в основе admin-эндпоинта «пересчитать всё», который только ставит запрос в очередь, а не выполняет синхронный цикл (P2-3, Аудит-эпизод 5)."
+    },
+    "cadence_ref": "recompute",
+    "aliases": [
+      "recompute-drift",
+      "country-drift"
+    ],
+    "examples": [
+      "--all --dry-run",
+      "--country argentina"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "recompute-platform-metrics",
+    "filename": "recompute_platform_metrics.py",
+    "category": "recompute",
+    "summary": {
+      "en": "Recompute platform intelligence metrics.",
+      "ru": "Пересчёт метрик platform intelligence."
+    },
+    "description": {
+      "en": "Recomputes platform intelligence metrics for one country or all active countries. Accepts --all or --country, --dry-run, --metric-key, and --scenario-slug. Same enqueue-not-loop relationship to its admin HTTP endpoint as recompute-country-drift (P2-3, Аудит-эпизод 5).",
+      "ru": "Пересчитывает метрики platform intelligence для одной страны или всех активных стран. Принимает --all или --country, --dry-run, --metric-key и --scenario-slug. Та же связь «постановка в очередь, а не цикл» с admin HTTP-эндпоинтом, что и у recompute-country-drift (P2-3, Аудит-эпизод 5)."
+    },
+    "cadence_ref": "recompute",
+    "aliases": [
+      "recompute-metrics",
+      "platform-metrics"
+    ],
+    "examples": [
+      "--all --dry-run",
+      "--country argentina --metric-key cost_of_living"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "recompute-trust-scores",
+    "filename": "recompute_trust_scores.py",
+    "category": "recompute",
+    "summary": {
+      "en": "Recompute country trust scores.",
+      "ru": "Пересчёт trust-скоров страны."
+    },
+    "description": {
+      "en": "Recomputes country trust scores for one country or all active countries. Accepts --all or --country and --dry-run. Same enqueue-not-loop relationship to its admin HTTP endpoint as recompute-country-drift (P2-3, Аудит-эпизод 5).",
+      "ru": "Пересчитывает trust-скоры для одной страны или всех активных стран. Принимает --all или --country и --dry-run. Та же связь «постановка в очередь, а не цикл» с admin HTTP-эндпоинтом, что и у recompute-country-drift (P2-3, Аудит-эпизод 5)."
+    },
+    "cadence_ref": "recompute",
+    "aliases": [
+      "recompute-trust",
+      "trust-scores"
+    ],
+    "examples": [
+      "--all --dry-run",
+      "--country russia"
+    ],
+    "directory": "scripts"
+  },
+  {
+    "title": "restore-demo-countries",
+    "filename": "restore_demo_countries.py",
+    "category": "demo",
+    "summary": {
+      "en": "Restore the conserved demo countries from fixtures.",
+      "ru": "Восстановление консервированных демо-стран из фикстур."
+    },
+    "description": {
+      "en": "Idempotently restores the conserved demo country dataset (russia, uruguay, argentina) from database/fixtures/demo_countries/ JSON fixtures. Accepts --dry-run. --visible additionally lifts is_demo for the restored rows (used by CI/E2E jobs only — see docs/_arch_/08_Открытые_вопросы.md, Р-11).",
+      "ru": "Идемпотентно восстанавливает консервированный демо-набор стран (russia, uruguay, argentina) из JSON-фикстур в database/fixtures/demo_countries/. Принимает --dry-run. --visible дополнительно снимает is_demo для восстановленных строк (используется только CI/E2E-джобами — см. docs/_arch_/08_Открытые_вопросы.md, Р-11)."
+    },
+    "cadence": {
+      "en": "On-demand — whenever the local demo dataset needs restoring.",
+      "ru": "По требованию — когда нужно восстановить локальный демо-набор."
+    },
+    "aliases": [
+      "restore-demo",
+      "demo-countries"
+    ],
+    "examples": [
+      "--dry-run",
+      "--visible"
+    ]
+  },
+  {
+    "title": "export-demo-countries",
+    "filename": "export_demo_countries.py",
+    "category": "demo",
+    "summary": {
+      "en": "Export the conserved demo countries to fixtures.",
+      "ru": "Экспорт консервированных демо-стран в фикстуры."
+    },
+    "description": {
+      "en": "Exports the conserved demo country dataset (russia, uruguay, argentina) to JSON fixtures under database/fixtures/demo_countries/ — the inverse of restore-demo-countries. Takes no flags. Run this after a deliberate change to the demo dataset, then commit the updated fixtures.",
+      "ru": "Экспортирует консервированный демо-набор стран (russia, uruguay, argentina) в JSON-фикстуры в database/fixtures/demo_countries/ — операция, обратная restore-demo-countries. Не принимает флагов. Запускайте после осознанного изменения демо-набора, затем закоммитьте обновлённые фикстуры."
+    },
+    "cadence": {
+      "en": "On-demand — only after a deliberate change to the demo dataset.",
+      "ru": "По требованию — только после осознанного изменения демо-набора."
+    },
+    "aliases": [
+      "export-demo"
+    ],
+    "examples": []
+  },
+  {
+    "title": "sync-agents",
+    "filename": "sync_agents_md.py",
+    "category": "assistant",
+    "summary": {
+      "en": "Regenerate AGENTS.md from the shared .ai/ rule modules.",
+      "ru": "Регенерация AGENTS.md из общих модулей правил .ai/."
+    },
+    "description": {
+      "en": "Regenerates AGENTS.md from the shared AI-assistant rule modules in .ai/ (universal + project) — the single source of truth for both Claude Code and Codex. Never hand-edit AGENTS.md; edit a module and re-run this. Pass --check to verify AGENTS.md is in sync without writing (used by CI).",
+      "ru": "Регенерирует AGENTS.md из общих модулей правил ассистентов в .ai/ (universal + project) — единственный источник истины для Claude Code и Codex. Никогда не редактируйте AGENTS.md вручную — меняйте модуль и перезапускайте эту команду. Флаг --check проверяет синхронизацию AGENTS.md без записи (используется в CI)."
+    },
+    "cadence": {
+      "en": "On-demand — every time a .ai/ rule module changes.",
+      "ru": "По требованию — при каждом изменении модуля правил в .ai/."
+    },
+    "aliases": [
+      "sync-agents-md",
+      "agents-sync"
+    ],
+    "examples": [
+      "--check"
+    ]
+  },
+  {
+    "title": "translation-pipeline-status",
+    "filename": "translation_pipeline_status.py",
+    "category": "reports",
+    "summary": {
+      "en": "Read-only report on translation units and jobs.",
+      "ru": "Отчёт только для чтения о юнитах и джобах перевода."
+    },
+    "description": {
+      "en": "Read-only report: translation units and jobs by status, and counts of missing/stale EN translations. Takes no flags and never modifies data — safe to run at any time.",
+      "ru": "Отчёт только для чтения: юниты и джобы перевода по статусам, количество отсутствующих/устаревших переводов на EN. Не принимает флагов и никогда не изменяет данные — безопасно запускать в любой момент."
+    },
+    "cadence": {
+      "en": "On-demand, read-only — safe to run anytime.",
+      "ru": "По требованию, только для чтения — безопасно запускать в любой момент."
+    },
+    "aliases": [
+      "translation-status",
+      "i18n-status"
+    ],
+    "examples": [],
+    "directory": "scripts"
+  },
+  {
+    "title": "i18n-parity",
+    "filename": "i18n_parity_check.py",
+    "category": "quality",
+    "summary": {
+      "en": "Fail if apps/web/src/messages/en.json and ru.json key sets differ.",
+      "ru": "Падает, если наборы ключей en.json и ru.json расходятся."
+    },
+    "description": {
+      "en": "Recursively diffs the dot-path key sets of apps/web/src/messages/en.json and ru.json and fails (exit 1) listing every one-sided key (an orphan translation present in only one locale). Read-only, no fix mode — there is no correct auto-generated value for a missing translation. Wired into full_check.py's Phase 3 static quality gate, so it runs on every profile including --profile quick.",
+      "ru": "Рекурсивно сравнивает наборы ключей (dot-path) в apps/web/src/messages/en.json и ru.json и падает (exit 1), перечисляя каждый односторонний ключ (сиротская строка, присутствующая только в одной локали). Только чтение, без режима исправления — для отсутствующего перевода нет корректного автоматически сгенерированного значения. Подключён в Phase 3 static quality gate full_check.py, поэтому запускается на любом профиле, включая --profile quick."
+    },
+    "cadence": {
+      "en": "Automatic, every quality-gate run; on-demand for a quick check.",
+      "ru": "Автоматически при каждом запуске quality gate; по требованию для быстрой проверки."
+    },
+    "aliases": [
+      "i18n",
+      "messages-parity"
+    ],
+    "examples": [
+      "--check"
+    ]
+  },
+  {
+    "title": "contrast-audit",
+    "filename": "contrast_audit.py",
+    "category": "quality",
+    "summary": {
+      "en": "Fail if a text token drops below WCAG AA contrast on any background token.",
+      "ru": "Падает, если текстовый токен опускается ниже контраста WCAG AA на любом фоновом токене."
+    },
+    "description": {
+      "en": "Parses the color tokens from packages/ui/src/tokens/theme.css and checks every text token (c1-c4) against every background token (bg-bg4) for the WCAG AA normal-text ratio of 4.5:1, printing the exact computed ratio per pair. c3/c4 carry small meta/label text throughout the app, so they are held to the same floor as body text. Read-only; fails (exit 1) listing each pair below minimum. Wired into full_check.py's Phase 3 static quality gate, so it runs on every profile including --profile quick.",
+      "ru": "Разбирает цветовые токены из packages/ui/src/tokens/theme.css и проверяет каждый текстовый токен (c1-c4) против каждого фонового (bg-bg4) на соответствие WCAG AA для обычного текста (4.5:1), печатая точное вычисленное соотношение для каждой пары. c3/c4 несут мелкий мета-текст по всему приложению, поэтому удерживаются на том же пороге, что и основной текст. Только чтение; падает (exit 1) с перечнем пар ниже минимума. Подключён в Phase 3 static quality gate full_check.py, поэтому запускается на любом профиле, включая --profile quick."
+    },
+    "cadence": {
+      "en": "Automatic, every quality-gate run; on-demand when retuning tokens.",
+      "ru": "Автоматически при каждом запуске quality gate; по требованию при настройке токенов."
+    },
+    "aliases": [
+      "contrast",
+      "wcag-audit"
+    ],
+    "examples": []
+  }
+]

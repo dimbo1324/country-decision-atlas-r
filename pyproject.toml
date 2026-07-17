@@ -67,6 +67,7 @@ src = [
   "packages/shared",
   "scripts",
   "tests",
+  "utils",
 ]
 exclude = ["apps/api/app/integrations/notifier_grpc/generated"]
 
@@ -90,6 +91,7 @@ fixable = ["ALL"]
 "apps/api/app/services/decision_engine/*.py" = ["RUF001"]
 "apps/api/app/services/country_pairs.py" = ["RUF001"]
 "dev_tools_scripts_runner.py" = ["RUF001"]
+"utils/dev_tools_scripts_runner/*.py" = ["RUF001"]
 "scripts/apply_migrations.py" = ["E402"]
 "scripts/outbox_relay.py" = ["E402"]
 

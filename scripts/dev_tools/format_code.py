@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-PYTHON_PATHS = ["apps", "packages", "scripts", "tests"]
+PYTHON_PATHS = ["apps", "packages", "scripts", "tests", "utils"]
 TARGET_ORDER = ("python", "frontend", "go")
 
 
