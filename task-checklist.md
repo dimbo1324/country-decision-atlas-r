@@ -1,291 +1,128 @@
-# Task: Frontend redesign — Этап 2 (Волна «Сценарий решения»)
+# Task: Modularize dev_tools_scripts_runner.py
 
-Source: owner-provided plan (pasted in chat). Follows Этап 1 (`2584a5f`,
-merged to main). Branch: `feat/frontend-decision-scenario-v1`, fresh off
-`main`.
+Owner request (verbatim intent): `dev_tools_scripts_runner.py` has grown to
+1159 lines and will keep growing. It stays as the entry point (invocation
+unchanged: `python dev_tools_scripts_runner.py ...`) but shrinks to a
+near-two-line shim; all business logic and infrastructure moves into
+`utils/dev_tools_scripts_runner/` following proper decomposition/modularity/
+OOP/security/readability conventions. Hand-editable data currently baked
+into the script (`AVAILABLE_SCRIPTS`, `CATEGORIES`, `_RECURRING_JOB_CADENCE`,
+`_RECOMPUTE_CADENCE`) moves to JSON config files; Python keeps only the
+business logic.
 
-Three sub-items: 2.1 decision wizard restructuring, 2.2 result card deck,
-2.3 passport visual polish.
+Branch: `refactor/dev-tools-runner-modularize`, fresh off `main`.
 
 ## Pre-implementation investigation (verified, not assumed)
 
-- `DecisionRunForm.tsx` is currently ONE flat form (`grid lg:grid-cols-2`)
-  with an existing collapsible `DecisionWizard` (8-question guided quiz,
-  `features/decision-wizard/`, separate concept from "4 steps" — it
-  pre-fills the flat form's fields via `onApply`, stays untouched and
-  always-visible above the new stepper) plus `AIDecisionIntentHelper`
-  (same treatment), then manual fields: origin-select, candidate
-  checkboxes, scenario-select (native `<select>`), persona-select
-  (native `<select>`), `DecisionWeightSliders` (already a `<details>`
-  accordion, closed by default — the plan's "свернуто по умолчанию" for
-  Приоритеты is already satisfied by this existing component, no new
-  work needed there), run button.
-- `decision-scenario-select` is currently a native `<select>`.
-  `DecisionWizardStep` (the existing quiz's own option picker) already
-  uses `RadioCards` with testid pattern `${name}-option-${value}` — same
-  primitive/pattern the plan asks for in step 1, proven and reusable.
-  Switching the flat form's scenario field to RadioCards breaks every
-  test using `.selectOption()`/`.locator("option")` on
-  `decision-scenario-select` — confirmed via a full e2e catalog (see
-  below), not assumed.
-- Full e2e catalog (via Explore subagent, cross-checked against source):
-  `origin-select`, `decision-scenario-select`, `persona-selector`,
-  `decision-run-button` are all currently visible/interactable with
-  **zero prior clicks** in most decision specs (fill fields → click run,
-  no step navigation). `decision-weights-panel`/`decision-weight-slider-*`
-  already require an explicit `<details>` open first — existing
-  precedent for "click to reveal" in this exact form. Files touching
-  these testids: `web-mvp-decision-personalization`,
-  `web-mvp-decision-wizard`, `web-mvp-decision-ready-scenarios`,
-  `web-mvp-scenario-specific-cii`, `web-mvp-origin-aware-decision`,
-  `web-mvp-personas`, `web-mvp-decision-passport`,
-  `web-mvp-platform-foundations`, plus incidental checks in
-  `web-mvp-main-flow`, `web-mvp-ai-invariants`, `web-mvp-locale`,
-  `web-mvp-localization-badges`, `web-mvp-pages`.
-- **Hard constraints for 2.2** (must stay visible with zero clicks after
-  restructuring, confirmed via the same e2e catalog): `result-card`
-  (main-flow.spec.ts), `persona-adjusted-score` (personas.spec.ts),
-  `ai-explain-number-button` nested inside `decision-winner-block`
-  (ai-invariants.spec.ts). `origin-pair-context`/`origin-pair-context-empty`
-  have **zero** e2e coverage — free to move behind an accordion.
-  `decision-winner-block` itself needs no restructuring — the plan's own
-  text says it "уже есть" (already exists) as the big-winner-on-top
-  treatment.
-- `/compare` currently has no query-param pre-fill mechanism at all
-  (`CompareMatrixView` always renders the full matrix) — building the
-  "compare top-2/3" pre-fill is new, contained work (client-side filter
-  of an already-fetched dataset), not wiring up an existing feature.
-- Real passport page (`decision/passports/[token]/page.tsx`) currently
-  reuses plain `Card`/`Badge` primitives, not `PassportCard`.
-  `PassportCard` (packages/ui/src/charts/PassportCard.tsx) is the
-  web-prototype's mockup component with **live recompute toggles** —
-  the plan explicitly says port only decorative fragments (perforated
-  edge, stamp), not the component, and explicitly not the toggles, since
-  the real passport is an immutable snapshot (matches invariant #4 in
-  `02_Реестр_инвариантов.md`: methodology/results carry a version, no
-  silent recompute).
+- Full source read: 1159 lines, single file. Structure: `Text`/`Category`/
+  `ScriptInfo` dataclasses (lines 1-155) → `CATEGORIES` (8 entries) →
+  `AVAILABLE_SCRIPTS` (19 `ScriptInfo` entries, ~612 lines of near-identical
+  repetitive data) → `Session` dataclass → lookup helpers (`find_script`,
+  `find_category`, `scripts_in`, `default_script`) → rendering functions
+  (`print_top_menu`, `print_category_menu`, `print_help_catalog`,
+  `print_manual`) → execution functions (`run_script`, `_prompt_extra_args`,
+  `_launch`) → interactive REPL (`run_interactive`, `_run_help_browser`,
+  `_run_category`) → CLI entry (`main`, `run_help_command`,
+  `_parse_help_args`).
+- `utils/dev_tools_scripts_runner/main.py` already exists, tracked by git,
+  **empty** — the owner's own placeholder marking where this work goes.
+  Reused as the CLI-entry module name inside the new package.
+- Data extracted programmatically (imported the live module, walked
+  `CATEGORIES`/`AVAILABLE_SCRIPTS`/the two cadence constants, dumped to
+  JSON) rather than hand-retyped — avoids transcription errors across ~600
+  lines of bilingual text. Verified: 8 categories, 19 scripts, exact text
+  match against direct reads of several entries (full-check, format-code,
+  ship-main).
+- Of the 19 scripts, 5 share `_RECURRING_JOB_CADENCE` verbatim and 4 share
+  `_RECOMPUTE_CADENCE` verbatim (confirmed by diffing each script's cadence
+  text against both constants) — JSON schema keeps these as named, reusable
+  entries (`cadence_ref`) rather than flattening/duplicating the text into
+  every script, preserving the DRY intent the constants already expressed.
+- **Existing test file found**: `tests/test_dev_tools_scripts_runner.py`,
+  26 tests, dynamically loads `dev_tools_scripts_runner.py` via
+  `importlib.util.spec_from_file_location` and asserts on module-level
+  attributes (`module.CATEGORIES`, `module.AVAILABLE_SCRIPTS`,
+  `module.find_script`, `module.main`, `module.run_interactive`, etc.),
+  monkeypatching `module.run_script`/`module._stdin_is_interactive`. This
+  conflicts with a genuinely ~2-line entry point (can't cleanly re-export a
+  dozen names AND stay 2 lines). Resolved by adapting the test file to
+  import and exercise the new package's modules/classes directly — the
+  same underlying refactor-implies-test-follows-the-code principle already
+  applied to production code this session, not a coverage reduction: every
+  existing assertion's intent is preserved 1:1, plus new coverage added for
+  JSON config validation. A thin subprocess-level smoke test is kept for
+  the entry-point shim itself so "does invoking the file still work" stays
+  covered independent of the internal module structure.
+- **Quality-gate wiring gap found**: `utils/` is not in
+  `pyproject.toml`'s `[tool.ruff] src`, not in
+  `scripts/dev_tools/format_code.py`'s `PYTHON_PATHS`, not in
+  `scripts/dev_tools/full_check.py`'s `ruff check`/`mypy` invocations, and
+  not matched by `.pre-commit-config.yaml`'s ruff hook file regex
+  (`^(apps|packages|scripts|tests)/.*\.py$`). New code in `utils/` would
+  silently sit outside the project's own quality gate unless these four
+  places are updated — doing so is part of this task, not a separate one,
+  since shipping unchecked code would contradict the task's own stated
+  goal (proper conventions).
+- `pyproject.toml`'s `[tool.setuptools.packages.find]` only looks in
+  `apps/api`, `apps/worker`, `packages/contracts`, `packages/shared` for
+  installable packages — `utils/` (like `scripts/`) is dev tooling run
+  directly via `python <path>`, not pip-installed, so no packaging-table
+  change is needed there; `sys.path[0]` is `ROOT_DIR` when the entry-point
+  script is run directly (the project's own documented invocation), which
+  is sufficient for `import utils.dev_tools_scripts_runner` to resolve.
 
-## Design decisions (reasoned, not silently assumed)
+## Design
 
-- Step navigation: a horizontal stepper header (4 clickable step
-  buttons, direct non-linear jump allowed — not strictly sequential)
-  plus Prev/Next buttons. No global keyboard arrow-key hijacking (same
-  reasoning as Stage 1.3's HorizontalPager — the steps contain real
-  form controls, e.g. `<select>`, that already use arrow keys
-  themselves; hijacking them globally would actively break those
-  controls, worse than the home-page case). Native buttons are
-  sufficiently keyboard-accessible on their own.
-- Step content is simple conditional rendering (no transform/slide
-  animation) — this is a controlled form wizard, not a content carousel;
-  animating it adds risk with no clear UX benefit the plan asked for.
-- Step state: `useQueryState("step", parseAsInteger.withDefault(1))`
-  (nuqs), matching the plan's `?step=2` and the established pattern from
-  `CountryCatalogView`'s pagination.
-- `decision-scenario-select` RadioCards wrapped in a
-  `data-testid="decision-scenario-select"` container div (RadioCards
-  itself has no container testid, only per-option) so existing
-  `.toBeVisible()` checks on that testid keep working; individual
-  options get `decision-scenario-select-option-<slug>` for free via
-  RadioCards' own naming.
+- `utils/__init__.py` (new, minimal) + `utils/dev_tools_scripts_runner/`:
+  - `__init__.py` — public surface: re-exports `main`.
+  - `exceptions.py` — `ConfigValidationError` and friends.
+  - `models.py` — `Text`, `Category`, `ScriptInfo`, `Session` (frozen
+    dataclasses except `Session`; unchanged behavior from the original).
+  - `config_loader.py` — `ConfigLoader`: reads the 4 JSON files, validates
+    (category references resolve, `cadence`/`cadence_ref` mutually
+    exclusive and resolve, no duplicate script identifiers, `filename`/
+    `directory` can't escape `ROOT_DIR` via `..`), builds a
+    `ScriptRegistry`. Fails fast with a clear message on bad config
+    instead of a cryptic runtime `KeyError` deep in menu rendering.
+  - `registry.py` — `ScriptRegistry`: owns the loaded
+    categories/scripts/cadences, exposes `find_script`, `find_category`,
+    `scripts_in`, `default_script` as methods instead of free functions
+    over module globals.
+  - `execution.py` — `ScriptRunner`: `run`, `prompt_extra_args`, `launch`
+    (subprocess execution unchanged — list-form argv, no `shell=True`,
+    preserved exactly).
+  - `rendering.py` — `MenuRenderer`: top menu, category menu, help
+    catalog, manual page — ported behavior-for-behavior.
+  - `interactive.py` — `InteractiveShell`: the REPL loop, help browser,
+    category browser.
+  - `main.py` — `CliApp` + `main(argv)`: argv parsing/dispatch (help
+    command, direct script run, interactive fallback), the module the
+    owner's own empty placeholder already named.
+  - `config/categories.json`, `config/cadences.json`, `config/scripts.json`,
+    `config/meta.json`.
+- `dev_tools_scripts_runner.py` becomes the thin shim.
 
-## 2.1 — Decision wizard: 4 horizontal steps
+## Implementation
 
-- [+] New step-wizard structure in `DecisionRunForm.tsx`: stepper header
-      (Цель / Откуда / Приоритеты / Запуск), step content conditionally
-      rendered, Prev/Next + direct step-jump (non-linear — clicking any
-      step button jumps straight there, not just sequential). Step state
-      via `useQueryState("step", parseAsInteger.withDefault(1))`.
-- [+] Step 1 «Цель»: scenario picker converted to `RadioCards`, wrapped in
-      a `data-testid="decision-scenario-select"` container so the
-      existing testid stays queryable; individual options get
-      `decision-scenario-select-option-<slug>` for free via RadioCards'
-      own naming.
-- [+] Step 2 «Откуда»: origin-select + candidate checkboxes (unchanged
-      elements, just relocated).
-- [+] Step 3 «Приоритеты»: persona-select + existing
-      `DecisionWeightSliders` (unchanged, already collapsed by default —
-      the plan's "свернуто по умолчанию" was already satisfied, no new
-      work needed).
-- [+] Step 4 «Запуск»: summary `<dl>` of current selections (scenario,
-      origin, candidate count, persona, weights-touched) + run button.
-- [+] `DecisionWizard` (guided quiz) + `AIDecisionIntentHelper` stay
-      always-visible above the stepper, fully untouched — verified via
-      the existing `web-mvp-decision-wizard.spec.ts` suite.
-- [+] typecheck/lint/prettier clean (packages/ui + apps/web).
-- [+] **Accessibility fix found and fixed, not just tested around:**
-      `RadioCards` had no way to associate a visible label with its
-      `role="radiogroup"` — a pre-existing gap also present in the
-      already-shipped `DecisionWizardStep`'s own RadioCards usage, not
-      something this wave introduced but newly exposed by an accessibility
-      test that specifically probes the flat form. Added an `ariaLabel`
-      prop to `RadioCards` (`packages/ui/src/primitives/RadioCards.tsx`),
-      applied as `aria-label` on the radiogroup div; `DecisionRunForm`
-      now passes `ariaLabel="Сценарий"`.
-
-## 2.1 — e2e updates for step navigation
-
-- [+] Added `tests/e2e/helpers/decision.ts` (`goToDecisionStep(page, n)`)
-      — one shared helper for the repeated "jump to step N" pattern,
-      used across every file below instead of duplicating the click.
-- [+] `web-mvp-decision-ready-scenarios.spec.ts`: option-text reads via
-      `[role="radio"]` instead of `<option>`; run-button tests get a
-      step-4 jump.
-- [+] `web-mvp-decision-personalization.spec.ts`: all 9 tests get a
-      step-3 jump before touching persona/weights; `runDecision` helper
-      centralizes the step-4 jump for the 3 tests that also run.
-- [+] `web-mvp-decision-wizard.spec.ts`: post-apply scenario assertion
-      reads RadioCards `aria-checked` instead of `<select>` `.toHaveValue`;
-      persona/weights checks get a step-3 jump; manual-override test
-      clicks the RadioCards option directly instead of `.selectOption()`.
-- [+] `web-mvp-scenario-specific-cii.spec.ts`: single shared `runDecision`
-      helper fixed once, cascading to all 8 tests.
-- [+] `web-mvp-origin-aware-decision.spec.ts`, `web-mvp-personas.spec.ts`,
-      `web-mvp-decision-passport.spec.ts`,
-      `web-mvp-platform-foundations.spec.ts`,
-      `web-mvp-decision-visual-comparison.spec.ts` (6 tests, same shared
-      pattern), `web-mvp-platform-intelligence.spec.ts`: step jumps added
-      wherever origin/persona/weights/run fields moved.
-- [+] Found beyond the original spot-check list (a broader grep for the
-      run button's own accessible-name text, not just testids, surfaced
-      these): `web-mvp-main-flow.spec.ts` (scenario check switched from a
-      combobox-role lookup to the RadioCards testid, since RadioCards
-      carries no combobox role), `web-mvp-pages.spec.ts` (2 tests),
-      `web-mvp-locale.spec.ts` (1 test), `web-mvp-ai-invariants.spec.ts`
-      (1 test) — all needed a step jump before their role-based run-button
-      lookup.
-- [+] `web-mvp-analytical-pages.spec.ts`'s "decision page form inputs have
-      labels" accessibility test: scenario check switched from
-      `getByLabel` (which doesn't apply to a `role="radiogroup"` without
-      the new `aria-label`) to `getByRole("radiogroup", {name: ...})`,
-      exercising the accessibility fix above rather than working around
-      it.
-- [+] Full verification: all 15 touched/spot-checked decision-related
-      spec files run together against a clean production build — 102
-      passed, 1 flake (confirmed transient via isolated re-run: 14/14
-      passed in under 12s total). One test
-      (`web-mvp-locale.spec.ts` "locale=ru is preserved...") reproduced a
-      consistent 3/3 failure at one point during investigation — root
-      caused to leaving a manually-started `next dev` preview server
-      running, which Playwright's `reuseExistingServer` config silently
-      reused instead of its own production build; dev-mode's slower
-      client-side transition timing let `page.url()` observe a stale URL
-      mid-navigation. Not a code bug — confirmed by a clean production
-      rebuild + 3/3 pass. Documented here since it's the second time this
-      exact dev/production `.next` mixing has caused confusing failures
-      this session (first at the end of Stage 1.3) — worth remembering
-      going forward: never leave a `preview_start` dev server running
-      during an e2e verification pass.
-
-## 2.2 — Result card deck
-
-- [+] `DecisionResultCard.tsx`: compact always-visible header (rank,
-      country, score, `score_label` badge, confidence, localization
-      badge) + trust badge + summary + `persona-adjusted-score` (kept
-      compact — hard test constraint) + one-line top strength, under
-      `result-card`. Rest moves into an `Accordion`
-      (`packages/ui/src/primitives/Accordion.tsx`, already existed,
-      single-open-at-a-time): route context, remaining strengths,
-      weaknesses, risks, breakdown, sources.
-- [+] **Route context placement resolved a real conflict, not silently**:
-      the plan names "контекст маршрута" as accordion content, but
-      `web-mvp-origin-aware-decision.spec.ts` asserts `origin-aware-context`
-      visible with zero clicks. `Accordion` opens item 0 by default, so
-      making route context accordion item 0 satisfies both — the plan's
-      structural intent and the existing test — with no compromise and no
-      test rewrite needed for that specific assertion.
-- [+] Country-card link kept in the compact area (not accordion) —
-      reasoned deviation: it's a simple "view more" navigation link with
-      no expand-state dependency, no reason to gate it behind a click.
-- [+] Compare top-2/3 link: `DecisionResults.tsx` adds
-      `data-testid="compare-top-results-link"`, linking to
-      `/compare?countries=slug1,slug2[,slug3]` using the top
-      `min(3, results.length)` ranked country slugs. Only shown when
-      `results.length >= 2` (a single result has nothing to compare).
-- [+] `CompareMatrixView.tsx`: reads a `countries` query param via
-      `useSearchParams`, filters the already-fetched matrix dataset
-      client-side (no new API call). Missing/empty param falls back to
-      the original unfiltered behavior — verified manually: `/compare`
-      alone still shows all 3 countries; `/compare?countries=uruguay,russia`
-      shows exactly those 2.
-- [+] typecheck/lint/prettier clean (packages/ui + apps/web).
-- [+] Verified against a clean production build: `result-card`,
-      `persona-adjusted-score` (personas.spec.ts, 1.2s),
-      `ai-explain-number-button`-inside-`decision-winner-block`
-      (ai-invariants.spec.ts) all confirmed visible with zero clicks.
-      `decision-visual-comparison.spec.ts` (8 tests) +
-      `scenario-specific-cii.spec.ts` (8 tests) +
-      `compare-matrix.spec.ts` (12 tests) all pass — CII-comparison
-      components and the compare page are unaffected by the result-card
-      restructuring, as expected since they're separate components.
-
-## 2.3 — Passport visual polish
-
-- [+] Perforated-edge top border + circular rotated stamp/seal
-      (`ShieldCheck` in a dashed gold circle) ported as decorative markup
-      into the passport page header — plain JSX, no client component
-      needed, no state, matching the page's existing Server Component
-      structure.
-- [+] Mono-formatted REF (`passport.id.slice(0, 8)`, the passport's own
-      database id — not the URL access token, a deliberate choice to keep
-      "reference" and "shareable link" as distinct concepts even though
-      both happen to be visible together on a public page) + date/status
-      metadata, `font-mono` + letter-tracking matching `PassportCard`'s
-      own styling.
-- [+] No live toggles, no recompute — page is untouched as a pure
-      server-rendered snapshot; only decorative markup and formatting
-      changed.
-- [+] Verified visually via a real browser against a clean production
-      build (screenshot) and via `web-mvp-decision-passport.spec.ts`
-      (7/7 pass).
-
-## Verification (before merge)
-
-- [+] `packages/ui`/`apps/web` typecheck/lint/build clean — verified after
-      every substantive edit across all three sub-stages.
-- [+] Full Playwright suite: 328 passed, 2 flaky (both recovered on
-      retry — `sources filter` and `knowledge-transparency query params`,
-      neither touches anything in this wave's diff), 0 hard failures,
-      1.9m runtime.
-- [+] **Real, non-Stage-2 issue found and fixed during this pass, not
-      hidden:** an earlier full environment reset this session (fresh
-      `node_modules`, fresh Docker volumes, fresh migrations, fresh demo
-      countries via `restore-demo-countries --visible`) left derived
-      data — trust scores, country drift snapshots, platform-intelligence
-      metrics — uncomputed, since those are async recompute jobs, not
-      something migrations seed directly. This surfaced as 6 consistently
-      failing `web-mvp-trust-transparency.spec.ts` tests (a real
-      `trust_not_found` 404 from the API, confirmed via direct `curl`,
-      not e2e flakiness) — unrelated to any Stage 2 code change. Fixed by
-      running `recompute-trust-scores --all`,
-      `recompute-country-drift --all`, and `recompute-platform-metrics
-      --all` via the dev tools runner; re-verified 26/26 trust-
-      transparency tests pass. Documented here rather than silently
-      worked around, since it's exactly the kind of "found something
-      else broken, fixed it, said so" case the project's own workflow
-      rules ask for.
-- [+] **Visual test gap found and fixed:** the earlier e2e sweep only
-      searched `tests/e2e/`, missing `tests/visual/pages.visual.spec.ts`
-      — it also drives `origin-select`/`decision-run-button` directly
-      with no step navigation. Fixed the same way as every other spec
-      (`goToDecisionStep`), confirmed via `pnpm web:mvp:visual:update`:
-      `decision-result.png` and `decision-passport.png` re-shot as
-      expected (Stage 2 changed those pages);
-      `country-dossier-chromium-win32.png` ALSO changed, traced to the
-      trust/drift/metrics recompute above (the dossier's trust/platform-
-      intelligence sections now show real computed data instead of
-      empty-state placeholders) — confirmed by inspecting the new
-      screenshot directly, not assumed; `home.png`/`catalog.png` matched
-      unchanged, as expected.
-- [+] Manual browser check against a clean production build: full 4-step
-      decision flow start to finish (scenario → origin → priorities →
-      run → results), compare pre-fill link, passport page visual
-      polish — all screenshotted/inspected directly, not assumed working.
+- [ ] Finalize JSON config (with `cadence_ref` support) under
+      `utils/dev_tools_scripts_runner/config/`.
+- [ ] `models.py` + `exceptions.py`.
+- [ ] `config_loader.py` + `registry.py`.
+- [ ] `execution.py` + `rendering.py`.
+- [ ] `interactive.py` + `main.py` + `__init__.py`.
+- [ ] Rewrite `dev_tools_scripts_runner.py` as the thin entry point.
+- [ ] Wire `utils/` into `pyproject.toml`, `format_code.py`,
+      `full_check.py`, `.pre-commit-config.yaml`.
+- [ ] Adapt `tests/test_dev_tools_scripts_runner.py` to the new package
+      (preserve every existing assertion's intent) + add config-validation
+      coverage + entry-point subprocess smoke test.
+- [ ] typecheck/lint/format clean for `utils/` and the updated test file.
+- [ ] `pytest tests/test_dev_tools_scripts_runner.py -v` green.
+- [ ] Manual parity check: `help`, `help <script>`, direct dispatch by
+      title/alias, unmatched-flags passthrough, interactive flow — output
+      compared against the pre-refactor behavior.
 
 ## Completion
 
-- [+] Fill this checklist (`+`/`-`).
-- [+] Commit on `feat/frontend-decision-scenario-v1`.
-- [ ] **STOP before merge/push** — ask the user explicitly, given the
-      Stage 1 finding that push authorization doesn't automatically
-      carry over between waves.
-- [+] Final report.
+- [ ] Fill this checklist (`+`/`-`).
+- [ ] Final report.
