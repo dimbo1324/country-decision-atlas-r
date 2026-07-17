@@ -8,8 +8,8 @@
       "ru": "Локальный quality gate: линт, типы, тесты, опционально Docker/E2E."
     },
     "description": {
-      "en": "Runs the local quality gate: toolchain checks, dependency install, static analysis (ruff/mypy/sqlfluff), pytest (including scripts/synthetic_data), and — on fuller profiles — the Docker stack, migrations, runtime smokes, and Playwright E2E. Accepts full_check.py's own flags unchanged: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. This is the default script: running the orchestrator with no arguments (non-interactively) runs it directly.",
-      "ru": "Запускает локальный quality gate: проверка тулчейна, установка зависимостей, статический анализ (ruff/mypy/sqlfluff), pytest (включая scripts/synthetic_data), а на более полных профилях — Docker-стек, миграции, runtime-смоки и Playwright E2E. Принимает собственные флаги full_check.py без изменений: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. Это скрипт по умолчанию: запуск оркестратора без аргументов (не в интерактивном режиме) выполняет именно его."
+      "en": "Runs the local quality gate: toolchain checks, dependency install, static analysis (ruff/mypy/sqlfluff), pytest (including utils/synthetic_data), and — on fuller profiles — the Docker stack, migrations, runtime smokes, and Playwright E2E. Accepts full_check.py's own flags unchanged: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. This is the default script: running the orchestrator with no arguments (non-interactively) runs it directly.",
+      "ru": "Запускает локальный quality gate: проверка тулчейна, установка зависимостей, статический анализ (ruff/mypy/sqlfluff), pytest (включая utils/synthetic_data), а на более полных профилях — Docker-стек, миграции, runtime-смоки и Playwright E2E. Принимает собственные флаги full_check.py без изменений: --profile {quick,backend,frontend,full,ci}, --fix, --doctor. Это скрипт по умолчанию: запуск оркестратора без аргументов (не в интерактивном режиме) выполняет именно его."
     },
     "cadence": {
       "en": "Run before every merge; --profile quick is the minimum before every push.",
@@ -354,6 +354,33 @@
       "export-demo"
     ],
     "examples": []
+  },
+  {
+    "title": "synthetic-data",
+    "filename": "synthetic_data.py",
+    "category": "synthetic",
+    "summary": {
+      "en": "Generate a fully fictional dataset (countries, documents, SQL fixtures).",
+      "ru": "Генерация полностью вымышленного датасета (страны, документы, SQL-фикстуры)."
+    },
+    "description": {
+      "en": "Thin entry point for the synthetic data pipeline (utils/synthetic_data/); forwards every argument to its CLI unchanged (validate, plan, generate, render, package, list, prune, diff, translate, cii-preview, load-sql, cleanup-sql). Never touches real country data; never runs as part of the default quality gate. See utils/synthetic_data/README.md for the full command reference.",
+      "ru": "Тонкая точка входа пайплайна синтетических данных (utils/synthetic_data/); передаёт все аргументы в его CLI без изменений (validate, plan, generate, render, package, list, prune, diff, translate, cii-preview, load-sql, cleanup-sql). Никогда не трогает данные реальных стран; никогда не запускается в составе дефолтного quality gate. Полный список команд — utils/synthetic_data/README.md."
+    },
+    "cadence": {
+      "en": "On-demand, whenever you need a synthetic dataset for local dev or a demo.",
+      "ru": "По требованию, когда нужен синтетический датасет для локальной разработки или демо."
+    },
+    "aliases": [
+      "synth",
+      "syn-data"
+    ],
+    "examples": [
+      "validate",
+      "generate --scale small",
+      "generate --seed 42017"
+    ],
+    "directory": "scripts"
   },
   {
     "title": "sync-agents",

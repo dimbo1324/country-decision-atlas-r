@@ -1794,16 +1794,16 @@ class FullCheck:
             ),
         )
         # `pyproject.toml` scopes `testpaths` to `tests/` for the main suite's
-        # speed, so `scripts/synthetic_data/tests` needs its own explicit
+        # speed, so `utils/synthetic_data/tests` needs its own explicit
         # step here or it silently never runs (spec section 18).
         synthetic_data_pytest_temp = self.temp_root / "pytest-synthetic-data"
         synthetic_data_pytest_temp.mkdir(parents=True, exist_ok=True)
         self.run_gate_step(
-            "pytest (scripts/synthetic_data)",
+            "pytest (utils/synthetic_data)",
             py_args(
                 "-m",
                 "pytest",
-                "scripts/synthetic_data/tests",
+                "utils/synthetic_data/tests",
                 "-p",
                 "no:cacheprovider",
                 f"--basetemp={synthetic_data_pytest_temp}",

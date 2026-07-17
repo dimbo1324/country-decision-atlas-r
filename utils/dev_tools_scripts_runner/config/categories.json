@@ -66,6 +66,17 @@
     }
   },
   {
+    "key": "synthetic",
+    "title": {
+      "en": "Synthetic Data Pipeline",
+      "ru": "Пайплайн синтетических данных"
+    },
+    "blurb": {
+      "en": "Generate a fully fictional world (countries, documents, SQL fixtures) for local dev and demos — never real data.",
+      "ru": "Генерация полностью вымышленного мира (страны, документы, SQL-фикстуры) для локальной разработки и демо — никогда реальных данных."
+    }
+  },
+  {
     "key": "assistant",
     "title": {
       "en": "AI Assistant Config",

@@ -30,7 +30,7 @@ confidence — never a bare "best country" number.
 | `apps/web-prototype` | Standalone, offline Vite/React UI prototype used for early design exploration — isolated from the real app and its data. |
 | `contracts/openapi.yaml` | Source of truth for the API contract. Run `pnpm contracts:generate` to regenerate `packages/contracts/generated` — never hand-edit the generated file. |
 | `database/migrations` | Numbered, checksum-tracked SQL migrations. |
-| `scripts/synthetic_data` | Generates a fully fictional "world" (countries, users, articles, documents, SQL fixtures) for local development and demos without any real data. Includes a local mock HTTP server so the frontend can run against synthetic data with no database at all — see [scripts/synthetic_data/README.md](scripts/synthetic_data/README.md). |
+| `scripts/synthetic_data.py` + `utils/synthetic_data` | Generates a fully fictional "world" (countries, users, articles, documents, SQL fixtures) for local development and demos without any real data. Includes a local mock HTTP server so the frontend can run against synthetic data with no database at all — see [utils/synthetic_data/README.md](utils/synthetic_data/README.md). |
 | `scripts/dev_tools`, `dev_tools_scripts_runner.py` | Developer automation: quality gates, formatting, releases, scheduled jobs. |
 | `docs/_arch_` | Architecture, product vision, and implementation plan (**written in Russian**). |
 | `.ai/` | Shared rule modules that both Claude Code and Codex read for how work is done in this repo. |
@@ -80,8 +80,8 @@ pnpm dev   # starts apps/web on http://localhost:3000
 the synthetic mock server instead:
 
 ```powershell
-python -m scripts.synthetic_data.cli generate --seed 42017
-python -m scripts.synthetic_data.mock_server --dataset <dataset_id> --port 8000
+python scripts/synthetic_data.py generate --seed 42017
+python -m utils.synthetic_data.mock_server --dataset <dataset_id> --port 8000
 ```
 
 This serves a fully fictional dataset that mimics the shape of the real
@@ -126,7 +126,7 @@ cd apps/notifier && go vet ./... && go test ./...    # Go (drop -race locally on
 - `docs/_arch_/01_Продукт/02_Текущее_состояние_системы.md` — what's built today.
 - `docs/_arch_/02_План/01_План_реализации.md` — the implementation plan, by episode.
 - `docs/_arch_/02_План/02_Реестр_инвариантов.md` — invariants that must never be broken.
-- `scripts/synthetic_data/README.md` — the synthetic data pipeline in full detail.
+- `utils/synthetic_data/README.md` — the synthetic data pipeline in full detail.
 - `.ai/universal/` and `.ai/project/` — the rule modules that govern how AI assistants work in this repo.
 
 ## Project status notes

@@ -309,4 +309,4 @@ mongo-data/
 redpanda-data/
 apps/notifier/notifier
 apps/notifier/bin/
-docs/synthetic_data/output_data/
+.synthetic_data/
