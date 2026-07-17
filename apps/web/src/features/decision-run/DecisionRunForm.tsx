@@ -276,8 +276,11 @@ function DecisionFormInner() {
           className="flex flex-col gap-6"
           data-testid="decision-run-wizard"
         >
-          <div
-            role="tablist"
+          {/* A step indicator, not ARIA tabs: tab roles would demand the
+              full tabs keyboard pattern (roving tabindex, arrow keys,
+              aria-controls); plain buttons with aria-current="step" are
+              the correct wizard semantics. */}
+          <nav
             aria-label="Шаги подбора"
             className="flex flex-wrap items-center gap-2"
           >
@@ -288,8 +291,7 @@ function DecisionFormInner() {
                 <button
                   key={label}
                   type="button"
-                  role="tab"
-                  aria-selected={isActive}
+                  aria-current={isActive ? "step" : undefined}
                   onClick={() => goToStep(stepNumber)}
                   data-testid={`decision-step-${stepNumber}`}
                   className={cn(
@@ -306,7 +308,7 @@ function DecisionFormInner() {
                 </button>
               );
             })}
-          </div>
+          </nav>
 
           {currentStep === 1 && (
             <div

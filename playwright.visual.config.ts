@@ -25,7 +25,13 @@ export default defineConfig({
   use: {
     baseURL: WEB_BASE_URL,
     trace: "retain-on-failure",
-    reducedMotion: "reduce",
+    // `reducedMotion` is not a top-level Playwright TestOption (root
+    // configs are not typechecked by any gate, so the mistake was
+    // silent); it must travel via contextOptions to actually reach
+    // window.matchMedia in pages under test. Verified empirically in the
+    // Stage-1 wave: top-level -> matchMedia reads false, contextOptions/
+    // emulateMedia -> reads true.
+    contextOptions: { reducedMotion: "reduce" },
   },
   projects: [
     {

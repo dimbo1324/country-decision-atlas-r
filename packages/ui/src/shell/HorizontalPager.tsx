@@ -181,7 +181,10 @@ export function HorizontalPager({
                 ? `${containerWidth}px`
                 : `${100 / slides.length}%`,
             }}
-            aria-hidden={slide.id !== current?.id}
+            // `inert` (not just aria-hidden): links inside off-screen
+            // slides must also leave the tab order, otherwise keyboard
+            // focus lands in invisible content.
+            inert={slide.id !== current?.id}
             data-testid={`pager-slide-${slide.id}`}
           >
             {slide.content}
