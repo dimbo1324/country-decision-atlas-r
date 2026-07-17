@@ -445,10 +445,9 @@ Guarantees, all enforced in code (not just convention):
 - Values are only ones the pipeline itself created; strings/identifiers
   are escaped through `psycopg.sql`, never string concatenation.
 - Every row carries a `syn_<dataset_id>`-scoped identity so datasets never
-  collide **for tables scoped by primary-key `ON CONFLICT`** — see the
-  `iso2`/`iso3` caveat under "Known limitations" below, a real,
-  pre-existing gap in that guarantee found during Stage 2's live
-  verification.
+  collide on primary-key `ON CONFLICT` — the one narrower exception is
+  `countries.iso2`/`iso3`'s own separate `UNIQUE` constraints, mitigated
+  but not fully eliminated; see "Known limitations" below.
 - `INSERT ... ON CONFLICT (id) DO UPDATE` makes `load-sql` idempotent —
   re-running it never duplicates rows.
 - `cleanup-sql` deletes only rows matching the dataset's own IDs, with an
@@ -648,25 +647,29 @@ python scripts/synthetic_data.py cleanup-sql --dataset <dataset_id> --confirm
 
 ## Known limitations / deferred work
 
-- **`iso2`/`iso3` collide across datasets loaded into the same database
-  (priority: data-integrity bug, found during Stage 2's live
-  verification, not yet fixed).** `country_fixture_ids()`
-  (`core/sql_fixture.py`) derives `countries.iso2`/`iso3` only from a
-  country's index within its own dataset (`chr(ord("A") + index)`), not
-  from `dataset_id` — every dataset's first country gets `iso2='XA'`,
-  second `'XB'`, and so on, regardless of seed. `countries.iso2 CHAR(2)`
-  and `iso3 CHAR(3)` are both `UNIQUE`, so `load-sql`/`bootstrap-app` for
-  a *second* dataset fails with `UniqueViolation` on `countries_iso2_key`
-  unless the first dataset's rows were already `cleanup-sql`'d out first.
-  Reproduced live: `generate` two datasets, `load-sql` the first (fine),
-  `load-sql` the second without cleaning up the first (fails). Workaround
-  today: always `cleanup-sql` a dataset before loading a different one —
-  which is the documented usage pattern anyway, so this only bites
-  multi-dataset-simultaneously workflows. Not fixed here: it's in
-  `country_fixture_ids()`, pre-existing code outside Stage 2's scope
-  (users), and a real fix is constrained by `CHAR(2)` only having 26 safe
-  ISO-reserved (`XA`-`XZ`) codes available in the first place — worth a
-  deliberately-scoped follow-up task, not a quick patch.
+- **`iso2`/`iso3` can still collide across datasets loaded into the same
+  database (priority: data-integrity, mitigated but not eliminated).**
+  `country_fixture_ids()` (`core/sql_fixture.py`) used to derive
+  `countries.iso2`/`iso3` only from a country's index within its own
+  dataset (`chr(ord("A") + index)`), not from `dataset_id` — every
+  dataset's first country got `iso2='XA'`, second `'XB'`, and so on,
+  *regardless of seed*, so `load-sql`/`bootstrap-app` for a *second*
+  dataset always failed with `UniqueViolation` on `countries_iso2_key`
+  unless the first dataset's rows were already `cleanup-sql`'d out first
+  (found live during Stage 2 verification, reproduced by loading two
+  datasets back to back). **Fixed** with a `dataset_id`-seeded
+  permutation of the 26 safe ISO-reserved `iso2` letters (`XA`-`XZ`) and
+  676 safe `iso3` suffixes (`XAA`-`XZZ`) — guaranteed collision-free
+  *within* one dataset (a permutation never repeats a letter), and now
+  *usually* different letters get used by two arbitrary datasets instead
+  of *always* the same ones. Re-verified live after the fix: two datasets
+  generated with different seeds both `load-sql`'d successfully back to
+  back with no cleanup in between. Still not a full guarantee —
+  `iso2 CHAR(2)` only has 26 safe combinations in the entire ISO-reserved
+  range, a hard schema constraint, so collisions between many
+  *simultaneously*-loaded datasets remain possible (just no longer
+  certain). `cleanup-sql` between datasets is still the recommended,
+  fully-safe pattern.
 - **Translation preview is fake-by-default only.** `translate` proves the
   derived-artifact pipeline (source/target text, provider/version, seed,
   status, marking — see above) but its "translation" is a deterministic

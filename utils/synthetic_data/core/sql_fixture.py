@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import random
 import re
 import sys
 import uuid
@@ -94,10 +95,47 @@ def _bucket_severity(value: int) -> str:
     return "critical"
 
 
+# countries.iso2 CHAR(2) UNIQUE and iso3 CHAR(3) UNIQUE (database/migrations/
+# 001_init.sql) only leave room for the ISO 3166-1 user-assigned "X"
+# prefix to stay safely clear of real country codes -- 26 total iso2
+# combinations (XA-XZ), 676 total iso3 combinations (XAA-XZZ). A fixed
+# per-index mapping (the original implementation) meant every dataset's
+# Nth country got the exact same code, so a second dataset loaded without
+# a cleanup-sql of the first always collided (found live during Stage 2
+# verification). These per-dataset-seeded permutations make that a
+# probabilistic ~1-in-26 (iso2) / ~1-in-676 (iso3) chance instead of a
+# certainty -- iso2's 26-code ceiling is a hard schema constraint, so
+# collisions between many simultaneously-loaded datasets still are not
+# fully eliminated; see README "Known limitations".
+def _iso2_letter_permutation(dataset_id: str) -> list[str]:
+    seed = int(
+        hashlib.sha256(f"{dataset_id}:iso2_permutation".encode()).hexdigest(),
+        16,
+    )
+    letters = [chr(ord("A") + i) for i in range(26)]
+    random.Random(seed).shuffle(letters)
+    return letters
+
+
+def _iso3_suffix_permutation(dataset_id: str) -> list[str]:
+    seed = int(
+        hashlib.sha256(f"{dataset_id}:iso3_permutation".encode()).hexdigest(),
+        16,
+    )
+    suffixes = [
+        f"{chr(ord('A') + i)}{chr(ord('A') + j)}"
+        for i in range(26)
+        for j in range(26)
+    ]
+    random.Random(seed).shuffle(suffixes)
+    return suffixes
+
+
 def country_fixture_ids(
     *, dataset_id: str, country: SyntheticCountry, index: int
 ) -> CountryFixtureIds:
-    letter = chr(ord("A") + index)
+    iso2_letters = _iso2_letter_permutation(dataset_id)
+    iso3_suffixes = _iso3_suffix_permutation(dataset_id)
     return CountryFixtureIds(
         country_id=country.country_id,
         profile_id=_derive_uuid(dataset_id, "profile", country.slug),
@@ -105,8 +143,8 @@ def country_fixture_ids(
             dataset_id, "source", country.sources[0].source_id
         ),
         legal_signal_id=_derive_uuid(dataset_id, "legal_signal", country.slug),
-        iso2=f"X{letter}",
-        iso3=f"X{letter}X",
+        iso2=f"X{iso2_letters[index]}",
+        iso3=f"X{iso3_suffixes[index]}",
         slug=_sanitize_slug(country.slug),
     )
 

@@ -131,6 +131,65 @@ def test_country_fixture_ids_use_reserved_iso_codes() -> None:
     ]
     assert len(set(all_iso2)) == len(all_iso2)
 
+    all_iso3 = [
+        country_fixture_ids(
+            dataset_id=world.metadata.dataset_id, country=country, index=index
+        ).iso3
+        for index, country in enumerate(world.countries)
+    ]
+    assert len(set(all_iso3)) == len(all_iso3)
+
+
+def test_different_datasets_usually_get_different_iso_codes() -> None:
+    """Regression test for a real bug found live during Stage 2
+    verification: the original implementation derived iso2/iso3 only
+    from a country's index, so every dataset's first country got the
+    exact same 'XA'/'XAA' -- loading a second dataset without cleaning
+    up the first always collided on countries.iso2's UNIQUE constraint.
+    Fixed with a per-dataset-seeded permutation (still not a full
+    guarantee -- iso2 only has 26 safe combinations total, see README
+    "Known limitations" -- but no longer a certainty either)."""
+    first_country = _world(seed=1).countries[0]
+    first_ids = country_fixture_ids(
+        dataset_id=_world(seed=1).metadata.dataset_id,
+        country=first_country,
+        index=0,
+    )
+
+    iso2_values = set()
+    iso3_values = set()
+    for seed in range(1, 21):
+        world = _world(seed=seed)
+        ids = country_fixture_ids(
+            dataset_id=world.metadata.dataset_id,
+            country=world.countries[0],
+            index=0,
+        )
+        iso2_values.add(ids.iso2)
+        iso3_values.add(ids.iso3)
+
+    # Old behavior: every one of these would be identical ('XA'/'XAA').
+    assert len(iso2_values) > 1
+    assert len(iso3_values) > 1
+    assert first_ids.iso2 in iso2_values
+
+
+def test_country_fixture_ids_iso_codes_are_stable_for_the_same_dataset() -> (
+    None
+):
+    world = _world()
+    country = world.countries[0]
+
+    first = country_fixture_ids(
+        dataset_id=world.metadata.dataset_id, country=country, index=0
+    )
+    second = country_fixture_ids(
+        dataset_id=world.metadata.dataset_id, country=country, index=0
+    )
+
+    assert first.iso2 == second.iso2
+    assert first.iso3 == second.iso3
+
 
 def test_cleanup_sql_targets_exactly_this_datasets_ids() -> None:
     world = _world()
