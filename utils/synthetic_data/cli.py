@@ -5,6 +5,7 @@ import json
 import os
 import random
 import secrets
+import subprocess
 import sys
 from pathlib import Path
 
@@ -92,6 +93,7 @@ _WORLD_COMMANDS = frozenset(
         "serve",
         "load-sql",
         "cleanup-sql",
+        "bootstrap-app",
         "list",
         "package",
         "prune",
@@ -1217,6 +1219,155 @@ def _run_sql_command(args: argparse.Namespace, report: _Report) -> int:
     return 0
 
 
+_BOOTSTRAP_SCRIPTS = (
+    "apply_migrations.py",
+    "rebuild_search_index.py",
+    "bootstrap_runtime_read_models.py",
+)
+
+
+def _run_subprocess_step(
+    *, name: str, args: list[str], report: _Report
+) -> int | None:
+    """Runs one sibling scripts/*.py step, streaming its own stdout/stderr
+    directly (these already print their own progress) and returning None
+    on success or an exit code to propagate on failure -- so the caller
+    can stop the chain at the first broken link instead of plowing ahead
+    with a half-bootstrapped database."""
+    report.line(f"-- {name} --")
+    result = subprocess.run([sys.executable, *args], cwd=ROOT_DIR, check=False)
+    if result.returncode != 0:
+        print(
+            f"ERROR: {name} failed (exit {result.returncode}); "
+            "stopping the bootstrap chain here.",
+            file=sys.stderr,
+        )
+        return result.returncode
+    return None
+
+
+def _run_bootstrap_app(args: argparse.Namespace, report: _Report) -> int:
+    """`apply_migrations.py` -> `load-sql` -> `rebuild_search_index.py
+    --all` -> `bootstrap_runtime_read_models.py`, in one command (spec:
+    "the world in a running app, one command"). Same safety gate as
+    load-sql -- it connects to a real database and writes rows -- plus it
+    runs migrations and two more sibling scripts, so a broken link
+    anywhere stops the whole chain rather than leaving a half-bootstrapped
+    database."""
+    if not args.dataset:
+        print(
+            "ERROR: bootstrap-app requires --dataset <dataset_id>",
+            file=sys.stderr,
+        )
+        return 2
+    database_url = args.database_url or os.environ.get("DATABASE_URL")
+    if not database_url and not args.dry_run:
+        print(
+            "ERROR: no database URL given (--database-url or DATABASE_URL "
+            "environment variable)",
+            file=sys.stderr,
+        )
+        return 2
+
+    dataset_dir = _resolve_dataset_dir(args)
+    if dataset_dir is None:
+        print(f"ERROR: {_dataset_not_found_error(args)}", file=sys.stderr)
+        return 2
+    sql_path = dataset_dir / "sql" / "seed_synthetic_world.sql"
+
+    steps = [
+        f"python {ROOT_DIR / 'scripts' / 'apply_migrations.py'}",
+        f"load-sql (apply {sql_path})",
+        f"python {ROOT_DIR / 'scripts' / 'rebuild_search_index.py'} --all",
+        f"python {ROOT_DIR / 'scripts' / 'bootstrap_runtime_read_models.py'}",
+    ]
+    if args.dry_run:
+        try:
+            ensure_not_production()
+            blocked = False
+        except SqlLoaderError as error:
+            blocked = True
+            report.line(f"[dry-run] would refuse: {error}")
+        if not blocked:
+            report.line(
+                f"[dry-run] would run for dataset={args.dataset}: "
+                + " -> ".join(steps)
+            )
+        report.data.update(
+            {
+                "dry_run": True,
+                "dataset_id": args.dataset,
+                "steps": steps,
+                "blocked_by_production_guard": blocked,
+            }
+        )
+        report.emit()
+        return 2 if blocked else 0
+
+    if not args.confirm:
+        print(
+            "ERROR: bootstrap-app requires --confirm — it runs migrations "
+            "and writes rows to a real database.",
+            file=sys.stderr,
+        )
+        return 2
+    try:
+        ensure_not_production()
+    except SqlLoaderError as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 2
+
+    failure = _run_subprocess_step(
+        name="apply_migrations.py",
+        args=[str(ROOT_DIR / "scripts" / "apply_migrations.py")],
+        report=report,
+    )
+    if failure is not None:
+        return failure
+
+    report.line(f"-- load-sql ({sql_path}) --")
+    assert database_url is not None  # guaranteed by the check above
+    try:
+        execute_sql_file(sql_path, database_url=database_url)
+    except SqlLoaderError as error:
+        print(f"ERROR: load-sql failed: {error}", file=sys.stderr)
+        return 2
+
+    failure = _run_subprocess_step(
+        name="rebuild_search_index.py --all",
+        args=[
+            str(ROOT_DIR / "scripts" / "rebuild_search_index.py"),
+            "--all",
+        ],
+        report=report,
+    )
+    if failure is not None:
+        return failure
+
+    failure = _run_subprocess_step(
+        name="bootstrap_runtime_read_models.py",
+        args=[str(ROOT_DIR / "scripts" / "bootstrap_runtime_read_models.py")],
+        report=report,
+    )
+    if failure is not None:
+        return failure
+
+    report.line(
+        f"bootstrap-app: dataset {args.dataset} is live -- log in with any "
+        f"synthetic user's email and the password documented in "
+        "utils/synthetic_data/README.md."
+    )
+    report.data.update(
+        {
+            "dataset_id": args.dataset,
+            "sql_path": str(sql_path),
+            "steps_completed": list(_BOOTSTRAP_SCRIPTS),
+        }
+    )
+    report.emit()
+    return 0
+
+
 def _run_world(argv: list[str]) -> int:
     parser = build_world_arg_parser()
     args = parser.parse_args(argv)
@@ -1244,6 +1395,8 @@ def _run_world(argv: list[str]) -> int:
         return _run_schema()
     if args.command in ("load-sql", "cleanup-sql"):
         return _run_sql_command(args, report)
+    if args.command == "bootstrap-app":
+        return _run_bootstrap_app(args, report)
     try:
         input_data = load_world_input(args.world_input)
         if args.command == "validate":

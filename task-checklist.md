@@ -1,150 +1,135 @@
-# Task: Synthetic data — Stage 1: Synthetic Web Environment
+# Task: Synthetic data — Stage 2: full local stack on synthetic data
 
-Owner request (verbatim intent): execute Stage 1 of
-`docs/_arch_/SYNTHETIC_DATA_PLAN.md` in full, without stopping to ask at
-each step, working carefully and double-checking along the way ("делай не
-спеша, перепроверяй себя").
+Owner request (verbatim intent): execute Stage 2 of
+`docs/_arch_/SYNTHETIC_DATA_PLAN.md` ("Приступай к эпизоду 2").
 
-Branch: `feat/synthetic-web-environment`, off `refactor/synthetic-data-relocate`
-(Stage 0's branch — Stage 1 needs `utils/synthetic_data/` to already exist,
-so it couldn't branch from `main` directly until Stage 0 merges).
+Branch: `feat/synthetic-data-bootstrap-app`, off up-to-date `main`
+(Stages 0+1 already merged).
 
-## Investigation before writing any code
+## Step 1 — mandatory analytical spike (plan requires deferring unclear
 
-- [+] Read `core/world_models.py`, `core/seed.py`, `core/world_generator.py`,
-      `core/manifest.py`, `core/dataset_packager.py`, `core/document_formats.py`,
-      `core/document_rendering/context.py`, `core/artifact_validation.py`,
-      `mock_server/__main__.py` + `app.py`, `core/world_input.py`,
-      `core/world_validation.py`, `core/dashboard.py`, `cli.py` (argument
-      parser, `_run_world` dispatch, `_render_and_package`).
-- [+] **Critical finding, changed the plan**: `core/world_validation.py`
-      hard-requires `SyntheticSource.url` to start with `synthetic://` —
-      not a placeholder waiting for a real URL, an enforced invariant.
-      A literal reading of the plan ("`SyntheticSource.url` начинает
-      указывать на конкретную страницу") would have broken this invariant,
-      `world_generator.py`'s byte-for-byte determinism test, and the
-      committed `tests/fixtures/smoke_world_snapshot.json` golden fixture.
-      Redesigned before writing code: a separate `source_id -> "/sites/..."`
-      mapping (`web/graph.py`'s `source_page_urls()`,
-      `websites/source_pages.json`) instead of mutating the field.
-- [+] Confirmed FastAPI/uvicorn are already project dependencies (used by
-      `mock_server`) — chose them for `web/server.py` over stdlib
-      `http.server` (the plan left this open) for `Content-Disposition`,
-      redirects, and status codes without hand-rolling HTTP.
+mappings to the owner, not inventing them)
+
+- [+] Investigated the real schema: `users` + `user_auth_credentials`
+      (migration 001/044), `051_community_threads_v1.sql` (private
+      1:1 contact-gated messaging, NOT public articles/comments),
+      `migration_board_posts` (045), `user_stories`/`user_story_ratings`
+      (003/042), the invariants registry. Read `scripts/create_auth_user.py`
+      as the established real-password-hashing pattern, and
+      `apps/api/app/services/auth.py`'s actual PBKDF2 scheme (not
+      bcrypt/argon2/passlib).
+- [+] **Finding**: no clean "public articles + comments" concept exists
+      anywhere in the real schema. Surfaced two genuine decision points to
+      the owner via AskUserQuestion rather than guessing:
+      1. Where (if anywhere) should SyntheticArticle/SyntheticComment map?
+         → Owner: nowhere — stay JSON-only (matches the CII-preview
+         precedent from Stage 0).
+      2. What real RBAC role should synthetic users get, given
+         SyntheticUser.role ('author'/'user') is a different concept from
+         the real users.role enum? → Owner: all get the ordinary 'user'.
+- [+] Both decisions recorded in code comments (`core/sql_fixture.py`),
+      README.md, and the plan's Stage 2 status note — not just in chat.
 
 ## Implementation
 
-- [+] `input_data/web_config.json`: 4 site archetypes (gov_portal,
-      news_portal, blog, wiki), cross-site link count range, per-kind
-      anomaly ratios, huge-page padding size.
-- [+] `web/models.py`: `LinkEdge`, `PageAnomaly`, `SitePage`,
-      `SyntheticSite`, `WebGraph` (Pydantic frozen models, matching
-      `core/world_models.py`'s own style).
-- [+] `web/archetypes.py`: `load_web_config()` with the same
-      fail-fast-with-a-specific-path validation style as `world_input.py`.
-- [+] `web/graph.py`: `build_web_graph()` — one site per country
-      (archetype chosen from `seed_factory.rng()`), grounded pages for
-      every source/article/legal-signal the archetype publishes (never
-      invents an entity), home+about pages, cross-site links. Plus
-      `source_page_urls()` (see the invariant finding above).
-- [+] `web/anomalies.py`: `assign_anomalies()` — one seeded coin flip per
-      site per anomaly kind; `not_found`/`server_error` never get a
-      rendered file (server answers from the graph itself).
-- [+] `web/html_renderer.py` + `web/assets.py`: stdlib-only rendering
-      (f-strings + `html.escape`, no jinja2 — matches `core/dashboard.py`'s
-      existing pattern), inline CSS/favicon/placeholder-image SVG (no
-      static-asset HTTP route needed).
-- [+] `web/validation.py`: link resolution, "broken"-marked links must NOT
-      resolve, download links must match a real rendered document, every
-      non-`not_found`/`server_error` page must have a file on disk.
-- [+] `web/server.py`: one FastAPI app, `/sites/<path>` (real 404/500/302
-      per anomaly kind, backed by `graph.json`) and `/files/<path>`
-      (`Content-Disposition: attachment`, path-traversal guarded).
-- [+] `cli.py`: `--formats web` (recognized, deliberately excluded from
-      `all`), `render-web` + `serve` commands, `--host`/`--port` flags,
-      `_render_website()` shared helper (used by both `generate --formats
-      web` and standalone `render-web`, so they can't drift).
-- [+] `core/dataset_packager.py`: `package_dataset()` gained an
-      `extra_files` parameter so website artifacts fold into the existing
-      manifest/ZIP machinery without inventing a parallel one.
+- [+] `core/sql_fixture.py`: `UserFixtureIds`, `user_fixture_ids()`,
+      `_user_metadata()` (invariant #26 marking), users +
+      user_auth_credentials INSERT/ON CONFLICT blocks in
+      `build_seed_sql()`, matching DELETE blocks (credentials before
+      users) in `build_cleanup_sql()`.
+- [+] Real password hashing, reusing the app's own PBKDF2
+      algorithm/iteration constants (`_import_real_pbkdf2_params()`,
+      lazy cross-package import into `apps/api`, same pattern as
+      `scripts/create_auth_user.py`) — **not** the real `hash_password()`
+      function itself, which salts randomly and would have broken this
+      pipeline's "same seed -> byte-for-byte identical world" guarantee
+      (caught by `test_seed_sql_is_deterministic_for_the_same_world`
+      failing on the first attempt). Fixed with a deterministic
+      per-user salt derived from `dataset_id` + `user_id`.
+- [+] `cli.py`: `bootstrap-app` command (`_run_bootstrap_app`,
+      `_run_subprocess_step` helper) — chains `apply_migrations.py`
+      (subprocess) -> `load-sql` (in-process, reuses `execute_sql_file`)
+      -> `rebuild_search_index.py --all` (subprocess) ->
+      `bootstrap_runtime_read_models.py` (subprocess). Same safety gate
+      as `load-sql`: `--confirm` required, `ensure_not_production()`
+      checked before anything runs, `--dry-run` prints the chain without
+      touching anything.
 
-## Bugs found by my own tests (fixed, not ignored)
+## Bugs found (one fixed, one found-but-deliberately-not-fixed)
 
-- [+] `web/graph.py`'s validation for "broken" links initially checked
-      against *every* graph page, including `not_found`/`server_error`
-      pages themselves (which legitimately have no file) — falsely
-      flagged every intentional 404/500 link as "resolves but shouldn't."
-      Fixed: a separate `servable_page_paths` set excludes those two kinds.
-- [+] `_render_redirect_stub()` (the meta-refresh HTML for `redirect`
-      anomalies) didn't carry the `FICTIONAL_NOTICE` marker every other
-      real page has — caught by `test_every_rendered_page_carries_the_fictional_notice`.
-      Fixed. (`empty` anomaly pages are a deliberate, documented exception
-      — carrying a notice would defeat the point of being empty.)
-- [+] Download link paths were first built as page-relative
-      (`../files/...`), which breaks depending on how deep the linking
-      page sits. Redesigned as server-root-absolute (`/files/...`)
-      before any renderer code was written, once the depth-counting math
-      turned out genuinely fiddly — simpler and correct regardless of
-      page depth.
+- [+] **Fixed** (my own new code): `_hash_synthetic_password()`'s first
+      version called the real `hash_password()` directly, which salts
+      with `secrets.token_hex()` — non-deterministic across re-runs of
+      the same seed. Caught immediately by the existing
+      `test_seed_sql_is_deterministic_for_the_same_world` test.
+- [-] **Found, NOT fixed (out of scope)**: live e2e testing surfaced a
+      real, pre-existing bug in `country_fixture_ids()` (Stage 0/1 code,
+      not Stage 2's): `countries.iso2`/`iso3` are derived only from a
+      country's index within its own dataset, not `dataset_id` — every
+      dataset's first country gets `iso2='XA'` regardless of seed.
+      `countries.iso2 CHAR(2) UNIQUE` means loading a *second* dataset
+      without `cleanup-sql`-ing the first fails with `UniqueViolation`.
+      Reproduced live. Worked around for this task's own verification by
+      cleaning up between datasets (the documented usage pattern anyway).
+      Not fixed here per scope discipline (pre-existing code outside
+      Stage 2, and a real fix is constrained by `CHAR(2)` only having 26
+      safe ISO-reserved codes — needs a deliberately-scoped follow-up).
+      Recorded loudly in `utils/synthetic_data/README.md`'s "Known
+      limitations" (priority: data-integrity) and the plan's Stage 2
+      status note, not silently.
 
 ## Verification
 
-- [+] Manual, incremental verification at every layer as it was built
-      (not only at the end): graph determinism across 6 seeds, all 7
-      anomaly kinds confirmed appearing across a seed range, end-to-end
-      HTML rendering + byte-level checks (broken_encoding genuinely fails
-      UTF-8 decode, duplicate byte-identical, huge measurably larger),
-      live `TestClient` HTTP checks for every anomaly's status code
-      (404/500/302/200), a real download with `Content-Disposition`
-      verified via actual PDF documents, path-traversal attempt on
-      `/files/` rejected.
-- [+] Full CLI path exercised for real (not just unit-level): `generate
-      --formats web`, `render --formats pdf` then `render-web` picking up
-      the newly-rendered PDFs for download links, and `serve` run as an
-      actual background process with real `curl` HTTP requests against
-      `http://127.0.0.1:18080` (home page 200, unknown page 404, PDF
-      download with attachment header) — then cleanly killed
-      (`taskkill`), confirmed no lingering process on the port afterward.
-- [+] 39 new tests (`test_web_archetypes.py`, `test_web_graph.py`,
-      `test_web_html_renderer.py`, `test_web_validation.py`,
-      `test_web_server.py`, `test_web_cli.py`) — determinism, structural
-      correctness, mutation tests for validation.py (dangling link, a
-      broken-marked link that actually resolves, a missing file, a
-      download link with no matching document), full HTTP-status
-      coverage per anomaly kind, CLI success/dry-run/error paths.
-- [+] `python -m ruff check utils/synthetic_data` — clean (fixed 10
-      issues along the way: import ordering after the module rename
-      pattern seen before, `RUF005`/`RUF043`/`SIM102`/`ARG001`).
-- [+] `python -m ruff format --check utils/synthetic_data` — clean.
-- [+] `python -m mypy utils/synthetic_data` — clean, 120 source files,
-      zero issues (fixed a `del` on a `dict[str, object]`-typed value in
-      a test that needed an explicit `isinstance` narrow).
-- [+] `py -3.12 -m pytest utils/synthetic_data/tests -q` — 341 tests,
-      all green (302 pre-existing + 39 new), confirming zero regressions
-      in the pre-existing suite.
+- [+] 9 new tests in `test_sql_fixture.py`: user fixture id stability/
+      uniqueness, every user gets `role='user'`, every password_hash
+      verifies against the real app's `verify_password()` (imported
+      live from `apps/api`) and rejects a wrong password, metadata marks
+      every row synthetic (invariant #26), reserved email domain,
+      cleanup deletes credentials before users, cleanup targets exactly
+      this dataset's user ids, cleanup never cross-deletes another
+      dataset's users. Also updated 2 pre-existing tests whose hardcoded
+      counts became stale once users joined the fixture (`ON CONFLICT`
+      count, real-role regex) — legitimate refactor-follows-the-code
+      updates, not weakened assertions.
+- [+] **Live e2e verification against a real stack** (the plan's own
+      step 4 requirement), not just unit tests:
+      `docker compose up -d postgres redis` + `docker compose up --build
+      -d api`, `APP_ENV=local apply_migrations.py`, generated a dataset,
+      `load-sql`, then a real `POST /api/v1/auth/login` with a synthetic
+      user's email + `SYNTHETIC_USER_PASSWORD` → HTTP 200, real session
+      token, `role: "user"` confirmed in the response. Wrong password →
+      401. Ran `cleanup-sql`, same login → 401 again (user genuinely
+      gone). Ran the *full* `bootstrap-app` chain end-to-end on a second
+      dataset (hit and worked around the iso2 bug above along the way) →
+      login worked for that dataset's user too. Cleaned up both datasets
+      and stopped the containers afterward.
+- [+] `python -m ruff check/format --check utils/synthetic_data` — clean,
+      120 files.
+- [+] `python -m mypy utils/synthetic_data` — clean, 120 files.
+- [+] `py -3.12 -m pytest utils/synthetic_data/tests -q` — 350 tests
+      (341 pre-existing + 9 new), all green, zero regressions.
 - [ ] Full project quality gate (`python dev_tools_scripts_runner.py`,
-      Docker stack + E2E) was **not** re-run end-to-end — this task only
-      touches files inside `utils/synthetic_data/` (plus its own docs),
-      already covered by the package's dedicated pytest step and the
-      checks above; re-running the ~10-minute Docker/E2E gate for a
-      change with no Docker/API/frontend surface would not add signal.
-      Flagged honestly rather than silently claimed.
+      the OTHER 78+ checks: frontend, notifier, migrations-as-a-whole)
+      was **not** re-run — this task's live verification already
+      exercised the exact Docker/migrations/API-login path relevant to
+      what changed; re-running the full ~10-minute gate for the
+      unrelated 90% of checks would not add signal for this diff.
+      Flagged honestly, matching the pattern from prior tasks this
+      session.
 
 ## Documentation
 
-- [+] `utils/synthetic_data/README.md`: new "Synthetic Web Environment"
-      section (architecture diagram, anomaly table, download-link
-      behavior, the `SyntheticSource.url` invariant explanation, CLI
-      examples), updated architecture diagram/layer table, `Output
-      layout` tree, CLI command list, test count (302 -> 341).
-- [+] `docs/_arch_/SYNTHETIC_DATA_PLAN.md`: Stage 0 and Stage 1 both
-      checked off in the plan's own DoD section (Stage 0 had shipped in
-      the prior task but was never marked done); a `**Статус.**` line
-      under Stage 1 recording what shipped and the invariant-driven
-      design deviation.
-- [+] `docs/_arch_/01_Продукт/02_Текущее_состояние_системы.md` §7.3:
-      one sentence added noting the web layer now exists, its shape, and
-      the CLI commands.
+- [+] `utils/synthetic_data/README.md`: new "Users (Stage 2)" subsection
+      under "SQL fixtures and database safety" (both owner decisions,
+      the deterministic-salt design note, the live-verification
+      summary), `bootstrap-app` added to the CLI command list and the
+      manual-verification walkthrough, `iso2`/`iso3` bug added to "Known
+      limitations" (was silently absent before), stale "4 tables"/"never
+      collide" claims corrected to reflect what's now demonstrated true.
+- [+] `docs/_arch_/SYNTHETIC_DATA_PLAN.md`: Stage 2 checked off in the
+      DoD section with a `**Статус.**` note (what shipped, the two owner
+      decisions, the live-verification results, the found-not-fixed bug
+      with a pointer to the README for details).
 
 ## Completion
 

@@ -386,12 +386,15 @@ both a real text layer and an image fragment in the same file.
 
 ## SQL fixtures and database safety
 
-`core/sql_fixture.py` covers the minimal first set of tables: `countries`,
-`country_profiles`, `sources`, `legal_signals`. Deliberately **not**
-covered (documented gaps, not oversights):
+`core/sql_fixture.py` covers: `countries`, `country_profiles`, `sources`,
+`legal_signals`, and (Stage 2) `users` + `user_auth_credentials`.
+Deliberately **not** covered (documented gaps, not oversights — see
+"Users vs. articles/comments" below for why the line is drawn here):
 
-- Users/authors/articles/comments — these have no matching real DB
-  tables; they exist only in the JSON/document layer.
+- Authors/articles/comments — no clean real-table analogue exists in this
+  schema at all (no public "articles + comments" concept — see the
+  analytical-spike note below); they exist only in the JSON/document
+  layer.
 - Manual-test `scenarios` — the real `scenarios`/`scenario_criteria`
   tables serve a different concept (decision-methodology weights), not
   manual test scripts.
@@ -404,18 +407,55 @@ covered (documented gaps, not oversights):
 - Search indexing (`search_documents`) — a separate existing dev-tools
   step (`rebuild_search_index.py --all`), not part of the fixture.
 
+### Users (Stage 2)
+
+Every `SyntheticUser` in the world becomes one `users` row + one
+`user_auth_credentials` row, so a manually-run local stack (or an e2e
+test) can actually log in as a synthetic user — not just see country
+data. Design decisions from the Stage 2 analytical spike (owner-approved,
+recorded here rather than re-litigated in code comments):
+
+- **Articles/comments stay JSON-only.** The real schema has no public
+  "articles + comments" concept — the closest candidates
+  (`migration_board_posts`, `user_stories`/`user_story_ratings`, the Q&A
+  tables) each require inventing facts the synthetic world doesn't model,
+  or don't support a `users.id`-linked author at all. Mapping them is
+  deferred to a separate, explicitly-scoped task if ever needed.
+- **Every synthetic user gets the real `role='user'`**, regardless of
+  its synthetic `role` field (`'author'`/`'user'`, a content-authorship
+  concept unrelated to the real RBAC roles `user`/`editor`/`moderator`/
+  `admin`/`owner`). Testing elevated-role flows is
+  `scripts/create_auth_user.py --role admin`'s job, not this generator's.
+- **The password is real and known.** `SYNTHETIC_USER_PASSWORD` in
+  `core/sql_fixture.py` (`Synthetic-Test-Password-Not-Real-42017`) is
+  hashed with the real app's own PBKDF2 algorithm/iteration count
+  (`app.services.auth`), but with a *deterministic* per-user salt derived
+  from `dataset_id` + `user_id` instead of the real app's random salt —
+  the real `hash_password()` can't be reused as-is here without breaking
+  this pipeline's core "same seed → byte-for-byte identical world"
+  guarantee. The resulting hash still verifies correctly against the real
+  `verify_password()` — confirmed by a live login against a real API
+  container during Stage 2 development. Log in with any synthetic user's
+  email and this password.
+- **Every row is marked** (`metadata.synthetic = true`, `dataset_id`,
+  `notice`) per invariant #26 (synthetic content is always marked).
+
 Guarantees, all enforced in code (not just convention):
 
 - Values are only ones the pipeline itself created; strings/identifiers
   are escaped through `psycopg.sql`, never string concatenation.
 - Every row carries a `syn_<dataset_id>`-scoped identity so datasets never
-  collide.
+  collide **for tables scoped by primary-key `ON CONFLICT`** — see the
+  `iso2`/`iso3` caveat under "Known limitations" below, a real,
+  pre-existing gap in that guarantee found during Stage 2's live
+  verification.
 - `INSERT ... ON CONFLICT (id) DO UPDATE` makes `load-sql` idempotent —
   re-running it never duplicates rows.
 - `cleanup-sql` deletes only rows matching the dataset's own IDs, with an
   extra `AND is_demo = FALSE` guard on the `countries` delete so the
   conserved demo dataset (`argentina`/`russia`/`uruguay`) can never be
-  touched even by a bug.
+  touched even by a bug. Confirmed live for users too: a synthetic
+  login stops working immediately after `cleanup-sql`.
 - `ensure_not_production()` in `core/sql_loader.py` runs before any
   `psycopg.connect` — a missing or `production` `APP_ENV` is rejected
   before a connection is ever opened.
@@ -475,6 +515,9 @@ $env:APP_ENV = "local"
 $env:DATABASE_URL = "postgresql://country_atlas:change-me@localhost:5433/country_atlas"
 python scripts/synthetic_data.py load-sql --dataset <dataset_id> --confirm
 python scripts/synthetic_data.py cleanup-sql --dataset <dataset_id> --confirm
+
+# One command: migrations -> load-sql -> search index -> read models
+python scripts/synthetic_data.py bootstrap-app --dataset <dataset_id> --confirm
 ```
 
 Common flags: `--seed` (omit for a random one, always printed),
@@ -583,7 +626,13 @@ real database is verified manually against a live local Postgres rather
 than through an automated pytest+DB integration test, since the project
 has no other pytest tests requiring a live database (DB-dependent
 behavior is otherwise verified via the quality gate's Docker-stack curl
-smokes, not pytest). To re-verify by hand:
+smokes, not pytest). Stage 2's `users`/`bootstrap-app` work was verified
+this way against a real `docker compose up -d postgres redis` +
+`docker compose up --build -d api` stack: `bootstrap-app` end to end,
+then a real `POST /api/v1/auth/login` with a synthetic user's email and
+`SYNTHETIC_USER_PASSWORD` (200, real session token), the same login
+rejected with the wrong password (401), and rejected again after
+`cleanup-sql` (401 — the user row is really gone). To re-verify by hand:
 
 ```powershell
 docker compose up -d postgres
@@ -591,13 +640,33 @@ $env:APP_ENV = "local"
 python scripts/apply_migrations.py
 python scripts/synthetic_data.py generate --formats json --seed <any>
 python scripts/synthetic_data.py load-sql --dataset <dataset_id> --confirm
-# ... inspect countries/sources/legal_signals, re-run load-sql to confirm no duplicates ...
+# ... inspect countries/sources/legal_signals/users, re-run load-sql to confirm no duplicates ...
+# ... POST /api/v1/auth/login with a synthetic user's email + SYNTHETIC_USER_PASSWORD (needs the api container too) ...
 python scripts/synthetic_data.py cleanup-sql --dataset <dataset_id> --confirm
-# ... confirm only the synthetic countries are gone, argentina/russia/uruguay remain ...
+# ... confirm only the synthetic countries/users are gone, argentina/russia/uruguay remain ...
 ```
 
 ## Known limitations / deferred work
 
+- **`iso2`/`iso3` collide across datasets loaded into the same database
+  (priority: data-integrity bug, found during Stage 2's live
+  verification, not yet fixed).** `country_fixture_ids()`
+  (`core/sql_fixture.py`) derives `countries.iso2`/`iso3` only from a
+  country's index within its own dataset (`chr(ord("A") + index)`), not
+  from `dataset_id` — every dataset's first country gets `iso2='XA'`,
+  second `'XB'`, and so on, regardless of seed. `countries.iso2 CHAR(2)`
+  and `iso3 CHAR(3)` are both `UNIQUE`, so `load-sql`/`bootstrap-app` for
+  a *second* dataset fails with `UniqueViolation` on `countries_iso2_key`
+  unless the first dataset's rows were already `cleanup-sql`'d out first.
+  Reproduced live: `generate` two datasets, `load-sql` the first (fine),
+  `load-sql` the second without cleaning up the first (fails). Workaround
+  today: always `cleanup-sql` a dataset before loading a different one —
+  which is the documented usage pattern anyway, so this only bites
+  multi-dataset-simultaneously workflows. Not fixed here: it's in
+  `country_fixture_ids()`, pre-existing code outside Stage 2's scope
+  (users), and a real fix is constrained by `CHAR(2)` only having 26 safe
+  ISO-reserved (`XA`-`XZ`) codes available in the first place — worth a
+  deliberately-scoped follow-up task, not a quick patch.
 - **Translation preview is fake-by-default only.** `translate` proves the
   derived-artifact pipeline (source/target text, provider/version, seed,
   status, marking — see above) but its "translation" is a deterministic
@@ -608,8 +677,10 @@ python scripts/synthetic_data.py cleanup-sql --dataset <dataset_id> --confirm
   covered at the unit-test level for Vietnamese text; there is no
   synthetic-corpus-backed test against the application's real search
   index.
-- **SQL fixtures cover 4 tables**, not the full domain — see "Known gaps"
-  above for exactly which entities are JSON/document-only for now.
+- **SQL fixtures cover 6 tables** (`countries`, `country_profiles`,
+  `sources`, `legal_signals`, `users`, `user_auth_credentials`), not the
+  full domain — see "Known gaps" above for exactly which entities are
+  JSON/document-only for now.
 - **New countries, languages, or AI-driven translation are out of scope**
   for this generator, matching the project-wide rule against adding real
   countries/languages or using AI translation without an explicit owner

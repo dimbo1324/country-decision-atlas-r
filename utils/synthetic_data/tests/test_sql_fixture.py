@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+import json
+import re
+import sys
+from pathlib import Path
 from utils.synthetic_data.core.sql_fixture import (
+    SYNTHETIC_USER_PASSWORD,
+    SYNTHETIC_USER_ROLE,
     build_cleanup_sql,
     build_seed_sql,
     country_fixture_ids,
+    user_fixture_ids,
 )
 from utils.synthetic_data.core.world_generator import (
     WorldGenerationOptions,
@@ -14,6 +21,15 @@ from utils.synthetic_data.core.world_models import (
     FICTIONAL_NOTICE,
     SyntheticWorld,
 )
+
+
+_ROOT_DIR = Path(__file__).resolve().parents[3]
+_API_DIR = _ROOT_DIR / "apps" / "api"
+for _path in (_ROOT_DIR, _API_DIR):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+from app.services.auth import verify_password  # noqa: E402
 
 
 def _world(seed: int = 42017) -> SyntheticWorld:
@@ -47,13 +63,19 @@ def test_seed_sql_wraps_in_a_single_transaction() -> None:
 
 
 def test_seed_sql_uses_on_conflict_do_update_for_every_insert() -> None:
-    sql_text = build_seed_sql(_world())
+    world = _world()
+    sql_text = build_seed_sql(world)
 
     assert sql_text.count("INSERT INTO countries") == 5
     assert sql_text.count("INSERT INTO country_profiles") == 5
     assert sql_text.count("INSERT INTO sources") == 5
     assert sql_text.count("INSERT INTO legal_signals") == 5
-    assert sql_text.count("ON CONFLICT") == 20
+    assert sql_text.count("INSERT INTO users") == len(world.users)
+    assert sql_text.count("INSERT INTO user_auth_credentials") == len(
+        world.users
+    )
+    expected_on_conflict = 4 * 5 + 2 * len(world.users)
+    assert sql_text.count("ON CONFLICT") == expected_on_conflict
 
 
 def test_seed_sql_never_sets_is_demo_true() -> None:
@@ -146,3 +168,118 @@ def test_seed_sql_marks_every_source_and_summary_as_synthetic() -> None:
     sql_text = build_seed_sql(world)
 
     assert FICTIONAL_NOTICE in sql_text
+
+
+def test_user_fixture_ids_are_stable_for_the_same_dataset() -> None:
+    world = _world()
+    user = world.users[0]
+
+    first = user_fixture_ids(dataset_id=world.metadata.dataset_id, user=user)
+    second = user_fixture_ids(dataset_id=world.metadata.dataset_id, user=user)
+
+    assert first == second
+
+
+def test_different_users_get_different_fixture_ids() -> None:
+    world = _world()
+
+    ids = [
+        user_fixture_ids(dataset_id=world.metadata.dataset_id, user=user)
+        for user in world.users
+    ]
+
+    assert len({fixture_ids.user_id for fixture_ids in ids}) == len(ids)
+    assert len({fixture_ids.credential_id for fixture_ids in ids}) == len(ids)
+
+
+def test_every_user_gets_the_ordinary_real_role() -> None:
+    """Owner decision (Stage 2 spike): SyntheticUser.role ('author'/'user',
+    a content-authorship concept) never becomes the real users.role RBAC
+    value directly -- every synthetic user gets the safe 'user' default."""
+    world = _world()
+    sql_text = build_seed_sql(world)
+
+    role_values = set(re.findall(r"', '([a-z]+)', 'active', '\{", sql_text))
+    assert role_values == {SYNTHETIC_USER_ROLE}
+
+
+def test_every_user_password_hash_verifies_against_the_real_app() -> None:
+    """The whole point of writing users into the real `users` table: a
+    manual tester or e2e test must be able to actually log in. Every
+    password_hash in the fixture must verify against the real app's own
+    verify_password() using the documented SYNTHETIC_USER_PASSWORD."""
+    world = _world()
+    sql_text = build_seed_sql(world)
+
+    hashes = re.findall(r"'(pbkdf2_sha256\$[^']+)'", sql_text)
+    assert len(hashes) == len(world.users)
+    assert all(
+        verify_password(SYNTHETIC_USER_PASSWORD, encoded) for encoded in hashes
+    )
+    assert not any(
+        verify_password("definitely-the-wrong-password", encoded)
+        for encoded in hashes
+    )
+
+
+def test_user_metadata_marks_every_row_as_synthetic() -> None:
+    """Invariant #26 (docs/_arch_/02_План/02_Реестр_инвариантов.md):
+    synthetic content is always marked."""
+    world = _world()
+    sql_text = build_seed_sql(world)
+
+    metadata_blobs = re.findall(r'\{"synthetic":[^}]+\}', sql_text)
+    assert len(metadata_blobs) == len(world.users)
+    for blob in metadata_blobs:
+        payload = json.loads(blob)
+        assert payload["synthetic"] is True
+        assert payload["dataset_id"] == world.metadata.dataset_id
+        assert payload["notice"] == FICTIONAL_NOTICE
+
+
+def test_seed_sql_users_use_the_reserved_email_domain() -> None:
+    world = _world()
+    sql_text = build_seed_sql(world)
+
+    for user in world.users:
+        assert user.email.endswith("@example.test")
+        assert user.email in sql_text
+
+
+def test_cleanup_sql_deletes_user_credentials_before_users() -> None:
+    sql_text = build_cleanup_sql(_world())
+
+    credentials_pos = sql_text.index("DELETE FROM user_auth_credentials")
+    users_pos = sql_text.index("DELETE FROM users")
+
+    assert credentials_pos < users_pos
+
+
+def test_cleanup_sql_targets_exactly_this_datasets_user_ids() -> None:
+    world = _world()
+    seed_sql = build_seed_sql(world)
+    cleanup_sql = build_cleanup_sql(world)
+
+    for user in world.users:
+        ids = user_fixture_ids(dataset_id=world.metadata.dataset_id, user=user)
+        assert ids.user_id in seed_sql
+        assert ids.user_id in cleanup_sql
+        assert ids.credential_id in seed_sql
+        assert ids.credential_id in cleanup_sql
+
+
+def test_cleanup_sql_only_targets_this_datasets_users_not_others() -> None:
+    """Cleanup isolation: two different datasets' user fixtures must never
+    collide or cross-delete each other's rows."""
+    first_world = _world(seed=1)
+    second_world = _world(seed=2)
+
+    first_cleanup = build_cleanup_sql(first_world)
+    second_user_ids = {
+        user_fixture_ids(
+            dataset_id=second_world.metadata.dataset_id, user=user
+        ).user_id
+        for user in second_world.users
+    }
+
+    assert not any(user_id in first_cleanup for user_id in second_user_ids)
