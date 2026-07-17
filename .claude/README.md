@@ -43,3 +43,7 @@ python dev_tools_scripts_runner.py ship-main --message "type: explain the change
 
 `ship-main` is only for an explicitly requested publish of already-validated
 work; the default path is branch → gate → ff-merge → push.
+
+`dev_tools_scripts_runner.py` is a thin entry-point shim only; its
+implementation lives in `utils/dev_tools_scripts_runner/` — edit that
+package, not the entry point, to change runner behavior.

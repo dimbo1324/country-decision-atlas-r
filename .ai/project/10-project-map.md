@@ -17,7 +17,10 @@ It is NOT a country-ranking blog or listicle product.
 - `database/migrations` — numbered SQL migrations tracked by filename +
   checksum in `schema_migrations`.
 - `scripts/dev_tools` + `dev_tools_scripts_runner.py` — developer
-  automation; the main way to verify the project.
+  automation; the main way to verify the project. `dev_tools_scripts_runner.py`
+  is a thin entry-point shim only (~8 lines); its business logic, script
+  catalog, and JSON config live in `utils/dev_tools_scripts_runner/` — edit
+  that package, not the entry-point file, to change runner behavior.
 - `docs/_arch_` — architecture, product model, and plan (Russian). Keep
   current when architecture changes.
 - `.ai/` — assistant rule modules (this system).

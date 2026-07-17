@@ -359,7 +359,10 @@ It is NOT a country-ranking blog or listicle product.
 - `database/migrations` — numbered SQL migrations tracked by filename +
   checksum in `schema_migrations`.
 - `scripts/dev_tools` + `dev_tools_scripts_runner.py` — developer
-  automation; the main way to verify the project.
+  automation; the main way to verify the project. `dev_tools_scripts_runner.py`
+  is a thin entry-point shim only (~8 lines); its business logic, script
+  catalog, and JSON config live in `utils/dev_tools_scripts_runner/` — edit
+  that package, not the entry-point file, to change runner behavior.
 - `docs/_arch_` — architecture, product model, and plan (Russian). Keep
   current when architecture changes.
 - `.ai/` — assistant rule modules (this system).
@@ -412,6 +415,12 @@ python dev_tools_scripts_runner.py ship-main --message "type: why"  # guided pub
 
 `ship-main` is only for an explicitly requested publish of already-validated
 work; the default path is branch → gate → ff-merge → push.
+
+`dev_tools_scripts_runner.py` itself is a thin entry-point shim only — to
+change the runner's behavior (add or edit a script entry, fix a bug, adjust
+the catalog), edit `utils/dev_tools_scripts_runner/` (the Python modules and
+the JSON config under `utils/dev_tools_scripts_runner/config/`), not the
+entry-point file.
 
 ## Direct commands (when targeting one layer)
 
