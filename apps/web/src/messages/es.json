@@ -222,5 +222,144 @@
     "kicker": "Comparar",
     "title": "Comparar países por escenario",
     "description": "La matriz muestra la puntuación CII para cada escenario en cada país."
+  },
+  "countryHeader": {
+    "kickerFallback": "País",
+    "isoLabel": "ISO: {code}",
+    "statusLabel": "Estado: {status}",
+    "allCountries": "Todos los países",
+    "startDecision": "Iniciar el motor de decisión",
+    "legalSignals": "Señales legales",
+    "sources": "Fuentes"
+  },
+  "countryCii": {
+    "empty": "Los datos de CII para este país aún no se han calculado.",
+    "progressLabel": "CII sobre 100",
+    "confidenceLabel": "Confianza: {value}",
+    "na": "n/d",
+    "driftLabel": "Tendencia: {value}",
+    "versionLabel": "Versión {version}",
+    "description": "un índice compuesto: estado de derecho, libertad económica, estabilidad política, seguridad, anticorrupción, acceso digital. Más alto = mejor."
+  },
+  "countryEvidenceSummary": {
+    "statTotal": "Evidencia total",
+    "statHighConfidence": "Confianza alta",
+    "statMediumConfidence": "Confianza media",
+    "statLowConfidence": "Confianza baja",
+    "pipelineKicker": "Ficha → puntuación → evidencia → fuente",
+    "legalSignalsLink": "Señales legales",
+    "allSourcesLink": "Todas las fuentes"
+  },
+  "countryProfileSections": {
+    "sectionExecutiveSummary": "Resumen",
+    "sectionMigration": "Migración / residencia",
+    "sectionTax": "Impuestos",
+    "sectionCostOfLiving": "Costo de vida",
+    "sectionBusiness": "Negocios",
+    "sectionSafety": "Seguridad",
+    "sectionLegalSignals": "Señales legales",
+    "sectionRisks": "Riesgos",
+    "sectionSources": "Fuentes",
+    "emptyProfile": "No hay datos de perfil disponibles.",
+    "emptySections": "No hay secciones de perfil disponibles."
+  },
+  "countryScores": {
+    "empty": "No hay puntuaciones de escenario disponibles.",
+    "gaugeLabel": "Puntuación",
+    "confidenceLabel": "Confianza: {value}",
+    "breakdownToggle": "Desglose de la puntuación",
+    "columnCriterion": "Criterio",
+    "columnScore": "Puntuación",
+    "columnWeight": "Peso",
+    "columnWeighted": "Ponderada",
+    "columnConfidence": "Confianza",
+    "supportingSources": "Fuentes de respaldo",
+    "confidenceInline": "Confianza: {value}",
+    "openSource": "Abrir fuente"
+  },
+  "countryUserStories": {
+    "total": "Historias totales",
+    "synthetic": "Sintéticas",
+    "avgSatisfaction": "Satisfacción media"
+  },
+  "localeStatus": {
+    "requestedLocale": "Idioma solicitado:",
+    "resolvedLocale": "Idioma realmente mostrado:",
+    "translationStatus": "Estado de la traducción:",
+    "fallbackNotice": "La traducción al ruso falta parcialmente. Se muestra la versión alternativa en inglés."
+  },
+  "countryDossier": {
+    "tabOverview": "Resumen",
+    "tabScores": "Puntuaciones",
+    "tabTrust": "Confianza",
+    "tabSignals": "Señales",
+    "tabCommunity": "Comunidad",
+    "railOverview": "Resumen",
+    "titleCii": "Índice Compuesto de Inversión (CII)",
+    "railPlatformIntelligence": "Inteligencia de la plataforma",
+    "titleDataQuality": "Calidad de los datos",
+    "railTrends": "Tendencias",
+    "railScores": "Puntuaciones",
+    "titleScenarioScores": "Puntuaciones por escenario",
+    "railRoutes": "Rutas",
+    "railMigrationBoard": "Tablón de mudanzas",
+    "titleMigrationBoard": "Personas que planean este destino",
+    "railProfile": "Perfil",
+    "titleCountryProfile": "Perfil del país",
+    "railWhatChanged": "Qué cambió",
+    "railDataJournal": "Diario de datos",
+    "titleDataJournal": "Últimas actualizaciones de datos",
+    "railLegalSignals": "Señales legales",
+    "descriptionLegalSignals": "Las señales legales son cambios y riesgos estructurados que pueden afectar la mudanza, los negocios, la seguridad o la planificación a largo plazo.",
+    "allLegalSignalsFor": "Todas las señales legales de {name}",
+    "railSources": "Fuentes",
+    "titleSourcedData": "Datos con fuentes",
+    "allSourcesFor": "Todas las fuentes de {name}",
+    "railEvidence": "Evidencia",
+    "titleEvidenceAndSources": "Evidencia y fuentes",
+    "railUserStories": "Historias",
+    "titleUserStories": "Historias de usuarios",
+    "railTranslation": "Traducción",
+    "titleTranslationStatus": "Estado de la traducción"
+  },
+  "platformIntelligence": {
+    "globalMetrics": "Métricas globales",
+    "scenarioRisks": "Riesgos por escenario",
+    "emptyMessage": "Las métricas de inteligencia de la plataforma aún no se han calculado para este país.",
+    "insufficientData": "Datos insuficientes",
+    "riskContextKicker": "Contexto de riesgo de inteligencia de la plataforma"
+  },
+  "countryDrift": {
+    "badgeTitle": "Indicador de tendencia basado en señales legales",
+    "empty": "La dirección de la tendencia aún no se ha calculado para este país.",
+    "eventsInPeriod": "Eventos en el período: {count}",
+    "windowDays": "Ventana: {days} días",
+    "netScore": "Puntuación neta: {value}",
+    "computedAt": "Calculado: {date}",
+    "disclaimer": "El indicador se basa únicamente en señales legales oficiales del período seleccionado y no es una predicción."
+  },
+  "dataJournal": {
+    "empty": "Todavía no hay actualizaciones de datos publicadas para este país."
+  },
+  "trustSurface": {
+    "empty": "Los datos de confianza en las fuentes aún no se han calculado para este país.",
+    "contradictionUnknown": "Desconocida",
+    "contradictionLow": "Baja",
+    "contradictionMedium": "Media",
+    "contradictionHigh": "Alta",
+    "contradictionLabel": "Contradicción de datos:",
+    "aboutMethodology": "Sobre la metodología"
+  },
+  "whatChanged": {
+    "readMore": "Leer más",
+    "empty": "Todavía no hay cambios para el período seleccionado.",
+    "sinceSummary": "Desde {date} · cambios totales: {total}"
+  },
+  "countryPage": {
+    "navLabel": "Navegación",
+    "countriesLink": "Países",
+    "kicker": "País",
+    "backToCountries": "Volver a países",
+    "fallbackNotice": "La traducción al ruso falta parcialmente. Se muestra la versión alternativa en inglés."
   }
 }

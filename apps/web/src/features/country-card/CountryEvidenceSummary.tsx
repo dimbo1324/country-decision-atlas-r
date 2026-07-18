@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Counter, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
@@ -31,6 +32,7 @@ export function CountryEvidenceSummary({
   countrySlug,
   sourceSummary,
 }: CountryEvidenceSummaryProps) {
+  const t = useTranslations("countryEvidenceSummary");
   return (
     <div
       className="flex flex-col gap-5"
@@ -43,36 +45,36 @@ export function CountryEvidenceSummary({
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat
           value={evidenceSummary.total}
-          label="Всего доказательств"
+          label={t("statTotal")}
         />
         <Stat
           value={evidenceSummary.high_confidence}
-          label="Высокая достоверность"
+          label={t("statHighConfidence")}
         />
         <Stat
           value={evidenceSummary.medium_confidence}
-          label="Средняя достоверность"
+          label={t("statMediumConfidence")}
         />
         <Stat
           value={evidenceSummary.low_confidence}
-          label="Низкая достоверность"
+          label={t("statLowConfidence")}
         />
       </div>
 
-      <Kicker>Карточка → оценка → доказательство → источник</Kicker>
+      <Kicker>{t("pipelineKicker")}</Kicker>
 
       <div className="flex flex-wrap gap-4">
         <Link
           href={routes.legalSignalsForCountry(countrySlug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Правовые сигналы <ArrowNext />
+          {t("legalSignalsLink")} <ArrowNext />
         </Link>
         <Link
           href={routes.sourcesForCountry(countrySlug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Все источники <ArrowNext />
+          {t("allSourcesLink")} <ArrowNext />
         </Link>
       </div>
     </div>

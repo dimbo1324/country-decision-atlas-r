@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Card,
@@ -7,6 +8,7 @@ import {
 } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { GlossaryTerm } from "../../shared/ui/GlossaryTerm";
 import { AIExplainNumberButton } from "../ai-assistant";
@@ -20,13 +22,31 @@ type CountryCiiBlockProps = {
   locale: SupportedLocale;
 };
 
-const METRIC_LABEL_RU: Record<string, string> = {
-  rule_of_law: "Верховенство права",
-  economic_freedom: "Экон. свобода",
-  political_stability: "Пол. стабильность",
-  safety: "Безопасность",
-  corruption: "Антикоррупция",
-  digital_access: "Цифровой доступ",
+const METRIC_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    rule_of_law: "Rule of law",
+    economic_freedom: "Econ. freedom",
+    political_stability: "Political stability",
+    safety: "Safety",
+    corruption: "Anti-corruption",
+    digital_access: "Digital access",
+  },
+  ru: {
+    rule_of_law: "Верховенство права",
+    economic_freedom: "Экон. свобода",
+    political_stability: "Пол. стабильность",
+    safety: "Безопасность",
+    corruption: "Антикоррупция",
+    digital_access: "Цифровой доступ",
+  },
+  es: {
+    rule_of_law: "Estado de derecho",
+    economic_freedom: "Libertad económica",
+    political_stability: "Estabilidad política",
+    safety: "Seguridad",
+    corruption: "Anticorrupción",
+    digital_access: "Acceso digital",
+  },
 };
 
 function scoreAccent(score: number): "sage" | "gold" | "terra" {
@@ -35,8 +55,8 @@ function scoreAccent(score: number): "sage" | "gold" | "terra" {
   return "terra";
 }
 
-function metricLabel(metric: CiiMetric): string {
-  return METRIC_LABEL_RU[metric.slug] ?? metric.name_en;
+function metricLabel(metric: CiiMetric, uiLocale: SupportedLocale): string {
+  return METRIC_LABELS[uiLocale][metric.slug] ?? metric.name_en;
 }
 
 export function CountryCiiBlock({
@@ -44,10 +64,10 @@ export function CountryCiiBlock({
   countrySlug,
   locale,
 }: CountryCiiBlockProps) {
+  const t = useTranslations("countryCii");
+  const uiLocale = useAppLocale();
   if (!cii) {
-    return (
-      <EmptyState message="CII-данные для этой страны ещё не рассчитаны." />
-    );
+    return <EmptyState message={t("empty")} />;
   }
 
   const metrics = cii.metrics ?? [];
@@ -63,7 +83,7 @@ export function CountryCiiBlock({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <ProgressRing
             value={Math.round(cii.overall_score)}
-            label="CII из 100"
+            label={t("progressLabel")}
             size={128}
             accent={overallAccent}
             active
@@ -71,19 +91,23 @@ export function CountryCiiBlock({
           />
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Badge variant="trust">
-              Уверенность: {cii.confidence ?? "н/д"}
+              {t("confidenceLabel", { value: cii.confidence ?? t("na") })}
             </Badge>
             <Badge
               variant={
                 cii.drift != null && cii.drift > 0 ? "positive" : "default"
               }
             >
-              Динамика:{" "}
-              {cii.drift != null
-                ? `${cii.drift > 0 ? "+" : ""}${cii.drift.toFixed(1)}`
-                : "н/д"}
+              {t("driftLabel", {
+                value:
+                  cii.drift != null
+                    ? `${cii.drift > 0 ? "+" : ""}${cii.drift.toFixed(1)}`
+                    : t("na"),
+              })}
             </Badge>
-            <Badge variant="default">Версия {cii.version}</Badge>
+            <Badge variant="default">
+              {t("versionLabel", { version: cii.version })}
+            </Badge>
             {cii.aggregation_method && (
               <Badge variant="default">{cii.aggregation_method}</Badge>
             )}
@@ -100,7 +124,7 @@ export function CountryCiiBlock({
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="aspect-square w-full max-w-[320px] justify-self-center">
               <RadarChart
-                axes={metrics.map(metricLabel)}
+                axes={metrics.map((m) => metricLabel(m, uiLocale))}
                 series={[
                   {
                     label: "CII",
@@ -115,7 +139,7 @@ export function CountryCiiBlock({
             <CriteriaWeightBars
               active
               criteria={metrics.map((m) => ({
-                label: metricLabel(m),
+                label: metricLabel(m, uiLocale),
                 contribution: Math.round(m.score - 50),
                 accent: scoreAccent(m.score),
               }))}
@@ -124,9 +148,7 @@ export function CountryCiiBlock({
         )}
 
         <p className="text-c4 font-mono text-[9px] leading-relaxed tracking-[0.05em] uppercase">
-          <GlossaryTerm slug="cii">CII</GlossaryTerm> — составной индекс:
-          верховенство права, экон. свобода, полит. стабильность, безопасность,
-          антикоррупция, цифровой доступ. Выше = лучше.
+          <GlossaryTerm slug="cii">CII</GlossaryTerm> — {t("description")}
         </p>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api";
 import type { LocaleCode } from "../../shared/api/countries";
@@ -18,6 +19,7 @@ export function PlatformIntelligenceBlock({
   countrySlug,
   locale,
 }: PlatformIntelligenceBlockProps) {
+  const t = useTranslations("platformIntelligence");
   const { data, error, isPending, isError } = useQuery(
     countryPlatformMetricsQuery(countrySlug, locale),
   );
@@ -50,7 +52,7 @@ export function PlatformIntelligenceBlock({
     >
       {globalMetrics.length > 0 && (
         <div className="flex flex-col gap-3">
-          <Kicker>Глобальные показатели</Kicker>
+          <Kicker>{t("globalMetrics")}</Kicker>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {globalMetrics.map((metric) => (
               <PlatformMetricCard
@@ -63,7 +65,7 @@ export function PlatformIntelligenceBlock({
       )}
       {scenarioMetrics.length > 0 && (
         <div className="flex flex-col gap-3">
-          <Kicker>Риски по сценариям</Kicker>
+          <Kicker>{t("scenarioRisks")}</Kicker>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {scenarioMetrics.map((metric) => (
               <PlatformMetricCard

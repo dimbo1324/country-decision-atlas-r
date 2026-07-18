@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { parseAsStringEnum, useQueryState } from "nuqs";
 import {
   Card,
@@ -48,12 +49,12 @@ const TAB_IDS = [
 ] as const;
 type TabId = (typeof TAB_IDS)[number];
 
-const TAB_LABELS: Record<TabId, string> = {
-  overview: "Обзор",
-  scores: "Оценки",
-  trust: "Доверие",
-  signals: "Сигналы",
-  community: "Сообщество",
+const TAB_LABEL_KEYS: Record<TabId, string> = {
+  overview: "tabOverview",
+  scores: "tabScores",
+  trust: "tabTrust",
+  signals: "tabSignals",
+  community: "tabCommunity",
 };
 
 // Wide/data-table-heavy sections read better spanning the full tab width
@@ -117,6 +118,7 @@ interface CountryDossierProps {
  * `DossierRail` gets every section id/label for the flat layout, and only
  * the active tab's subset for the tabbed one. */
 export function CountryDossier({ card, locale }: CountryDossierProps) {
+  const t = useTranslations("countryDossier");
   const apiLocale = toApiLocale(locale);
   const isTabbedLayout = useFeatureEnabled("web_dossier_v2");
   const [activeTab, setActiveTab] = useQueryState(
@@ -131,7 +133,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
       list.push({
         id: "overview",
         tabId: "overview",
-        railLabel: "Обзор",
+        railLabel: t("railOverview"),
         content: (
           <section
             id="overview"
@@ -141,7 +143,9 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
               accent="gold"
               interactive={false}
             >
-              <h2 className="font-display mb-3 text-xl font-semibold">Обзор</h2>
+              <h2 className="font-display mb-3 text-xl font-semibold">
+                {t("railOverview")}
+              </h2>
               <p className="text-c2 text-sm leading-relaxed">
                 {card.profile.executive_summary}
               </p>
@@ -158,7 +162,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
       content: (
         <DossierSection
           id="cii"
-          title="Индекс инвестиционной привлекательности (CII)"
+          title={t("titleCii")}
           testId="cii-section"
         >
           <CountryCiiBlock
@@ -173,11 +177,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "platform-intelligence",
       tabId: "scores",
-      railLabel: "Платформенный интеллект",
+      railLabel: t("railPlatformIntelligence"),
       content: (
         <DossierSection
           id="platform-intelligence"
-          title="Платформенный интеллект"
+          title={t("railPlatformIntelligence")}
           testId="platform-intelligence-section"
         >
           <PlatformIntelligenceBlock
@@ -191,11 +195,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "trust",
       tabId: "trust",
-      railLabel: "Доверие",
+      railLabel: t("tabTrust"),
       content: (
         <DossierSection
           id="trust"
-          title="Качество данных"
+          title={t("titleDataQuality")}
           testId="trust-surface-section"
         >
           <TrustSurfaceBlock
@@ -209,11 +213,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "drift",
       tabId: "scores",
-      railLabel: "Тренды",
+      railLabel: t("railTrends"),
       content: (
         <DossierSection
           id="drift"
-          title="Направление изменений"
+          title={t("railTrends")}
           testId="country-drift-section"
         >
           <CountryDriftBlock
@@ -227,11 +231,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "scores",
       tabId: "scores",
-      railLabel: "Скоры",
+      railLabel: t("railScores"),
       content: (
         <DossierSection
           id="scores"
-          title="Оценки сценариев"
+          title={t("titleScenarioScores")}
         >
           <CountryScores
             scores={card.scores}
@@ -244,11 +248,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "routes",
       tabId: "signals",
-      railLabel: "Маршруты",
+      railLabel: t("railRoutes"),
       content: (
         <DossierSection
           id="routes"
-          title="Маршруты"
+          title={t("railRoutes")}
         >
           <CountryRoutesBlock
             countrySlug={card.country.slug}
@@ -261,11 +265,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "migration-board",
       tabId: "community",
-      railLabel: "Доска переезда",
+      railLabel: t("railMigrationBoard"),
       content: (
         <DossierSection
           id="migration-board"
-          title="Люди, планирующие это направление"
+          title={t("titleMigrationBoard")}
           testId="country-migration-board-section"
         >
           <CountryMigrationBoardBlock countrySlug={card.country.slug} />
@@ -276,11 +280,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "profile",
       tabId: "overview",
-      railLabel: "Профиль",
+      railLabel: t("railProfile"),
       content: (
         <DossierSection
           id="profile"
-          title="Профиль страны"
+          title={t("titleCountryProfile")}
         >
           <CountryProfileSections
             profile={card.profile}
@@ -293,11 +297,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "what-changed",
       tabId: "overview",
-      railLabel: "Что изменилось",
+      railLabel: t("railWhatChanged"),
       content: (
         <DossierSection
           id="what-changed"
-          title="Что изменилось"
+          title={t("railWhatChanged")}
           testId="what-changed-section"
         >
           <CountryWhatChanged
@@ -311,11 +315,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "data-journal",
       tabId: "trust",
-      railLabel: "Журнал данных",
+      railLabel: t("railDataJournal"),
       content: (
         <DossierSection
           id="data-journal"
-          title="Последние обновления данных"
+          title={t("titleDataJournal")}
         >
           <CountryDataJournalBlock
             countrySlug={card.country.slug}
@@ -328,19 +332,19 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "legal-signals",
       tabId: "signals",
-      railLabel: "Правовые сигналы",
+      railLabel: t("railLegalSignals"),
       content: (
         <DossierSection
           id="legal-signals"
-          title="Правовые сигналы"
-          description="Правовые сигналы — структурированные изменения и риски, способные повлиять на переезд, бизнес, безопасность или долгосрочное планирование."
+          title={t("railLegalSignals")}
+          description={t("descriptionLegalSignals")}
         >
           <CountryLegalSignals legalSignals={card.legal_signals} />
           <Link
             href={routes.legalSignalsForCountry(card.country.slug)}
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Все правовые сигналы для {card.country.name} <ArrowNext />
+            {t("allLegalSignalsFor", { name: card.country.name })} <ArrowNext />
           </Link>
         </DossierSection>
       ),
@@ -349,18 +353,18 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "sources",
       tabId: "trust",
-      railLabel: "Источники",
+      railLabel: t("railSources"),
       content: (
         <DossierSection
           id="sources"
-          title="Данные с источниками"
+          title={t("titleSourcedData")}
         >
           <CountrySources sources={card.sources} />
           <Link
             href={routes.sourcesForCountry(card.country.slug)}
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Все источники для {card.country.name} <ArrowNext />
+            {t("allSourcesFor", { name: card.country.name })} <ArrowNext />
           </Link>
         </DossierSection>
       ),
@@ -369,11 +373,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "evidence",
       tabId: "overview",
-      railLabel: "Доказательства",
+      railLabel: t("railEvidence"),
       content: (
         <DossierSection
           id="evidence"
-          title="Доказательства и источники"
+          title={t("titleEvidenceAndSources")}
         >
           <CountryEvidenceSummary
             evidenceSummary={card.evidence_summary}
@@ -387,11 +391,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "user-stories",
       tabId: "community",
-      railLabel: "Истории",
+      railLabel: t("railUserStories"),
       content: (
         <DossierSection
           id="user-stories"
-          title="Пользовательские истории"
+          title={t("titleUserStories")}
         >
           <CountryUserStoriesSummary
             userStoriesSummary={card.user_stories_summary}
@@ -418,11 +422,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "locale-status",
       tabId: "overview",
-      railLabel: "Перевод",
+      railLabel: t("railTranslation"),
       content: (
         <DossierSection
           id="locale-status"
-          title="Статус перевода"
+          title={t("titleTranslationStatus")}
           testId="locale-status"
         >
           <LocaleStatusBadge locale={card.locale} />
@@ -431,7 +435,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     });
 
     return list;
-  }, [card, locale, apiLocale]);
+  }, [card, locale, apiLocale, t]);
 
   if (!isTabbedLayout) {
     return (
@@ -478,7 +482,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
                 value={tabId}
                 data-testid={`dossier-tab-${tabId}`}
               >
-                {TAB_LABELS[tabId]}
+                {t(TAB_LABEL_KEYS[tabId])}
               </TabsTrigger>
             ))}
           </TabsList>

@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../i18n/navigation";
 import { countriesApi } from "../../../../shared/api";
@@ -18,6 +18,7 @@ type PageProps = {
 export default async function CountryPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = asSupportedLocale(await getLocale());
+  const t = await getTranslations("countryPage");
 
   let card;
   try {
@@ -30,26 +31,26 @@ export default async function CountryPage({ params }: PageProps) {
     return (
       <div className="flex flex-col gap-6">
         <nav
-          aria-label="Навигация"
+          aria-label={t("navLabel")}
           className="text-c4 flex items-center gap-2 text-xs"
         >
           <Link
             href={routes.countries}
             className="hover:text-gold transition-colors duration-300"
           >
-            Страны
+            {t("countriesLink")}
           </Link>
           <span aria-hidden="true">/</span>
           <span>{slug}</span>
         </nav>
         <header className="flex flex-col gap-3">
-          <Kicker>Страна</Kicker>
+          <Kicker>{t("kicker")}</Kicker>
           <h1 className="font-display text-3xl font-bold">{slug}</h1>
         </header>
         <ErrorState
           error={errProp}
           backHref={getPathname({ href: routes.countries, locale })}
-          backLabel="Назад к странам"
+          backLabel={t("backToCountries")}
         />
       </div>
     );
@@ -60,14 +61,14 @@ export default async function CountryPage({ params }: PageProps) {
   return (
     <div className="flex flex-col gap-6">
       <nav
-        aria-label="Навигация"
+        aria-label={t("navLabel")}
         className="text-c4 flex items-center gap-2 text-xs"
       >
         <Link
           href={routes.countries}
           className="hover:text-gold transition-colors duration-300"
         >
-          Страны
+          {t("countriesLink")}
         </Link>
         <span aria-hidden="true">/</span>
         <span>{card.country.name}</span>
@@ -75,8 +76,7 @@ export default async function CountryPage({ params }: PageProps) {
 
       {isFallback && (
         <p className="border-terra2/60 text-terra3 border px-4 py-3 text-sm">
-          Русский перевод частично отсутствует. Показана английская
-          fallback-версия.
+          {t("fallbackNotice")}
         </p>
       )}
 

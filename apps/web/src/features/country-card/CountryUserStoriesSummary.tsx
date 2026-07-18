@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Counter } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 
@@ -24,21 +25,22 @@ function Stat({ value, label }: { value: number; label: string }) {
 export function CountryUserStoriesSummary({
   userStoriesSummary,
 }: CountryUserStoriesSummaryProps) {
+  const t = useTranslations("countryUserStories");
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
       <Stat
         value={userStoriesSummary.total}
-        label="Всего историй"
+        label={t("total")}
       />
       <Stat
         value={userStoriesSummary.synthetic}
-        label="Синтетические"
+        label={t("synthetic")}
       />
       {userStoriesSummary.average_satisfaction_score !== null &&
         userStoriesSummary.average_satisfaction_score !== undefined && (
           <Stat
             value={userStoriesSummary.average_satisfaction_score}
-            label="Ср. удовлетворённость"
+            label={t("avgSatisfaction")}
           />
         )}
     </div>

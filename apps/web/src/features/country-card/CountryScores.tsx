@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Card,
@@ -23,10 +24,11 @@ function scoreToLabel(score: number): string {
 }
 
 export function CountryScores({ scores, sources }: CountryScoresProps) {
+  const t = useTranslations("countryScores");
   const sourcesById = new Map(sources.map((s) => [s.id, s]));
 
   if (!scores || scores.length === 0) {
-    return <EmptyState message="Оценки сценариев отсутствуют." />;
+    return <EmptyState message={t("empty")} />;
   }
 
   return (
@@ -51,14 +53,16 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
             </div>
             <GaugeArc
               value={score.score}
-              label="Скор"
+              label={t("gaugeLabel")}
               active
               accent={accent}
               width={180}
               mode="static"
             />
             {score.confidence && (
-              <Badge variant="trust">Уверенность: {score.confidence}</Badge>
+              <Badge variant="trust">
+                {t("confidenceLabel", { value: score.confidence })}
+              </Badge>
             )}
             {score.explanation && (
               <p className="text-c3 text-sm leading-relaxed">
@@ -68,7 +72,7 @@ export function CountryScores({ scores, sources }: CountryScoresProps) {
             {score.breakdowns && score.breakdowns.length > 0 && (
               <details className="group">
                 <summary className="font-mono text-c3 hover:text-gold cursor-pointer text-[9px] tracking-[0.15em] uppercase transition-colors duration-300">
-                  Разбор оценки
+                  {t("breakdownToggle")}
                 </summary>
                 <div className="mt-4">
                   <ScoreBreakdown

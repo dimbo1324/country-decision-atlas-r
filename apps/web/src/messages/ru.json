@@ -222,5 +222,144 @@
     "kicker": "Сравнение",
     "title": "Сравнение стран по сценариям",
     "description": "Матрица показывает CII-оценку по каждому сценарию для каждой страны."
+  },
+  "countryHeader": {
+    "kickerFallback": "Страна",
+    "isoLabel": "ISO: {code}",
+    "statusLabel": "Статус: {status}",
+    "allCountries": "Все страны",
+    "startDecision": "Запустить подбор",
+    "legalSignals": "Правовые сигналы",
+    "sources": "Источники"
+  },
+  "countryCii": {
+    "empty": "CII-данные для этой страны ещё не рассчитаны.",
+    "progressLabel": "CII из 100",
+    "confidenceLabel": "Уверенность: {value}",
+    "na": "н/д",
+    "driftLabel": "Динамика: {value}",
+    "versionLabel": "Версия {version}",
+    "description": "составной индекс: верховенство права, экон. свобода, полит. стабильность, безопасность, антикоррупция, цифровой доступ. Выше = лучше."
+  },
+  "countryEvidenceSummary": {
+    "statTotal": "Всего доказательств",
+    "statHighConfidence": "Высокая достоверность",
+    "statMediumConfidence": "Средняя достоверность",
+    "statLowConfidence": "Низкая достоверность",
+    "pipelineKicker": "Карточка → оценка → доказательство → источник",
+    "legalSignalsLink": "Правовые сигналы",
+    "allSourcesLink": "Все источники"
+  },
+  "countryProfileSections": {
+    "sectionExecutiveSummary": "Обзор",
+    "sectionMigration": "Миграция / резидентство",
+    "sectionTax": "Налоги",
+    "sectionCostOfLiving": "Стоимость жизни",
+    "sectionBusiness": "Бизнес",
+    "sectionSafety": "Безопасность",
+    "sectionLegalSignals": "Правовые сигналы",
+    "sectionRisks": "Риски",
+    "sectionSources": "Источники",
+    "emptyProfile": "Данные профиля отсутствуют.",
+    "emptySections": "Разделы профиля отсутствуют."
+  },
+  "countryScores": {
+    "empty": "Оценки сценариев отсутствуют.",
+    "gaugeLabel": "Скор",
+    "confidenceLabel": "Уверенность: {value}",
+    "breakdownToggle": "Разбор оценки",
+    "columnCriterion": "Критерий",
+    "columnScore": "Оценка",
+    "columnWeight": "Вес",
+    "columnWeighted": "Взвешенная",
+    "columnConfidence": "Достоверность",
+    "supportingSources": "Подтверждающие источники",
+    "confidenceInline": "Достоверность: {value}",
+    "openSource": "Открыть источник"
+  },
+  "countryUserStories": {
+    "total": "Всего историй",
+    "synthetic": "Синтетические",
+    "avgSatisfaction": "Ср. удовлетворённость"
+  },
+  "localeStatus": {
+    "requestedLocale": "Запрошенный язык:",
+    "resolvedLocale": "Фактически показанный язык:",
+    "translationStatus": "Статус перевода:",
+    "fallbackNotice": "Русский перевод частично отсутствует. Показана английская резервная версия."
+  },
+  "countryDossier": {
+    "tabOverview": "Обзор",
+    "tabScores": "Оценки",
+    "tabTrust": "Доверие",
+    "tabSignals": "Сигналы",
+    "tabCommunity": "Сообщество",
+    "railOverview": "Обзор",
+    "titleCii": "Индекс инвестиционной привлекательности (CII)",
+    "railPlatformIntelligence": "Платформенный интеллект",
+    "titleDataQuality": "Качество данных",
+    "railTrends": "Тренды",
+    "railScores": "Скоры",
+    "titleScenarioScores": "Оценки сценариев",
+    "railRoutes": "Маршруты",
+    "railMigrationBoard": "Доска переезда",
+    "titleMigrationBoard": "Люди, планирующие это направление",
+    "railProfile": "Профиль",
+    "titleCountryProfile": "Профиль страны",
+    "railWhatChanged": "Что изменилось",
+    "railDataJournal": "Журнал данных",
+    "titleDataJournal": "Последние обновления данных",
+    "railLegalSignals": "Правовые сигналы",
+    "descriptionLegalSignals": "Правовые сигналы — структурированные изменения и риски, способные повлиять на переезд, бизнес, безопасность или долгосрочное планирование.",
+    "allLegalSignalsFor": "Все правовые сигналы для {name}",
+    "railSources": "Источники",
+    "titleSourcedData": "Данные с источниками",
+    "allSourcesFor": "Все источники для {name}",
+    "railEvidence": "Доказательства",
+    "titleEvidenceAndSources": "Доказательства и источники",
+    "railUserStories": "Истории",
+    "titleUserStories": "Пользовательские истории",
+    "railTranslation": "Перевод",
+    "titleTranslationStatus": "Статус перевода"
+  },
+  "platformIntelligence": {
+    "globalMetrics": "Глобальные показатели",
+    "scenarioRisks": "Риски по сценариям",
+    "emptyMessage": "Метрики платформенного интеллекта ещё не вычислены для этой страны.",
+    "insufficientData": "Недостаточно данных",
+    "riskContextKicker": "Контекст рисков платформенного интеллекта"
+  },
+  "countryDrift": {
+    "badgeTitle": "Индикатор тренда на основе правовых сигналов",
+    "empty": "Данные о направлении изменений ещё не вычислены для этой страны.",
+    "eventsInPeriod": "Событий за период: {count}",
+    "windowDays": "Окно: {days} дней",
+    "netScore": "Net score: {value}",
+    "computedAt": "Рассчитано: {date}",
+    "disclaimer": "Индикатор основан только на официальных правовых сигналах за выбранный период и не является прогнозом."
+  },
+  "dataJournal": {
+    "empty": "Пока нет опубликованных обновлений данных для этой страны."
+  },
+  "trustSurface": {
+    "empty": "Данные о доверии к источникам ещё не вычислены для этой страны.",
+    "contradictionUnknown": "Неизвестно",
+    "contradictionLow": "Низкая",
+    "contradictionMedium": "Средняя",
+    "contradictionHigh": "Высокая",
+    "contradictionLabel": "Противоречивость данных:",
+    "aboutMethodology": "О методологии"
+  },
+  "whatChanged": {
+    "readMore": "Подробнее",
+    "empty": "Пока нет изменений за выбранный период.",
+    "sinceSummary": "С {date} · всего изменений: {total}"
+  },
+  "countryPage": {
+    "navLabel": "Навигация",
+    "countriesLink": "Страны",
+    "kicker": "Страна",
+    "backToCountries": "Назад к странам",
+    "fallbackNotice": "Русский перевод частично отсутствует. Показана английская fallback-версия."
   }
 }

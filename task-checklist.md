@@ -260,7 +260,77 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         (confirmed the locale-cast bug fix: matrix loads instead of
         erroring, and matrix-cell links resolve to `/es/countries/...`,
         not `/en/...`).
-- [ ] Country Dossier (21 files + 1 page).
+- [+] Country Dossier (21 files + 1 page).
+      - `country-card` (11): 13 new namespaces (`countryHeader`, `countryCii`,
+        `countryEvidenceSummary`, `countryProfileSections`, `countryScores`
+        shared with `ScoreBreakdown`, `countryUserStories`, `localeStatus`,
+        `countryDossier`). `CountryCiiBlock`'s `METRIC_LABEL_RU` and
+        `LocaleStatusBadge`'s `STATUS_LABELS` converted to the
+        `Record<SupportedLocale, Record<string,string>>` pattern (unknown-
+        value fallback, same reasoning as Stage 3a's badges). `CountryDossier`
+        itself is the largest single edit this whole task — 17 section
+        titles/rail-labels/tab-labels — all now `t()`-driven inside the
+        `useMemo` that builds the section list (added `t` to the deps array).
+      - `trust-surface` (1), `country-drift` (2 of 3 —
+        `DriftHistoryMiniList.tsx` has no hardcoded text),
+        `what-changed` (2), `data-journal` (1 of 3 — `CountryDataJournalBlock`
+        and `CountryDataJournalBlock`'s empty-state wrapper have none of
+        their own), `platform-intelligence` (4 of 5 —
+        `PlatformMetricLabelBadge.tsx` renders the raw enum value directly,
+        nothing to translate) — each finishes the strings Stage 3a's
+        `toApiLocale`-only pass deliberately left behind (e.g.
+        `TrustSurfaceBlock`'s empty-state/contradiction-level text,
+        `CountryDriftBlock`'s "events in period/window/computed at" line).
+      - `countries/[slug]/page.tsx`: new `countryPage` namespace via
+        `getTranslations()` (Server Component, matching Stage 4's page
+        pattern).
+      - **Two real bugs found via the browser walkthrough, not caught by
+        typecheck/lint/tests**:
+        1. A genuine typo introduced mid-edit in `CountryDossier.tsx`:
+           pasted an extra `<CommunityCountryBlock>` into the
+           migration-board section's content (duplicate render, wrong
+           section). Caught on self-review before verification even ran.
+        2. `shared/lib/useAppLocale.ts` (existing file, untouched since
+           before this task) carried a `"use client"` directive that had
+           gone unnoticed all the way through Stages 3–4 because every
+           prior call site happened to already sit inside a `"use client"`
+           ancestor. `CountryHeader.tsx` is the first call site rendered
+           **directly** from a Server Component (`countries/[slug]/page.tsx`
+           renders `<CountryHeader>` standalone, not through the
+           `"use client"` `CountryDossier`) — so `LocalizationBadge`'s
+           `useAppLocale()` call (added back in Stage 3a) crashed with
+           "Attempted to call useAppLocale() from the server" the moment a
+           real country page was browser-tested for the first time since
+           Stage 3a. Root cause: next-intl's own `useLocale()` (which
+           `useAppLocale` just wraps) is dual-mode-safe in both Server and
+           Client Components — same as `useTranslations` — but wrapping it
+           in a file explicitly marked `"use client"` blocks that, since
+           the directive is a hard module-boundary marker Next.js enforces
+           regardless of what the wrapped call actually needs. Fix: dropped
+           the stray `"use client"` from `useAppLocale.ts` — it was never
+           actually needed.
+      - **Test infrastructure gap found and fixed**: `CountryDossier.test.tsx`
+        asserts literal Russian tab labels (e.g. `"Обзор"`), and
+        `test-utils/render.tsx`'s `renderWithProviders` was passing
+        `messages={{}}` to `NextIntlClientProvider` — meaning every
+        `useTranslations()` call in a tested component was silently getting
+        next-intl's `"namespace.key"` missing-message fallback string
+        instead of real text. This had been invisible until this stage
+        because the few `useTranslations()` users before now (`AppFooter`
+        etc.) had no dedicated component tests exercising their translated
+        text. Fixed by importing the real `ru.json` catalog into
+        `render.tsx` (matching the hardcoded `locale="ru"`) instead of an
+        empty object — every future stage's component tests now get real
+        translated text for free, not just this one.
+      - Verify: typecheck/lint/format clean; Vitest 86/86 (14 files,
+        including the now-meaningful `CountryDossier.test.tsx` assertions);
+        fresh `next build` clean; `i18n_parity_check.py` 297/297 keys;
+        browser walkthrough of `/en/countries/argentina`,
+        `/ru/countries/argentina`, `/es/countries/argentina` (all dossier
+        sections render translated, in the correct locale, with backend
+        content — country names, source excerpts — correctly still
+        following its own data-locale fallback rather than the interface
+        locale, exactly per the Stage 1 design).
 - [ ] Decision flow (15 files + 2 pages).
 - [ ] Legal Signals, Sources, Routes (21 files + 3 pages).
 - [ ] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, type RenderOptions } from "@testing-library/react";
 import { withNuqsTestingAdapter } from "nuqs/adapters/testing";
 import { NextIntlClientProvider } from "next-intl";
+import messages from "../messages/ru.json";
 
 /** Fresh `QueryClient` per render, retries disabled so a mocked-error test
  * fails fast instead of waiting out TanStack Query's default retry backoff. */
@@ -29,7 +30,7 @@ export function renderWithProviders(
     wrapper: ({ children }) => (
       <NextIntlClientProvider
         locale="ru"
-        messages={{}}
+        messages={messages}
       >
         <QueryClientProvider client={queryClient}>
           <NuqsWrapper>{children}</NuqsWrapper>

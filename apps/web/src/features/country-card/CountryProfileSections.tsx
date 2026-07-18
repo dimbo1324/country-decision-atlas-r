@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Accordion, type AccordionItem } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -15,35 +16,35 @@ type ProfileTextKey = Exclude<
 
 const SECTIONS: {
   key: ProfileTextKey;
-  label: string;
+  labelKey: string;
 }[] = [
-  { key: "executive_summary", label: "Обзор" },
-  { key: "migration_overview", label: "Миграция / резидентство" },
-  { key: "tax_overview", label: "Налоги" },
-  { key: "cost_of_living_overview", label: "Стоимость жизни" },
-  { key: "business_overview", label: "Бизнес" },
-  { key: "safety_overview", label: "Безопасность" },
-  { key: "legal_signals_summary", label: "Правовые сигналы" },
-  { key: "risk_summary", label: "Риски" },
-  { key: "source_summary", label: "Источники" },
+  { key: "executive_summary", labelKey: "sectionExecutiveSummary" },
+  { key: "migration_overview", labelKey: "sectionMigration" },
+  { key: "tax_overview", labelKey: "sectionTax" },
+  { key: "cost_of_living_overview", labelKey: "sectionCostOfLiving" },
+  { key: "business_overview", labelKey: "sectionBusiness" },
+  { key: "safety_overview", labelKey: "sectionSafety" },
+  { key: "legal_signals_summary", labelKey: "sectionLegalSignals" },
+  { key: "risk_summary", labelKey: "sectionRisks" },
+  { key: "source_summary", labelKey: "sectionSources" },
 ];
 
 export function CountryProfileSections({
   profile,
   skipExecutiveSummary = false,
 }: CountryProfileSectionsProps) {
-  if (!profile) return <EmptyState message="Данные профиля отсутствуют." />;
+  const t = useTranslations("countryProfileSections");
+  if (!profile) return <EmptyState message={t("emptyProfile")} />;
 
   const filled = SECTIONS.filter(
     (s) =>
       profile[s.key] &&
       !(skipExecutiveSummary && s.key === "executive_summary"),
   );
-  if (filled.length === 0)
-    return <EmptyState message="Разделы профиля отсутствуют." />;
+  if (filled.length === 0) return <EmptyState message={t("emptySections")} />;
 
   const items: AccordionItem[] = filled.map((s) => ({
-    title: s.label,
+    title: t(s.labelKey),
     content: (
       <p className="text-c3 text-sm leading-relaxed">{profile[s.key]}</p>
     ),

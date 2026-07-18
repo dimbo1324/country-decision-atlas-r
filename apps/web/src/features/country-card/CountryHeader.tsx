@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
@@ -10,16 +11,21 @@ type CountryHeaderProps = {
 };
 
 export function CountryHeader({ country }: CountryHeaderProps) {
+  const t = useTranslations("countryHeader");
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3">
-        <Kicker>{country.region ?? "Страна"}</Kicker>
+        <Kicker>{country.region ?? t("kickerFallback")}</Kicker>
         <h1 className="font-display text-4xl font-bold">{country.name}</h1>
         <div className="flex flex-wrap items-center gap-2">
           {country.iso_code && (
-            <Badge variant="default">ISO: {country.iso_code}</Badge>
+            <Badge variant="default">
+              {t("isoLabel", { code: country.iso_code })}
+            </Badge>
           )}
-          <Badge variant="default">Статус: {country.status}</Badge>
+          <Badge variant="default">
+            {t("statusLabel", { status: country.status })}
+          </Badge>
           <LocalizationBadge localization={country.localization} />
         </div>
       </header>
@@ -28,25 +34,25 @@ export function CountryHeader({ country }: CountryHeaderProps) {
           href={routes.countries}
           className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
-          <ArrowBack /> Все страны
+          <ArrowBack /> {t("allCountries")}
         </Link>
         <Link
           href={routes.decision}
           className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
-          Запустить подбор
+          {t("startDecision")}
         </Link>
         <Link
           href={routes.legalSignals}
           className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
-          Правовые сигналы
+          {t("legalSignals")}
         </Link>
         <Link
           href={routes.sources}
           className="font-mono text-c3 hover:text-gold text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
         >
-          Источники
+          {t("sources")}
         </Link>
       </div>
     </div>

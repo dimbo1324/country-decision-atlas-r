@@ -222,5 +222,144 @@
     "kicker": "Compare",
     "title": "Compare countries by scenario",
     "description": "The matrix shows the CII score for every scenario across every country."
+  },
+  "countryHeader": {
+    "kickerFallback": "Country",
+    "isoLabel": "ISO: {code}",
+    "statusLabel": "Status: {status}",
+    "allCountries": "All countries",
+    "startDecision": "Run the decision engine",
+    "legalSignals": "Legal signals",
+    "sources": "Sources"
+  },
+  "countryCii": {
+    "empty": "CII data hasn't been calculated for this country yet.",
+    "progressLabel": "CII out of 100",
+    "confidenceLabel": "Confidence: {value}",
+    "na": "n/a",
+    "driftLabel": "Drift: {value}",
+    "versionLabel": "Version {version}",
+    "description": "a composite index: rule of law, econ. freedom, political stability, safety, anti-corruption, digital access. Higher = better."
+  },
+  "countryEvidenceSummary": {
+    "statTotal": "Total evidence",
+    "statHighConfidence": "High confidence",
+    "statMediumConfidence": "Medium confidence",
+    "statLowConfidence": "Low confidence",
+    "pipelineKicker": "Card → score → evidence → source",
+    "legalSignalsLink": "Legal signals",
+    "allSourcesLink": "All sources"
+  },
+  "countryProfileSections": {
+    "sectionExecutiveSummary": "Overview",
+    "sectionMigration": "Migration / residency",
+    "sectionTax": "Taxes",
+    "sectionCostOfLiving": "Cost of living",
+    "sectionBusiness": "Business",
+    "sectionSafety": "Safety",
+    "sectionLegalSignals": "Legal signals",
+    "sectionRisks": "Risks",
+    "sectionSources": "Sources",
+    "emptyProfile": "No profile data available.",
+    "emptySections": "No profile sections available."
+  },
+  "countryScores": {
+    "empty": "No scenario scores available.",
+    "gaugeLabel": "Score",
+    "confidenceLabel": "Confidence: {value}",
+    "breakdownToggle": "Score breakdown",
+    "columnCriterion": "Criterion",
+    "columnScore": "Score",
+    "columnWeight": "Weight",
+    "columnWeighted": "Weighted",
+    "columnConfidence": "Confidence",
+    "supportingSources": "Supporting sources",
+    "confidenceInline": "Confidence: {value}",
+    "openSource": "Open source"
+  },
+  "countryUserStories": {
+    "total": "Total stories",
+    "synthetic": "Synthetic",
+    "avgSatisfaction": "Avg. satisfaction"
+  },
+  "localeStatus": {
+    "requestedLocale": "Requested language:",
+    "resolvedLocale": "Actually shown language:",
+    "translationStatus": "Translation status:",
+    "fallbackNotice": "The Russian translation is partially missing. Showing the English fallback version."
+  },
+  "countryDossier": {
+    "tabOverview": "Overview",
+    "tabScores": "Scores",
+    "tabTrust": "Trust",
+    "tabSignals": "Signals",
+    "tabCommunity": "Community",
+    "railOverview": "Overview",
+    "titleCii": "Composite Investment Index (CII)",
+    "railPlatformIntelligence": "Platform Intelligence",
+    "titleDataQuality": "Data quality",
+    "railTrends": "Trends",
+    "railScores": "Scores",
+    "titleScenarioScores": "Scenario scores",
+    "railRoutes": "Routes",
+    "railMigrationBoard": "Migration board",
+    "titleMigrationBoard": "People planning this destination",
+    "railProfile": "Profile",
+    "titleCountryProfile": "Country profile",
+    "railWhatChanged": "What changed",
+    "railDataJournal": "Data journal",
+    "titleDataJournal": "Latest data updates",
+    "railLegalSignals": "Legal signals",
+    "descriptionLegalSignals": "Legal signals are structured changes and risks that can affect relocation, business, safety, or long-term planning.",
+    "allLegalSignalsFor": "All legal signals for {name}",
+    "railSources": "Sources",
+    "titleSourcedData": "Sourced data",
+    "allSourcesFor": "All sources for {name}",
+    "railEvidence": "Evidence",
+    "titleEvidenceAndSources": "Evidence and sources",
+    "railUserStories": "Stories",
+    "titleUserStories": "User stories",
+    "railTranslation": "Translation",
+    "titleTranslationStatus": "Translation status"
+  },
+  "platformIntelligence": {
+    "globalMetrics": "Global metrics",
+    "scenarioRisks": "Scenario risks",
+    "emptyMessage": "Platform intelligence metrics haven't been calculated for this country yet.",
+    "insufficientData": "Not enough data",
+    "riskContextKicker": "Platform intelligence risk context"
+  },
+  "countryDrift": {
+    "badgeTitle": "Trend indicator based on legal signals",
+    "empty": "Drift direction hasn't been calculated for this country yet.",
+    "eventsInPeriod": "Events in period: {count}",
+    "windowDays": "Window: {days} days",
+    "netScore": "Net score: {value}",
+    "computedAt": "Calculated: {date}",
+    "disclaimer": "The indicator is based only on official legal signals for the selected period and is not a forecast."
+  },
+  "dataJournal": {
+    "empty": "No published data updates for this country yet."
+  },
+  "trustSurface": {
+    "empty": "Source trust data hasn't been calculated for this country yet.",
+    "contradictionUnknown": "Unknown",
+    "contradictionLow": "Low",
+    "contradictionMedium": "Medium",
+    "contradictionHigh": "High",
+    "contradictionLabel": "Data contradiction:",
+    "aboutMethodology": "About the methodology"
+  },
+  "whatChanged": {
+    "readMore": "Read more",
+    "empty": "No changes yet for the selected period.",
+    "sinceSummary": "Since {date} · total changes: {total}"
+  },
+  "countryPage": {
+    "navLabel": "Navigation",
+    "countriesLink": "Countries",
+    "kicker": "Country",
+    "backToCountries": "Back to countries",
+    "fallbackNotice": "The Russian translation is partially missing. Showing the English fallback version."
   }
 }

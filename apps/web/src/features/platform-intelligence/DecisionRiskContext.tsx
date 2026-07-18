@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Kicker } from "@country-decision-atlas/ui";
 
 import type { PlatformMetricListResponse } from "../../shared/api/platform-metrics";
@@ -19,6 +20,7 @@ export function DecisionRiskContext({
   scenarioSlug,
   locale,
 }: DecisionRiskContextProps) {
+  const t = useTranslations("platformIntelligence");
   const [metricsMap, setMetricsMap] = useState<
     Record<string, PlatformMetricListResponse>
   >({});
@@ -68,7 +70,7 @@ export function DecisionRiskContext({
       className="flex flex-col gap-4"
       data-testid="decision-risk-context"
     >
-      <Kicker>Контекст рисков платформенного интеллекта</Kicker>
+      <Kicker>{t("riskContextKicker")}</Kicker>
       {countrySlugs.map((slug) => {
         const metrics = metricsMap[slug];
         if (!metrics || metrics.items.length === 0) return null;

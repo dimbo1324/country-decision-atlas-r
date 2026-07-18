@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Badge, ProgressRing, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError, type LocaleCode } from "../../shared/api";
 import { countryTrustQuery } from "../../entities/trust-surface/api";
@@ -29,6 +30,7 @@ export function TrustSurfaceBlock({
   countrySlug,
   locale,
 }: TrustSurfaceBlockProps) {
+  const t = useTranslations("trustSurface");
   const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryTrustQuery(countrySlug, locale),
@@ -55,18 +57,18 @@ export function TrustSurfaceBlock({
         className="text-c4 text-sm"
         data-testid="trust-surface-empty"
       >
-        Данные о доверии к источникам ещё не вычислены для этой страны.
+        {t("empty")}
       </p>
     );
   }
 
   const contradictionLabel = (() => {
     const score = data.components?.contradiction_component;
-    if (score === null || score === undefined) return "Неизвестно";
+    if (score === null || score === undefined) return t("contradictionUnknown");
     const raw = 100 - score;
-    if (raw < 30) return "Низкая";
-    if (raw < 60) return "Средняя";
-    return "Высокая";
+    if (raw < 30) return t("contradictionLow");
+    if (raw < 60) return t("contradictionMedium");
+    return t("contradictionHigh");
   })();
 
   const accent = TRUST_LABEL_ACCENT[data.trust_label] ?? "gold";
@@ -97,14 +99,14 @@ export function TrustSurfaceBlock({
         className="text-c3 text-sm"
         data-testid="contradiction-context"
       >
-        Противоречивость данных:{" "}
+        {t("contradictionLabel")}{" "}
         <Badge variant="default">{contradictionLabel}</Badge>
       </p>
       <Link
         href="/methodology"
         className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
       >
-        О методологии <ArrowNext />
+        {t("aboutMethodology")} <ArrowNext />
       </Link>
       <DisclaimerNotice text={data.disclaimer} />
     </div>

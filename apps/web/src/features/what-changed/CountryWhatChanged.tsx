@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import type { LocaleCode } from "../../shared/api/countries";
 import { isApiError } from "../../shared/api/http";
@@ -20,6 +21,7 @@ export function CountryWhatChanged({
   countrySlug,
   locale,
 }: CountryWhatChangedProps) {
+  const t = useTranslations("whatChanged");
   const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryWhatChangedQuery(countrySlug, locale),
@@ -42,7 +44,7 @@ export function CountryWhatChanged({
   if (items.length === 0) {
     return (
       <div data-testid="what-changed-empty">
-        <EmptyState message="Пока нет изменений за выбранный период." />
+        <EmptyState message={t("empty")} />
       </div>
     );
   }
@@ -54,8 +56,10 @@ export function CountryWhatChanged({
     >
       {data && (
         <Kicker>
-          С {formatDate(data.since, uiLocale)} · всего изменений:{" "}
-          {data.summary.total}
+          {t("sinceSummary", {
+            date: formatDate(data.since, uiLocale),
+            total: data.summary.total,
+          })}
         </Kicker>
       )}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

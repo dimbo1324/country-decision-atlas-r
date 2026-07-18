@@ -1,22 +1,39 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { WhatChangedItem } from "../../shared/api/what-changed";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 import { formatDate } from "../../shared/lib/format";
+import type { SupportedLocale } from "../../shared/lib/locale";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type WhatChangedItemCardProps = {
   item: WhatChangedItem;
 };
 
-const IMPORTANCE_LABELS: Record<string, string> = {
-  low: "Низкая",
-  medium: "Средняя",
-  high: "Высокая",
-  critical: "Критичная",
+const IMPORTANCE_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    low: "Low",
+    medium: "Medium",
+    high: "High",
+    critical: "Critical",
+  },
+  ru: {
+    low: "Низкая",
+    medium: "Средняя",
+    high: "Высокая",
+    critical: "Критичная",
+  },
+  es: {
+    low: "Baja",
+    medium: "Media",
+    high: "Alta",
+    critical: "Crítica",
+  },
 };
 
 export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
+  const t = useTranslations("whatChanged");
   const locale = useAppLocale();
   const occurredAt = formatDate(item.occurred_at, locale);
 
@@ -33,7 +50,7 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
         <p className="text-c3 text-sm leading-relaxed">{item.summary}</p>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="default">
-            {IMPORTANCE_LABELS[item.importance] ?? item.importance}
+            {IMPORTANCE_LABELS[locale][item.importance] ?? item.importance}
           </Badge>
           <span className="text-c4 text-xs">{item.source}</span>
         </div>
@@ -41,7 +58,7 @@ export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
           href={item.path}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Подробнее <ArrowNext />
+          {t("readMore")} <ArrowNext />
         </Link>
       </Card>
     </div>

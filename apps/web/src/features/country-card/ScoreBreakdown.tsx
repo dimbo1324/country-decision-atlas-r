@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { DataTable } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { ArrowExternal } from "../../shared/ui/LinkArrow";
@@ -17,6 +18,7 @@ export function ScoreBreakdown({
   breakdowns,
   sourcesById,
 }: ScoreBreakdownProps) {
+  const t = useTranslations("countryScores");
   const linkedSources: CountryReadModelSource[] = [];
   if (sourcesById) {
     const seen = new Set<string>();
@@ -35,11 +37,11 @@ export function ScoreBreakdown({
     <div className="flex flex-col gap-4">
       <DataTable
         columns={[
-          { header: "Критерий" },
-          { header: "Оценка", numeric: true, align: "right" },
-          { header: "Вес", numeric: true, align: "right" },
-          { header: "Взвешенная", numeric: true, align: "right" },
-          { header: "Достоверность", align: "right" },
+          { header: t("columnCriterion") },
+          { header: t("columnScore"), numeric: true, align: "right" },
+          { header: t("columnWeight"), numeric: true, align: "right" },
+          { header: t("columnWeighted"), numeric: true, align: "right" },
+          { header: t("columnConfidence"), align: "right" },
         ]}
         rows={breakdowns.map((b) => [
           b.criterion,
@@ -56,7 +58,7 @@ export function ScoreBreakdown({
           data-testid="supporting-sources"
         >
           <p className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-            Подтверждающие источники
+            {t("supportingSources")}
           </p>
           {linkedSources.map((s) => (
             <div
@@ -72,7 +74,7 @@ export function ScoreBreakdown({
                 )}
                 {s.confidence && (
                   <span className="font-mono text-c4 text-[8px] tracking-[0.15em] uppercase">
-                    Достоверность: {s.confidence}
+                    {t("confidenceInline", { value: s.confidence })}
                   </span>
                 )}
               </div>
@@ -82,7 +84,7 @@ export function ScoreBreakdown({
                 rel="noreferrer"
                 className="text-gold3 hover:text-gold text-xs transition-colors duration-300"
               >
-                Открыть источник <ArrowExternal />
+                {t("openSource")} <ArrowExternal />
               </a>
             </div>
           ))}

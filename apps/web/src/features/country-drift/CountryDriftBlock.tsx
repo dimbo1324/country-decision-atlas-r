@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@country-decision-atlas/ui";
 import { isApiError, type LocaleCode } from "../../shared/api";
 import { countryDriftQuery } from "../../entities/country-drift/api";
@@ -21,6 +22,7 @@ export function CountryDriftBlock({
   countrySlug,
   locale,
 }: CountryDriftBlockProps) {
+  const t = useTranslations("countryDrift");
   const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryDriftQuery(countrySlug, locale),
@@ -46,7 +48,7 @@ export function CountryDriftBlock({
         className="text-c4 text-sm"
         data-testid="country-drift-empty"
       >
-        Данные о направлении изменений ещё не вычислены для этой страны.
+        {t("empty")}
       </p>
     );
   }
@@ -64,22 +66,21 @@ export function CountryDriftBlock({
         className="text-c3 text-sm"
         data-testid="country-drift-metrics"
       >
-        Событий за период: {snapshot.event_count} · Окно: {snapshot.window_days}{" "}
-        дней
+        {t("eventsInPeriod", { count: snapshot.event_count })} ·{" "}
+        {t("windowDays", { days: snapshot.window_days })}
         {snapshot.net_score != null && (
-          <> · Net score: {snapshot.net_score.toFixed(1)}</>
+          <> · {t("netScore", { value: snapshot.net_score.toFixed(1) })}</>
         )}
       </p>
       <p
         className="text-c4 text-xs"
         data-testid="country-drift-computed-at"
       >
-        Рассчитано: {formatDateTime(snapshot.computed_at, uiLocale)}
+        {t("computedAt", {
+          date: formatDateTime(snapshot.computed_at, uiLocale),
+        })}
       </p>
-      <p className="text-c4 text-xs">
-        Индикатор основан только на официальных правовых сигналах за выбранный
-        период и не является прогнозом.
-      </p>
+      <p className="text-c4 text-xs">{t("disclaimer")}</p>
       <DriftHistoryMiniList items={data?.history ?? []} />
       <DisclaimerNotice text={data?.disclaimer} />
     </div>
