@@ -34,8 +34,8 @@ test.describe("legal signals timeline chart", () => {
       }),
     );
     await expect(
-      page.getByRole("main").locator("#timeline-country"),
-    ).toHaveValue("russia");
+      page.getByRole("main").getByTestId("timeline-country-chip-russia"),
+    ).toHaveAttribute("aria-checked", "true");
     await expectNoAppCrash(page);
   });
 });

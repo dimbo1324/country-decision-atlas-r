@@ -1,21 +1,19 @@
+import { FilterChipGroup } from "@country-decision-atlas/ui";
 import type { CountryListResponse } from "../../shared/api/countries";
+import { capitalize } from "../../shared/lib/format";
+import { confidenceLabelRu } from "../../shared/ui/ConfidenceBadge";
 
-const SOURCE_TYPES = [
-  "government",
-  "news",
-  "academic",
-  "ngo",
-  "legal",
-  "official",
-  "other",
-];
+const SOURCE_TYPE_LABELS: Record<string, string> = {
+  government: "Государственный",
+  news: "СМИ",
+  academic: "Научный",
+  ngo: "НКО",
+  legal: "Юридический",
+  official: "Официальный",
+  other: "Другое",
+};
 
 const CONFIDENCE_OPTIONS = ["high", "medium", "low"];
-
-const SELECT_CLASS =
-  "border-warm bg-bg2 text-c1 font-body border px-3 py-2 text-sm transition-colors duration-300 hover:border-[var(--color-c3)] focus:outline-none";
-const LABEL_CLASS =
-  "font-mono text-c3 flex flex-col gap-1.5 text-[9px] tracking-[0.15em] uppercase";
 
 export function SourcesFilters({
   countrySlug,
@@ -36,66 +34,48 @@ export function SourcesFilters({
 }) {
   return (
     <div
-      className="border-warm flex flex-wrap gap-4 border p-4"
+      className="border-warm flex flex-wrap gap-5 border p-4"
       data-testid="sources-filters"
     >
-      <label className={LABEL_CLASS}>
-        Страна
-        <select
-          id="src-country"
-          className={SELECT_CLASS}
-          value={countrySlug}
-          onChange={(event) => onCountryChange(event.target.value)}
-        >
-          <option value="">Все страны</option>
-          {countries.map((country) => (
-            <option
-              key={country.slug}
-              value={country.slug}
-            >
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className={LABEL_CLASS}>
-        Тип источника
-        <select
-          id="src-type"
-          className={SELECT_CLASS}
-          value={sourceType}
-          onChange={(event) => onSourceTypeChange(event.target.value)}
-        >
-          <option value="">Все типы</option>
-          {SOURCE_TYPES.map((type) => (
-            <option
-              key={type}
-              value={type}
-            >
-              {type}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className={LABEL_CLASS}>
-        Достоверность
-        <select
-          id="src-confidence"
-          className={SELECT_CLASS}
-          value={confidence}
-          onChange={(event) => onConfidenceChange(event.target.value)}
-        >
-          <option value="">Все уровни</option>
-          {CONFIDENCE_OPTIONS.map((option) => (
-            <option
-              key={option}
-              value={option}
-            >
-              {option}
-            </option>
-          ))}
-        </select>
-      </label>
+      <FilterChipGroup
+        name="src-country"
+        label="Страна"
+        value={countrySlug}
+        onChange={onCountryChange}
+        options={[
+          { value: "", label: "Все страны" },
+          ...countries.map((country) => ({
+            value: country.slug,
+            label: country.name,
+          })),
+        ]}
+      />
+      <FilterChipGroup
+        name="src-type"
+        label="Тип источника"
+        value={sourceType}
+        onChange={onSourceTypeChange}
+        options={[
+          { value: "", label: "Все типы" },
+          ...Object.keys(SOURCE_TYPE_LABELS).map((type) => ({
+            value: type,
+            label: SOURCE_TYPE_LABELS[type],
+          })),
+        ]}
+      />
+      <FilterChipGroup
+        name="src-confidence"
+        label="Достоверность"
+        value={confidence}
+        onChange={onConfidenceChange}
+        options={[
+          { value: "", label: "Все уровни" },
+          ...CONFIDENCE_OPTIONS.map((option) => ({
+            value: option,
+            label: capitalize(confidenceLabelRu(option)),
+          })),
+        ]}
+      />
     </div>
   );
 }

@@ -75,6 +75,10 @@ export { Slider } from "./primitives/Slider";
 export { Toaster, toast } from "./primitives/Toast";
 export { Field, FieldLabel, FieldHint, FieldError } from "./primitives/Field";
 export { RadioCards, type RadioCardOption } from "./primitives/RadioCards";
+export {
+  FilterChipGroup,
+  type FilterChipOption,
+} from "./primitives/FilterChipGroup";
 export { Pagination } from "./primitives/Pagination";
 export { Breadcrumbs, type BreadcrumbItem } from "./primitives/Breadcrumbs";
 

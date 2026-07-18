@@ -43,7 +43,9 @@ test.describe("legal signals timeline", () => {
       }),
     );
     const main = page.getByRole("main");
-    await expect(main.locator("#timeline-country")).toHaveValue("russia");
+    await expect(
+      main.getByTestId("timeline-country-chip-russia"),
+    ).toHaveAttribute("aria-checked", "true");
     await expect(
       main.locator('[data-testid="legal-signals-timeline"]'),
     ).toBeVisible({

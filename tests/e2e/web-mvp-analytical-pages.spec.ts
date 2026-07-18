@@ -22,9 +22,11 @@ test.describe("legal signals page", () => {
       page.getByRole("main").getByTestId("timeline-filters"),
     ).toBeVisible();
 
-    const countrySelect = page.getByRole("main").locator("#timeline-country");
-    await expect(countrySelect).toBeVisible();
-    await expect(countrySelect).toHaveValue("russia");
+    const countryChip = page
+      .getByRole("main")
+      .getByTestId("timeline-country-chip-russia");
+    await expect(countryChip).toBeVisible();
+    await expect(countryChip).toHaveAttribute("aria-checked", "true");
 
     const hasItems = await page
       .locator('[data-testid="legal-signals-timeline"]')
@@ -94,9 +96,9 @@ test.describe("sources page", () => {
       page.locator('[data-testid="sources-filters"]').first(),
     ).toBeVisible();
 
-    const countrySelect = page.locator("#src-country");
-    await expect(countrySelect).toBeVisible();
-    await expect(countrySelect).toHaveValue("uruguay");
+    const countryChip = page.getByTestId("src-country-chip-uruguay");
+    await expect(countryChip).toBeVisible();
+    await expect(countryChip).toHaveAttribute("aria-checked", "true");
 
     const hasItems = await page
       .locator('[data-testid="sources-list"]')

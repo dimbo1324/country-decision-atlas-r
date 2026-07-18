@@ -57,20 +57,41 @@ starting any edits:
       `/legal-signals?tab=timeline&country_slug=uruguay` with the filter
       preserved, console clean.
 
-## Stage 3.2 — Legal signals + sources: chip filters
+## Stage 3.2 — Legal signals + sources: chip filters (done)
 
-- [ ] New `packages/ui` primitive: `FilterChipGroup` (single-select toggle
-      row, button-based, `aria-checked` + accessible name — not a native
-      `<select>`), Storybook story.
-- [ ] Convert `TimelineFilters` (5 fields) and `SourcesFilters` (3 fields)
-      from `<select>` dropdowns to `FilterChipGroup`.
-- [ ] Update e2e assertions that currently read `.toHaveValue()` on
+- [+] New `packages/ui` primitive: `FilterChipGroup` (single-select toggle
+      row, real `role="radio"` buttons — the visible label text is the
+      accessible name, not a styled `<select>`), Storybook story.
+- [+] Converted `TimelineFilters` (5 fields: country/signal-type/
+      impact-direction/impact-level/year) and `SourcesFilters` (3 fields:
+      country/type/confidence) from `<select>` dropdowns to
+      `FilterChipGroup`. Bonus fix found while converting: source-type
+      chips (`government`/`news`/`academic`/…) and confidence chips
+      previously showed raw English/lowercase values in the `<select>`
+      options (unlike `TimelineFilters`, which already had Russian
+      labels) — added a `SOURCE_TYPE_LABELS` map and reused the existing
+      `confidenceLabelRu()` export so both filter bars are consistently
+      Russian.
+- [+] Updated e2e assertions that read `.toHaveValue()` on
       `#timeline-country`/`#src-country` to chip-based assertions
-      (`aria-checked` / accessible name) — touches
-      `web-mvp-analytical-pages.spec.ts`,
-      `web-mvp-legal-signals-timeline.spec.ts`.
-- [ ] Verify: typecheck/lint, targeted e2e, visual check (filter bar at
-      mobile width).
+      (`getByTestId("<name>-chip-<value>")` +
+      `toHaveAttribute("aria-checked", "true")`) — touched
+      `web-mvp-analytical-pages.spec.ts` (2 assertions),
+      `web-mvp-legal-signals-timeline.spec.ts` (1),
+      `web-mvp-knowledge-transparency.spec.ts` (1, already rewritten in
+      3.1, needed a second pass here for the chip change).
+- [+] Verify: typecheck/lint clean (web+ui); 27 targeted e2e green after
+      diagnosing a false alarm — the first run showed 25/27 failing
+      including completely unrelated pages (glossary, methodology,
+      data-quality), traced to a stale `next start` process still bound
+      to port 3000 from Stage 3.1's browser walkthrough serving
+      mismatched chunks against the just-rebuilt `.next` output, not a
+      code regression; killing that process and re-running gave a clean
+      27/27. Browser walkthrough: chips render with correct Russian
+      labels, a real click (via the `computer` tool, not raw JS
+      `.click()`) flips `aria-checked` and updates the URL query param,
+      no horizontal overflow or wrapping issues at 375px, console clean
+      on both `/sources` and `/legal-signals`.
 
 ## Stage 3.3 — Cabinet: shared board grid, subscriptions card conversion
 
