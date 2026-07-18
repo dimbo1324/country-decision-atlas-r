@@ -169,7 +169,7 @@ export function ModerationQueue<T>({
                     data-testid={`${testId}-row`}
                     {...(renderDetail
                       ? {
-                          tabIndex: 0,
+                          "tabIndex": 0,
                           "aria-label": detailTitle
                             ? `Открыть детали: ${detailTitle(row.original)}`
                             : "Открыть детали",
@@ -179,7 +179,7 @@ export function ModerationQueue<T>({
                           // element. Ignore keydowns that bubble up from
                           // those nested buttons so pressing Enter/Space on
                           // an action doesn't also open the detail drawer.
-                          onKeyDown: (event: React.KeyboardEvent) => {
+                          "onKeyDown": (event: React.KeyboardEvent) => {
                             if (event.key !== "Enter" && event.key !== " ") {
                               return;
                             }

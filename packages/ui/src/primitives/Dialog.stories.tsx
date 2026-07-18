@@ -19,7 +19,14 @@ export const Default: Story = {
         title="Подтвердите действие"
         description="Это действие отзовёт все активные сессии на других устройствах."
       >
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 12,
+            marginTop: 16,
+          }}
+        >
           <Button variant="ghost">Отмена</Button>
           <Button variant="primary">Подтвердить</Button>
         </div>
@@ -30,13 +37,11 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
 
-    await userEvent.click(canvas.getByRole("button", { name: "Открыть диалог" }));
-    await waitFor(() =>
-      expect(body.getByRole("dialog")).toBeInTheDocument(),
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Открыть диалог" }),
     );
-    expect(
-      body.getByText("Подтвердите действие"),
-    ).toBeInTheDocument();
+    await waitFor(() => expect(body.getByRole("dialog")).toBeInTheDocument());
+    expect(body.getByText("Подтвердите действие")).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(body.queryByRole("dialog")).toBeNull());

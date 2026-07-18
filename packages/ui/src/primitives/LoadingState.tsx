@@ -27,7 +27,9 @@ export function LoadingState({ message, className }: LoadingStateProps) {
           />
         ))}
       </span>
-      <p className="text-c3 font-mono text-[10px] tracking-[0.2em] uppercase">{message}</p>
+      <p className="text-c3 font-mono text-[10px] tracking-[0.2em] uppercase">
+        {message}
+      </p>
     </div>
   );
 }

@@ -18,7 +18,9 @@ export const Default: Story = {
       </TabsList>
       <TabsContent value="overview">Обзор досье страны.</TabsContent>
       <TabsContent value="cii">Разбор индекса CII по компонентам.</TabsContent>
-      <TabsContent value="trust">Скор доверия и структура источников.</TabsContent>
+      <TabsContent value="trust">
+        Скор доверия и структура источников.
+      </TabsContent>
     </Tabs>
   ),
   play: async ({ canvasElement }) => {

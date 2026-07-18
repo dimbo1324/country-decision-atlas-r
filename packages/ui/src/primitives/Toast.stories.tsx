@@ -13,7 +13,9 @@ export const Default: Story = {
     <>
       <Toaster />
       <div style={{ display: "flex", gap: 12 }}>
-        <Button onClick={() => toast.success("Watchlist обновлён")}>Success</Button>
+        <Button onClick={() => toast.success("Watchlist обновлён")}>
+          Success
+        </Button>
         <Button
           variant="ghost"
           onClick={() => toast.error("Не удалось отозвать сессию")}

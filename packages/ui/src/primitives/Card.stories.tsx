@@ -23,7 +23,13 @@ export const Gold: Story = {
 
 export const AllAccents: Story = {
   render: () => (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: 16,
+      }}
+    >
       {(["gold", "blue", "terra", "sage", "plum"] as const).map((accent) => (
         <Card
           key={accent}

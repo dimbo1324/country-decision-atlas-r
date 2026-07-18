@@ -24,7 +24,13 @@ export const Interactive: Story = {
             eyebrow="Дрейф · REF № CA-014"
             title="Что изменилось"
           >
-            <p style={{ color: "var(--color-c3)", fontSize: 14, lineHeight: 1.7 }}>
+            <p
+              style={{
+                color: "var(--color-c3)",
+                fontSize: 14,
+                lineHeight: 1.7,
+              }}
+            >
               Содержимое досье изменения: источники, даты, затронутые метрики.
             </p>
           </Drawer>

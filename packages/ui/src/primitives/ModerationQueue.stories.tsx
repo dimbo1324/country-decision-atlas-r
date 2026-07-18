@@ -96,10 +96,9 @@ export const RejectWithReason: Story = {
     // ModerationQueue's `runAction`). Not asserting on the toast text
     // itself here -- sonner auto-dismisses it after a few seconds, which
     // made this flaky when combined with MSW round-trip + typing latency.
-    await waitFor(
-      () => expect(body.queryByRole("dialog")).toBeNull(),
-      { timeout: 5000 },
-    );
+    await waitFor(() => expect(body.queryByRole("dialog")).toBeNull(), {
+      timeout: 5000,
+    });
   },
 };
 
@@ -119,7 +118,9 @@ export const OpenDetailWithKeyboard: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const [firstRow] = canvas.getAllByTestId("demo-moderation-queue-detail-row");
+    const [firstRow] = canvas.getAllByTestId(
+      "demo-moderation-queue-detail-row",
+    );
     firstRow.focus();
     await userEvent.keyboard("{Enter}");
 

@@ -49,7 +49,9 @@ export function Drawer({
       aria-hidden={!open}
       className={cn(
         "fixed inset-0 z-[80] transition-opacity duration-300",
-        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        open
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0",
       )}
     >
       <div
@@ -73,7 +75,9 @@ export function Drawer({
                 {eyebrow}
               </div>
             )}
-            <h3 className="font-display text-c1 text-2xl font-semibold">{title}</h3>
+            <h3 className="font-display text-c1 text-2xl font-semibold">
+              {title}
+            </h3>
           </div>
           <button
             onClick={onClose}

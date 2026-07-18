@@ -23,7 +23,9 @@ export const WithHint: Story = {
             fontFamily: "var(--font-body)",
           }}
         />
-        <FieldHint>Используется для входа и уведомлений безопасности.</FieldHint>
+        <FieldHint>
+          Используется для входа и уведомлений безопасности.
+        </FieldHint>
       </Field>
     </div>
   ),

@@ -43,7 +43,9 @@ export function MetricCard({
         />
       </span>
       <div className="flex flex-col gap-1">
-        <h3 className="font-display text-lg leading-snug font-semibold">{name}</h3>
+        <h3 className="font-display text-lg leading-snug font-semibold">
+          {name}
+        </h3>
         <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
           {tag}
         </span>

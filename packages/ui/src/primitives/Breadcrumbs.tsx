@@ -17,7 +17,11 @@ interface BreadcrumbsProps {
   className?: string;
 }
 
-export function Breadcrumbs({ items, renderLink, className }: BreadcrumbsProps) {
+export function Breadcrumbs({
+  items,
+  renderLink,
+  className,
+}: BreadcrumbsProps) {
   return (
     <nav
       aria-label="Хлебные крошки"
@@ -28,21 +32,22 @@ export function Breadcrumbs({ items, renderLink, className }: BreadcrumbsProps) 
     >
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
-        const label = isLast || !item.href ? (
-          <span
-            className={isLast ? "text-c1" : undefined}
-            aria-current={isLast ? "page" : undefined}
-          >
-            {item.label}
-          </span>
-        ) : (
-          renderLink?.(
-            item,
-            <span className="hover:text-c1 transition-colors duration-200">
+        const label =
+          isLast || !item.href ? (
+            <span
+              className={isLast ? "text-c1" : undefined}
+              aria-current={isLast ? "page" : undefined}
+            >
               {item.label}
-            </span>,
-          ) ?? <span>{item.label}</span>
-        );
+            </span>
+          ) : (
+            (renderLink?.(
+              item,
+              <span className="hover:text-c1 transition-colors duration-200">
+                {item.label}
+              </span>,
+            ) ?? <span>{item.label}</span>)
+          );
         return (
           <span
             key={`${item.label}-${index}`}
