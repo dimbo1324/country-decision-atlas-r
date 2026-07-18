@@ -269,13 +269,16 @@ not silently dropped):
       of trusting the script); console clean throughout the browser
       walkthrough.
 
-## 5.5 — i18n content-strategy decision
+## 5.5 — i18n content-strategy decision (done)
 
-- [ ] Add a new accepted-decision entry (Р-12) to
-      `docs/_arch_/08_Открытые_вопросы.md`: ru-only feature/page-content
-      labels are the accepted pattern; `next-intl` stays scoped to app
-      chrome; full string migration is an explicit "not now", revisitable
-      if the owner asks for true EN-locale parity later.
+- [+] Added Р-12 to `docs/_arch_/08_Открытые_вопросы.md`: ru-only
+      feature/page-content labels documented as the accepted pattern
+      (matches the existing hard rule in `.ai/project/12-domain-rules.md`
+      and the redesign's own consistent practice across Stages 0-3, not
+      a new owner conversation — worded honestly as such, not framed as
+      if freshly decided in a chat that didn't happen). `next-intl` stays
+      scoped to app chrome; full string migration explicitly deferred,
+      revisitable if the owner asks for true EN-locale parity.
 
 ## Tech debt cleanup
 
