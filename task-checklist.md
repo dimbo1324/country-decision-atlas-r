@@ -43,22 +43,43 @@ files.
 
 ## Verification (after all three merged, on the integration branch)
 
-- [ ] `pnpm install` to regenerate `pnpm-lock.yaml` cleanly.
-- [ ] Full typecheck/lint (`ui` + `web`), `pnpm format:check`.
-- [ ] `next build` clean, JS-budget script passes.
-- [ ] Full Vitest (`apps/web` + `packages/ui`).
-- [ ] `packages/ui` `storybook build` clean.
-- [ ] Full Playwright e2e suite.
-- [ ] Visual regression suite.
-- [ ] Contrast + i18n-parity audits.
-- [ ] Confirm zero `web-prototype` references remain (except the one
-      intentional historical mention), confirm the format glob covers
-      `packages/**/*.tsx`, confirm Stage 5's test infrastructure and
-      RadioCards a11y fix are present.
+- [+] `pnpm install`: lockfile was already consistent post-merge ("up to
+      date, resolution step skipped") — the 3-way merge of
+      `pnpm-lock.yaml` resolved cleanly on its own, nothing to regenerate.
+- [+] Full typecheck/lint clean: `ui` and `web` both.
+- [+] `pnpm format:check` clean — confirmed the glob now covers
+      `packages/**/*.tsx` (was `{ts,json}`, now `{ts,tsx,json}`).
+- [+] `next build` clean (45 routes); `check_js_budgets.py`: worst route
+      297.0 kB, ceiling 330 kB, OK.
+- [+] Full Vitest: `apps/web` 77/77, `packages/ui` 8/8.
+- [+] `packages/ui` `storybook build` clean; spot-checked
+      `Tabs.stories.tsx` directly — both the reformatted `Default` story
+      and Stage 5's new `ControlledFiveTabs` story are present together,
+      confirming the auto-merge combined both branches' changes correctly
+      rather than one silently clobbering the other.
+- [+] Full Playwright e2e suite: **330/330 passed, 0 flaky** (Docker
+      stack healthy throughout this run — no repeat of the earlier
+      Docker-daemon-crash artifact from Stage 5's own verification).
+- [+] Visual regression suite: 5/5 passed, no baseline changes needed.
+- [+] Contrast audit: all tokens pass. i18n-parity: 90/90 keys match.
+- [+] Confirmed zero problematic `web-prototype` references remain (only
+      the one intentional historical mention, see above); confirmed
+      `RadioCards.tsx`'s roving-tabindex a11y fix and the new
+      `apps/web/src/test-utils/render.tsx` test infrastructure are both
+      present in the merged tree.
+- [+] No fixes were needed on `main` after merging — everything was
+      already green on the integration branch before the fast-forward.
 
 ## Completion
 
-- [ ] Checklist filled (`+`/`-`).
-- [ ] `git merge --ff-only` this integration branch onto `main`.
-- [ ] Push `main` to `origin`.
-- [ ] Final report.
+- [+] Checklist filled (`+`/`-`).
+- [+] `git merge --ff-only` this integration branch onto `main`.
+- [+] Deleted all four now-fully-merged branches (local + remote):
+      `fix/packages-tsx-format-check-glob`,
+      `feat/frontend-redesign-stage-5-consolidation`,
+      `chore/remove-web-prototype`,
+      `integration/stage5-formatfix-protoremoval` — plus the orphaned
+      local-only `claude/gallant-dubinsky-f97d5e` (zero unique commits,
+      sat exactly at old `main`'s tip). Only `main` remains.
+- [+] Pushed `main` to `origin`.
+- [+] Final report.
