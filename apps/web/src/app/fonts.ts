@@ -8,8 +8,8 @@ import {
 // family in the design system ships a cyrillic subset on Google Fonts —
 // Crimson Text and IM Fell English are latin-only upstream, so Cyrillic text
 // set in them silently falls through to the Georgia/serif fallback in
-// theme.css's font stack. That mirrors apps/web-prototype's own behavior
-// (same families, same gap) rather than introducing a new inconsistency.
+// theme.css's font stack. This is an accepted, intentional gap in those
+// upstream families, not a bug introduced here.
 export const playfairDisplay = Playfair_Display({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "600", "700"],

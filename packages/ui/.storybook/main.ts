@@ -12,8 +12,6 @@ const config: StorybookConfig = {
   // Without this, theme.css's `@theme`/`@source`/utility classes never get
   // processed by Tailwind - the browser receives them as inert CSS, so no
   // token (`--color-c1`, `h-full`, `text-c3`, ...) actually resolves.
-  // apps/web-prototype's own vite.config.ts registers the same plugin the
-  // same way for its (non-Storybook) dev server.
   async viteFinal(viteConfig) {
     viteConfig.plugins = viteConfig.plugins || [];
     viteConfig.plugins.push(tailwindcss());

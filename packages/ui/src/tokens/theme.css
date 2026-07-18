@@ -10,11 +10,12 @@
 
 /*
  * Font family variables resolve through a `--ui-font-*` indirection so this
- * one file works unchanged in both consumers: apps/web-prototype loads the
- * families by name via a Google Fonts <link> and never sets `--ui-font-*`
- * (falls through to the literal family name below); apps/web loads them via
- * next/font and sets `--ui-font-*` to the generated font-variable on the
- * root element, per component split by `display: swap` fallback metrics.
+ * one file works unchanged in both consumers: Storybook
+ * (packages/ui/.storybook/preview-head.html) loads the families by name via
+ * a Google Fonts <link> and never sets `--ui-font-*` (falls through to the
+ * literal family name below); apps/web loads them via next/font and sets
+ * `--ui-font-*` to the generated font-variable on the root element, per
+ * component split by `display: swap` fallback metrics.
  */
 @theme {
   --font-display: var(--ui-font-display, "Playfair Display"), Georgia, serif;

@@ -27,7 +27,6 @@ confidence — never a bare "best country" number.
 | `apps/web` | Next.js frontend — the main user-facing application. |
 | `apps/worker` | Python batch worker (e.g. processes queued translation jobs). |
 | `apps/notifier` | Go gRPC service: consumes domain events from Kafka and delivers Telegram notifications. |
-| `apps/web-prototype` | Standalone, offline Vite/React UI prototype used for early design exploration — isolated from the real app and its data. |
 | `contracts/openapi.yaml` | Source of truth for the API contract. Run `pnpm contracts:generate` to regenerate `packages/contracts/generated` — never hand-edit the generated file. |
 | `database/migrations` | Numbered, checksum-tracked SQL migrations. |
 | `scripts/synthetic_data.py` + `utils/synthetic_data` | Generates a fully fictional "world" (countries, users, articles, documents, SQL fixtures) for local development and demos without any real data. Includes a local mock HTTP server so the frontend can run against synthetic data with no database at all — see [utils/synthetic_data/README.md](utils/synthetic_data/README.md). |
