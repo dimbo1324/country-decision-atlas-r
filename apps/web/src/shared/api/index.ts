@@ -23,5 +23,4 @@ export * from "./search";
 export * from "./sources";
 export * from "./trust";
 export * from "./user-stories";
-export * from "./watchlists";
 export * from "./what-changed";

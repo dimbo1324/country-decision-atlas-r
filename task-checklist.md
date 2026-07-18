@@ -280,15 +280,23 @@ not silently dropped):
       scoped to app chrome; full string migration explicitly deferred,
       revisitable if the owner asks for true EN-locale parity.
 
-## Tech debt cleanup
+## Tech debt cleanup (done)
 
-- [ ] `.claude/launch.json`: add `"env": {"APP_ENV": "local"}` to the
-      `web-prod` entry, matching the `api` entry's existing pattern, so a
-      manually-started preview server behaves like Playwright's own
-      managed one (root cause of the `/internal/*` 404s hit during Stage
-      3's final verification).
-- [ ] Remove dead `apps/web/src/shared/api/watchlists.ts` after confirming
-      zero remaining references (grep first, don't assume).
+- [+] `.claude/launch.json`: added `"env": {"APP_ENV": "local"}` to the
+      `web-prod` entry, matching the `api` entry's existing pattern.
+      `web` (dev) needed no change — `next dev` sets `NODE_ENV=development`
+      itself, which already satisfies the middleware's gate independent
+      of `APP_ENV`; only `next start` (production mode) needed the
+      override.
+- [+] Removed dead `apps/web/src/shared/api/watchlists.ts` — grepped
+      first (not assumed): zero references to `watchlistsApi` or any of
+      its 5 exported functions anywhere outside the file itself; the only
+      other hit was `shared/api/index.ts`'s barrel re-export (removed
+      too). `entities/watchlist/api.ts` and `shared/api/contracts-check.ts`
+      both already derive their own `Watchlist*` type aliases directly
+      from the generated contract schemas, not from this file.
+- [+] Verify: typecheck/lint clean, `next build` clean, 77/77 Vitest
+      green, `format:check` clean.
 
 ## Final verification
 
