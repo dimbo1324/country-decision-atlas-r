@@ -125,8 +125,67 @@ touched.
 Each sub-stage: extract hardcoded strings into `useTranslations()` calls
 against new message-catalog namespaces (en/ru/es), verify, commit.
 
-- [ ] `shared/**` (16 files) — badges, empty/error states. Done early;
+- [+] `shared/**` (16 files) — badges, empty/error states. Done early;
       many feature files depend on these.
+      - Two strategies, chosen per file rather than one blanket rule:
+        - **Enum-keyed label maps** (`TrustBadge`, `ConfidenceBadge`,
+          `FreshnessBadge`, `ImpactBadge`, `StatusBadge`,
+          `entity-type-labels.ts`, `glossary-labels.ts`,
+          `localization-labels.ts`) stay `Record<SupportedLocale,
+          Record<string,string>>` dictionaries (the `decision-wizard-labels.ts`
+          Stage-1 pattern) rather than next-intl `useTranslations()` — these
+          all need a `?? rawValue` fallback for enum values the frontend
+          doesn't recognize yet (defensive against the backend sending
+          something new), and next-intl's `t()` throws on an unknown key
+          unless wrapped in try/catch at every call site. Badge components
+          read the locale themselves via `useAppLocale()` (zero call-site
+          changes); the plain-function exports (`trustLabel`, renamed from
+          `trustLabelRu`; `confidenceLabel`, renamed from `confidenceLabelRu`;
+          `entityTypeLabel`; `glossaryCategoryLabel`;
+          `getLocalizationBadgeLabel`/`getLocalizationBadgeTitle`) gained a
+          `locale: SupportedLocale` parameter, touching 6 call-site feature
+          files to pass it in (`CommandPalette`, `SearchResultCard`,
+          `GlossaryTerm`, `GlossaryTermEntry`, `GlossaryFilters`,
+          `TrustSurfaceBlock`, `CountryOverviewCards`, `SourcesFilters`) —
+          only the specific line calling the shared function, not those
+          files' own remaining hardcoded strings (those stay for their own
+          later stage). `TrustSurfaceBlock` needed care: its `locale` prop is
+          the *API* locale (already `toApiLocale`-mapped from Stage 1), not
+          the real interface locale, so the label lookup uses a separate
+          `useAppLocale()` call, not the prop.
+        - **Static-text components** (`EvidenceCard`, `ErrorBoundary`,
+          `LoadingState`, `EmptyState`, `DisclaimerNotice`, `ErrorState`,
+          `LastVerifiedAt`) use `useTranslations()` against 7 new namespaces
+          added to `messages/{en,ru,es}.json` (104 keys total, parity
+          verified) — no unknown-key fallback needed since these aren't
+          enum lookups. `ErrorBoundary` stays a class component
+          (`componentDidCatch` has no hook equivalent) but now delegates its
+          rendered fallback to a new function component
+          (`ErrorBoundaryFallback`) so the translated text can use the hook.
+          `LastVerifiedAt` also maps the interface locale to a
+          `toLocaleDateString` tag (`en-US`/`ru-RU`/`es-ES`).
+      - `LocalizationBadge.tsx` (not one of the original 16, but the sole
+        consumer of `localization-labels.ts` and used by `EvidenceCard`)
+        pulled into scope as a natural extension — leaving it uncalled with
+        the new `locale` parameter would have left it broken, not just
+        untranslated.
+      - `shared/api/http.ts`'s two network-error fallback messages
+        (`request_timeout`/`network_error`) can't take a `locale` argument
+        normally — they're reached from ~70 data-fetching modules with no
+        natural place to thread one through. Instead they read the locale
+        straight from `window.location.pathname`'s first segment (always
+        the interface locale, guaranteed by `routing.ts`'s
+        `localePrefix: "always"`), falling back to the default locale
+        during SSR where these messages are never shown to a user.
+      - Verify: `apps/web` typecheck/lint clean; `pnpm format` clean;
+        Vitest 84/84 (14 files) — including the two renamed/re-parametrized
+        test files (`semantic-labels.test.tsx`,
+        `localization-labels.test.ts`/`entity-type-labels.test.ts` now
+        assert all 3 locales, not just Russian); fresh `next build` clean
+        (same route list, confirming every `useTranslations()`/`useAppLocale()`
+        addition landed inside an existing client boundary without needing
+        a new explicit `"use client"`); `i18n_parity_check.py` reports
+        104/104 keys matching across en/ru/es.
 - [ ] Home, Catalog, Compare (14 files + 2 pages).
 - [ ] Country Dossier (21 files + 1 page).
 - [ ] Decision flow (15 files + 2 pages).

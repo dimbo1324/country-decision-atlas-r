@@ -55,35 +55,38 @@ describe("formatLocalePair", () => {
 });
 
 describe("getTranslationStatusLabel", () => {
-  it("maps every known status to a Russian label", () => {
-    expect(getTranslationStatusLabel("original")).toBe("Оригинал");
-    expect(getTranslationStatusLabel("machine_translated")).toBe(
+  it("maps every known status to a locale-specific label", () => {
+    expect(getTranslationStatusLabel("original", "ru")).toBe("Оригинал");
+    expect(getTranslationStatusLabel("machine_translated", "ru")).toBe(
       "Машинный перевод",
     );
-    expect(getTranslationStatusLabel("stale")).toBe("Устаревший перевод");
+    expect(getTranslationStatusLabel("stale", "ru")).toBe("Устаревший перевод");
+    expect(getTranslationStatusLabel("original", "en")).toBe("Original");
+    expect(getTranslationStatusLabel("original", "es")).toBe("Original");
   });
 
   it("returns an empty string for an unknown or missing status", () => {
-    expect(getTranslationStatusLabel("unknown")).toBe("");
-    expect(getTranslationStatusLabel(null)).toBe("");
+    expect(getTranslationStatusLabel("unknown", "en")).toBe("");
+    expect(getTranslationStatusLabel(null, "en")).toBe("");
   });
 });
 
 describe("getLocalizationBadgeLabel", () => {
   it("returns null when meta is missing", () => {
-    expect(getLocalizationBadgeLabel(null)).toBeNull();
+    expect(getLocalizationBadgeLabel(null, "en")).toBeNull();
   });
 
   it("prioritizes stale over other statuses", () => {
     expect(
       getLocalizationBadgeLabel(
         meta({ has_stale_fields: true, status: "original" }),
+        "ru",
       ),
     ).toBe("Устаревший перевод");
   });
 
   it("reports missing translation", () => {
-    expect(getLocalizationBadgeLabel(meta({ status: "missing" }))).toBe(
+    expect(getLocalizationBadgeLabel(meta({ status: "missing" }), "ru")).toBe(
       "Нет перевода",
     );
   });
@@ -92,6 +95,7 @@ describe("getLocalizationBadgeLabel", () => {
     expect(
       getLocalizationBadgeLabel(
         meta({ is_fallback: true, resolved_locale: "en" }),
+        "ru",
       ),
     ).toBe("Показан fallback EN");
   });
@@ -100,18 +104,30 @@ describe("getLocalizationBadgeLabel", () => {
     expect(
       getLocalizationBadgeLabel(
         meta({ status: "original", resolved_locale: "ru" }),
+        "ru",
       ),
     ).toBe("Оригинал RU");
   });
 
   it("returns null for an unrecognized status", () => {
-    expect(getLocalizationBadgeLabel(meta({ status: "weird" }))).toBeNull();
+    expect(
+      getLocalizationBadgeLabel(meta({ status: "weird" }), "ru"),
+    ).toBeNull();
+  });
+
+  it("translates the same meta into English and Spanish", () => {
+    expect(getLocalizationBadgeLabel(meta({ status: "missing" }), "en")).toBe(
+      "No translation",
+    );
+    expect(getLocalizationBadgeLabel(meta({ status: "missing" }), "es")).toBe(
+      "Sin traducción",
+    );
   });
 });
 
 describe("getLocalizationBadgeTitle", () => {
   it("returns null when meta is missing", () => {
-    expect(getLocalizationBadgeTitle(null)).toBeNull();
+    expect(getLocalizationBadgeTitle(null, "ru")).toBeNull();
   });
 
   it("joins requested/resolved/status into one sentence", () => {
@@ -122,6 +138,7 @@ describe("getLocalizationBadgeTitle", () => {
           resolved_locale: "ru",
           status: "fallback",
         }),
+        "ru",
       ),
     ).toBe(
       "Запрошенный язык: EN. Показанный язык: RU. Статус: Показан fallback.",
@@ -129,7 +146,7 @@ describe("getLocalizationBadgeTitle", () => {
   });
 
   it("returns null when there is nothing to report", () => {
-    expect(getLocalizationBadgeTitle(meta({}))).toBeNull();
+    expect(getLocalizationBadgeTitle(meta({}), "ru")).toBeNull();
   });
 });
 

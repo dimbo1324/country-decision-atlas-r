@@ -1,19 +1,17 @@
+import { useTranslations } from "next-intl";
+
 type DisclaimerNoticeProps = {
   text?: string;
 };
 
-const DEFAULT_DISCLAIMER =
-  "Это индикатор качества данных, а не рекомендация. Не является юридической консультацией.";
-
-export function DisclaimerNotice({
-  text = DEFAULT_DISCLAIMER,
-}: DisclaimerNoticeProps) {
+export function DisclaimerNotice({ text }: DisclaimerNoticeProps) {
+  const t = useTranslations("disclaimerNotice");
   return (
     <p
       className="disclaimer-notice"
       role="note"
     >
-      {text}
+      {text ?? t("default")}
     </p>
   );
 }

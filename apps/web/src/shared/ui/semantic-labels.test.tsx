@@ -1,30 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { confidenceLabelRu } from "./ConfidenceBadge";
-import { trustLabelRu } from "./TrustBadge";
+import { confidenceLabel } from "./ConfidenceBadge";
+import { trustLabel } from "./TrustBadge";
 
-describe("confidenceLabelRu", () => {
-  it("translates the three confidence levels", () => {
-    expect(confidenceLabelRu("high")).toBe("высокая");
-    expect(confidenceLabelRu("medium")).toBe("средняя");
-    expect(confidenceLabelRu("low")).toBe("низкая");
+describe("confidenceLabel", () => {
+  it("translates the three confidence levels per locale", () => {
+    expect(confidenceLabel("high", "ru")).toBe("высокая");
+    expect(confidenceLabel("medium", "ru")).toBe("средняя");
+    expect(confidenceLabel("low", "ru")).toBe("низкая");
+    expect(confidenceLabel("high", "en")).toBe("high");
+    expect(confidenceLabel("high", "es")).toBe("alta");
   });
 
   it("falls back to the raw value for unknown levels", () => {
-    expect(confidenceLabelRu("mystery")).toBe("mystery");
+    expect(confidenceLabel("mystery", "en")).toBe("mystery");
   });
 });
 
-describe("trustLabelRu", () => {
-  it("translates every trust level", () => {
-    expect(trustLabelRu("very_high")).toBe("Очень высокое");
-    expect(trustLabelRu("high")).toBe("Высокое");
-    expect(trustLabelRu("medium")).toBe("Среднее");
-    expect(trustLabelRu("low")).toBe("Низкое");
-    expect(trustLabelRu("very_low")).toBe("Очень низкое");
-    expect(trustLabelRu("insufficient_data")).toBe("Недостаточно данных");
+describe("trustLabel", () => {
+  it("translates every trust level per locale", () => {
+    expect(trustLabel("very_high", "ru")).toBe("Очень высокое");
+    expect(trustLabel("high", "ru")).toBe("Высокое");
+    expect(trustLabel("medium", "ru")).toBe("Среднее");
+    expect(trustLabel("low", "ru")).toBe("Низкое");
+    expect(trustLabel("very_low", "ru")).toBe("Очень низкое");
+    expect(trustLabel("insufficient_data", "ru")).toBe("Недостаточно данных");
+    expect(trustLabel("high", "en")).toBe("High");
+    expect(trustLabel("high", "es")).toBe("Alta");
   });
 
   it("falls back to the raw value for unknown levels", () => {
-    expect(trustLabelRu("unmapped")).toBe("unmapped");
+    expect(trustLabel("unmapped", "en")).toBe("unmapped");
   });
 });

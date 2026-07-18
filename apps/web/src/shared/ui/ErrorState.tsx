@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ErrorState as ErrorStateShell } from "@country-decision-atlas/ui";
 
 type ApiErrorShape = {
@@ -20,14 +21,15 @@ type ErrorStateProps = {
 };
 
 export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
+  const t = useTranslations("errorState");
   let code: string | undefined;
   let message: string;
 
   if (typeof error === "string") {
-    message = error || "Произошла непредвиденная ошибка.";
+    message = error || t("genericMessage");
   } else {
     code = error?.error?.code;
-    message = error?.error?.message ?? "Произошла непредвиденная ошибка.";
+    message = error?.error?.message ?? t("genericMessage");
   }
 
   const isBackendDown =
@@ -37,20 +39,16 @@ export function ErrorState({ error, backHref, backLabel }: ErrorStateProps) {
 
   return (
     <ErrorStateShell
-      title={isBackendDown ? "Backend недоступен" : "Что-то пошло не так"}
+      title={isBackendDown ? t("backendDownTitle") : t("genericTitle")}
       code={code}
-      message={
-        isBackendDown
-          ? "API недоступен. Убедитесь, что backend запущен, и повторите попытку."
-          : message
-      }
+      message={isBackendDown ? t("backendDownMessage") : message}
       action={
         backHref && (
           <Link
             href={backHref}
             className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
           >
-            {backLabel ?? "Назад"}
+            {backLabel ?? t("backLabel")}
           </Link>
         )
       }

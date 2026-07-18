@@ -143,7 +143,7 @@ export function CommandPalette() {
                     >
                       <span className="truncate">{item.title}</span>
                       <span className="font-mono text-c4 shrink-0 text-[8px] tracking-[0.15em] uppercase">
-                        {entityTypeLabel(item.entity_type)}
+                        {entityTypeLabel(item.entity_type, locale)}
                       </span>
                     </Command.Item>
                   ))}

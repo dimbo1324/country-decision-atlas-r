@@ -3,12 +3,14 @@ import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { SearchResultItem } from "../../shared/api/search";
 import { entityTypeLabel } from "../../shared/lib/entity-type-labels";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 function stripHighlightTags(snippet: string): string {
   return snippet.replace(/<[^>]+>/g, "");
 }
 
 export function SearchResultCard({ item }: { item: SearchResultItem }) {
+  const locale = useAppLocale();
   const isExternalPath = !item.path.startsWith("/");
   const LinkComponent = isExternalPath ? NextLink : Link;
 
@@ -19,7 +21,9 @@ export function SearchResultCard({ item }: { item: SearchResultItem }) {
         className="flex flex-col gap-2"
       >
         <div className="flex items-center gap-2">
-          <Badge variant="info">{entityTypeLabel(item.entity_type)}</Badge>
+          <Badge variant="info">
+            {entityTypeLabel(item.entity_type, locale)}
+          </Badge>
           {item.country_slug && (
             <Badge variant="default">{item.country_slug}</Badge>
           )}

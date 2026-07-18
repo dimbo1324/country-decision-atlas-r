@@ -1,9 +1,11 @@
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { GlossaryTerm as GlossaryTermData } from "../../shared/api/glossary";
-import { GLOSSARY_CATEGORY_LABELS } from "../../shared/lib/glossary-labels";
+import { glossaryCategoryLabel } from "../../shared/lib/glossary-labels";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { RelatedTermChip } from "./RelatedTermChip";
 
 export function GlossaryTermEntry({ term }: { term: GlossaryTermData }) {
+  const locale = useAppLocale();
   return (
     <div data-testid="glossary-term-entry">
       <Card
@@ -15,7 +17,7 @@ export function GlossaryTermEntry({ term }: { term: GlossaryTermData }) {
             {term.term}
           </span>
           <Badge variant="info">
-            {GLOSSARY_CATEGORY_LABELS[term.category] ?? term.category}
+            {glossaryCategoryLabel(term.category, locale)}
           </Badge>
         </div>
         <p className="text-c3 text-sm leading-relaxed">{term.definition}</p>

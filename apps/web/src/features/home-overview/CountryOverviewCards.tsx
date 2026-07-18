@@ -7,7 +7,8 @@ import {
 import { Link } from "../../i18n/navigation";
 import type { CountryOverviewCard } from "../../shared/api/home";
 import { capitalize } from "../../shared/lib/format";
-import { confidenceLabelRu } from "../../shared/ui/ConfidenceBadge";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { confidenceLabel } from "../../shared/ui/ConfidenceBadge";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 
 const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {
@@ -21,6 +22,7 @@ export function CountryOverviewCards({
 }: {
   countries: CountryOverviewCard[];
 }) {
+  const locale = useAppLocale();
   return (
     <section aria-labelledby="home-countries-title">
       <div className="mb-5 flex items-end justify-between gap-4">
@@ -64,7 +66,7 @@ export function CountryOverviewCards({
                       CONFIDENCE_VARIANT[country.confidence] ?? "default"
                     }
                   >
-                    {capitalize(confidenceLabelRu(country.confidence))}
+                    {capitalize(confidenceLabel(country.confidence, locale))}
                   </Badge>
                 )}
               </div>

@@ -1,4 +1,6 @@
 import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
+import type { SupportedLocale } from "../lib/locale";
+import { useAppLocale } from "../lib/useAppLocale";
 
 type ImpactDirection =
   | "positive"
@@ -32,29 +34,61 @@ const LEVEL_VARIANT: Record<string, BadgeVariant> = {
   critical: "critical",
 };
 
-const DIRECTION_LABELS: Record<string, string> = {
-  positive: "положительное",
-  negative: "отрицательное",
-  mixed: "смешанное",
-  neutral: "нейтральное",
-  uncertain: "неопределённое",
+const DIRECTION_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    positive: "positive",
+    negative: "negative",
+    mixed: "mixed",
+    neutral: "neutral",
+    uncertain: "uncertain",
+  },
+  ru: {
+    positive: "положительное",
+    negative: "отрицательное",
+    mixed: "смешанное",
+    neutral: "нейтральное",
+    uncertain: "неопределённое",
+  },
+  es: {
+    positive: "positivo",
+    negative: "negativo",
+    mixed: "mixto",
+    neutral: "neutral",
+    uncertain: "incierto",
+  },
 };
 
-const LEVEL_LABELS: Record<string, string> = {
-  low: "низкий",
-  medium: "средний",
-  high: "высокий",
-  critical: "критический",
+const LEVEL_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    low: "low",
+    medium: "medium",
+    high: "high",
+    critical: "critical",
+  },
+  ru: {
+    low: "низкий",
+    medium: "средний",
+    high: "высокий",
+    critical: "критический",
+  },
+  es: {
+    low: "bajo",
+    medium: "medio",
+    high: "alto",
+    critical: "crítico",
+  },
 };
 
 export function ImpactDirectionBadge({ direction }: ImpactDirectionBadgeProps) {
+  const locale = useAppLocale();
   const variant = DIRECTION_VARIANT[direction] ?? "default";
-  const label = DIRECTION_LABELS[direction] ?? direction;
+  const label = DIRECTION_LABELS[locale][direction] ?? direction;
   return <Badge variant={variant}>{label}</Badge>;
 }
 
 export function ImpactLevelBadge({ level }: ImpactLevelBadgeProps) {
+  const locale = useAppLocale();
   const variant = LEVEL_VARIANT[level] ?? "default";
-  const label = LEVEL_LABELS[level] ?? level;
+  const label = LEVEL_LABELS[locale][level] ?? level;
   return <Badge variant={variant}>{label}</Badge>;
 }

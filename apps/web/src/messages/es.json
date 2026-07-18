@@ -102,5 +102,33 @@
     "title": "Página no encontrada",
     "message": "Esta página no existe o ha sido movida.",
     "backHome": "Volver al inicio"
+  },
+  "errorState": {
+    "genericTitle": "Algo salió mal",
+    "genericMessage": "Se produjo un error inesperado.",
+    "backendDownTitle": "Backend no disponible",
+    "backendDownMessage": "La API no está disponible. Asegúrate de que el backend esté en ejecución e inténtalo de nuevo.",
+    "backLabel": "Atrás"
+  },
+  "emptyState": {
+    "default": "No hay datos disponibles."
+  },
+  "loadingState": {
+    "default": "Cargando datos…"
+  },
+  "disclaimerNotice": {
+    "default": "Esto es un indicador de calidad de datos, no una recomendación. No constituye asesoramiento legal."
+  },
+  "evidenceCard": {
+    "openSource": "Abrir fuente"
+  },
+  "errorBoundary": {
+    "kicker": "Error",
+    "message": "Algo salió mal al mostrar esta página. Ya hemos registrado el evento — intenta actualizar este bloque.",
+    "retry": "Intentar de nuevo"
+  },
+  "lastVerifiedAt": {
+    "unknown": "Fecha de última verificación desconocida",
+    "verified": "Datos verificados: {date}"
   }
 }

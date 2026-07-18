@@ -1,7 +1,8 @@
 import { FilterChipGroup } from "@country-decision-atlas/ui";
 import type { CountryListResponse } from "../../shared/api/countries";
 import { capitalize } from "../../shared/lib/format";
-import { confidenceLabelRu } from "../../shared/ui/ConfidenceBadge";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { confidenceLabel } from "../../shared/ui/ConfidenceBadge";
 
 const SOURCE_TYPE_LABELS: Record<string, string> = {
   government: "Государственный",
@@ -32,6 +33,7 @@ export function SourcesFilters({
   onSourceTypeChange: (value: string) => void;
   onConfidenceChange: (value: string) => void;
 }) {
+  const locale = useAppLocale();
   return (
     <div
       className="border-warm flex flex-wrap gap-5 border p-4"
@@ -72,7 +74,7 @@ export function SourcesFilters({
           { value: "", label: "Все уровни" },
           ...CONFIDENCE_OPTIONS.map((option) => ({
             value: option,
-            label: capitalize(confidenceLabelRu(option)),
+            label: capitalize(confidenceLabel(option, locale)),
           })),
         ]}
       />

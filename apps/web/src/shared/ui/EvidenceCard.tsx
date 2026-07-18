@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { EvidenceItem } from "../api/evidence";
 import { ConfidenceBadge } from "./ConfidenceBadge";
@@ -16,6 +17,7 @@ export function EvidenceCard({
   sourceTitle,
   sourceUrl,
 }: EvidenceCardProps) {
+  const t = useTranslations("evidenceCard");
   const mainText = item.claim ?? item.title;
   return (
     <div data-testid="evidence-card">
@@ -64,7 +66,7 @@ export function EvidenceCard({
                 rel="noreferrer"
                 className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
               >
-                Открыть источник <ArrowExternal />
+                {t("openSource")} <ArrowExternal />
               </a>
             )}
           </div>

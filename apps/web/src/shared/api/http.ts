@@ -1,5 +1,10 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 import { API_BASE_URL, API_TIMEOUT_MS } from "../config/env";
+import {
+  asSupportedLocale,
+  DEFAULT_LOCALE,
+  type SupportedLocale,
+} from "../lib/locale";
 
 export type ApiErrorResponse = components["schemas"]["ErrorResponse"];
 
@@ -7,7 +12,41 @@ type RequestOptions = {
   headers?: HeadersInit;
 };
 
+/** `apiGet`/`apiPost`/etc run deep inside ~70 data-fetching modules with no
+ * natural place to receive a `locale` argument (most aren't React code at
+ * all), so this reads it straight from the URL instead of threading it
+ * through every call site -- `routing.ts`'s `localePrefix: "always"`
+ * guarantees the first path segment is always the interface locale on the
+ * client. Falls back to the default locale during SSR/build, where these
+ * network-error messages are never actually shown to a user. */
+function currentPathLocale(): SupportedLocale {
+  if (typeof window === "undefined") return DEFAULT_LOCALE;
+  const segment = window.location.pathname.split("/")[1] ?? "";
+  return asSupportedLocale(segment);
+}
+
+const NETWORK_ERROR_MESSAGES: Record<
+  SupportedLocale,
+  { timeout: (seconds: number) => string; network: string }
+> = {
+  en: {
+    timeout: (seconds) => `The server took too long to respond (${seconds}s).`,
+    network: "Network error while contacting the API.",
+  },
+  ru: {
+    timeout: (seconds) =>
+      `Превышено время ожидания ответа от сервера (${seconds} с).`,
+    network: "Сетевая ошибка при обращении к API.",
+  },
+  es: {
+    timeout: (seconds) =>
+      `El servidor tardó demasiado en responder (${seconds} s).`,
+    network: "Error de red al conectar con la API.",
+  },
+};
+
 function toNetworkApiError(err: unknown): ApiErrorResponse {
+  const messages = NETWORK_ERROR_MESSAGES[currentPathLocale()];
   if (
     err instanceof DOMException &&
     (err.name === "TimeoutError" || err.name === "AbortError")
@@ -15,17 +54,14 @@ function toNetworkApiError(err: unknown): ApiErrorResponse {
     return {
       error: {
         code: "request_timeout",
-        message: `Превышено время ожидания ответа от сервера (${API_TIMEOUT_MS / 1000} с).`,
+        message: messages.timeout(API_TIMEOUT_MS / 1000),
       },
     };
   }
   return {
     error: {
       code: "network_error",
-      message:
-        err instanceof Error
-          ? err.message
-          : "Сетевая ошибка при обращении к API.",
+      message: err instanceof Error ? err.message : messages.network,
     },
   };
 }

@@ -1,7 +1,8 @@
 import {
   GLOSSARY_CATEGORIES,
-  GLOSSARY_CATEGORY_LABELS,
+  glossaryCategoryLabel,
 } from "../../shared/lib/glossary-labels";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 const SELECT_CLASS =
   "border-warm bg-bg2 text-c1 font-body border px-3 py-2 text-sm transition-colors duration-300 hover:border-[var(--color-c3)] focus:outline-none";
@@ -19,6 +20,7 @@ export function GlossaryFilters({
   onQueryChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
 }) {
+  const locale = useAppLocale();
   return (
     <div
       className="border-warm flex flex-wrap items-end gap-4 border p-4"
@@ -49,7 +51,7 @@ export function GlossaryFilters({
               key={value}
               value={value}
             >
-              {GLOSSARY_CATEGORY_LABELS[value]}
+              {glossaryCategoryLabel(value, locale)}
             </option>
           ))}
         </select>

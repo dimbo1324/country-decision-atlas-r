@@ -102,5 +102,33 @@
     "title": "Page not found",
     "message": "This page does not exist or has been moved.",
     "backHome": "Back home"
+  },
+  "errorState": {
+    "genericTitle": "Something went wrong",
+    "genericMessage": "An unexpected error occurred.",
+    "backendDownTitle": "Backend unavailable",
+    "backendDownMessage": "The API is unreachable. Make sure the backend is running and try again.",
+    "backLabel": "Back"
+  },
+  "emptyState": {
+    "default": "No data available."
+  },
+  "loadingState": {
+    "default": "Loading data…"
+  },
+  "disclaimerNotice": {
+    "default": "This is a data-quality indicator, not a recommendation. Not legal advice."
+  },
+  "evidenceCard": {
+    "openSource": "Open source"
+  },
+  "errorBoundary": {
+    "kicker": "Error",
+    "message": "Something went wrong while rendering this page. We've already logged the event — try refreshing this block.",
+    "retry": "Try again"
+  },
+  "lastVerifiedAt": {
+    "unknown": "Last verification date unknown",
+    "verified": "Data verified: {date}"
   }
 }

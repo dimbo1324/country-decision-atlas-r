@@ -11,7 +11,8 @@ import { FreshnessBadge } from "../../shared/ui/FreshnessBadge";
 import { LastVerifiedAt } from "../../shared/ui/LastVerifiedAt";
 import { Link } from "../../i18n/navigation";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
-import { trustLabelRu } from "../../shared/ui/TrustBadge";
+import { trustLabel } from "../../shared/ui/TrustBadge";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type TrustSurfaceBlockProps = {
   countrySlug: string;
@@ -28,6 +29,7 @@ export function TrustSurfaceBlock({
   countrySlug,
   locale,
 }: TrustSurfaceBlockProps) {
+  const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryTrustQuery(countrySlug, locale),
   );
@@ -78,7 +80,7 @@ export function TrustSurfaceBlock({
         {data.trust_score != null && (
           <ProgressRing
             value={Math.round(data.trust_score)}
-            label={trustLabelRu(data.trust_label)}
+            label={trustLabel(data.trust_label, uiLocale)}
             size={128}
             accent={accent}
             active

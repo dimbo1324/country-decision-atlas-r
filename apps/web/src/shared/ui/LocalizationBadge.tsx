@@ -5,6 +5,7 @@ import {
   getLocalizationBadgeTitle,
   getLocalizationBadgeVariant,
 } from "../lib/localization-labels";
+import { useAppLocale } from "../lib/useAppLocale";
 
 type LocalizationMeta = components["schemas"]["LocalizationMeta"];
 
@@ -27,10 +28,11 @@ export function LocalizationBadge({
   localization,
   compact = false,
 }: LocalizationBadgeProps) {
+  const locale = useAppLocale();
   if (!localization) return null;
-  const label = getLocalizationBadgeLabel(localization);
+  const label = getLocalizationBadgeLabel(localization, locale);
   if (!label) return null;
-  const title = getLocalizationBadgeTitle(localization);
+  const title = getLocalizationBadgeTitle(localization, locale);
   const variant =
     VARIANT_MAP[getLocalizationBadgeVariant(localization)] ?? "default";
   return (

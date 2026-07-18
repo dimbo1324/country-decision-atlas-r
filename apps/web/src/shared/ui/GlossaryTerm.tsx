@@ -8,7 +8,8 @@ import {
   PopoverTrigger,
 } from "@country-decision-atlas/ui";
 import { useGlossaryTerm } from "../glossary/GlossaryProvider";
-import { GLOSSARY_CATEGORY_LABELS } from "../lib/glossary-labels";
+import { glossaryCategoryLabel } from "../lib/glossary-labels";
+import { useAppLocale } from "../lib/useAppLocale";
 
 type GlossaryTermProps = {
   slug: string;
@@ -20,6 +21,7 @@ type GlossaryTermProps = {
  * callers never need to guard for a missing term themselves. */
 export function GlossaryTerm({ slug, children }: GlossaryTermProps) {
   const term = useGlossaryTerm(slug);
+  const locale = useAppLocale();
 
   if (!term) {
     return <>{children}</>;
@@ -44,7 +46,7 @@ export function GlossaryTerm({ slug, children }: GlossaryTermProps) {
               {term.term}
             </span>
             <Badge variant="info">
-              {GLOSSARY_CATEGORY_LABELS[term.category] ?? term.category}
+              {glossaryCategoryLabel(term.category, locale)}
             </Badge>
           </div>
           <p className="text-c3 text-sm leading-relaxed">{term.definition}</p>

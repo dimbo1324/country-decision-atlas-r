@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { Button, Card, Kicker } from "@country-decision-atlas/ui";
 import { trackEvent } from "../analytics/client";
 
@@ -11,6 +12,34 @@ type ErrorBoundaryProps = {
 type ErrorBoundaryState = {
   error: Error | null;
 };
+
+/** Split out so the translated fallback text can use `useTranslations()` —
+ * the boundary itself must stay a class component (no hook equivalent for
+ * `componentDidCatch`), and hooks can't be called from one. */
+function ErrorBoundaryFallback({ onRetry }: { onRetry: () => void }) {
+  const t = useTranslations("errorBoundary");
+  return (
+    <div
+      className="flex min-h-[40vh] items-center justify-center py-12"
+      data-testid="app-error-boundary"
+    >
+      <Card
+        interactive={false}
+        className="flex max-w-md flex-col gap-4 text-center"
+      >
+        <Kicker>{t("kicker")}</Kicker>
+        <p className="text-c1 text-sm leading-relaxed">{t("message")}</p>
+        <Button
+          type="button"
+          onClick={onRetry}
+          data-testid="app-error-boundary-retry"
+        >
+          {t("retry")}
+        </Button>
+      </Card>
+    </div>
+  );
+}
 
 /** React error boundaries must be class components -- there is no hook
  * equivalent for componentDidCatch. Reports a `client_error` analytics
@@ -51,29 +80,6 @@ export class ErrorBoundary extends Component<
       return this.props.children;
     }
 
-    return (
-      <div
-        className="flex min-h-[40vh] items-center justify-center py-12"
-        data-testid="app-error-boundary"
-      >
-        <Card
-          interactive={false}
-          className="flex max-w-md flex-col gap-4 text-center"
-        >
-          <Kicker>Ошибка</Kicker>
-          <p className="text-c1 text-sm leading-relaxed">
-            Что-то пошло не так при отображении этой страницы. Мы уже записали
-            событие — попробуйте обновить блок.
-          </p>
-          <Button
-            type="button"
-            onClick={this.handleRetry}
-            data-testid="app-error-boundary-retry"
-          >
-            Попробовать снова
-          </Button>
-        </Card>
-      </div>
-    );
+    return <ErrorBoundaryFallback onRetry={this.handleRetry} />;
   }
 }
