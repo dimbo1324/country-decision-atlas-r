@@ -182,23 +182,40 @@ not silently dropped):
       next+prev) — also re-checked the pre-existing `Tabs` `Default` story
       still renders correctly after editing its file.
 
-## 5.3 — First Load JS budget gate
+## 5.3 — First Load JS budget gate (done)
 
-- [ ] New script `scripts/dev_tools/check_js_budgets.py`: runs
-      `next build` for `apps/web` (or accepts already-captured output),
-      parses the route table for each route's First Load JS, fails
-      (exit 1) listing every route over a fixed ceiling.
-- [ ] Ceiling = current worst measured route, rounded, +10% margin, per
-      the plan's literal instruction ("текущее +10% как потолок,
-      снижать волнами").
-- [ ] Register in `utils/dev_tools_scripts_runner/config/scripts.json`
-      for discoverability (`--doctor`/listing), but note it is **not**
-      wired into any local `full_check.py` profile (see pre-flight) —
-      it's CI + on-demand only.
-- [ ] New step in `.github/workflows/quality.yml`'s `frontend` job, right
-      after `Build`.
-- [ ] Verify: script correctly fails on an artificially lowered ceiling,
-      passes on the real one.
+- [+] New `scripts/dev_tools/check_js_budgets.py`: runs
+      `pnpm --filter @country-decision-atlas/web build` itself by default,
+      or parses already-captured output via `--input <path>`; regex-parses
+      Next's own console route table (route + First Load JS column),
+      converts kB/MB/B to bytes, fails (exit 1) listing every route over
+      the ceiling sorted worst-first.
+- [+] Ceiling = 330 kB — measured worst route on 2026-07-18
+      (`/[locale]/countries/[slug]` at 297 kB, rounded to 300, +10%), per
+      the plan's literal instruction ("текущее +10% как потолок, снижать
+      волнами"); recorded as `CEILING_KB` with the measurement date in a
+      comment so a future wave knows when/why to revisit it.
+- [+] Registered in `utils/dev_tools_scripts_runner/config/scripts.json`
+      (title `js-budgets`, category `quality`) for discoverability via
+      `python dev_tools_scripts_runner.py help js-budgets` — confirmed it
+      loads and renders correctly; explicitly documented in its own
+      description that it is **not** wired into any `full_check.py`
+      profile (none of `quick`/`backend`/`frontend`/`docker`/`full`/`ci`
+      run a real Next build today, confirmed by reading
+      `should_run_phase`), CI + on-demand only.
+- [+] New `.github/workflows/quality.yml` `frontend`-job steps: added
+      `actions/setup-python@v6` (the job had no Python before), changed
+      `Build` to `pnpm build | tee build-output.log` (bash's default
+      `pipefail` on GitHub-hosted runners still surfaces a build failure
+      through the pipe), and a new `Check First Load JS budgets` step
+      right after running the script against that saved log — avoids a
+      redundant second full Next build in CI.
+- [+] Verify: `ruff check`/`ruff format --check`/`mypy` all clean on the
+      new script; tested both paths directly — real ceiling passes
+      (45 routes, worst 297.0 kB), an artificially lowered 200 kB ceiling
+      correctly fails and lists exactly the 40 routes over it, sorted
+      worst-first; validated the edited `scripts.json` and `quality.yml`
+      parse as valid JSON/YAML.
 
 ## 5.4 — Accessibility hardening
 

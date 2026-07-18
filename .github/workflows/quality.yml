@@ -228,6 +228,10 @@ jobs:
           node-version: "22"
           cache: "pnpm"
 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
 
@@ -247,7 +251,10 @@ jobs:
         run: pnpm typecheck
 
       - name: Build
-        run: pnpm build
+        run: pnpm build | tee build-output.log
+
+      - name: Check First Load JS budgets
+        run: python scripts/dev_tools/check_js_budgets.py --input build-output.log
 
       - name: pnpm audit
         # P2-6, Аудит-эпизод 8: allow-fail on introduction — gate once the
