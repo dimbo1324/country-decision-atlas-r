@@ -300,26 +300,67 @@ not silently dropped):
 
 ## Final verification
 
-- [ ] Full typecheck/lint (`ui`+`web`), `pnpm format:check`.
-- [ ] `next build` clean, JS-budget script passes against the real
-      ceiling.
-- [ ] New Vitest component tests green; existing Vitest suite unaffected.
-- [ ] Storybook builds clean, new play-tests pass.
-- [ ] Full Playwright e2e suite green (or isolated-passing flakes only,
-      confirmed by re-running the specific spec alone) — a fresh
-      `next start` server, not a reused one with stale env, per the
-      Stage 3 lesson.
-- [ ] Visual regression suite green (only if any covered page's markup
-      changed — check before re-shooting).
-- [ ] Contrast + i18n-parity audits still green.
-- [ ] Browser walkthrough of anything visually touched (pager focus
-      changes, aria-live region).
+- [+] Full typecheck/lint clean: `ui` (`tsc --noEmit`, `eslint .`) and
+      `web` (same) both clean. `pnpm format:check` clean (repo-wide glob);
+      separately re-checked `packages/**/*.tsx` directly since the
+      project's own `format:check` glob excludes `.tsx` under
+      `packages/**` — the 3 files this stage actually touched
+      (`RadioCards.tsx`, `HorizontalPager.tsx`, `DecisionResults.tsx`) are
+      clean. Noted but explicitly NOT fixed (pre-existing, unrelated):
+      ~24 other `packages/ui/**/*.tsx` files have drifted from Prettier
+      style over time, invisible to CI because of that same glob gap —
+      flagging as a separate small tech-debt item, not touched here since
+      none of those files are part of this stage's diff.
+- [+] Fresh `next build`: 45 routes, worst `/[locale]/countries/[slug]`
+      at 297.0 kB — unchanged from the measurement the 330 kB ceiling was
+      set against. `check_js_budgets.py` run directly (not just trusted
+      from the earlier sub-item): "JS budget OK: 45 routes checked".
+- [+] Full Vitest: `apps/web` 77/77, `packages/ui` 8/8 — re-ran both after
+      all Stage 5 commits, not just once mid-stage.
+- [+] `storybook build` (packages/ui): compiles clean, both new/changed
+      stories present in the output. (Chunk-size warning is Storybook's
+      own internal docs-renderer bundle, unrelated to any app code.)
+- [+] Full Playwright e2e, run **twice** because the first run surfaced a
+      real environment problem, not a code issue: partway through this
+      session Docker Desktop's daemon had stopped entirely (`docker info`
+      unreachable, no Docker Desktop process running) — apparently a
+      crash during the earlier work, invisible until this verification
+      pass. That first run showed 18 failures scattered across totally
+      unrelated pages/specs (data-quality, home-overview, internal-admin,
+      migration-board, community-intelligence), the exact "different
+      failures each time, unrelated pages" signature this project's own
+      Stage 0 checklist already documented for load/infra-related
+      flakiness, not a deterministic regression. Restarted Docker Desktop,
+      waited for the daemon, brought `postgres`/`redis`/`api` back up
+      (all healthy), rebuilt `apps/web` fresh, and re-ran: 85/85 targeted
+      re-run of every previously-failing spec passed cleanly. Then ran
+      the **complete** 44-file suite fresh: 326 passed, 3 flaky (recovered
+      on retry), 1 hard failure (`web-mvp-compare-matrix.spec.ts:52`) —
+      re-ran that file alone: 12/12 passed in under 1s each, confirming a
+      single load-related flake under the 4-worker run, not a regression.
+- [+] Visual regression: 5/5 green (home, catalog, country dossier,
+      decision result, decision passport) — no baseline changes, meaning
+      Stage 5.4's a11y attributes (roving `tabIndex`, `aria-live` sr-only
+      text) are correctly non-visual, as expected.
+- [+] Contrast audit: all c1-c4 tokens pass on all bg tokens. i18n-parity:
+      90/90 keys match — both unaffected by this stage (no new
+      user-facing chrome copy), re-run to confirm no drift.
+- [+] Browser walkthrough, done independently in this final pass (not
+      just trusting Stage 5.4's own sub-item verification): `/ru/decision`
+      RadioCards — confirmed via direct DOM inspection that only the
+      checked option carries `tabIndex=0`, dispatched a real `ArrowRight`
+      `KeyboardEvent` on the focused option and confirmed both focus AND
+      `aria-checked`/roving `tabIndex` moved together to the next option,
+      wrapping correctly to the last option. Home page pager dot row:
+      confirmed `role="group"` with `aria-label="Слайды колоды"` and
+      `aria-current="true"` on the active dot. Console clean throughout.
 
 ## Completion
 
-- [ ] Fill this checklist (`+`/`-`).
-- [ ] Incremental commits on this branch only, one per sub-item group,
-      no merge to `main`.
-- [ ] Push `feat/frontend-redesign-stage-5-consolidation` to `origin`
-      (not `main`).
-- [ ] Final report.
+- [+] Checklist filled (`+`/`-`) for every sub-stage.
+- [+] Commits on `feat/frontend-redesign-stage-5-consolidation` only, one
+      per sub-item group (checklist, 5.1, 5.2, 5.3, 5.4, 5.5, tech debt),
+      no merge to `main` at any point.
+- [+] Pushed `feat/frontend-redesign-stage-5-consolidation` to `origin`
+      (not `main`) — see final report.
+- [+] Final report delivered to the owner.
