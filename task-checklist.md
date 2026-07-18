@@ -18,14 +18,30 @@ before a fast-forward merge into `main`.
    project's own protocol); `Tabs.stories.tsx` auto-merged cleanly
    (format-glob-fix's reformatting composed with Stage 5's added
    `ControlledFiveTabs` story without manual intervention).
-3. `chore/remove-web-prototype` — conflicts expected on
-   `task-checklist.md`, `.claude/launch.json` (Stage 5 added `APP_ENV` to
-   the `web-prod` entry; this branch removed the neighboring
-   `web-prototype` entry entirely — different parts of the same array),
-   and `pnpm-lock.yaml` (regenerated fresh via `pnpm install` after the
-   merge rather than trusting a 3-way lockfile merge).
+3. `chore/remove-web-prototype` — `.claude/launch.json` and
+   `pnpm-lock.yaml` both auto-merged cleanly (Stage 5's `APP_ENV` addition
+   to the `web-prod` entry and this branch's removal of the neighboring
+   `web-prototype` entry were different parts of the same array/file);
+   only `task-checklist.md` conflicted again, resolved the same way.
 
-## Verification (after all three merged)
+`chore/remove-web-prototype`'s own completion record (preserved here since
+it documents real verification work, not just merge mechanics): confirmed
+scope via a repo-wide grep (9 files with real mentions plus the directory
+itself, zero hits in `.codex/`, `.claude/agents|skills`, `AGENTS.md`,
+`CLAUDE.md`, `.ai/`); removed the `apps/web-prototype` workspace entry,
+`.claude/launch.json` dev-server block, README table row; reworded
+comments in `fonts.ts`, the decision-passport page, `.storybook/main.ts`,
+and `theme.css` that referenced the prototype (the `theme.css` one needed
+a real edit, not just deletion — confirmed Storybook's
+`preview-head.html` loads the same font families via a Google Fonts
+`<link>`, i.e. it was always the *other* real consumer this comment
+described, `web-prototype` was just the named example); removed the
+`docs/_arch_` section describing the prototype and renumbered the
+following section; reworded the implementation plan's "tranche prep
+already done" paragraph to past tense. `git rm -r` removed all 61 tracked
+files.
+
+## Verification (after all three merged, on the integration branch)
 
 - [ ] `pnpm install` to regenerate `pnpm-lock.yaml` cleanly.
 - [ ] Full typecheck/lint (`ui` + `web`), `pnpm format:check`.
@@ -35,9 +51,10 @@ before a fast-forward merge into `main`.
 - [ ] Full Playwright e2e suite.
 - [ ] Visual regression suite.
 - [ ] Contrast + i18n-parity audits.
-- [ ] Confirm zero `web-prototype` references remain, confirm the format
-      glob covers `packages/**/*.tsx`, confirm Stage 5's test
-      infrastructure and RadioCards a11y fix are present.
+- [ ] Confirm zero `web-prototype` references remain (except the one
+      intentional historical mention), confirm the format glob covers
+      `packages/**/*.tsx`, confirm Stage 5's test infrastructure and
+      RadioCards a11y fix are present.
 
 ## Completion
 

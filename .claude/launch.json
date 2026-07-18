@@ -17,12 +17,6 @@
       }
     },
     {
-      "name": "web-prototype",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@country-decision-atlas/web-prototype", "dev"],
-      "port": 5173
-    },
-    {
       "name": "api",
       "runtimeExecutable": "python",
       "runtimeArgs": [

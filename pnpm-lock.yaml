@@ -139,61 +139,6 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@22.19.21)(jsdom@29.1.1)(msw@2.15.0(@types/node@22.19.21)(typescript@5.9.3))(vite@6.4.3(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.32.0))
 
-  apps/web-prototype:
-    dependencies:
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.469.0
-        version: 0.469.0(react@19.2.7)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.7(react@19.2.7)
-    devDependencies:
-      '@eslint/js':
-        specifier: ^9.17.0
-        version: 9.39.4
-      '@tailwindcss/vite':
-        specifier: ^4.0.0
-        version: 4.3.2(vite@6.4.3(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.32.0))
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.17
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.17)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.3(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.32.0))
-      eslint:
-        specifier: ^9.17.0
-        version: 9.39.4(jiti@2.7.0)
-      eslint-plugin-react-hooks:
-        specifier: ^5.1.0
-        version: 5.2.0(eslint@9.39.4(jiti@2.7.0))
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.16
-        version: 0.4.26(eslint@9.39.4(jiti@2.7.0))
-      globals:
-        specifier: ^15.14.0
-        version: 15.15.0
-      tailwindcss:
-        specifier: ^4.0.0
-        version: 4.3.2
-      typescript:
-        specifier: ^5.6.0
-        version: 5.9.3
-      typescript-eslint:
-        specifier: ^8.18.0
-        version: 8.62.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
-      vite:
-        specifier: ^6.0.0
-        version: 6.4.3(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.32.0)
-
   packages/contracts: {}
 
   packages/ui:
@@ -2814,11 +2759,6 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
-
-  eslint-plugin-react-refresh@0.4.26:
-    resolution: {integrity: sha512-1RETEylht2O6FM/MvgnyvT+8K21wLqDNg4qD51Zj3guhjt433XbnnkVttHMyaVyAFD03QSV4LPS5iE3VQmO7XQ==}
-    peerDependencies:
-      eslint: '>=8.40'
 
   eslint-plugin-react@7.37.5:
     resolution: {integrity: sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==}
@@ -7099,10 +7039,6 @@ snapshots:
       string.prototype.includes: 2.0.1
 
   eslint-plugin-react-hooks@5.2.0(eslint@9.39.4(jiti@2.7.0)):
-    dependencies:
-      eslint: 9.39.4(jiti@2.7.0)
-
-  eslint-plugin-react-refresh@0.4.26(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       eslint: 9.39.4(jiti@2.7.0)
 

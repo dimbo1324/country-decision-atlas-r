@@ -33,13 +33,13 @@ export default async function DecisionPassportPage({ params }: PageProps) {
             { label: "Паспорт решения" },
           ]}
         />
-        {/* Decorative document fragments ported from
-            packages/ui/src/charts/PassportCard.tsx (the web-prototype's
-            mockup component) -- the perforated edge and stamp seal only,
-            not the component itself and not its live recompute toggles.
-            This page stays a plain server-rendered, immutable snapshot;
-            methodology_snapshot/status/generated_at below are exactly
-            what the API returned, never recalculated client-side. */}
+        {/* Decorative document fragments from
+            packages/ui/src/charts/PassportCard.tsx -- the perforated edge
+            and stamp seal only, not the component itself and not its live
+            recompute toggles. This page stays a plain server-rendered,
+            immutable snapshot; methodology_snapshot/status/generated_at
+            below are exactly what the API returned, never recalculated
+            client-side. */}
         <div className="border-warm bg-bg2 relative flex flex-col border">
           <div
             aria-hidden
