@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { compareCiiQuery } from "../../entities/decision/api";
 import { CiiComparisonEmptyState } from "./CiiComparisonEmptyState";
@@ -22,6 +23,7 @@ export function DecisionCiiComparison({
   locale,
   personaSlug,
 }: Props) {
+  const t = useTranslations("ciiComparison");
   const { data, isPending, isError } = useQuery(
     compareCiiQuery({
       countries: countrySlugs,
@@ -38,9 +40,7 @@ export function DecisionCiiComparison({
   }
 
   if (isError || data == null) {
-    return (
-      <CiiComparisonEmptyState message="Не удалось загрузить данные CII для сравнения" />
-    );
+    return <CiiComparisonEmptyState message={t("loadError")} />;
   }
 
   const countries = data.countries ?? [];
@@ -54,22 +54,26 @@ export function DecisionCiiComparison({
   return (
     <section
       className="flex flex-col gap-5"
-      aria-label="CII сравнение стран"
+      aria-label={t("sectionAriaLabel")}
       data-testid="cii-compare-block"
     >
       <div className="flex flex-col gap-1">
         <Kicker>
-          Сценарные веса CII: {countries.map((c) => c.name).join(" vs ")}
+          {t("scenarioWeights", {
+            names: countries.map((c) => c.name).join(" vs "),
+          })}
         </Kicker>
         {data.scenario?.title && (
-          <p className="text-c3 text-sm">Сценарий: {data.scenario.title}</p>
+          <p className="text-c3 text-sm">
+            {t("scenarioLabel", { title: data.scenario.title })}
+          </p>
         )}
         {data.applied_persona && (
           <p
             className="text-c3 text-sm"
             data-testid="cii-persona-note"
           >
-            Персона: {data.applied_persona.name}
+            {t("personaLabel", { name: data.applied_persona.name })}
           </p>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { DataTable } from "@country-decision-atlas/ui";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 
@@ -9,16 +10,17 @@ type DecisionBreakdownProps = {
 };
 
 export function DecisionBreakdown({ breakdown }: DecisionBreakdownProps) {
+  const t = useTranslations("countryScores");
   if (breakdown.length === 0) return null;
 
   return (
     <DataTable
       columns={[
-        { header: "Критерий" },
-        { header: "Оценка", numeric: true, align: "right" },
-        { header: "Вес", numeric: true, align: "right" },
-        { header: "Взвешенная", numeric: true, align: "right" },
-        { header: "Достоверность", align: "right" },
+        { header: t("columnCriterion") },
+        { header: t("columnScore"), numeric: true, align: "right" },
+        { header: t("columnWeight"), numeric: true, align: "right" },
+        { header: t("columnWeighted"), numeric: true, align: "right" },
+        { header: t("columnConfidence"), align: "right" },
       ]}
       rows={breakdown.map((b) => [
         b.title || b.criterion,

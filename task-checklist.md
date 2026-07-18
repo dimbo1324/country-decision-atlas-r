@@ -331,7 +331,56 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         content — country names, source excerpts — correctly still
         following its own data-locale fallback rather than the interface
         locale, exactly per the Stage 1 design).
-- [ ] Decision flow (15 files + 2 pages).
+- [+] Decision flow (15 files + 2 pages).
+      - `decision-personalization` (4 + `decision-criteria-labels.ts`):
+        `DECISION_CRITERIA_LABELS` converted to the enum-dict pattern; new
+        `decisionPersonalization` namespace for the sliders panel and
+        summary.
+      - `decision-run` (6 of 7 — `DecisionWarnings.tsx` has no hardcoded
+        text): `DecisionBreakdown` reuses `countryScores`'s table-column
+        keys verbatim (identical table to `ScoreBreakdown.tsx` from
+        Stage 5) rather than duplicating them; `DecisionResultCard`'s three
+        enum dicts (compatibility/freshness/note-type labels) converted to
+        the `Record<SupportedLocale,...>` pattern; `DecisionRunForm` is the
+        session's largest single component edit — moved `STEP_LABELS` and
+        the personalization-error-message map from module scope into the
+        component body so they can call `t()`.
+      - `decision-wizard`: **0 files needed changes** — Stage 1's
+        `DECISION_WIZARD_LABELS[locale]` dictionary already covers every
+        string in this folder's three real components end to end; the
+        checklist's original "(1)" estimate turned out to already be fully
+        resolved.
+      - `decision-visual-comparison` (2 of 6 — the spider chart, summary,
+        bars, and winner-list components render only data-driven labels,
+        no hardcoded text of their own): new `ciiComparison` namespace.
+      - `decision-passports` (2): new `decisionPassports` namespace.
+      - `decision/page.tsx` (`decisionPage` namespace) and
+        `decision/passports/[token]/page.tsx` (`decisionPassportPage`
+        namespace, finishing the strings Stage 4 left behind when it only
+        touched this page's date formatting and `uiLocale` prop wiring).
+      - **Real bug found via the browser walkthrough** (not caught by
+        typecheck/lint/tests): `DecisionResults.tsx` — the component that
+        renders the actual ranked outcome after clicking "run" — still had
+        entirely untranslated Russian text (`"Сценарий:"`, `"Создано:"`,
+        `"Рекомендуемый вариант"`, `"Полный рейтинг"`, the
+        screen-reader-only status announcement, etc.). It had only ever
+        been touched for its date-formatting/`uiLocale`-prop plumbing back
+        in Stage 4, and every prior review of "decision-run (6)" wrongly
+        assumed `DecisionWarnings.tsx` was the one file with no text,
+        overlooking that `DecisionResults.tsx` still had its own. Not
+        caught until actually clicking "Run the decision engine" in the
+        browser and reading the result card — typecheck/lint/tests have no
+        way to notice a string that was never wrapped in `t()` at all.
+        Fixed with a new `decisionResults` namespace (14 keys); this is the
+        reason every stage in this task ends with an interactive browser
+        walkthrough, not just a page-load check.
+      - Verify: typecheck/lint/format clean; Vitest 86/86 (14 files); fresh
+        `next build` clean; `i18n_parity_check.py` 411/411 keys; full
+        interactive walkthrough (not just page load) of `/en/decision`,
+        `/ru/decision`, and `/es/decision` — filled the wizard to step 4 via
+        `?step=4`, clicked "Run the decision engine" for real, and read the
+        actual result card in all 3 locales (this is what caught the
+        `DecisionResults.tsx` gap above).
 - [ ] Legal Signals, Sources, Routes (21 files + 3 pages).
 - [ ] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +
       4 pages).

@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { ShieldCheck } from "lucide-react";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../../i18n/navigation";
@@ -21,6 +21,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
   const { token } = await params;
   const locale = await getLocale();
   const uiLocale = asSupportedLocale(locale);
+  const t = await getTranslations("decisionPassportPage");
 
   try {
     const passport = await decisionPassportsApi.getDecisionPassport(token);
@@ -31,8 +32,8 @@ export default async function DecisionPassportPage({ params }: PageProps) {
       >
         <AppBreadcrumbs
           items={[
-            { label: "Подбор", href: routes.decision },
-            { label: "Паспорт решения" },
+            { label: t("breadcrumbDecision"), href: routes.decision },
+            { label: t("breadcrumbPassport") },
           ]}
         />
         {/* Decorative document fragments from
@@ -62,11 +63,15 @@ export default async function DecisionPassportPage({ params }: PageProps) {
                   REF · {passport.id.slice(0, 8)}
                 </span>
                 <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-                  Создан: {formatDateTime(passport.generated_at, uiLocale)}
+                  {t("created", {
+                    date: formatDateTime(passport.generated_at, uiLocale),
+                  })}
                 </span>
                 {passport.expires_at && (
                   <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-                    Истекает: {formatDateTime(passport.expires_at, uiLocale)}
+                    {t("expires", {
+                      date: formatDateTime(passport.expires_at, uiLocale),
+                    })}
                   </span>
                 )}
                 <Badge variant="trust">{passport.status}</Badge>
@@ -99,11 +104,13 @@ export default async function DecisionPassportPage({ params }: PageProps) {
             interactive={false}
             className="flex flex-col gap-3"
           >
-            <h2 className="font-display text-lg font-semibold">Методология</h2>
+            <h2 className="font-display text-lg font-semibold">
+              {t("methodology")}
+            </h2>
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                  Версия движка
+                  {t("engineVersion")}
                 </dt>
                 <dd className="text-c2 text-sm">
                   {passport.methodology_snapshot.decision_engine_version}
@@ -111,7 +118,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
               </div>
               <div>
                 <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                  Сценарий
+                  {t("scenario")}
                 </dt>
                 <dd className="text-c2 text-sm">
                   {passport.methodology_snapshot.scenario_slug}
@@ -120,7 +127,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
               {passport.methodology_snapshot.persona_slug && (
                 <div>
                   <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                    Персона
+                    {t("persona")}
                   </dt>
                   <dd className="text-c2 text-sm">
                     {passport.methodology_snapshot.persona_slug}
@@ -130,7 +137,7 @@ export default async function DecisionPassportPage({ params }: PageProps) {
               {passport.methodology_snapshot.origin_country_slug && (
                 <div>
                   <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                    Страна отправления
+                    {t("originCountry")}
                   </dt>
                   <dd className="text-c2 text-sm">
                     {passport.methodology_snapshot.origin_country_slug}
@@ -139,17 +146,17 @@ export default async function DecisionPassportPage({ params }: PageProps) {
               )}
               <div>
                 <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                  Кастомные веса
+                  {t("customWeights")}
                 </dt>
                 <dd className="text-c2 text-sm">
                   {passport.methodology_snapshot.custom_weights_applied
-                    ? "Да"
-                    : "Нет"}
+                    ? t("yes")
+                    : t("no")}
                 </dd>
               </div>
               <div>
                 <dt className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-                  Режим ранжирования
+                  {t("rankingMode")}
                 </dt>
                 <dd className="text-c2 text-sm">
                   {passport.methodology_snapshot.ranking_policy}
@@ -170,19 +177,19 @@ export default async function DecisionPassportPage({ params }: PageProps) {
         <header className="flex flex-col gap-3">
           <Kicker>Decision Passport</Kicker>
           <h1 className="font-display text-3xl font-bold">
-            Decision Passport недоступен
+            {t("passportUnavailable")}
           </h1>
         </header>
         <ErrorState
           error={errProp}
           backHref={getPathname({ href: "/decision", locale })}
-          backLabel="Назад к подбору"
+          backLabel={t("backToDecision")}
         />
         <Link
           href="/decision"
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Запустить новый подбор
+          {t("runNewDecision")}
         </Link>
       </div>
     );

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "@country-decision-atlas/ui";
 import {
   DECISION_CRITERIA_ORDER,
@@ -17,6 +18,7 @@ export function DecisionWeightSliders({
   onChange,
   onReset,
 }: DecisionWeightSlidersProps) {
+  const t = useTranslations("decisionPersonalization");
   const sum = DECISION_CRITERIA_ORDER.reduce(
     (total, criterion) => total + weights[criterion],
     0,
@@ -25,13 +27,10 @@ export function DecisionWeightSliders({
   return (
     <details data-testid="decision-weights-panel">
       <summary className="font-mono text-c3 hover:text-gold cursor-pointer text-[10px] tracking-[0.15em] uppercase transition-colors duration-300">
-        Настроить приоритеты
+        {t("configureTitle")}
       </summary>
       <div className="mt-4 flex flex-col gap-5">
-        <p className="text-c4 text-xs">
-          Приоритеты влияют только на текущий расчёт и не меняют базовую
-          методологию.
-        </p>
+        <p className="text-c4 text-xs">{t("configureHint")}</p>
         {DECISION_CRITERIA_ORDER.map((criterion) => (
           <DecisionWeightSlider
             key={criterion}
@@ -46,7 +45,7 @@ export function DecisionWeightSliders({
           onClick={onReset}
           data-testid="decision-weights-reset"
         >
-          Сбросить
+          {t("reset")}
         </Button>
       </div>
     </details>

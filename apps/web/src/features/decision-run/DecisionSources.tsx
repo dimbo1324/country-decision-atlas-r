@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@country-decision-atlas/ui";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -12,10 +13,9 @@ type DecisionSourcesProps = {
 };
 
 export function DecisionSources({ sources }: DecisionSourcesProps) {
+  const t = useTranslations("decisionRun");
   if (sources.length === 0) {
-    return (
-      <EmptyState message="К этому результату источники не прикреплены." />
-    );
+    return <EmptyState message={t("noSourcesAttached")} />;
   }
 
   return (
@@ -46,7 +46,7 @@ export function DecisionSources({ sources }: DecisionSourcesProps) {
             rel="noreferrer"
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Открыть источник <ArrowExternal />
+            {t("openSource")} <ArrowExternal />
           </a>
         </div>
       ))}

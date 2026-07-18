@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { DecisionRunResponse } from "../../shared/api/decision";
@@ -25,6 +26,7 @@ type DecisionResultsProps = {
 };
 
 export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
+  const t = useTranslations("decisionResults");
   const {
     scenario,
     origin_country,
@@ -56,36 +58,35 @@ export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
         className="sr-only"
       >
         {winner
-          ? `Результаты обновлены. Рекомендуем: ${winner.country.name}.`
-          : "Результаты обновлены."}
+          ? t("resultsUpdatedWithWinner", { name: winner.country.name })
+          : t("resultsUpdated")}
       </p>
 
       {isFallback && (
         <p className="border-terra2/60 text-terra3 border px-4 py-3 text-sm">
-          Русский перевод частично отсутствует. Показана английская
-          fallback-версия.
+          {t("fallbackNotice")}
         </p>
       )}
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-c4 text-xs">Сценарий:</span>
+          <span className="text-c4 text-xs">{t("scenario")}</span>
           <strong className="text-c1 text-sm">{scenario.title}</strong>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-c4 text-xs">Отправление:</span>
+          <span className="text-c4 text-xs">{t("origin")}</span>
           <strong className="text-c1 text-sm">
-            {origin_country ? origin_country.name : "Не указано"}
+            {origin_country ? origin_country.name : t("notSpecified")}
           </strong>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-c4 text-xs">Создано:</span>
+          <span className="text-c4 text-xs">{t("created")}</span>
           <span className="text-c3 text-sm">
             {formatDateTime(meta.generated_at, uiLocale)}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-c4 text-xs">Перевод:</span>
+          <span className="text-c4 text-xs">{t("translation")}</span>
           <Badge variant="default">{locale.translation_status}</Badge>
         </div>
       </div>
@@ -96,13 +97,11 @@ export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
           data-testid="decision-persona-meta"
         >
           <div className="flex items-center gap-2">
-            <span className="text-c4 text-xs">
-              Рейтинг адаптирован под профиль:
-            </span>
+            <span className="text-c4 text-xs">{t("adaptedForProfile")}</span>
             <strong className="text-c1 text-sm">{applied_persona.name}</strong>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-c4 text-xs">Режим ранжирования:</span>
+            <span className="text-c4 text-xs">{t("rankingMode")}</span>
             <Badge variant="default">{ranking_mode}</Badge>
           </div>
         </div>
@@ -117,7 +116,7 @@ export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
             interactive={false}
             className="flex flex-col gap-2"
           >
-            <Kicker>Рекомендуемый вариант</Kicker>
+            <Kicker>{t("recommendedOption")}</Kicker>
             <div className="flex items-baseline justify-between gap-3">
               <span className="font-display text-2xl font-bold">
                 {winner.country.name}
@@ -151,12 +150,12 @@ export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
       )}
 
       {results.length === 0 ? (
-        <EmptyState message="Результаты подбора не получены." />
+        <EmptyState message={t("noResults")} />
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="font-display text-lg font-semibold">
-              Полный рейтинг
+              {t("fullRanking")}
             </h3>
             {results.length >= 2 && (
               <Link
@@ -167,7 +166,9 @@ export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
                 className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
                 data-testid="compare-top-results-link"
               >
-                Сравнить топ-{Math.min(3, results.length)} бок-о-бок{" "}
+                {t("compareTopSideBySide", {
+                  count: Math.min(3, results.length),
+                })}{" "}
                 <ArrowNext />
               </Link>
             )}

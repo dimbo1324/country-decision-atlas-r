@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Accordion,
   Badge,
@@ -8,6 +9,7 @@ import { Link } from "../../i18n/navigation";
 import type { DecisionRunResponse } from "../../shared/api/decision";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatScore } from "../../shared/lib/format";
@@ -26,28 +28,76 @@ type DecisionResultCardProps = {
   originContextStatus?: OriginContextStatus;
 };
 
-const COMPATIBILITY_LABELS: Record<string, string> = {
-  favourable: "Благоприятно",
-  mixed: "Смешанно",
-  restrictive: "Ограничено",
-  unknown: "Неизвестно",
+const COMPATIBILITY_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    favourable: "Favourable",
+    mixed: "Mixed",
+    restrictive: "Restrictive",
+    unknown: "Unknown",
+  },
+  ru: {
+    favourable: "Благоприятно",
+    mixed: "Смешанно",
+    restrictive: "Ограничено",
+    unknown: "Неизвестно",
+  },
+  es: {
+    favourable: "Favorable",
+    mixed: "Mixto",
+    restrictive: "Restrictivo",
+    unknown: "Desconocido",
+  },
 };
 
-const FRESHNESS_LABELS: Record<string, string> = {
-  fresh: "свежие",
-  current: "актуальные",
-  stale: "устаревшие",
-  unknown: "неизвестно",
+const FRESHNESS_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    fresh: "fresh",
+    current: "current",
+    stale: "stale",
+    unknown: "unknown",
+  },
+  ru: {
+    fresh: "свежие",
+    current: "актуальные",
+    stale: "устаревшие",
+    unknown: "неизвестно",
+  },
+  es: {
+    fresh: "actualizados",
+    current: "vigentes",
+    stale: "desactualizados",
+    unknown: "desconocido",
+  },
 };
 
-const NOTE_TYPE_LABELS: Record<string, string> = {
-  visa: "Виза",
-  banking: "Банки",
-  tax: "Налоги",
-  flight_logistics: "Логистика перелётов",
-  timezone: "Часовой пояс",
-  language: "Язык",
-  migration_restriction: "Миграционные ограничения",
+const NOTE_TYPE_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    visa: "Visa",
+    banking: "Banking",
+    tax: "Taxes",
+    flight_logistics: "Flight logistics",
+    timezone: "Time zone",
+    language: "Language",
+    migration_restriction: "Migration restrictions",
+  },
+  ru: {
+    visa: "Виза",
+    banking: "Банки",
+    tax: "Налоги",
+    flight_logistics: "Логистика перелётов",
+    timezone: "Часовой пояс",
+    language: "Язык",
+    migration_restriction: "Миграционные ограничения",
+  },
+  es: {
+    visa: "Visado",
+    banking: "Banca",
+    tax: "Impuestos",
+    flight_logistics: "Logística de vuelos",
+    timezone: "Zona horaria",
+    language: "Idioma",
+    migration_restriction: "Restricciones migratorias",
+  },
 };
 
 function OriginAwareContext({
@@ -57,6 +107,8 @@ function OriginAwareContext({
   result: DecisionCountryResult;
   originContextStatus?: OriginContextStatus;
 }) {
+  const t = useTranslations("decisionRun");
+  const locale = useAppLocale();
   return (
     <div data-testid="origin-aware-context">
       {!originContextStatus || originContextStatus === "not_requested" ? (
@@ -64,7 +116,7 @@ function OriginAwareContext({
           className="text-c4 text-sm"
           data-testid="origin-context-not-requested"
         >
-          Укажите страну отправления, чтобы увидеть контекст маршрута.
+          {t("specifyOrigin")}
         </p>
       ) : result.country_pair_context ? (
         <div
@@ -73,7 +125,7 @@ function OriginAwareContext({
         >
           <div className="flex flex-wrap gap-2">
             <Badge variant="default">
-              {COMPATIBILITY_LABELS[
+              {COMPATIBILITY_LABELS[locale][
                 result.country_pair_context.compatibility_label
               ] ?? result.country_pair_context.compatibility_label}
             </Badge>
@@ -81,9 +133,12 @@ function OriginAwareContext({
               confidence={result.country_pair_context.confidence}
             />
             <Badge variant="default">
-              Данные:{" "}
-              {FRESHNESS_LABELS[result.country_pair_context.freshness_status] ??
-                result.country_pair_context.freshness_status}
+              {t("dataLabel", {
+                value:
+                  FRESHNESS_LABELS[locale][
+                    result.country_pair_context.freshness_status
+                  ] ?? result.country_pair_context.freshness_status,
+              })}
             </Badge>
           </div>
           {result.country_pair_context.practical_summary && (
@@ -96,7 +151,7 @@ function OriginAwareContext({
               {(result.country_pair_context.key_notes ?? []).map((note) => (
                 <li key={note.type}>
                   <strong className="text-c2">
-                    {NOTE_TYPE_LABELS[note.type] ?? note.type}:
+                    {NOTE_TYPE_LABELS[locale][note.type] ?? note.type}:
                   </strong>{" "}
                   {note.message}
                 </li>
@@ -105,8 +160,9 @@ function OriginAwareContext({
           )}
           {(result.country_pair_context.source_ids ?? []).length > 0 && (
             <p className="text-c4 text-xs">
-              Источников:{" "}
-              {(result.country_pair_context.source_ids ?? []).length}
+              {t("sourcesCount", {
+                count: (result.country_pair_context.source_ids ?? []).length,
+              })}
             </p>
           )}
         </div>
@@ -115,7 +171,7 @@ function OriginAwareContext({
           className="text-c4 text-sm"
           data-testid="origin-pair-context-empty"
         >
-          Пока нет данных по этому маршруту.
+          {t("noRouteDataYet")}
         </p>
       )}
     </div>
@@ -127,6 +183,7 @@ export function DecisionResultCard({
   locale,
   originContextStatus,
 }: DecisionResultCardProps) {
+  const t = useTranslations("decisionRun");
   const [topStrength, ...restStrengths] = result.strengths;
 
   // Route context is deliberately accordion item 0 -- Accordion opens
@@ -136,7 +193,7 @@ export function DecisionResultCard({
   // any interaction.
   const accordionItems: AccordionItem[] = [
     {
-      title: "Контекст маршрута",
+      title: t("routeContext"),
       content: (
         <OriginAwareContext
           result={result}
@@ -148,7 +205,7 @@ export function DecisionResultCard({
 
   if (restStrengths.length > 0) {
     accordionItems.push({
-      title: "Остальные сильные стороны",
+      title: t("otherStrengths"),
       content: (
         <ul className="flex flex-col gap-1">
           {restStrengths.map((s) => (
@@ -161,7 +218,7 @@ export function DecisionResultCard({
 
   if (result.weaknesses.length > 0) {
     accordionItems.push({
-      title: "Слабые стороны",
+      title: t("weaknesses"),
       content: (
         <ul className="flex flex-col gap-1">
           {result.weaknesses.map((w) => (
@@ -174,7 +231,7 @@ export function DecisionResultCard({
 
   if (result.risk_warnings.length > 0) {
     accordionItems.push({
-      title: "Риски",
+      title: t("risks"),
       meta: String(result.risk_warnings.length),
       content: <DecisionWarnings warnings={result.risk_warnings} />,
     });
@@ -182,13 +239,13 @@ export function DecisionResultCard({
 
   if (result.breakdown.length > 0) {
     accordionItems.push({
-      title: "Разбор оценки",
+      title: t("scoreBreakdown"),
       content: <DecisionBreakdown breakdown={result.breakdown} />,
     });
   }
 
   accordionItems.push({
-    title: "Источники",
+    title: t("sources"),
     content: <DecisionSources sources={result.sources} />,
   });
 
@@ -201,7 +258,7 @@ export function DecisionResultCard({
         <div className="flex flex-wrap items-center gap-2">
           <span
             className="font-display text-gold3 text-xl font-bold"
-            aria-label={`Место ${result.rank}`}
+            aria-label={t("rank", { rank: result.rank })}
           >
             #{result.rank}
           </span>
@@ -236,11 +293,12 @@ export function DecisionResultCard({
             data-testid="persona-adjusted-score"
           >
             <span className="text-c3">
-              Базовая оценка: {formatScore(result.score)}
+              {t("baseScore", { value: formatScore(result.score) })}
             </span>
             <span className="text-c2 font-semibold">
-              Оценка с учетом персоны:{" "}
-              {formatScore(result.persona_adjusted_score)}
+              {t("personaAdjustedScore", {
+                value: formatScore(result.persona_adjusted_score),
+              })}
             </span>
           </div>
         )}
@@ -248,7 +306,7 @@ export function DecisionResultCard({
         {topStrength && (
           <p className="text-sm">
             <span className="font-mono text-sage3 text-[9px] tracking-[0.2em] uppercase">
-              Сильная сторона:{" "}
+              {t("strengthLabel")}{" "}
             </span>
             <span className="text-c2">{topStrength.message}</span>
           </p>
@@ -260,7 +318,7 @@ export function DecisionResultCard({
           href={routes.country(result.country.slug)}
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          Карточка страны <ArrowNext />
+          {t("countryCard")} <ArrowNext />
         </Link>
       </Card>
     </div>

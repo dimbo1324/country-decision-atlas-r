@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsInteger, useQueryState } from "nuqs";
 import {
   AnalysisOverlay,
@@ -49,23 +50,28 @@ import type { AIDecisionIntentResponse } from "../../shared/api/ai";
 
 type RunError = { error?: { code?: string; message?: string } } | string | null;
 
-const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
-  unknown_custom_weight_criterion: "Проверьте значения приоритетов.",
-  custom_weights_incomplete: "Проверьте значения приоритетов.",
-  custom_weight_out_of_range: "Проверьте значения приоритетов.",
-  custom_weight_invalid: "Проверьте значения приоритетов.",
-  custom_weights_sum_zero: "Сумма приоритетов должна быть больше нуля.",
-  decision_personalization_disabled:
-    "Настройка приоритетов временно недоступна.",
-};
-
-const STEP_LABELS = ["Цель", "Откуда", "Приоритеты", "Запуск"] as const;
-const STEP_COUNT = STEP_LABELS.length;
-
 function DecisionFormInner() {
+  const t = useTranslations("decisionRunForm");
   const locale = useAppLocale();
   const apiLocale = toApiLocale(locale);
   const trackAnalyticsEvent = useAnalyticsEvent();
+
+  const DECISION_PERSONALIZATION_ERROR_MESSAGES: Record<string, string> = {
+    unknown_custom_weight_criterion: t("checkPriorityValues"),
+    custom_weights_incomplete: t("checkPriorityValues"),
+    custom_weight_out_of_range: t("checkPriorityValues"),
+    custom_weight_invalid: t("checkPriorityValues"),
+    custom_weights_sum_zero: t("sumMustBePositive"),
+    decision_personalization_disabled: t("personalizationDisabled"),
+  };
+
+  const STEP_LABELS = [
+    t("stepGoal"),
+    t("stepOrigin"),
+    t("stepPriorities"),
+    t("stepRun"),
+  ] as const;
+  const STEP_COUNT = STEP_LABELS.length;
 
   const { data: countries, isPending: countriesPending } = useQuery(
     allCountriesQuery(apiLocale),
@@ -210,17 +216,17 @@ function DecisionFormInner() {
         setRunError(
           typeof err === "object" && err !== null && "error" in err
             ? (err as { error?: { code?: string; message?: string } })
-            : "Произошла ошибка при запросе",
+            : t("requestError"),
         );
       }
     }
   }
 
   if (countriesPending || scenariosPending) {
-    return <LoadingState message="Загрузка стран и сценариев…" />;
+    return <LoadingState message={t("loadingCountriesScenarios")} />;
   }
   if (!countries || !scenarios) {
-    return <ErrorState error="Не удалось загрузить данные" />;
+    return <ErrorState error={t("loadDataError")} />;
   }
 
   const decisionReadyScenarios = scenarios.items.filter((s) =>
@@ -236,7 +242,7 @@ function DecisionFormInner() {
 
   const resolvedRunError =
     runErrorCode === "decision_score_not_found"
-      ? "Этот сценарий пока недоступен для выбранных стран. Пожалуйста, выберите один из MVP-сценариев подбора."
+      ? t("scenarioNotAvailable")
       : runErrorCode && runErrorCode in DECISION_PERSONALIZATION_ERROR_MESSAGES
         ? DECISION_PERSONALIZATION_ERROR_MESSAGES[runErrorCode]
         : runError;
@@ -283,7 +289,7 @@ function DecisionFormInner() {
               aria-controls); plain buttons with aria-current="step" are
               the correct wizard semantics. */}
           <nav
-            aria-label="Шаги подбора"
+            aria-label={t("stepsNavLabel")}
             className="flex flex-wrap items-center gap-2"
           >
             {STEP_LABELS.map((label, index) => {
@@ -317,13 +323,13 @@ function DecisionFormInner() {
               className="flex flex-col gap-2"
               data-testid="decision-step-panel-1"
             >
-              <FieldLabel>Сценарий</FieldLabel>
+              <FieldLabel>{t("scenario")}</FieldLabel>
               {noScenariosAvailable ? (
                 <p
                   role="alert"
                   className="text-terra3 text-sm"
                 >
-                  Готовые сценарии подбора пока отсутствуют.
+                  {t("noReadyScenarios")}
                 </p>
               ) : (
                 <div data-testid="decision-scenario-select">
@@ -331,7 +337,7 @@ function DecisionFormInner() {
                     name="decision-scenario-select"
                     value={scenarioSlug}
                     onChange={setScenarioSlug}
-                    ariaLabel="Сценарий"
+                    ariaLabel={t("scenario")}
                     options={decisionReadyScenarios.map((s) => ({
                       value: s.slug,
                       label: s.name,
@@ -349,7 +355,7 @@ function DecisionFormInner() {
             >
               <Field>
                 <FieldLabel htmlFor="origin-select">
-                  Страна отправления
+                  {t("originCountry")}
                 </FieldLabel>
                 <select
                   id="origin-select"
@@ -358,7 +364,7 @@ function DecisionFormInner() {
                   onChange={(e) => setOriginCountrySlug(e.target.value)}
                   data-testid="origin-select"
                 >
-                  <option value="">Не указано</option>
+                  <option value="">{t("notSpecified")}</option>
                   {countries.items.map((c) => (
                     <option
                       key={c.slug}
@@ -368,14 +374,11 @@ function DecisionFormInner() {
                     </option>
                   ))}
                 </select>
-                <p className="text-c4 text-xs">
-                  Страна отправления влияет только на контекст, не на базовый
-                  рейтинг
-                </p>
+                <p className="text-c4 text-xs">{t("originCountryHint")}</p>
               </Field>
 
               <Field>
-                <FieldLabel>Страны-кандидаты</FieldLabel>
+                <FieldLabel>{t("candidateCountries")}</FieldLabel>
                 <div className="flex flex-col gap-2">
                   {countries.items.map((c) => (
                     <label
@@ -397,7 +400,7 @@ function DecisionFormInner() {
                     role="alert"
                     className="text-terra3 text-sm"
                   >
-                    Выберите хотя бы одну страну-кандидат.
+                    {t("selectAtLeastOneCandidate")}
                   </p>
                 )}
               </Field>
@@ -410,7 +413,7 @@ function DecisionFormInner() {
               data-testid="decision-step-panel-3"
             >
               <Field>
-                <FieldLabel htmlFor="persona-select">Персона</FieldLabel>
+                <FieldLabel htmlFor="persona-select">{t("persona")}</FieldLabel>
                 <select
                   id="persona-select"
                   className="border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none"
@@ -428,7 +431,7 @@ function DecisionFormInner() {
                   }}
                   data-testid="persona-selector"
                 >
-                  <option value="">Без персонализации</option>
+                  <option value="">{t("noPersonalization")}</option>
                   {(personas?.items ?? []).map((persona) => (
                     <option
                       key={persona.slug}
@@ -438,9 +441,7 @@ function DecisionFormInner() {
                     </option>
                   ))}
                 </select>
-                <p className="text-c4 text-xs">
-                  Рейтинг будет адаптирован под выбранный профиль.
-                </p>
+                <p className="text-c4 text-xs">{t("personaHint")}</p>
               </Field>
 
               <DecisionWeightSliders
@@ -458,35 +459,35 @@ function DecisionFormInner() {
             >
               <dl className="border-warm flex flex-col gap-2 border p-4 text-sm">
                 <div className="flex justify-between gap-2">
-                  <dt className="text-c4">Сценарий</dt>
+                  <dt className="text-c4">{t("scenario")}</dt>
                   <dd className="text-c1 text-right">
                     {selectedScenarioName ?? "—"}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-c4">Отправление</dt>
+                  <dt className="text-c4">{t("origin")}</dt>
                   <dd className="text-c1 text-right">
-                    {selectedOriginName ?? "Не указано"}
+                    {selectedOriginName ?? t("notSpecified")}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-c4">Кандидаты</dt>
+                  <dt className="text-c4">{t("candidates")}</dt>
                   <dd className="text-c1 text-right">
                     {candidateCountrySlugs.length > 0
                       ? candidateCountrySlugs.length
-                      : "не выбраны"}
+                      : t("noneSelected")}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-c4">Персона</dt>
+                  <dt className="text-c4">{t("persona")}</dt>
                   <dd className="text-c1 text-right">
-                    {selectedPersonaName ?? "Без персонализации"}
+                    {selectedPersonaName ?? t("noPersonalization")}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-c4">Приоритеты</dt>
+                  <dt className="text-c4">{t("priorities")}</dt>
                   <dd className="text-c1 text-right">
-                    {personalizationTouched ? "Настроены" : "По умолчанию"}
+                    {personalizationTouched ? t("customized") : t("default")}
                   </dd>
                 </div>
               </dl>
@@ -502,9 +503,7 @@ function DecisionFormInner() {
                 aria-busy={runDecision.isPending}
                 data-testid="decision-run-button"
               >
-                {runDecision.isPending
-                  ? "Выполняется подбор…"
-                  : "Запустить подбор"}
+                {runDecision.isPending ? t("running") : t("runDecision")}
               </Button>
             </div>
           )}
@@ -516,7 +515,7 @@ function DecisionFormInner() {
               disabled={currentStep === 1}
               data-testid="decision-step-prev"
             >
-              Назад
+              {t("back")}
             </Button>
             <Button
               variant="ghost"
@@ -524,7 +523,7 @@ function DecisionFormInner() {
               disabled={currentStep === STEP_COUNT}
               data-testid="decision-step-next"
             >
-              Далее
+              {t("next")}
             </Button>
           </div>
         </div>
@@ -536,9 +535,7 @@ function DecisionFormInner() {
         )}
         {!runDecision.isPending &&
           resolvedRunError === null &&
-          result === null && (
-            <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
-          )}
+          result === null && <EmptyState message={t("emptyPrompt")} />}
         {result !== null && (
           <DecisionResults
             response={result}
@@ -571,9 +568,14 @@ function DecisionFormInner() {
   );
 }
 
+function DecisionFormLoadingFallback() {
+  const t = useTranslations("decisionRunForm");
+  return <LoadingState message={t("loadingForm")} />;
+}
+
 export function DecisionRunForm() {
   return (
-    <Suspense fallback={<LoadingState message="Загрузка формы подбора…" />}>
+    <Suspense fallback={<DecisionFormLoadingFallback />}>
       <DecisionFormInner />
     </Suspense>
   );

@@ -1,3 +1,4 @@
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import {
   DECISION_CRITERIA_LABELS,
   type DecisionCriterion,
@@ -14,12 +15,12 @@ export function DecisionWeightSlider({
   value,
   onChange,
 }: DecisionWeightSliderProps) {
+  const locale = useAppLocale();
+  const label = DECISION_CRITERIA_LABELS[locale][criterion];
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-c2 text-sm">
-          {DECISION_CRITERIA_LABELS[criterion]}
-        </span>
+        <span className="text-c2 text-sm">{label}</span>
         <span className="font-display text-gold3 text-sm font-bold">
           {value}
         </span>
@@ -31,7 +32,7 @@ export function DecisionWeightSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(criterion, Number(e.target.value))}
-        aria-label={DECISION_CRITERIA_LABELS[criterion]}
+        aria-label={label}
         data-testid={`decision-weight-slider-${criterion}`}
         className="accent-gold h-1 w-full cursor-pointer"
       />

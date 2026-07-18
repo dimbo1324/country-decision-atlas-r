@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { EmptyState } from "../../shared/ui/EmptyState";
 
 type Props = {
@@ -5,7 +6,6 @@ type Props = {
 };
 
 export function CiiComparisonEmptyState({ message }: Props) {
-  return (
-    <EmptyState message={message ?? "Визуальное сравнение CII недоступно"} />
-  );
+  const t = useTranslations("ciiComparison");
+  return <EmptyState message={message ?? t("empty")} />;
 }

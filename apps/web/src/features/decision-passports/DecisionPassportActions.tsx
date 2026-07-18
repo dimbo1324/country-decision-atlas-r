@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@country-decision-atlas/ui";
 
 import type { DecisionRunRequest } from "../../shared/api/decision";
@@ -22,6 +23,7 @@ export function DecisionPassportActions({
   decisionRequest,
   locale,
 }: DecisionPassportActionsProps) {
+  const t = useTranslations("decisionPassports");
   const createPassport = useCreateDecisionPassportMutation();
   const [copied, setCopied] = useState(false);
 
@@ -39,7 +41,7 @@ export function DecisionPassportActions({
     createPassport.isError && isApiError(createPassport.error)
       ? createPassport.error.error.message
       : createPassport.isError
-        ? "Не удалось создать Decision Passport. Попробуйте ещё раз."
+        ? t("createError")
         : null;
 
   async function handleCopy() {
@@ -69,12 +71,10 @@ export function DecisionPassportActions({
         onClick={handleCreate}
         disabled={createPassport.isPending}
         aria-busy={createPassport.isPending}
-        aria-label="Создать Decision Passport"
+        aria-label={t("createPassport")}
         data-testid="create-passport-button"
       >
-        {createPassport.isPending
-          ? "Создаём Decision Passport…"
-          : "Создать Decision Passport"}
+        {createPassport.isPending ? t("creatingPassport") : t("createPassport")}
       </Button>
 
       {error && (
@@ -95,7 +95,7 @@ export function DecisionPassportActions({
           <a
             href={fullUrl}
             data-testid="passport-link"
-            aria-label="Открыть Decision Passport"
+            aria-label={t("openPassport")}
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
             {fullUrl}
@@ -103,15 +103,12 @@ export function DecisionPassportActions({
           <Button
             variant="ghost"
             onClick={handleCopy}
-            aria-label="Скопировать ссылку на Decision Passport"
+            aria-label={t("copyPassportLink")}
             data-testid="copy-passport-link"
           >
-            {copied ? "Скопировано" : "Скопировать ссылку"}
+            {copied ? t("copied") : t("copyLink")}
           </Button>
-          <p className="text-c4 text-xs">
-            Decision Passport — это сохранённый снимок результата, а не
-            консультация.
-          </p>
+          <p className="text-c4 text-xs">{t("passportDisclaimer")}</p>
         </div>
       )}
     </div>
