@@ -155,17 +155,32 @@ not silently dropped):
       + 3 new) in `apps/web`; typecheck/lint clean; `pnpm format:check`
       clean after an auto-fix pass.
 
-## 5.2 — Storybook stories + play-tests for new primitives
+## 5.2 — Storybook stories + play-tests for new primitives (done)
 
-- [ ] Confirm/add a story for `Tabs` (packages/ui primitive) using the
-      dossier's tab pattern (5 triggers, controlled value) if no story
-      exists yet for a multi-tab configuration.
-- [ ] Confirm/add a story for `HorizontalPager` (the deck) with a
-      play-test exercising next/prev navigation and asserting `inert` on
-      off-screen slides.
-- [ ] `BoardGrid` already has a story from Stage 3.3 — no action needed,
-      noted for completeness.
-- [ ] Verify: Storybook builds clean, play-tests pass.
+- [+] `Tabs.stories.tsx` already had a `Default` story + play-test (3 tabs,
+      `defaultValue`/uncontrolled) — didn't touch it. Added a new
+      `ControlledFiveTabs` story exercising the pattern `CountryDossier`
+      actually uses (`value`/`onValueChange` controlled externally, 5 tabs
+      matching the real tab labels), with its own play-test clicking
+      through to the last two tabs and asserting content swaps.
+- [+] New `HorizontalPager.stories.tsx` (no prior story existed) — 3-slide
+      controlled deck, play-test asserts the off-screen slide carries
+      `inert` and the active one doesn't, clicks `pager-next` and
+      re-asserts the flip, clicks `pager-prev` and confirms it returns to
+      the original state.
+- [+] `BoardGrid` already has a story from Stage 3.3 — confirmed, no
+      action needed.
+- [+] Verify: `storybook build` compiles clean (both new/changed files
+      show up in the output, no errors). Play-tests aren't wired into any
+      automated runner in this project (`build-storybook` doesn't execute
+      `play`, and there's no `@storybook/test-runner` script) — verified
+      by hand instead: started `storybook dev`, opened each story's
+      `iframe.html?id=...&viewMode=story` directly (bypasses the manager
+      shell), confirmed zero console errors and that the DOM's final state
+      matches each play function's last assertion (dossier tabs on
+      "Сообщество", pager back at slide 1 with slide 2 `inert` again after
+      next+prev) — also re-checked the pre-existing `Tabs` `Default` story
+      still renders correctly after editing its file.
 
 ## 5.3 — First Load JS budget gate
 
