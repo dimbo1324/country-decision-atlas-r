@@ -210,13 +210,27 @@ export function HorizontalPager({
             {" / "}
             {String(slides.length).padStart(2, "0")}
           </span>
-          <div className="flex items-center gap-2">
+          {/* A row of independently-focusable buttons in normal tab
+              order, not an ARIA tablist -- roving tabindex/arrow-key
+              navigation is for widgets where the items are mutually
+              exclusive selections a user steps through (radiogroup,
+              tablist); here each dot just jumps straight to its slide, so
+              Tab-order access to all of them is the correct, simpler
+              pattern (same reasoning as DecisionRunForm's step nav).
+              `role="group"` + `aria-current` give it the grouping context
+              and current-item semantics it was missing. */}
+          <div
+            role="group"
+            aria-label="Слайды колоды"
+            className="flex items-center gap-2"
+          >
             {slides.map((slide, slideIndex) => (
               <button
                 type="button"
                 key={slide.id}
                 onClick={() => onIndexChange(slideIndex)}
                 aria-label={slide.navLabel}
+                aria-current={slideIndex === index ? "true" : undefined}
                 data-testid={`pager-dot-${slide.id}`}
                 className={cn(
                   "h-1.5 rounded-full transition-all duration-300",

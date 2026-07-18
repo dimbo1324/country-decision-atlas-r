@@ -217,18 +217,57 @@ not silently dropped):
       worst-first; validated the edited `scripts.json` and `quality.yml`
       parse as valid JSON/YAML.
 
-## 5.4 — Accessibility hardening
+## 5.4 — Accessibility hardening (done)
 
-- [ ] `HorizontalPager`'s dot/arrow navigation: proper focus management
-      (confirm whether existing dot buttons need roving tabindex, or
-      whether disabled/enabled arrow buttons already give adequate
-      keyboard reachability — read the component before assuming a gap).
-- [ ] `DecisionResults` recompute: `aria-live="polite"` region announcing
-      when results update after a weight/persona change.
-- [ ] Keyboard-only walkthrough of the wizard (Tab/Enter/Arrow) via a
-      live browser check, not assumed from reading code alone.
-- [ ] Verify: no regression in existing a11y-relevant e2e assertions;
-      manual keyboard walkthrough recorded in the final report.
+- [+] `HorizontalPager`'s dot/arrow navigation, re-assessed rather than
+      assumed: the two arrow buttons are plain independent
+      `<button>`s (fine as-is, no group semantics needed for 2 unrelated
+      actions). The dot row, though, had no group context and no
+      current-item semantics — added `role="group"` +
+      `aria-label="Слайды колоды"` on the wrapper and `aria-current`
+      on the active dot. **Did not** add roving tabindex/arrow-key nav to
+      the dots themselves: each dot jumps straight to its own slide (not
+      a mutually-exclusive stepped selection), so independently-tabbable
+      buttons in normal Tab order is the correct simpler pattern — same
+      reasoning as `DecisionRunForm`'s step nav from the Stage 0-2 audit.
+- [+] **Real gap found while assessing the above, fixed instead**:
+      `RadioCards` (`packages/ui`, used by the wizard's scenario picker
+      and `DecisionWizard`) already declared `role="radiogroup"`/
+      `role="radio"`/`aria-checked` but had zero keyboard support behind
+      it — every option was an independent Tab stop, no arrow-key
+      handling at all, the exact kind of half-finished ARIA-widget
+      pattern this stage exists to catch. Implemented proper roving
+      tabindex (only the checked/first option has `tabIndex={0}`, rest
+      `-1`) plus ArrowUp/Down/Left/Right + Home/End moving focus *and*
+      selection together, matching native `<input type="radio">`
+      behavior. This is the redesign's actual "roving tabindex" fix, in
+      the ARIA composite widget that genuinely needed it (not the pager,
+      which didn't).
+- [+] `DecisionResults` recompute: added a `role="status"` (implicit
+      `aria-live="polite"`) screen-reader-only line announcing just the
+      winner's name on every re-render — not `aria-atomic` over the
+      whole results block, which would re-read the entire ranking on
+      every change and be more noise than signal.
+- [+] Keyboard walkthrough, done live in the browser, not assumed from
+      code: `computer`'s synthetic Tab/Enter/Arrow key presses turned out
+      not to reach the page in this environment at all (confirmed with a
+      capture-phase `keydown` listener that never fired for either
+      pressed key) — worked around by dispatching genuine `KeyboardEvent`
+      objects via `element.dispatchEvent(...)` on the real focused
+      element instead, which is what a physical keypress produces from
+      React's perspective, just triggered through JS rather than the
+      automation tool's input layer. Confirmed: pager dot `aria-current`
+      flips on a real click; `RadioCards` ArrowRight moves both focus and
+      `aria-checked`/roving `tabIndex` together across all 5 options, and
+      wraps correctly from the last option back to the first.
+- [+] Verify: typecheck/lint clean (`ui` + `web`); 16 targeted e2e green
+      across the 4 spec files exercising `RadioCards`
+      (decision-ready-scenarios, decision-wizard, scenario-specific-cii,
+      main-flow); full Vitest suite still 77/77; `prettier --write` on
+      `RadioCards.tsx` (not covered by the repo's own `format:check`
+      glob, which excludes `packages/**/*.tsx` — checked directly instead
+      of trusting the script); console clean throughout the browser
+      walkthrough.
 
 ## 5.5 — i18n content-strategy decision
 

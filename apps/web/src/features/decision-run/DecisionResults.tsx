@@ -36,6 +36,21 @@ export function DecisionResults({ response }: DecisionResultsProps) {
       className="flex flex-col gap-6"
       data-testid="decision-results"
     >
+      {/* Screen-reader-only: DecisionResults re-renders in place on every
+          recompute (weight/persona/candidate change), so a sighted user
+          sees the update but nothing tells an AT user new results
+          landed -- role="status" (implicit aria-live="polite") announces
+          just the winner, not the whole results block, to avoid an overly
+          verbose re-read of the entire ranking on every change. */}
+      <p
+        role="status"
+        className="sr-only"
+      >
+        {winner
+          ? `Результаты обновлены. Рекомендуем: ${winner.country.name}.`
+          : "Результаты обновлены."}
+      </p>
+
       {isFallback && (
         <p className="border-terra2/60 text-terra3 border px-4 py-3 text-sm">
           Русский перевод частично отсутствует. Показана английская
