@@ -9,27 +9,32 @@ formatting-only, no behavior changes.
 
 ## Preparation
 
-- [ ] Confirm current drift: `pnpm exec prettier --check "packages/**/*.tsx"`
-      and record the affected file list.
+- [+] Confirmed current drift: `pnpm exec prettier --check "packages/**/*.tsx"`
+      found 25 files with drift (Accordion.stories, BoardGrid, Breadcrumbs,
+      Card.stories, Dialog.stories, Drawer(+stories), ErrorState(+stories),
+      Field(+stories), Icon, LoadingState, MetricCard,
+      ModerationQueue(+stories), Pagination, RadioCards.stories,
+      Select(+stories), Slider, Tabs.stories, Toast.stories, Toggle,
+      Tooltip.stories — all under `packages/ui/src/primitives/`).
 
 ## Implementation
 
-- [ ] Add `.tsx` to the `packages/**/*` glob in `format:prettier` and
-      `format:check` in root `package.json`.
-- [ ] Run `pnpm exec prettier --write` on the newly-covered `packages/**/*.tsx`
-      files to bring them in line. Formatting only — no refactors.
+- [+] Added `.tsx` to the `packages/**/*` glob in `format:prettier` and
+      `format:check` in root `package.json` (`{ts,json}` -> `{ts,tsx,json}`).
+- [+] Ran `pnpm exec prettier --write "packages/**/*.tsx"` to reformat the 25
+      drifted files. Formatting only — no refactors.
 
 ## Verification
 
-- [ ] `pnpm format:check` passes clean.
-- [ ] `packages/ui` typecheck passes.
-- [ ] `packages/ui` lint passes (if a dedicated lint target exists).
-- [ ] `pnpm --filter @country-decision-atlas/web typecheck` and `lint` still
-      pass (sanity check nothing downstream broke).
-- [ ] Diff review: only formatting changes (whitespace/quotes/etc.), no
-      logic/behavior edits.
+- [+] `pnpm format:check` passes clean.
+- [+] `packages/ui` typecheck (`tsc --noEmit`) passes clean.
+- [+] `packages/ui` lint (`eslint .`) passes clean.
+- [+] `apps/web` typecheck and lint pass clean (downstream sanity check).
+- [+] Diff review: all 25 reformatted files are pure prettier re-wrapping
+      (line-width/indentation/quote-style), spot-checked `Slider.tsx` and
+      `Breadcrumbs.tsx` in full — no logic/behavior edits.
 
 ## Completion
 
-- [ ] Checklist filled (`+`/`-`).
-- [ ] Final report delivered to the owner.
+- [+] Checklist filled (`+`/`-`).
+- [+] Final report delivered to the owner.
