@@ -1,1 +1,0 @@
-export { LegalSignalsChartView } from "./LegalSignalsChartView";

@@ -18,25 +18,44 @@ starting any edits:
   by `entities/watchlist/api.ts`'s own client — flagged as a separate
   tech-debt item, not fixed in this wave (unrelated to the redesign).
 
-## Stage 3.1 — Legal signals: fold timeline into a tab
+## Stage 3.1 — Legal signals: fold timeline into a tab (done)
 
-- [ ] Merge `LegalSignalsTimelineView` (year-group feed) and
+- [+] Merged `LegalSignalsTimelineView` (year-group feed) and
       `LegalSignalsChartView` (chart) into one `LegalSignalsRegistryView`
       on `/legal-signals`, tabbed (`Лента` / `Таймлайн`, Radix `Tabs`
-      matching `CountryDossier`'s convention), tab state via nuqs `?tab=`.
-- [ ] Hoist the 5 filter query-states (`country_slug`, `signal_type`,
-      `impact_direction`, `impact_level`, `year`) up one level so both
-      tabs share one filter bar instead of each duplicating it.
-- [ ] Delete `apps/web/src/app/[locale]/legal-signals/timeline/page.tsx`;
-      old URL redirects to `/legal-signals?tab=timeline`.
-- [ ] Fold `features/legal-signals-chart/` into `features/legal-signals-timeline/`
-      (move `adaptTimelineEvents.ts`, delete the now-empty chart feature dir).
-- [ ] Rewrite the 3 pinned tests in `web-mvp-knowledge-transparency.spec.ts`
-      (new URL shape, new testids) plus anything in
-      `web-mvp-legal-signals-timeline.spec.ts` that assumes the old split.
-- [ ] Verify: typecheck/lint, targeted e2e re-run, browser walkthrough
-      (both tabs, filters persist across tab switch, old timeline URL
-      redirects).
+      matching `CountryDossier`'s convention), tab state via nuqs `?tab=`
+      (`feed` default, `timeline`).
+- [+] Hoisted the 5 filter query-states (`country_slug`, `signal_type`,
+      `impact_direction`, `impact_level`, `year`) to the merged view so
+      both tabs share one filter bar and one data fetch instead of each
+      duplicating both.
+- [+] `apps/web/src/app/[locale]/legal-signals/timeline/page.tsx` is now a
+      redirect (`i18n/navigation`'s locale-aware `redirect()`) to
+      `/legal-signals?tab=timeline`, forwarding any filter query params
+      from the old URL so saved filtered links keep their meaning.
+- [+] Folded `features/legal-signals-chart/` into
+      `features/legal-signals-timeline/` (`adaptTimelineEvents.ts` moved
+      via `git mv`, `LegalSignalsChartView.tsx` deleted — its logic lives
+      in the merged view now; the chart primitive itself is unaffected,
+      it lives in `packages/ui`). Removed the now-dead
+      `routes.legalSignalsTimeline` constant from `shared/lib/routes.ts`
+      (nothing in the app links to it anymore — the merged page handles
+      both views via the tab).
+- [+] Rewrote the 3 pinned tests in `web-mvp-knowledge-transparency.spec.ts`
+      for the new URL shape (`?tab=timeline`) and new testids
+      (`legal-signals-view-panel-timeline`); `web-mvp-legal-signals-timeline.spec.ts`
+      and the legal-signals section of `web-mvp-analytical-pages.spec.ts`
+      needed no changes — both already exercised the default `feed` tab
+      through `e2eRoutes.legalSignals(...)`, unaffected by the merge.
+- [+] Verify: typecheck/lint clean; targeted e2e (27 tests across the 3
+      affected + adjacent spec files) — all green; browser walkthrough —
+      both tabs render, filter selection (country) persists across a tab
+      switch via a real click (not raw DOM `.click()`, which silently
+      no-ops on Radix's Tabs — same raw-DOM-simulation pitfall documented
+      earlier in this project for native `<select>`), old
+      `/legal-signals/timeline?country_slug=uruguay` URL redirects to
+      `/legal-signals?tab=timeline&country_slug=uruguay` with the filter
+      preserved, console clean.
 
 ## Stage 3.2 — Legal signals + sources: chip filters
 

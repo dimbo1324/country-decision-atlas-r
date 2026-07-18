@@ -9,7 +9,6 @@ export const routes = {
   decision: "/decision",
   compare: "/compare",
   legalSignals: "/legal-signals",
-  legalSignalsTimeline: "/legal-signals/timeline",
   sources: "/sources",
   methodology: "/methodology",
   methodologyParameters: "/methodology/parameters",

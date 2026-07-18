@@ -3,14 +3,19 @@ import { expectNoAppCrash, expectPageReady } from "./helpers/assertions";
 import { e2eRoutes } from "./helpers/routes";
 
 test.describe("legal signals timeline chart", () => {
-  test("/legal-signals/timeline opens without crash", async ({ page }) => {
+  test("old /legal-signals/timeline URL redirects into the tab", async ({
+    page,
+  }) => {
     await page.goto(e2eRoutes.legalSignalsTimeline({ locale: "ru" }));
     await expectPageReady(page);
-    await expect(page.getByTestId("legal-signals-timeline-page")).toBeVisible();
+    await expect(page).toHaveURL(/\/legal-signals\?tab=timeline/);
+    await expect(
+      page.getByRole("main").getByTestId("legal-signals-view-panel-timeline"),
+    ).toBeVisible();
   });
 
   test("chart or empty state renders", async ({ page }) => {
-    await page.goto(e2eRoutes.legalSignalsTimeline({ locale: "ru" }));
+    await page.goto(e2eRoutes.legalSignals({ tab: "timeline", locale: "ru" }));
     await expectPageReady(page);
     const chart = page.getByTestId("legal-signals-timeline-chart");
     const empty = page.getByText(/по выбранным фильтрам событий не найдено/i);
@@ -18,13 +23,19 @@ test.describe("legal signals timeline chart", () => {
     await expectNoAppCrash(page);
   });
 
-  test("country filter is shared with the registry via query params", async ({
+  test("country filter is shared with the feed via query params", async ({
     page,
   }) => {
     await page.goto(
-      e2eRoutes.legalSignalsTimeline({ country_slug: "russia", locale: "ru" }),
+      e2eRoutes.legalSignals({
+        tab: "timeline",
+        country_slug: "russia",
+        locale: "ru",
+      }),
     );
-    await expect(page.locator("#timeline-country")).toHaveValue("russia");
+    await expect(
+      page.getByRole("main").locator("#timeline-country"),
+    ).toHaveValue("russia");
     await expectNoAppCrash(page);
   });
 });

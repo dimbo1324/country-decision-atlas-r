@@ -1,1 +1,1 @@
-export { LegalSignalsTimelineView } from "./LegalSignalsTimelineView";
+export { LegalSignalsRegistryView } from "./LegalSignalsRegistryView";
