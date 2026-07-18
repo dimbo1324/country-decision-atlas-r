@@ -22,12 +22,12 @@ test.describe("home visual overview", () => {
     });
     await expect(
       page.locator('[data-testid="pager-slide-scenarios"]'),
-    ).toHaveAttribute("aria-hidden", "true");
+    ).toHaveJSProperty("inert", true);
 
     await page.getByTestId("pager-next").click();
     await expect(
       page.locator('[data-testid="pager-slide-scenarios"]'),
-    ).not.toHaveAttribute("aria-hidden", "true");
+    ).toHaveJSProperty("inert", false);
     await expect(
       page.locator('[data-testid="home-scenario-winners"]'),
     ).toBeVisible();
