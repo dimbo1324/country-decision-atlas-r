@@ -1,78 +1,84 @@
-# Task: Total project check + fix errors on the spot (main)
+# Task: Frontend redesign Stage 3 (registries and cabinet)
 
-Owner request (verbatim intent): "теперь сделай тотльную и плную проверку
-самого проекта, скриптов и т.д. ошипки устраняй прямо на месте в ветке main."
-(Do a total/full check of the project and scripts; fix errors directly on
-the spot on the `main` branch.) Working directly on `main`, no new branch,
-per explicit owner instruction.
+Owner-approved plan, continuing directly on `main` (established pattern for
+this whole redesign initiative — stages 0-2 landed there too). Sub-staged
+like stages 1-2, each its own commit, full verification before moving on.
 
-## Full project quality gate
+Scope correction from the original plan, based on a read-only survey before
+starting any edits:
+- Trips and watchlist are **already card grids**, not plain lists — the
+  "card-board" work narrows to (a) extracting the duplicated grid classes
+  into one shared primitive, (b) converting **subscriptions**, the one
+  genuinely plain list, to match.
+- All five domains touched here (legal-signals, sources, trips, watchlist,
+  subscriptions) are **already migrated** to the `entities/*` queryOptions
+  pattern — the plan's "Этап 4 (слой данных)" has no remaining work for
+  this wave.
+- `apps/web/src/shared/api/watchlists.ts` looks like dead code superseded
+  by `entities/watchlist/api.ts`'s own client — flagged as a separate
+  tech-debt item, not fixed in this wave (unrelated to the redesign).
 
-- [+] Ran `python dev_tools_scripts_runner.py full-check` (full gate: static
-      checks, pytest main + `utils/synthetic_data`, `pnpm quality`, Go
-      vet/test, Docker stack + migrations + runtime smokes, Playwright E2E,
-      pre-commit).
-- [+] Result: 80 OK, 1 WARN, 1 FAIL, 1 SKIP, ~11.7 min.
-- [+] WARN: stale `.tmp/full-check` cache dir — confirmed gitignored
-      (`.gitignore` line 199), removed (`rm -rf .tmp/full-check`).
-- [+] FAIL: `go test -race` — `-race requires cgo; enable cgo by setting
-      CGO_ENABLED=1` (no C compiler on this Windows machine). Confirmed via
-      transcript grep this is the exact same, already-known limitation the
-      owner explicitly accepted in an earlier session (real `-race` gate is
-      CI's `ubuntu-latest`). Not a regression — no action taken.
-- [+] `pytest (utils/synthetic_data)` passed (confirms the `arabic-reshaper`
-      dependency fix from earlier in this session still holds).
+## Stage 3.1 — Legal signals: fold timeline into a tab
 
-## Bug found during the gate review and fixed on the spot
+- [ ] Merge `LegalSignalsTimelineView` (year-group feed) and
+      `LegalSignalsChartView` (chart) into one `LegalSignalsRegistryView`
+      on `/legal-signals`, tabbed (`Лента` / `Таймлайн`, Radix `Tabs`
+      matching `CountryDossier`'s convention), tab state via nuqs `?tab=`.
+- [ ] Hoist the 5 filter query-states (`country_slug`, `signal_type`,
+      `impact_direction`, `impact_level`, `year`) up one level so both
+      tabs share one filter bar instead of each duplicating it.
+- [ ] Delete `apps/web/src/app/[locale]/legal-signals/timeline/page.tsx`;
+      old URL redirects to `/legal-signals?tab=timeline`.
+- [ ] Fold `features/legal-signals-chart/` into `features/legal-signals-timeline/`
+      (move `adaptTimelineEvents.ts`, delete the now-empty chart feature dir).
+- [ ] Rewrite the 3 pinned tests in `web-mvp-knowledge-transparency.spec.ts`
+      (new URL shape, new testids) plus anything in
+      `web-mvp-legal-signals-timeline.spec.ts` that assumes the old split.
+- [ ] Verify: typecheck/lint, targeted e2e re-run, browser walkthrough
+      (both tabs, filters persist across tab switch, old timeline URL
+      redirects).
 
-- [+] Revisited the pre-existing, previously-documented-but-deliberately-
-      deferred bug from Stage 2's live verification: `country_fixture_ids()`
-      (Stage 0/1 code) derived `countries.iso2`/`iso3` only from a country's
-      index within its own dataset, not `dataset_id` — every dataset's Nth
-      country got the identical code, so a second dataset loaded without
-      `cleanup-sql`-ing the first always failed with `UniqueViolation` on
-      `countries_iso2_key`.
-- [+] Fixed in `utils/synthetic_data/core/sql_fixture.py`: added
-      `_iso2_letter_permutation()` / `_iso3_suffix_permutation()`, each a
-      `dataset_id`-seeded deterministic shuffle (`hashlib.sha256` ->
-      `random.Random(seed).shuffle`) of the 26 safe iso2 letters / 676 safe
-      iso3 suffixes. `country_fixture_ids()` now indexes into the
-      per-dataset permutation instead of a fixed `chr(ord("A") + index)`
-      mapping. Guarantees zero collision within one dataset; reduces (does
-      not eliminate — `CHAR(2)` only has 26 safe combinations total) cross-
-      dataset collision risk.
-- [+] Tests: extended `test_country_fixture_ids_use_reserved_iso_codes()` to
-      also assert iso3 uniqueness; added
-      `test_different_datasets_usually_get_different_iso_codes()` (explicit
-      regression test for the found bug, seeds 1-20) and
-      `test_country_fixture_ids_iso_codes_are_stable_for_the_same_dataset()`
-      (determinism check). `py -3.12 -m pytest utils/synthetic_data/tests -q`
-      — all tests green. `ruff check`/`format --check` and `mypy` on
-      `utils/synthetic_data` — clean.
-- [+] **Live re-verification against a real stack**: generated two datasets
-      (seeds 5001, 5002), loaded both via `load-sql` back-to-back with NO
-      `cleanup-sql` in between — the exact scenario that previously failed.
-      Both loads succeeded this time.
-- [+] Docker containers and temp test artifacts from the live verification
-      cleaned up afterward.
+## Stage 3.2 — Legal signals + sources: chip filters
 
-## Documentation
+- [ ] New `packages/ui` primitive: `FilterChipGroup` (single-select toggle
+      row, button-based, `aria-checked` + accessible name — not a native
+      `<select>`), Storybook story.
+- [ ] Convert `TimelineFilters` (5 fields) and `SourcesFilters` (3 fields)
+      from `<select>` dropdowns to `FilterChipGroup`.
+- [ ] Update e2e assertions that currently read `.toHaveValue()` on
+      `#timeline-country`/`#src-country` to chip-based assertions
+      (`aria-checked` / accessible name) — touches
+      `web-mvp-analytical-pages.spec.ts`,
+      `web-mvp-legal-signals-timeline.spec.ts`.
+- [ ] Verify: typecheck/lint, targeted e2e, visual check (filter bar at
+      mobile width).
 
-- [+] `utils/synthetic_data/README.md`: "Known limitations" bullet rewritten
-      (bug -> fix -> live re-verification -> honest remaining caveat about
-      the 26-code ceiling); "Guarantees" bullet in the SQL-fixtures section
-      updated to match.
-- [+] `docs/_arch_/SYNTHETIC_DATA_PLAN.md`: Stage 2 status note's
-      "Найден и НЕ исправлен" paragraph rewritten to "Найден и позже
-      исправлен" with the fix approach and re-verification result.
+## Stage 3.3 — Cabinet: shared board grid, subscriptions card conversion
+
+- [ ] New `packages/ui` primitive: `BoardGrid` (the
+      `grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3` pattern
+      duplicated in `TripListView.tsx` and `WatchlistView.tsx`).
+- [ ] Adopt `BoardGrid` in `TripListView.tsx` and `WatchlistView.tsx`
+      (behavior-neutral refactor — same markup, shared primitive).
+- [ ] Convert `SubscriptionsView.tsx`'s plain `border-b` row list to
+      `BoardGrid` cards.
+- [ ] Update `web-mvp-subscriptions.spec.ts` testids/structure as needed
+      (keep `subscriptions-list`/`subscription-item`/
+      `subscription-remove-button` contracts where possible).
+- [ ] Verify: typecheck/lint, targeted e2e, visual check.
+
+## Final verification (after 3.1-3.3 all land)
+
+- [ ] Full Playwright suite green (or isolated-passing flakes only,
+      confirmed by re-running the specific spec alone).
+- [ ] Visual regression suite green (re-shoot baselines once at the end
+      of the whole wave, not per commit).
+- [ ] `packages/ui`/`apps/web` typecheck/lint/build clean.
+- [ ] Contrast + i18n-parity audits still green.
+- [ ] Browser walkthrough of all Stage 3 surfaces.
 
 ## Completion
 
-- [+] Fill this checklist (`+`/`-`).
-- [+] Commit the fix + docs directly on `main` (owner explicitly authorized
-      working on `main` for this task).
-- [ ] Push to `origin/main` — not yet requested separately for this specific
-      commit; will report readiness and let the owner decide, matching the
-      pattern where pushes have been requested explicitly and separately
-      from the "do the work" instruction each time so far this session.
-- [+] Final report (in chat).
+- [ ] Fill this checklist (`+`/`-`).
+- [ ] Commit(s) directly on `main`, each sub-stage its own commit.
+- [ ] Final report.
