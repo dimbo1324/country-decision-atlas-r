@@ -1,175 +1,204 @@
-# Task: Frontend redesign Stage 3 (registries and cabinet)
+# Task: Frontend redesign — Этап 5 (Закрепление / consolidation)
 
-Owner-approved plan, continuing directly on `main` (established pattern for
-this whole redesign initiative — stages 0-2 landed there too). Sub-staged
-like stages 1-2, each its own commit, full verification before moving on.
+Owner-provided plan, §"Этап 5 — Закрепление". Unlike Stages 0-3 (which
+landed directly on `main` by owner instruction for that work), this task
+runs on a dedicated branch (`feat/frontend-redesign-stage-5-consolidation`)
+per explicit owner instruction this session: incremental commits, no
+merge to `main`, no push to `origin/main` — only a push of this branch to
+`origin` at the end.
 
-Scope correction from the original plan, based on a read-only survey before
-starting any edits:
-- Trips and watchlist are **already card grids**, not plain lists — the
-  "card-board" work narrows to (a) extracting the duplicated grid classes
-  into one shared primitive, (b) converting **subscriptions**, the one
-  genuinely plain list, to match.
-- All five domains touched here (legal-signals, sources, trips, watchlist,
-  subscriptions) are **already migrated** to the `entities/*` queryOptions
-  pattern — the plan's "Этап 4 (слой данных)" has no remaining work for
-  this wave.
-- `apps/web/src/shared/api/watchlists.ts` looks like dead code superseded
-  by `entities/watchlist/api.ts`'s own client — flagged as a separate
-  tech-debt item, not fixed in this wave (unrelated to the redesign).
+Scope for this branch, per the owner's "доделай оставшиеся задачи" request
+and the audit from the previous conversation turn:
 
-## Stage 3.1 — Legal signals: fold timeline into a tab (done)
+- Этап 5's five sub-items (component tests, Storybook stories/play-tests,
+  JS budget CI gate, a11y hardening, i18n content-strategy decision).
+- Two small previously-flagged tech-debt items:
+  `.claude/launch.json` missing `APP_ENV=local` on `web-prod`, and dead
+  code `apps/web/src/shared/api/watchlists.ts`.
 
-- [+] Merged `LegalSignalsTimelineView` (year-group feed) and
-      `LegalSignalsChartView` (chart) into one `LegalSignalsRegistryView`
-      on `/legal-signals`, tabbed (`Лента` / `Таймлайн`, Radix `Tabs`
-      matching `CountryDossier`'s convention), tab state via nuqs `?tab=`
-      (`feed` default, `timeline`).
-- [+] Hoisted the 5 filter query-states (`country_slug`, `signal_type`,
-      `impact_direction`, `impact_level`, `year`) to the merged view so
-      both tabs share one filter bar and one data fetch instead of each
-      duplicating both.
-- [+] `apps/web/src/app/[locale]/legal-signals/timeline/page.tsx` is now a
-      redirect (`i18n/navigation`'s locale-aware `redirect()`) to
-      `/legal-signals?tab=timeline`, forwarding any filter query params
-      from the old URL so saved filtered links keep their meaning.
-- [+] Folded `features/legal-signals-chart/` into
-      `features/legal-signals-timeline/` (`adaptTimelineEvents.ts` moved
-      via `git mv`, `LegalSignalsChartView.tsx` deleted — its logic lives
-      in the merged view now; the chart primitive itself is unaffected,
-      it lives in `packages/ui`). Removed the now-dead
-      `routes.legalSignalsTimeline` constant from `shared/lib/routes.ts`
-      (nothing in the app links to it anymore — the merged page handles
-      both views via the tab).
-- [+] Rewrote the 3 pinned tests in `web-mvp-knowledge-transparency.spec.ts`
-      for the new URL shape (`?tab=timeline`) and new testids
-      (`legal-signals-view-panel-timeline`); `web-mvp-legal-signals-timeline.spec.ts`
-      and the legal-signals section of `web-mvp-analytical-pages.spec.ts`
-      needed no changes — both already exercised the default `feed` tab
-      through `e2eRoutes.legalSignals(...)`, unaffected by the merge.
-- [+] Verify: typecheck/lint clean; targeted e2e (27 tests across the 3
-      affected + adjacent spec files) — all green; browser walkthrough —
-      both tabs render, filter selection (country) persists across a tab
-      switch via a real click (not raw DOM `.click()`, which silently
-      no-ops on Radix's Tabs — same raw-DOM-simulation pitfall documented
-      earlier in this project for native `<select>`), old
-      `/legal-signals/timeline?country_slug=uruguay` URL redirects to
-      `/legal-signals?tab=timeline&country_slug=uruguay` with the filter
-      preserved, console clean.
+Explicitly OUT of scope for this branch (confirmed again before starting,
+not silently dropped):
 
-## Stage 3.2 — Legal signals + sources: chip filters (done)
+- Catalog (Stage 1.2) CII ring / drift trend arrow — blocked on a backend
+  contract gap (`cii_score`/`country_drift` not on the catalog list
+  endpoint's response schema); a schema + repository + service change,
+  not a "consolidation" task. Left as backend follow-up per Stage 1.2's
+  own documented decision.
+- Catalog sticky filter/sort panel — blocked on there being no filter/sort
+  UI on the catalog page at all yet; building one from scratch is a
+  materially larger, different task than "make it sticky". Left as its
+  own follow-up per Stage 1.2's own documented decision.
 
-- [+] New `packages/ui` primitive: `FilterChipGroup` (single-select toggle
-      row, real `role="radio"` buttons — the visible label text is the
-      accessible name, not a styled `<select>`), Storybook story.
-- [+] Converted `TimelineFilters` (5 fields: country/signal-type/
-      impact-direction/impact-level/year) and `SourcesFilters` (3 fields:
-      country/type/confidence) from `<select>` dropdowns to
-      `FilterChipGroup`. Bonus fix found while converting: source-type
-      chips (`government`/`news`/`academic`/…) and confidence chips
-      previously showed raw English/lowercase values in the `<select>`
-      options (unlike `TimelineFilters`, which already had Russian
-      labels) — added a `SOURCE_TYPE_LABELS` map and reused the existing
-      `confidenceLabelRu()` export so both filter bars are consistently
-      Russian.
-- [+] Updated e2e assertions that read `.toHaveValue()` on
-      `#timeline-country`/`#src-country` to chip-based assertions
-      (`getByTestId("<name>-chip-<value>")` +
-      `toHaveAttribute("aria-checked", "true")`) — touched
-      `web-mvp-analytical-pages.spec.ts` (2 assertions),
-      `web-mvp-legal-signals-timeline.spec.ts` (1),
-      `web-mvp-knowledge-transparency.spec.ts` (1, already rewritten in
-      3.1, needed a second pass here for the chip change).
-- [+] Verify: typecheck/lint clean (web+ui); 27 targeted e2e green after
-      diagnosing a false alarm — the first run showed 25/27 failing
-      including completely unrelated pages (glossary, methodology,
-      data-quality), traced to a stale `next start` process still bound
-      to port 3000 from Stage 3.1's browser walkthrough serving
-      mismatched chunks against the just-rebuilt `.next` output, not a
-      code regression; killing that process and re-running gave a clean
-      27/27. Browser walkthrough: chips render with correct Russian
-      labels, a real click (via the `computer` tool, not raw JS
-      `.click()`) flips `aria-checked` and updates the URL query param,
-      no horizontal overflow or wrapping issues at 375px, console clean
-      on both `/sources` and `/legal-signals`.
+## Pre-flight (verified, not assumed)
 
-## Stage 3.3 — Cabinet: shared board grid, subscriptions card conversion (done)
+- [+] `apps/web` has Vitest + jsdom, but **no** `@testing-library/react`
+      anywhere in the repo (checked root/`apps/web`/`packages/ui`
+      `package.json`s) and only one existing `.test.tsx` file
+      (`shared/ui/semantic-labels.test.tsx`), which is a plain
+      function-level test despite the extension — no actual component
+      render exists yet. `packages/ui` has `msw`/`msw-storybook-addon`
+      for Storybook only, no vitest-level MSW handler setup anywhere.
+      Adding `@testing-library/react` (+ `@testing-library/jest-dom`,
+      `@testing-library/user-event`) to `apps/web` is therefore a new,
+      justified dependency: it's what the owner's own plan asks for by
+      name, actively maintained, industry-standard, and doesn't duplicate
+      anything already installed.
+- [+] `CountryDossier` receives `card` as an already-resolved prop (no
+      internal fetch) and imports its 17 sections' heavy feature blocks
+      (`CommunityCountryBlock`, `TrustSurfaceBlock`, etc.) as named
+      imports — mockable via `vi.mock` so the component test can target
+      tab-switching/URL-sync/`DossierRail` behavior without needing MSW
+      handlers for 17 unrelated domains. `useFeatureEnabled` reads a
+      plain React Context (no TanStack Query) — mocked directly via
+      `vi.mock` on `FeatureProvider`, simpler than wrapping a real
+      provider and mocking its underlying fetch.
+- [+] `HomeDeck` also receives all panel data as already-resolved props
+      (no internal fetch) and imports its 5 panel components by name —
+      same `vi.mock` strategy. Its only runtime dependencies needing a
+      jsdom shim are `useMediaQuery`/`useReducedMotion`, both thin
+      `window.matchMedia` wrappers.
+- [+] `DecisionRunForm` is the one case needing real MSW: it calls
+      `allCountriesQuery`/`scenariosQuery` (2 real endpoints) to populate
+      its two `<select>`s. A real MSW-backed test is worth it here since
+      the actual multi-step interaction (RHF + step navigation) is what
+      needs covering, not something to mock away.
+- [+] Stage 13 stream 3 already wired `@next/bundle-analyzer` behind
+      `ANALYZE=true` for **manual, local-only** audits — confirmed via
+      `git show b9d924d`, no CI gate exists today. `full_check.py`'s
+      local profiles (`quick`/`backend`/`frontend`/`docker`/`full`/`ci`)
+      **do not run `next build` at all** in any profile (checked
+      `should_run_phase`'s `profile_phases` dict) — only
+      `.github/workflows/quality.yml`'s dedicated `frontend` job runs
+      `pnpm build`. Wiring a JS-budget check into `full_check.py` would
+      mean adding a new phase that runs a real Next build locally on
+      every quick/full run — a materially bigger, riskier change to a
+      heavily-relied-on script than this task needs. Chose instead: one
+      new standalone script (invokable on its own, runs its own
+      `next build` and parses the result) plus one new CI step in the
+      existing `frontend` job, right after `Build` — surgical, no changes
+      to `full_check.py`.
+- [+] Current worst First Load JS (fresh `next build`, this branch):
+      recorded in the script's own docstring/constant once measured.
+- [+] `next-intl`'s message catalog (`en.json`/`ru.json`, 90 keys) covers
+      only app chrome (nav, auth forms, footer, search palette,
+      error/not-found) — zero keys for any feature/page content. Country
+      data is localized separately via the backend's
+      `overlay_localized_fields` service. Every UI label added across
+      Stages 0-3 of this redesign (dossier tab names, wizard step names,
+      catalog labels, filter-chip option labels) is a hardcoded Russian
+      string, unaffected by the `/en/` vs `/ru/` URL locale — confirmed
+      by reading `TAB_LABELS`/`STEP_LABELS`/`FilterChipGroup` option
+      arrays directly, not assumed. This matches the project's own
+      existing hard rule (`.ai/project/12-domain-rules.md`: no AI
+      translation without an explicit owner ask) and the whole redesign's
+      de facto pattern to date — documenting it as the accepted decision
+      rather than opening a large, invasive full-migration effort nobody
+      asked for.
 
-- [+] New `packages/ui` primitive: `BoardGrid` (the
-      `grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3` pattern
-      duplicated in `TripListView.tsx` and `WatchlistView.tsx`), forwards
-      `data-testid` and the rest of `<div>`'s props so each caller keeps its
-      own grid testid. Exported from `packages/ui/src/index.ts`, Storybook
-      story added.
-- [+] Adopted `BoardGrid` in `TripListView.tsx` and `WatchlistView.tsx`
-      (behavior-neutral refactor — same markup/testids, just routed through
-      the shared primitive instead of each duplicating the raw grid
-      className).
-- [+] Converted `SubscriptionsView.tsx`'s plain `border-b` row list to
-      `BoardGrid` cards, matching the visual language of the trips/watchlist
-      cards (title, metric-slug badge, "Отписаться" button); the separate
-      `feedItems`/`TimelineList` feed section was left untouched, as scoped.
-- [+] `web-mvp-subscriptions.spec.ts` needed no changes — it only asserts on
-      `subscriptions-list`/`subscription-item`/`subscription-remove-button`
-      testids, all of which the card conversion preserved; verified this by
-      reading the spec before making any edits.
-- [+] Verify: typecheck/lint clean (`ui`+`web`), `pnpm format:check` clean;
-      `next build` clean; 17 targeted e2e green
-      (`web-mvp-trips.spec.ts`/`web-mvp-watchlist.spec.ts`/
-      `web-mvp-subscriptions.spec.ts`) after stopping a stale `web-prod`
-      preview server left over from an earlier stage (same
-      port-3000-reuse pitfall as Stage 3.2, caught before it could cause a
-      false-alarm run this time); browser walkthrough — created a trip and
-      a watchlist entry and a subscription through real UI actions, each
-      landed in a `BoardGrid` with the correct grid className and
-      testid/child count, deleted the subscription and confirmed the empty
-      state returns, no horizontal overflow at 375px, console clean.
+## 5.1 — Component tests for the three new layouts
 
-## Final verification (after 3.1-3.3 all land)
+- [ ] Add `@testing-library/react`, `@testing-library/jest-dom`,
+      `@testing-library/user-event` to `apps/web`'s devDependencies; wire
+      `@testing-library/jest-dom`'s matchers into `vitest.config.ts`'s
+      setup.
+- [ ] `CountryDossier.test.tsx`: mock the 17 sections' heavy feature
+      blocks and `useFeatureEnabled` (forced tabbed layout); assert the 5
+      tabs render, switching tabs shows/hides the right sections, the
+      `tab` URL param syncs, `DossierRail` reflects only the active tab's
+      sections.
+- [ ] `DecisionRunForm.test.tsx`: real MSW mocking of the countries/
+      scenarios endpoints; assert the 4-step flow (labels, forward/back
+      navigation, validation blocking advance, final submit reachable).
+- [ ] `HomeDeck.test.tsx`: mock the 5 panel components; assert
+      pager-next/prev advances the active slide, off-screen slides are
+      `inert`, reduced-motion renders the flat fallback with no pager
+      controls.
+- [ ] Verify: `pnpm --filter web test` (or equivalent vitest invocation)
+      green; typecheck/lint clean.
 
-- [+] Full Playwright suite: 329 passed, 1 flaky (recovered on the
-      built-in retry; re-ran `web-mvp-migration-board.spec.ts` alone and
-      it was clean, confirming a load-related timeout under the 4-worker
-      run, not a regression, exactly the case
-      `playwright.config.ts`'s own comments describe). Along the way
-      found and fixed one genuine regression unrelated to Stage 3 itself:
-      `web-mvp-home-overview.spec.ts` still asserted the old
-      `aria-hidden="true"` attribute on the pager's off-screen slide, but
-      the Stage 0-2 audit had switched `HorizontalPager` to `inert`
-      (dropping `aria-hidden` as redundant) without re-running this spec
-      — updated the assertions to `toHaveJSProperty("inert", ...)`,
-      committed separately from the Stage 3.3 feature commit. Also hit
-      the Stage 3.2-style stale-server pitfall in a new shape: the
-      `/internal/*` ops console is gated behind `APP_ENV=local` in
-      `middleware.ts`, which Playwright's own managed webServer sets but
-      a manually-started `web-prod` preview server (via
-      `.claude/launch.json`, no env override there) does not -- when
-      `reuseExistingServer` picked up my manual server, all 17
-      `/internal/*`-touching tests 404'd/blanked. Fixed by stopping the
-      manual server so Playwright started (and later reused) its own
-      correctly-configured one; not a code change, `.claude/launch.json`
-      flagged separately as tech debt, not touched in this diff.
-- [+] Visual regression suite: 5/5 green, unchanged. None of Stage 3's
-      changed pages (legal-signals, sources, trips, watchlist,
-      subscriptions) are covered by `tests/visual/pages.visual.spec.ts`
-      (only home/catalog/country-dossier/decision-result/passport are),
-      so no baselines needed re-shooting.
-- [+] `packages/ui` typecheck/lint clean; `apps/web` typecheck/lint
-      clean; `next build` clean; `pnpm format:check` clean.
-- [+] Contrast audit: all c1-c4 tokens pass on all bg tokens. i18n-parity:
-      90/90 keys match between `en.json`/`ru.json`. Both unaffected by
-      Stage 3 (no new copy needing translation), re-run to confirm no
-      drift.
-- [+] Browser walkthrough of all Stage 3 surfaces: legal-signals (both
-      tabs, chip filters), sources (chip filters), trips/watchlist/
-      subscriptions (BoardGrid cards, create/toggle/remove flows via
-      real UI actions, not raw DOM events), 375px width on trips with no
-      horizontal overflow, console clean throughout.
+## 5.2 — Storybook stories + play-tests for new primitives
+
+- [ ] Confirm/add a story for `Tabs` (packages/ui primitive) using the
+      dossier's tab pattern (5 triggers, controlled value) if no story
+      exists yet for a multi-tab configuration.
+- [ ] Confirm/add a story for `HorizontalPager` (the deck) with a
+      play-test exercising next/prev navigation and asserting `inert` on
+      off-screen slides.
+- [ ] `BoardGrid` already has a story from Stage 3.3 — no action needed,
+      noted for completeness.
+- [ ] Verify: Storybook builds clean, play-tests pass.
+
+## 5.3 — First Load JS budget gate
+
+- [ ] New script `scripts/dev_tools/check_js_budgets.py`: runs
+      `next build` for `apps/web` (or accepts already-captured output),
+      parses the route table for each route's First Load JS, fails
+      (exit 1) listing every route over a fixed ceiling.
+- [ ] Ceiling = current worst measured route, rounded, +10% margin, per
+      the plan's literal instruction ("текущее +10% как потолок,
+      снижать волнами").
+- [ ] Register in `utils/dev_tools_scripts_runner/config/scripts.json`
+      for discoverability (`--doctor`/listing), but note it is **not**
+      wired into any local `full_check.py` profile (see pre-flight) —
+      it's CI + on-demand only.
+- [ ] New step in `.github/workflows/quality.yml`'s `frontend` job, right
+      after `Build`.
+- [ ] Verify: script correctly fails on an artificially lowered ceiling,
+      passes on the real one.
+
+## 5.4 — Accessibility hardening
+
+- [ ] `HorizontalPager`'s dot/arrow navigation: proper focus management
+      (confirm whether existing dot buttons need roving tabindex, or
+      whether disabled/enabled arrow buttons already give adequate
+      keyboard reachability — read the component before assuming a gap).
+- [ ] `DecisionResults` recompute: `aria-live="polite"` region announcing
+      when results update after a weight/persona change.
+- [ ] Keyboard-only walkthrough of the wizard (Tab/Enter/Arrow) via a
+      live browser check, not assumed from reading code alone.
+- [ ] Verify: no regression in existing a11y-relevant e2e assertions;
+      manual keyboard walkthrough recorded in the final report.
+
+## 5.5 — i18n content-strategy decision
+
+- [ ] Add a new accepted-decision entry (Р-12) to
+      `docs/_arch_/08_Открытые_вопросы.md`: ru-only feature/page-content
+      labels are the accepted pattern; `next-intl` stays scoped to app
+      chrome; full string migration is an explicit "not now", revisitable
+      if the owner asks for true EN-locale parity later.
+
+## Tech debt cleanup
+
+- [ ] `.claude/launch.json`: add `"env": {"APP_ENV": "local"}` to the
+      `web-prod` entry, matching the `api` entry's existing pattern, so a
+      manually-started preview server behaves like Playwright's own
+      managed one (root cause of the `/internal/*` 404s hit during Stage
+      3's final verification).
+- [ ] Remove dead `apps/web/src/shared/api/watchlists.ts` after confirming
+      zero remaining references (grep first, don't assume).
+
+## Final verification
+
+- [ ] Full typecheck/lint (`ui`+`web`), `pnpm format:check`.
+- [ ] `next build` clean, JS-budget script passes against the real
+      ceiling.
+- [ ] New Vitest component tests green; existing Vitest suite unaffected.
+- [ ] Storybook builds clean, new play-tests pass.
+- [ ] Full Playwright e2e suite green (or isolated-passing flakes only,
+      confirmed by re-running the specific spec alone) — a fresh
+      `next start` server, not a reused one with stale env, per the
+      Stage 3 lesson.
+- [ ] Visual regression suite green (only if any covered page's markup
+      changed — check before re-shooting).
+- [ ] Contrast + i18n-parity audits still green.
+- [ ] Browser walkthrough of anything visually touched (pager focus
+      changes, aria-live region).
 
 ## Completion
 
-- [+] Checklist filled (`+`/`-`) for every sub-stage.
-- [+] Commits directly on `main`: 3.1, 3.2, 3.3 each their own commit,
-      plus a separate fix commit for the home-overview regression found
-      during final verification.
-- [+] Final report delivered to the owner.
+- [ ] Fill this checklist (`+`/`-`).
+- [ ] Incremental commits on this branch only, one per sub-item group,
+      no merge to `main`.
+- [ ] Push `feat/frontend-redesign-stage-5-consolidation` to `origin`
+      (not `main`).
+- [ ] Final report.
