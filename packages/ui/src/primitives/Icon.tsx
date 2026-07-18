@@ -9,7 +9,11 @@ interface IconProps {
   className?: string;
 }
 
-export function Icon({ icon: LucideComponent, size = 16, className }: IconProps) {
+export function Icon({
+  icon: LucideComponent,
+  size = 16,
+  className,
+}: IconProps) {
   return (
     <LucideComponent
       width={size}

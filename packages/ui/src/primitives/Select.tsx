@@ -56,7 +56,9 @@ export const SelectContent = forwardRef<
           height={13}
         />
       </SelectPrimitive.ScrollUpButton>
-      <SelectPrimitive.Viewport className="p-1">{children}</SelectPrimitive.Viewport>
+      <SelectPrimitive.Viewport className="p-1">
+        {children}
+      </SelectPrimitive.Viewport>
       <SelectPrimitive.ScrollDownButton className="text-c3 flex items-center justify-center py-1">
         <ChevronDown
           width={13}

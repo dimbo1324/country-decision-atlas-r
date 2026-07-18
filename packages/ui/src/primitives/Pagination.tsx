@@ -10,7 +10,12 @@ interface PaginationProps {
   className?: string;
 }
 
-export function Pagination({ page, pageCount, onPageChange, className }: PaginationProps) {
+export function Pagination({
+  page,
+  pageCount,
+  onPageChange,
+  className,
+}: PaginationProps) {
   if (pageCount <= 1) return null;
 
   return (

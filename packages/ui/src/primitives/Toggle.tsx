@@ -11,7 +11,13 @@ interface ToggleProps {
   accent?: Accent;
 }
 
-export function Toggle({ checked, onChange, label, hint, accent = "gold" }: ToggleProps) {
+export function Toggle({
+  checked,
+  onChange,
+  label,
+  hint,
+  accent = "gold",
+}: ToggleProps) {
   const accentClasses = ACCENTS[accent];
   return (
     <button
@@ -39,7 +45,9 @@ export function Toggle({ checked, onChange, label, hint, accent = "gold" }: Togg
       <span
         className={cn(
           "relative h-5 w-10 shrink-0 border transition-colors duration-300",
-          checked ? cn("border-transparent", accentClasses.bg) : "border-warm-hi bg-transparent",
+          checked
+            ? cn("border-transparent", accentClasses.bg)
+            : "border-warm-hi bg-transparent",
         )}
       >
         <span

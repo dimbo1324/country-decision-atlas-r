@@ -12,7 +12,9 @@ interface FieldProps {
  * Framework-agnostic — pair the control with React Hook Form's `register()`
  * or a Controller render prop; this component only owns the layout/skin. */
 export function Field({ children, className }: FieldProps) {
-  return <div className={cn("flex flex-col gap-1.5", className)}>{children}</div>;
+  return (
+    <div className={cn("flex flex-col gap-1.5", className)}>{children}</div>
+  );
 }
 
 export function FieldLabel({

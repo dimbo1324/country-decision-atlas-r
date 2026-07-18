@@ -21,10 +21,26 @@ export const Interactive: Story = {
             onChange={setValue}
             accent="gold"
             options={[
-              { value: "relocation", label: "Переезд", description: "Полная смена страны проживания" },
-              { value: "residency", label: "ВНЖ/гражданство", description: "Легальный статус без переезда сразу" },
-              { value: "remote", label: "Удалённая работа", description: "Виза цифрового кочевника" },
-              { value: "business", label: "Бизнес", description: "Регистрация и налоговый режим" },
+              {
+                value: "relocation",
+                label: "Переезд",
+                description: "Полная смена страны проживания",
+              },
+              {
+                value: "residency",
+                label: "ВНЖ/гражданство",
+                description: "Легальный статус без переезда сразу",
+              },
+              {
+                value: "remote",
+                label: "Удалённая работа",
+                description: "Виза цифрового кочевника",
+              },
+              {
+                value: "business",
+                label: "Бизнес",
+                description: "Регистрация и налоговый режим",
+              },
             ]}
           />
         </div>

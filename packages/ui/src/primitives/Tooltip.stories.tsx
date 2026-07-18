@@ -1,5 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./Tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./Tooltip";
 import { Icon } from "./Icon";
 import { Info } from "lucide-react";
 
@@ -16,7 +21,11 @@ export const Default: Story = {
         <TooltipTrigger asChild>
           <button
             aria-label="Подробнее"
-            style={{ background: "none", border: "none", color: "var(--color-c2)" }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--color-c2)",
+            }}
           >
             <Icon icon={Info} />
           </button>

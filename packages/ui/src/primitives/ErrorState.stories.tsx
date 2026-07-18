@@ -19,6 +19,7 @@ export const Default: Story = {
 export const BackendDown: Story = {
   args: {
     title: "Backend недоступен",
-    message: "API недоступен. Убедитесь, что backend запущен, и повторите попытку.",
+    message:
+      "API недоступен. Убедитесь, что backend запущен, и повторите попытку.",
   },
 };
