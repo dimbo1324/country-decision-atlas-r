@@ -95,26 +95,65 @@ not silently dropped):
       rather than opening a large, invasive full-migration effort nobody
       asked for.
 
-## 5.1 — Component tests for the three new layouts
+## 5.1 — Component tests for the three new layouts (done)
 
-- [ ] Add `@testing-library/react`, `@testing-library/jest-dom`,
-      `@testing-library/user-event` to `apps/web`'s devDependencies; wire
-      `@testing-library/jest-dom`'s matchers into `vitest.config.ts`'s
-      setup.
-- [ ] `CountryDossier.test.tsx`: mock the 17 sections' heavy feature
-      blocks and `useFeatureEnabled` (forced tabbed layout); assert the 5
-      tabs render, switching tabs shows/hides the right sections, the
-      `tab` URL param syncs, `DossierRail` reflects only the active tab's
-      sections.
-- [ ] `DecisionRunForm.test.tsx`: real MSW mocking of the countries/
-      scenarios endpoints; assert the 4-step flow (labels, forward/back
-      navigation, validation blocking advance, final submit reachable).
-- [ ] `HomeDeck.test.tsx`: mock the 5 panel components; assert
-      pager-next/prev advances the active slide, off-screen slides are
-      `inert`, reduced-motion renders the flat fallback with no pager
-      controls.
-- [ ] Verify: `pnpm --filter web test` (or equivalent vitest invocation)
-      green; typecheck/lint clean.
+- [+] Added `@testing-library/react`, `@testing-library/jest-dom`,
+      `@testing-library/user-event`, `msw` to `apps/web`'s devDependencies;
+      wired `@testing-library/jest-dom/vitest` into a new
+      `apps/web/vitest.setup.ts`, registered via `vitest.config.ts`'s
+      `test.setupFiles`.
+- [+] New shared `apps/web/src/test-utils/render.tsx`
+      (`renderWithProviders`): fresh `QueryClient` per render (retries
+      off), `nuqs/adapters/testing`'s real `withNuqsTestingAdapter`
+      (`hasMemory: true`, not a hand-rolled nuqs mock), wrapped in
+      `NextIntlClientProvider` — needed because `CountryDossier.tsx`
+      itself and `CountryEvidenceSummary` both use `<Link>` from
+      `i18n/navigation`, which throws without an intl context even for
+      components not under test directly.
+- [+] Explicit `afterEach(() => cleanup())` added to `vitest.setup.ts` —
+      discovered Testing Library's automatic per-test DOM cleanup never
+      registers without `test.globals: true` (which this project
+      deliberately doesn't set), so unmounted components were piling up
+      and causing "found multiple elements" failures across tests in the
+      same file until this was added.
+- [+] `IntersectionObserver` and `ResizeObserver` jsdom polyfills added to
+      `vitest.setup.ts` — `DossierRail`'s scrollspy and
+      `HorizontalPager`'s container-width measurement both construct one
+      unconditionally on mount; jsdom has neither.
+- [+] `CountryDossier.test.tsx`: mocks the 8 heavy sibling feature blocks
+      (community/country-drift/data-journal/migration-board/
+      platform-intelligence/routes/trust-surface/what-changed) and
+      `useFeatureEnabled` (forced tabbed layout); the `./index`-local
+      section components (CII, evidence, scores, sources, etc.) render
+      for real from a minimal `card` fixture. 3 tests: default tab +
+      all 5 triggers present, switching tabs shows only that tab's
+      panel/rail sections (Radix keeps inactive `TabsContent` in the DOM
+      with `hidden`, doesn't unmount — asserted via `.not.toBeVisible()`,
+      not `.not.toBeInTheDocument()`, after the first attempt proved that
+      wrong), community tab renders its own mocked blocks.
+- [+] `DecisionRunForm.test.tsx`: real MSW handlers for
+      `/api/v1/countries`, `/api/v1/scenarios`, `/api/v1/personas`; mocks
+      `useAppLocale`/`useAnalyticsEvent` and the non-wizard-step sibling
+      components (`DecisionWizard`, `AIDecisionIntentHelper`,
+      `DecisionPassportActions`, `DecisionCiiComparison`,
+      `DecisionRiskContext`, `DecisionResults`). 5 tests covering the
+      actual behavior (step navigation has no validation gate — only the
+      final run button's `disabled` state reacts to candidate/scenario
+      state — corrected from this checklist's original "validation
+      blocking advance" wording, which didn't match the real
+      implementation once read closely): all 4 labels render with step 1
+      active, "Далее" advances through all 4 panels, direct step-nav
+      jump works, "Назад" disabled only on step 1, run button disables
+      once every candidate is unchecked.
+- [+] `HomeDeck.test.tsx`: mocks the 5 panel components; a local
+      `mockMatchMedia(matchingQueries)` helper drives `useMediaQuery`/
+      `useReducedMotion` directly. 3 tests: desktop pager mode (off-screen
+      slides `inert`, clicking `pager-next` flips which slide is inert),
+      reduced-motion flat fallback (no pager controls at all), narrow
+      viewport uses `MobileStack` instead.
+- [+] Verify: 77/77 Vitest tests green across all 14 files (11 pre-existing
+      + 3 new) in `apps/web`; typecheck/lint clean; `pnpm format:check`
+      clean after an auto-fix pass.
 
 ## 5.2 — Storybook stories + play-tests for new primitives
 
