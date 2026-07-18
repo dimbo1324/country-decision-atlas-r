@@ -81,6 +81,7 @@ export {
 } from "./primitives/FilterChipGroup";
 export { Pagination } from "./primitives/Pagination";
 export { Breadcrumbs, type BreadcrumbItem } from "./primitives/Breadcrumbs";
+export { BoardGrid } from "./primitives/BoardGrid";
 
 export { Badge, type BadgeVariant } from "./primitives/Badge";
 export { EmptyState } from "./primitives/EmptyState";

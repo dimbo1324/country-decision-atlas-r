@@ -93,19 +93,37 @@ starting any edits:
       no horizontal overflow or wrapping issues at 375px, console clean
       on both `/sources` and `/legal-signals`.
 
-## Stage 3.3 — Cabinet: shared board grid, subscriptions card conversion
+## Stage 3.3 — Cabinet: shared board grid, subscriptions card conversion (done)
 
-- [ ] New `packages/ui` primitive: `BoardGrid` (the
+- [+] New `packages/ui` primitive: `BoardGrid` (the
       `grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3` pattern
-      duplicated in `TripListView.tsx` and `WatchlistView.tsx`).
-- [ ] Adopt `BoardGrid` in `TripListView.tsx` and `WatchlistView.tsx`
-      (behavior-neutral refactor — same markup, shared primitive).
-- [ ] Convert `SubscriptionsView.tsx`'s plain `border-b` row list to
-      `BoardGrid` cards.
-- [ ] Update `web-mvp-subscriptions.spec.ts` testids/structure as needed
-      (keep `subscriptions-list`/`subscription-item`/
-      `subscription-remove-button` contracts where possible).
-- [ ] Verify: typecheck/lint, targeted e2e, visual check.
+      duplicated in `TripListView.tsx` and `WatchlistView.tsx`), forwards
+      `data-testid` and the rest of `<div>`'s props so each caller keeps its
+      own grid testid. Exported from `packages/ui/src/index.ts`, Storybook
+      story added.
+- [+] Adopted `BoardGrid` in `TripListView.tsx` and `WatchlistView.tsx`
+      (behavior-neutral refactor — same markup/testids, just routed through
+      the shared primitive instead of each duplicating the raw grid
+      className).
+- [+] Converted `SubscriptionsView.tsx`'s plain `border-b` row list to
+      `BoardGrid` cards, matching the visual language of the trips/watchlist
+      cards (title, metric-slug badge, "Отписаться" button); the separate
+      `feedItems`/`TimelineList` feed section was left untouched, as scoped.
+- [+] `web-mvp-subscriptions.spec.ts` needed no changes — it only asserts on
+      `subscriptions-list`/`subscription-item`/`subscription-remove-button`
+      testids, all of which the card conversion preserved; verified this by
+      reading the spec before making any edits.
+- [+] Verify: typecheck/lint clean (`ui`+`web`), `pnpm format:check` clean;
+      `next build` clean; 17 targeted e2e green
+      (`web-mvp-trips.spec.ts`/`web-mvp-watchlist.spec.ts`/
+      `web-mvp-subscriptions.spec.ts`) after stopping a stale `web-prod`
+      preview server left over from an earlier stage (same
+      port-3000-reuse pitfall as Stage 3.2, caught before it could cause a
+      false-alarm run this time); browser walkthrough — created a trip and
+      a watchlist entry and a subscription through real UI actions, each
+      landed in a `BoardGrid` with the correct grid className and
+      testid/child count, deleted the subscription and confirmed the empty
+      state returns, no horizontal overflow at 375px, console clean.
 
 ## Final verification (after 3.1-3.3 all land)
 

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Badge,
+  BoardGrid,
   Button,
   Card,
   Field,
@@ -204,10 +205,7 @@ export function TripListView() {
             <EmptyState message="Поездок пока нет. Создайте первую выше." />
           </div>
         ) : (
-          <div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            data-testid="trips-list"
-          >
+          <BoardGrid data-testid="trips-list">
             {items.map((trip) => (
               <Link
                 key={trip.id}
@@ -231,7 +229,7 @@ export function TripListView() {
                 </Card>
               </Link>
             ))}
-          </div>
+          </BoardGrid>
         )}
       </div>
     </div>

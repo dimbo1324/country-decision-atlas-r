@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Badge, Card } from "@country-decision-atlas/ui";
+import { Badge, BoardGrid, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import {
   myWatchlistQuery,
@@ -81,10 +81,7 @@ export function WatchlistView() {
   }
 
   return (
-    <div
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      data-testid="watchlist-list"
-    >
+    <BoardGrid data-testid="watchlist-list">
       {items.map((item) => (
         <div
           key={item.id}
@@ -142,6 +139,6 @@ export function WatchlistView() {
           </Card>
         </div>
       ))}
-    </div>
+    </BoardGrid>
   );
 }

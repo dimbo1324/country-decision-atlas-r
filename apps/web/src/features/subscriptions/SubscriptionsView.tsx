@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Badge,
+  BoardGrid,
   Button,
   Card,
   Field,
@@ -202,15 +203,17 @@ export function SubscriptionsView() {
             Вы пока ни на что не подписаны.
           </p>
         ) : (
-          <div data-testid="subscriptions-list">
+          <BoardGrid data-testid="subscriptions-list">
             {subscriptionItems.map((subscription) => (
               <div
                 key={subscription.id}
-                className="border-warm flex items-center justify-between gap-4 border-b py-3 last:border-b-0"
                 data-testid="subscription-item"
               >
-                <div className="flex flex-col gap-1">
-                  <span className="text-c2 text-sm font-semibold">
+                <Card
+                  interactive={false}
+                  className="flex h-full flex-col gap-3"
+                >
+                  <span className="font-display text-lg font-semibold">
                     {subscription.metric_name_en ??
                       (subscription.author_display_name
                         ? `Автор: ${subscription.author_display_name}`
@@ -219,17 +222,18 @@ export function SubscriptionsView() {
                   {subscription.metric_slug && (
                     <Badge variant="default">{subscription.metric_slug}</Badge>
                   )}
-                </div>
-                <Button
-                  variant="ghost"
-                  onClick={() => deleteSubscription.mutate(subscription.id)}
-                  data-testid="subscription-remove-button"
-                >
-                  Отписаться
-                </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => deleteSubscription.mutate(subscription.id)}
+                    data-testid="subscription-remove-button"
+                    className="self-start"
+                  >
+                    Отписаться
+                  </Button>
+                </Card>
               </div>
             ))}
-          </div>
+          </BoardGrid>
         )}
       </Card>
 
