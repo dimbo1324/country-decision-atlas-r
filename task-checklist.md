@@ -127,16 +127,49 @@ starting any edits:
 
 ## Final verification (after 3.1-3.3 all land)
 
-- [ ] Full Playwright suite green (or isolated-passing flakes only,
-      confirmed by re-running the specific spec alone).
-- [ ] Visual regression suite green (re-shoot baselines once at the end
-      of the whole wave, not per commit).
-- [ ] `packages/ui`/`apps/web` typecheck/lint/build clean.
-- [ ] Contrast + i18n-parity audits still green.
-- [ ] Browser walkthrough of all Stage 3 surfaces.
+- [+] Full Playwright suite: 329 passed, 1 flaky (recovered on the
+      built-in retry; re-ran `web-mvp-migration-board.spec.ts` alone and
+      it was clean, confirming a load-related timeout under the 4-worker
+      run, not a regression, exactly the case
+      `playwright.config.ts`'s own comments describe). Along the way
+      found and fixed one genuine regression unrelated to Stage 3 itself:
+      `web-mvp-home-overview.spec.ts` still asserted the old
+      `aria-hidden="true"` attribute on the pager's off-screen slide, but
+      the Stage 0-2 audit had switched `HorizontalPager` to `inert`
+      (dropping `aria-hidden` as redundant) without re-running this spec
+      — updated the assertions to `toHaveJSProperty("inert", ...)`,
+      committed separately from the Stage 3.3 feature commit. Also hit
+      the Stage 3.2-style stale-server pitfall in a new shape: the
+      `/internal/*` ops console is gated behind `APP_ENV=local` in
+      `middleware.ts`, which Playwright's own managed webServer sets but
+      a manually-started `web-prod` preview server (via
+      `.claude/launch.json`, no env override there) does not -- when
+      `reuseExistingServer` picked up my manual server, all 17
+      `/internal/*`-touching tests 404'd/blanked. Fixed by stopping the
+      manual server so Playwright started (and later reused) its own
+      correctly-configured one; not a code change, `.claude/launch.json`
+      flagged separately as tech debt, not touched in this diff.
+- [+] Visual regression suite: 5/5 green, unchanged. None of Stage 3's
+      changed pages (legal-signals, sources, trips, watchlist,
+      subscriptions) are covered by `tests/visual/pages.visual.spec.ts`
+      (only home/catalog/country-dossier/decision-result/passport are),
+      so no baselines needed re-shooting.
+- [+] `packages/ui` typecheck/lint clean; `apps/web` typecheck/lint
+      clean; `next build` clean; `pnpm format:check` clean.
+- [+] Contrast audit: all c1-c4 tokens pass on all bg tokens. i18n-parity:
+      90/90 keys match between `en.json`/`ru.json`. Both unaffected by
+      Stage 3 (no new copy needing translation), re-run to confirm no
+      drift.
+- [+] Browser walkthrough of all Stage 3 surfaces: legal-signals (both
+      tabs, chip filters), sources (chip filters), trips/watchlist/
+      subscriptions (BoardGrid cards, create/toggle/remove flows via
+      real UI actions, not raw DOM events), 375px width on trips with no
+      horizontal overflow, console clean throughout.
 
 ## Completion
 
-- [ ] Fill this checklist (`+`/`-`).
-- [ ] Commit(s) directly on `main`, each sub-stage its own commit.
-- [ ] Final report.
+- [+] Checklist filled (`+`/`-`) for every sub-stage.
+- [+] Commits directly on `main`: 3.1, 3.2, 3.3 each their own commit,
+      plus a separate fix commit for the home-overview regression found
+      during final verification.
+- [+] Final report delivered to the owner.
