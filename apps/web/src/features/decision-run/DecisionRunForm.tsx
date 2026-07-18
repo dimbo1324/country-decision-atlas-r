@@ -13,6 +13,7 @@ import {
   RadioCards,
 } from "@country-decision-atlas/ui";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 
 import type {
   DecisionRunRequest,
@@ -63,15 +64,16 @@ const STEP_COUNT = STEP_LABELS.length;
 
 function DecisionFormInner() {
   const locale = useAppLocale();
+  const apiLocale = toApiLocale(locale);
   const trackAnalyticsEvent = useAnalyticsEvent();
 
   const { data: countries, isPending: countriesPending } = useQuery(
-    allCountriesQuery(locale),
+    allCountriesQuery(apiLocale),
   );
   const { data: scenarios, isPending: scenariosPending } = useQuery(
-    scenariosQuery(locale),
+    scenariosQuery(apiLocale),
   );
-  const { data: personas } = useQuery(personasQuery(locale));
+  const { data: personas } = useQuery(personasQuery(apiLocale));
 
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const currentStep = Math.min(Math.max(step, 1), STEP_COUNT);
@@ -192,7 +194,7 @@ function DecisionFormInner() {
     const decisionRequest: DecisionRunRequest = {
       candidate_country_slugs: candidateCountrySlugs,
       scenario_slug: scenarioSlug,
-      locale,
+      locale: apiLocale,
       ...(originCountrySlug ? { origin_country_slug: originCountrySlug } : {}),
       ...(selectedPersonaSlug ? { persona: selectedPersonaSlug } : {}),
       ...(personalizationTouched ? { custom_weights: customWeights } : {}),
@@ -556,7 +558,7 @@ function DecisionFormInner() {
           <DecisionRiskContext
             countrySlugs={candidateCountrySlugs}
             scenarioSlug={scenarioSlug}
-            locale={locale}
+            locale={apiLocale}
           />
         )}
       </div>

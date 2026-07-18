@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -31,7 +31,7 @@ export function listCountryRoutes(
 ): Promise<RouteListResponse> {
   return apiGet<RouteListResponse>(
     `/api/v1/countries/${countrySlug}/routes${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       route_type: params.route_type,
       allows_work: params.allows_work,
       allows_family: params.allows_family,
@@ -48,7 +48,7 @@ export function getRoute(
 ): Promise<RouteDetailResponse> {
   return apiGet<RouteDetailResponse>(
     `/api/v1/routes/${routeId}${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
     })}`,
   );
 }
@@ -60,7 +60,7 @@ export function getCountryRoute(
 ): Promise<RouteDetailResponse> {
   return apiGet<RouteDetailResponse>(
     `/api/v1/countries/${countrySlug}/routes/${routeSlug}${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
     })}`,
   );
 }

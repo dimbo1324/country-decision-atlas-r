@@ -7,6 +7,7 @@ import { Suspense, useMemo, useState } from "react";
 import { countryListQuery } from "../../entities/country/api";
 import { sourceListQuery } from "../../entities/sources/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -41,7 +42,7 @@ function SourcesViewInner() {
     isPending,
     isError,
   } = useQuery(
-    sourceListQuery(locale, {
+    sourceListQuery(toApiLocale(locale), {
       countrySlug: countrySlug || undefined,
       sourceType: sourceType || undefined,
       confidence: (confidence || undefined) as

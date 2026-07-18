@@ -40,6 +40,7 @@ import {
 import type { TripWaypoint } from "../../shared/api/trips";
 import { isApiError } from "../../shared/api/http";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 
 const WAYPOINT_KIND_LABELS: Record<string, string> = {
   transit: "Транзит",
@@ -115,7 +116,7 @@ type AddWaypointValues = z.infer<typeof addWaypointSchema>;
 
 function AddWaypointForm({ tripId }: { tripId: string }) {
   const locale = useAppLocale();
-  const countries = useQuery(allCountriesQuery(locale));
+  const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const createWaypoint = useCreateWaypointMutation(tripId);
   const {
     register,

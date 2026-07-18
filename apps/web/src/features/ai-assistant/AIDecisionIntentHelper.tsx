@@ -5,7 +5,7 @@ import { Badge, Button, Field, FieldLabel } from "@country-decision-atlas/ui";
 import { useParseDecisionIntentMutation } from "../../entities/ai-assistant/api";
 import type { AIDecisionIntentResponse } from "../../shared/api/ai";
 import { isApiError } from "../../shared/api";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -25,7 +25,7 @@ export function AIDecisionIntentHelper({
   const parseDecisionIntent = useParseDecisionIntentMutation();
 
   async function handleSubmit() {
-    parseDecisionIntent.mutate({ text, locale });
+    parseDecisionIntent.mutate({ text, locale: toApiLocale(locale) });
   }
 
   return (

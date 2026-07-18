@@ -8,7 +8,7 @@ import {
 import { useExplainNumberMutation } from "../../entities/ai-assistant/api";
 import type { AIExplainNumberResponse } from "../../shared/api/ai";
 import { isApiError } from "../../shared/api";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 import { AICitationsList } from "./AICitationsList";
 import { AIDisclaimer } from "./AIDisclaimer";
 import { AIRefusalState } from "./AIRefusalState";
@@ -75,7 +75,7 @@ export function AIExplainNumberButton({
       scenario_slug: scenarioSlug,
       value,
       metric_key: metricKey,
-      locale,
+      locale: toApiLocale(locale),
     });
   }
 

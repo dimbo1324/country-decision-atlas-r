@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -21,7 +21,7 @@ export function getCountryWhatChanged(
 ): Promise<WhatChangedResponse> {
   return apiGet<WhatChangedResponse>(
     `/api/v1/countries/${countrySlug}/what-changed${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       since: params.since,
       days: params.days,
       limit: params.limit,

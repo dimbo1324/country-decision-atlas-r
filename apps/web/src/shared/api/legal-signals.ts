@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
 import type { EvidenceListResponse } from "./evidence";
@@ -49,7 +49,7 @@ export function listLegalSignals(
 ): Promise<LegalSignalListResponse> {
   return apiGet<LegalSignalListResponse>(
     `/api/v1/legal-signals${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       country_slug: params.countrySlug,
       signal_type: params.signalType,
       impact_direction: params.impactDirection,
@@ -77,7 +77,7 @@ export function getLegalSignalTimeline(
 ): Promise<LegalSignalTimelineResponse> {
   return apiGet<LegalSignalTimelineResponse>(
     `/api/v1/legal-signals/timeline${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       country_slug: params.countrySlug,
       signal_type: params.signalType,
       impact_direction: params.impactDirection,

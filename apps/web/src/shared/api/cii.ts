@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 export type CiiCountryComparisonResponse =
@@ -35,7 +35,7 @@ export function compareCountriesCii(
     `/api/v1/countries/compare${queryString({
       countries: params.countries.join(","),
       scenario: params.scenario,
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       persona: params.persona,
     })}`,
   );
@@ -52,7 +52,7 @@ export function getMatrix(
     `/api/v1/countries/matrix${queryString({
       countries: params.countries?.join(","),
       scenarios: scenariosParam,
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
     })}`,
   );
 }

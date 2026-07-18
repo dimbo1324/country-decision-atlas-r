@@ -28,6 +28,7 @@ import type { MyAuthorMetricDefinition } from "../../shared/api/author-metrics";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -141,7 +142,7 @@ function CreateMetricForm() {
 
 function MetricValuesEditor({ metric }: { metric: MyAuthorMetricDefinition }) {
   const locale = useAppLocale();
-  const countries = useQuery(allCountriesQuery(locale));
+  const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const values = useQuery(myAuthorMetricValuesQuery(metric.id));
   const upsertValues = useUpsertAuthorMetricValuesMutation(metric.id);
   const [draftValues, setDraftValues] = useState<Record<string, string>>({});

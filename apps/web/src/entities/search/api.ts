@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { apiClient, unwrap } from "../../shared/api/client";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 export interface SearchQueryParams {
   q: string;
@@ -15,11 +15,12 @@ export interface SearchQueryParams {
  * stays a plain queryOptions object so it works the same for a debounced
  * ⌘K palette query and the full `/search` page. */
 export function searchQuery(params: SearchQueryParams) {
+  const apiLocale = toApiLocale(params.locale);
   return queryOptions({
     queryKey: [
       "search",
       params.q,
-      params.locale,
+      apiLocale,
       params.types,
       params.countrySlug,
       params.limit,
@@ -31,7 +32,7 @@ export function searchQuery(params: SearchQueryParams) {
           params: {
             query: {
               q: params.q,
-              locale: params.locale,
+              locale: apiLocale,
               types: params.types,
               country_slug: params.countrySlug,
               limit: params.limit,

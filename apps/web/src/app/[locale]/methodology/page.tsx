@@ -2,7 +2,7 @@ import { Kicker } from "@country-decision-atlas/ui";
 import { getLocale } from "next-intl/server";
 import { listGlossaryTerms } from "../../../shared/api/glossary";
 import { listMethodologySections } from "../../../shared/api/methodology";
-import { asSupportedLocale } from "../../../shared/lib/locale";
+import { asSupportedLocale, toApiLocale } from "../../../shared/lib/locale";
 import { Link } from "../../../i18n/navigation";
 import { routes } from "../../../shared/lib/routes";
 import { DisclaimerNotice } from "../../../shared/ui/DisclaimerNotice";
@@ -14,10 +14,11 @@ export const dynamic = "force-dynamic";
 
 export default async function MethodologyPage() {
   const locale = asSupportedLocale(await getLocale());
+  const apiLocale = toApiLocale(locale);
 
   let sections;
   try {
-    const response = await listMethodologySections(locale);
+    const response = await listMethodologySections(apiLocale);
     sections = response.items;
   } catch {
     return (
@@ -39,7 +40,7 @@ export default async function MethodologyPage() {
   let glossaryTerms: Awaited<ReturnType<typeof listGlossaryTerms>>["items"] =
     [];
   try {
-    const glossary = await listGlossaryTerms(locale);
+    const glossary = await listGlossaryTerms(apiLocale);
     glossaryTerms = glossary.items;
   } catch {
     glossaryTerms = [];

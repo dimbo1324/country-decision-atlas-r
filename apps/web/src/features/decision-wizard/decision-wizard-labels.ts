@@ -59,6 +59,12 @@ const LEVEL_OPTIONS_EN: Array<DecisionWizardOption<Level>> = [
   { value: "high", label: "High" },
 ];
 
+const LEVEL_OPTIONS_ES: Array<DecisionWizardOption<Level>> = [
+  { value: "low", label: "Bajo" },
+  { value: "medium", label: "Medio" },
+  { value: "high", label: "Alto" },
+];
+
 export const DECISION_WIZARD_LABELS: Record<
   SupportedLocale,
   DecisionWizardLabels
@@ -172,6 +178,62 @@ export const DECISION_WIZARD_LABELS: Record<
     warningLabels: {
       recommended_persona_unavailable:
         "The recommended persona is unavailable.",
+    },
+  },
+  es: {
+    title: "Ayúdame a elegir la configuración",
+    hint: "Responde algunas preguntas y el formulario de decisión se completará sin guardar un perfil.",
+    open: "Abrir",
+    close: "Ocultar",
+    goal: "Objetivo",
+    budget: "Presupuesto",
+    family: "Familia",
+    timeframe: "Plazo",
+    workPriority: "Trabajo",
+    safetyPriority: "Seguridad",
+    citizenshipPriority: "Estatus",
+    businessPriority: "Negocio",
+    apply: "Rellenar el formulario",
+    applying: "Calculando…",
+    confidence: "Confianza",
+    scenario: "Escenario",
+    persona: "Perfil",
+    noPersona: "Sin perfil",
+    explanation: "Por qué encaja",
+    warnings: "Advertencias",
+    manualNote:
+      "Después de aplicar la recomendación, aún puedes ajustar la configuración manualmente.",
+    unavailable:
+      "El asistente no está disponible temporalmente. Puedes continuar manualmente.",
+    primaryGoalOptions: [
+      { value: "residence", label: "Residencia y mudanza" },
+      { value: "citizenship", label: "Residencia permanente y ciudadanía" },
+      { value: "low_budget", label: "Presupuesto bajo" },
+      { value: "business", label: "Negocio" },
+      { value: "safety", label: "Seguridad" },
+      { value: "remote_work", label: "Trabajo remoto" },
+      { value: "study", label: "Estudios" },
+    ],
+    budgetOptions: [
+      { value: "unknown", label: "No estoy seguro" },
+      ...LEVEL_OPTIONS_ES,
+    ],
+    familyOptions: [
+      { value: "unknown", label: "No importa" },
+      { value: "solo", label: "Individual" },
+      { value: "couple", label: "Pareja" },
+      { value: "family_with_children", label: "Familia con hijos" },
+    ],
+    timeframeOptions: [
+      { value: "unknown", label: "No importa" },
+      { value: "fast", label: "Rápido" },
+      { value: "medium", label: "Mediano plazo" },
+      { value: "long", label: "Largo plazo" },
+    ],
+    levelOptions: LEVEL_OPTIONS_ES,
+    warningLabels: {
+      recommended_persona_unavailable:
+        "El perfil recomendado no está disponible por el momento.",
     },
   },
 };

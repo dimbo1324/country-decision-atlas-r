@@ -6,7 +6,7 @@ import { Button } from "@country-decision-atlas/ui";
 import type { DecisionRunRequest } from "../../shared/api/decision";
 import { useCreateDecisionPassportMutation } from "../../entities/decision-passports/api";
 import { isApiError } from "../../shared/api/http";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 type DecisionPassportActionsProps = {
   decisionRequest: DecisionRunRequest;
@@ -29,7 +29,7 @@ export function DecisionPassportActions({
     setCopied(false);
     createPassport.mutate({
       decision_request: decisionRequest,
-      locale,
+      locale: toApiLocale(locale),
     });
   }
 

@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -9,7 +9,7 @@ export type GlossaryListResponse =
   components["schemas"]["GlossaryListResponse"];
 
 export function listGlossaryTerms(
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
   category?: string,
   q?: string,
 ): Promise<GlossaryListResponse> {
@@ -20,7 +20,7 @@ export function listGlossaryTerms(
 
 export function getGlossaryTerm(
   slug: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
 ): Promise<GlossaryTerm> {
   return apiGet<GlossaryTerm>(
     `/api/v1/glossary/${slug}${queryString({ locale })}`,

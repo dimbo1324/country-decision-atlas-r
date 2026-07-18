@@ -2,7 +2,7 @@ import { getLocale } from "next-intl/server";
 import { Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../i18n/navigation";
 import { countriesApi } from "../../../../shared/api";
-import { asSupportedLocale } from "../../../../shared/lib/locale";
+import { asSupportedLocale, toApiLocale } from "../../../../shared/lib/locale";
 import { routes } from "../../../../shared/lib/routes";
 import { ErrorState } from "../../../../shared/ui/ErrorState";
 import {
@@ -21,7 +21,7 @@ export default async function CountryPage({ params }: PageProps) {
 
   let card;
   try {
-    card = await countriesApi.getCountryCard(slug, locale);
+    card = await countriesApi.getCountryCard(slug, toApiLocale(locale));
   } catch (err: unknown) {
     const errProp =
       err instanceof Error

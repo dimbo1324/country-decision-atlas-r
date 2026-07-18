@@ -4,6 +4,7 @@ import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { glossaryTermsQuery } from "../../entities/glossary/api";
 import { useAppLocale } from "../lib/useAppLocale";
+import { toApiLocale } from "../lib/locale";
 import type { GlossaryTerm } from "../api/glossary";
 
 type GlossaryContextValue = {
@@ -17,7 +18,7 @@ const GlossaryContext = createContext<GlossaryContextValue | null>(null);
  * provider — mounted once, per locale, in `[locale]/layout.tsx`. */
 export function GlossaryProvider({ children }: { children: ReactNode }) {
   const locale = useAppLocale();
-  const { data } = useQuery(glossaryTermsQuery(locale));
+  const { data } = useQuery(glossaryTermsQuery(toApiLocale(locale)));
 
   const termsBySlug = useMemo(
     () => new Map((data?.items ?? []).map((term) => [term.slug, term])),

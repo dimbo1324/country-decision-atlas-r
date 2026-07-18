@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 export type LocaleCode = components["schemas"]["LocaleCode"];
@@ -19,7 +19,7 @@ export function listCountries(
 ): Promise<CountryListResponse> {
   return apiGet<CountryListResponse>(
     `/api/v1/countries${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       limit: params.limit,
       offset: params.offset,
     })}`,
@@ -28,7 +28,7 @@ export function listCountries(
 
 export function getCountryCard(
   countrySlug: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
 ): Promise<CountryReadModelResponse> {
   return apiGet<CountryReadModelResponse>(
     `/api/v1/countries/${countrySlug}/card${queryString({ locale })}`,

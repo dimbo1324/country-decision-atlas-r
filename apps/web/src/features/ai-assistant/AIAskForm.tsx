@@ -5,7 +5,7 @@ import { Button, Field, FieldLabel } from "@country-decision-atlas/ui";
 import { useAskAIMutation } from "../../entities/ai-assistant/api";
 import type { AIAskResponse } from "../../shared/api/ai";
 import { isApiError } from "../../shared/api";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -33,7 +33,7 @@ export function AIAskForm({
     try {
       const response = await askAI.mutateAsync({
         question,
-        locale,
+        locale: toApiLocale(locale),
         country_slug: countrySlug || undefined,
       });
       onResponse(response);

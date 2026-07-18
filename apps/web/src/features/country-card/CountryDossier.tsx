@@ -14,7 +14,7 @@ import {
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 import { Link } from "../../i18n/navigation";
 import { useFeatureEnabled } from "../../shared/features/FeatureProvider";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 import { CommunityCountryBlock } from "../community";
@@ -117,6 +117,7 @@ interface CountryDossierProps {
  * `DossierRail` gets every section id/label for the flat layout, and only
  * the active tab's subset for the tabbed one. */
 export function CountryDossier({ card, locale }: CountryDossierProps) {
+  const apiLocale = toApiLocale(locale);
   const isTabbedLayout = useFeatureEnabled("web_dossier_v2");
   const [activeTab, setActiveTab] = useQueryState(
     "tab",
@@ -181,7 +182,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <PlatformIntelligenceBlock
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -199,7 +200,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <TrustSurfaceBlock
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -217,7 +218,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <CountryDriftBlock
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -251,7 +252,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <CountryRoutesBlock
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -301,7 +302,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <CountryWhatChanged
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -318,7 +319,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
         >
           <CountryDataJournalBlock
             countrySlug={card.country.slug}
-            locale={locale}
+            locale={apiLocale}
           />
         </DossierSection>
       ),
@@ -430,7 +431,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     });
 
     return list;
-  }, [card, locale]);
+  }, [card, locale, apiLocale]);
 
   if (!isTabbedLayout) {
     return (

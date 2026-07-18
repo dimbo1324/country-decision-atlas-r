@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -10,7 +10,7 @@ export type DataJournalEntry = components["schemas"]["DataJournalEntry"];
 
 export function getCountryDataJournal(
   countrySlug: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
   limit = 10,
   offset = 0,
 ): Promise<CountryDataJournalResponse> {

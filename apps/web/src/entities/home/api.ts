@@ -1,14 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 import { apiClient, unwrap } from "../../shared/api/client";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 export function homeOverviewQuery(locale: SupportedLocale) {
+  const apiLocale = toApiLocale(locale);
   return queryOptions({
-    queryKey: ["home", "overview", locale] as const,
+    queryKey: ["home", "overview", apiLocale] as const,
     queryFn: () =>
       unwrap(
         apiClient.GET("/api/v1/home/overview", {
-          params: { query: { locale } },
+          params: { query: { locale: apiLocale } },
         }),
       ),
     // Matches the platform summary's own refresh cadence — short enough

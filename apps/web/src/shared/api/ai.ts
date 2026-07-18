@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiPost } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -19,7 +19,7 @@ export type AICitation = components["schemas"]["AICitation"];
 export function askAI(payload: AIAskRequest): Promise<AIAskResponse> {
   return apiPost<AIAskResponse, AIAskRequest>("/api/v1/ai/ask", {
     ...payload,
-    locale: payload.locale ?? DEFAULT_LOCALE,
+    locale: payload.locale ?? DEFAULT_API_LOCALE,
   });
 }
 
@@ -30,7 +30,7 @@ export function explainNumber(
     "/api/v1/ai/explain-number",
     {
       ...payload,
-      locale: (payload.locale ?? DEFAULT_LOCALE) as LocaleCode,
+      locale: (payload.locale ?? DEFAULT_API_LOCALE) as LocaleCode,
     },
   );
 }
@@ -42,7 +42,7 @@ export function parseDecisionIntent(
     "/api/v1/ai/decision-intent",
     {
       ...payload,
-      locale: payload.locale ?? DEFAULT_LOCALE,
+      locale: payload.locale ?? DEFAULT_API_LOCALE,
     },
   );
 }

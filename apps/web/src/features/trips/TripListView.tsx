@@ -21,6 +21,7 @@ import { tripsQuery, useCreateTripMutation } from "../../entities/trips/api";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -47,8 +48,9 @@ type CreateTripValues = z.infer<typeof createTripSchema>;
 
 function CreateTripForm() {
   const locale = useAppLocale();
-  const countries = useQuery(allCountriesQuery(locale));
-  const scenarios = useQuery(scenariosQuery(locale));
+  const apiLocale = toApiLocale(locale);
+  const countries = useQuery(allCountriesQuery(apiLocale));
+  const scenarios = useQuery(scenariosQuery(apiLocale));
   const createTrip = useCreateTripMutation();
   const {
     register,

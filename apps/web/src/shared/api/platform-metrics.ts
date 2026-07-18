@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -12,7 +12,7 @@ export type PlatformMetricDetailResponse =
 
 export function getCountryPlatformMetrics(
   countrySlug: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
   scenario?: string,
   includeInputSummary = false,
 ): Promise<PlatformMetricListResponse> {
@@ -28,7 +28,7 @@ export function getCountryPlatformMetrics(
 export function getCountryPlatformMetric(
   countrySlug: string,
   metricKey: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
   scenario?: string,
 ): Promise<PlatformMetricDetailResponse> {
   return apiGet<PlatformMetricDetailResponse>(

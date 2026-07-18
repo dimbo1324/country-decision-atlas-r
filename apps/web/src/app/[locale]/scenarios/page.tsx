@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { Card, Kicker } from "@country-decision-atlas/ui";
 import { scenariosApi } from "../../../shared/api";
-import { asSupportedLocale } from "../../../shared/lib/locale";
+import { asSupportedLocale, toApiLocale } from "../../../shared/lib/locale";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,9 @@ export default async function ScenariosPage() {
 
   let scenarios;
   try {
-    scenarios = await scenariosApi.listScenarios({ locale });
+    scenarios = await scenariosApi.listScenarios({
+      locale: toApiLocale(locale),
+    });
   } catch {
     return (
       <main className="flex flex-col gap-6">

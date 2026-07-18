@@ -13,6 +13,7 @@ import { Suspense, useState } from "react";
 import { countryListQuery } from "../../entities/country/api";
 import { legalSignalTimelineQuery } from "../../entities/legal-signals/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -37,6 +38,7 @@ const VIEW_LABELS: Record<ViewId, string> = {
  * exact same 5 filter query-states and re-fetched the exact same query. */
 function LegalSignalsRegistryViewInner() {
   const locale = useAppLocale();
+  const apiLocale = toApiLocale(locale);
   const [view, setView] = useQueryState(
     "tab",
     parseAsStringEnum<ViewId>([...VIEW_IDS]).withDefault("feed"),
@@ -79,7 +81,7 @@ function LegalSignalsRegistryViewInner() {
     isPending,
     isError,
   } = useQuery(
-    legalSignalTimelineQuery(locale, {
+    legalSignalTimelineQuery(apiLocale, {
       countrySlug: countrySlug || undefined,
       signalType: signalType || undefined,
       impactDirection: impactDirection || undefined,
@@ -164,7 +166,7 @@ function LegalSignalsRegistryViewInner() {
                   <TimelineYearGroup
                     key={group.year}
                     group={group}
-                    locale={locale}
+                    locale={apiLocale}
                     onShowEvidence={(id, title) =>
                       setEvidenceSignal({ id, title })
                     }

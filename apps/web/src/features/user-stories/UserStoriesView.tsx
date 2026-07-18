@@ -23,6 +23,7 @@ import {
 import type { UserStory } from "../../shared/api/user-stories";
 import { isApiError } from "../../shared/api/http";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -89,8 +90,9 @@ type SubmitStoryValues = z.infer<typeof submitStorySchema>;
 
 function SubmitStoryForm() {
   const locale = useAppLocale();
-  const countries = useQuery(allCountriesQuery(locale));
-  const scenarios = useQuery(scenariosQuery(locale));
+  const apiLocale = toApiLocale(locale);
+  const countries = useQuery(allCountriesQuery(apiLocale));
+  const scenarios = useQuery(scenariosQuery(apiLocale));
   const createStory = useCreateUserStoryMutation();
   const {
     register,
@@ -206,7 +208,7 @@ function SubmitStoryForm() {
 
 export function UserStoriesView() {
   const locale = useAppLocale();
-  const countries = useQuery(allCountriesQuery(locale));
+  const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const stories = useQuery(userStoriesQuery());
 
   const countryNameById = new Map(

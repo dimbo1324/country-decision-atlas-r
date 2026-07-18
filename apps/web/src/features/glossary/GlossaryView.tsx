@@ -6,6 +6,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { Suspense, useMemo } from "react";
 import { glossaryTermsQuery } from "../../entities/glossary/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -21,7 +22,11 @@ function GlossaryViewInner() {
   );
 
   const { data, isPending, isError } = useQuery(
-    glossaryTermsQuery(locale, category || undefined, q || undefined),
+    glossaryTermsQuery(
+      toApiLocale(locale),
+      category || undefined,
+      q || undefined,
+    ),
   );
 
   const groups = useMemo(() => {

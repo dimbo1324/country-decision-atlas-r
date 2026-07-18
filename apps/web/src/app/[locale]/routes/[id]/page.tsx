@@ -2,7 +2,7 @@ import { getLocale } from "next-intl/server";
 import { Kicker } from "@country-decision-atlas/ui";
 import { getPathname } from "../../../../i18n/navigation";
 import { routesApi } from "../../../../shared/api/routes";
-import { asSupportedLocale } from "../../../../shared/lib/locale";
+import { asSupportedLocale, toApiLocale } from "../../../../shared/lib/locale";
 import { routes } from "../../../../shared/lib/routes";
 import { AppBreadcrumbs } from "../../../../shared/ui/AppBreadcrumbs";
 import { DisclaimerNotice } from "../../../../shared/ui/DisclaimerNotice";
@@ -20,7 +20,7 @@ export default async function RoutePage({ params }: PageProps) {
   const locale = asSupportedLocale(await getLocale());
 
   try {
-    const route = await routesApi.getRoute(id, { locale });
+    const route = await routesApi.getRoute(id, { locale: toApiLocale(locale) });
     return (
       <div className="flex flex-col gap-6">
         <AppBreadcrumbs

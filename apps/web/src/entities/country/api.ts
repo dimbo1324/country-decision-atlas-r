@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { apiClient, unwrap } from "../../shared/api/client";
-import type { SupportedLocale } from "../../shared/lib/locale";
+import { toApiLocale, type SupportedLocale } from "../../shared/lib/locale";
 
 /** Catalog grid page size (Stage 5). Offset-based, matching the actual
  * `Pagination{limit,offset,total}` contract — not keyset, despite the
@@ -21,11 +21,12 @@ export function countryListQuery(
   locale: SupportedLocale,
   params?: { limit?: number; offset?: number },
 ) {
+  const apiLocale = toApiLocale(locale);
   return queryOptions({
     queryKey: [
       "country",
       "list",
-      locale,
+      apiLocale,
       params?.limit,
       params?.offset,
     ] as const,
@@ -34,7 +35,7 @@ export function countryListQuery(
         apiClient.GET("/api/v1/countries", {
           params: {
             query: {
-              locale,
+              locale: apiLocale,
               limit: params?.limit,
               offset: params?.offset,
             },

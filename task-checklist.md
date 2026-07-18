@@ -1,85 +1,121 @@
-# Task: Integrate three sibling branches into `main`
+# Task: Three-language interface (English default, Russian, Spanish)
 
-Owner request: three independent branches had accumulated off the same
-`main` commit (`4335b46`) — `fix/packages-tsx-format-check-glob`,
-`feat/frontend-redesign-stage-5-consolidation`, `chore/remove-web-prototype`
-— and asked to land them all on `main` together. Each branch's own
-`task-checklist.md` history (with its own detailed `+`/`-` completion
-record) is preserved in git log on that branch's commits; this file
-documents the integration itself, done on `integration/stage5-formatfix-protoremoval`
-before a fast-forward merge into `main`.
+Owner request: the product's *interface* (chrome + every UI label —
+explicitly NOT the country/content data pipeline, which stays a separate
+future task) should support switching between English (new primary),
+Russian (existing), and Spanish (new). Branch
+`feat/i18n-three-language-interface` off up-to-date `main`.
 
-## Merge order (chosen to minimize rework)
+Owner-confirmed scope: **public product surface only** — everything under
+`apps/web/src/app/[locale]/**`. `/internal/**` (admin/moderation, a
+separate route tree not under `[locale]`) is explicitly excluded and not
+touched.
 
-1. `fix/packages-tsx-format-check-glob` (smallest, most isolated —
-   formatting only) — clean merge, no conflicts.
-2. `feat/frontend-redesign-stage-5-consolidation` — one conflict:
-   `task-checklist.md` (expected, each branch recreates it per the
-   project's own protocol); `Tabs.stories.tsx` auto-merged cleanly
-   (format-glob-fix's reformatting composed with Stage 5's added
-   `ControlledFiveTabs` story without manual intervention).
-3. `chore/remove-web-prototype` — `.claude/launch.json` and
-   `pnpm-lock.yaml` both auto-merged cleanly (Stage 5's `APP_ENV` addition
-   to the `web-prod` entry and this branch's removal of the neighboring
-   `web-prototype` entry were different parts of the same array/file);
-   only `task-checklist.md` conflicted again, resolved the same way.
+## Scope survey (done before implementation)
 
-`chore/remove-web-prototype`'s own completion record (preserved here since
-it documents real verification work, not just merge mechanics): confirmed
-scope via a repo-wide grep (9 files with real mentions plus the directory
-itself, zero hits in `.codex/`, `.claude/agents|skills`, `AGENTS.md`,
-`CLAUDE.md`, `.ai/`); removed the `apps/web-prototype` workspace entry,
-`.claude/launch.json` dev-server block, README table row; reworded
-comments in `fonts.ts`, the decision-passport page, `.storybook/main.ts`,
-and `theme.css` that referenced the prototype (the `theme.css` one needed
-a real edit, not just deletion — confirmed Storybook's
-`preview-head.html` loads the same font families via a Google Fonts
-`<link>`, i.e. it was always the *other* real consumer this comment
-described, `web-prototype` was just the named example); removed the
-`docs/_arch_` section describing the prototype and renumbered the
-following section; reworded the implementation plan's "tranche prep
-already done" paragraph to past tense. `git rm -r` removed all 61 tracked
-files.
+- [+] Delegated an import-tracing survey (not just folder-name grep) to
+      distinguish genuinely public files from folders that mix public and
+      admin-only components under one barrel (confirmed real split in
+      `author-metrics/`, `migration-board/`, `community/`; confirmed
+      `data-quality/` is 100% internal despite no `admin-` prefix, and
+      `country-proposals/` is 100% public despite looking admin-adjacent).
+- [+] Result: ~154 files in `apps/web` (30 page.tsx + 108 feature files +
+      16 shared/** files) contain hardcoded Cyrillic UI text needing
+      extraction, plus ~11 `packages/ui` component files rendered on
+      public pages (Breadcrumbs, Drawer, ModerationQueue, Pagination,
+      PassportCard, DriftBoard, LegalSignalTimeline, DivergingMeter,
+      DossierRail, HorizontalPager, AnalysisOverlay) — strategy for those
+      still to be decided (task in progress).
+- [+] Confirmed backend's `LocaleCode` contract enum is `"en"|"ru"` only —
+      no Spanish support and none planned by this task (owner's explicit
+      interface-vs-content boundary). Decision: interface locale `es`
+      requests backend DATA in `en` as a fallback; UI chrome around it
+      still renders in Spanish.
 
-## Verification (after all three merged, on the integration branch)
+## Stage 1 — Infrastructure (done)
 
-- [+] `pnpm install`: lockfile was already consistent post-merge ("up to
-      date, resolution step skipped") — the 3-way merge of
-      `pnpm-lock.yaml` resolved cleanly on its own, nothing to regenerate.
-- [+] Full typecheck/lint clean: `ui` and `web` both.
-- [+] `pnpm format:check` clean — confirmed the glob now covers
-      `packages/**/*.tsx` (was `{ts,json}`, now `{ts,tsx,json}`).
-- [+] `next build` clean (45 routes); `check_js_budgets.py`: worst route
-      297.0 kB, ceiling 330 kB, OK.
-- [+] Full Vitest: `apps/web` 77/77, `packages/ui` 8/8.
-- [+] `packages/ui` `storybook build` clean; spot-checked
-      `Tabs.stories.tsx` directly — both the reformatted `Default` story
-      and Stage 5's new `ControlledFiveTabs` story are present together,
-      confirming the auto-merge combined both branches' changes correctly
-      rather than one silently clobbering the other.
-- [+] Full Playwright e2e suite: **330/330 passed, 0 flaky** (Docker
-      stack healthy throughout this run — no repeat of the earlier
-      Docker-daemon-crash artifact from Stage 5's own verification).
-- [+] Visual regression suite: 5/5 passed, no baseline changes needed.
-- [+] Contrast audit: all tokens pass. i18n-parity: 90/90 keys match.
-- [+] Confirmed zero problematic `web-prototype` references remain (only
-      the one intentional historical mention, see above); confirmed
-      `RadioCards.tsx`'s roving-tabindex a11y fix and the new
-      `apps/web/src/test-utils/render.tsx` test infrastructure are both
-      present in the merged tree.
-- [+] No fixes were needed on `main` after merging — everything was
-      already green on the integration branch before the fast-forward.
+- [+] `SUPPORTED_LOCALES` → `["en", "ru", "es"]`, `DEFAULT_LOCALE` → `"en"`
+      (was `"ru"`) in `shared/lib/locale.ts`. `routing.ts`'s
+      `localePrefix: "always"` needed no change (every locale, including
+      default, already gets a URL prefix).
+- [+] New `apps/web/src/messages/es.json` — full, hand-written Spanish
+      translation of all 90 existing chrome keys (nav/auth/footer/locale/
+      search/error/notFound), matching the register of the existing
+      en/ru copy. `next-intl`'s `request.ts` needed zero changes (already
+      dynamically imports `../messages/${locale}.json` off `routing`).
+- [+] `scripts/dev_tools/i18n_parity_check.py`: generalized from a
+      hardcoded en/ru comparison to an N-locale comparison
+      (`LOCALES = ("en", "ru", "es")`) — verified 90/90 keys match.
+- [+] `LocaleSwitcher.tsx` needed **zero changes** — it already renders
+      one button per `SUPPORTED_LOCALES` entry; adding `"es"` to the
+      array was enough to get a working 3-way EN/RU/ES switcher for free.
+- [+] New `ApiLocale`/`toApiLocale()`/`DEFAULT_API_LOCALE` in
+      `shared/lib/locale.ts` (es→en fallback for every backend-facing
+      call). Let the TypeScript compiler find every affected call site
+      by widening `SupportedLocale` first and fixing each resulting
+      error, rather than grepping for usages by hand — safer given ~40
+      call sites across ~30 files. Also updated 16 `shared/api/*.ts`
+      modules' own internal `DEFAULT_LOCALE` fallback to a new
+      `DEFAULT_API_LOCALE` constant (same root cause, same fix, applied
+      uniformly since all 16 shared the identical pattern).
+- [+] `decision-wizard-labels.ts`'s `Record<SupportedLocale, ...>`
+      dictionary needed an actual new `es` entry (not just a type
+      loosening) — added a full, hand-written Spanish translation
+      alongside the existing ru/en ones.
+- [+] Verify: `pnpm typecheck`/`lint` clean (web); fresh `next build`
+      clean; browser walkthrough — `/` redirects to `/en` (was `/ru`),
+      switcher renders all 3 languages and switching to `/es` renders
+      correct Spanish chrome (footer spot-checked verbatim), country
+      dossier page loads on `/es/countries/russia` with all 6
+      `toApiLocale`-mapped child-block requests (`platform-metrics`,
+      `trust`, `drift`, `routes`, `what-changed`, `data-journal`)
+      correctly hitting the backend with `locale=en`, `/ru/...` pages
+      unaffected (still request `locale=ru`, unaffected functionally).
+      Docker stack needed a full rebuild + reseed mid-verification (the
+      owner had cleared images/volumes) — migrations, bootstrap,
+      demo-country restore, search index rebuild, all re-run cleanly.
+
+## Stage 2 — packages/ui strategy (in progress)
+
+- [ ] Determine whether the ~11 flagged `packages/ui` components take
+      text via props already (fix at the apps/web call site) or hardcode
+      Cyrillic internally (needs a different approach, since
+      `packages/ui` has no `next-intl` context of its own outside
+      Storybook).
+
+## Stage 3 — Content migration (154 files, by feature area)
+
+Each sub-stage: extract hardcoded strings into `useTranslations()` calls
+against new message-catalog namespaces (en/ru/es), verify, commit.
+
+- [ ] `shared/**` (16 files) — badges, empty/error states. Done early;
+      many feature files depend on these.
+- [ ] Home, Catalog, Compare (14 files + 2 pages).
+- [ ] Country Dossier (21 files + 1 page).
+- [ ] Decision flow (15 files + 2 pages).
+- [ ] Legal Signals, Sources, Routes (21 files + 3 pages).
+- [ ] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +
+      4 pages).
+- [ ] Community: Migration Board, User Stories, Author Metrics, Country
+      Proposals (12 files + 6 pages).
+- [ ] Knowledge + AI Assistant + Search (14 files + 4 pages).
+
+## Final verification (after all stages land)
+
+- [ ] Full typecheck/lint/format (`ui` + `web`).
+- [ ] `next build` clean, JS-budget script passes.
+- [ ] Full Vitest, Storybook build.
+- [ ] Full Playwright e2e suite + visual regression (expect real, reviewed
+      baseline changes this time — English is now the default locale
+      shown in every "no explicit locale" screenshot).
+- [ ] Contrast + i18n-parity audits (parity now covers 3 locales).
+- [ ] Browser walkthrough of all 3 locales across every migrated area.
+- [ ] Update `docs/_arch_/08_Открытые_вопросы.md`'s Р-12 (documented
+      "ru-only interface, next-intl scoped to chrome" as the accepted
+      state) — supersede with the new decision and date.
 
 ## Completion
 
-- [+] Checklist filled (`+`/`-`).
-- [+] `git merge --ff-only` this integration branch onto `main`.
-- [+] Deleted all four now-fully-merged branches (local + remote):
-      `fix/packages-tsx-format-check-glob`,
-      `feat/frontend-redesign-stage-5-consolidation`,
-      `chore/remove-web-prototype`,
-      `integration/stage5-formatfix-protoremoval` — plus the orphaned
-      local-only `claude/gallant-dubinsky-f97d5e` (zero unique commits,
-      sat exactly at old `main`'s tip). Only `main` remains.
-- [+] Pushed `main` to `origin`.
-- [+] Final report.
+- [ ] Checklist filled (`+`/`-`).
+- [ ] Incremental commits on this branch, one per stage.
+- [ ] Final report.

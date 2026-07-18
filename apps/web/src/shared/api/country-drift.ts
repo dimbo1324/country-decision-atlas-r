@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 
 type LocaleCode = components["schemas"]["LocaleCode"];
@@ -13,7 +13,7 @@ export type CountryDriftHistoryItem =
 
 export function getCountryDrift(
   countrySlug: string,
-  locale: LocaleCode = DEFAULT_LOCALE,
+  locale: LocaleCode = DEFAULT_API_LOCALE,
 ): Promise<CountryDriftResponse> {
   return apiGet<CountryDriftResponse>(
     `/api/v1/countries/${countrySlug}/drift${queryString({ locale })}`,

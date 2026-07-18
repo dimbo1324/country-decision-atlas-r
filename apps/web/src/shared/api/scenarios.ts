@@ -1,6 +1,6 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
 
-import { DEFAULT_LOCALE } from "../lib/locale";
+import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
 import type { LocaleCode } from "./countries";
 
@@ -18,7 +18,7 @@ export function listScenarios(
 ): Promise<ScenarioListResponse> {
   return apiGet<ScenarioListResponse>(
     `/api/v1/scenarios${queryString({
-      locale: params.locale ?? DEFAULT_LOCALE,
+      locale: params.locale ?? DEFAULT_API_LOCALE,
       limit: params.limit,
       offset: params.offset,
     })}`,
