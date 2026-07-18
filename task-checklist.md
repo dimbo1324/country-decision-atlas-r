@@ -1,40 +1,47 @@
-# Task: Fix `format:check`/`format:prettier` glob missing `.tsx` under `packages/**`
+# Task: Integrate three sibling branches into `main`
 
-Root `package.json`'s `format:check` / `format:prettier` scripts glob
-`"packages/**/*.{ts,json}"` — `.tsx` is excluded entirely under `packages/**`,
-so `packages/ui/src/**/*.tsx` has never been covered by CI or local
-`format:check`, only by manual/ad-hoc prettier runs. Pre-existing debt,
-unrelated to the current frontend-redesign branch. Fix scope is
-formatting-only, no behavior changes.
+Owner request: three independent branches had accumulated off the same
+`main` commit (`4335b46`) — `fix/packages-tsx-format-check-glob`,
+`feat/frontend-redesign-stage-5-consolidation`, `chore/remove-web-prototype`
+— and asked to land them all on `main` together. Each branch's own
+`task-checklist.md` history (with its own detailed `+`/`-` completion
+record) is preserved in git log on that branch's commits; this file
+documents the integration itself, done on `integration/stage5-formatfix-protoremoval`
+before a fast-forward merge into `main`.
 
-## Preparation
+## Merge order (chosen to minimize rework)
 
-- [+] Confirmed current drift: `pnpm exec prettier --check "packages/**/*.tsx"`
-      found 25 files with drift (Accordion.stories, BoardGrid, Breadcrumbs,
-      Card.stories, Dialog.stories, Drawer(+stories), ErrorState(+stories),
-      Field(+stories), Icon, LoadingState, MetricCard,
-      ModerationQueue(+stories), Pagination, RadioCards.stories,
-      Select(+stories), Slider, Tabs.stories, Toast.stories, Toggle,
-      Tooltip.stories — all under `packages/ui/src/primitives/`).
+1. `fix/packages-tsx-format-check-glob` (smallest, most isolated —
+   formatting only) — clean merge, no conflicts.
+2. `feat/frontend-redesign-stage-5-consolidation` — one conflict:
+   `task-checklist.md` (expected, each branch recreates it per the
+   project's own protocol); `Tabs.stories.tsx` auto-merged cleanly
+   (format-glob-fix's reformatting composed with Stage 5's added
+   `ControlledFiveTabs` story without manual intervention).
+3. `chore/remove-web-prototype` — conflicts expected on
+   `task-checklist.md`, `.claude/launch.json` (Stage 5 added `APP_ENV` to
+   the `web-prod` entry; this branch removed the neighboring
+   `web-prototype` entry entirely — different parts of the same array),
+   and `pnpm-lock.yaml` (regenerated fresh via `pnpm install` after the
+   merge rather than trusting a 3-way lockfile merge).
 
-## Implementation
+## Verification (after all three merged)
 
-- [+] Added `.tsx` to the `packages/**/*` glob in `format:prettier` and
-      `format:check` in root `package.json` (`{ts,json}` -> `{ts,tsx,json}`).
-- [+] Ran `pnpm exec prettier --write "packages/**/*.tsx"` to reformat the 25
-      drifted files. Formatting only — no refactors.
-
-## Verification
-
-- [+] `pnpm format:check` passes clean.
-- [+] `packages/ui` typecheck (`tsc --noEmit`) passes clean.
-- [+] `packages/ui` lint (`eslint .`) passes clean.
-- [+] `apps/web` typecheck and lint pass clean (downstream sanity check).
-- [+] Diff review: all 25 reformatted files are pure prettier re-wrapping
-      (line-width/indentation/quote-style), spot-checked `Slider.tsx` and
-      `Breadcrumbs.tsx` in full — no logic/behavior edits.
+- [ ] `pnpm install` to regenerate `pnpm-lock.yaml` cleanly.
+- [ ] Full typecheck/lint (`ui` + `web`), `pnpm format:check`.
+- [ ] `next build` clean, JS-budget script passes.
+- [ ] Full Vitest (`apps/web` + `packages/ui`).
+- [ ] `packages/ui` `storybook build` clean.
+- [ ] Full Playwright e2e suite.
+- [ ] Visual regression suite.
+- [ ] Contrast + i18n-parity audits.
+- [ ] Confirm zero `web-prototype` references remain, confirm the format
+      glob covers `packages/**/*.tsx`, confirm Stage 5's test
+      infrastructure and RadioCards a11y fix are present.
 
 ## Completion
 
-- [+] Checklist filled (`+`/`-`).
-- [+] Final report delivered to the owner.
+- [ ] Checklist filled (`+`/`-`).
+- [ ] `git merge --ff-only` this integration branch onto `main`.
+- [ ] Push `main` to `origin`.
+- [ ] Final report.

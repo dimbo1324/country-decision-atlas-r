@@ -474,5 +474,27 @@
       "wcag-audit"
     ],
     "examples": []
+  },
+  {
+    "title": "js-budgets",
+    "filename": "check_js_budgets.py",
+    "category": "quality",
+    "summary": {
+      "en": "Fail if any apps/web route's First Load JS exceeds a fixed ceiling.",
+      "ru": "Падает, если First Load JS какого-либо маршрута apps/web превышает фиксированный потолок."
+    },
+    "description": {
+      "en": "Runs `pnpm --filter @country-decision-atlas/web build` (or parses an already-captured build log via --input), extracts every route's First Load JS from Next's own console table, and fails (exit 1) listing every route over the ceiling (330 kB -- the worst route measured on 2026-07-18, /countries/[slug] at 297 kB, rounded up +10%, per the redesign plan's 'lower it in future waves' instruction). NOT wired into any full_check.py profile (quick/backend/frontend/docker/full/ci) -- none of them run a real Next build today, and adding one just for this check would be a bigger change than this budget check needs. Runs only via .github/workflows/quality.yml's frontend job (right after its own Build step) and on demand.",
+      "ru": "Запускает `pnpm --filter @country-decision-atlas/web build` (либо разбирает уже сохранённый лог сборки через --input), извлекает First Load JS каждого маршрута из консольной таблицы Next и падает (exit 1), перечисляя каждый маршрут сверх потолка (330 кБ -- худший маршрут на 2026-07-18, /countries/[slug] на 297 кБ, округлено вверх +10% согласно инструкции плана редизайна «снижать в будущих волнах»). НЕ подключён ни в один профиль full_check.py (quick/backend/frontend/docker/full/ci) -- ни один из них сегодня не выполняет настоящую сборку Next, а добавление такого шага ради этой проверки было бы более крупным изменением, чем нужно для неё. Запускается только через шаг frontend в .github/workflows/quality.yml (сразу после его собственного шага Build) и по требованию."
+    },
+    "cadence": {
+      "en": "Automatic, every CI push/PR; on-demand when checking a route's weight locally.",
+      "ru": "Автоматически при каждом push/PR в CI; по требованию при локальной проверке веса маршрута."
+    },
+    "aliases": [
+      "js-budget",
+      "bundle-budget"
+    ],
+    "examples": ["--input build-output.log"]
   }
 ]
