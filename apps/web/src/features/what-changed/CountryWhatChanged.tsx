@@ -9,6 +9,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { WhatChangedItemCard } from "./WhatChangedItemCard";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type CountryWhatChangedProps = {
   countrySlug: string;
@@ -19,6 +20,7 @@ export function CountryWhatChanged({
   countrySlug,
   locale,
 }: CountryWhatChangedProps) {
+  const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryWhatChangedQuery(countrySlug, locale),
   );
@@ -52,7 +54,8 @@ export function CountryWhatChanged({
     >
       {data && (
         <Kicker>
-          С {formatDate(data.since)} · всего изменений: {data.summary.total}
+          С {formatDate(data.since, uiLocale)} · всего изменений:{" "}
+          {data.summary.total}
         </Kicker>
       )}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

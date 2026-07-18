@@ -5,7 +5,10 @@ import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { formatDateTime, formatScore } from "../../shared/lib/format";
-import { asSupportedLocale } from "../../shared/lib/locale";
+import {
+  asSupportedLocale,
+  type SupportedLocale,
+} from "../../shared/lib/locale";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 import { AIExplainNumberButton } from "../ai-assistant";
 import { DecisionResultCard } from "./DecisionResultCard";
@@ -13,9 +16,15 @@ import { DecisionPersonalizationSummary } from "../decision-personalization";
 
 type DecisionResultsProps = {
   response: DecisionRunResponse;
+  /** The real interface locale, not `response.locale` (the backend's data
+   * locale) -- passed as a prop rather than read via `useAppLocale()`
+   * internally because this component renders from both a client tree
+   * (`DecisionRunForm`) and a Server Component (the decision-passport
+   * page), and hooks aren't available in the latter. */
+  uiLocale: SupportedLocale;
 };
 
-export function DecisionResults({ response }: DecisionResultsProps) {
+export function DecisionResults({ response, uiLocale }: DecisionResultsProps) {
   const {
     scenario,
     origin_country,
@@ -72,7 +81,7 @@ export function DecisionResults({ response }: DecisionResultsProps) {
         <div className="flex items-center gap-2">
           <span className="text-c4 text-xs">Создано:</span>
           <span className="text-c3 text-sm">
-            {formatDateTime(meta.generated_at)}
+            {formatDateTime(meta.generated_at, uiLocale)}
           </span>
         </div>
         <div className="flex items-center gap-2">

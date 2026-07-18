@@ -4,6 +4,7 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { ArrowExternal } from "../../shared/ui/LinkArrow";
 
 type CountrySourcesProps = {
@@ -11,6 +12,7 @@ type CountrySourcesProps = {
 };
 
 export function CountrySources({ sources }: CountrySourcesProps) {
+  const locale = useAppLocale();
   if (!sources || sources.length === 0) {
     return <EmptyState message="К этой стране источники не прикреплены." />;
   }
@@ -46,12 +48,12 @@ export function CountrySources({ sources }: CountrySourcesProps) {
           <div className="flex flex-wrap gap-2">
             {source.last_checked_at && (
               <Badge variant="default">
-                Проверено: {formatDate(source.last_checked_at)}
+                Проверено: {formatDate(source.last_checked_at, locale)}
               </Badge>
             )}
             {source.published_at && (
               <Badge variant="default">
-                Опубликовано: {formatDate(source.published_at)}
+                Опубликовано: {formatDate(source.published_at, locale)}
               </Badge>
             )}
           </div>

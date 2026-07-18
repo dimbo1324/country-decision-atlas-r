@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   Card,
   EmptyState,
@@ -40,6 +41,7 @@ function CatalogSkeletonGrid() {
 }
 
 function CountryCatalogViewInner() {
+  const t = useTranslations("countryCatalog");
   const locale = useAppLocale();
   const { user } = useAuth();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
@@ -66,28 +68,24 @@ function CountryCatalogViewInner() {
       data-testid="country-catalog"
     >
       <header className="flex flex-col gap-3">
-        <Kicker>Каталог · {total || "…"} стран</Kicker>
-        <h1 className="font-display text-4xl font-bold">
-          Карточки стран для подбора
-        </h1>
+        <Kicker>{t("kicker", { count: total || "…" })}</Kicker>
+        <h1 className="font-display text-4xl font-bold">{t("title")}</h1>
         <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-          Каждая карточка страны содержит сценарные оценки, правовые сигналы,
-          доказательства с источниками и профильные разделы для принятия
-          решений.
+          {t("description")}
         </p>
       </header>
 
       {isError && (
         <ErrorState
-          title="Не удалось загрузить страны"
-          message="Произошла ошибка при загрузке каталога. Попробуйте обновить страницу."
+          title={t("loadErrorTitle")}
+          message={t("loadErrorMessage")}
         />
       )}
 
       {isPending && <CatalogSkeletonGrid />}
 
       {!isPending && !isError && items.length === 0 && (
-        <EmptyState message="Страны пока отсутствуют." />
+        <EmptyState message={t("empty")} />
       )}
 
       {!isPending && !isError && items.length > 0 && (
@@ -106,6 +104,9 @@ function CountryCatalogViewInner() {
             page={page}
             pageCount={pageCount}
             onPageChange={setPage}
+            ariaLabel={t("paginationLabel")}
+            previousLabel={t("paginationPrevious")}
+            nextLabel={t("paginationNext")}
           />
         </>
       )}
@@ -113,9 +114,14 @@ function CountryCatalogViewInner() {
   );
 }
 
+function CatalogLoadingFallback() {
+  const t = useTranslations("countryCatalog");
+  return <LoadingState message={t("loading")} />;
+}
+
 export function CountryCatalogView() {
   return (
-    <Suspense fallback={<LoadingState message="Загрузка каталога…" />}>
+    <Suspense fallback={<CatalogLoadingFallback />}>
       <CountryCatalogViewInner />
     </Suspense>
   );

@@ -33,6 +33,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import type { SupportedLocale } from "../../shared/lib/locale";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -115,10 +117,13 @@ function SubscribeForm() {
   );
 }
 
-function feedEntryToTimelineEvent(entry: FeedEntryResponse): TimelineEvent {
+function feedEntryToTimelineEvent(
+  entry: FeedEntryResponse,
+  locale: SupportedLocale,
+): TimelineEvent {
   return {
     id: `${entry.metric_id}-${entry.value_updated_at}`,
-    date: formatDate(entry.value_updated_at),
+    date: formatDate(entry.value_updated_at, locale),
     impact: "info",
     impactLabel: `${entry.country_name} · ${entry.value}`,
     title: entry.metric_name_ru,
@@ -127,6 +132,7 @@ function feedEntryToTimelineEvent(entry: FeedEntryResponse): TimelineEvent {
 }
 
 export function SubscriptionsView() {
+  const locale = useAppLocale();
   const { user, isLoading: isAuthLoading } = useAuth();
   const subscriptions = useQuery({
     ...subscriptionsQuery(),
@@ -248,7 +254,11 @@ export function SubscriptionsView() {
           </div>
         ) : (
           <div data-testid="feed-list">
-            <TimelineList events={feedItems.map(feedEntryToTimelineEvent)} />
+            <TimelineList
+              events={feedItems.map((entry) =>
+                feedEntryToTimelineEvent(entry, locale),
+              )}
+            />
           </div>
         )}
       </Card>

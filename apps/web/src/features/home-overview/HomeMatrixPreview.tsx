@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { HomeMatrixPreview as HomeMatrixPreviewData } from "../../shared/api/home";
@@ -16,6 +17,7 @@ export function HomeMatrixPreview({
 }: {
   matrix: HomeMatrixPreviewData;
 }) {
+  const t = useTranslations("home");
   const countries = matrix.countries ?? [];
   const scenarios = matrix.scenarios ?? [];
   const cells = new Map(
@@ -33,15 +35,15 @@ export function HomeMatrixPreview({
             id="home-matrix-title"
             className="font-display text-2xl font-semibold"
           >
-            Матрица CII
+            {t("matrixTitle")}
           </h2>
-          <p className="text-c3 text-sm">Компактный обзор сценарных оценок.</p>
+          <p className="text-c3 text-sm">{t("matrixSubtitle")}</p>
         </div>
         <Link
           href="/compare"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Полная матрица <ArrowNext />
+          {t("fullMatrix")} <ArrowNext />
         </Link>
       </div>
       <div
@@ -49,13 +51,13 @@ export function HomeMatrixPreview({
         data-testid="home-matrix-preview"
       >
         {countries.length === 0 || scenarios.length === 0 ? (
-          <p className="text-c3 p-6 text-sm">Матрица пока недоступна.</p>
+          <p className="text-c3 p-6 text-sm">{t("matrixUnavailable")}</p>
         ) : (
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-warm border-b">
                 <th className="text-c3 font-mono px-4 py-3 text-left text-[9px] tracking-[0.15em] uppercase">
-                  Страна
+                  {t("countryHeader")}
                 </th>
                 {scenarios.map((scenario) => (
                   <th

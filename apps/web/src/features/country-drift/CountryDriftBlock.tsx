@@ -10,6 +10,7 @@ import { ErrorState } from "../../shared/ui/ErrorState";
 import { CountryDriftBadge } from "./CountryDriftBadge";
 import { DriftHistoryMiniList } from "./DriftHistoryMiniList";
 import { formatDateTime } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type CountryDriftBlockProps = {
   countrySlug: string;
@@ -20,6 +21,7 @@ export function CountryDriftBlock({
   countrySlug,
   locale,
 }: CountryDriftBlockProps) {
+  const uiLocale = useAppLocale();
   const { data, error, isPending, isError } = useQuery(
     countryDriftQuery(countrySlug, locale),
   );
@@ -72,7 +74,7 @@ export function CountryDriftBlock({
         className="text-c4 text-xs"
         data-testid="country-drift-computed-at"
       >
-        Рассчитано: {formatDateTime(snapshot.computed_at)}
+        Рассчитано: {formatDateTime(snapshot.computed_at, uiLocale)}
       </p>
       <p className="text-c4 text-xs">
         Индикатор основан только на официальных правовых сигналах за выбранный

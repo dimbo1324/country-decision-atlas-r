@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Card,
@@ -22,6 +23,7 @@ export function CountryOverviewCards({
 }: {
   countries: CountryOverviewCard[];
 }) {
+  const t = useTranslations("home");
   const locale = useAppLocale();
   return (
     <section aria-labelledby="home-countries-title">
@@ -30,13 +32,13 @@ export function CountryOverviewCards({
           id="home-countries-title"
           className="font-display text-2xl font-semibold"
         >
-          Обзор стран
+          {t("countriesTitle")}
         </h2>
         <Link
           href="/countries"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Перейти к странам <ArrowNext />
+          {t("goToCountries")} <ArrowNext />
         </Link>
       </div>
       <div
@@ -74,7 +76,7 @@ export function CountryOverviewCards({
               <div className="flex items-center justify-center py-1">
                 <ProgressRing
                   value={country.average_score ?? 0}
-                  label="Средний скор"
+                  label={t("averageScore")}
                   size={104}
                   accent="gold"
                   active
@@ -84,17 +86,17 @@ export function CountryOverviewCards({
 
               <dl className="text-c3 flex flex-col gap-1.5 text-xs">
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-c4">Сильнейший сценарий</dt>
+                  <dt className="text-c4">{t("bestScenario")}</dt>
                   <dd className="text-right">
-                    {country.best_scenario_name ?? "Нет данных"}
+                    {country.best_scenario_name ?? t("noData")}
                     {country.best_score != null &&
                       ` · ${country.best_score.toFixed(1)}`}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-c4">Слабейший сценарий</dt>
+                  <dt className="text-c4">{t("worstScenario")}</dt>
                   <dd className="text-right">
-                    {country.weakest_scenario_name ?? "Нет данных"}
+                    {country.weakest_scenario_name ?? t("noData")}
                     {country.weakest_score != null &&
                       ` · ${country.weakest_score.toFixed(1)}`}
                   </dd>

@@ -1,14 +1,18 @@
+import { useTranslations } from "next-intl";
 import { Badge, SignalTicker, cn } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { LatestLegalEvent } from "../../shared/api/home";
+import { DATE_FORMAT_LOCALE } from "../../shared/lib/format";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 
-const DIRECTION_LABELS: Record<string, string> = {
-  positive: "Положительное",
-  negative: "Негативное",
-  neutral: "Нейтральное",
-  mixed: "Смешанное",
-  uncertain: "Неопределённое",
+const DIRECTION_KEY: Record<string, string> = {
+  positive: "directionPositive",
+  negative: "directionNegative",
+  neutral: "directionNeutral",
+  mixed: "directionMixed",
+  uncertain: "directionUncertain",
 };
 
 const DIRECTION_TEXT_CLASS: Record<string, string> = {
@@ -16,12 +20,14 @@ const DIRECTION_TEXT_CLASS: Record<string, string> = {
   negative: "text-terra3",
 };
 
-function formatDate(value: string): string {
-  return new Date(`${value}T00:00:00`).toLocaleDateString("ru-RU", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+/** Appends a local-midnight time (not the shared `formatDate`, which parses
+ * the bare date as UTC midnight) so a date-only string like "2026-01-15"
+ * can't roll back a day in timezones behind UTC. */
+function formatEventDate(value: string, locale: SupportedLocale): string {
+  return new Date(`${value}T00:00:00`).toLocaleDateString(
+    DATE_FORMAT_LOCALE[locale],
+    { year: "numeric", month: "short", day: "numeric" },
+  );
 }
 
 export function LatestLegalEventsPanel({
@@ -29,6 +35,8 @@ export function LatestLegalEventsPanel({
 }: {
   events: LatestLegalEvent[];
 }) {
+  const t = useTranslations("home");
+  const locale = useAppLocale();
   const tickerItems = events.map(
     (event) => `${event.country_name} · ${event.title}`,
   );
@@ -40,18 +48,18 @@ export function LatestLegalEventsPanel({
           id="home-events-title"
           className="font-display text-2xl font-semibold"
         >
-          Последние правовые изменения
+          {t("legalEventsTitle")}
         </h2>
         <Link
           href="/legal-signals"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть правовые сигналы <ArrowNext />
+          {t("openLegalSignals")} <ArrowNext />
         </Link>
       </div>
       <div data-testid="home-latest-legal-events">
         {events.length === 0 ? (
-          <p className="text-c3 text-sm">Недавние события пока недоступны.</p>
+          <p className="text-c3 text-sm">{t("legalEventsEmpty")}</p>
         ) : (
           <>
             {tickerItems.length > 0 && (
@@ -70,7 +78,7 @@ export function LatestLegalEventsPanel({
                       dateTime={event.event_date}
                       className="font-mono text-c4 text-[9px] tracking-[0.12em]"
                     >
-                      {formatDate(event.event_date)}
+                      {formatEventDate(event.event_date, locale)}
                     </time>
                     <span className="text-c3 text-xs">
                       {event.country_name}
@@ -84,8 +92,9 @@ export function LatestLegalEventsPanel({
                             : "default"
                       }
                     >
-                      {DIRECTION_LABELS[event.impact_direction] ??
-                        event.impact_direction}
+                      {DIRECTION_KEY[event.impact_direction]
+                        ? t(DIRECTION_KEY[event.impact_direction])
+                        : event.impact_direction}
                     </Badge>
                     <span className="font-mono text-c4 text-[9px] tracking-[0.12em] uppercase">
                       {event.impact_level}
@@ -111,7 +120,7 @@ export function LatestLegalEventsPanel({
                       rel="noreferrer"
                       className="font-mono text-c4 hover:text-gold3 text-[9px] tracking-[0.1em] uppercase transition-colors duration-300"
                     >
-                      Источник: {event.source.title}
+                      {t("sourceLabel", { title: event.source.title })}
                     </a>
                   )}
                 </li>

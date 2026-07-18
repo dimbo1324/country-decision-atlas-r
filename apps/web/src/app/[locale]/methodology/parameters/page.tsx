@@ -1,6 +1,8 @@
+import { getLocale } from "next-intl/server";
 import { DataTable, Kicker } from "@country-decision-atlas/ui";
 import { listMethodologyParameters } from "../../../../shared/api/methodology";
 import { formatDate } from "../../../../shared/lib/format";
+import { asSupportedLocale } from "../../../../shared/lib/locale";
 import { DisclaimerNotice } from "../../../../shared/ui/DisclaimerNotice";
 import { ErrorState } from "../../../../shared/ui/ErrorState";
 
@@ -13,6 +15,7 @@ function formatValue(value_numeric?: number | null, value_json?: unknown) {
 }
 
 export default async function MethodologyParametersPage() {
+  const locale = asSupportedLocale(await getLocale());
   let response;
   try {
     response = await listMethodologyParameters();
@@ -42,7 +45,7 @@ export default async function MethodologyParametersPage() {
     </span>,
     formatValue(item.value_numeric, item.value_json),
     item.description,
-    formatDate(item.effective_from),
+    formatDate(item.effective_from, locale),
   ]);
 
   return (

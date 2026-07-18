@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { ScenarioWinner } from "../../shared/api/home";
@@ -12,6 +13,7 @@ export function ScenarioWinnersPanel({
 }: {
   winners: ScenarioWinner[];
 }) {
+  const t = useTranslations("home");
   return (
     <section aria-labelledby="home-winners-title">
       <div className="mb-5 flex items-end justify-between gap-4">
@@ -19,13 +21,13 @@ export function ScenarioWinnersPanel({
           id="home-winners-title"
           className="font-display text-2xl font-semibold"
         >
-          Победители по сценариям
+          {t("scenarioWinnersTitle")}
         </h2>
         <Link
           href="/compare"
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть матрицу <ArrowNext />
+          {t("openMatrix")} <ArrowNext />
         </Link>
       </div>
       <div
@@ -42,7 +44,7 @@ export function ScenarioWinnersPanel({
               {winner.scenario_name}
             </h3>
             <span className="text-c3 text-sm">
-              {winner.winner_country_name ?? "Недостаточно данных"}
+              {winner.winner_country_name ?? t("insufficientData")}
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <b className="font-display text-gold3 text-2xl font-bold">

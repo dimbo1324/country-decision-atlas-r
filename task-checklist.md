@@ -186,7 +186,80 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         addition landed inside an existing client boundary without needing
         a new explicit `"use client"`); `i18n_parity_check.py` reports
         104/104 keys matching across en/ru/es.
-- [ ] Home, Catalog, Compare (14 files + 2 pages).
+- [+] Home, Catalog, Compare (14 files + 2 pages).
+      - `home-overview` (7): new `home` namespace (48 keys) covers
+        `HomeOverviewView`, `HomeDeck` (slide nav labels + `HorizontalPager`
+        prop wiring — Stage 2 left these on Russian defaults, this stage
+        wires the real translated strings through), `HomeMatrixPreview`,
+        `KeyInsightsPanel`, `LatestLegalEventsPanel`, `ScenarioWinnersPanel`,
+        `CountryOverviewCards` (finished; Stage 3a only touched its
+        `confidenceLabel` call site).
+      - `country-catalog` (3): new `countryCatalog` namespace; also wired
+        translated labels into `Pagination` (another Stage-2 prop-only
+        component) in `CountryCatalogView`.
+      - `compare-matrix` (4 of 6 — `MatrixCell`/`CountryScenarioMatrix` have
+        no hardcoded text): new `compareMatrix` namespace.
+      - `scenarios/page.tsx` (`scenariosPage` namespace) and
+        `compare/page.tsx` (`comparePage` namespace) — both Server
+        Components, using `getTranslations()` from `next-intl/server`
+        (this codebase's first use of it) rather than the `useTranslations`
+        hook.
+      - **Real bug found and fixed, not just a translation gap**:
+        `CompareMatrixView` cast the raw interface `locale` prop straight to
+        the backend's `LocaleCode` type and called the API with it directly
+        — worked by accident while only `en`/`ru` existed, but silently
+        broke `/es/compare` (API call fails, matrix renders as "could not
+        load") once `es` became a real interface locale. Fixed by mapping
+        through `toApiLocale(asSupportedLocale(locale))` for the data
+        fetch, while leaving the original `locale` prop unchanged for
+        `MatrixCell`'s URL building (`getPathname`) — the same
+        interface-locale-vs-data-locale distinction as Stage 1's
+        `DecisionPassportActions.tsx`, just not caught until this stage
+        actually exercised `/es/compare` in the browser.
+      - **Extended scope, done deliberately**: `shared/lib/format.ts`'s
+        `formatDate`/`formatDateTime` (17 call sites app-wide, `ru-RU`
+        hardcoded) is exactly the kind of foundational shared infra Stage
+        3a already set the precedent for touching early. Gave both an
+        optional `locale: SupportedLocale = "ru"` parameter — defaulting to
+        `"ru"` (not the interface's own `en` default) so the untouched
+        `/internal/**` caller (`UsersAdminView.tsx`, confirmed
+        internal-only, out of scope) and `DataQualityReportView.tsx`
+        (confirmed internal-only via its sole page)
+        keep their exact current output with zero required edit. Touched
+        the ~13 real non-internal call sites (`WhatChangedItemCard`,
+        `CountryWhatChanged`, `SubscriptionsView`, `SourceCard` x2,
+        `DataJournalEntryCard`, the decision-passport page x2,
+        `CountryDriftBlock`, `DecisionResults`, `CountrySources` x2,
+        `CountryLegalSignals` x2, `AccountView` x2,
+        `methodology/parameters/page.tsx`) to pass the real interface
+        locale — only the one line calling `formatDate`/`formatDateTime`,
+        not those files' own remaining hardcoded strings (deferred to their
+        own later stage). `LatestLegalEventsPanel.tsx` had its own
+        near-duplicate local `formatDate` (deliberately appending
+        `T00:00:00` to avoid a UTC-midnight timezone rollback for
+        date-only strings) — kept that behavior, renamed to
+        `formatEventDate`, parameterized by locale, and exported
+        `DATE_FORMAT_LOCALE` from `format.ts` so this and
+        `HomeOverviewView.tsx`'s own datetime formatter share one map
+        instead of three near-identical copies.
+      - `DecisionResults.tsx` needed a `uiLocale` **prop**, not
+        `useAppLocale()` internally — it renders from both a client tree
+        (`DecisionRunForm`) and directly from a Server Component (the
+        decision-passport page), and hooks aren't available in the latter;
+        wired both callers to pass the correct locale (`useAppLocale()`’s
+        value client-side, `asSupportedLocale(await getLocale())`
+        server-side).
+      - Verify: typecheck/lint/format clean; Vitest 86/86 (14 files); fresh
+        `next build` clean (same route list — confirms the mixed
+        server/client `DecisionResults` prop approach and the two new
+        `getTranslations()` Server-Component pages compile correctly);
+        `i18n_parity_check.py` 186/186 keys; browser walkthrough of `/en`,
+        `/ru`, `/es` home pages (chrome fully translated, backend data
+        correctly still English for `/es` per the Stage 1 `toApiLocale`
+        fallback design), `/es/countries` catalog, and `/es/compare`
+        (confirmed the locale-cast bug fix: matrix loads instead of
+        erroring, and matrix-cell links resolve to `/es/countries/...`,
+        not `/en/...`).
 - [ ] Country Dossier (21 files + 1 page).
 - [ ] Decision flow (15 files + 2 pages).
 - [ ] Legal Signals, Sources, Routes (21 files + 3 pages).

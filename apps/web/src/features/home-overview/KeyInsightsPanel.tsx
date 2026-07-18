@@ -1,12 +1,13 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card, type BadgeVariant } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { HomeKeyInsight } from "../../shared/api/home";
 
-const SEVERITY_LABELS: Record<string, string> = {
-  info: "Информация",
-  positive: "Сильная сторона",
-  warning: "Требует внимания",
-  risk: "Риск",
+const SEVERITY_KEY: Record<string, string> = {
+  info: "severityInfo",
+  positive: "severityPositive",
+  warning: "severityWarning",
+  risk: "severityRisk",
 };
 
 const SEVERITY_VARIANT: Record<string, BadgeVariant> = {
@@ -17,22 +18,21 @@ const SEVERITY_VARIANT: Record<string, BadgeVariant> = {
 };
 
 export function KeyInsightsPanel({ insights }: { insights: HomeKeyInsight[] }) {
+  const t = useTranslations("home");
   return (
     <section aria-labelledby="home-insights-title">
       <h2
         id="home-insights-title"
         className="font-display mb-5 text-2xl font-semibold"
       >
-        Ключевые выводы
+        {t("keyInsightsTitle")}
       </h2>
       <div
         className="flex flex-col gap-3"
         data-testid="home-key-insights"
       >
         {insights.length === 0 ? (
-          <p className="text-c3 text-sm">
-            Выводы появятся после обновления аналитических данных.
-          </p>
+          <p className="text-c3 text-sm">{t("keyInsightsEmpty")}</p>
         ) : (
           insights.map((insight) => (
             <Link
@@ -46,7 +46,9 @@ export function KeyInsightsPanel({ insights }: { insights: HomeKeyInsight[] }) {
                 <Badge
                   variant={SEVERITY_VARIANT[insight.severity] ?? "default"}
                 >
-                  {SEVERITY_LABELS[insight.severity] ?? insight.severity}
+                  {SEVERITY_KEY[insight.severity]
+                    ? t(SEVERITY_KEY[insight.severity])
+                    : insight.severity}
                 </Badge>
                 <h3 className="font-display text-base font-semibold">
                   {insight.title}

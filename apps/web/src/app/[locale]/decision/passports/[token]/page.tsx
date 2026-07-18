@@ -9,6 +9,7 @@ import { routes } from "../../../../../shared/lib/routes";
 import { AppBreadcrumbs } from "../../../../../shared/ui/AppBreadcrumbs";
 import { ErrorState } from "../../../../../shared/ui/ErrorState";
 import { formatDateTime } from "../../../../../shared/lib/format";
+import { asSupportedLocale } from "../../../../../shared/lib/locale";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ type PageProps = {
 export default async function DecisionPassportPage({ params }: PageProps) {
   const { token } = await params;
   const locale = await getLocale();
+  const uiLocale = asSupportedLocale(locale);
 
   try {
     const passport = await decisionPassportsApi.getDecisionPassport(token);
@@ -60,11 +62,11 @@ export default async function DecisionPassportPage({ params }: PageProps) {
                   REF · {passport.id.slice(0, 8)}
                 </span>
                 <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-                  Создан: {formatDateTime(passport.generated_at)}
+                  Создан: {formatDateTime(passport.generated_at, uiLocale)}
                 </span>
                 {passport.expires_at && (
                   <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-                    Истекает: {formatDateTime(passport.expires_at)}
+                    Истекает: {formatDateTime(passport.expires_at, uiLocale)}
                   </span>
                 )}
                 <Badge variant="trust">{passport.status}</Badge>
@@ -87,7 +89,10 @@ export default async function DecisionPassportPage({ params }: PageProps) {
           <CreateTripFromPassportButton token={token} />
         </div>
 
-        <DecisionResults response={passport.decision_result} />
+        <DecisionResults
+          response={passport.decision_result}
+          uiLocale={uiLocale}
+        />
 
         <section data-testid="passport-methodology">
           <Card

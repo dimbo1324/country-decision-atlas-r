@@ -1,24 +1,26 @@
+import { useTranslations } from "next-intl";
 import { scoreLabelStyle } from "@country-decision-atlas/ui";
 
-const BANDS = [
-  { label: "weak", text: "Слабый (0–30)" },
-  { label: "limited", text: "Ограниченный (30–50)" },
-  { label: "moderate", text: "Средний (50–70)" },
-  { label: "strong", text: "Сильный (70–85)" },
-  { label: "excellent", text: "Отличный (85–100)" },
+const BAND_KEYS = [
+  { label: "weak", key: "bandWeak" },
+  { label: "limited", key: "bandLimited" },
+  { label: "moderate", key: "bandModerate" },
+  { label: "strong", key: "bandStrong" },
+  { label: "excellent", key: "bandExcellent" },
 ];
 
 export function MatrixLegend() {
+  const t = useTranslations("compareMatrix");
   return (
     <div
       className="flex flex-col gap-3"
       data-testid="compare-matrix-legend"
     >
       <h3 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-        Легенда
+        {t("legendTitle")}
       </h3>
       <div className="flex flex-wrap gap-4">
-        {BANDS.map((b) => {
+        {BAND_KEYS.map((b) => {
           const { accent } = scoreLabelStyle(b.label);
           return (
             <div
@@ -29,7 +31,7 @@ export function MatrixLegend() {
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: `var(--color-${accent})` }}
               />
-              <span className="text-c3 text-xs">{b.text}</span>
+              <span className="text-c3 text-xs">{t(b.key)}</span>
             </div>
           );
         })}

@@ -4,6 +4,7 @@ import type { CountryListResponse } from "../../shared/api/countries";
 import type { SourceListResponse } from "../../shared/api/sources";
 import { routes } from "../../shared/lib/routes";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
@@ -20,6 +21,7 @@ export function SourceCard({
   country: CountryListResponse["items"][number] | undefined;
   onShowEvidence: (sourceId: string, title: string) => void;
 }) {
+  const locale = useAppLocale();
   return (
     <div data-testid="source-card">
       <Card
@@ -53,12 +55,12 @@ export function SourceCard({
           )}
           {source.last_checked_at && (
             <Badge variant="default">
-              Проверено: {formatDate(source.last_checked_at)}
+              Проверено: {formatDate(source.last_checked_at, locale)}
             </Badge>
           )}
           {source.published_at && (
             <Badge variant="default">
-              Опубликовано: {formatDate(source.published_at)}
+              Опубликовано: {formatDate(source.published_at, locale)}
             </Badge>
           )}
         </div>

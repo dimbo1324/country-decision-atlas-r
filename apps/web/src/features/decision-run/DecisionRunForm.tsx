@@ -539,7 +539,12 @@ function DecisionFormInner() {
           result === null && (
             <EmptyState message="Выберите сценарий и запустите подбор, чтобы увидеть рейтинг." />
           )}
-        {result !== null && <DecisionResults response={result} />}
+        {result !== null && (
+          <DecisionResults
+            response={result}
+            uiLocale={locale}
+          />
+        )}
         {result !== null && lastDecisionRequest !== null && (
           <DecisionPassportActions
             decisionRequest={lastDecisionRequest}

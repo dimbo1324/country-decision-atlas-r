@@ -3,6 +3,7 @@ import { Badge, Card } from "@country-decision-atlas/ui";
 import type { WhatChangedItem } from "../../shared/api/what-changed";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type WhatChangedItemCardProps = {
   item: WhatChangedItem;
@@ -16,7 +17,8 @@ const IMPORTANCE_LABELS: Record<string, string> = {
 };
 
 export function WhatChangedItemCard({ item }: WhatChangedItemCardProps) {
-  const occurredAt = formatDate(item.occurred_at);
+  const locale = useAppLocale();
+  const occurredAt = formatDate(item.occurred_at, locale);
 
   return (
     <div data-testid="what-changed-item">

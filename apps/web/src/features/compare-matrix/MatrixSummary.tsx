@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type {
   MatrixCell,
   MatrixCountry,
@@ -51,6 +52,7 @@ function bestScenarioForCountry(
 }
 
 export function MatrixSummary({ countries, scenarios, cells }: Props) {
+  const t = useTranslations("compareMatrix");
   if (countries.length === 0 || scenarios.length === 0) return null;
 
   const scenarioWinners = scenarios.map((s) => ({
@@ -70,7 +72,7 @@ export function MatrixSummary({ countries, scenarios, cells }: Props) {
     >
       <div className="flex flex-col gap-2">
         <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-          Лучшая страна по сценарию
+          {t("bestCountryPerScenario")}
         </h4>
         <ul className="text-c3 flex flex-col gap-1 text-sm">
           {scenarioWinners.map(({ scenario, winner }) => (
@@ -85,7 +87,7 @@ export function MatrixSummary({ countries, scenarios, cells }: Props) {
       </div>
       <div className="flex flex-col gap-2">
         <h4 className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
-          Лучший сценарий по стране
+          {t("bestScenarioPerCountry")}
         </h4>
         <ul className="text-c3 flex flex-col gap-1 text-sm">
           {countryBest.map(({ country, best }) => (

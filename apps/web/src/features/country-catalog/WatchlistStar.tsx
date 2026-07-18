@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@country-decision-atlas/ui";
 import { Star } from "lucide-react";
 import { Link } from "../../i18n/navigation";
@@ -20,13 +21,14 @@ export function WatchlistStar({
   saved: boolean;
   authenticated: boolean;
 }) {
+  const t = useTranslations("countryCatalog");
   const toggle = useToggleWatchlistMutation();
 
   if (!authenticated) {
     return (
       <Link
         href={routes.login}
-        aria-label="Войдите, чтобы сохранить страну"
+        aria-label={t("loginToSave")}
         data-testid="watchlist-star-login-required"
         className={cn(STAR_BUTTON_CLASS, "text-c4 hover:text-gold3")}
       >
@@ -47,7 +49,7 @@ export function WatchlistStar({
       }
       disabled={toggle.isPending}
       aria-pressed={saved}
-      aria-label={saved ? "Убрать из watchlist" : "Сохранить в watchlist"}
+      aria-label={saved ? t("removeFromWatchlist") : t("addToWatchlist")}
       data-testid="watchlist-star-toggle"
       className={cn(
         STAR_BUTTON_CLASS,

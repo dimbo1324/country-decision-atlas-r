@@ -8,8 +8,14 @@ import {
 } from "./format";
 
 describe("formatDate", () => {
-  it("formats an ISO date string in Russian", () => {
+  it("defaults to Russian for callers that don't pass a locale", () => {
     expect(formatDate("2026-01-15")).toBe("15 янв. 2026 г.");
+  });
+
+  it("formats in the requested locale", () => {
+    expect(formatDate("2026-01-15", "ru")).toBe("15 янв. 2026 г.");
+    expect(formatDate("2026-01-15", "en")).toBe("Jan 15, 2026");
+    expect(formatDate("2026-01-15", "es")).toBe("15 ene 2026");
   });
 
   it("returns an em dash for null or undefined", () => {
@@ -23,10 +29,14 @@ describe("formatDate", () => {
 });
 
 describe("formatDateTime", () => {
-  it("formats date and time in Russian", () => {
+  it("defaults to Russian for callers that don't pass a locale", () => {
     expect(formatDateTime("2026-01-15T10:30:00Z")).toMatch(
       /15\.01\.2026, \d{2}:\d{2}:\d{2}/,
     );
+  });
+
+  it("formats in the requested locale", () => {
+    expect(formatDateTime("2026-01-15T10:30:00Z", "en")).toMatch(/1\/15\/2026/);
   });
 
   it("returns an em dash for null or undefined", () => {

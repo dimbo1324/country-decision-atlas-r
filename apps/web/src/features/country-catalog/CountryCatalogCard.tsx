@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { components } from "@country-decision-atlas/contracts/generated/types";
@@ -17,6 +18,7 @@ export function CountryCatalogCard({
   saved: boolean;
   authenticated: boolean;
 }) {
+  const t = useTranslations("countryCatalog");
   return (
     <Card className="relative flex flex-col gap-4">
       <div className="absolute top-4 right-4">
@@ -60,7 +62,7 @@ export function CountryCatalogCard({
           )}
         </div>
         <span className="font-mono text-gold3 mt-auto text-[10px] tracking-[0.15em] uppercase">
-          Открыть досье <ArrowNext />
+          {t("openDossier")} <ArrowNext />
         </span>
       </Link>
     </Card>

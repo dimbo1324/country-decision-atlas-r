@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   HorizontalPager,
   MobileStack,
@@ -47,6 +48,7 @@ export function HomeDeck({
   latestLegalEvents,
   keyInsights,
 }: HomeDeckProps) {
+  const t = useTranslations("home");
   const [index, setIndex] = useState(0);
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 821px)");
@@ -55,13 +57,13 @@ export function HomeDeck({
     () => [
       {
         id: "countries",
-        navLabel: "Страны",
+        navLabel: t("slideCountries"),
         accent: "gold",
         content: <CountryOverviewCards countries={countries} />,
       },
       {
         id: "scenarios",
-        navLabel: "Сценарии",
+        navLabel: t("slideScenarios"),
         accent: "blue",
         content: (
           <div className="flex flex-col gap-8">
@@ -72,7 +74,7 @@ export function HomeDeck({
       },
       {
         id: "signals",
-        navLabel: "Сигналы",
+        navLabel: t("slideSignals"),
         accent: "terra",
         content: (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -82,7 +84,7 @@ export function HomeDeck({
         ),
       },
     ],
-    [countries, scenarioWinners, matrix, latestLegalEvents, keyInsights],
+    [countries, scenarioWinners, matrix, latestLegalEvents, keyInsights, t],
   );
 
   if (reducedMotion) {
@@ -108,6 +110,11 @@ export function HomeDeck({
           slides={slides}
           index={index}
           onIndexChange={setIndex}
+          prevLabel={t("pagerPrevLabel")}
+          nextLabel={t("pagerNextLabel")}
+          prevTooltipPrefix={t("pagerPrevTooltip")}
+          nextTooltipPrefix={t("pagerNextTooltip")}
+          slidesGroupAriaLabel={t("pagerSlidesGroupLabel")}
         />
       ) : (
         <MobileStack slides={slides} />

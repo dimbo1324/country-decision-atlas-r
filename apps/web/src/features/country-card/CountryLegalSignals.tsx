@@ -8,6 +8,7 @@ import {
 import { ConfidenceBadge } from "../../shared/ui/ConfidenceBadge";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type CountryLegalSignalsProps = {
   legalSignals: CountryReadModelResponse["legal_signals"];
@@ -16,6 +17,7 @@ type CountryLegalSignalsProps = {
 export function CountryLegalSignals({
   legalSignals,
 }: CountryLegalSignalsProps) {
+  const locale = useAppLocale();
   if (!legalSignals || legalSignals.length === 0) {
     return (
       <EmptyState message="Правовые сигналы для этой страны пока отсутствуют." />
@@ -60,12 +62,12 @@ export function CountryLegalSignals({
             )}
             {signal.published_date && (
               <Badge variant="default">
-                Опубликовано: {formatDate(signal.published_date)}
+                Опубликовано: {formatDate(signal.published_date, locale)}
               </Badge>
             )}
             {signal.effective_date && (
               <Badge variant="default">
-                Действует с: {formatDate(signal.effective_date)}
+                Действует с: {formatDate(signal.effective_date, locale)}
               </Badge>
             )}
           </div>

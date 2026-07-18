@@ -1,13 +1,15 @@
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { DataJournalEntry } from "../../shared/api/data-journal";
 import { formatDate } from "../../shared/lib/format";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type DataJournalEntryCardProps = {
   entry: DataJournalEntry;
 };
 
 export function DataJournalEntryCard({ entry }: DataJournalEntryCardProps) {
-  const eventDate = formatDate(entry.event_date);
+  const locale = useAppLocale();
+  const eventDate = formatDate(entry.event_date, locale);
 
   return (
     <div data-testid="data-journal-entry">

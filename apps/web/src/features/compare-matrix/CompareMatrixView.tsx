@@ -2,24 +2,27 @@
 
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@country-decision-atlas/ui";
-import type { components } from "@country-decision-atlas/contracts/generated/types";
 import { matrixQuery } from "../../entities/decision/api";
+import { asSupportedLocale, toApiLocale } from "../../shared/lib/locale";
 import { CountryScenarioMatrix } from "./CountryScenarioMatrix";
 import { MatrixEmptyState } from "./MatrixEmptyState";
 import { MatrixLegend } from "./MatrixLegend";
 import { MatrixSummary } from "./MatrixSummary";
 
-type LocaleCode = components["schemas"]["LocaleCode"];
-
 type Props = {
+  /** The real interface locale (e.g. "es") -- kept as-is for URL building
+   * further down in `MatrixCell`. The backend's `LocaleCode` only knows
+   * en/ru, so the actual data fetch below maps it through `toApiLocale`
+   * rather than casting this value directly. */
   locale: string;
 };
 
 export function CompareMatrixView({ locale }: Props) {
-  const { data, isPending, isError } = useQuery(
-    matrixQuery(locale as LocaleCode),
-  );
+  const t = useTranslations("compareMatrix");
+  const apiLocale = toApiLocale(asSupportedLocale(locale));
+  const { data, isPending, isError } = useQuery(matrixQuery(apiLocale));
   const searchParams = useSearchParams();
 
   if (isPending) {
@@ -27,9 +30,7 @@ export function CompareMatrixView({ locale }: Props) {
   }
 
   if (isError || !data) {
-    return (
-      <MatrixEmptyState message="Не удалось загрузить матрицу сравнения." />
-    );
+    return <MatrixEmptyState message={t("loadError")} />;
   }
 
   const allCountries = data.countries ?? [];
