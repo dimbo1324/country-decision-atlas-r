@@ -13,6 +13,10 @@ interface DrawerProps {
   title: ReactNode;
   eyebrow?: ReactNode;
   children: ReactNode;
+  /** This package has no i18n context of its own (Storybook renders it with
+   * none at all) — callers with a real locale pass the translated string;
+   * untranslated callers keep the original Russian default. */
+  closeLabel?: string;
 }
 
 export function Drawer({
@@ -22,6 +26,7 @@ export function Drawer({
   title,
   eyebrow,
   children,
+  closeLabel = "Закрыть",
 }: DrawerProps) {
   useEffect(() => {
     if (!open) return;
@@ -81,7 +86,7 @@ export function Drawer({
           </div>
           <button
             onClick={onClose}
-            aria-label="Закрыть"
+            aria-label={closeLabel}
             className="border-warm text-c2 hover:border-warm-hi hover:text-c1 flex h-9 w-9 shrink-0 items-center justify-center border transition-transform duration-300 hover:rotate-90"
           >
             <X

@@ -11,13 +11,21 @@ export interface DossierRailSection {
 interface DossierRailProps {
   sections: DossierRailSection[];
   className?: string;
+  /** This package has no i18n context of its own (Storybook renders it
+   * with none at all) — callers with a real locale pass the translated
+   * string; untranslated callers keep the original Russian default. */
+  ariaLabel?: string;
 }
 
 /** Sticky section nav for long single-page dossiers (country card, decision
  * passport). Highlights the section currently intersecting the viewport
  * instead of tracking scroll position by hand — one IntersectionObserver,
  * torn down on unmount. */
-export function DossierRail({ sections, className }: DossierRailProps) {
+export function DossierRail({
+  sections,
+  className,
+  ariaLabel = "Разделы досье",
+}: DossierRailProps) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -43,7 +51,7 @@ export function DossierRail({ sections, className }: DossierRailProps) {
 
   return (
     <nav
-      aria-label="Разделы досье"
+      aria-label={ariaLabel}
       data-testid="dossier-rail"
       className={cn(
         "border-warm bg-bg2/60 sticky top-24 hidden max-h-[calc(100vh-8rem)] w-52 shrink-0 flex-col gap-1 overflow-y-auto border-l px-4 py-2 lg:flex",

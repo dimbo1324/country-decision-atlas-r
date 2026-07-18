@@ -75,13 +75,50 @@ touched.
       owner had cleared images/volumes) — migrations, bootstrap,
       demo-country restore, search index rebuild, all re-run cleanly.
 
-## Stage 2 — packages/ui strategy (in progress)
+## Stage 2 — packages/ui strategy (done)
 
-- [ ] Determine whether the ~11 flagged `packages/ui` components take
-      text via props already (fix at the apps/web call site) or hardcode
-      Cyrillic internally (needs a different approach, since
-      `packages/ui` has no `next-intl` context of its own outside
-      Storybook).
+- [+] Checked each of the 11 originally-flagged files individually rather
+      than assuming one strategy fits all:
+      - **`ModerationQueue`** — excluded. Confirmed internal-only (used
+        exclusively by `/internal/*` admin/moderation pages), out of the
+        owner's explicit public-surface scope.
+      - **`PassportCard`** — excluded. Grepped `apps/web/src` for actual
+        usage: the only hit is a *comment* in the decision-passport page
+        noting its perforated-edge/stamp styling was manually
+        recreated there, not imported. The component itself is never
+        rendered anywhere in the real product (Storybook-only showcase)
+        — dead code from a real user's perspective, so translating its
+        ~15 hardcoded strings would have zero user-facing effect. Left
+        untouched; documented here rather than silently skipped.
+      - **`AnalysisOverlay`** — already fully prop-driven (`label` prop
+        with a Russian default) since it was first written. No change
+        needed; the translated value gets wired in during the Decision
+        flow content stage.
+      - **Breadcrumbs, Drawer, Pagination, DossierRail, DivergingMeter,
+        LegalSignalTimeline** — added one or a few optional string props
+        each (`ariaLabel`, `closeLabel`, `previousLabel`/`nextLabel`,
+        `scaleLabel`, …), all defaulting to the existing Russian text so
+        Storybook and any not-yet-migrated caller keep working unchanged.
+      - **`HorizontalPager`** — same pattern, five new props
+        (`prevLabel`/`nextLabel`/`prevTooltipPrefix`/`nextTooltipPrefix`/
+        `slidesGroupAriaLabel`); the `NavArrow` sub-component's tooltip
+        text (`"Назад"`/`"Далее"` hardcoded by direction) also became a
+        `tooltipPrefix` prop.
+      - **`DriftBoard`** — the one with real volume (7 strings: eyebrow
+        prefix, two stat labels, two chart-axis labels, a methodology
+        paragraph, a legal-disclaimer line) — bundled into one
+        `labels?: Partial<DriftBoardLabels>` prop merged over a
+        `DEFAULT_LABELS` object, rather than 7 separate props.
+- [+] None of these are wired up to translated values yet — that happens
+      per-area during Stage 3, at the `apps/web` call site that already
+      has the right `useTranslations()` context (this package still has
+      none of its own, deliberately, since Storybook renders every story
+      with zero i18n provider).
+- [+] Verify: `packages/ui` typecheck/lint clean, Vitest 8/8, Storybook
+      `build-storybook` clean (defaults preserve current behavior for
+      every untouched story); `apps/web` typecheck clean and `next build`
+      clean (confirms the widened prop signatures don't break any
+      existing call site).
 
 ## Stage 3 — Content migration (154 files, by feature area)
 

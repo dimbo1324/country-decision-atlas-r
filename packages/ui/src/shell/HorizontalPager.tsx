@@ -18,6 +18,14 @@ interface HorizontalPagerProps {
   index: number;
   onIndexChange: (index: number) => void;
   className?: string;
+  /** This package has no i18n context of its own (Storybook renders it
+   * with none at all) — callers with a real locale pass translated
+   * strings; untranslated callers keep the original Russian defaults. */
+  prevLabel?: string;
+  nextLabel?: string;
+  prevTooltipPrefix?: string;
+  nextTooltipPrefix?: string;
+  slidesGroupAriaLabel?: string;
 }
 
 const SWIPE_THRESHOLD_PX = 60;
@@ -30,6 +38,7 @@ function NavArrow({
   disabled,
   label,
   targetLabel,
+  tooltipPrefix,
   hovered,
   onHoverChange,
   testId,
@@ -39,6 +48,7 @@ function NavArrow({
   disabled: boolean;
   label: string;
   targetLabel?: string;
+  tooltipPrefix: string;
   hovered: boolean;
   onHoverChange: (hovered: boolean) => void;
   testId: string;
@@ -76,7 +86,7 @@ function NavArrow({
             hovered ? "opacity-100" : "opacity-0",
           )}
         >
-          {direction === "prev" ? "Назад" : "Далее"} · {targetLabel}
+          {tooltipPrefix} · {targetLabel}
         </span>
       )}
     </div>
@@ -95,6 +105,11 @@ export function HorizontalPager({
   index,
   onIndexChange,
   className,
+  prevLabel = "Предыдущий блок",
+  nextLabel = "Следующий блок",
+  prevTooltipPrefix = "Назад",
+  nextTooltipPrefix = "Далее",
+  slidesGroupAriaLabel = "Слайды колоды",
 }: HorizontalPagerProps) {
   const isFirst = index === 0;
   const isLast = index === slides.length - 1;
@@ -197,8 +212,9 @@ export function HorizontalPager({
           direction="prev"
           onClick={goPrev}
           disabled={isFirst}
-          label="Предыдущий блок"
+          label={prevLabel}
           targetLabel={isFirst ? undefined : slides[index - 1]?.navLabel}
+          tooltipPrefix={prevTooltipPrefix}
           hovered={hoverSide === "prev"}
           onHoverChange={(hovered) => setHoverSide(hovered ? "prev" : null)}
           testId="pager-prev"
@@ -221,7 +237,7 @@ export function HorizontalPager({
               and current-item semantics it was missing. */}
           <div
             role="group"
-            aria-label="Слайды колоды"
+            aria-label={slidesGroupAriaLabel}
             className="flex items-center gap-2"
           >
             {slides.map((slide, slideIndex) => (
@@ -247,8 +263,9 @@ export function HorizontalPager({
           direction="next"
           onClick={goNext}
           disabled={isLast}
-          label="Следующий блок"
+          label={nextLabel}
           targetLabel={isLast ? undefined : slides[index + 1]?.navLabel}
+          tooltipPrefix={nextTooltipPrefix}
           hovered={hoverSide === "next"}
           onHoverChange={(hovered) => setHoverSide(hovered ? "next" : null)}
           testId="pager-next"

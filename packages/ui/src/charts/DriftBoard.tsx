@@ -84,16 +84,48 @@ function RowSparkline({
   );
 }
 
+export interface DriftBoardLabels {
+  eyebrowPrefix: string;
+  netDrift: string;
+  direction: string;
+  driftIndexAxis: string;
+  weeksAxis: string;
+  methodologyNote: string;
+  legalDisclaimer: string;
+}
+
+const DEFAULT_LABELS: DriftBoardLabels = {
+  eyebrowPrefix: "Дрейф · REF CA-2026-",
+  netDrift: "Чистый дрейф · 16 нед.",
+  direction: "Направление",
+  driftIndexAxis: "Индекс дрейфа",
+  weeksAxis: "16 недель",
+  methodologyNote:
+    "Дрейф взвешивается по уровню воздействия каждого правового сигнала. При выборке менее трёх событий за окно платформа честно помечает результат как «недостаточно данных» и не показывает ложный тренд.",
+  legalDisclaimer:
+    "Это не юридическая консультация — данные носят справочный характер.",
+};
+
 interface DriftBoardProps {
   rows: DriftBoardRow[];
   active: boolean;
   /** @default "live" */
   mode?: ChartMode;
+  /** This package has no i18n context of its own (Storybook renders it
+   * with none at all) — callers with a real locale pass translated
+   * labels; untranslated callers keep the original Russian defaults. */
+  labels?: Partial<DriftBoardLabels>;
 }
 
 /** The mockup's drift board: one row per jurisdiction with a live inline
  * sparkline and a direction badge. Clicking a row opens its dossier. */
-export function DriftBoard({ rows, active, mode = "live" }: DriftBoardProps) {
+export function DriftBoard({
+  rows,
+  active,
+  mode = "live",
+  labels,
+}: DriftBoardProps) {
+  const l = { ...DEFAULT_LABELS, ...labels };
   const [selected, setSelected] = useState<DriftBoardRow | null>(null);
 
   return (
@@ -139,7 +171,7 @@ export function DriftBoard({ rows, active, mode = "live" }: DriftBoardProps) {
         open={selected !== null}
         onClose={() => setSelected(null)}
         accent="terra"
-        eyebrow={selected ? `Дрейф · REF CA-2026-${selected.flag}` : ""}
+        eyebrow={selected ? `${l.eyebrowPrefix}${selected.flag}` : ""}
         title={selected?.name ?? ""}
       >
         {selected && (
@@ -151,7 +183,7 @@ export function DriftBoard({ rows, active, mode = "live" }: DriftBoardProps) {
                   {selected.driftValue}
                 </div>
                 <div className="font-mono text-c3 text-[9px] tracking-[0.2em] uppercase">
-                  Чистый дрейф · 16 нед.
+                  {l.netDrift}
                 </div>
               </div>
               <div>
@@ -159,7 +191,7 @@ export function DriftBoard({ rows, active, mode = "live" }: DriftBoardProps) {
                   {selected.statusLabel}
                 </div>
                 <div className="font-mono text-c3 text-[9px] tracking-[0.2em] uppercase">
-                  Направление
+                  {l.direction}
                 </div>
               </div>
             </div>
@@ -169,20 +201,16 @@ export function DriftBoard({ rows, active, mode = "live" }: DriftBoardProps) {
                 active={selected !== null}
                 accent={STATUS_STYLES[selected.status].accent}
                 zeroLine
-                yAxisLabel="Индекс дрейфа"
-                xAxisLabel="16 недель"
+                yAxisLabel={l.driftIndexAxis}
+                xAxisLabel={l.weeksAxis}
                 mode={mode}
               />
             </div>
             <p className="text-c3 text-sm leading-relaxed">
-              Дрейф взвешивается по уровню воздействия каждого правового
-              сигнала. При выборке менее трёх событий за окно платформа честно
-              помечает результат как «недостаточно данных» и не показывает
-              ложный тренд.
+              {l.methodologyNote}
             </p>
             <p className="font-quote text-c4 text-xs italic">
-              Это не юридическая консультация — данные носят справочный
-              характер.
+              {l.legalDisclaimer}
             </p>
           </div>
         )}

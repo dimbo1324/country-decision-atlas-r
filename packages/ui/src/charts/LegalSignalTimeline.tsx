@@ -13,6 +13,11 @@ interface LegalSignalTimelineProps {
   active: boolean;
   width?: number;
   height?: number;
+  /** This package has no i18n context of its own (Storybook renders it
+   * with none at all) — callers with a real locale build and pass the
+   * translated, already-interpolated string; untranslated callers keep
+   * the original Russian default. */
+  ariaLabel?: string;
 }
 
 const IMPACT_ACCENT: Record<LegalSignalEvent["impact"], Accent> = {
@@ -34,6 +39,7 @@ export function LegalSignalTimeline({
   active,
   width = 760,
   height = 180,
+  ariaLabel,
 }: LegalSignalTimelineProps) {
   const reducedMotion = useReducedMotion();
   const [entered, setEntered] = useState(false);
@@ -78,7 +84,9 @@ export function LegalSignalTimeline({
       viewBox={`0 0 ${width} ${height}`}
       className="h-full w-full"
       role="img"
-      aria-label={`Таймлайн правовых сигналов, ${sorted.length} событий`}
+      aria-label={
+        ariaLabel ?? `Таймлайн правовых сигналов, ${sorted.length} событий`
+      }
     >
       <line
         x1={PAD_X}

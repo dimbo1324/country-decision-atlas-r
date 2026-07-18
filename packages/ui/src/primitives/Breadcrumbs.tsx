@@ -15,16 +15,21 @@ interface BreadcrumbsProps {
    * plain anchor; keeps this primitive framework-agnostic. */
   renderLink?: (item: BreadcrumbItem, children: ReactNode) => ReactNode;
   className?: string;
+  /** This package has no i18n context of its own (Storybook renders it with
+   * none at all) — callers with a real locale pass the translated string;
+   * untranslated callers keep the original Russian default. */
+  ariaLabel?: string;
 }
 
 export function Breadcrumbs({
   items,
   renderLink,
   className,
+  ariaLabel = "Хлебные крошки",
 }: BreadcrumbsProps) {
   return (
     <nav
-      aria-label="Хлебные крошки"
+      aria-label={ariaLabel}
       className={cn(
         "font-mono text-c3 flex flex-wrap items-center gap-2 text-[10px] tracking-[0.15em] uppercase",
         className,

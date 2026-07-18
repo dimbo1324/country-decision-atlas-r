@@ -18,6 +18,10 @@ interface DivergingMeterProps {
   maxValue?: number;
   /** @default "live" */
   mode?: ChartMode;
+  /** This package has no i18n context of its own (Storybook renders it
+   * with none at all) — callers with a real locale pass the translated
+   * string; untranslated callers keep the original Russian default. */
+  scaleLabel?: string;
 }
 
 // Deliberately plain HTML/CSS instead of canvas: three rounds of bugs in the
@@ -37,6 +41,7 @@ export function DivergingMeter({
   active,
   maxValue = 100,
   mode = "live",
+  scaleLabel = "Балл · шкала 0–100",
 }: DivergingMeterProps) {
   const reducedMotion = useReducedMotion();
   const effectiveMode: ChartMode = reducedMotion ? "static" : mode;
@@ -76,7 +81,7 @@ export function DivergingMeter({
     <div className="flex h-full flex-col gap-5">
       <div className="font-mono text-c4 flex items-center justify-between text-[9px] tracking-[0.2em] uppercase">
         <span style={{ color: leftColor }}>{leftLabel}</span>
-        <span>Балл · шкала 0–100</span>
+        <span>{scaleLabel}</span>
         <span style={{ color: rightColor }}>{rightLabel}</span>
       </div>
       <div className="flex flex-1 flex-col justify-center gap-5">
