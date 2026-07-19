@@ -3,7 +3,7 @@ from app.core.errors import api_error
 from app.repositories import data_error_reports as repository
 from app.repositories.domain_events import insert_domain_event
 from app.schemas.data_error_reports import DataErrorReportCreate
-from app.services.community import ensure_feature_enabled
+from app.services.community import FEATURE_KEY_COMMUNITY, ensure_feature_enabled
 from psycopg import Connection
 from typing import Any
 
@@ -13,7 +13,7 @@ def submit_data_error_report(
     settings: Settings,
     payload: DataErrorReportCreate,
 ) -> dict[str, Any]:
-    ensure_feature_enabled(connection, settings, "community_enabled")
+    ensure_feature_enabled(connection, settings, FEATURE_KEY_COMMUNITY)
     ensure_feature_enabled(
         connection, settings, "community_error_reports_enabled"
     )

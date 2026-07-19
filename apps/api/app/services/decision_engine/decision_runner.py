@@ -539,7 +539,7 @@ def _build_summary(
 def _rank_results(
     results: list[DecisionCountryResult],
 ) -> list[DecisionCountryResult]:
-    confidence_rank = {"high": 3, "medium": 2, "low": 1}
+    confidence_rank = helpers.CONFIDENCE_RANK
     ranked = sorted(
         results,
         key=lambda item: (
@@ -556,7 +556,7 @@ def _rank_results(
 def _rank_persona_adjusted_results(
     results: list[DecisionCountryResult],
 ) -> list[DecisionCountryResult]:
-    confidence_rank = {"high": 3, "medium": 2, "low": 1}
+    confidence_rank = helpers.CONFIDENCE_RANK
     ranked = sorted(
         results,
         key=lambda item: (

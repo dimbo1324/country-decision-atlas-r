@@ -1,4 +1,5 @@
 from app.core.database import execute_one, fetch_all, fetch_one
+from app.repositories.staleness import RECOMPUTE_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
 
@@ -120,13 +121,13 @@ def list_stale_author_reputation(
 ) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             author_user_id::text AS author_user_id,
             computed_at,
             EXTRACT(EPOCH FROM (NOW() - computed_at)) / 86400 AS days_old
         FROM author_reputation
-        WHERE computed_at < NOW() - INTERVAL '30 days'
+        WHERE computed_at < NOW() - INTERVAL '{RECOMPUTE_STALE_AFTER_DAYS} days'
         ORDER BY computed_at ASC
         """,
     )

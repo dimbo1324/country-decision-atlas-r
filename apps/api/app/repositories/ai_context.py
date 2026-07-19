@@ -1,4 +1,5 @@
 from app.core.database import fetch_all
+from app.repositories.staleness import SOURCE_FRESHNESS_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
 
@@ -46,7 +47,7 @@ def search_ai_context_items(
             'medium' AS confidence,
             CASE
                 WHEN sd.source_updated_at IS NULL THEN 'unknown'
-                WHEN sd.source_updated_at < NOW() - INTERVAL '365 days' THEN 'stale'
+                WHEN sd.source_updated_at < NOW() - INTERVAL '{SOURCE_FRESHNESS_STALE_AFTER_DAYS} days' THEN 'stale'
                 ELSE 'fresh'
             END AS freshness_status,
             sd.source_updated_at::text AS last_verified_at,
@@ -111,7 +112,7 @@ def get_route_ai_context(
             'medium' AS confidence,
             CASE
                 WHEN sd.source_updated_at IS NULL THEN 'unknown'
-                WHEN sd.source_updated_at < NOW() - INTERVAL '365 days' THEN 'stale'
+                WHEN sd.source_updated_at < NOW() - INTERVAL '{SOURCE_FRESHNESS_STALE_AFTER_DAYS} days' THEN 'stale'
                 ELSE 'fresh'
             END AS freshness_status,
             sd.source_updated_at::text AS last_verified_at,
@@ -242,7 +243,7 @@ def _latest_search_documents(
             'medium' AS confidence,
             CASE
                 WHEN sd.source_updated_at IS NULL THEN 'unknown'
-                WHEN sd.source_updated_at < NOW() - INTERVAL '365 days' THEN 'stale'
+                WHEN sd.source_updated_at < NOW() - INTERVAL '{SOURCE_FRESHNESS_STALE_AFTER_DAYS} days' THEN 'stale'
                 ELSE 'fresh'
             END AS freshness_status,
             sd.source_updated_at::text AS last_verified_at,

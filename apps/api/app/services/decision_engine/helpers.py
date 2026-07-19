@@ -53,12 +53,14 @@ def _score_label_literal(
     return cast(ScoreLabel, get_score_label(score, thresholds))
 
 
+CONFIDENCE_RANK: dict[str, int] = {"low": 1, "medium": 2, "high": 3}
+
+
 def aggregate_confidence(
     values: Iterable[str | None], thresholds: ConfidenceThresholds
 ) -> str:
-    confidence_value = {"low": 1, "medium": 2, "high": 3}
     clean_values = [
-        confidence_value[value] for value in values if value in confidence_value
+        CONFIDENCE_RANK[value] for value in values if value in CONFIDENCE_RANK
     ]
     if not clean_values:
         return "low"

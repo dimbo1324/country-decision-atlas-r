@@ -3,11 +3,9 @@ from app.repositories.data_quality._shared import (
     MVP_SCENARIO_SLUGS,
     fetch_all,
 )
+from app.repositories.staleness import RECOMPUTE_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
-
-
-STALE_DAYS_THRESHOLD = 30
 
 
 def list_mvp_countries_missing_global_platform_metrics(
@@ -121,7 +119,7 @@ def list_stale_platform_metrics(
 ) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             cpm.id::text AS id,
             c.slug AS country_slug,
@@ -132,7 +130,7 @@ def list_stale_platform_metrics(
         FROM country_platform_metrics cpm
         JOIN countries c ON c.id = cpm.country_id
         WHERE cpm.computed_at IS NOT NULL
-          AND cpm.computed_at < NOW() - INTERVAL '30 days'
+          AND cpm.computed_at < NOW() - INTERVAL '{RECOMPUTE_STALE_AFTER_DAYS} days'
         ORDER BY cpm.computed_at ASC
         """,
         (),

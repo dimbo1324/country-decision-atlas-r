@@ -61,6 +61,7 @@ class Settings(BaseSettings):
     database_pool_min_size: int = 1
     database_pool_max_size: int = 10
     database_pool_timeout_seconds: float = 30.0
+    redis_connect_timeout_seconds: float = 0.2
 
     @property
     def cors_origins(self) -> list[str]:

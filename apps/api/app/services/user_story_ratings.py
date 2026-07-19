@@ -2,7 +2,7 @@ from app.core.config import Settings
 from app.core.errors import api_error
 from app.repositories import user_story_ratings as repository
 from app.schemas.user_story_ratings import UserStoryRatingCreate
-from app.services.community import ensure_feature_enabled
+from app.services.community import FEATURE_KEY_COMMUNITY, ensure_feature_enabled
 from psycopg import Connection
 from typing import Any
 
@@ -12,7 +12,7 @@ def submit_user_story_rating(
     settings: Settings,
     payload: UserStoryRatingCreate,
 ) -> dict[str, Any]:
-    ensure_feature_enabled(connection, settings, "community_enabled")
+    ensure_feature_enabled(connection, settings, FEATURE_KEY_COMMUNITY)
     ensure_feature_enabled(
         connection, settings, "community_story_ratings_enabled"
     )

@@ -19,7 +19,9 @@ def _get_redis_client() -> Any | None:
         from redis import Redis
 
         client = Redis.from_url(
-            settings.redis_url, socket_connect_timeout=0.2, socket_timeout=0.2
+            settings.redis_url,
+            socket_connect_timeout=settings.redis_connect_timeout_seconds,
+            socket_timeout=settings.redis_connect_timeout_seconds,
         )
         client.ping()
         return client

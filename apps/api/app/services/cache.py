@@ -122,7 +122,9 @@ def get_cache_backend(settings: Settings | None = None) -> CacheBackend:
         from redis import Redis
 
         client = Redis.from_url(
-            resolved.redis_url, socket_connect_timeout=0.2, socket_timeout=0.2
+            resolved.redis_url,
+            socket_connect_timeout=resolved.redis_connect_timeout_seconds,
+            socket_timeout=resolved.redis_connect_timeout_seconds,
         )
         _redis_backend = RedisCache(client, resolved.cache_namespace)
         return _redis_backend

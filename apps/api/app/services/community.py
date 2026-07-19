@@ -20,6 +20,12 @@ from psycopg import Connection
 from typing import Any
 
 
+# Shared across every community sub-feature (Q&A, story ratings, error
+# reports) -- named once so the 5 call sites across 3 files can't drift
+# out of sync via a typo in the raw string.
+FEATURE_KEY_COMMUNITY = "community_enabled"
+
+
 def ensure_feature_enabled(
     connection: Connection[Any], settings: Settings, feature_key: str
 ) -> None:
@@ -45,7 +51,7 @@ def submit_question(
     settings: Settings,
     payload: CommunityQuestionCreate,
 ) -> dict[str, Any]:
-    ensure_feature_enabled(connection, settings, "community_enabled")
+    ensure_feature_enabled(connection, settings, FEATURE_KEY_COMMUNITY)
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
     row = repository.insert_question(
         connection,
@@ -109,7 +115,7 @@ def submit_answer(
     question_id: str,
     payload: CommunityAnswerCreate,
 ) -> dict[str, Any]:
-    ensure_feature_enabled(connection, settings, "community_enabled")
+    ensure_feature_enabled(connection, settings, FEATURE_KEY_COMMUNITY)
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
     question = repository.get_question(
         connection, question_id, public_only=True
@@ -147,7 +153,7 @@ def submit_vote(
     answer_id: str,
     payload: CommunityVoteCreate,
 ) -> ConsensusSummary:
-    ensure_feature_enabled(connection, settings, "community_enabled")
+    ensure_feature_enabled(connection, settings, FEATURE_KEY_COMMUNITY)
     ensure_feature_enabled(connection, settings, "community_qna_enabled")
     answer = repository.get_answer(connection, answer_id, public_only=True)
     if answer is None:

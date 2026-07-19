@@ -12,6 +12,18 @@ MIN_LEGAL_SIGNALS_FOR_SCORE = 3
 FRESHNESS_FRESH_DAYS = 180
 FRESHNESS_AGING_DAYS = 365
 
+TRUST_LABEL_VERY_HIGH_MIN = 85.0
+TRUST_LABEL_HIGH_MIN = 70.0
+TRUST_LABEL_MEDIUM_MIN = 50.0
+TRUST_LABEL_LOW_MIN = 30.0
+
+CONFIDENCE_HIGH_MIN_SOURCES = 15
+CONFIDENCE_HIGH_MIN_EVIDENCE = 20
+CONFIDENCE_HIGH_MIN_LEGAL_SIGNALS = 8
+CONFIDENCE_MEDIUM_MIN_SOURCES = 10
+CONFIDENCE_MEDIUM_MIN_EVIDENCE = 10
+CONFIDENCE_MEDIUM_MIN_LEGAL_SIGNALS = 5
+
 
 def _clamp(value: float, lo: float = 0.0, hi: float = 100.0) -> float:
     return max(lo, min(hi, value))
@@ -95,13 +107,13 @@ def compute_contradiction_component(
 def compute_trust_label(trust_score: float | None) -> str:
     if trust_score is None:
         return "insufficient_data"
-    if trust_score >= 85:
+    if trust_score >= TRUST_LABEL_VERY_HIGH_MIN:
         return "very_high"
-    if trust_score >= 70:
+    if trust_score >= TRUST_LABEL_HIGH_MIN:
         return "high"
-    if trust_score >= 50:
+    if trust_score >= TRUST_LABEL_MEDIUM_MIN:
         return "medium"
-    if trust_score >= 30:
+    if trust_score >= TRUST_LABEL_LOW_MIN:
         return "low"
     return "very_low"
 
@@ -113,13 +125,17 @@ def compute_confidence(
     freshness_status: str,
 ) -> str:
     if (
-        source_count >= 15
-        and evidence_count >= 20
-        and legal_signal_count >= 8
+        source_count >= CONFIDENCE_HIGH_MIN_SOURCES
+        and evidence_count >= CONFIDENCE_HIGH_MIN_EVIDENCE
+        and legal_signal_count >= CONFIDENCE_HIGH_MIN_LEGAL_SIGNALS
         and freshness_status in ("fresh", "aging")
     ):
         return "high"
-    if source_count >= 10 and evidence_count >= 10 and legal_signal_count >= 5:
+    if (
+        source_count >= CONFIDENCE_MEDIUM_MIN_SOURCES
+        and evidence_count >= CONFIDENCE_MEDIUM_MIN_EVIDENCE
+        and legal_signal_count >= CONFIDENCE_MEDIUM_MIN_LEGAL_SIGNALS
+    ):
         return "medium"
     return "low"
 

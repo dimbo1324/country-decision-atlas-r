@@ -1,4 +1,5 @@
 from app.core.database import execute_one, fetch_all, fetch_one
+from app.repositories.staleness import RECOMPUTE_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
 
@@ -274,14 +275,14 @@ def list_stale_country_trust_scores(
 ) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             c.slug AS country_slug,
             cts.computed_at,
             EXTRACT(EPOCH FROM (NOW() - cts.computed_at)) / 86400 AS days_old
         FROM country_trust_scores cts
         JOIN countries c ON c.id = cts.country_id
-        WHERE cts.computed_at < NOW() - INTERVAL '30 days'
+        WHERE cts.computed_at < NOW() - INTERVAL '{RECOMPUTE_STALE_AFTER_DAYS} days'
         ORDER BY cts.computed_at ASC
         """,
     )

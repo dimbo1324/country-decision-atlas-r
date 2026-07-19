@@ -1,4 +1,5 @@
 from app.core.database import fetch_all
+from app.repositories.staleness import RECOMPUTE_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
 
@@ -427,7 +428,7 @@ def list_stale_pending_data_error_reports(
 ) -> list[dict[str, Any]]:
     return fetch_all(
         connection,
-        """
+        f"""
         SELECT
             id::text,
             entity_type,
@@ -439,7 +440,7 @@ def list_stale_pending_data_error_reports(
             created_at
         FROM data_error_reports
         WHERE status = 'pending'
-          AND created_at < NOW() - INTERVAL '30 days'
+          AND created_at < NOW() - INTERVAL '{RECOMPUTE_STALE_AFTER_DAYS} days'
         ORDER BY created_at ASC
         LIMIT 100
         """,

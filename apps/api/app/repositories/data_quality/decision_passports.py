@@ -1,4 +1,5 @@
 from app.repositories import data_quality as data_quality_repository
+from app.repositories.staleness import RECOMPUTE_STALE_AFTER_DAYS
 from psycopg import Connection
 from typing import Any
 
@@ -100,12 +101,12 @@ def list_old_active_passports_without_expires_at(
 ) -> list[dict[str, Any]]:
     return data_quality_repository.fetch_all(
         connection,
-        """
+        f"""
         SELECT id::text AS id, generated_at
         FROM decision_passports
         WHERE status = 'active'
           AND expires_at IS NULL
-          AND generated_at < NOW() - INTERVAL '30 days'
+          AND generated_at < NOW() - INTERVAL '{RECOMPUTE_STALE_AFTER_DAYS} days'
         ORDER BY generated_at DESC
         """,
     )
