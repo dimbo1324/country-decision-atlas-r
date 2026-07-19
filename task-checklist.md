@@ -783,8 +783,7 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
 - [ ] Incremental commits on this branch, one per stage (9 of 10 done;
       commits so far: `6554d7f` Stage 1, `47fc596` Stage 2, `425c199`
       Stage 3a, `8747a19` Stage 4, `1461d77` Stage 5, `58781f0` Stage 6,
-      `e538e6f` Stage 7, `71ff01f` Stage 8, Stage 9 — see the commit this
-      task-checklist update ships in).
+      `e538e6f` Stage 7, `71ff01f` Stage 8, `2a64476` Stage 9).
 - [ ] Final report — summarize what shipped, total namespaces/keys added
       across all 10 stages, any deferred tech debt (the two items in the
       Final-verification gaps list above), and confirm the branch's
