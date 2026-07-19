@@ -32,6 +32,7 @@ export function SourceEvidenceDrawer({
       onClose={onClose}
       eyebrow={t("eyebrow")}
       title={sourceTitle ?? t("titleFallback")}
+      closeLabel={t("close")}
     >
       <div
         className="flex flex-col gap-4"

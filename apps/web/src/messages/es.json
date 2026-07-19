@@ -78,6 +78,9 @@
     "linkTrips": "Viajes",
     "descTrips": "Planificador de viajes con listas de tareas."
   },
+  "breadcrumbs": {
+    "ariaLabel": "Ruta de navegación"
+  },
   "locale": {
     "switchTo": "Cambiar idioma a {locale}"
   },
@@ -329,7 +332,8 @@
     "railCommunity": "Comunidad",
     "titleCommunity": "Comunidad",
     "railTranslation": "Traducción",
-    "titleTranslationStatus": "Estado de la traducción"
+    "titleTranslationStatus": "Estado de la traducción",
+    "dossierRailAriaLabel": "Secciones del dossier"
   },
   "platformIntelligence": {
     "globalMetrics": "Métricas globales",
@@ -508,6 +512,17 @@
     "viewFeed": "Feed",
     "viewTimeline": "Cronología",
     "eventsCount": "{count} eventos",
+    "chartAriaLabel": "Cronología de señales legales, {count} eventos",
+    "chartFrameVerifiedAtTitle": "Fecha de verificación de datos",
+    "chartFrameVerifiedAtLabel": "Verificado {date}",
+    "chartFrameConfidenceTitle": "Nivel de confianza de la plataforma en este indicador",
+    "chartFrameConfidenceLow": "Confianza: baja",
+    "chartFrameConfidenceMedium": "Confianza: media",
+    "chartFrameConfidenceHigh": "Confianza: alta",
+    "chartFrameLive": "En línea",
+    "chartFrameCollapseAriaLabel": "Contraer gráfico",
+    "chartFrameExpandAriaLabel": "Ampliar gráfico",
+    "chartFrameExpandedPlaceholder": "Gráfico ampliado",
     "noEventsForFilters": "Ningún evento coincide con los filtros actuales.",
     "country": "País",
     "signalType": "Tipo de señal",
@@ -532,7 +547,8 @@
     "titleFallback": "Señal",
     "loading": "Cargando evidencia…",
     "loadError": "No se pudo cargar la evidencia.",
-    "noEvidence": "Todavía no hay evidencia vinculada a esta señal."
+    "noEvidence": "Todavía no hay evidencia vinculada a esta señal.",
+    "close": "Cerrar"
   },
   "legalSignalsPage": {
     "kicker": "Señales legales",
@@ -550,7 +566,8 @@
     "titleFallback": "Fuente",
     "loading": "Cargando evidencia…",
     "loadError": "No se pudo cargar la evidencia.",
-    "noEvidence": "Todavía no hay evidencia vinculada a esta fuente."
+    "noEvidence": "Todavía no hay evidencia vinculada a esta fuente.",
+    "close": "Cerrar"
   },
   "sourcesFilters": {
     "country": "País",

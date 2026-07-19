@@ -7,10 +7,33 @@ import { cn } from "../lib/cn";
 import { Badge } from "./Badge";
 import type { Confidence } from "../lib/confidence";
 
-const CONFIDENCE_LABEL: Record<Confidence, string> = {
-  low: "Уверенность: низкая",
-  medium: "Уверенность: средняя",
-  high: "Уверенность: высокая",
+export interface ChartFrameLabels {
+  verifiedAtTitle: string;
+  verifiedAtLabel: string;
+  confidenceTitle: string;
+  confidenceLabel: Record<Confidence, string>;
+  live: string;
+  collapseAriaLabel: string;
+  expandAriaLabel: string;
+  expandedPlaceholder: string;
+}
+
+/** This package has no i18n context of its own (Storybook renders it with
+ * none at all) — callers with a real locale pass a translated `labels`
+ * object; untranslated callers keep these original Russian defaults. */
+const DEFAULT_LABELS: ChartFrameLabels = {
+  verifiedAtTitle: "Дата верификации данных",
+  verifiedAtLabel: "Проверено {date}",
+  confidenceTitle: "Уровень уверенности платформы в этом показателе",
+  confidenceLabel: {
+    low: "Уверенность: низкая",
+    medium: "Уверенность: средняя",
+    high: "Уверенность: высокая",
+  },
+  live: "Онлайн",
+  collapseAriaLabel: "Свернуть график",
+  expandAriaLabel: "Развернуть график",
+  expandedPlaceholder: "График развёрнут",
 };
 
 const CONFIDENCE_VARIANT: Record<
@@ -35,6 +58,7 @@ interface ChartFrameProps {
   /** Extra controls rendered in the header actions row, next to the
    * expand/collapse button — e.g. an AI explain-number trigger. */
   actions?: ReactNode;
+  labels?: Partial<ChartFrameLabels>;
 }
 
 function FrameHeader({
@@ -46,6 +70,7 @@ function FrameHeader({
   expandable,
   onToggle,
   actions,
+  labels,
 }: {
   title: string;
   live: boolean;
@@ -55,6 +80,7 @@ function FrameHeader({
   expandable: boolean;
   onToggle: () => void;
   actions?: ReactNode;
+  labels: ChartFrameLabels;
 }) {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -65,17 +91,17 @@ function FrameHeader({
         {verifiedAt && (
           <Badge
             variant="default"
-            title="Дата верификации данных"
+            title={labels.verifiedAtTitle}
           >
-            Проверено {verifiedAt}
+            {labels.verifiedAtLabel.replace("{date}", verifiedAt)}
           </Badge>
         )}
         {confidence && (
           <Badge
             variant={CONFIDENCE_VARIANT[confidence]}
-            title="Уровень уверенности платформы в этом показателе"
+            title={labels.confidenceTitle}
           >
-            {CONFIDENCE_LABEL[confidence]}
+            {labels.confidenceLabel[confidence]}
           </Badge>
         )}
       </div>
@@ -83,7 +109,7 @@ function FrameHeader({
         {live && (
           <span className="font-mono text-gold3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase">
             <span className="bg-gold h-1.5 w-1.5 animate-pulse rounded-full" />
-            Онлайн
+            {labels.live}
           </span>
         )}
         {actions}
@@ -91,7 +117,9 @@ function FrameHeader({
           <button
             type="button"
             onClick={onToggle}
-            aria-label={expanded ? "Свернуть график" : "Развернуть график"}
+            aria-label={
+              expanded ? labels.collapseAriaLabel : labels.expandAriaLabel
+            }
             className="border-warm text-c3 hover:border-warm-hi hover:text-c1 flex h-7 w-7 shrink-0 items-center justify-center border transition-colors duration-300"
           >
             {expanded ? (
@@ -121,8 +149,17 @@ export function ChartFrame({
   className,
   expandable = true,
   actions,
+  labels: labelsOverride,
 }: ChartFrameProps) {
   const [expanded, setExpanded] = useState(false);
+  const labels: ChartFrameLabels = {
+    ...DEFAULT_LABELS,
+    ...labelsOverride,
+    confidenceLabel: {
+      ...DEFAULT_LABELS.confidenceLabel,
+      ...labelsOverride?.confidenceLabel,
+    },
+  };
 
   useEffect(() => {
     if (!expanded) return;
@@ -147,11 +184,12 @@ export function ChartFrame({
         expandable={expandable}
         onToggle={() => setExpanded(true)}
         actions={actions}
+        labels={labels}
       />
       <div className="relative min-h-0 flex-1">
         {expanded ? (
           <div className="font-mono text-c4 flex h-full items-center justify-center text-center text-[10px] tracking-[0.2em] uppercase">
-            График развёрнут
+            {labels.expandedPlaceholder}
           </div>
         ) : (
           children
@@ -175,6 +213,7 @@ export function ChartFrame({
                 expandable
                 onToggle={() => setExpanded(false)}
                 actions={actions}
+                labels={labels}
               />
               <div className="relative min-h-0 flex-1">{children}</div>
             </div>

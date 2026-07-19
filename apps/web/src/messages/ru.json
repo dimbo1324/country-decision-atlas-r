@@ -78,6 +78,9 @@
     "linkTrips": "Поездки",
     "descTrips": "Планировщик поездок с чек-листами."
   },
+  "breadcrumbs": {
+    "ariaLabel": "Хлебные крошки"
+  },
   "locale": {
     "switchTo": "Переключить язык на {locale}"
   },
@@ -329,7 +332,8 @@
     "railCommunity": "Сообщество",
     "titleCommunity": "Сообщество",
     "railTranslation": "Перевод",
-    "titleTranslationStatus": "Статус перевода"
+    "titleTranslationStatus": "Статус перевода",
+    "dossierRailAriaLabel": "Разделы досье"
   },
   "platformIntelligence": {
     "globalMetrics": "Глобальные показатели",
@@ -508,6 +512,17 @@
     "viewFeed": "Лента",
     "viewTimeline": "Хронология",
     "eventsCount": "Событий: {count}",
+    "chartAriaLabel": "Таймлайн правовых сигналов, {count} событий",
+    "chartFrameVerifiedAtTitle": "Дата верификации данных",
+    "chartFrameVerifiedAtLabel": "Проверено {date}",
+    "chartFrameConfidenceTitle": "Уровень уверенности платформы в этом показателе",
+    "chartFrameConfidenceLow": "Уверенность: низкая",
+    "chartFrameConfidenceMedium": "Уверенность: средняя",
+    "chartFrameConfidenceHigh": "Уверенность: высокая",
+    "chartFrameLive": "Онлайн",
+    "chartFrameCollapseAriaLabel": "Свернуть график",
+    "chartFrameExpandAriaLabel": "Развернуть график",
+    "chartFrameExpandedPlaceholder": "График развёрнут",
     "noEventsForFilters": "Нет событий, соответствующих текущим фильтрам.",
     "country": "Страна",
     "signalType": "Тип сигнала",
@@ -532,7 +547,8 @@
     "titleFallback": "Сигнал",
     "loading": "Загрузка доказательств…",
     "loadError": "Не удалось загрузить доказательства.",
-    "noEvidence": "К этому сигналу пока не привязаны доказательства."
+    "noEvidence": "К этому сигналу пока не привязаны доказательства.",
+    "close": "Закрыть"
   },
   "legalSignalsPage": {
     "kicker": "Правовые сигналы",
@@ -550,7 +566,8 @@
     "titleFallback": "Источник",
     "loading": "Загрузка доказательств…",
     "loadError": "Не удалось загрузить доказательства.",
-    "noEvidence": "К этому источнику пока не привязаны доказательства."
+    "noEvidence": "К этому источнику пока не привязаны доказательства.",
+    "close": "Закрыть"
   },
   "sourcesFilters": {
     "country": "Страна",

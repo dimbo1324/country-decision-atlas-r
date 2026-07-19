@@ -184,12 +184,29 @@ function LegalSignalsRegistryViewInner() {
                 <ChartFrame
                   title={t("eventsCount", { count: chartEvents.length })}
                   live={false}
+                  labels={{
+                    verifiedAtTitle: t("chartFrameVerifiedAtTitle"),
+                    verifiedAtLabel: t("chartFrameVerifiedAtLabel"),
+                    confidenceTitle: t("chartFrameConfidenceTitle"),
+                    confidenceLabel: {
+                      low: t("chartFrameConfidenceLow"),
+                      medium: t("chartFrameConfidenceMedium"),
+                      high: t("chartFrameConfidenceHigh"),
+                    },
+                    live: t("chartFrameLive"),
+                    collapseAriaLabel: t("chartFrameCollapseAriaLabel"),
+                    expandAriaLabel: t("chartFrameExpandAriaLabel"),
+                    expandedPlaceholder: t("chartFrameExpandedPlaceholder"),
+                  }}
                 >
                   <LegalSignalTimeline
                     events={chartEvents}
                     active
                     width={960}
                     height={220}
+                    ariaLabel={t("chartAriaLabel", {
+                      count: chartEvents.length,
+                    })}
                   />
                 </ChartFrame>
               </div>

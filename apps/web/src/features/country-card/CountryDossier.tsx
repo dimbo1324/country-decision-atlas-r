@@ -453,6 +453,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
             id,
             label: railLabel,
           }))}
+          ariaLabel={t("dossierRailAriaLabel")}
         />
       </div>
     );
@@ -517,6 +518,7 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
           id,
           label: railLabel,
         }))}
+        ariaLabel={t("dossierRailAriaLabel")}
       />
     </div>
   );

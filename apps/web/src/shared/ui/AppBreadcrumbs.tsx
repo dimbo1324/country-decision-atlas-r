@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Breadcrumbs, type BreadcrumbItem } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 
@@ -14,10 +15,12 @@ type AppBreadcrumbsProps = {
  * This component owns the `renderLink` closure instead and only takes
  * plain serializable `items` from its (possibly server) caller. */
 export function AppBreadcrumbs({ items, className }: AppBreadcrumbsProps) {
+  const t = useTranslations("breadcrumbs");
   return (
     <Breadcrumbs
       items={items}
       className={className}
+      ariaLabel={t("ariaLabel")}
       renderLink={(item, children) => (
         <Link href={item.href ?? "#"}>{children}</Link>
       )}

@@ -78,6 +78,9 @@
     "linkTrips": "Trips",
     "descTrips": "Trip planner with checklists."
   },
+  "breadcrumbs": {
+    "ariaLabel": "Breadcrumbs"
+  },
   "locale": {
     "switchTo": "Switch language to {locale}"
   },
@@ -329,7 +332,8 @@
     "railCommunity": "Community",
     "titleCommunity": "Community",
     "railTranslation": "Translation",
-    "titleTranslationStatus": "Translation status"
+    "titleTranslationStatus": "Translation status",
+    "dossierRailAriaLabel": "Dossier sections"
   },
   "platformIntelligence": {
     "globalMetrics": "Global metrics",
@@ -508,6 +512,17 @@
     "viewFeed": "Feed",
     "viewTimeline": "Timeline",
     "eventsCount": "{count} events",
+    "chartAriaLabel": "Legal signals timeline, {count} events",
+    "chartFrameVerifiedAtTitle": "Data verification date",
+    "chartFrameVerifiedAtLabel": "Verified {date}",
+    "chartFrameConfidenceTitle": "Platform confidence level for this metric",
+    "chartFrameConfidenceLow": "Confidence: low",
+    "chartFrameConfidenceMedium": "Confidence: medium",
+    "chartFrameConfidenceHigh": "Confidence: high",
+    "chartFrameLive": "Online",
+    "chartFrameCollapseAriaLabel": "Collapse chart",
+    "chartFrameExpandAriaLabel": "Expand chart",
+    "chartFrameExpandedPlaceholder": "Chart expanded",
     "noEventsForFilters": "No events match the current filters.",
     "country": "Country",
     "signalType": "Signal type",
@@ -532,7 +547,8 @@
     "titleFallback": "Signal",
     "loading": "Loading evidence…",
     "loadError": "Could not load evidence.",
-    "noEvidence": "No evidence has been linked to this signal yet."
+    "noEvidence": "No evidence has been linked to this signal yet.",
+    "close": "Close"
   },
   "legalSignalsPage": {
     "kicker": "Legal signals",
@@ -550,7 +566,8 @@
     "titleFallback": "Source",
     "loading": "Loading evidence…",
     "loadError": "Could not load evidence.",
-    "noEvidence": "No evidence has been linked to this source yet."
+    "noEvidence": "No evidence has been linked to this source yet.",
+    "close": "Close"
   },
   "sourcesFilters": {
     "country": "Country",

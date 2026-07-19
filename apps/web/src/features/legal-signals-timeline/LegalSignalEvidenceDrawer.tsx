@@ -32,6 +32,7 @@ export function LegalSignalEvidenceDrawer({
       onClose={onClose}
       eyebrow={t("eyebrow")}
       title={signalTitle ?? t("titleFallback")}
+      closeLabel={t("close")}
     >
       <div
         className="flex flex-col gap-4"
