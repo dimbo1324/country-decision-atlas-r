@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Popover,
   PopoverContent,
@@ -65,6 +66,7 @@ export function AIExplainNumberButton({
   metricKey,
   locale,
 }: AIExplainNumberButtonProps) {
+  const t = useTranslations("aiExplainNumberButton");
   const explainNumber = useExplainNumberMutation();
 
   function handleOpenChange(open: boolean) {
@@ -85,7 +87,7 @@ export function AIExplainNumberButton({
         <PopoverTrigger asChild>
           <button
             type="button"
-            aria-label="Объяснить число"
+            aria-label={t("explainAriaLabel")}
             data-testid="ai-explain-number-button"
             className="border-warm text-c3 hover:border-gold hover:text-gold3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-mono text-xs transition-colors duration-200"
           >
@@ -94,7 +96,7 @@ export function AIExplainNumberButton({
         </PopoverTrigger>
         <PopoverContent className="max-h-96 w-80 overflow-y-auto">
           {explainNumber.isPending && (
-            <p className="text-c3 text-sm">Объясняем…</p>
+            <p className="text-c3 text-sm">{t("loadingLabel")}</p>
           )}
           {explainNumber.isError && (
             <p
@@ -102,9 +104,8 @@ export function AIExplainNumberButton({
               role="alert"
             >
               {isApiError(explainNumber.error)
-                ? (explainNumber.error.error?.message ??
-                  "Объяснение временно недоступно.")
-                : "Объяснение временно недоступно."}
+                ? (explainNumber.error.error?.message ?? t("errorFallback"))
+                : t("errorFallback")}
             </p>
           )}
           {explainNumber.data && (

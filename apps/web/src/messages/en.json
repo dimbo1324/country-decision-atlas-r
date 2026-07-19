@@ -91,7 +91,14 @@
     "sectionActions": "Actions",
     "sectionResults": "Results",
     "searching": "Searching…",
-    "showAllResults": "Show all results"
+    "showAllResults": "Show all results",
+    "ariaLabel": "Search the platform",
+    "promptMessage": "Enter a query to start searching.",
+    "errorTitle": "Search unavailable",
+    "errorMessage": "Could not perform the search. Please try again.",
+    "resultsCount": "Results: {count}",
+    "emptyState": "Nothing found for the query \"{query}\".",
+    "loadingFallback": "Loading search…"
   },
   "error": {
     "title": "Something went wrong",
@@ -1132,5 +1139,105 @@
   "countryProposalWizardPage": {
     "kicker": "Country proposal",
     "title": "Country proposal wizard"
+  },
+  "aiAnswerCard": {
+    "uncitedBadge": "No supporting sources",
+    "uncitedWarning": "This answer is not backed by links to published data — treat it as unverified.",
+    "providerMeta": "Provider: {provider} · mode: {mode} · context: {count}"
+  },
+  "aiAssistantView": {
+    "askQuestionKicker": "Ask a question",
+    "typingIndicator": "Preparing an answer…",
+    "emptyState": "Ask a question about the platform's published data."
+  },
+  "aiCitationsList": {
+    "sourcesKicker": "Sources"
+  },
+  "aiRefusalState": {
+    "heading": "Not enough data"
+  },
+  "aiAskForm": {
+    "questionLabel": "Question",
+    "countryLabel": "Country, if relevant",
+    "defaultQuestion": "What is known about Uruguay for relocation?",
+    "errorFallback": "The AI assistant is temporarily unavailable.",
+    "requestError": "Request failed.",
+    "submitPending": "Preparing an answer…",
+    "submitLabel": "Ask"
+  },
+  "aiDecisionIntentHelper": {
+    "situationLabel": "Describe your situation",
+    "defaultText": "I want to relocate with my family, the budget is limited, and safety and a path to citizenship matter to me.",
+    "submitPending": "Matching…",
+    "submitLabel": "Match scenario / persona",
+    "refusedFallback": "Not enough data.",
+    "scenarioLabel": "Scenario",
+    "personaLabel": "Persona",
+    "candidatesLabel": "Candidates:",
+    "applyLabel": "Apply suggestions",
+    "errorFallback": "The AI hint is temporarily unavailable.",
+    "requestError": "Request failed."
+  },
+  "aiExplainNumberButton": {
+    "explainAriaLabel": "Explain this number",
+    "loadingLabel": "Explaining…",
+    "errorFallback": "Explanation temporarily unavailable."
+  },
+  "glossaryFilters": {
+    "searchLabel": "Search",
+    "searchPlaceholder": "Term or definition…",
+    "categoryLabel": "Category",
+    "allCategories": "All categories"
+  },
+  "glossaryTermEntry": {
+    "relatedTerms": "Related terms:"
+  },
+  "glossaryView": {
+    "termsCount": "Terms: {count}",
+    "loading": "Loading glossary…",
+    "loadError": "Could not load the glossary.",
+    "emptyState": "No terms match the selected filters."
+  },
+  "methodologyGlossaryTeaser": {
+    "ariaLabel": "Glossary",
+    "kicker": "Glossary of terms",
+    "openFull": "Open full glossary",
+    "hint": "Hover or tap a term to see its definition."
+  },
+  "searchFilters": {
+    "resultTypeLabel": "Result type",
+    "countryLabel": "Country",
+    "allCountries": "All countries"
+  },
+  "methodologyPage": {
+    "kicker": "Methodology",
+    "title": "Platform methodology",
+    "loadError": "Could not load the methodology.",
+    "parametersLink": "Methodology parameters"
+  },
+  "methodologyParametersPage": {
+    "kicker": "Methodology · parameters",
+    "kickerVersioned": "Methodology · parameters · version {version}",
+    "title": "Methodology parameters",
+    "description": "Current thresholds and coefficients used in the platform's formulas.",
+    "loadError": "Could not load methodology parameters.",
+    "columnParameter": "Parameter",
+    "columnValue": "Value",
+    "columnDescription": "Description",
+    "columnEffectiveFrom": "Effective from"
+  },
+  "glossaryPage": {
+    "kicker": "Glossary",
+    "title": "Platform glossary of terms",
+    "description": "Definitions of key terms used in the platform's scores, ratings, and reports."
+  },
+  "assistantPage": {
+    "kicker": "AI assistant",
+    "title": "Ask a question about the platform's published data",
+    "description": "The answer is based only on published sources. If there isn't enough context, the assistant will refuse to answer."
+  },
+  "searchPage": {
+    "kicker": "Search",
+    "title": "Search the platform"
   }
 }

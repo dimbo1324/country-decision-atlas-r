@@ -91,7 +91,14 @@
     "sectionActions": "Действия",
     "sectionResults": "Результаты",
     "searching": "Ищем…",
-    "showAllResults": "Показать все результаты"
+    "showAllResults": "Показать все результаты",
+    "ariaLabel": "Поиск по платформе",
+    "promptMessage": "Введите запрос, чтобы начать поиск.",
+    "errorTitle": "Поиск недоступен",
+    "errorMessage": "Не удалось выполнить поиск. Попробуйте ещё раз.",
+    "resultsCount": "Результатов: {count}",
+    "emptyState": "Ничего не найдено по запросу «{query}».",
+    "loadingFallback": "Загрузка поиска…"
   },
   "error": {
     "title": "Что-то пошло не так",
@@ -1132,5 +1139,105 @@
   "countryProposalWizardPage": {
     "kicker": "Заявка страны",
     "title": "Мастер заявки страны"
+  },
+  "aiAnswerCard": {
+    "uncitedBadge": "Без подтверждающих источников",
+    "uncitedWarning": "Этот ответ не подкреплён ссылками на опубликованные данные — относитесь к нему как к непроверенному.",
+    "providerMeta": "Провайдер: {provider} · режим: {mode} · контекст: {count}"
+  },
+  "aiAssistantView": {
+    "askQuestionKicker": "Задать вопрос",
+    "typingIndicator": "Готовим ответ…",
+    "emptyState": "Задайте вопрос по опубликованным данным проекта."
+  },
+  "aiCitationsList": {
+    "sourcesKicker": "Источники"
+  },
+  "aiRefusalState": {
+    "heading": "Недостаточно данных"
+  },
+  "aiAskForm": {
+    "questionLabel": "Вопрос",
+    "countryLabel": "Страна, если нужно",
+    "defaultQuestion": "Что известно об Уругвае для переезда?",
+    "errorFallback": "AI-помощник временно недоступен.",
+    "requestError": "Ошибка запроса.",
+    "submitPending": "Готовим ответ…",
+    "submitLabel": "Спросить"
+  },
+  "aiDecisionIntentHelper": {
+    "situationLabel": "Опишите вашу ситуацию",
+    "defaultText": "Я хочу переехать с семьёй, бюджет ограничен, важна безопасность и путь к гражданству.",
+    "submitPending": "Подбираем…",
+    "submitLabel": "Подобрать сценарий и персону",
+    "refusedFallback": "Недостаточно данных.",
+    "scenarioLabel": "Сценарий",
+    "personaLabel": "Персона",
+    "candidatesLabel": "Кандидаты:",
+    "applyLabel": "Применить подсказки",
+    "errorFallback": "AI-подсказка временно недоступна.",
+    "requestError": "Ошибка запроса."
+  },
+  "aiExplainNumberButton": {
+    "explainAriaLabel": "Объяснить число",
+    "loadingLabel": "Объясняем…",
+    "errorFallback": "Объяснение временно недоступно."
+  },
+  "glossaryFilters": {
+    "searchLabel": "Поиск",
+    "searchPlaceholder": "Название или определение…",
+    "categoryLabel": "Категория",
+    "allCategories": "Все категории"
+  },
+  "glossaryTermEntry": {
+    "relatedTerms": "Связанные термины:"
+  },
+  "glossaryView": {
+    "termsCount": "Терминов: {count}",
+    "loading": "Загрузка глоссария…",
+    "loadError": "Не удалось загрузить глоссарий.",
+    "emptyState": "По выбранным фильтрам термины не найдены."
+  },
+  "methodologyGlossaryTeaser": {
+    "ariaLabel": "Глоссарий",
+    "kicker": "Глоссарий терминов",
+    "openFull": "Открыть полный глоссарий",
+    "hint": "Наведите или нажмите на термин, чтобы увидеть его определение."
+  },
+  "searchFilters": {
+    "resultTypeLabel": "Тип результата",
+    "countryLabel": "Страна",
+    "allCountries": "Все страны"
+  },
+  "methodologyPage": {
+    "kicker": "Методология",
+    "title": "Методология платформы",
+    "loadError": "Не удалось загрузить методологию.",
+    "parametersLink": "Параметры методологии"
+  },
+  "methodologyParametersPage": {
+    "kicker": "Методология · параметры",
+    "kickerVersioned": "Методология · параметры · версия {version}",
+    "title": "Параметры методологии",
+    "description": "Текущие пороги и коэффициенты, используемые в формулах платформы.",
+    "loadError": "Не удалось загрузить параметры методологии.",
+    "columnParameter": "Параметр",
+    "columnValue": "Значение",
+    "columnDescription": "Описание",
+    "columnEffectiveFrom": "Действует с"
+  },
+  "glossaryPage": {
+    "kicker": "Глоссарий",
+    "title": "Глоссарий терминов платформы",
+    "description": "Определения ключевых терминов, используемых в оценках, скорах и отчётах платформы."
+  },
+  "assistantPage": {
+    "kicker": "AI-помощник",
+    "title": "Задайте вопрос по опубликованным данным проекта",
+    "description": "Ответ основан только на опубликованных источниках. Если контекста недостаточно, помощник откажется отвечать."
+  },
+  "searchPage": {
+    "kicker": "Поиск",
+    "title": "Поиск по платформе"
   }
 }

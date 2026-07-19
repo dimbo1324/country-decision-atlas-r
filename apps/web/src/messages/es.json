@@ -91,7 +91,14 @@
     "sectionActions": "Acciones",
     "sectionResults": "Resultados",
     "searching": "Buscando…",
-    "showAllResults": "Ver todos los resultados"
+    "showAllResults": "Ver todos los resultados",
+    "ariaLabel": "Buscar en la plataforma",
+    "promptMessage": "Escribe una consulta para empezar a buscar.",
+    "errorTitle": "Búsqueda no disponible",
+    "errorMessage": "No se pudo realizar la búsqueda. Inténtalo de nuevo.",
+    "resultsCount": "Resultados: {count}",
+    "emptyState": "No se encontró nada para la consulta «{query}».",
+    "loadingFallback": "Cargando búsqueda…"
   },
   "error": {
     "title": "Algo salió mal",
@@ -1132,5 +1139,105 @@
   "countryProposalWizardPage": {
     "kicker": "Propuesta de país",
     "title": "Asistente de propuesta de país"
+  },
+  "aiAnswerCard": {
+    "uncitedBadge": "Sin fuentes de respaldo",
+    "uncitedWarning": "Esta respuesta no está respaldada por enlaces a datos publicados — trátala como no verificada.",
+    "providerMeta": "Proveedor: {provider} · modo: {mode} · contexto: {count}"
+  },
+  "aiAssistantView": {
+    "askQuestionKicker": "Haz una pregunta",
+    "typingIndicator": "Preparando una respuesta…",
+    "emptyState": "Haz una pregunta sobre los datos publicados de la plataforma."
+  },
+  "aiCitationsList": {
+    "sourcesKicker": "Fuentes"
+  },
+  "aiRefusalState": {
+    "heading": "Datos insuficientes"
+  },
+  "aiAskForm": {
+    "questionLabel": "Pregunta",
+    "countryLabel": "País, si corresponde",
+    "defaultQuestion": "¿Qué se sabe sobre Uruguay para la reubicación?",
+    "errorFallback": "El asistente de IA no está disponible temporalmente.",
+    "requestError": "Error en la solicitud.",
+    "submitPending": "Preparando una respuesta…",
+    "submitLabel": "Preguntar"
+  },
+  "aiDecisionIntentHelper": {
+    "situationLabel": "Describe tu situación",
+    "defaultText": "Quiero reubicarme con mi familia, el presupuesto es limitado, y me importan la seguridad y el camino a la ciudadanía.",
+    "submitPending": "Buscando coincidencias…",
+    "submitLabel": "Elegir escenario y persona",
+    "refusedFallback": "Datos insuficientes.",
+    "scenarioLabel": "Escenario",
+    "personaLabel": "Persona",
+    "candidatesLabel": "Candidatos:",
+    "applyLabel": "Aplicar sugerencias",
+    "errorFallback": "La sugerencia de IA no está disponible temporalmente.",
+    "requestError": "Error en la solicitud."
+  },
+  "aiExplainNumberButton": {
+    "explainAriaLabel": "Explicar este número",
+    "loadingLabel": "Explicando…",
+    "errorFallback": "Explicación no disponible temporalmente."
+  },
+  "glossaryFilters": {
+    "searchLabel": "Buscar",
+    "searchPlaceholder": "Término o definición…",
+    "categoryLabel": "Categoría",
+    "allCategories": "Todas las categorías"
+  },
+  "glossaryTermEntry": {
+    "relatedTerms": "Términos relacionados:"
+  },
+  "glossaryView": {
+    "termsCount": "Términos: {count}",
+    "loading": "Cargando glosario…",
+    "loadError": "No se pudo cargar el glosario.",
+    "emptyState": "Ningún término coincide con los filtros seleccionados."
+  },
+  "methodologyGlossaryTeaser": {
+    "ariaLabel": "Glosario",
+    "kicker": "Glosario de términos",
+    "openFull": "Abrir glosario completo",
+    "hint": "Pasa el cursor o toca un término para ver su definición."
+  },
+  "searchFilters": {
+    "resultTypeLabel": "Tipo de resultado",
+    "countryLabel": "País",
+    "allCountries": "Todos los países"
+  },
+  "methodologyPage": {
+    "kicker": "Metodología",
+    "title": "Metodología de la plataforma",
+    "loadError": "No se pudo cargar la metodología.",
+    "parametersLink": "Parámetros de la metodología"
+  },
+  "methodologyParametersPage": {
+    "kicker": "Metodología · parámetros",
+    "kickerVersioned": "Metodología · parámetros · versión {version}",
+    "title": "Parámetros de la metodología",
+    "description": "Umbrales y coeficientes actuales usados en las fórmulas de la plataforma.",
+    "loadError": "No se pudieron cargar los parámetros de la metodología.",
+    "columnParameter": "Parámetro",
+    "columnValue": "Valor",
+    "columnDescription": "Descripción",
+    "columnEffectiveFrom": "Vigente desde"
+  },
+  "glossaryPage": {
+    "kicker": "Glosario",
+    "title": "Glosario de términos de la plataforma",
+    "description": "Definiciones de los términos clave usados en las puntuaciones, índices e informes de la plataforma."
+  },
+  "assistantPage": {
+    "kicker": "Asistente de IA",
+    "title": "Haz una pregunta sobre los datos publicados de la plataforma",
+    "description": "La respuesta se basa solo en fuentes publicadas. Si no hay suficiente contexto, el asistente se negará a responder."
+  },
+  "searchPage": {
+    "kicker": "Búsqueda",
+    "title": "Buscar en la plataforma"
   }
 }

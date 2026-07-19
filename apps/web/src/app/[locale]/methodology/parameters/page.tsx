@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { DataTable, Kicker } from "@country-decision-atlas/ui";
 import { listMethodologyParameters } from "../../../../shared/api/methodology";
 import { formatDate } from "../../../../shared/lib/format";
@@ -16,6 +16,7 @@ function formatValue(value_numeric?: number | null, value_json?: unknown) {
 
 export default async function MethodologyParametersPage() {
   const locale = asSupportedLocale(await getLocale());
+  const t = await getTranslations("methodologyParametersPage");
   let response;
   try {
     response = await listMethodologyParameters();
@@ -26,12 +27,10 @@ export default async function MethodologyParametersPage() {
         data-testid="methodology-parameters-page"
       >
         <header className="flex flex-col gap-3">
-          <Kicker>Методология · параметры</Kicker>
-          <h1 className="font-display text-4xl font-bold">
-            Параметры методологии
-          </h1>
+          <Kicker>{t("kicker")}</Kicker>
+          <h1 className="font-display text-4xl font-bold">{t("title")}</h1>
         </header>
-        <ErrorState error="Не удалось загрузить параметры методологии." />
+        <ErrorState error={t("loadError")} />
       </div>
     );
   }
@@ -54,20 +53,18 @@ export default async function MethodologyParametersPage() {
       data-testid="methodology-parameters-page"
     >
       <header className="flex flex-col gap-3">
-        <Kicker>Методология · параметры · версия {response.version}</Kicker>
-        <h1 className="font-display text-4xl font-bold">
-          Параметры методологии
-        </h1>
+        <Kicker>{t("kickerVersioned", { version: response.version })}</Kicker>
+        <h1 className="font-display text-4xl font-bold">{t("title")}</h1>
         <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-          Текущие пороги и коэффициенты, используемые в формулах платформы.
+          {t("description")}
         </p>
       </header>
       <DataTable
         columns={[
-          { header: "Параметр" },
-          { header: "Значение", align: "right", numeric: true },
-          { header: "Описание" },
-          { header: "Действует с" },
+          { header: t("columnParameter") },
+          { header: t("columnValue"), align: "right", numeric: true },
+          { header: t("columnDescription") },
+          { header: t("columnEffectiveFrom") },
         ]}
         rows={rows}
       />

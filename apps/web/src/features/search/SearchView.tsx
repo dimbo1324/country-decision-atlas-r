@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { ErrorState, LoadingState } from "@country-decision-atlas/ui";
 import { parseAsString, useQueryState } from "nuqs";
 import { Suspense } from "react";
@@ -19,6 +20,7 @@ function parseTypes(typesParam: string): string[] {
 
 function SearchViewInner() {
   const locale = useAppLocale();
+  const t = useTranslations("search");
   const [q, setQ] = useQueryState("q", parseAsString.withDefault(""));
   const [typesParam, setTypesParam] = useQueryState(
     "types",
@@ -85,8 +87,8 @@ function SearchViewInner() {
           defaultValue={q}
           key={q}
           className="text-c1 placeholder:text-c4 font-body w-full bg-transparent px-4 py-3 text-sm outline-none"
-          placeholder="Поиск по платформе…"
-          aria-label="Поиск по платформе"
+          placeholder={t("placeholder")}
+          aria-label={t("ariaLabel")}
           data-testid="search-page-input"
         />
         <button
@@ -94,7 +96,7 @@ function SearchViewInner() {
           className="font-mono text-c3 hover:text-gold3 border-warm border-l px-5 py-3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
           data-testid="search-page-submit"
         >
-          Найти
+          {t("submit")}
         </button>
       </form>
 
@@ -111,19 +113,19 @@ function SearchViewInner() {
           className="text-c3 text-sm"
           data-testid="search-prompt"
         >
-          Введите запрос, чтобы начать поиск.
+          {t("promptMessage")}
         </p>
       )}
 
       {trimmedQuery !== "" && isFetching && (
-        <LoadingState message="Идёт поиск…" />
+        <LoadingState message={t("searching")} />
       )}
 
       {trimmedQuery !== "" && !isFetching && isError && (
         <div data-testid="search-error">
           <ErrorState
-            title="Поиск недоступен"
-            message="Не удалось выполнить поиск. Попробуйте ещё раз."
+            title={t("errorTitle")}
+            message={t("errorMessage")}
           />
         </div>
       )}
@@ -134,14 +136,14 @@ function SearchViewInner() {
             className="font-mono text-c3 text-[10px] tracking-[0.15em] uppercase"
             data-testid="search-result-count"
           >
-            Результатов: {result.total}
+            {t("resultsCount", { count: result.total })}
           </div>
           {items.length === 0 ? (
             <p
               className="text-c3 text-sm"
               data-testid="search-empty-state"
             >
-              Ничего не найдено по запросу «{result.query}».
+              {t("emptyState", { query: result.query })}
             </p>
           ) : (
             <div
@@ -163,8 +165,9 @@ function SearchViewInner() {
 }
 
 export function SearchView() {
+  const t = useTranslations("search");
   return (
-    <Suspense fallback={<LoadingState message="Загрузка поиска…" />}>
+    <Suspense fallback={<LoadingState message={t("loadingFallback")} />}>
       <SearchViewInner />
     </Suspense>
   );

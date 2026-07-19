@@ -740,21 +740,142 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         `/api/v1/scenarios?locale=en` and finding literal Russian names mixed
         with English ones already at the data layer.
 
-- [ ] Knowledge + AI Assistant + Search (14 files + 4 pages) — not yet
-      surveyed this session. Before starting: glob
-      `apps/web/src/features/{methodology,glossary,scenarios,assistant,search}/**/*.tsx`
-      (or whatever the actual folder names turn out to be — methodology,
-      glossary, and scenarios pages already exist per the route list seen
-      in every `next build` output this session:
-      `/methodology`, `/methodology/parameters`, `/glossary`, `/scenarios`,
-      `/assistant`, `/search`) and cross-check each file's importers
-      against `app/internal/**` the same way Stage 9 does, in case any of
-      these also have an internal-only sibling. This is the last content
-      stage — after it lands, every string budget in the original ~154-file
-      survey (`## Scope survey` above) should be accounted for; if the
-      actual file count comes in noticeably different from the "14 files"
-      estimate, that's expected (every stage this session did) — just
-      record the real number.
+- [+] Knowledge + AI Assistant + Search (14 files + 5 pages — the checklist's
+      original "14 files + 4 pages" heading undercounted the pages by one:
+      `scenarios/page.tsx` was already fully migrated back in Stage 3b
+      (`scenariosPage` namespace), so it was never part of this stage's real
+      remaining work; the actual 5 pages were `methodology/page.tsx`,
+      `methodology/parameters/page.tsx`, `glossary/page.tsx`,
+      `assistant/page.tsx`, `search/page.tsx`. File count of 14 was
+      confirmed exactly right this time: `features/ai-assistant/` (7 of 8 —
+      `AIDisclaimer.tsx` re-confirmed already fully prop-driven, untouched),
+      `features/glossary/` (3 of 4 — `RelatedTermChip.tsx` re-confirmed
+      zero hardcoded strings, untouched), `features/methodology/` (2 of 2),
+      `features/search/` (2 of 3 — `SearchResultCard.tsx` re-confirmed zero
+      hardcoded strings, untouched). `shared/ui/CommandPalette.tsx`
+      re-confirmed already fully translated from an earlier stage, not
+      touched.
+      - `ai-assistant` (7 files): 7 new namespaces, one per component
+        (`aiAnswerCard`, `aiAssistantView`, `aiCitationsList`,
+        `aiRefusalState`, `aiAskForm`, `aiDecisionIntentHelper`,
+        `aiExplainNumberButton` — 32 keys total), matching this task's
+        established per-component-namespace granularity for small, tightly
+        coupled UI (the `timelineEventCard`/`legalSignalEvidenceDrawer`
+        precedent from Stage 7). `AIAskForm.tsx`'s and
+        `AIDecisionIntentHelper.tsx`'s hardcoded default textarea values
+        (a suggested example question about Uruguay; a sample relocation
+        situation) were treated as translatable UI-facing text, not fixed
+        content — full, natural translations added for all 3 locales
+        (the `country_slug` default value `"uruguay"` itself stayed
+        untouched, a data-layer slug, not display text).
+        `AIDecisionIntentHelper.tsx`'s `Scenario:`/`Persona:` badge prefixes
+        reuse the exact translated wording already established by Stage 6's
+        `decisionPersonalization.persona` and Stage 9's
+        `migrationBoardForm.scenarioLabel`/`personaLabel`
+        (`Сценарий`/`Персона`, `Escenario`/`Persona`) rather than inventing
+        new wording for the same concept.
+      - `glossary` (3 files): 3 new namespaces (`glossaryFilters`,
+        `glossaryTermEntry`, `glossaryView`, 9 keys) — `GlossaryFilters.tsx`
+        and `GlossaryTermEntry.tsx` already called `useAppLocale()` without
+        their own `"use client"` directive from an earlier stage, confirming
+        again (as Stage 3a first established) that files nested inside a
+        `"use client"` ancestor tree don't need their own directive to use
+        hooks; `useTranslations()` was added the same way, no directive
+        needed.
+      - `methodology` (2 files): `MethodologyAccordion.tsx`'s
+        `SECTION_TYPE_LABELS` (keyed by the backend's `section_type` enum,
+        with a `?? section.section_type` fallback) converted to the
+        `Record<SupportedLocale, Record<string,string>>` enum-dict pattern
+        established since Stage 3a — kept local to the file since nothing
+        else in the app reads this specific enum.
+        `MethodologyGlossaryTeaser.tsx` is rendered directly from
+        `methodology/page.tsx` (a Server Component) with no `"use client"`
+        ancestor in its render tree — called `useTranslations()` directly
+        without adding a `"use client"` directive of its own (the
+        `AppFooter`/Stage 7 `legalSignalsPage` precedent: next-intl's
+        `useTranslations()` is dual-mode-safe in Server and Client
+        Components as long as the file itself isn't marked `"use client"`;
+        only `useAppLocale()`/`useLocale()` had the Stage 5 crash, from a
+        stray `"use client"` on that specific wrapper file, not from
+        `useTranslations()` itself). New `methodologyGlossaryTeaser`
+        namespace (4 keys).
+      - `search` (2 files): `SearchFilters.tsx`'s `ENTITY_TYPE_OPTIONS`
+        (a second, plural-flavored hardcoded copy of the same
+        `SearchResultItem["entity_type"]` enum `entity-type-labels.ts`
+        already covers) was **not** turned into a second enum dict —
+        reused the existing `entityTypeLabel()`/`ENTITY_TYPE_LABELS` from
+        Stage 3a instead (already complete for all 3 locales), the same
+        "don't duplicate an enum dict that already exists" reasoning as
+        Stage 7's `route-labels.ts` extraction, just in the opposite
+        direction (avoiding a new duplicate instead of de-duplicating an
+        existing one). New `searchFilters` namespace (3 keys) for the
+        filter's own labels (`Result type`/`Country`/`All countries`).
+        `SearchView.tsx` reuses and extends the **existing** `search`
+        namespace (already used by `CommandPalette.tsx` since an earlier
+        stage) rather than creating a new `searchView` namespace from
+        scratch — `search.placeholder`/`search.submit`/`search.searching`
+        already had exactly the right English/Russian/Spanish wording for
+        this component's search input, submit button, and searching state;
+        added 7 new keys to the same namespace for the parts `CommandPalette`
+        doesn't need (`ariaLabel`, `promptMessage`, `errorTitle`,
+        `errorMessage`, `resultsCount`, `emptyState`, `loadingFallback`).
+      - 5 pages: `methodologyPage` (4 keys), `methodologyParametersPage`
+        (9 keys, including separate `kicker`/`kickerVersioned` keys matching
+        the source's own error-state-vs-loaded-state split), `glossaryPage`
+        (3 keys), `assistantPage` (3 keys), `searchPage` (2 keys) — all via
+        `getTranslations()`/`useTranslations()` from Server Components,
+        matching the Stage 4-9 page pattern (`methodologyParametersPage` and
+        `assistantPage` needed `getLocale()` alongside `getTranslations()`
+        since both also do locale-dependent work — `toApiLocale`/
+        `formatDate` and passing `locale` to `AIAssistantView` respectively;
+        `glossaryPage` and `searchPage` needed only `useTranslations()`
+        directly, the simpler `AppFooter`/`legalSignalsPage`-style pattern,
+        since neither has any other locale-dependent logic).
+      - No enum-value-map bugs, no typos, and no untranslated-literal
+        section-title-prop mistakes found on the explicit self-check for
+        this stage (grepped every touched file for remaining Cyrillic — 3
+        hits, all false positives: a `·` middle-dot separator character,
+        an em dash, and the `MethodologyAccordion.tsx` `ru`/`es` enum-dict
+        values themselves, which are supposed to stay non-English; and
+        grepped for bare string literals in
+        `title=`/`label=`/`railLabel=`/`aria-label=`-shaped props — zero
+        hits across all 19 files, unlike Stage 9's real
+        `CountryDossier.tsx` miss).
+      - Verify: `i18n_parity_check.py` 1023/1023 keys across en/ru/es (17
+        new namespaces + 7 new keys added to the pre-existing `search`
+        namespace, 73 new keys total, from 950 after Stage 9);
+        `pnpm --filter web typecheck` clean; `pnpm --filter web lint`
+        clean; Vitest 5/5; `pnpm format:check` clean (6 files needed a
+        `prettier --write` pass, all `Prettier`-only reflow of lines this
+        stage's edits pushed past the wrap width, no logic change); fresh
+        `next build` clean (45 routes, unchanged from Stage 9 — no route
+        added or removed); `python -m pytest tests/test_frontend_contract.py -q`
+        clean (8/8).
+      - **HTTP-level smoke test done, real browser walkthrough still owed**
+        (same tooling gap as Stage 9 — this session also had no Browser-pane
+        tools, only Read/Edit/Write/Bash/Grep/Glob). Started the real
+        `pnpm dev` server against the already-running, healthy Docker stack
+        (API + Postgres + Redis, confirmed via `docker ps`), then `curl`ed
+        all 5 pages (`/methodology`, `/methodology/parameters`, `/glossary`,
+        `/assistant`, `/search`) in all 3 locales — 15 requests, all HTTP
+        200. Grepped every response for leaked `namespace.key`
+        missing-translation fallback strings — zero found. Spot-checked
+        specific translated strings (page titles/headers, form field
+        labels, table column headers, the AI-assistant default question
+        text, the methodology accordion's enum meta-labels, the glossary's
+        "related terms" label) by exact substring match in all 3 locales'
+        HTML — all found correctly translated, no stray English on `/ru`
+        or `/es`. This confirms no leaked keys and no obviously-missed
+        strings, but it is **not** a substitute for a real interactive
+        click-through (submitting the AI-assistant ask form and reading a
+        real response, opening the AI-explain-number popover on a country
+        page, typing in the glossary/search filters and reading live
+        results, expanding a methodology accordion section) — flagged here
+        honestly, matching Stage 9's own precedent, rather than claimed as
+        done; owed before Final verification's full walkthrough.
+      - This is the last content stage — every string budget in the
+        original ~154-file survey (`## Scope survey` above) is now
+        accounted for across Stages 1-10.
 
 ## Final verification (after all stages land)
 

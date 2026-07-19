@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button, Field, FieldLabel } from "@country-decision-atlas/ui";
 import { useAskAIMutation } from "../../entities/ai-assistant/api";
 import type { AIAskResponse } from "../../shared/api/ai";
@@ -21,9 +22,8 @@ export function AIAskForm({
   onResponse,
   onPendingChange,
 }: AIAskFormProps) {
-  const [question, setQuestion] = useState(
-    "Что известно об Уругвае для переезда?",
-  );
+  const t = useTranslations("aiAskForm");
+  const [question, setQuestion] = useState(t("defaultQuestion"));
   const [countrySlug, setCountrySlug] = useState("uruguay");
   const askAI = useAskAIMutation();
 
@@ -51,7 +51,7 @@ export function AIAskForm({
       data-testid="ai-ask-form"
     >
       <Field>
-        <FieldLabel htmlFor="ai-question">Вопрос</FieldLabel>
+        <FieldLabel htmlFor="ai-question">{t("questionLabel")}</FieldLabel>
         <textarea
           id="ai-question"
           className={inputClass}
@@ -62,7 +62,7 @@ export function AIAskForm({
         />
       </Field>
       <Field>
-        <FieldLabel htmlFor="ai-country">Страна, если нужно</FieldLabel>
+        <FieldLabel htmlFor="ai-country">{t("countryLabel")}</FieldLabel>
         <input
           id="ai-country"
           className={inputClass}
@@ -78,8 +78,8 @@ export function AIAskForm({
           data-testid="ai-error"
         >
           {isApiError(askAI.error)
-            ? (askAI.error.error?.message ?? "AI-помощник временно недоступен.")
-            : "Ошибка запроса."}
+            ? (askAI.error.error?.message ?? t("errorFallback"))
+            : t("requestError")}
         </p>
       )}
       <Button
@@ -87,7 +87,7 @@ export function AIAskForm({
         disabled={askAI.isPending || question.trim().length === 0}
         data-testid="ai-submit"
       >
-        {askAI.isPending ? "Готовим ответ…" : "Спросить"}
+        {askAI.isPending ? t("submitPending") : t("submitLabel")}
       </Button>
     </form>
   );

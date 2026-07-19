@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Kicker } from "@country-decision-atlas/ui";
 import type { AICitation } from "../../shared/api/ai";
 import { Link } from "../../i18n/navigation";
@@ -7,6 +8,7 @@ type AICitationsListProps = {
 };
 
 export function AICitationsList({ citations }: AICitationsListProps) {
+  const t = useTranslations("aiCitationsList");
   const items = citations ?? [];
 
   if (items.length === 0) {
@@ -18,7 +20,7 @@ export function AICitationsList({ citations }: AICitationsListProps) {
       className="flex flex-col gap-2"
       data-testid="ai-citations"
     >
-      <Kicker>Источники</Kicker>
+      <Kicker>{t("sourcesKicker")}</Kicker>
       <ul className="flex flex-col gap-1.5">
         {items.map((citation) => (
           <li

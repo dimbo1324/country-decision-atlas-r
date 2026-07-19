@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker } from "@country-decision-atlas/ui";
 import { parseAsString, useQueryState } from "nuqs";
 import { Suspense, useMemo } from "react";
@@ -15,6 +16,7 @@ import { GlossaryTermEntry } from "./GlossaryTermEntry";
 
 function GlossaryViewInner() {
   const locale = useAppLocale();
+  const t = useTranslations("glossaryView");
   const [q, setQ] = useQueryState("q", parseAsString.withDefault(""));
   const [category, setCategory] = useQueryState(
     "category",
@@ -55,14 +57,12 @@ function GlossaryViewInner() {
         onCategoryChange={(value) => void setCategory(value || null)}
       />
 
-      {data && <Kicker>Терминов: {data.items.length}</Kicker>}
+      {data && <Kicker>{t("termsCount", { count: data.items.length })}</Kicker>}
 
-      {isPending && <LoadingState message="Загрузка глоссария…" />}
-      {!isPending && isError && (
-        <ErrorState error="Не удалось загрузить глоссарий." />
-      )}
+      {isPending && <LoadingState message={t("loading")} />}
+      {!isPending && isError && <ErrorState error={t("loadError")} />}
       {!isPending && !isError && groups.length === 0 && (
-        <EmptyState message="По выбранным фильтрам термины не найдены." />
+        <EmptyState message={t("emptyState")} />
       )}
       {!isPending && !isError && groups.length > 0 && (
         <div
@@ -94,8 +94,9 @@ function GlossaryViewInner() {
 }
 
 export function GlossaryView() {
+  const t = useTranslations("glossaryView");
   return (
-    <Suspense fallback={<LoadingState message="Загрузка глоссария…" />}>
+    <Suspense fallback={<LoadingState message={t("loading")} />}>
       <GlossaryViewInner />
     </Suspense>
   );

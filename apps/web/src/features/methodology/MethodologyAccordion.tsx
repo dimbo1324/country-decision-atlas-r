@@ -2,15 +2,37 @@
 
 import { Accordion, type AccordionItem } from "@country-decision-atlas/ui";
 import type { MethodologySection } from "../../shared/api/methodology";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
-const SECTION_TYPE_LABELS: Record<string, string> = {
-  index: "индекс",
-  score: "показатель",
-  metric: "метрика",
-  trust: "доверие",
-  risk: "риск",
-  source: "источники",
-  disclaimer: "дисклеймер",
+const SECTION_TYPE_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    index: "index",
+    score: "score",
+    metric: "metric",
+    trust: "trust",
+    risk: "risk",
+    source: "sources",
+    disclaimer: "disclaimer",
+  },
+  ru: {
+    index: "индекс",
+    score: "показатель",
+    metric: "метрика",
+    trust: "доверие",
+    risk: "риск",
+    source: "источники",
+    disclaimer: "дисклеймер",
+  },
+  es: {
+    index: "índice",
+    score: "puntuación",
+    metric: "métrica",
+    trust: "confianza",
+    risk: "riesgo",
+    source: "fuentes",
+    disclaimer: "descargo",
+  },
 };
 
 export function MethodologyAccordion({
@@ -18,9 +40,11 @@ export function MethodologyAccordion({
 }: {
   sections: MethodologySection[];
 }) {
+  const locale = useAppLocale();
   const items: AccordionItem[] = sections.map((section) => ({
     title: section.title,
-    meta: SECTION_TYPE_LABELS[section.section_type] ?? section.section_type,
+    meta:
+      SECTION_TYPE_LABELS[locale][section.section_type] ?? section.section_type,
     content: (
       <div
         className="flex flex-col gap-3"

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { GlossaryTerm as GlossaryTermData } from "../../shared/api/glossary";
 import { glossaryCategoryLabel } from "../../shared/lib/glossary-labels";
@@ -6,6 +7,7 @@ import { RelatedTermChip } from "./RelatedTermChip";
 
 export function GlossaryTermEntry({ term }: { term: GlossaryTermData }) {
   const locale = useAppLocale();
+  const t = useTranslations("glossaryTermEntry");
   return (
     <div data-testid="glossary-term-entry">
       <Card
@@ -24,7 +26,7 @@ export function GlossaryTermEntry({ term }: { term: GlossaryTermData }) {
         {term.related_terms && term.related_terms.length > 0 && (
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-mono text-c4 text-[9px] tracking-[0.15em] uppercase">
-              Связанные термины:
+              {t("relatedTerms")}
             </span>
             {term.related_terms.map((slug) => (
               <RelatedTermChip

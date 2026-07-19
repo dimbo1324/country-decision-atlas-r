@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@country-decision-atlas/ui";
 import type { AIAskResponse } from "../../shared/api/ai";
 import { AICitationsList } from "./AICitationsList";
@@ -9,6 +10,7 @@ type AIAnswerCardProps = {
 };
 
 export function AIAnswerCard({ response }: AIAnswerCardProps) {
+  const t = useTranslations("aiAnswerCard");
   const citationCount = response.citations?.length ?? 0;
   const isUncited = !response.refused && citationCount === 0;
 
@@ -24,12 +26,9 @@ export function AIAnswerCard({ response }: AIAnswerCardProps) {
           className="border-warm flex flex-col gap-2 border px-4 py-3"
           data-testid="ai-answer-uncited"
         >
-          <Badge variant="warning">Без подтверждающих источников</Badge>
+          <Badge variant="warning">{t("uncitedBadge")}</Badge>
           <p className="text-c3 text-sm leading-relaxed">{response.answer}</p>
-          <p className="text-c4 text-xs">
-            Этот ответ не подкреплён ссылками на опубликованные данные —
-            относитесь к нему как к непроверенному.
-          </p>
+          <p className="text-c4 text-xs">{t("uncitedWarning")}</p>
         </div>
       ) : (
         <p className="text-c1 text-sm leading-relaxed">{response.answer}</p>
@@ -40,8 +39,11 @@ export function AIAnswerCard({ response }: AIAnswerCardProps) {
         className="text-c4 font-mono text-[9px] tracking-[0.05em] uppercase"
         data-testid="ai-provider-meta"
       >
-        Provider: {response.provider} · mode: {response.mode} · context:{" "}
-        {response.context_items_count}
+        {t("providerMeta", {
+          provider: response.provider,
+          mode: response.mode,
+          count: response.context_items_count,
+        })}
       </p>
     </article>
   );

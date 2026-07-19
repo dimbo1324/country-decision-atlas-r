@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Card, Kicker, useReducedMotion } from "@country-decision-atlas/ui";
 import type { AIAskResponse } from "../../shared/api/ai";
 import type { SupportedLocale } from "../../shared/lib/locale";
@@ -14,6 +15,7 @@ type AIAssistantViewProps = {
 
 function TypingIndicator() {
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("aiAssistantView");
 
   if (reducedMotion) {
     return (
@@ -21,7 +23,7 @@ function TypingIndicator() {
         className="text-c3 text-sm"
         data-testid="ai-typing-indicator"
       >
-        Готовим ответ…
+        {t("typingIndicator")}
       </p>
     );
   }
@@ -30,7 +32,7 @@ function TypingIndicator() {
     <div
       className="flex items-center gap-1.5"
       data-testid="ai-typing-indicator"
-      aria-label="Готовим ответ…"
+      aria-label={t("typingIndicator")}
     >
       {[0, 1, 2].map((index) => (
         <span
@@ -44,6 +46,7 @@ function TypingIndicator() {
 }
 
 export function AIAssistantView({ locale }: AIAssistantViewProps) {
+  const t = useTranslations("aiAssistantView");
   const [response, setResponse] = useState<AIAskResponse | null>(null);
   const [isAsking, setIsAsking] = useState(false);
 
@@ -56,7 +59,7 @@ export function AIAssistantView({ locale }: AIAssistantViewProps) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Задать вопрос</Kicker>
+        <Kicker>{t("askQuestionKicker")}</Kicker>
         <AIAskForm
           locale={locale}
           onResponse={(next) => {
@@ -72,7 +75,7 @@ export function AIAssistantView({ locale }: AIAssistantViewProps) {
         ) : response ? (
           <AIAnswerCard response={response} />
         ) : (
-          <EmptyState message="Задайте вопрос по опубликованным данным проекта." />
+          <EmptyState message={t("emptyState")} />
         )}
       </div>
     </div>

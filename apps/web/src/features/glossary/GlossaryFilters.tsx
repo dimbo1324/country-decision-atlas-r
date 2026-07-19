@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   GLOSSARY_CATEGORIES,
   glossaryCategoryLabel,
@@ -21,31 +22,32 @@ export function GlossaryFilters({
   onCategoryChange: (value: string) => void;
 }) {
   const locale = useAppLocale();
+  const t = useTranslations("glossaryFilters");
   return (
     <div
       className="border-warm flex flex-wrap items-end gap-4 border p-4"
       data-testid="glossary-filters"
     >
       <label className={LABEL_CLASS}>
-        Поиск
+        {t("searchLabel")}
         <input
           type="search"
           className={SELECT_CLASS}
           value={q}
-          placeholder="Название или определение…"
+          placeholder={t("searchPlaceholder")}
           onChange={(event) => onQueryChange(event.target.value)}
           data-testid="glossary-search-input"
         />
       </label>
       <label className={LABEL_CLASS}>
-        Категория
+        {t("categoryLabel")}
         <select
           className={SELECT_CLASS}
           value={category}
           onChange={(event) => onCategoryChange(event.target.value)}
           data-testid="glossary-category-select"
         >
-          <option value="">Все категории</option>
+          <option value="">{t("allCategories")}</option>
           {GLOSSARY_CATEGORIES.map((value) => (
             <option
               key={value}

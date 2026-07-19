@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
@@ -10,24 +11,23 @@ export function MethodologyGlossaryTeaser({
 }: {
   terms: GlossaryTermData[];
 }) {
+  const t = useTranslations("methodologyGlossaryTeaser");
   return (
     <section
       className="flex flex-col gap-4"
       data-testid="glossary-section"
-      aria-label="Глоссарий"
+      aria-label={t("ariaLabel")}
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Kicker>Глоссарий терминов</Kicker>
+        <Kicker>{t("kicker")}</Kicker>
         <Link
           href={routes.glossary}
           className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Открыть полный глоссарий <ArrowNext />
+          {t("openFull")} <ArrowNext />
         </Link>
       </div>
-      <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-        Наведите или нажмите на термин, чтобы увидеть его определение.
-      </p>
+      <p className="text-c3 max-w-2xl text-sm leading-relaxed">{t("hint")}</p>
       <div className="flex flex-wrap gap-x-4 gap-y-3">
         {terms.map((term) => (
           <GlossaryTerm

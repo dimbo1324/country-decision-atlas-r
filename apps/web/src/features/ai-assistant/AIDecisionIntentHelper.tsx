@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Badge, Button, Field, FieldLabel } from "@country-decision-atlas/ui";
 import { useParseDecisionIntentMutation } from "../../entities/ai-assistant/api";
 import type { AIDecisionIntentResponse } from "../../shared/api/ai";
@@ -19,9 +20,8 @@ export function AIDecisionIntentHelper({
   locale,
   onApply,
 }: AIDecisionIntentHelperProps) {
-  const [text, setText] = useState(
-    "Я хочу переехать с семьёй, бюджет ограничен, важна безопасность и путь к гражданству.",
-  );
+  const t = useTranslations("aiDecisionIntentHelper");
+  const [text, setText] = useState(t("defaultText"));
   const parseDecisionIntent = useParseDecisionIntentMutation();
 
   async function handleSubmit() {
@@ -35,7 +35,7 @@ export function AIDecisionIntentHelper({
     >
       <Field>
         <FieldLabel htmlFor="ai-decision-intent">
-          Опишите вашу ситуацию
+          {t("situationLabel")}
         </FieldLabel>
         <textarea
           id="ai-decision-intent"
@@ -52,9 +52,7 @@ export function AIDecisionIntentHelper({
         disabled={parseDecisionIntent.isPending || text.trim().length === 0}
         data-testid="ai-decision-intent-submit"
       >
-        {parseDecisionIntent.isPending
-          ? "Подбираем…"
-          : "Подобрать scenario/persona"}
+        {parseDecisionIntent.isPending ? t("submitPending") : t("submitLabel")}
       </Button>
       {parseDecisionIntent.isError && (
         <p
@@ -63,9 +61,8 @@ export function AIDecisionIntentHelper({
           data-testid="ai-decision-error"
         >
           {isApiError(parseDecisionIntent.error)
-            ? (parseDecisionIntent.error.error?.message ??
-              "AI-подсказка временно недоступна.")
-            : "Ошибка запроса."}
+            ? (parseDecisionIntent.error.error?.message ?? t("errorFallback"))
+            : t("requestError")}
         </p>
       )}
       {parseDecisionIntent.data && (
@@ -75,21 +72,20 @@ export function AIDecisionIntentHelper({
         >
           {parseDecisionIntent.data.refused ? (
             <p className="text-c3">
-              {parseDecisionIntent.data.refusal?.reason ??
-                "Недостаточно данных."}
+              {parseDecisionIntent.data.refusal?.reason ?? t("refusedFallback")}
             </p>
           ) : (
             <>
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="default">
-                  Scenario: {parseDecisionIntent.data.scenario_slug}
+                  {t("scenarioLabel")}: {parseDecisionIntent.data.scenario_slug}
                 </Badge>
                 <Badge variant="default">
-                  Persona: {parseDecisionIntent.data.persona_slug}
+                  {t("personaLabel")}: {parseDecisionIntent.data.persona_slug}
                 </Badge>
               </div>
               <p className="text-c3">
-                Кандидаты:{" "}
+                {t("candidatesLabel")}{" "}
                 {(parseDecisionIntent.data.candidate_country_slugs ?? []).join(
                   ", ",
                 )}
@@ -100,7 +96,7 @@ export function AIDecisionIntentHelper({
                 onClick={() => onApply(parseDecisionIntent.data!)}
                 data-testid="ai-decision-apply"
               >
-                Применить подсказки
+                {t("applyLabel")}
               </Button>
             </>
           )}
