@@ -184,12 +184,46 @@ giant diff.
       `DivergingMeter`, `Heatmap`, `RankFlow`, `SparklineChart`) — same
       "dead from a real user's perspective" precedent as the original
       i18n task's `PassportCard` finding.
-- [ ] Frontend: extract/name real magic values found in Stage 1.
-- [ ] Backend: extract/name real magic values found in Stage 1 (constants
-      module or local named constant, whichever fits the existing
-      architecture pattern in that area).
-- [ ] Re-run `i18n_parity_check.py`, typecheck/lint/format, relevant test
-      suites after each group.
+- [+] Frontend: extract/name real magic values found in Stage 1 (`b563244`).
+      `ROUTE_TYPE_VALUES`/`ENTITY_TYPE_VALUES` now derived from
+      `ROUTE_TYPE_LABELS`/`ENTITY_TYPE_LABELS` via `Object.keys()` instead
+      of a second hand-maintained array; the `Confidence` union imported
+      from `@country-decision-atlas/ui` at all 4 real duplicate sites
+      (left `decision-wizard-labels.ts`'s `Level` type alone — same
+      literal values by coincidence, different domain concept, aliasing
+      it would be a misleading merge); `LegalSignalsRegistryView.tsx`/
+      `SourcesView.tsx` now reuse `allCountriesQuery()` instead of
+      re-passing `{ limit: 100 }`; `CountryCiiBlock.tsx`/
+      `CountryScores.tsx`'s score-band thresholds named without changing
+      values (documented the pre-existing divergence in a comment rather
+      than silently unifying two independently-tuned visual scales);
+      `CommunityCountryBlock.tsx`'s duplicated `maxLength={2000}` named
+      `COMMUNITY_TEXT_MAX_LENGTH`.
+- [+] Backend: extract/name real magic values found in Stage 1 (`9d66c3e`).
+      New `app/repositories/staleness.py` centralizes the 30-day
+      "needs recompute" window (6 files, all already agreed on the same
+      value) and `ai_context.py`'s separate 365-day freshness window (3x
+      in one file) — also found `platform_metrics.py`'s own
+      `STALE_DAYS_THRESHOLD=30` was defined but never actually wired to
+      its query, a second, dead near-miss of the same fix. `helpers.py`'s
+      `confidence_rank` dict named `CONFIDENCE_RANK`, referenced from
+      `decision_runner.py` via the existing qualified-module-import
+      convention. `trust_score.py`'s `compute_trust_label`/
+      `compute_confidence` thresholds named to match the file's own
+      already-established pattern. The `"community_enabled"` feature-flag
+      key (5 call sites, 3 files) named `FEATURE_KEY_COMMUNITY`. The
+      duplicated 0.2s Redis timeout promoted to
+      `Settings.redis_connect_timeout_seconds`, documented in
+      `.env.example`. Explicitly left untouched: all
+      `methodology_config.py`/`cii_matrix.py`/`cii.py` weights and
+      tier-cutoffs (invariant-locked), `ScoreLabelThresholds`/
+      `ConfidenceThresholds` (already injected config), per-endpoint
+      pagination bounds (intentional variance, not a bug).
+- [+] Re-ran `i18n_parity_check.py` (1045/1045 final), typecheck/lint/
+      format for both `apps/web` and `packages/ui`, full Vitest
+      (`web` 86/86, `ui` 8/8), and the full backend `pytest` suite
+      (2248 passed, 58 skipped, 0 failures) after every group — all
+      green throughout, no regressions introduced by any fix.
 
 ## Stage 3 — Verification
 
