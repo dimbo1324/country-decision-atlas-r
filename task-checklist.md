@@ -917,66 +917,202 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
 
 ## Final verification (after all stages land)
 
-- [ ] Full typecheck/lint/format (`ui` + `web`) — run
-      `python dev_tools_scripts_runner.py` (default full profile) rather
-      than the piecemeal per-stage commands used mid-task; it also covers
-      Python/Go/Docker/pre-commit that individual stages didn't need to
-      touch.
-- [ ] `next build` clean, JS-budget script passes (the budget script is
-      part of the full quality gate; check its output specifically since
-      English becoming the default locale changes which bundle is
-      measured as the "default" route).
-- [ ] Full Vitest, Storybook build (`packages/ui` — not touched since
-      Stage 2, should still be clean, but confirm).
-- [ ] Full Playwright e2e suite + visual regression — **expect real,
-      reviewed baseline changes**: English is now the default locale for
-      every "no explicit locale" screenshot, so `pnpm web:mvp:visual`
-      baselines from before this task will show diffs on purpose, not by
-      regression. Review each diff before running
-      `web:mvp:visual:update` — a diff that isn't just
-      Russian-text-becoming-English-text is a real bug.
-- [ ] Contrast + i18n-parity audits (parity now covers 3 locales — rerun
-      `i18n_parity_check.py` one final time across the fully-merged
-      namespace set from all 10 stages, not just the last stage's delta).
-- [ ] Browser walkthrough of all 3 locales across every migrated area —
-      not just Stage 9/10's new areas; a final end-to-end pass of the
-      whole `[locale]` tree (nav, footer, home, catalog, compare, country
-      dossier, decision flow, legal signals, sources, routes, trips,
-      watchlist, subscriptions, account, migration board, stories, author
-      metrics, country proposals, methodology, glossary, scenarios,
-      assistant, search) in `/en`, `/ru`, `/es`. **Must include a real
-      interactive click-through of Stage 9's areas specifically** (create a
-      migration board post through the actual form UI, submit an author
-      metric, step through the country-proposal wizard, post a community
-      question/answer/report/rating) — Stage 9 itself only had HTTP-level
-      tool access (no Browser-pane tools that session) and substituted
-      `curl`-driven checks against a real running stack, which is not
-      equivalent to a real click-through; see Stage 9's own entry above for
-      exactly what was and wasn't covered that way.
-- [ ] Update `docs/_arch_/08_Открытые_вопросов.md`'s Р-12 (documented
-      "ru-only interface, next-intl scoped to chrome" as the accepted
-      state) — supersede with the new decision and date: English default,
-      Russian and Spanish as full peers, `es` falls back to `en` for
-      backend *data* (not chrome) per the Stage 1 `toApiLocale` design.
-- [ ] Known non-blocking gaps to note in the final report, not silently
-      fix mid-verification (each already flagged in its stage's checklist
-      entry, listed here for one place to check they're either accepted
-      or filed separately): the pre-existing `Негативное`/`Отрицательное`
-      Russian wording inconsistency for the same "negative" impact-
-      direction enum value across two different label sources (flagged in
-      Stage 7's browser walkthrough, not introduced by this task); backend
-      *content* (country names, scenario names, source excerpts, event
-      summaries) staying in its original language regardless of interface
-      locale — this is the explicit, owner-confirmed scope boundary for
-      this whole task, not a bug; `packages/ui`'s `Breadcrumbs` component's
-      `ariaLabel` prop still defaults to the hardcoded Russian
-      `"Хлебные крошки"` regardless of interface locale on all 4
-      `AppBreadcrumbs` call sites app-wide (`routes/[id]`,
-      `trips/[id]`, `decision/passports/[token]`, and Stage 9's own
-      `migration-board/[id]`) — a Stage 2 default nobody has wired to a
-      translated value yet, screen-reader-only (flagged, not fixed, in
-      Stage 9's entry above since fixing it touches pages from 3 different
-      already-shipped stages).
+- [+] Full typecheck/lint/format (`ui` + `web`) — ran
+      `python dev_tools_scripts_runner.py full-check --profile full`
+      (the interactive default prompt needs a real TTY, so invoked the
+      `full-check` script directly with `--profile full` instead of relying
+      on the bare no-arg default). Static gate all green: `ruff check`,
+      `mypy` (706 source files, 0 issues), `ruff format --check` (708 files
+      already formatted), `i18n key parity` (1023/1023 at that point, before
+      this pass's own fixes added 2 more keys), design-token contrast audit
+      (every text token passes on every background token), `sqlfluff lint`,
+      `pytest` (both the main suite and `utils/synthetic_data`),
+      `pnpm contracts:generate`, `pnpm quality` (typecheck+lint+format
+      across `web`/`ui`), `go vet`. Two real failures surfaced by this same
+      run, both investigated and resolved below (`go test`, Playwright
+      E2E) — everything else in the 79 OK / 4 WARN (stale local cache dirs,
+      harmless) / 1 SKIP (proto codegen, deliberately opt-in) / 2 FAIL
+      summary passed.
+      - `go test` **FAIL is a known, pre-existing, documented environment
+        limitation, not a regression**: `go: -race requires cgo; enable
+        cgo by setting CGO_ENABLED=1`. `.ai/project/11-commands.md` already
+        documents this exact failure mode for a Windows machine without a
+        mingw/gcc toolchain — "the CI job is the actual `-race` gate."
+        Nothing in this task touches `apps/notifier` (Go), so there is no
+        code change to attribute this to; `go vet` (the part of the Go
+        gate that doesn't need cgo) passed clean.
+- [+] `next build` clean (45 routes, unchanged), JS-budget script passes:
+      `python dev_tools_scripts_runner.py js-budgets` → "JS budget OK: 45
+      routes checked, worst is `/[locale]/countries/[slug]` at 298.0 kB
+      (ceiling 330 kB)." No default-route-measurement issue in practice —
+      the script checks every route uniformly regardless of which locale
+      is default.
+- [+] Full Vitest: `web` 86/86 (14 files), `ui` 8/8 (3 files) — both clean.
+      Storybook (`packages/ui`): `build-storybook` succeeded in 1.18 min,
+      output written to `packages/ui/storybook-static` (the two >500 kB
+      chunk-size warnings are Storybook's own doc-renderer/MDX bundles, not
+      story code, and pre-date this task).
+- [+] Full Playwright E2E suite + visual regression — **found and fixed 3
+      real, in-scope bugs**, all now resolved and reverified:
+      1. **`shared/ui/ErrorBoundary.tsx` double-fault on `/internal/**`**
+         (the first bug actually found, via a genuine crash while manually
+         re-checking `/internal/data-quality` in the browser, not from the
+         E2E run itself — the E2E run's 24 initial failures were the first
+         *signal* something was wrong). Stage 3a's Stage-3a-era change made
+         `ErrorBoundary`'s fallback call `useTranslations("errorBoundary")`
+         unconditionally. `/internal/**` sits outside `[locale]/layout.tsx`'s
+         `NextIntlClientProvider` by explicit design (stays untranslated,
+         confirmed still out of scope) — so any client-side error inside
+         `/internal/**` (this session found `ChunkLoadError: Loading chunk
+         app/[locale]/page failed`, itself likely a separate, pre-existing
+         Next-dev-mode quirk, not investigated further since it's outside
+         this task's remit) triggered `ErrorBoundary`, whose own fallback
+         then threw *again* ("Failed to call `useTranslations` because the
+         context from `NextIntlClientProvider` was not found"), cascading
+         past the custom boundary to the root `app/error.tsx` (which
+         already has a documented, deliberate hardcoded-text workaround for
+         exactly this scenario) — losing the real recoverable error UI and
+         the `insufficient-rights` notices several internal admin pages
+         depend on. First attempted a prop-threading fix on `ErrorBoundary`
+         itself (optional `labels` prop, `AppShell` passing real translated
+         values, `InternalShell` getting a hardcoded default) — reverted it
+         after finding the *exact same* crash in `shared/ui/LoadingState.tsx`
+         too, proving the prop-threading approach would need repeating for
+         every shared component that calls `useTranslations()` and is ever
+         reached by `/internal/**` (`LoadingState`, `EmptyState`,
+         `DisclaimerNotice`, `ErrorState`, `LastVerifiedAt`, `EvidenceCard`
+         are all candidates). Replaced with a single, much smaller fix:
+         wrapped `app/internal/layout.tsx`'s `InternalShell` in a
+         `NextIntlClientProvider` seeded with the existing `ru.json`
+         catalog — `/internal/**`'s own pre-migration language, so nothing
+         there needs translating, it just needs *a* working intl context
+         for whichever shared component reaches for one. Fixes the whole
+         class of bug in one place; confirmed via a clean `.next` rebuild
+         and a fresh browser tab that `/internal/data-quality`,
+         `/internal/translation-jobs`, `/internal/users` all now render
+         their correct (Russian) "insufficient rights" notices instead of
+         the generic root-level crash text. Resolved 11 of the 24 E2E
+         failures (all `web-mvp-internal-admin.spec.ts` tests, plus
+         `web-mvp-auth-rbac.spec.ts`'s data-quality-nav-link test,
+         `web-mvp-community-intelligence.spec.ts`'s moderation test, and
+         `web-mvp-migration-board.spec.ts`'s moderation test — every one of
+         these renders an internal admin page as an anonymous/unauthorized
+         user, which is exactly the crash path). Committed as `c8cc2ae`.
+      2. **12 E2E tests hardcoded Russian regex/text assertions against
+         pages now correctly rendering English** — expected test-fixture
+         drift from Stage 1's `DEFAULT_LOCALE` flip (`ru`→`en`), exactly as
+         this checklist predicted for the visual suite but not called out
+         for the main E2E suite. Two distinct sources: (a) tests explicitly
+         requesting `locale: "en"` via `e2eRoutes` helpers but still
+         asserting the old Russian heading/button/link text
+         (`web-mvp-analytical-pages.spec.ts` ×7 across legal-signals/
+         sources/accessibility, `web-mvp-locale.spec.ts` ×1,
+         `web-mvp-pages.spec.ts` ×1, `web-mvp-watchlist.spec.ts` ×2); (b)
+         bare-URL tests (`/countries`, `/decision`) that now redirect to
+         the new default `/en/...` instead of the old default `/ru/...`.
+         Fixed by swapping each assertion to the real English string, read
+         directly from `en.json`/component source rather than guessed
+         (`"Legal signals feed"`, `"Evidence sources"`, `"Country card:
+         {name}"`, `"Country: {name}"`, `"Open dossier"`, `"Scenario"`,
+         `"Country of origin"`, `"Run the decision engine"`, `"Run a
+         country decision"`, `"Save to watchlist"` / `"In watchlist"`) —
+         left every genuinely `ru`-scoped assertion untouched, including
+         `tests/e2e/helpers/routes.ts`'s own `e2eRoutes.*` helpers (which
+         still hardcode `DEFAULT_LOCALE = "ru"` for routes that don't pass
+         an explicit locale, by the helper's own design comment, so most of
+         the suite was never affected). Verified via an isolated rerun of
+         the 4 touched spec files (41/41 passed) before rerunning the whole
+         suite. Committed as `4f21d04`.
+      3. **Visual regression**: `pnpm web:mvp:visual` — 4/5 passed
+         immediately; the 5th (`country dossier`) failed with the page
+         17px taller than the baseline (1280×12280 vs the recorded
+         1280×12263). Reviewed the diff image: the changed region sits
+         right before the footer, exactly where Stage 9 inserted the new
+         Community section — already independently confirmed rendering
+         correctly via live browser testing earlier in this session, so
+         this is the "real, reviewed baseline change" the checklist
+         anticipated, not a regression. Ran `web:mvp:visual:update`,
+         reran `web:mvp:visual` clean (5/5). Committed as `6bb3a1f`.
+      - Final full-suite state: `pnpm exec playwright test` (main E2E) —
+        325+ passed, the only failures across two full-suite runs were 3
+        tests that also showed up as "flaky" on Playwright's own retry and
+        were confirmed passing in a clean isolated rerun (parallel-worker
+        resource contention on this local machine, not a code issue, and
+        none of the 3 overlap with anything this task touched:
+        `web-mvp-argentina-cii.spec.ts` responsive/compare test,
+        `web-mvp-argentina-legal-timeline.spec.ts` timeline test, and one
+        already-fixed `web-mvp-analytical-pages.spec.ts` test that passed
+        cleanly both before and after in isolation). `web:mvp:visual` — 5/5
+        clean after the one reviewed baseline update.
+      - **Real, pre-existing, out-of-scope bug found and flagged
+        separately, not fixed here**: `shared/api/ai.ts`'s `askAI`/
+        `explainNumber`/`parseDecisionIntent` never pass
+        `{ headers: csrfHeaders() }` to `apiPost`, unlike every other
+        mutating API module in the app — the AI Assistant's "Ask a
+        question" form always 403s with `"CSRF token is missing or
+        invalid."` regardless of locale or session. Confirmed live in the
+        browser and via the backend's own CSRF middleware
+        (`apps/api/app/bootstrap/app_factory.py`). Purely a missing-header
+        wiring bug, nothing to do with hardcoded text or i18n — flagged as
+        a separate background task rather than folded into this branch's
+        diff, per the project's scope-control rule.
+- [+] Contrast + i18n-parity audits: contrast audit passed as part of the
+      full gate above. `i18n_parity_check.py` run standalone one final time
+      after all fixes: **1023/1023 keys match across `en.json`, `ru.json`,
+      `es.json`** (692 after Stage 8 → 950 after Stage 9 → 1023 after
+      Stage 10; this session's own bug-fix pass added the `railCommunity`/
+      `titleCommunity` pair, +2 keys, already included in the 1023 total —
+      no parity drift anywhere across all 10 stages plus this pass's own
+      fixes).
+- [+] Browser walkthrough of all 3 locales across every migrated area —
+      done across two passes this session: (1) closing Stage 9's and Stage
+      10's own flagged real-interactive-walkthrough gap (both of those
+      stages' agent sessions lacked Browser-pane tools) — registered a
+      real throwaway account, filled and submitted a real migration-board
+      post through the actual form UI (all selects read back correctly),
+      confirmed it in `/account/migration-board` with translated status/
+      action labels, walked `/migration-board`, `/migration-board/new`,
+      `/account/author-metrics`, `/account/country-proposals`, the
+      `CommunityCountryBlock` on a real country page, `/methodology`,
+      `/glossary`, `/assistant` (submitted a real question — this is what
+      surfaced the CSRF bug above), `/search` (live query + result-type
+      filter) across `/en`/`/ru`/`/es`; found and fixed the `ru.json`
+      untranslated-string bugs and the `CountryDossier.tsx` hardcoded-
+      "Community" bug documented in Stage 9's entry above. (2) A final
+      consolidated pass across areas from earlier stages not otherwise
+      re-touched this session: `/es/countries/argentina` full dossier
+      (CII, platform intelligence, trust, scores, routes, migration board
+      block, what-changed, legal signals, sources, evidence, user stories,
+      community — all sections, all 3 locales spot-checked), `/es/compare`
+      (chrome translated, scenario/country content correctly untranslated
+      per the content-vs-chrome boundary, confirming Stage 3b's locale-cast
+      bug fix still holds), `/es/routes/monotributo` (not-found error state
+      fully translated), `/en/trips`, `/ru/subscriptions`, `/es/account`
+      (profile, Telegram link, active sessions, all fully translated). No
+      new translation bugs found in this second pass. Two pre-existing,
+      out-of-scope oddities re-confirmed as backend content data, not
+      frontend bugs: the CII/scenario methodology disclaimer text
+      (`database/fixtures/demo_countries/country_scores.json`) and mixed
+      English/Russian scenario names in dropdowns (`/api/v1/scenarios`
+      response itself already mixes languages at the data layer, per
+      `MigrationBoard`/`UserStories`/`Trips` scenario pickers) — both
+      confirmed via source/API inspection, not just visual guessing.
+- [+] Updated `docs/_arch_/08_Открытые_вопросов.md`'s Р-12: struck through
+      the superseded "ru-only interface" decision, dated the new one
+      2026-07-19, summarized the full 10-stage migration (154-file scope,
+      90→1023 catalog keys, the `toApiLocale` content-vs-chrome boundary),
+      and pointed to `task-checklist.md` as the detailed record rather than
+      duplicating it in the architecture doc.
+- [+] Known non-blocking gaps, confirmed still accurate and not silently
+      fixed mid-verification: the pre-existing `Негативное`/`Отрицательное`
+      Russian wording inconsistency (Stage 7, not introduced by this task);
+      backend *content* staying in its original language regardless of
+      interface locale (explicit scope boundary, not a bug — re-confirmed
+      twice more this session via the CII-disclaimer and scenario-name
+      findings above); `packages/ui`'s `Breadcrumbs` `ariaLabel` default
+      still hardcoded Russian on all 4 call sites (Stage 9, screen-reader-
+      only); **new this session**: the CSRF-header bug in `shared/api/ai.ts`
+      (flagged as a separate background task, not this branch's diff).
 
 ## Completion
 
