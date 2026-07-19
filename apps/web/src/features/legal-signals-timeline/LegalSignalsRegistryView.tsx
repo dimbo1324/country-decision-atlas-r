@@ -187,7 +187,11 @@ function LegalSignalsRegistryViewInner() {
                   live={false}
                   labels={{
                     verifiedAtTitle: t("chartFrameVerifiedAtTitle"),
-                    verifiedAtLabel: t("chartFrameVerifiedAtLabel"),
+                    // Raw, unfilled "{date}" placeholder -- ChartFrame
+                    // itself substitutes the real date; t() (not t.raw())
+                    // would throw here since next-intl requires every ICU
+                    // placeholder to be filled at call time.
+                    verifiedAtLabel: t.raw("chartFrameVerifiedAtLabel"),
                     confidenceTitle: t("chartFrameConfidenceTitle"),
                     confidenceLabel: {
                       low: t("chartFrameConfidenceLow"),

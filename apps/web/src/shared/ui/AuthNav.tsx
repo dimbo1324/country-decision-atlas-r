@@ -136,10 +136,21 @@ export function AuthNav({
 
   if (!user) {
     return (
+      // Fixed min-width sized for the longest translation ("Iniciar
+      // sesión") so this link's own footprint -- and the gap between it
+      // and the rest of the header -- doesn't shift when the interface
+      // locale changes. Right-aligned only from `lg` up (the desktop
+      // header copy): the mobile drawer copy (below `lg`) keeps its
+      // original left-aligned look, since this same component also
+      // renders there via MobileNav.
       <Link
         href={routes.login}
         onClick={onNavigate}
-        className={cn(linkClass, className)}
+        className={cn(
+          linkClass,
+          "inline-block min-w-[8rem] lg:text-right",
+          className,
+        )}
         data-testid="nav-sign-in-link"
       >
         {t("signIn")}

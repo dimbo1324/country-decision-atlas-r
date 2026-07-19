@@ -11,8 +11,9 @@ import { MobileNav } from "./MobileNav";
 
 /** Breakpoints are budgeted against measured widths so the bar never
  * exceeds its container (max-w minus padding = 1352px) for any role or
- * locale: brand text from xl, section nav from lg, palette label from
- * 2xl; search itself lives in the ⌘K palette, not a separate box. */
+ * locale: brand text from xl, section nav from lg; the quick-jump trigger
+ * and locale switcher are both fixed-width regardless of breakpoint or
+ * locale (search itself lives in the ⌘K palette, not a separate box). */
 export function AppHeader() {
   return (
     <header className="border-warm bg-bg/85 sticky top-0 z-40 border-b backdrop-blur-md">
@@ -38,11 +39,11 @@ export function AppHeader() {
 
         <div className="flex shrink-0 items-center gap-3">
           <CommandPalette />
+          <LocaleSwitcher />
           <AuthNav
             variant="menu"
             className="hidden lg:flex"
           />
-          <LocaleSwitcher />
           <MobileNav />
         </div>
       </div>

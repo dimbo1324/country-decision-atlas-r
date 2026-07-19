@@ -86,20 +86,28 @@ export function CommandPalette() {
 
   return (
     <>
+      {/* Collapsed to an icon-only 36px square by default -- at any
+       * locale, the trigger's own width is fixed regardless of how long
+       * "Quick jump"/"Быстрый переход"/"Acceso rápido" is. Widens on
+       * hover/focus to reveal the label + shortcut; the end width is
+       * generous enough to fit the longest translation without clipping. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("paletteTrigger")}
-        className="border-warm text-c3 hover:border-warm-hi hover:text-c1 font-mono inline-flex items-center gap-2 border px-3 py-2 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
+        className="border-warm text-c3 hover:border-warm-hi focus-visible:border-warm-hi hover:text-c1 focus-visible:text-c1 group font-mono inline-flex h-9 w-9 shrink-0 items-center gap-2 overflow-hidden border px-2.5 text-[10px] tracking-[0.15em] uppercase transition-[width] duration-300 ease-out hover:w-[12rem] focus-visible:w-[12rem]"
         data-testid="command-palette-trigger"
       >
         <Search
           width={13}
           height={13}
           strokeWidth={1.5}
+          className="shrink-0"
         />
-        <span className="hidden 2xl:inline">{t("paletteTrigger")}</span>
-        <kbd className="text-c4 border-warm hidden border px-1 py-0.5 text-[9px] 2xl:inline">
+        <span className="whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+          {t("paletteTrigger")}
+        </span>
+        <kbd className="text-c4 border-warm ml-auto shrink-0 border px-1 py-0.5 text-[9px] whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
           ⌘K
         </kbd>
       </button>
