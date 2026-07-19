@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { CountryListResponse } from "../../shared/api/countries";
@@ -21,6 +22,7 @@ export function SourceCard({
   country: CountryListResponse["items"][number] | undefined;
   onShowEvidence: (sourceId: string, title: string) => void;
 }) {
+  const t = useTranslations("sourceCard");
   const locale = useAppLocale();
   return (
     <div data-testid="source-card">
@@ -55,12 +57,16 @@ export function SourceCard({
           )}
           {source.last_checked_at && (
             <Badge variant="default">
-              Проверено: {formatDate(source.last_checked_at, locale)}
+              {t("checked", {
+                date: formatDate(source.last_checked_at, locale),
+              })}
             </Badge>
           )}
           {source.published_at && (
             <Badge variant="default">
-              Опубликовано: {formatDate(source.published_at, locale)}
+              {t("published", {
+                date: formatDate(source.published_at, locale),
+              })}
             </Badge>
           )}
         </div>
@@ -72,14 +78,14 @@ export function SourceCard({
             data-testid="source-external-link"
             className="text-gold3 hover:text-gold transition-colors duration-300"
           >
-            Открыть источник <ArrowExternal />
+            {t("openSource")} <ArrowExternal />
           </a>
           {country && (
             <Link
               href={routes.country(country.slug)}
               className="text-c3 hover:text-c1 transition-colors duration-300"
             >
-              Страна: {country.name} <ArrowNext />
+              {t("country", { name: country.name })} <ArrowNext />
             </Link>
           )}
           <button
@@ -88,7 +94,7 @@ export function SourceCard({
             data-testid="source-evidence-toggle"
             className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
           >
-            Доказательства <ArrowNext />
+            {t("evidence")} <ArrowNext />
           </button>
         </div>
       </Card>

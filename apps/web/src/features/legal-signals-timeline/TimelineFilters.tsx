@@ -1,5 +1,8 @@
+import { useTranslations } from "next-intl";
 import { FilterChipGroup } from "@country-decision-atlas/ui";
 import type { CountryListResponse } from "../../shared/api/countries";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
 type Filters = {
   countrySlug: string;
@@ -9,33 +12,93 @@ type Filters = {
   year: string;
 };
 
-const SIGNAL_TYPE_OPTIONS = [
-  { value: "", label: "Все типы" },
-  { value: "law", label: "Закон" },
-  { value: "bill", label: "Законопроект" },
-  { value: "policy", label: "Политика" },
-  { value: "court_decision", label: "Судебное решение" },
-  { value: "administrative_change", label: "Административное изменение" },
-  { value: "political_signal", label: "Политический сигнал" },
-  { value: "other", label: "Другое" },
-];
+const SIGNAL_TYPE_VALUES = [
+  "law",
+  "bill",
+  "policy",
+  "court_decision",
+  "administrative_change",
+  "political_signal",
+  "other",
+] as const;
 
-const IMPACT_DIRECTION_OPTIONS = [
-  { value: "", label: "Все направления" },
-  { value: "positive", label: "Положительное" },
-  { value: "negative", label: "Негативное" },
-  { value: "neutral", label: "Нейтральное" },
-  { value: "mixed", label: "Смешанное" },
-  { value: "uncertain", label: "Неопределённое" },
-];
+const SIGNAL_TYPE_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    law: "Law",
+    bill: "Bill",
+    policy: "Policy",
+    court_decision: "Court decision",
+    administrative_change: "Administrative change",
+    political_signal: "Political signal",
+    other: "Other",
+  },
+  ru: {
+    law: "Закон",
+    bill: "Законопроект",
+    policy: "Политика",
+    court_decision: "Судебное решение",
+    administrative_change: "Административное изменение",
+    political_signal: "Политический сигнал",
+    other: "Другое",
+  },
+  es: {
+    law: "Ley",
+    bill: "Proyecto de ley",
+    policy: "Política",
+    court_decision: "Decisión judicial",
+    administrative_change: "Cambio administrativo",
+    political_signal: "Señal política",
+    other: "Otro",
+  },
+};
 
-const IMPACT_LEVEL_OPTIONS = [
-  { value: "", label: "Все уровни" },
-  { value: "low", label: "Низкий" },
-  { value: "medium", label: "Средний" },
-  { value: "high", label: "Высокий" },
-  { value: "critical", label: "Критический" },
-];
+const IMPACT_DIRECTION_VALUES = [
+  "positive",
+  "negative",
+  "neutral",
+  "mixed",
+  "uncertain",
+] as const;
+
+const IMPACT_DIRECTION_LABELS: Record<
+  SupportedLocale,
+  Record<string, string>
+> = {
+  en: {
+    positive: "Positive",
+    negative: "Negative",
+    neutral: "Neutral",
+    mixed: "Mixed",
+    uncertain: "Uncertain",
+  },
+  ru: {
+    positive: "Положительное",
+    negative: "Негативное",
+    neutral: "Нейтральное",
+    mixed: "Смешанное",
+    uncertain: "Неопределённое",
+  },
+  es: {
+    positive: "Positivo",
+    negative: "Negativo",
+    neutral: "Neutral",
+    mixed: "Mixto",
+    uncertain: "Incierto",
+  },
+};
+
+const IMPACT_LEVEL_VALUES = ["low", "medium", "high", "critical"] as const;
+
+const IMPACT_LEVEL_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: { low: "Low", medium: "Medium", high: "High", critical: "Critical" },
+  ru: {
+    low: "Низкий",
+    medium: "Средний",
+    high: "Высокий",
+    critical: "Критический",
+  },
+  es: { low: "Bajo", medium: "Medio", high: "Alto", critical: "Crítico" },
+};
 
 export function TimelineFilters({
   filters,
@@ -48,6 +111,31 @@ export function TimelineFilters({
   years: number[];
   onChange: (name: keyof Filters, value: string) => void;
 }) {
+  const t = useTranslations("legalSignalsTimeline");
+  const locale = useAppLocale();
+
+  const signalTypeOptions = [
+    { value: "", label: t("allTypes") },
+    ...SIGNAL_TYPE_VALUES.map((value) => ({
+      value,
+      label: SIGNAL_TYPE_LABELS[locale][value],
+    })),
+  ];
+  const impactDirectionOptions = [
+    { value: "", label: t("allDirections") },
+    ...IMPACT_DIRECTION_VALUES.map((value) => ({
+      value,
+      label: IMPACT_DIRECTION_LABELS[locale][value],
+    })),
+  ];
+  const impactLevelOptions = [
+    { value: "", label: t("allLevels") },
+    ...IMPACT_LEVEL_VALUES.map((value) => ({
+      value,
+      label: IMPACT_LEVEL_LABELS[locale][value],
+    })),
+  ];
+
   return (
     <div
       className="border-warm flex flex-wrap gap-5 border p-4"
@@ -55,11 +143,11 @@ export function TimelineFilters({
     >
       <FilterChipGroup
         name="timeline-country"
-        label="Страна"
+        label={t("country")}
         value={filters.countrySlug}
         onChange={(value) => onChange("countrySlug", value)}
         options={[
-          { value: "", label: "Все страны" },
+          { value: "", label: t("allCountries") },
           ...countries.map((country) => ({
             value: country.slug,
             label: country.name,
@@ -68,32 +156,32 @@ export function TimelineFilters({
       />
       <FilterChipGroup
         name="timeline-signal-type"
-        label="Тип сигнала"
+        label={t("signalType")}
         value={filters.signalType}
         onChange={(value) => onChange("signalType", value)}
-        options={SIGNAL_TYPE_OPTIONS}
+        options={signalTypeOptions}
       />
       <FilterChipGroup
         name="timeline-impact-direction"
-        label="Направление влияния"
+        label={t("impactDirection")}
         value={filters.impactDirection}
         onChange={(value) => onChange("impactDirection", value)}
-        options={IMPACT_DIRECTION_OPTIONS}
+        options={impactDirectionOptions}
       />
       <FilterChipGroup
         name="timeline-impact-level"
-        label="Уровень влияния"
+        label={t("impactLevel")}
         value={filters.impactLevel}
         onChange={(value) => onChange("impactLevel", value)}
-        options={IMPACT_LEVEL_OPTIONS}
+        options={impactLevelOptions}
       />
       <FilterChipGroup
         name="timeline-year"
-        label="Год"
+        label={t("year")}
         value={filters.year}
         onChange={(value) => onChange("year", value)}
         options={[
-          { value: "", label: "Все годы" },
+          { value: "", label: t("allYears") },
           ...years.map((year) => ({
             value: String(year),
             label: String(year),

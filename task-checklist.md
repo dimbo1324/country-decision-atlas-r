@@ -381,7 +381,71 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         `?step=4`, clicked "Run the decision engine" for real, and read the
         actual result card in all 3 locales (this is what caught the
         `DecisionResults.tsx` gap above).
-- [ ] Legal Signals, Sources, Routes (21 files + 3 pages).
+- [+] Legal Signals, Sources, Routes (21 files + 3 pages).
+      - `legal-signals-timeline` (7): new `legalSignalsTimeline` namespace
+        for the shared registry view/filters/legend/empty-state (feed +
+        chart tabs, both driven by one data-fetch, per the file's own
+        header comment); `timelineEventCard` for the event card;
+        `legalSignalEvidenceDrawer` for the evidence drawer.
+        `TimelineFilters.tsx`'s `SIGNAL_TYPE_LABELS`/
+        `IMPACT_DIRECTION_LABELS`/`IMPACT_LEVEL_LABELS` and
+        `TimelineEventCard.tsx`'s `TYPE_LABELS` converted to the
+        `Record<SupportedLocale, Record<string,string>>` enum-dict pattern.
+        **Locale-prop fix**: `TimelineEventCard`/`TimelineYearGroup`'s
+        `locale` prop was typed as the backend-only `LocaleCode` (`en`/`ru`)
+        even though both components only ever use it for display (date
+        formatting, enum labels), never a data fetch — retyped to
+        `SupportedLocale` and fixed the caller
+        (`LegalSignalsRegistryView.tsx`) to pass the real interface
+        `locale` instead of the `apiLocale` it was fetching with. This also
+        fixed a real gap: `TimelineEventCard`'s local `formatEventDate` had
+        `locale === "ru" ? "ru-RU" : "en-US"` hardcoded, silently mapping
+        `es` to English date formatting; now uses the shared
+        `DATE_FORMAT_LOCALE` map from `shared/lib/format.ts`.
+      - `sources` (5): `sourceCard`, `sourceEvidenceDrawer`,
+        `sourcesFilters`, `sourcesView` namespaces.
+        `SourcesFilters.tsx`'s `SOURCE_TYPE_LABELS` converted to the same
+        enum-dict pattern; its `useAppLocale()` + `confidenceLabel()` reuse
+        from Stage 3a's `ConfidenceBadge` left unchanged.
+      - `routes` (9 + new `route-labels.ts`): new shared
+        `features/routes/route-labels.ts` exporting `ROUTE_TYPE_LABELS`
+        (`Record<SupportedLocale, Record<RouteType,string>>`) — created to
+        de-duplicate the identical route-type dictionary that was
+        previously hardcoded separately in both `RouteDetailView.tsx` and
+        `RouteFilters.tsx`; both now import it instead of keeping their own
+        copy. `routes` namespace covers `CountryRoutesBlock`,
+        `RouteEmptyState`, `RouteFilters` (shared, since all three are
+        tightly coupled); `routeCard` for `RouteCard`; `routeDetail`
+        (largest new namespace, 45 keys) covers `RouteDetailView`,
+        `RouteChecklistList`, `RouteDocumentsList`, `RouteEligibilityBadges`,
+        `RouteEvidenceList`, `RouteSourcesList` — `RouteDetailView`'s
+        `LEGAL_STATUS_LABELS`/`STATUS_LABELS` and
+        `RouteEligibilityBadges`' `LABELS`/`VALUE_LABELS` converted to the
+        enum-dict pattern (the latter needed a new `useAppLocale()` call,
+        having had no locale access before).
+      - `legal-signals/page.tsx` (`legalSignalsPage`), `sources/page.tsx`
+        (`sourcesPage`) — both existing Server Components using
+        `useTranslations()` directly (confirmed RSC-safe, matching the
+        `AppFooter` precedent); `routes/[id]/page.tsx` (`routePage`) —
+        Server Component switched to `getTranslations()` from
+        `next-intl/server`, matching the Stage 4-6 page pattern.
+        `legal-signals/timeline/page.tsx` needed zero changes — confirmed
+        it is a pure redirect with no user-facing text.
+      - Verify: typecheck/lint clean; `pnpm format:check` clean (4 files
+        needed a `prettier --write` pass after editing); Vitest 5/5;
+        fresh `next build` clean (same route list); `i18n_parity_check.py`
+        529/529 keys across en/ru/es (13 new namespaces added); full
+        interactive browser walkthrough of `/legal-signals` (feed +
+        timeline tabs, evidence drawer open/empty-state), `/sources`
+        (filters, evidence drawer), and a real `/routes/[id]` page
+        (Argentina's monotributo route, plus a route-not-found error
+        state) across all 3 locales — confirmed chrome fully translated
+        while backend content (event titles/summaries, route notes) stays
+        in its own data locale per the Stage 1 design, and confirmed the
+        still-Russian Migration Board block on the route page and the
+        still-Russian watchlist/AI-assistant strings on the country
+        dossier are pre-existing gaps already tracked as separate stages
+        (#58 Cabinet, #59 Community), not a regression from this stage.
 - [ ] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +
       4 pages).
 - [ ] Community: Migration Board, User Stories, Author Metrics, Country

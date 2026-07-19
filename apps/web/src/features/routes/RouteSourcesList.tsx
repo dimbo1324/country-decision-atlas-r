@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { RouteDetailResponse } from "../../shared/api/routes";
 import { RouteEmptyState } from "./RouteEmptyState";
 
@@ -6,10 +7,10 @@ type RouteSourcesListProps = {
 };
 
 export function RouteSourcesList({ sources }: RouteSourcesListProps) {
+  const t = useTranslations("routeDetail");
+
   if (sources.length === 0) {
-    return (
-      <RouteEmptyState message="Источники для этого маршрута пока не указаны." />
-    );
+    return <RouteEmptyState message={t("noSources")} />;
   }
 
   return (

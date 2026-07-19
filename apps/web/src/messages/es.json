@@ -491,5 +491,149 @@
     "passportUnavailable": "Decision Passport no disponible",
     "backToDecision": "Volver a la decisión",
     "runNewDecision": "Ejecutar una nueva decisión"
+  },
+  "legalSignalsTimeline": {
+    "description": "Señales legales y políticas que afectan a las normas de inmigración, fiscalidad y residencia en distintos países — decisiones judiciales, nuevas leyes y cambios administrativos, cada una vinculada a su fuente.",
+    "loading": "Cargando señales legales…",
+    "loadError": "No se pudieron cargar las señales legales.",
+    "viewFeed": "Feed",
+    "viewTimeline": "Cronología",
+    "eventsCount": "{count} eventos",
+    "noEventsForFilters": "Ningún evento coincide con los filtros actuales.",
+    "country": "País",
+    "signalType": "Tipo de señal",
+    "impactDirection": "Dirección del impacto",
+    "impactLevel": "Nivel de impacto",
+    "year": "Año",
+    "allCountries": "Todos los países",
+    "allTypes": "Todos los tipos",
+    "allDirections": "Todas las direcciones",
+    "allLevels": "Todos los niveles",
+    "allYears": "Todos los años"
+  },
+  "timelineEventCard": {
+    "affectedGroups": "Grupos afectados:",
+    "source": "Fuente: {title}",
+    "countryCard": "Ficha del país: {name}",
+    "allCountrySources": "Todas las fuentes de este país",
+    "evidence": "Evidencia"
+  },
+  "legalSignalEvidenceDrawer": {
+    "eyebrow": "Evidencia de la señal",
+    "titleFallback": "Señal",
+    "loading": "Cargando evidencia…",
+    "loadError": "No se pudo cargar la evidencia.",
+    "noEvidence": "Todavía no hay evidencia vinculada a esta señal."
+  },
+  "legalSignalsPage": {
+    "kicker": "Señales legales",
+    "title": "Feed de señales legales"
+  },
+  "sourceCard": {
+    "checked": "Verificado: {date}",
+    "published": "Publicado: {date}",
+    "openSource": "Abrir fuente",
+    "country": "País: {name}",
+    "evidence": "Evidencia"
+  },
+  "sourceEvidenceDrawer": {
+    "eyebrow": "Evidencia de la fuente",
+    "titleFallback": "Fuente",
+    "loading": "Cargando evidencia…",
+    "loadError": "No se pudo cargar la evidencia.",
+    "noEvidence": "Todavía no hay evidencia vinculada a esta fuente."
+  },
+  "sourcesFilters": {
+    "country": "País",
+    "allCountries": "Todos los países",
+    "sourceType": "Tipo de fuente",
+    "allTypes": "Todos los tipos",
+    "confidence": "Confianza",
+    "allLevels": "Todos los niveles"
+  },
+  "sourcesView": {
+    "kicker": "Fuentes · {shown} mostradas de {total}",
+    "loading": "Cargando fuentes…",
+    "loadError": "No se pudieron cargar las fuentes.",
+    "empty": "Ninguna fuente coincide con los filtros actuales."
+  },
+  "sourcesPage": {
+    "kicker": "Fuentes",
+    "title": "Fuentes de evidencia"
+  },
+  "routes": {
+    "unavailable": "Las rutas no están disponibles en este momento.",
+    "shownCount": "Mostrando {shown} de {total} rutas",
+    "empty": "Todavía no hay rutas para las condiciones seleccionadas.",
+    "routeType": "Tipo de ruta",
+    "allTypes": "Todos los tipos",
+    "work": "Trabajo",
+    "family": "Familia",
+    "permanentResidence": "Residencia permanente",
+    "anyStatus": "Cualquier estado",
+    "yes": "Sí",
+    "no": "No",
+    "unknown": "Desconocido",
+    "reset": "Restablecer"
+  },
+  "routeCard": {
+    "open": "Abrir"
+  },
+  "routeDetail": {
+    "route": "Ruta",
+    "backToCountry": "Volver al país",
+    "description": "Descripción",
+    "parameters": "Parámetros",
+    "income": "Ingresos",
+    "fees": "Tasas",
+    "processingTime": "Tiempo de tramitación",
+    "stayPeriod": "Período de estancia",
+    "renewal": "Renovación",
+    "warnings": "Advertencias",
+    "checklist": "Lista de verificación práctica",
+    "checklistDisclaimer": "La lista de verificación es solo orientativa y no sustituye el asesoramiento profesional.",
+    "documents": "Documentos",
+    "peopleConsidering": "Personas que consideran esta ruta",
+    "sources": "Fuentes",
+    "evidence": "Evidencia",
+    "legalStatusProposed": "Propuesto",
+    "legalStatusAdopted": "Adoptado",
+    "legalStatusEffective": "Vigente",
+    "legalStatusExpired": "Caducado",
+    "legalStatusRevoked": "Revocado",
+    "legalStatusUnknown": "Estado desconocido",
+    "statusDraft": "Borrador",
+    "statusReview": "En revisión",
+    "statusPublished": "Publicado",
+    "statusArchived": "Archivado",
+    "statusRejected": "Rechazado",
+    "noChecklist": "Todavía no se ha preparado una lista de verificación práctica para esta ruta.",
+    "required": "Obligatorio",
+    "situational": "Según el caso",
+    "documentsNote": "Documentos: {note}",
+    "costNote": "Coste: {note}",
+    "timingNote": "Plazos: {note}",
+    "officialRequirementNote": "Requisito oficial: {note}",
+    "source": "Fuente: {title}",
+    "noDocuments": "Todavía no se han indicado documentos para esta ruta.",
+    "noEvidence": "Todavía no se ha indicado evidencia para esta ruta.",
+    "evidenceFallback": "Evidencia",
+    "noSources": "Todavía no se han indicado fuentes para esta ruta.",
+    "allowsWork": "Permite trabajar",
+    "allowsFamily": "Permite traer a la familia",
+    "leadsToPr": "Conduce a la residencia permanente",
+    "leadsToCitizenship": "Conduce a la ciudadanía",
+    "requiresIncomeProof": "Requiere justificante de ingresos",
+    "requiresLocalAddress": "Requiere domicilio local",
+    "requiresCriminalRecordCheck": "Requiere certificado de antecedentes penales",
+    "yes": "Sí",
+    "no": "No",
+    "unknown": "Desconocido"
+  },
+  "routePage": {
+    "countries": "Países",
+    "kicker": "Ruta",
+    "notFound": "Ruta no encontrada",
+    "backToCountries": "Volver a los países"
   }
 }

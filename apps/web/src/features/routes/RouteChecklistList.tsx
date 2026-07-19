@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@country-decision-atlas/ui";
 import type { RouteDetailResponse } from "../../shared/api/routes";
 import { RouteEmptyState } from "./RouteEmptyState";
@@ -13,10 +14,10 @@ export function RouteChecklistList({
   sources,
   evidence,
 }: RouteChecklistListProps) {
+  const t = useTranslations("routeDetail");
+
   if (checklist.length === 0) {
-    return (
-      <RouteEmptyState message="Практический чек-лист для этого маршрута пока не подготовлен." />
-    );
+    return <RouteEmptyState message={t("noChecklist")} />;
   }
 
   const sorted = [...checklist].sort((a, b) => a.step_order - b.step_order);
@@ -45,7 +46,7 @@ export function RouteChecklistList({
               </span>
               <strong className="text-c1 text-sm">{item.title}</strong>
               <Badge variant="default">
-                {item.is_required ? "Обязательно" : "По ситуации"}
+                {item.is_required ? t("required") : t("situational")}
               </Badge>
             </div>
             {item.description && (
@@ -54,17 +55,25 @@ export function RouteChecklistList({
               </p>
             )}
             {item.document_note && (
-              <p className="text-c3 text-xs">Документы: {item.document_note}</p>
+              <p className="text-c3 text-xs">
+                {t("documentsNote", { note: item.document_note })}
+              </p>
             )}
             {item.cost_note && (
-              <p className="text-c3 text-xs">Стоимость: {item.cost_note}</p>
+              <p className="text-c3 text-xs">
+                {t("costNote", { note: item.cost_note })}
+              </p>
             )}
             {item.timing_note && (
-              <p className="text-c3 text-xs">Сроки: {item.timing_note}</p>
+              <p className="text-c3 text-xs">
+                {t("timingNote", { note: item.timing_note })}
+              </p>
             )}
             {item.official_requirement_note && (
               <p className="text-c3 text-xs">
-                Официальное требование: {item.official_requirement_note}
+                {t("officialRequirementNote", {
+                  note: item.official_requirement_note,
+                })}
               </p>
             )}
             {linkedSource && (
@@ -75,7 +84,7 @@ export function RouteChecklistList({
                 className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
                 data-testid="route-checklist-source-link"
               >
-                Источник: {linkedSource.title}
+                {t("source", { title: linkedSource.title })}
               </a>
             )}
             {!linkedSource && linkedEvidence?.source_url && (
@@ -86,8 +95,10 @@ export function RouteChecklistList({
                 className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
                 data-testid="route-checklist-source-link"
               >
-                Источник:{" "}
-                {linkedEvidence.source_title ?? linkedEvidence.source_url}
+                {t("source", {
+                  title:
+                    linkedEvidence.source_title ?? linkedEvidence.source_url,
+                })}
               </a>
             )}
           </li>

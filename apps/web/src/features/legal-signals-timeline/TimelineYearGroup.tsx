@@ -1,5 +1,5 @@
-import type { LocaleCode } from "../../shared/api/countries";
 import type { TimelineYearGroup as TimelineYearGroupData } from "../../shared/api/legal-signals";
+import type { SupportedLocale } from "../../shared/lib/locale";
 import { TimelineEventCard } from "./TimelineEventCard";
 
 export function TimelineYearGroup({
@@ -8,7 +8,7 @@ export function TimelineYearGroup({
   onShowEvidence,
 }: {
   group: TimelineYearGroupData;
-  locale: LocaleCode;
+  locale: SupportedLocale;
   onShowEvidence: (signalId: string, title: string) => void;
 }) {
   return (

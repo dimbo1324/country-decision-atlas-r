@@ -1,42 +1,34 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 
-import type { RouteDetailResponse, RouteType } from "../../shared/api/routes";
+import type { RouteDetailResponse } from "../../shared/api/routes";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { DisclaimerNotice } from "../../shared/ui/DisclaimerNotice";
 import { routes } from "../../shared/lib/routes";
 import { RouteMigrationBoardBlock } from "../migration-board";
+import { ROUTE_TYPE_LABELS } from "./route-labels";
 import { RouteChecklistList } from "./RouteChecklistList";
 import { RouteDocumentsList } from "./RouteDocumentsList";
 import { RouteEligibilityBadges } from "./RouteEligibilityBadges";
 import { RouteEvidenceList } from "./RouteEvidenceList";
 import { RouteSourcesList } from "./RouteSourcesList";
 
-const ROUTE_TYPE_LABELS: Record<RouteType, string> = {
-  temporary_residence: "Временное проживание",
-  permanent_residence: "ПМЖ",
-  citizenship: "Гражданство",
-  digital_nomad: "Digital nomad",
-  work: "Работа",
-  business: "Бизнес",
-  study: "Учёба",
-  investment: "Инвестиции",
+const LEGAL_STATUS_LABEL_KEYS: Record<string, string> = {
+  proposed: "legalStatusProposed",
+  adopted: "legalStatusAdopted",
+  effective: "legalStatusEffective",
+  expired: "legalStatusExpired",
+  revoked: "legalStatusRevoked",
+  unknown: "legalStatusUnknown",
 };
 
-const LEGAL_STATUS_LABELS: Record<string, string> = {
-  proposed: "Предложен",
-  adopted: "Принят",
-  effective: "Действует",
-  expired: "Истёк",
-  revoked: "Отозван",
-  unknown: "Статус неизвестен",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  review: "На проверке",
-  published: "Опубликован",
-  archived: "Архив",
-  rejected: "Отклонён",
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  draft: "statusDraft",
+  review: "statusReview",
+  published: "statusPublished",
+  archived: "statusArchived",
+  rejected: "statusRejected",
 };
 
 type RouteDetailViewProps = {
@@ -44,30 +36,36 @@ type RouteDetailViewProps = {
 };
 
 export function RouteDetailView({ route }: RouteDetailViewProps) {
+  const t = useTranslations("routeDetail");
+  const locale = useAppLocale();
+
+  const legalStatusKey = LEGAL_STATUS_LABEL_KEYS[route.legal_status];
+  const statusKey = STATUS_LABEL_KEYS[route.status];
+
   return (
     <article
       className="flex flex-col gap-6"
       data-testid="route-detail"
     >
       <header className="flex flex-col gap-3">
-        <Kicker>Маршрут</Kicker>
+        <Kicker>{t("route")}</Kicker>
         <h1 className="font-display text-4xl font-bold">{route.title}</h1>
         <div className="flex flex-wrap gap-2">
           <Badge variant="default">
-            {ROUTE_TYPE_LABELS[route.route_type] ?? route.route_type}
+            {ROUTE_TYPE_LABELS[locale][route.route_type] ?? route.route_type}
           </Badge>
           <Badge variant="default">
-            {LEGAL_STATUS_LABELS[route.legal_status] ?? route.legal_status}
+            {legalStatusKey ? t(legalStatusKey) : route.legal_status}
           </Badge>
           <Badge variant="default">
-            {STATUS_LABELS[route.status] ?? route.status}
+            {statusKey ? t(statusKey) : route.status}
           </Badge>
         </div>
         <Link
           href={routes.country(route.country_slug)}
           className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         >
-          Назад к стране
+          {t("backToCountry")}
         </Link>
       </header>
 
@@ -76,7 +74,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-2"
         >
-          <Kicker>Описание</Kicker>
+          <Kicker>{t("description")}</Kicker>
           {route.summary && (
             <p className="text-c1 text-sm leading-relaxed">{route.summary}</p>
           )}
@@ -92,11 +90,11 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-2"
         >
-          <Kicker>Параметры</Kicker>
+          <Kicker>{t("parameters")}</Kicker>
           <dl className="flex flex-col gap-2.5">
             {route.income_requirement_note && (
               <div className="flex flex-col gap-0.5">
-                <dt className="text-c3 text-xs font-bold">Доход</dt>
+                <dt className="text-c3 text-xs font-bold">{t("income")}</dt>
                 <dd className="text-c1 text-sm">
                   {route.income_requirement_note}
                 </dd>
@@ -104,13 +102,15 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
             )}
             {route.fees_note && (
               <div className="flex flex-col gap-0.5">
-                <dt className="text-c3 text-xs font-bold">Сборы</dt>
+                <dt className="text-c3 text-xs font-bold">{t("fees")}</dt>
                 <dd className="text-c1 text-sm">{route.fees_note}</dd>
               </div>
             )}
             {route.processing_time_note && (
               <div className="flex flex-col gap-0.5">
-                <dt className="text-c3 text-xs font-bold">Срок обработки</dt>
+                <dt className="text-c3 text-xs font-bold">
+                  {t("processingTime")}
+                </dt>
                 <dd className="text-c1 text-sm">
                   {route.processing_time_note}
                 </dd>
@@ -118,13 +118,13 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
             )}
             {route.stay_period_note && (
               <div className="flex flex-col gap-0.5">
-                <dt className="text-c3 text-xs font-bold">Срок пребывания</dt>
+                <dt className="text-c3 text-xs font-bold">{t("stayPeriod")}</dt>
                 <dd className="text-c1 text-sm">{route.stay_period_note}</dd>
               </div>
             )}
             {route.renewal_note && (
               <div className="flex flex-col gap-0.5">
-                <dt className="text-c3 text-xs font-bold">Продление</dt>
+                <dt className="text-c3 text-xs font-bold">{t("renewal")}</dt>
                 <dd className="text-c1 text-sm">{route.renewal_note}</dd>
               </div>
             )}
@@ -137,7 +137,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-2"
         >
-          <Kicker>Предупреждения</Kicker>
+          <Kicker>{t("warnings")}</Kicker>
           <div className="flex flex-col gap-2">
             {route.tax_warning && (
               <p className="border-gold3 text-c1 border-l-4 pl-2.5 text-sm">
@@ -158,14 +158,14 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <Kicker>Практический чек-лист</Kicker>
+          <Kicker>{t("checklist")}</Kicker>
           <RouteChecklistList
             checklist={route.checklist}
             sources={route.sources}
             evidence={route.evidence}
           />
           {route.checklist.length > 0 && (
-            <DisclaimerNotice text="Чек-лист носит справочный характер и не заменяет консультацию специалиста." />
+            <DisclaimerNotice text={t("checklistDisclaimer")} />
           )}
         </Card>
       </div>
@@ -175,7 +175,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <Kicker>Документы</Kicker>
+          <Kicker>{t("documents")}</Kicker>
           <RouteDocumentsList documents={route.documents} />
         </Card>
       </div>
@@ -185,7 +185,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <Kicker>Люди, рассматривающие этот маршрут</Kicker>
+          <Kicker>{t("peopleConsidering")}</Kicker>
           <RouteMigrationBoardBlock routeId={route.id} />
         </Card>
       </div>
@@ -195,7 +195,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <Kicker>Источники</Kicker>
+          <Kicker>{t("sources")}</Kicker>
           <RouteSourcesList sources={route.sources} />
         </Card>
       </div>
@@ -205,7 +205,7 @@ export function RouteDetailView({ route }: RouteDetailViewProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <Kicker>Доказательства</Kicker>
+          <Kicker>{t("evidence")}</Kicker>
           <RouteEvidenceList evidence={route.evidence} />
         </Card>
       </div>

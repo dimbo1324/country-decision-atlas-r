@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker, VirtualList } from "@country-decision-atlas/ui";
 import { parseAsString, useQueryState } from "nuqs";
 import { Suspense, useMemo, useState } from "react";
@@ -16,6 +17,7 @@ import { SourceEvidenceDrawer } from "./SourceEvidenceDrawer";
 import { SourcesFilters } from "./SourcesFilters";
 
 function SourcesViewInner() {
+  const t = useTranslations("sourcesView");
   const locale = useAppLocale();
   const [countrySlug, setCountrySlug] = useQueryState(
     "country_slug",
@@ -78,16 +80,17 @@ function SourcesViewInner() {
 
       {sources && (
         <Kicker>
-          Источники · {items.length} показано из {sources.pagination.total}
+          {t("kicker", {
+            shown: items.length,
+            total: sources.pagination.total,
+          })}
         </Kicker>
       )}
 
-      {isPending && <LoadingState message="Загрузка источников…" />}
-      {!isPending && isError && (
-        <ErrorState error="Произошла ошибка при загрузке источников." />
-      )}
+      {isPending && <LoadingState message={t("loading")} />}
+      {!isPending && isError && <ErrorState error={t("loadError")} />}
       {!isPending && !isError && items.length === 0 && (
-        <EmptyState message="По выбранным фильтрам источники не найдены." />
+        <EmptyState message={t("empty")} />
       )}
       {!isPending && !isError && items.length > 0 && (
         <div data-testid="sources-list">
@@ -122,9 +125,14 @@ function SourcesViewInner() {
   );
 }
 
+function SourcesLoadingFallback() {
+  const t = useTranslations("sourcesView");
+  return <LoadingState message={t("loading")} />;
+}
+
 export function SourcesView() {
   return (
-    <Suspense fallback={<LoadingState message="Загрузка источников…" />}>
+    <Suspense fallback={<SourcesLoadingFallback />}>
       <SourcesViewInner />
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Kicker } from "@country-decision-atlas/ui";
 import { getPathname } from "../../../../i18n/navigation";
 import { routesApi } from "../../../../shared/api/routes";
@@ -18,6 +18,7 @@ type PageProps = {
 export default async function RoutePage({ params }: PageProps) {
   const { id } = await params;
   const locale = asSupportedLocale(await getLocale());
+  const t = await getTranslations("routePage");
 
   try {
     const route = await routesApi.getRoute(id, { locale: toApiLocale(locale) });
@@ -25,7 +26,7 @@ export default async function RoutePage({ params }: PageProps) {
       <div className="flex flex-col gap-6">
         <AppBreadcrumbs
           items={[
-            { label: "Страны", href: routes.countries },
+            { label: t("countries"), href: routes.countries },
             {
               label: route.country_slug,
               href: routes.country(route.country_slug),
@@ -45,16 +46,19 @@ export default async function RoutePage({ params }: PageProps) {
     return (
       <div className="flex flex-col gap-6">
         <AppBreadcrumbs
-          items={[{ label: "Страны", href: routes.countries }, { label: id }]}
+          items={[
+            { label: t("countries"), href: routes.countries },
+            { label: id },
+          ]}
         />
         <header className="flex flex-col gap-3">
-          <Kicker>Маршрут</Kicker>
-          <h1 className="font-display text-4xl font-bold">Маршрут не найден</h1>
+          <Kicker>{t("kicker")}</Kicker>
+          <h1 className="font-display text-4xl font-bold">{t("notFound")}</h1>
         </header>
         <ErrorState
           error={errProp}
           backHref={getPathname({ href: routes.countries, locale })}
-          backLabel="Назад к странам"
+          backLabel={t("backToCountries")}
         />
       </div>
     );

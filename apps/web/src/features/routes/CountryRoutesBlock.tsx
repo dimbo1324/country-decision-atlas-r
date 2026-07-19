@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Kicker, Skeleton } from "@country-decision-atlas/ui";
 import { isApiError } from "../../shared/api/http";
 import type { LocaleCode } from "../../shared/api/countries";
@@ -27,6 +28,7 @@ export function CountryRoutesBlock({
   countrySlug,
   locale,
 }: CountryRoutesBlockProps) {
+  const t = useTranslations("routes");
   const [filters, setFilters] = useState<RouteFilterValues>(DEFAULT_FILTERS);
 
   const { data, error, isPending, isError } = useQuery(
@@ -60,7 +62,7 @@ export function CountryRoutesBlock({
               : {
                   error: {
                     code: "unknown",
-                    message: "Маршруты сейчас недоступны.",
+                    message: t("unavailable"),
                   },
                 }
           }
@@ -73,7 +75,10 @@ export function CountryRoutesBlock({
         <>
           {data.pagination.total > data.items.length && (
             <Kicker>
-              Показано {data.items.length} из {data.pagination.total} маршрутов
+              {t("shownCount", {
+                shown: data.items.length,
+                total: data.pagination.total,
+              })}
             </Kicker>
           )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

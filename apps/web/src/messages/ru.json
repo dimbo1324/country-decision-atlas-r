@@ -491,5 +491,149 @@
     "passportUnavailable": "Decision Passport недоступен",
     "backToDecision": "Назад к подбору",
     "runNewDecision": "Запустить новый подбор"
+  },
+  "legalSignalsTimeline": {
+    "description": "Правовые и политические сигналы, влияющие на правила иммиграции, налогообложения и получения статуса в разных странах — судебные решения, новые законы и административные изменения, каждый со ссылкой на источник.",
+    "loading": "Загрузка правовых сигналов…",
+    "loadError": "Не удалось загрузить правовые сигналы.",
+    "viewFeed": "Лента",
+    "viewTimeline": "Хронология",
+    "eventsCount": "Событий: {count}",
+    "noEventsForFilters": "Нет событий, соответствующих текущим фильтрам.",
+    "country": "Страна",
+    "signalType": "Тип сигнала",
+    "impactDirection": "Направление влияния",
+    "impactLevel": "Уровень влияния",
+    "year": "Год",
+    "allCountries": "Все страны",
+    "allTypes": "Все типы",
+    "allDirections": "Все направления",
+    "allLevels": "Все уровни",
+    "allYears": "Все годы"
+  },
+  "timelineEventCard": {
+    "affectedGroups": "Затронутые группы:",
+    "source": "Источник: {title}",
+    "countryCard": "Карточка страны: {name}",
+    "allCountrySources": "Все источники страны",
+    "evidence": "Доказательства"
+  },
+  "legalSignalEvidenceDrawer": {
+    "eyebrow": "Доказательства сигнала",
+    "titleFallback": "Сигнал",
+    "loading": "Загрузка доказательств…",
+    "loadError": "Не удалось загрузить доказательства.",
+    "noEvidence": "К этому сигналу пока не привязаны доказательства."
+  },
+  "legalSignalsPage": {
+    "kicker": "Правовые сигналы",
+    "title": "Лента правовых сигналов"
+  },
+  "sourceCard": {
+    "checked": "Проверено: {date}",
+    "published": "Опубликовано: {date}",
+    "openSource": "Открыть источник",
+    "country": "Страна: {name}",
+    "evidence": "Доказательства"
+  },
+  "sourceEvidenceDrawer": {
+    "eyebrow": "Доказательства источника",
+    "titleFallback": "Источник",
+    "loading": "Загрузка доказательств…",
+    "loadError": "Не удалось загрузить доказательства.",
+    "noEvidence": "К этому источнику пока не привязаны доказательства."
+  },
+  "sourcesFilters": {
+    "country": "Страна",
+    "allCountries": "Все страны",
+    "sourceType": "Тип источника",
+    "allTypes": "Все типы",
+    "confidence": "Достоверность",
+    "allLevels": "Все уровни"
+  },
+  "sourcesView": {
+    "kicker": "Источники · {shown} показано из {total}",
+    "loading": "Загрузка источников…",
+    "loadError": "Не удалось загрузить источники.",
+    "empty": "Нет источников, соответствующих текущим фильтрам."
+  },
+  "sourcesPage": {
+    "kicker": "Источники",
+    "title": "Источники доказательств"
+  },
+  "routes": {
+    "unavailable": "Маршруты сейчас недоступны.",
+    "shownCount": "Показано {shown} из {total} маршрутов",
+    "empty": "Для выбранных условий маршруты пока отсутствуют.",
+    "routeType": "Тип маршрута",
+    "allTypes": "Все типы",
+    "work": "Работа",
+    "family": "Семья",
+    "permanentResidence": "ПМЖ",
+    "anyStatus": "Любой статус",
+    "yes": "Да",
+    "no": "Нет",
+    "unknown": "Неизвестно",
+    "reset": "Сбросить"
+  },
+  "routeCard": {
+    "open": "Открыть"
+  },
+  "routeDetail": {
+    "route": "Маршрут",
+    "backToCountry": "Назад к стране",
+    "description": "Описание",
+    "parameters": "Параметры",
+    "income": "Доход",
+    "fees": "Сборы",
+    "processingTime": "Срок обработки",
+    "stayPeriod": "Срок пребывания",
+    "renewal": "Продление",
+    "warnings": "Предупреждения",
+    "checklist": "Практический чек-лист",
+    "checklistDisclaimer": "Чек-лист носит справочный характер и не заменяет консультацию специалиста.",
+    "documents": "Документы",
+    "peopleConsidering": "Люди, рассматривающие этот маршрут",
+    "sources": "Источники",
+    "evidence": "Доказательства",
+    "legalStatusProposed": "Предложен",
+    "legalStatusAdopted": "Принят",
+    "legalStatusEffective": "Действует",
+    "legalStatusExpired": "Истёк",
+    "legalStatusRevoked": "Отозван",
+    "legalStatusUnknown": "Статус неизвестен",
+    "statusDraft": "Черновик",
+    "statusReview": "На проверке",
+    "statusPublished": "Опубликован",
+    "statusArchived": "Архив",
+    "statusRejected": "Отклонён",
+    "noChecklist": "Практический чек-лист для этого маршрута пока не подготовлен.",
+    "required": "Обязательно",
+    "situational": "По ситуации",
+    "documentsNote": "Документы: {note}",
+    "costNote": "Стоимость: {note}",
+    "timingNote": "Сроки: {note}",
+    "officialRequirementNote": "Официальное требование: {note}",
+    "source": "Источник: {title}",
+    "noDocuments": "Документы для этого маршрута пока не указаны.",
+    "noEvidence": "Доказательства для этого маршрута пока не указаны.",
+    "evidenceFallback": "Доказательство",
+    "noSources": "Источники для этого маршрута пока не указаны.",
+    "allowsWork": "Можно работать",
+    "allowsFamily": "Можно с семьёй",
+    "leadsToPr": "Ведёт к ПМЖ",
+    "leadsToCitizenship": "Ведёт к гражданству",
+    "requiresIncomeProof": "Нужен доход",
+    "requiresLocalAddress": "Нужен адрес",
+    "requiresCriminalRecordCheck": "Нужна справка о несудимости",
+    "yes": "Да",
+    "no": "Нет",
+    "unknown": "Неизвестно"
+  },
+  "routePage": {
+    "countries": "Страны",
+    "kicker": "Маршрут",
+    "notFound": "Маршрут не найден",
+    "backToCountries": "Назад к странам"
   }
 }

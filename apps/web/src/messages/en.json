@@ -491,5 +491,149 @@
     "passportUnavailable": "Decision Passport unavailable",
     "backToDecision": "Back to decision",
     "runNewDecision": "Run a new decision"
+  },
+  "legalSignalsTimeline": {
+    "description": "Legal and policy signals affecting immigration, tax, and residency rules across countries — court decisions, new laws, and administrative changes, each linked to its source.",
+    "loading": "Loading legal signals…",
+    "loadError": "Could not load legal signals.",
+    "viewFeed": "Feed",
+    "viewTimeline": "Timeline",
+    "eventsCount": "{count} events",
+    "noEventsForFilters": "No events match the current filters.",
+    "country": "Country",
+    "signalType": "Signal type",
+    "impactDirection": "Impact direction",
+    "impactLevel": "Impact level",
+    "year": "Year",
+    "allCountries": "All countries",
+    "allTypes": "All types",
+    "allDirections": "All directions",
+    "allLevels": "All levels",
+    "allYears": "All years"
+  },
+  "timelineEventCard": {
+    "affectedGroups": "Affected groups:",
+    "source": "Source: {title}",
+    "countryCard": "Country card: {name}",
+    "allCountrySources": "All sources for this country",
+    "evidence": "Evidence"
+  },
+  "legalSignalEvidenceDrawer": {
+    "eyebrow": "Signal evidence",
+    "titleFallback": "Signal",
+    "loading": "Loading evidence…",
+    "loadError": "Could not load evidence.",
+    "noEvidence": "No evidence has been linked to this signal yet."
+  },
+  "legalSignalsPage": {
+    "kicker": "Legal signals",
+    "title": "Legal signals feed"
+  },
+  "sourceCard": {
+    "checked": "Checked: {date}",
+    "published": "Published: {date}",
+    "openSource": "Open source",
+    "country": "Country: {name}",
+    "evidence": "Evidence"
+  },
+  "sourceEvidenceDrawer": {
+    "eyebrow": "Source evidence",
+    "titleFallback": "Source",
+    "loading": "Loading evidence…",
+    "loadError": "Could not load evidence.",
+    "noEvidence": "No evidence has been linked to this source yet."
+  },
+  "sourcesFilters": {
+    "country": "Country",
+    "allCountries": "All countries",
+    "sourceType": "Source type",
+    "allTypes": "All types",
+    "confidence": "Confidence",
+    "allLevels": "All levels"
+  },
+  "sourcesView": {
+    "kicker": "Sources · {shown} shown of {total}",
+    "loading": "Loading sources…",
+    "loadError": "Could not load sources.",
+    "empty": "No sources match the current filters."
+  },
+  "sourcesPage": {
+    "kicker": "Sources",
+    "title": "Evidence sources"
+  },
+  "routes": {
+    "unavailable": "Routes are unavailable right now.",
+    "shownCount": "Showing {shown} of {total} routes",
+    "empty": "No routes match the selected conditions yet.",
+    "routeType": "Route type",
+    "allTypes": "All types",
+    "work": "Work",
+    "family": "Family",
+    "permanentResidence": "Permanent residence",
+    "anyStatus": "Any status",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown",
+    "reset": "Reset"
+  },
+  "routeCard": {
+    "open": "Open"
+  },
+  "routeDetail": {
+    "route": "Route",
+    "backToCountry": "Back to country",
+    "description": "Description",
+    "parameters": "Parameters",
+    "income": "Income",
+    "fees": "Fees",
+    "processingTime": "Processing time",
+    "stayPeriod": "Stay period",
+    "renewal": "Renewal",
+    "warnings": "Warnings",
+    "checklist": "Practical checklist",
+    "checklistDisclaimer": "The checklist is for reference only and does not replace professional advice.",
+    "documents": "Documents",
+    "peopleConsidering": "People considering this route",
+    "sources": "Sources",
+    "evidence": "Evidence",
+    "legalStatusProposed": "Proposed",
+    "legalStatusAdopted": "Adopted",
+    "legalStatusEffective": "In effect",
+    "legalStatusExpired": "Expired",
+    "legalStatusRevoked": "Revoked",
+    "legalStatusUnknown": "Status unknown",
+    "statusDraft": "Draft",
+    "statusReview": "In review",
+    "statusPublished": "Published",
+    "statusArchived": "Archived",
+    "statusRejected": "Rejected",
+    "noChecklist": "A practical checklist for this route has not been prepared yet.",
+    "required": "Required",
+    "situational": "Situational",
+    "documentsNote": "Documents: {note}",
+    "costNote": "Cost: {note}",
+    "timingNote": "Timing: {note}",
+    "officialRequirementNote": "Official requirement: {note}",
+    "source": "Source: {title}",
+    "noDocuments": "No documents have been specified for this route yet.",
+    "noEvidence": "No evidence has been specified for this route yet.",
+    "evidenceFallback": "Evidence",
+    "noSources": "No sources have been specified for this route yet.",
+    "allowsWork": "Allows work",
+    "allowsFamily": "Allows family",
+    "leadsToPr": "Leads to permanent residence",
+    "leadsToCitizenship": "Leads to citizenship",
+    "requiresIncomeProof": "Requires income proof",
+    "requiresLocalAddress": "Requires local address",
+    "requiresCriminalRecordCheck": "Requires criminal record check",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown"
+  },
+  "routePage": {
+    "countries": "Countries",
+    "kicker": "Route",
+    "notFound": "Route not found",
+    "backToCountries": "Back to countries"
   }
 }

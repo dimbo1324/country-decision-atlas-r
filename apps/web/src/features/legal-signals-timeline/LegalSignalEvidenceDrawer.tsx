@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Drawer } from "@country-decision-atlas/ui";
 import { legalSignalEvidenceQuery } from "../../entities/legal-signals/api";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -19,6 +20,7 @@ export function LegalSignalEvidenceDrawer({
   signalTitle,
   onClose,
 }: LegalSignalEvidenceDrawerProps) {
+  const t = useTranslations("legalSignalEvidenceDrawer");
   const { data, isPending, isError } = useQuery({
     ...legalSignalEvidenceQuery(signalId ?? ""),
     enabled: Boolean(signalId),
@@ -28,19 +30,17 @@ export function LegalSignalEvidenceDrawer({
     <Drawer
       open={Boolean(signalId)}
       onClose={onClose}
-      eyebrow="Доказательства сигнала"
-      title={signalTitle ?? "Сигнал"}
+      eyebrow={t("eyebrow")}
+      title={signalTitle ?? t("titleFallback")}
     >
       <div
         className="flex flex-col gap-4"
         data-testid="legal-signal-evidence-drawer"
       >
-        {isPending && <LoadingState message="Загрузка доказательств…" />}
-        {!isPending && isError && (
-          <ErrorState error="Не удалось загрузить доказательства." />
-        )}
+        {isPending && <LoadingState message={t("loading")} />}
+        {!isPending && isError && <ErrorState error={t("loadError")} />}
         {!isPending && !isError && (data?.items.length ?? 0) === 0 && (
-          <EmptyState message="К этому сигналу доказательства не прикреплены." />
+          <EmptyState message={t("noEvidence")} />
         )}
         {!isPending &&
           !isError &&

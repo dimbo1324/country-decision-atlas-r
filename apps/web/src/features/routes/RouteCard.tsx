@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import type { RouteListItem } from "../../shared/api/routes";
@@ -9,6 +10,7 @@ type RouteCardProps = {
 };
 
 export function RouteCard({ route }: RouteCardProps) {
+  const t = useTranslations("routeCard");
   return (
     <div data-testid="route-card">
       <Card
@@ -31,7 +33,7 @@ export function RouteCard({ route }: RouteCardProps) {
             href={routeDetailPath(route.id)}
             className="font-mono text-gold3 hover:text-gold shrink-0 text-[9px] tracking-[0.15em] uppercase transition-colors duration-300"
           >
-            Открыть
+            {t("open")}
           </Link>
         </div>
         {route.summary && (

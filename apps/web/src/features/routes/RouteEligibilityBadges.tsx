@@ -1,23 +1,24 @@
+import { useTranslations } from "next-intl";
 import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
 import type { RouteEligibility } from "../../shared/api/routes";
 
-const LABELS: Record<keyof RouteEligibility, string> = {
-  allows_work: "Можно работать",
-  allows_family: "Можно с семьёй",
-  leads_to_pr: "Ведёт к ПМЖ",
-  leads_to_citizenship: "Ведёт к гражданству",
-  requires_income_proof: "Нужен доход",
-  requires_local_address: "Нужен адрес",
-  requires_criminal_record_check: "Нужна справка о несудимости",
+const LABEL_KEYS: Record<keyof RouteEligibility, string> = {
+  allows_work: "allowsWork",
+  allows_family: "allowsFamily",
+  leads_to_pr: "leadsToPr",
+  leads_to_citizenship: "leadsToCitizenship",
+  requires_income_proof: "requiresIncomeProof",
+  requires_local_address: "requiresLocalAddress",
+  requires_criminal_record_check: "requiresCriminalRecordCheck",
 };
 
-const VALUE_LABELS = {
-  yes: "Да",
-  no: "Нет",
-  unknown: "Неизвестно",
-};
+const VALUE_LABEL_KEYS = {
+  yes: "yes",
+  no: "no",
+  unknown: "unknown",
+} as const;
 
-const VALUE_VARIANT: Record<keyof typeof VALUE_LABELS, BadgeVariant> = {
+const VALUE_VARIANT: Record<keyof typeof VALUE_LABEL_KEYS, BadgeVariant> = {
   yes: "trust",
   no: "negative",
   unknown: "default",
@@ -30,6 +31,7 @@ export function RouteEligibilityBadges({
   eligibility: RouteEligibility;
   compact?: boolean;
 }) {
+  const t = useTranslations("routeDetail");
   const entries = Object.entries(eligibility) as [
     keyof RouteEligibility,
     RouteEligibility[keyof RouteEligibility],
@@ -47,7 +49,7 @@ export function RouteEligibilityBadges({
           data-testid="route-eligibility-badge"
         >
           <Badge variant={VALUE_VARIANT[value]}>
-            {LABELS[key]}: {VALUE_LABELS[value]}
+            {t(LABEL_KEYS[key])}: {t(VALUE_LABEL_KEYS[value])}
           </Badge>
         </span>
       ))}

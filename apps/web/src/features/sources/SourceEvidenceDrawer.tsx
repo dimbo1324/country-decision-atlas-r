@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Drawer } from "@country-decision-atlas/ui";
 import { sourceEvidenceQuery } from "../../entities/sources/api";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -19,6 +20,7 @@ export function SourceEvidenceDrawer({
   sourceTitle,
   onClose,
 }: SourceEvidenceDrawerProps) {
+  const t = useTranslations("sourceEvidenceDrawer");
   const { data, isPending, isError } = useQuery({
     ...sourceEvidenceQuery(sourceId ?? ""),
     enabled: Boolean(sourceId),
@@ -28,19 +30,17 @@ export function SourceEvidenceDrawer({
     <Drawer
       open={Boolean(sourceId)}
       onClose={onClose}
-      eyebrow="Доказательства источника"
-      title={sourceTitle ?? "Источник"}
+      eyebrow={t("eyebrow")}
+      title={sourceTitle ?? t("titleFallback")}
     >
       <div
         className="flex flex-col gap-4"
         data-testid="source-evidence-drawer"
       >
-        {isPending && <LoadingState message="Загрузка доказательств…" />}
-        {!isPending && isError && (
-          <ErrorState error="Не удалось загрузить доказательства." />
-        )}
+        {isPending && <LoadingState message={t("loading")} />}
+        {!isPending && isError && <ErrorState error={t("loadError")} />}
         {!isPending && !isError && (data?.items.length ?? 0) === 0 && (
-          <EmptyState message="К этому источнику доказательства не прикреплены." />
+          <EmptyState message={t("noEvidence")} />
         )}
         {!isPending &&
           !isError &&

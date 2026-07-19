@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { RouteDetailResponse } from "../../shared/api/routes";
 import { RouteEmptyState } from "./RouteEmptyState";
 
@@ -6,10 +7,10 @@ type RouteDocumentsListProps = {
 };
 
 export function RouteDocumentsList({ documents }: RouteDocumentsListProps) {
+  const t = useTranslations("routeDetail");
+
   if (documents.length === 0) {
-    return (
-      <RouteEmptyState message="Документы для этого маршрута пока не указаны." />
-    );
+    return <RouteEmptyState message={t("noDocuments")} />;
   }
 
   return (
@@ -21,7 +22,7 @@ export function RouteDocumentsList({ documents }: RouteDocumentsListProps) {
         >
           <strong className="text-c1">{document.name}</strong>
           <span className="text-c3 text-xs">
-            {document.is_mandatory ? "Обязательный" : "По ситуации"}
+            {document.is_mandatory ? t("required") : t("situational")}
           </span>
           {document.note && (
             <p className="text-c3 text-xs leading-relaxed">{document.note}</p>

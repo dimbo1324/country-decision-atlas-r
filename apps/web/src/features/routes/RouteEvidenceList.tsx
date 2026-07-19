@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { RouteDetailResponse } from "../../shared/api/routes";
 import { RouteEmptyState } from "./RouteEmptyState";
 
@@ -6,10 +7,10 @@ type RouteEvidenceListProps = {
 };
 
 export function RouteEvidenceList({ evidence }: RouteEvidenceListProps) {
+  const t = useTranslations("routeDetail");
+
   if (evidence.length === 0) {
-    return (
-      <RouteEmptyState message="Доказательства для этого маршрута пока не указаны." />
-    );
+    return <RouteEmptyState message={t("noEvidence")} />;
   }
 
   return (
@@ -20,7 +21,7 @@ export function RouteEvidenceList({ evidence }: RouteEvidenceListProps) {
           className="border-warm flex flex-col gap-1 border-b pb-2.5 text-sm last:border-b-0"
         >
           <strong className="text-c1">
-            {item.claim ?? item.source_title ?? "Доказательство"}
+            {item.claim ?? item.source_title ?? t("evidenceFallback")}
           </strong>
           {item.excerpt && (
             <p className="text-c3 text-xs leading-relaxed">{item.excerpt}</p>

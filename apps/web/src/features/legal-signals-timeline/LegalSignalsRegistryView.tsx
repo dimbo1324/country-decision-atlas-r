@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { ChartFrame, LegalSignalTimeline } from "@country-decision-atlas/ui";
 import {
   Tabs,
@@ -27,9 +28,9 @@ import { TimelineYearGroup } from "./TimelineYearGroup";
 const VIEW_IDS = ["feed", "timeline"] as const;
 type ViewId = (typeof VIEW_IDS)[number];
 
-const VIEW_LABELS: Record<ViewId, string> = {
-  feed: "Лента",
-  timeline: "Таймлайн",
+const VIEW_LABEL_KEYS: Record<ViewId, string> = {
+  feed: "viewFeed",
+  timeline: "viewTimeline",
 };
 
 /** One data-fetch, one filter bar, two presentations (year-group feed and
@@ -37,6 +38,7 @@ const VIEW_LABELS: Record<ViewId, string> = {
  * (`/legal-signals` and `/legal-signals/timeline`) each duplicated the
  * exact same 5 filter query-states and re-fetched the exact same query. */
 function LegalSignalsRegistryViewInner() {
+  const t = useTranslations("legalSignalsTimeline");
   const locale = useAppLocale();
   const apiLocale = toApiLocale(locale);
   const [view, setView] = useQueryState(
@@ -113,8 +115,7 @@ function LegalSignalsRegistryViewInner() {
   return (
     <div className="flex flex-col gap-6">
       <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-        Временная карта правовых, миграционных, политических и деловых
-        изменений.
+        {t("description")}
       </p>
       <TimelineFilters
         filters={filters}
@@ -124,12 +125,8 @@ function LegalSignalsRegistryViewInner() {
       />
       <TimelineLegend />
 
-      {isError && (
-        <ErrorState error="Не удалось загрузить ленту правовых сигналов." />
-      )}
-      {isPending && !isError && (
-        <LoadingState message="Загрузка временной карты изменений…" />
-      )}
+      {isError && <ErrorState error={t("loadError")} />}
+      {isPending && !isError && <LoadingState message={t("loading")} />}
 
       {!isPending && !isError && timeline && (
         <Tabs
@@ -143,7 +140,7 @@ function LegalSignalsRegistryViewInner() {
                 value={viewId}
                 data-testid={`legal-signals-view-${viewId}`}
               >
-                {VIEW_LABELS[viewId]}
+                {t(VIEW_LABEL_KEYS[viewId])}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -160,13 +157,13 @@ function LegalSignalsRegistryViewInner() {
                 data-testid="legal-signals-timeline"
               >
                 <div className="font-mono text-c3 text-[10px] tracking-[0.15em] uppercase">
-                  Событий: {timeline.total}
+                  {t("eventsCount", { count: timeline.total })}
                 </div>
                 {timeline.groups.map((group) => (
                   <TimelineYearGroup
                     key={group.year}
                     group={group}
-                    locale={apiLocale}
+                    locale={locale}
                     onShowEvidence={(id, title) =>
                       setEvidenceSignal({ id, title })
                     }
@@ -181,11 +178,11 @@ function LegalSignalsRegistryViewInner() {
             data-testid="legal-signals-view-panel-timeline"
           >
             {chartEvents.length === 0 ? (
-              <EmptyState message="По выбранным фильтрам событий не найдено." />
+              <EmptyState message={t("noEventsForFilters")} />
             ) : (
               <div data-testid="legal-signals-timeline-chart">
                 <ChartFrame
-                  title={`События: ${chartEvents.length}`}
+                  title={t("eventsCount", { count: chartEvents.length })}
                   live={false}
                 >
                   <LegalSignalTimeline
@@ -210,11 +207,14 @@ function LegalSignalsRegistryViewInner() {
   );
 }
 
+function LegalSignalsLoadingFallback() {
+  const t = useTranslations("legalSignalsTimeline");
+  return <LoadingState message={t("loading")} />;
+}
+
 export function LegalSignalsRegistryView() {
   return (
-    <Suspense
-      fallback={<LoadingState message="Загрузка временной карты изменений…" />}
-    >
+    <Suspense fallback={<LegalSignalsLoadingFallback />}>
       <LegalSignalsRegistryViewInner />
     </Suspense>
   );

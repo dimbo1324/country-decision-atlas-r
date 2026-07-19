@@ -1,7 +1,9 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
-import type { LocaleCode } from "../../shared/api/countries";
 import type { LegalSignalTimelineEvent } from "../../shared/api/legal-signals";
+import { DATE_FORMAT_LOCALE } from "../../shared/lib/format";
+import type { SupportedLocale } from "../../shared/lib/locale";
 import { routes } from "../../shared/lib/routes";
 import { LocalizationBadge } from "../../shared/ui/LocalizationBadge";
 import { ArrowNext } from "../../shared/ui/LinkArrow";
@@ -10,14 +12,34 @@ import {
   ImpactLevelBadge,
 } from "../../shared/ui/ImpactBadge";
 
-const typeLabels: Record<string, string> = {
-  law: "Закон",
-  bill: "Законопроект",
-  policy: "Политика",
-  court_decision: "Судебное решение",
-  administrative_change: "Административное изменение",
-  political_signal: "Политический сигнал",
-  other: "Другое",
+const TYPE_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: {
+    law: "Law",
+    bill: "Bill",
+    policy: "Policy",
+    court_decision: "Court decision",
+    administrative_change: "Administrative change",
+    political_signal: "Political signal",
+    other: "Other",
+  },
+  ru: {
+    law: "Закон",
+    bill: "Законопроект",
+    policy: "Политика",
+    court_decision: "Судебное решение",
+    administrative_change: "Административное изменение",
+    political_signal: "Политический сигнал",
+    other: "Другое",
+  },
+  es: {
+    law: "Ley",
+    bill: "Proyecto de ley",
+    policy: "Política",
+    court_decision: "Decisión judicial",
+    administrative_change: "Cambio administrativo",
+    political_signal: "Señal política",
+    other: "Otro",
+  },
 };
 
 export function TimelineEventCard({
@@ -26,9 +48,13 @@ export function TimelineEventCard({
   onShowEvidence,
 }: {
   event: LegalSignalTimelineEvent;
-  locale: LocaleCode;
+  /** The real interface locale, not the backend's en/ru-only `LocaleCode`
+   * -- this component only uses it for date/label display, never for a
+   * data fetch, so it can safely carry `es` through. */
+  locale: SupportedLocale;
   onShowEvidence: (signalId: string, title: string) => void;
 }) {
+  const t = useTranslations("timelineEventCard");
   return (
     <div data-testid="legal-signal-event-card">
       <Card
@@ -41,7 +67,7 @@ export function TimelineEventCard({
           </span>
           <div className="flex items-center gap-2">
             <Badge variant="default">
-              {typeLabels[event.signal_type] ?? event.signal_type}
+              {TYPE_LABELS[locale][event.signal_type] ?? event.signal_type}
             </Badge>
             {event.localization && (
               <LocalizationBadge
@@ -66,7 +92,7 @@ export function TimelineEventCard({
         </div>
         {(event.affected_groups ?? []).length > 0 && (
           <p className="text-c4 text-xs">
-            <strong className="text-c3">Затронутые группы:</strong>{" "}
+            <strong className="text-c3">{t("affectedGroups")}</strong>{" "}
             {(event.affected_groups ?? []).join(", ")}
           </p>
         )}
@@ -79,20 +105,20 @@ export function TimelineEventCard({
               data-testid="legal-signal-source-link"
               className="text-gold3 hover:text-gold transition-colors duration-300"
             >
-              Источник: {event.source.title}
+              {t("source", { title: event.source.title })}
             </a>
           )}
           <Link
             href={routes.country(event.country_slug)}
             className="text-c3 hover:text-c1 transition-colors duration-300"
           >
-            Карточка страны: {event.country_name} <ArrowNext />
+            {t("countryCard", { name: event.country_name })} <ArrowNext />
           </Link>
           <Link
             href={routes.sourcesForCountry(event.country_slug)}
             className="text-c3 hover:text-c1 transition-colors duration-300"
           >
-            Все источники страны
+            {t("allCountrySources")}
           </Link>
           <button
             type="button"
@@ -100,7 +126,7 @@ export function TimelineEventCard({
             data-testid="legal-signal-evidence-toggle"
             className="font-mono text-c3 hover:text-gold3 text-[10px] tracking-[0.15em] uppercase transition-colors duration-300"
           >
-            Доказательства <ArrowNext />
+            {t("evidence")} <ArrowNext />
           </button>
         </div>
       </Card>
@@ -108,9 +134,9 @@ export function TimelineEventCard({
   );
 }
 
-function formatEventDate(value: string, locale: LocaleCode) {
+function formatEventDate(value: string, locale: SupportedLocale) {
   return new Date(`${value}T00:00:00`).toLocaleDateString(
-    locale === "ru" ? "ru-RU" : "en-US",
+    DATE_FORMAT_LOCALE[locale],
     { year: "numeric", month: "long", day: "numeric" },
   );
 }
