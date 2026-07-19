@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Badge, Button, toast } from "@country-decision-atlas/ui";
 import {
   exportTrip,
@@ -11,6 +12,7 @@ import { isApiError } from "../../shared/api/http";
 import { routes } from "../../shared/lib/routes";
 
 export function TripShareExport({ trip }: { trip: TripDetail }) {
+  const t = useTranslations("tripShareExport");
   const enableShare = useEnableShareMutation(trip.id);
   const disableShare = useDisableShareMutation(trip.id);
   const isShared = trip.visibility === "link";
@@ -20,12 +22,12 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
       const result = await enableShare.mutateAsync();
       const url = `${window.location.origin}${routes.tripSharedPublic(result.token)}`;
       await navigator.clipboard.writeText(url).catch(() => undefined);
-      toast.success("Публичная ссылка создана и скопирована.");
+      toast.success(t("linkCreated"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось создать ссылку.")
-          : "Не удалось создать ссылку.",
+          ? (err.error?.message ?? t("linkCreateError"))
+          : t("linkCreateError"),
       );
     }
   }
@@ -33,12 +35,12 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
   async function handleDisableShare() {
     try {
       await disableShare.mutateAsync();
-      toast.success("Публичная ссылка отключена.");
+      toast.success(t("linkDisabled"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось отключить ссылку.")
-          : "Не удалось отключить ссылку.",
+          ? (err.error?.message ?? t("linkDisableError"))
+          : t("linkDisableError"),
       );
     }
   }
@@ -58,8 +60,8 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось экспортировать поездку.")
-          : "Не удалось экспортировать поездку.",
+          ? (err.error?.message ?? t("exportError"))
+          : t("exportError"),
       );
     }
   }
@@ -70,7 +72,7 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
       data-testid="trip-share-export"
     >
       <Badge variant="default">
-        {isShared ? "Доступна по ссылке" : "Приватная"}
+        {isShared ? t("availableByLink") : t("private")}
       </Badge>
       {isShared ? (
         <Button
@@ -79,7 +81,7 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
           disabled={disableShare.isPending}
           data-testid="trip-share-disable"
         >
-          Отключить ссылку
+          {t("disableLink")}
         </Button>
       ) : (
         <Button
@@ -88,7 +90,7 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
           disabled={enableShare.isPending}
           data-testid="trip-share-enable"
         >
-          Создать публичную ссылку
+          {t("createPublicLink")}
         </Button>
       )}
       <Button
@@ -96,7 +98,7 @@ export function TripShareExport({ trip }: { trip: TripDetail }) {
         onClick={handleExport}
         data-testid="trip-export-button"
       >
-        Экспортировать
+        {t("export")}
       </Button>
     </div>
   );

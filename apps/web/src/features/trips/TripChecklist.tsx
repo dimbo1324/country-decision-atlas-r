@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button, Field, FieldError, toast } from "@country-decision-atlas/ui";
@@ -23,6 +24,7 @@ function ChecklistItemRow({
   item: TripChecklistItem;
   tripId: string;
 }) {
+  const t = useTranslations("tripChecklist");
   const updateItem = useUpdateChecklistItemMutation(tripId);
   const deleteItem = useDeleteChecklistItemMutation(tripId);
   const done = item.status === "done";
@@ -58,19 +60,19 @@ function ChecklistItemRow({
         onClick={() => deleteItem.mutate(item.id)}
         data-testid="checklist-item-remove-button"
       >
-        Удалить
+        {t("remove")}
       </Button>
     </div>
   );
 }
 
-const addChecklistItemSchema = z.object({
-  title: z.string().min(1, "Введите название пункта"),
-});
-type AddChecklistItemValues = z.infer<typeof addChecklistItemSchema>;
-
 function AddChecklistItemForm({ tripId }: { tripId: string }) {
+  const t = useTranslations("tripChecklist");
   const createItem = useCreateChecklistItemMutation(tripId);
+  const addChecklistItemSchema = z.object({
+    title: z.string().min(1, t("itemTitleRequired")),
+  });
+  type AddChecklistItemValues = z.infer<typeof addChecklistItemSchema>;
   const {
     register,
     handleSubmit,
@@ -87,8 +89,8 @@ function AddChecklistItemForm({ tripId }: { tripId: string }) {
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить пункт.")
-          : "Не удалось добавить пункт.",
+          ? (err.error?.message ?? t("addItemError"))
+          : t("addItemError"),
       );
     }
   }
@@ -102,7 +104,7 @@ function AddChecklistItemForm({ tripId }: { tripId: string }) {
       <Field className="flex-1">
         <input
           type="text"
-          placeholder="Новый пункт чек-листа"
+          placeholder={t("newItemPlaceholder")}
           className={inputClass}
           data-testid="checklist-item-input"
           {...register("title")}
@@ -114,19 +116,19 @@ function AddChecklistItemForm({ tripId }: { tripId: string }) {
         disabled={createItem.isPending}
         data-testid="checklist-item-add-submit"
       >
-        Добавить
+        {t("add")}
       </Button>
     </form>
   );
 }
 
-const importChecklistSchema = z.object({
-  routeId: z.string().min(1, "Введите ID маршрута легализации"),
-});
-type ImportChecklistValues = z.infer<typeof importChecklistSchema>;
-
 function ImportChecklistForm({ tripId }: { tripId: string }) {
+  const t = useTranslations("tripChecklist");
   const importChecklist = useImportChecklistMutation(tripId);
+  const importChecklistSchema = z.object({
+    routeId: z.string().min(1, t("routeIdRequired")),
+  });
+  type ImportChecklistValues = z.infer<typeof importChecklistSchema>;
   const {
     register,
     handleSubmit,
@@ -140,12 +142,12 @@ function ImportChecklistForm({ tripId }: { tripId: string }) {
     try {
       await importChecklist.mutateAsync(values.routeId);
       reset();
-      toast.success("Шаблон чек-листа импортирован.");
+      toast.success(t("checklistImported"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось импортировать шаблон.")
-          : "Не удалось импортировать шаблон.",
+          ? (err.error?.message ?? t("importError"))
+          : t("importError"),
       );
     }
   }
@@ -159,7 +161,7 @@ function ImportChecklistForm({ tripId }: { tripId: string }) {
       <Field className="flex-1">
         <input
           type="text"
-          placeholder="ID маршрута легализации для импорта шаблона"
+          placeholder={t("importRouteIdPlaceholder")}
           className={inputClass}
           data-testid="checklist-import-route-id-input"
           {...register("routeId")}
@@ -172,7 +174,7 @@ function ImportChecklistForm({ tripId }: { tripId: string }) {
         disabled={importChecklist.isPending}
         data-testid="checklist-import-submit"
       >
-        Импортировать
+        {t("import")}
       </Button>
     </form>
   );
@@ -185,13 +187,14 @@ export function TripChecklist({
   tripId: string;
   items: TripChecklistItem[];
 }) {
+  const t = useTranslations("tripChecklist");
   return (
     <div
       className="flex flex-col gap-4"
       data-testid="trip-checklist"
     >
       {items.length === 0 ? (
-        <p className="text-c3 text-sm">Чек-лист пуст.</p>
+        <p className="text-c3 text-sm">{t("checklistEmpty")}</p>
       ) : (
         <div>
           {items

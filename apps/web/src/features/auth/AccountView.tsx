@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -42,18 +43,13 @@ import { useAppLocale } from "../../shared/lib/useAppLocale";
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const telegramLinkSchema = z.object({
-  code: z.string().min(1, "Введите код из /web_link"),
-});
-type TelegramLinkValues = z.infer<typeof telegramLinkSchema>;
-
-const revokeAllSchema = z.object({
-  currentPassword: z.string().min(1, "Введите пароль"),
-});
-type RevokeAllValues = z.infer<typeof revokeAllSchema>;
-
 function TelegramLinkForm() {
+  const t = useTranslations("account");
   const linkTelegram = useLinkTelegramMutation();
+  const telegramLinkSchema = z.object({
+    code: z.string().min(1, t("telegramCodeRequired")),
+  });
+  type TelegramLinkValues = z.infer<typeof telegramLinkSchema>;
   const {
     register,
     handleSubmit,
@@ -67,12 +63,12 @@ function TelegramLinkForm() {
     try {
       await linkTelegram.mutateAsync(values.code);
       reset();
-      toast.success("Telegram привязан.");
+      toast.success(t("telegramLinked"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось привязать Telegram.")
-          : "Не удалось привязать Telegram.",
+          ? (err.error?.message ?? t("telegramLinkError"))
+          : t("telegramLinkError"),
       );
     }
   }
@@ -84,7 +80,9 @@ function TelegramLinkForm() {
       noValidate
     >
       <Field>
-        <FieldLabel htmlFor="telegram-link-code">Код из /web_link</FieldLabel>
+        <FieldLabel htmlFor="telegram-link-code">
+          {t("telegramCodeLabel")}
+        </FieldLabel>
         <input
           id="telegram-link-code"
           type="text"
@@ -99,15 +97,20 @@ function TelegramLinkForm() {
         disabled={linkTelegram.isPending}
         data-testid="telegram-link-submit"
       >
-        {linkTelegram.isPending ? "Привязываем…" : "Привязать Telegram"}
+        {linkTelegram.isPending ? t("linking") : t("linkTelegram")}
       </Button>
     </form>
   );
 }
 
 function RevokeAllSessionsDialog() {
+  const t = useTranslations("account");
   const [open, setOpen] = useState(false);
   const revokeAll = useRevokeAllSessionsMutation();
+  const revokeAllSchema = z.object({
+    currentPassword: z.string().min(1, t("passwordRequired")),
+  });
+  type RevokeAllValues = z.infer<typeof revokeAllSchema>;
   const {
     register,
     handleSubmit,
@@ -120,12 +123,12 @@ function RevokeAllSessionsDialog() {
       await revokeAll.mutateAsync(values.currentPassword);
       reset();
       setOpen(false);
-      toast.success("Все сессии отозваны.");
+      toast.success(t("allSessionsRevoked"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось отозвать сессии.")
-          : "Не удалось отозвать сессии.",
+          ? (err.error?.message ?? t("revokeError"))
+          : t("revokeError"),
       );
     }
   }
@@ -140,12 +143,12 @@ function RevokeAllSessionsDialog() {
           variant="ghost"
           className="text-terra3 hover:text-terra2"
         >
-          Отозвать все сессии
+          {t("revokeAllSessions")}
         </Button>
       </DialogTrigger>
       <DialogContent
-        title="Отозвать все сессии"
-        description="Это действие завершит все активные сессии, включая текущую. Подтвердите пароль."
+        title={t("revokeAllSessions")}
+        description={t("revokeAllDescription")}
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -153,7 +156,9 @@ function RevokeAllSessionsDialog() {
           noValidate
         >
           <Field>
-            <FieldLabel htmlFor="revoke-all-password">Пароль</FieldLabel>
+            <FieldLabel htmlFor="revoke-all-password">
+              {t("password")}
+            </FieldLabel>
             <input
               id="revoke-all-password"
               type="password"
@@ -169,12 +174,10 @@ function RevokeAllSessionsDialog() {
               disabled={revokeAll.isPending}
               data-testid="revoke-all-confirm-submit"
             >
-              {revokeAll.isPending
-                ? "Отзываем…"
-                : "Подтвердить отзыв всех сессий"}
+              {revokeAll.isPending ? t("revoking") : t("confirmRevokeAll")}
             </Button>
             <DialogClose asChild>
-              <Button variant="ghost">Отмена</Button>
+              <Button variant="ghost">{t("cancel")}</Button>
             </DialogClose>
           </div>
         </form>
@@ -184,6 +187,7 @@ function RevokeAllSessionsDialog() {
 }
 
 export function AccountView() {
+  const t = useTranslations("account");
   const locale = useAppLocale();
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
@@ -208,7 +212,7 @@ export function AccountView() {
   }
 
   if (isLoading) {
-    return <LoadingState message="Загрузка аккаунта…" />;
+    return <LoadingState message={t("loadingAccount")} />;
   }
 
   if (!user) {
@@ -218,12 +222,12 @@ export function AccountView() {
         data-testid="account-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы просмотреть личный кабинет.{" "}
+          {t("loginToView")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("login")}
           </Link>
         </p>
       </div>
@@ -244,22 +248,22 @@ export function AccountView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Профиль</Kicker>
+        <Kicker>{t("profile")}</Kicker>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
-            <span className="text-c4 text-xs">Email</span>
+            <span className="text-c4 text-xs">{t("email")}</span>
             <span data-testid="account-email">{user.email}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-c4 text-xs">Имя</span>
+            <span className="text-c4 text-xs">{t("name")}</span>
             <span data-testid="account-display-name">{user.display_name}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-c4 text-xs">Роль</span>
+            <span className="text-c4 text-xs">{t("role")}</span>
             <span data-testid="account-role">{user.role}</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-c4 text-xs">Статус</span>
+            <span className="text-c4 text-xs">{t("status")}</span>
             <span data-testid="account-status">{user.status}</span>
           </div>
         </div>
@@ -267,7 +271,7 @@ export function AccountView() {
           variant="ghost"
           onClick={handleLogout}
         >
-          Выйти
+          {t("logout")}
         </Button>
       </Card>
 
@@ -281,7 +285,7 @@ export function AccountView() {
             interactive={false}
             className="flex flex-col gap-3"
           >
-            <Kicker>Уведомления безопасности</Kicker>
+            <Kicker>{t("securityNotifications")}</Kicker>
             {notificationItems.map((notification) => (
               <div
                 key={notification.id}
@@ -289,12 +293,13 @@ export function AccountView() {
                 data-testid="new-device-notification"
               >
                 <span className="text-c2 text-sm">
-                  Вход с нового устройства: {notification.device_label ?? "?"}
-                  {notification.ip_display
-                    ? ` (${notification.ip_display})`
-                    : ""}
-                  , {formatDateTime(notification.created_at, locale)}. Это были
-                  вы?
+                  {t("newDeviceLogin", {
+                    device: notification.device_label ?? "?",
+                    ip: notification.ip_display
+                      ? ` (${notification.ip_display})`
+                      : "",
+                    date: formatDateTime(notification.created_at, locale),
+                  })}
                 </span>
                 <Button
                   variant="ghost"
@@ -302,7 +307,7 @@ export function AccountView() {
                     acknowledgeNotification.mutate(notification.id)
                   }
                 >
-                  Подтвердить
+                  {t("confirm")}
                 </Button>
               </div>
             ))}
@@ -318,14 +323,14 @@ export function AccountView() {
         {telegramStatus.data?.linked ? (
           <div className="flex items-center gap-4">
             <span data-testid="telegram-linked-state">
-              <Badge variant="default">Telegram привязан</Badge>
+              <Badge variant="default">{t("telegramLinkedBadge")}</Badge>
             </span>
             <Button
               variant="ghost"
               onClick={() => unlinkTelegram.mutate()}
               data-testid="telegram-unlink-button"
             >
-              Отвязать Telegram
+              {t("unlinkTelegram")}
             </Button>
           </div>
         ) : (
@@ -337,22 +342,22 @@ export function AccountView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Активные сессии</Kicker>
+        <Kicker>{t("activeSessions")}</Kicker>
         {sessionItems.length === 0 ? (
-          <p className="text-c3 text-sm">Нет активных сессий.</p>
+          <p className="text-c3 text-sm">{t("noActiveSessions")}</p>
         ) : (
           <div data-testid="session-list">
             <DataTable
               columns={[
-                { header: "Устройство" },
-                { header: "Дата" },
+                { header: t("device") },
+                { header: t("date") },
                 { header: "" },
               ]}
               rows={sessionItems.map((session) => [
                 <span key="device">
-                  {session.device_label ?? "Неизвестное устройство"}
+                  {session.device_label ?? t("unknownDevice")}
                   {session.ip_display ? ` · ${session.ip_display}` : ""}
-                  {session.is_current ? " · текущая сессия" : ""}
+                  {session.is_current ? ` · ${t("currentSession")}` : ""}
                 </span>,
                 <span key="date">
                   {formatDateTime(session.created_at, locale)}
@@ -362,7 +367,7 @@ export function AccountView() {
                   variant="ghost"
                   onClick={() => revokeSession.mutate(session.id)}
                 >
-                  Отозвать
+                  {t("revoke")}
                 </Button>,
               ])}
             />

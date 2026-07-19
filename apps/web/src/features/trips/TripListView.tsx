@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -26,32 +27,26 @@ import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
-
-const TRIP_STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  active: "Активна",
-  completed: "Завершена",
-  abandoned: "Отменена",
-};
+import { TRIP_STATUS_LABELS } from "./trip-labels";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 const selectClass =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
 
-const createTripSchema = z.object({
-  title: z.string().min(1, "Введите название поездки"),
-  originCountrySlug: z.string().optional(),
-  scenarioSlug: z.string().optional(),
-});
-type CreateTripValues = z.infer<typeof createTripSchema>;
-
 function CreateTripForm() {
+  const t = useTranslations("trips");
   const locale = useAppLocale();
   const apiLocale = toApiLocale(locale);
   const countries = useQuery(allCountriesQuery(apiLocale));
   const scenarios = useQuery(scenariosQuery(apiLocale));
   const createTrip = useCreateTripMutation();
+  const createTripSchema = z.object({
+    title: z.string().min(1, t("titleRequired")),
+    originCountrySlug: z.string().optional(),
+    scenarioSlug: z.string().optional(),
+  });
+  type CreateTripValues = z.infer<typeof createTripSchema>;
   const {
     register,
     handleSubmit,
@@ -68,12 +63,12 @@ function CreateTripForm() {
         status: "draft",
       });
       reset();
-      toast.success("Поездка создана.");
+      toast.success(t("tripCreated"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось создать поездку.")
-          : "Не удалось создать поездку.",
+          ? (err.error?.message ?? t("tripCreateError"))
+          : t("tripCreateError"),
       );
     }
   }
@@ -85,7 +80,7 @@ function CreateTripForm() {
       noValidate
     >
       <Field>
-        <FieldLabel htmlFor="trip-title">Название поездки</FieldLabel>
+        <FieldLabel htmlFor="trip-title">{t("tripTitleLabel")}</FieldLabel>
         <input
           id="trip-title"
           type="text"
@@ -97,14 +92,16 @@ function CreateTripForm() {
       </Field>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="trip-origin">Страна отправления</FieldLabel>
+          <FieldLabel htmlFor="trip-origin">
+            {t("originCountryLabel")}
+          </FieldLabel>
           <select
             id="trip-origin"
             className={selectClass}
             data-testid="trip-origin-select"
             {...register("originCountrySlug")}
           >
-            <option value="">Не указано</option>
+            <option value="">{t("notSpecified")}</option>
             {countries.data?.items.map((c) => (
               <option
                 key={c.slug}
@@ -116,14 +113,14 @@ function CreateTripForm() {
           </select>
         </Field>
         <Field>
-          <FieldLabel htmlFor="trip-scenario">Сценарий</FieldLabel>
+          <FieldLabel htmlFor="trip-scenario">{t("scenarioLabel")}</FieldLabel>
           <select
             id="trip-scenario"
             className={selectClass}
             data-testid="trip-scenario-select"
             {...register("scenarioSlug")}
           >
-            <option value="">Не указано</option>
+            <option value="">{t("notSpecified")}</option>
             {scenarios.data?.items.map((s) => (
               <option
                 key={s.slug}
@@ -140,18 +137,20 @@ function CreateTripForm() {
         disabled={createTrip.isPending}
         data-testid="trip-create-submit"
       >
-        {createTrip.isPending ? "Создаём…" : "Создать поездку"}
+        {createTrip.isPending ? t("creating") : t("createTrip")}
       </Button>
     </form>
   );
 }
 
 export function TripListView() {
+  const t = useTranslations("trips");
+  const locale = useAppLocale();
   const { user, isLoading: isAuthLoading } = useAuth();
   const trips = useQuery({ ...tripsQuery(), enabled: Boolean(user) });
 
   if (isAuthLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -161,12 +160,12 @@ export function TripListView() {
         data-testid="trips-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы планировать поездки.{" "}
+          {t("loginToPlan")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("login")}
           </Link>
         </p>
       </div>
@@ -174,7 +173,7 @@ export function TripListView() {
   }
 
   if (trips.isPending) {
-    return <LoadingState message="Загрузка поездок…" />;
+    return <LoadingState message={t("loadingTrips")} />;
   }
 
   if (trips.isError) {
@@ -196,15 +195,15 @@ export function TripListView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Новая поездка</Kicker>
+        <Kicker>{t("newTrip")}</Kicker>
         <CreateTripForm />
       </Card>
 
       <div className="flex flex-col gap-4">
-        <Kicker>Мои поездки</Kicker>
+        <Kicker>{t("myTrips")}</Kicker>
         {items.length === 0 ? (
           <div data-testid="trips-empty-state">
-            <EmptyState message="Поездок пока нет. Создайте первую выше." />
+            <EmptyState message={t("emptyTrips")} />
           </div>
         ) : (
           <BoardGrid data-testid="trips-list">
@@ -220,11 +219,11 @@ export function TripListView() {
                   </span>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="default">
-                      {TRIP_STATUS_LABELS[trip.status] ?? trip.status}
+                      {TRIP_STATUS_LABELS[locale][trip.status] ?? trip.status}
                     </Badge>
                     {trip.origin_country && (
                       <Badge variant="default">
-                        Из: {trip.origin_country.name}
+                        {t("from", { name: trip.origin_country.name })}
                       </Badge>
                     )}
                   </div>

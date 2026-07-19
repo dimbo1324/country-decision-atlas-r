@@ -1,27 +1,36 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Badge } from "@country-decision-atlas/ui";
 import {
   tripWarningsQuery,
   tripWhatChangedQuery,
 } from "../../entities/trips/api";
 import { isApiError } from "../../shared/api/http";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { LoadingState } from "../../shared/ui/LoadingState";
 
-const SEVERITY_LABELS: Record<string, string> = {
-  low: "Низкий",
-  medium: "Средний",
-  high: "Высокий",
-  critical: "Критический",
+const SEVERITY_LABELS: Record<SupportedLocale, Record<string, string>> = {
+  en: { low: "Low", medium: "Medium", high: "High", critical: "Critical" },
+  ru: {
+    low: "Низкий",
+    medium: "Средний",
+    high: "Высокий",
+    critical: "Критический",
+  },
+  es: { low: "Bajo", medium: "Medio", high: "Alto", critical: "Crítico" },
 };
 
 export function TripWarnings({ tripId }: { tripId: string }) {
+  const t = useTranslations("tripWarnings");
+  const locale = useAppLocale();
   const warnings = useQuery(tripWarningsQuery(tripId));
   const whatChanged = useQuery(tripWhatChangedQuery(tripId));
 
   if (warnings.isPending) {
-    return <LoadingState message="Загрузка предупреждений…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (warnings.isError) {
@@ -31,9 +40,8 @@ export function TripWarnings({ tripId }: { tripId: string }) {
         data-testid="trip-warnings-error"
       >
         {isApiError(warnings.error)
-          ? (warnings.error.error?.message ??
-            "Не удалось загрузить предупреждения.")
-          : "Не удалось загрузить предупреждения."}
+          ? (warnings.error.error?.message ?? t("loadError"))
+          : t("loadError")}
       </p>
     );
   }
@@ -47,7 +55,7 @@ export function TripWarnings({ tripId }: { tripId: string }) {
       data-testid="trip-warnings"
     >
       {items.length === 0 ? (
-        <p className="text-c3 text-sm">Предупреждений нет.</p>
+        <p className="text-c3 text-sm">{t("noWarnings")}</p>
       ) : (
         <div className="flex flex-col gap-2">
           {items.map((warning, index) => (
@@ -58,7 +66,8 @@ export function TripWarnings({ tripId }: { tripId: string }) {
             >
               <div className="flex items-center gap-2">
                 <Badge variant="default">
-                  {SEVERITY_LABELS[warning.severity] ?? warning.severity}
+                  {SEVERITY_LABELS[locale][warning.severity] ??
+                    warning.severity}
                 </Badge>
               </div>
               <p className="text-terra3 text-sm">{warning.message}</p>
@@ -77,7 +86,7 @@ export function TripWarnings({ tripId }: { tripId: string }) {
               key={c.country_slug}
               variant="default"
             >
-              {c.country_slug}: {c.total} изменений
+              {t("changesCount", { country: c.country_slug, count: c.total })}
             </Badge>
           ))}
         </div>

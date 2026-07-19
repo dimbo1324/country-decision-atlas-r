@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import {
@@ -20,6 +21,7 @@ export function WatchlistButton({
   countrySlug: string;
   countryName: string;
 }) {
+  const t = useTranslations("watchlist");
   const { user, isLoading: isAuthLoading } = useAuth();
   // Visitors with no session hint can't possibly have a saved watchlist, so
   // the query must stay disabled until we know a session might exist: any
@@ -39,7 +41,7 @@ export function WatchlistButton({
         className="font-mono text-gold3 hover:text-gold text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
         data-testid="watchlist-button-login-required"
       >
-        Войдите, чтобы сохранить страну
+        {t("loginToSave")}
       </Link>
     );
   }
@@ -50,7 +52,7 @@ export function WatchlistButton({
         className="text-c3 text-sm"
         data-testid="watchlist-button-loading"
       >
-        Загрузка…
+        {t("loading")}
       </span>
     );
   }
@@ -67,7 +69,7 @@ export function WatchlistButton({
         className="text-c3 text-sm"
         data-testid="watchlist-button-error"
       >
-        Не удалось загрузить статус watchlist.
+        {t("statusLoadError")}
       </span>
     );
   }
@@ -87,7 +89,7 @@ export function WatchlistButton({
     >
       {saved ? (
         <>
-          В watchlist{" "}
+          {t("inWatchlist")}{" "}
           <Check
             width={12}
             height={12}
@@ -97,7 +99,7 @@ export function WatchlistButton({
           />
         </>
       ) : (
-        "Сохранить в watchlist"
+        t("saveToWatchlist")
       )}
     </Button>
   );

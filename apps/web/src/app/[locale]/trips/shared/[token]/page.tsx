@@ -1,29 +1,35 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Badge, Card, Kicker } from "@country-decision-atlas/ui";
 import { getPathname, Link } from "../../../../../i18n/navigation";
 import { getSharedTrip } from "../../../../../entities/trips/api";
+import { asSupportedLocale } from "../../../../../shared/lib/locale";
 import { ErrorState } from "../../../../../shared/ui/ErrorState";
+import {
+  TRIP_STATUS_LABELS,
+  WAYPOINT_KIND_LABELS,
+} from "../../../../../features/trips/trip-labels";
 
 export const dynamic = "force-dynamic";
 
-const TRIP_STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  active: "Активна",
-  completed: "Завершена",
-  abandoned: "Отменена",
-};
-
-const WAYPOINT_KIND_LABELS: Record<string, string> = {
-  transit: "Транзит",
-  destination: "Назначение",
-  stopover: "Остановка",
-};
-
-const CHECKLIST_STATUS_LABELS: Record<string, string> = {
-  todo: "Не начато",
-  in_progress: "В процессе",
-  done: "Готово",
-  skipped: "Пропущено",
+const CHECKLIST_STATUS_LABELS: Record<string, Record<string, string>> = {
+  en: {
+    todo: "Not started",
+    in_progress: "In progress",
+    done: "Done",
+    skipped: "Skipped",
+  },
+  ru: {
+    todo: "Не начато",
+    in_progress: "В процессе",
+    done: "Готово",
+    skipped: "Пропущено",
+  },
+  es: {
+    todo: "No iniciado",
+    in_progress: "En curso",
+    done: "Hecho",
+    skipped: "Omitido",
+  },
 };
 
 type PageProps = {
@@ -32,7 +38,9 @@ type PageProps = {
 
 export default async function SharedTripPage({ params }: PageProps) {
   const { token } = await params;
-  const locale = await getLocale();
+  const localeParam = await getLocale();
+  const locale = asSupportedLocale(localeParam);
+  const t = await getTranslations("sharedTripPage");
 
   try {
     const trip = await getSharedTrip(token);
@@ -42,7 +50,7 @@ export default async function SharedTripPage({ params }: PageProps) {
         data-testid="shared-trip-page"
       >
         <header className="flex flex-col gap-3">
-          <Kicker>Публичная поездка</Kicker>
+          <Kicker>{t("kicker")}</Kicker>
           <h1
             className="font-display text-3xl font-bold"
             data-testid="shared-trip-title"
@@ -51,10 +59,12 @@ export default async function SharedTripPage({ params }: PageProps) {
           </h1>
           <div className="flex flex-wrap gap-2">
             <Badge variant="default">
-              {TRIP_STATUS_LABELS[trip.status] ?? trip.status}
+              {TRIP_STATUS_LABELS[locale][trip.status] ?? trip.status}
             </Badge>
             {trip.origin_country && (
-              <Badge variant="default">Из: {trip.origin_country.name}</Badge>
+              <Badge variant="default">
+                {t("from", { name: trip.origin_country.name })}
+              </Badge>
             )}
           </div>
         </header>
@@ -63,9 +73,9 @@ export default async function SharedTripPage({ params }: PageProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <h2 className="font-display text-lg font-semibold">Маршрут</h2>
+          <h2 className="font-display text-lg font-semibold">{t("route")}</h2>
           {trip.waypoints.length === 0 ? (
-            <p className="text-c3 text-sm">Маршрут пуст.</p>
+            <p className="text-c3 text-sm">{t("routeEmpty")}</p>
           ) : (
             <div className="flex flex-col gap-2">
               {trip.waypoints
@@ -81,7 +91,8 @@ export default async function SharedTripPage({ params }: PageProps) {
                       {waypoint.city ? ` · ${waypoint.city}` : ""}
                     </span>
                     <Badge variant="default">
-                      {WAYPOINT_KIND_LABELS[waypoint.kind] ?? waypoint.kind}
+                      {WAYPOINT_KIND_LABELS[locale][waypoint.kind] ??
+                        waypoint.kind}
                     </Badge>
                   </div>
                 ))}
@@ -93,9 +104,11 @@ export default async function SharedTripPage({ params }: PageProps) {
           interactive={false}
           className="flex flex-col gap-3"
         >
-          <h2 className="font-display text-lg font-semibold">Чек-лист</h2>
+          <h2 className="font-display text-lg font-semibold">
+            {t("checklist")}
+          </h2>
           {trip.checklist_items.length === 0 ? (
-            <p className="text-c3 text-sm">Чек-лист пуст.</p>
+            <p className="text-c3 text-sm">{t("checklistEmpty")}</p>
           ) : (
             <div className="flex flex-col gap-2">
               {trip.checklist_items
@@ -108,7 +121,8 @@ export default async function SharedTripPage({ params }: PageProps) {
                   >
                     <span className="text-c2 flex-1 text-sm">{item.title}</span>
                     <Badge variant="default">
-                      {CHECKLIST_STATUS_LABELS[item.status] ?? item.status}
+                      {CHECKLIST_STATUS_LABELS[locale][item.status] ??
+                        item.status}
                     </Badge>
                   </div>
                 ))}
@@ -125,21 +139,21 @@ export default async function SharedTripPage({ params }: PageProps) {
     return (
       <div className="flex flex-col gap-6">
         <header className="flex flex-col gap-3">
-          <Kicker>Публичная поездка</Kicker>
+          <Kicker>{t("kicker")}</Kicker>
           <h1 className="font-display text-3xl font-bold">
-            Поездка недоступна
+            {t("unavailable")}
           </h1>
         </header>
         <ErrorState
           error={errProp}
           backHref={getPathname({ href: "/", locale })}
-          backLabel="На главную"
+          backLabel={t("home")}
         />
         <Link
           href="/"
           className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
         >
-          На главную
+          {t("home")}
         </Link>
       </div>
     );

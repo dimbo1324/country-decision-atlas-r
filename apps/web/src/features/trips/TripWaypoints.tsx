@@ -21,6 +21,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -41,12 +42,7 @@ import type { TripWaypoint } from "../../shared/api/trips";
 import { isApiError } from "../../shared/api/http";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
-
-const WAYPOINT_KIND_LABELS: Record<string, string> = {
-  transit: "Транзит",
-  destination: "Назначение",
-  stopover: "Остановка",
-};
+import { WAYPOINT_KIND_LABELS } from "./trip-labels";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -62,6 +58,8 @@ function SortableWaypointRow({
   onDelete: () => void;
   isDeleting: boolean;
 }) {
+  const t = useTranslations("tripWaypoints");
+  const locale = useAppLocale();
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: waypoint.id });
 
@@ -74,7 +72,7 @@ function SortableWaypointRow({
     >
       <button
         type="button"
-        aria-label="Перетащить, чтобы изменить порядок"
+        aria-label={t("dragToReorder")}
         className="text-c4 hover:text-c1 cursor-grab touch-none"
         data-testid="waypoint-drag-handle"
         {...attributes}
@@ -92,7 +90,7 @@ function SortableWaypointRow({
           {waypoint.city ? ` · ${waypoint.city}` : ""}
         </span>
         <Badge variant="default">
-          {WAYPOINT_KIND_LABELS[waypoint.kind] ?? waypoint.kind}
+          {WAYPOINT_KIND_LABELS[locale][waypoint.kind] ?? waypoint.kind}
         </Badge>
       </div>
       <Button
@@ -101,23 +99,23 @@ function SortableWaypointRow({
         disabled={isDeleting}
         data-testid="waypoint-remove-button"
       >
-        Удалить
+        {t("remove")}
       </Button>
     </div>
   );
 }
 
-const addWaypointSchema = z.object({
-  countrySlug: z.string().min(1, "Выберите страну"),
-  city: z.string().optional(),
-  kind: z.enum(["transit", "destination", "stopover"]),
-});
-type AddWaypointValues = z.infer<typeof addWaypointSchema>;
-
 function AddWaypointForm({ tripId }: { tripId: string }) {
+  const t = useTranslations("tripWaypoints");
   const locale = useAppLocale();
   const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const createWaypoint = useCreateWaypointMutation(tripId);
+  const addWaypointSchema = z.object({
+    countrySlug: z.string().min(1, t("countryRequired")),
+    city: z.string().optional(),
+    kind: z.enum(["transit", "destination", "stopover"]),
+  });
+  type AddWaypointValues = z.infer<typeof addWaypointSchema>;
   const {
     register,
     handleSubmit,
@@ -136,12 +134,10 @@ function AddWaypointForm({ tripId }: { tripId: string }) {
         kind: values.kind,
       });
       reset({ countrySlug: "", city: "", kind: "destination" });
-      toast.success("Точка маршрута добавлена.");
+      toast.success(t("waypointAdded"));
     } catch (err: unknown) {
       toast.error(
-        isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить точку маршрута.")
-          : "Не удалось добавить точку маршрута.",
+        isApiError(err) ? (err.error?.message ?? t("addError")) : t("addError"),
       );
     }
   }
@@ -153,14 +149,14 @@ function AddWaypointForm({ tripId }: { tripId: string }) {
       noValidate
     >
       <Field>
-        <FieldLabel htmlFor="waypoint-country">Страна</FieldLabel>
+        <FieldLabel htmlFor="waypoint-country">{t("country")}</FieldLabel>
         <select
           id="waypoint-country"
           className={selectClass}
           data-testid="waypoint-country-select"
           {...register("countrySlug")}
         >
-          <option value="">Выберите страну</option>
+          <option value="">{t("selectCountry")}</option>
           {countries.data?.items.map((c) => (
             <option
               key={c.slug}
@@ -173,7 +169,7 @@ function AddWaypointForm({ tripId }: { tripId: string }) {
         <FieldError>{errors.countrySlug?.message}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor="waypoint-city">Город</FieldLabel>
+        <FieldLabel htmlFor="waypoint-city">{t("city")}</FieldLabel>
         <input
           id="waypoint-city"
           type="text"
@@ -182,15 +178,21 @@ function AddWaypointForm({ tripId }: { tripId: string }) {
         />
       </Field>
       <Field>
-        <FieldLabel htmlFor="waypoint-kind">Тип</FieldLabel>
+        <FieldLabel htmlFor="waypoint-kind">{t("kind")}</FieldLabel>
         <select
           id="waypoint-kind"
           className={selectClass}
           {...register("kind")}
         >
-          <option value="destination">Назначение</option>
-          <option value="transit">Транзит</option>
-          <option value="stopover">Остановка</option>
+          <option value="destination">
+            {WAYPOINT_KIND_LABELS[locale].destination}
+          </option>
+          <option value="transit">
+            {WAYPOINT_KIND_LABELS[locale].transit}
+          </option>
+          <option value="stopover">
+            {WAYPOINT_KIND_LABELS[locale].stopover}
+          </option>
         </select>
       </Field>
       <Button
@@ -198,7 +200,7 @@ function AddWaypointForm({ tripId }: { tripId: string }) {
         disabled={createWaypoint.isPending}
         data-testid="waypoint-add-submit"
       >
-        Добавить
+        {t("add")}
       </Button>
     </form>
   );
@@ -211,6 +213,7 @@ export function TripWaypoints({
   tripId: string;
   waypoints: TripWaypoint[];
 }) {
+  const t = useTranslations("tripWaypoints");
   const [orderedIds, setOrderedIds] = useState(() =>
     waypoints.map((w) => w.id),
   );
@@ -249,7 +252,7 @@ export function TripWaypoints({
       data-testid="trip-waypoints"
     >
       {orderedWaypoints.length === 0 ? (
-        <p className="text-c3 text-sm">Маршрут пока пуст.</p>
+        <p className="text-c3 text-sm">{t("routeEmpty")}</p>
       ) : (
         <DndContext
           sensors={sensors}

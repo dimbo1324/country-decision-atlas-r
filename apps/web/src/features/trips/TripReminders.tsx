@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { ru } from "date-fns/locale";
+import { enUS, es, ru } from "date-fns/locale";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -18,23 +19,42 @@ import {
 } from "../../entities/trips/api";
 import type { TripReminder } from "../../shared/api/trips";
 import { isApiError } from "../../shared/api/http";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 
-const REMINDER_STATUS_LABELS: Record<string, string> = {
-  scheduled: "Запланировано",
-  sent: "Отправлено",
-  cancelled: "Отменено",
+const DATE_FNS_LOCALE: Record<SupportedLocale, typeof enUS> = {
+  en: enUS,
+  ru,
+  es,
+};
+
+const REMINDER_STATUS_LABELS: Record<
+  SupportedLocale,
+  Record<string, string>
+> = {
+  en: { scheduled: "Scheduled", sent: "Sent", cancelled: "Cancelled" },
+  ru: {
+    scheduled: "Запланировано",
+    sent: "Отправлено",
+    cancelled: "Отменено",
+  },
+  es: {
+    scheduled: "Programado",
+    sent: "Enviado",
+    cancelled: "Cancelado",
+  },
 };
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const createReminderSchema = z.object({
-  remindAt: z.string().min(1, "Укажите дату и время"),
-});
-type CreateReminderValues = z.infer<typeof createReminderSchema>;
-
 function CreateReminderForm({ tripId }: { tripId: string }) {
+  const t = useTranslations("tripReminders");
   const createReminder = useCreateReminderMutation(tripId);
+  const createReminderSchema = z.object({
+    remindAt: z.string().min(1, t("dateTimeRequired")),
+  });
+  type CreateReminderValues = z.infer<typeof createReminderSchema>;
   const {
     register,
     handleSubmit,
@@ -51,12 +71,12 @@ function CreateReminderForm({ tripId }: { tripId: string }) {
         channel: "telegram",
       });
       reset();
-      toast.success("Напоминание создано.");
+      toast.success(t("reminderCreated"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось создать напоминание.")
-          : "Не удалось создать напоминание.",
+          ? (err.error?.message ?? t("createError"))
+          : t("createError"),
       );
     }
   }
@@ -81,7 +101,7 @@ function CreateReminderForm({ tripId }: { tripId: string }) {
         disabled={createReminder.isPending}
         data-testid="reminder-create-submit"
       >
-        Добавить напоминание
+        {t("addReminder")}
       </Button>
     </form>
   );
@@ -94,6 +114,8 @@ export function TripReminders({
   tripId: string;
   reminders: TripReminder[];
 }) {
+  const t = useTranslations("tripReminders");
+  const locale = useAppLocale();
   const cancelReminder = useCancelReminderMutation(tripId);
 
   return (
@@ -102,7 +124,7 @@ export function TripReminders({
       data-testid="trip-reminders"
     >
       {reminders.length === 0 ? (
-        <p className="text-c3 text-sm">Напоминаний пока нет.</p>
+        <p className="text-c3 text-sm">{t("noReminders")}</p>
       ) : (
         <div>
           {reminders.map((reminder) => (
@@ -113,14 +135,15 @@ export function TripReminders({
             >
               <span className="text-c2 flex-1 text-sm">
                 {format(new Date(reminder.remind_at), "d MMMM yyyy, HH:mm", {
-                  locale: ru,
+                  locale: DATE_FNS_LOCALE[locale],
                 })}
                 {reminder.checklist_item_title
                   ? ` · ${reminder.checklist_item_title}`
                   : ""}
               </span>
               <Badge variant="default">
-                {REMINDER_STATUS_LABELS[reminder.status] ?? reminder.status}
+                {REMINDER_STATUS_LABELS[locale][reminder.status] ??
+                  reminder.status}
               </Badge>
               {reminder.status === "scheduled" && (
                 <Button
@@ -128,7 +151,7 @@ export function TripReminders({
                   onClick={() => cancelReminder.mutate(reminder.id)}
                   data-testid="reminder-cancel-button"
                 >
-                  Отменить
+                  {t("cancel")}
                 </Button>
               )}
             </div>

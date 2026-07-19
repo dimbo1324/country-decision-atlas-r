@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Badge, BoardGrid, Card } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
 import {
@@ -15,26 +16,21 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 
-const NOTIFY_TOGGLES: {
-  field:
-    | "notify_legal_signals"
-    | "notify_drift_changes"
-    | "notify_route_updates";
-  label: string;
-}[] = [
-  { field: "notify_legal_signals", label: "Правовые сигналы" },
-  { field: "notify_drift_changes", label: "Изменение направления" },
-  { field: "notify_route_updates", label: "Обновления маршрутов" },
-];
+const NOTIFY_TOGGLE_FIELDS = [
+  "notify_legal_signals",
+  "notify_drift_changes",
+  "notify_route_updates",
+] as const;
 
 export function WatchlistView() {
+  const t = useTranslations("watchlist");
   const { user, isLoading: isAuthLoading } = useAuth();
   const watchlist = useQuery({ ...myWatchlistQuery(), enabled: Boolean(user) });
   const toggle = useToggleWatchlistMutation();
   const updatePreferences = useUpdateWatchlistPreferencesMutation();
 
   if (isAuthLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -44,12 +40,12 @@ export function WatchlistView() {
         data-testid="watchlist-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы сохранять страны в watchlist.{" "}
+          {t("loginToSaveCountries")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("login")}
           </Link>
         </p>
       </div>
@@ -57,7 +53,7 @@ export function WatchlistView() {
   }
 
   if (watchlist.isPending) {
-    return <LoadingState message="Загрузка watchlist…" />;
+    return <LoadingState message={t("loadingWatchlist")} />;
   }
 
   if (watchlist.isError) {
@@ -75,7 +71,7 @@ export function WatchlistView() {
   if (items.length === 0) {
     return (
       <div data-testid="watchlist-empty-state">
-        <EmptyState message="Watchlist пуст. Сохраните страну на странице страны." />
+        <EmptyState message={t("empty")} />
       </div>
     );
   }
@@ -111,12 +107,12 @@ export function WatchlistView() {
                 data-testid="watchlist-remove-button"
                 className="font-mono text-c3 hover:text-terra3 text-[10px] tracking-[0.2em] uppercase transition-colors duration-300"
               >
-                Удалить
+                {t("remove")}
               </button>
             </div>
             <Badge variant="default">{item.status}</Badge>
             <div className="flex flex-col gap-2">
-              {NOTIFY_TOGGLES.map(({ field, label }) => (
+              {NOTIFY_TOGGLE_FIELDS.map((field) => (
                 <label
                   key={field}
                   className="text-c3 flex items-center gap-2 text-sm"
@@ -132,7 +128,7 @@ export function WatchlistView() {
                       })
                     }
                   />
-                  {label}
+                  {t(field)}
                 </label>
               ))}
             </div>

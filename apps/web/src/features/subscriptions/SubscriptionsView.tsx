@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -39,19 +40,19 @@ import type { SupportedLocale } from "../../shared/lib/locale";
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const subscribeSchema = z
-  .object({
-    metricId: z.string().optional(),
-    authorUserId: z.string().optional(),
-  })
-  .refine((v) => Boolean(v.metricId) || Boolean(v.authorUserId), {
-    message: "Укажите ID метрики или ID автора.",
-    path: ["metricId"],
-  });
-type SubscribeValues = z.infer<typeof subscribeSchema>;
-
 function SubscribeForm() {
+  const t = useTranslations("subscriptions");
   const createSubscription = useCreateSubscriptionMutation();
+  const subscribeSchema = z
+    .object({
+      metricId: z.string().optional(),
+      authorUserId: z.string().optional(),
+    })
+    .refine((v) => Boolean(v.metricId) || Boolean(v.authorUserId), {
+      message: t("metricOrAuthorRequired"),
+      path: ["metricId"],
+    });
+  type SubscribeValues = z.infer<typeof subscribeSchema>;
   const {
     register,
     handleSubmit,
@@ -66,12 +67,12 @@ function SubscribeForm() {
         author_user_id: values.authorUserId || null,
       });
       reset();
-      toast.success("Подписка добавлена.");
+      toast.success(t("subscriptionAdded"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось оформить подписку.")
-          : "Не удалось оформить подписку.",
+          ? (err.error?.message ?? t("subscribeError"))
+          : t("subscribeError"),
       );
     }
   }
@@ -83,7 +84,9 @@ function SubscribeForm() {
       noValidate
     >
       <Field className="flex-1">
-        <FieldLabel htmlFor="subscribe-metric-id">ID метрики</FieldLabel>
+        <FieldLabel htmlFor="subscribe-metric-id">
+          {t("metricIdLabel")}
+        </FieldLabel>
         <input
           id="subscribe-metric-id"
           type="text"
@@ -95,7 +98,7 @@ function SubscribeForm() {
       </Field>
       <Field className="flex-1">
         <FieldLabel htmlFor="subscribe-author-id">
-          Или ID автора (все его метрики)
+          {t("authorIdLabel")}
         </FieldLabel>
         <input
           id="subscribe-author-id"
@@ -104,14 +107,14 @@ function SubscribeForm() {
           data-testid="subscribe-author-id-input"
           {...register("authorUserId")}
         />
-        <FieldHint>Заполните одно из двух полей.</FieldHint>
+        <FieldHint>{t("fillOneOfTwo")}</FieldHint>
       </Field>
       <Button
         type="submit"
         disabled={createSubscription.isPending}
         data-testid="subscribe-submit"
       >
-        {createSubscription.isPending ? "Подписываем…" : "Подписаться"}
+        {createSubscription.isPending ? t("subscribing") : t("subscribe")}
       </Button>
     </form>
   );
@@ -132,6 +135,7 @@ function feedEntryToTimelineEvent(
 }
 
 export function SubscriptionsView() {
+  const t = useTranslations("subscriptions");
   const locale = useAppLocale();
   const { user, isLoading: isAuthLoading } = useAuth();
   const subscriptions = useQuery({
@@ -145,7 +149,7 @@ export function SubscriptionsView() {
   const deleteSubscription = useDeleteSubscriptionMutation();
 
   if (isAuthLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -155,12 +159,12 @@ export function SubscriptionsView() {
         data-testid="subscriptions-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы управлять подписками.{" "}
+          {t("loginToManage")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("login")}
           </Link>
         </p>
       </div>
@@ -168,7 +172,7 @@ export function SubscriptionsView() {
   }
 
   if (subscriptions.isPending || feed.isPending) {
-    return <LoadingState message="Загрузка подписок…" />;
+    return <LoadingState message={t("loadingSubscriptions")} />;
   }
 
   const loadError = subscriptions.error ?? feed.error;
@@ -192,7 +196,7 @@ export function SubscriptionsView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Новая подписка</Kicker>
+        <Kicker>{t("newSubscription")}</Kicker>
         <SubscribeForm />
       </Card>
 
@@ -200,13 +204,13 @@ export function SubscriptionsView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Мои подписки</Kicker>
+        <Kicker>{t("mySubscriptions")}</Kicker>
         {subscriptionItems.length === 0 ? (
           <p
             className="text-c3 text-sm"
             data-testid="subscriptions-empty-state"
           >
-            Вы пока ни на что не подписаны.
+            {t("noSubscriptionsYet")}
           </p>
         ) : (
           <BoardGrid data-testid="subscriptions-list">
@@ -222,8 +226,10 @@ export function SubscriptionsView() {
                   <span className="font-display text-lg font-semibold">
                     {subscription.metric_name_en ??
                       (subscription.author_display_name
-                        ? `Автор: ${subscription.author_display_name}`
-                        : "Подписка")}
+                        ? t("author", {
+                            name: subscription.author_display_name,
+                          })
+                        : t("subscriptionFallback"))}
                   </span>
                   {subscription.metric_slug && (
                     <Badge variant="default">{subscription.metric_slug}</Badge>
@@ -234,7 +240,7 @@ export function SubscriptionsView() {
                     data-testid="subscription-remove-button"
                     className="self-start"
                   >
-                    Отписаться
+                    {t("unsubscribe")}
                   </Button>
                 </Card>
               </div>
@@ -247,10 +253,10 @@ export function SubscriptionsView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Лента</Kicker>
+        <Kicker>{t("feed")}</Kicker>
         {feedItems.length === 0 ? (
           <div data-testid="feed-empty-state">
-            <EmptyState message="Пока нет обновлений по вашим подпискам." />
+            <EmptyState message={t("noFeedUpdates")} />
           </div>
         ) : (
           <div data-testid="feed-list">

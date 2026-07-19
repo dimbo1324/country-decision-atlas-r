@@ -446,8 +446,83 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         still-Russian watchlist/AI-assistant strings on the country
         dossier are pre-existing gaps already tracked as separate stages
         (#58 Cabinet, #59 Community), not a regression from this stage.
-- [ ] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +
-      4 pages).
+- [+] Cabinet: Trips, Watchlist, Subscriptions, Account/Auth (11 files +
+      8 pages — the initial "4 pages" estimate undercounted; the actual
+      public route tree has 8 distinct pages in this area).
+      - `auth` (`LoginForm.tsx`/`RegisterForm.tsx`): **0 files needed
+        changes** — both already fully wired to a pre-existing `auth`
+        namespace since Stage 1 (nav/footer labels needed it early), so
+        this stage's survey confirmed they were already done end to end.
+      - `trips` (7 files + new `features/trips/trip-labels.ts`): new shared
+        `TRIP_STATUS_LABELS`/`WAYPOINT_KIND_LABELS` enum dicts (de-duplicates
+        what was previously three separate hardcoded Russian copies across
+        `TripListView.tsx`, `TripDetailView.tsx`, and the shared-trip page —
+        same reasoning as Stage 7's `route-labels.ts`). New namespaces:
+        `trips` (shared by `TripListView`/`TripDetailView`), `tripChecklist`,
+        `tripReminders`, `tripShareExport`, `tripWarnings`, `tripWaypoints`.
+        `TripDetailView.tsx`'s two `next/dynamic` loading fallbacks
+        (`TripWaypoints`/`TripReminders`) needed small wrapper components
+        (`TripWaypointsLoadingFallback`/`TripRemindersLoadingFallback`)
+        since a `dynamic()` loading option can't call `useTranslations()`
+        directly — same pattern as Stage 7's `LegalSignalsLoadingFallback`.
+        `TripReminders.tsx` had a hardcoded `date-fns/locale`'s `ru` import
+        for its reminder-timestamp formatting with zero Spanish/English
+        support; added a local `DATE_FNS_LOCALE: Record<SupportedLocale,
+        typeof enUS>` map (`enUS`/`ru`/`es` from `date-fns/locale`) — the
+        first `date-fns` locale usage in the app, so no shared precedent to
+        reuse yet.
+      - `watchlist` (2 files): `WatchlistButton.tsx`/`WatchlistView.tsx`
+        share one `watchlist` namespace; the three notify-toggle field
+        labels use the exact snake_case API field names as translation keys
+        (`notify_legal_signals`/`notify_drift_changes`/`notify_route_updates`)
+        since the array of toggles is already keyed by those field names.
+      - `subscriptions` (1 file): new `subscriptions` namespace; the zod
+        refine error message needed the schema built inside the component
+        (same "move to component body so `t()` is callable" pattern used
+        for the trip/checklist/reminder/waypoint forms and precedented by
+        Stage 6's `DecisionRunForm`).
+      - `account` (1 file, `AccountView.tsx`): new `account` namespace
+        (42 keys, the largest single-file namespace this stage) covering
+        profile fields, Telegram link/unlink, security notifications
+        (`newDeviceLogin` interpolates `{device}{ip}{date}`), and the
+        revoke-all-sessions confirmation dialog.
+      - 8 pages, each a thin `Kicker`/`h1` wrapper: `login`, `register`,
+        `account`, `trips`, `watchlist`, `subscriptions` (all
+        `useTranslations()`, unchanged Server/Client shape); `trips/[id]`
+        switched to `getTranslations()` (breadcrumb labels only, matching
+        the Stage 7 page pattern); `trips/shared/[token]` (the one Server
+        Component with real content, not just a header) switched to
+        `getTranslations()` and now imports the shared
+        `TRIP_STATUS_LABELS`/`WAYPOINT_KIND_LABELS` from `trip-labels.ts`
+        (its own `CHECKLIST_STATUS_LABELS` stayed local — no duplicate
+        elsewhere to de-dupe against).
+      - Verify: typecheck/lint clean; `pnpm format:check` clean (5 files
+        needed a `prettier --write` pass); Vitest 5/5; fresh `next build`
+        clean (same route list); `i18n_parity_check.py` 692/692 keys across
+        en/ru/es (12 new namespaces + 8 new page namespaces added); full
+        interactive browser walkthrough across `/en`, `/ru`, `/es` —
+        registered a real throwaway account through the UI, created a
+        trip, opened its detail view (route/checklist/reminders/warnings/
+        publishing sections), saved a country to the watchlist and
+        confirmed the notify-toggle labels, checked the empty
+        subscriptions view, created a public share link and verified the
+        shared-trip Server Component page (including its not-found error
+        state) in all 3 locales, then deleted the trip. Confirmed the
+        still-Russian Migration Board block on the trip page and the
+        still-Russian scenario names in the trip-creation dropdown are
+        pre-existing gaps out of this stage's scope (Community stage #59
+        and backend content data respectively), not a regression.
+      - Browser-automation note (not a product bug): the in-app browser's
+        `form_input`/synthetic-event tools intermittently failed to
+        register a click or a `type="datetime-local"` value change with
+        this app's React Hook Form + Zod forms on the very first
+        interaction after a navigation — a known quirk of dispatching
+        synthetic DOM events against React's uncontrolled-ref input
+        tracking, not a translation or logic defect. Confirmed each time
+        by re-reading the DOM value (correctly set) and by dispatching a
+        real `.click()` via `javascript_tool`, which always succeeded.
+- [ ] Community: Migration Board, User Stories, Author Metrics, Country
+      Proposals (12 files + 6 pages).
 - [ ] Community: Migration Board, User Stories, Author Metrics, Country
       Proposals (12 files + 6 pages).
 - [ ] Knowledge + AI Assistant + Search (14 files + 4 pages).

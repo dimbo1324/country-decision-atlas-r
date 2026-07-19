@@ -2,17 +2,30 @@
 
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link, useRouter } from "../../i18n/navigation";
 import { tripQuery, useDeleteTripMutation } from "../../entities/trips/api";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
+import { TRIP_STATUS_LABELS } from "./trip-labels";
 import { TripChecklist } from "./TripChecklist";
 import { TripShareExport } from "./TripShareExport";
 import { TripWarnings } from "./TripWarnings";
+
+function TripWaypointsLoadingFallback() {
+  const t = useTranslations("trips");
+  return <LoadingState message={t("loadingRoute")} />;
+}
+
+function TripRemindersLoadingFallback() {
+  const t = useTranslations("trips");
+  return <LoadingState message={t("loadingReminders")} />;
+}
 
 // @dnd-kit (waypoint drag-reorder) and date-fns (reminder formatting) are
 // each ~35-40 KB parsed and only needed once a user opens a trip's detail
@@ -20,28 +33,23 @@ import { TripWarnings } from "./TripWarnings";
 // separate on-demand chunks instead of the route's initial JS.
 const TripWaypoints = dynamic(
   () => import("./TripWaypoints").then((m) => m.TripWaypoints),
-  { loading: () => <LoadingState message="Загрузка маршрута…" /> },
+  { loading: TripWaypointsLoadingFallback },
 );
 const TripReminders = dynamic(
   () => import("./TripReminders").then((m) => m.TripReminders),
-  { loading: () => <LoadingState message="Загрузка напоминаний…" /> },
+  { loading: TripRemindersLoadingFallback },
 );
 
-const TRIP_STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  active: "Активна",
-  completed: "Завершена",
-  abandoned: "Отменена",
-};
-
 export function TripDetailView({ tripId }: { tripId: string }) {
+  const t = useTranslations("trips");
+  const locale = useAppLocale();
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
   const trip = useQuery({ ...tripQuery(tripId), enabled: Boolean(user) });
   const deleteTrip = useDeleteTripMutation();
 
   if (isAuthLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -51,12 +59,12 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         data-testid="trip-detail-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы просмотреть поездку.{" "}
+          {t("loginToView")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("login")}
           </Link>
         </p>
       </div>
@@ -64,7 +72,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
   }
 
   if (trip.isPending) {
-    return <LoadingState message="Загрузка поездки…" />;
+    return <LoadingState message={t("loadingTrip")} />;
   }
 
   if (trip.isError) {
@@ -89,7 +97,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
     >
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <Kicker>Поездка</Kicker>
+          <Kicker>{t("tripKicker")}</Kicker>
           <h1
             className="font-display text-3xl font-bold"
             data-testid="trip-title"
@@ -98,10 +106,12 @@ export function TripDetailView({ tripId }: { tripId: string }) {
           </h1>
           <div className="flex flex-wrap gap-2">
             <Badge variant="default">
-              {TRIP_STATUS_LABELS[item.status] ?? item.status}
+              {TRIP_STATUS_LABELS[locale][item.status] ?? item.status}
             </Badge>
             {item.origin_country && (
-              <Badge variant="default">Из: {item.origin_country.name}</Badge>
+              <Badge variant="default">
+                {t("from", { name: item.origin_country.name })}
+              </Badge>
             )}
           </div>
         </div>
@@ -112,7 +122,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
           className="text-terra3 hover:text-terra2"
           data-testid="trip-delete-button"
         >
-          Удалить поездку
+          {t("deleteTrip")}
         </Button>
       </div>
 
@@ -120,7 +130,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Маршрут</Kicker>
+        <Kicker>{t("routeKicker")}</Kicker>
         <TripWaypoints
           tripId={tripId}
           waypoints={item.waypoints ?? []}
@@ -131,7 +141,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Чек-лист</Kicker>
+        <Kicker>{t("checklistKicker")}</Kicker>
         <TripChecklist
           tripId={tripId}
           items={item.checklist_items ?? []}
@@ -142,7 +152,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Напоминания</Kicker>
+        <Kicker>{t("remindersKicker")}</Kicker>
         <TripReminders
           tripId={tripId}
           reminders={item.reminders ?? []}
@@ -153,7 +163,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Предупреждения</Kicker>
+        <Kicker>{t("warningsKicker")}</Kicker>
         <TripWarnings tripId={tripId} />
       </Card>
 
@@ -161,7 +171,7 @@ export function TripDetailView({ tripId }: { tripId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Публикация</Kicker>
+        <Kicker>{t("publishingKicker")}</Kicker>
         <TripShareExport trip={item} />
       </Card>
     </div>
