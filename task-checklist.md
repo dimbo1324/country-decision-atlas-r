@@ -227,12 +227,59 @@ giant diff.
 
 ## Stage 3 — Verification
 
-- [ ] Full quality gate (`python dev_tools_scripts_runner.py full-check
-      --profile full`).
-- [ ] Browser walkthrough of any UI area touched, in all 3 locales.
+- [+] Full quality gate (`python dev_tools_scripts_runner.py full-check
+      --profile full`): green (80 OK, 1 FAIL — the pre-existing, documented
+      Windows `go test -race`/cgo limitation, unrelated to any file this
+      task touched; 4 WARN — stale local cache dirs, harmless). Static
+      gate, `pytest` (2248 passed), `pytest utils/synthetic_data`,
+      `pnpm quality`, `go vet`, Docker stack + migrations + smokes,
+      Playwright E2E (`pnpm web:mvp:check`, 330.8s, all green), pre-commit,
+      `git diff --check` — all OK.
+- [+] Browser walkthrough of touched UI areas in all 3 locales: done
+      per-fix-group during Stage 2 (legal-signals, sources, search, routes
+      country dropdowns; community drawers' close button; the new
+      `/internal/**` error-recovery path in en/ru/es). No regressions
+      found beyond the pre-existing, unrelated backend content-data
+      quirks already documented in the i18n task's own final report.
 
 ## Completion
 
-- [ ] Checklist filled (`+`/`-`).
-- [ ] Final report: what was fixed, what was deliberately left alone and
-      why, commits made.
+- [+] Checklist filled (`+`/`-`).
+- [+] Final report.
+
+### Final report
+
+**What shipped**: closed all 9 confirmed hardcoded-string bugs from the
+re-audit (packages/ui prop-default leaks, raw-hardcoded country-card
+text, non-locale-aware timeline labels, a static SEO description, and a
+new locale-aware `[locale]/error.tsx`) and all 11 magic-value findings (6
+frontend, 5 backend groups) — see Stage 2 above for the itemized list and
+Stage 1 for what was deliberately left alone and why (Storybook-only dead
+components, the `Level`/`Confidence` type collision, per-endpoint
+pagination variance, invariant-locked CII math). Message catalog grew
+1023 → 1045 keys/locale across the hardcoded-string fixes.
+
+**Commits** (on `feat/i18n-three-language-interface`, later merged to
+`main`): `5870100` task-checklist for this task, `270218c` consolidated
+audit findings, `9f8bbfd` + `0c3fa0b` + `08e5a1e` frontend hardcoded-string
+fixes, `7b1959a` checklist update, `b563244` frontend magic-value fixes,
+`9d66c3e` backend magic-value fixes, `64dbc6a` checklist update. All
+squashed into the branch that was fast-forward merged into `main` and
+pushed to `origin/main` per the owner's explicit instruction once the
+full gate went green.
+
+**Deferred, not fixed** (flagged, not silently dropped): `packages/ui`'s
+`Breadcrumbs`/`DossierRail`/`LegalSignalTimeline`/`Drawer`/`ChartFrame`
+default-prop mechanism itself (a Stage-2-of-the-i18n-task pattern) works
+correctly now that every real call site passes translated values — no
+remaining gap. Nothing else deferred from this task's own scope; the
+CSRF-header bug and `Breadcrumbs` `ariaLabel` gap noted in the prior
+i18n task's final report were both already resolved as part of this
+task's fixes (the latter — the other 3 components with the same pattern
+were new findings this task, not carried over).
+
+**Risks**: low. All changes are either pure naming/extraction refactors
+with no behavior change (verified via the full pytest suite and
+Playwright E2E both staying green), or additive i18n wiring (new message
+keys, new optional component props with backward-compatible defaults).
+No API/schema/contract changes.
