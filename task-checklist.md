@@ -1116,17 +1116,122 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
 
 ## Completion
 
-- [ ] Checklist filled (`+`/`-`) — stages 1–8 above are already `[+]`
-      with full writeups; only Stage 9, Stage 10, Final verification, and
-      this Completion section remain `[ ]`.
-- [ ] Incremental commits on this branch, one per stage (9 of 10 done;
-      commits so far: `6554d7f` Stage 1, `47fc596` Stage 2, `425c199`
-      Stage 3a, `8747a19` Stage 4, `1461d77` Stage 5, `58781f0` Stage 6,
-      `e538e6f` Stage 7, `71ff01f` Stage 8, `2a64476`/`74cc747` Stage 9,
-      `37472d8` Stage 9 browser-walkthrough fixups).
-- [ ] Final report — summarize what shipped, total namespaces/keys added
-      across all 10 stages, any deferred tech debt (the two items in the
-      Final-verification gaps list above), and confirm the branch's
-      relationship to `main` (currently pushed to `origin` only, per
-      owner's 2026-07-19 decision to defer the `main` merge until this
-      checklist and the full quality gate are both green).
+- [+] Checklist filled (`+`/`-`) — all 10 stages, Scope survey, Final
+      verification, and this Completion section are now `[+]` with full
+      writeups. Nothing left `[ ]`, nothing silently skipped.
+- [+] Incremental commits on this branch, one per stage plus this session's
+      verification fixes (all local, not yet pushed — see below): `6554d7f`
+      Stage 1, `47fc596` Stage 2, `425c199` Stage 3a, `8747a19` Stage 4,
+      `1461d77` Stage 5, `58781f0` Stage 6, `e538e6f` Stage 7, `71ff01f`
+      Stage 8, `2a64476`/`74cc747` Stage 9, `37472d8`/`8324ee2` Stage 9
+      browser-walkthrough fixups, `e74ac6a` Stage 10, `4ea360a` Stage 10
+      walkthrough notes, `c8cc2ae` `/internal/**` `NextIntlClientProvider`
+      fix, `4f21d04` E2E locale-drift test fixes, `6bb3a1f` visual-baseline
+      update, `74f9b0b` Final-verification writeup + Р-12 doc update.
+- [+] Final report — see below.
+
+## Final report
+
+**What shipped.** The product's public interface now supports 3 languages
+— English (new default, was Russian), Russian, Spanish — across the
+entire public route tree (`apps/web/src/app/[locale]/**`, ~154 files:
+30 pages, 108 feature components, 16 shared files, plus 11 `packages/ui`
+components given optional translated-label props). 10 content stages plus
+infrastructure/`packages/ui` staging work, executed in order, each
+independently verified and committed. The message catalog grew from a
+90-key en/ru-only set (chrome/nav/footer/auth only) to **1023 keys per
+locale**, hand-translated (not machine-translated) into all 3 languages,
+parity-checked at every stage via `scripts/dev_tools/i18n_parity_check.py`.
+
+**Scope boundary held throughout, re-verified multiple times this
+session**: backend *content* (country names, scenario names, source
+excerpts, legal-signal bodies, methodology explainer text) intentionally
+stays in its original language regardless of interface locale — an
+`es` interface requests backend data with a `toApiLocale()` `en` fallback
+(the backend's own `LocaleCode` contract is `en`\|`ru` only, unchanged).
+`/internal/**` (admin/moderation) is explicitly out of scope and was never
+translated — though see the `/internal/**` bugfix below, which touched
+*infrastructure* around that route tree without translating its content.
+
+**Real bugs found and fixed along the way** (not just translation gaps —
+each one is a genuine defect this task introduced or exposed, verified via
+actual interaction, not just code reading):
+- Stage 3b: `CompareMatrixView` cast the interface locale straight to the
+  backend `LocaleCode` type, silently breaking `/es/compare`.
+- Stage 5: a stray `"use client"` on `useAppLocale.ts` crashed the first
+  Server-Component-direct call site (`CountryHeader.tsx`); a real
+  copy-paste duplicate-component bug in `CountryDossier.tsx`, caught before
+  verification even ran.
+- Stage 5: `test-utils/render.tsx` was silently feeding every component
+  test an empty message catalog, making translated-text assertions
+  meaningless until fixed.
+- Stage 6: `DecisionResults.tsx` — the actual decision-run result card —
+  had been missed by the "decision-run (6 of 7)" file count and stayed
+  fully untranslated until a real interactive run caught it.
+- Stage 7: `TimelineEventCard`'s locale prop was mistyped as the
+  backend-only `LocaleCode`, silently mapping `es` to English date
+  formatting.
+- Stage 9: several `ru.json` strings shipped partially or fully
+  untranslated (English words mixed into Russian sentences) despite the
+  `es.json` equivalents being complete; `CountryDossier.tsx`'s Community
+  section had a hardcoded `"Community"` string bypassing `t()` entirely —
+  both found only via a real interactive click-through in a follow-up
+  session, since typecheck/lint/tests all pass on a plain string literal.
+- **This session (Final verification)**: `shared/ui/ErrorBoundary.tsx`'s
+  Stage-3a `useTranslations()` call broke error/loading recovery on
+  `/internal/**` (no `NextIntlClientProvider` there by design) — fixed by
+  giving `/internal/layout.tsx` an ambient `ru.json`-backed provider,
+  resolving 11 Playwright failures in one change. 12 more E2E tests had
+  stale Russian-regex assertions against pages Stage 1's default-locale
+  flip correctly changed to English — fixed to assert the real English
+  strings. One visual-regression baseline (`country-dossier.png`) needed
+  updating for Stage 9's Community section, reviewed and confirmed benign
+  before updating.
+
+**Deferred, not fixed in this branch** (flagged, not silently dropped):
+- `shared/api/ai.ts` never attaches the CSRF header on its 3 mutating
+  calls, breaking the AI Assistant feature end-to-end regardless of
+  locale — a pure API-wiring bug unrelated to hardcoded text, spawned as a
+  separate background task rather than mixed into this diff.
+- `packages/ui`'s `Breadcrumbs` `ariaLabel` still defaults to hardcoded
+  Russian on 4 call sites app-wide (screen-reader-only).
+- The pre-existing `Негативное`/`Отрицательное` Russian wording
+  inconsistency for the same enum value across two label sources
+  (Stage 7, not introduced by this task).
+- Backend content-data quirks confirmed pre-existing and out of scope:
+  duplicate/mixed-language scenario seed data (`business` RU vs
+  `business_self_employment` EN as separate scenario rows) and the CII
+  methodology-disclaimer text living in `database/fixtures/`.
+
+**Checks that ran and their results**: full `dev_tools_scripts_runner.py
+full-check --profile full` (static gate, pytest, Go, Docker stack +
+migrations + runtime smokes, pre-commit) all green except `go test`'s
+`-race`, which fails only on this Windows machine's missing cgo toolchain
+— a documented, pre-existing limitation, not a regression, and unrelated
+to any file this task touched. Full Playwright E2E (main suite, 325+
+tests) and visual regression (5 pages) both green after the 3 fixes above.
+Vitest `web` 86/86, `ui` 8/8. Storybook build clean. JS budget: worst
+route 298 kB against a 330 kB ceiling. Final `i18n_parity_check.py`:
+1023/1023 across `en`/`ru`/`es`.
+
+**Dependency, API, DB, and config changes**: none. No new production
+dependency, no schema change, no OpenAPI contract change — this was a
+frontend-only interface migration plus one small backend-adjacent
+frontend-infra fix (the `NextIntlClientProvider` wrapper).
+
+**Security/performance/compatibility risk**: low. The `/internal/**`
+`NextIntlClientProvider` fix only adds a static message catalog import to
+a route tree that was already broken in the crash-recovery path it fixes
+— strictly additive, not a behavior change for the (already broken) happy
+path. The default-locale flip (`ru`→`en`) is the one user-visible
+behavior change with real blast radius, already the explicit point of
+this task and covered by the whole verification pass above.
+
+**Branch relationship to `main`**: `feat/i18n-three-language-interface`
+is currently **10 commits ahead of `origin/feat/i18n-three-language-interface`
+and not yet pushed**, and has not been merged into `main`. The full
+quality gate is green and this checklist is complete, satisfying the
+owner's 2026-07-19 condition for considering the `main` merge — but
+per this project's workflow rules, pushing and merging both require an
+explicit owner go-ahead in the conversation, not an inference from gate
+status. Awaiting that instruction before pushing or merging.
