@@ -407,11 +407,11 @@ export function CountryDossier({ card, locale }: CountryDossierProps) {
     list.push({
       id: "community",
       tabId: "community",
-      railLabel: "Community",
+      railLabel: t("railCommunity"),
       content: (
         <DossierSection
           id="community"
-          title="Community"
+          title={t("titleCommunity")}
           testId="community-section"
         >
           <CommunityCountryBlock countrySlug={card.country.slug} />

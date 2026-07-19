@@ -695,6 +695,50 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         (45 routes, unchanged from before this stage — no route added or
         removed); `python -m pytest tests/test_frontend_contract.py -q`
         clean.
+      - **Real browser walkthrough done in a follow-up session**, closing the
+        gap flagged above: registered a throwaway account, filled and
+        submitted a real migration-board post through the UI (all form
+        selects — timeline/stage/goal/visibility — read back correctly),
+        confirmed it landed in `/account/migration-board` with translated
+        status/action labels, and spot-checked `/migration-board`,
+        `/migration-board/new`, `/account/migration-board`,
+        `/account/author-metrics`, `/account/country-proposals`, and a
+        country page's embedded `CommunityCountryBlock` across `/en`, `/ru`,
+        `/es`. **Found and fixed 2 real bugs the HTTP-only pass had missed**:
+        (1) `ru.json` had several `migrationBoardAccount`/`migrationBoardForm`
+        keys left partially or fully untranslated — `accept`/`decline`/
+        `cancel` as literal English, `incomingKicker`/`noIncoming`/
+        `outgoingKicker`/`noOutgoing`/`loadingBoard` mixing Russian sentences
+        with a bare English "requests"/"migration board" noun,
+        `scenarioLabel`/`personaLabel` left as English words, and
+        `contactRequestsLabel` mixing "contact requests" into an otherwise
+        Russian sentence — while the `es.json` equivalents were fully,
+        correctly translated; also `countryProposalWizard.executiveSummaryLabel`
+        was left as literal English "Executive summary" in `ru.json`. Fixed
+        all of these directly in `ru.json` (`Принять`/`Отклонить`/`Отменить`,
+        `Входящие заявки`/`Исходящие заявки`/etc., `Сценарий`/`Персона`,
+        `Разрешить заявки на контакт через платформу.`, `Краткое резюме`) —
+        left `routeIdLabel`/`slugLabel` ("Route ID"/"Slug") untranslated on
+        purpose, matching `es.json`'s own precedent of leaving those specific
+        technical field names in Latin script. (2) `CountryDossier.tsx`'s
+        Community section (added by this stage) had a hardcoded
+        `railLabel: "Community"` and `title="Community"` — never wrapped in
+        `t()`, unlike every other section in that file — so the dossier's tab
+        rail and section heading stayed literal English "Community" on `/ru`
+        and `/es` pages. Fixed by adding `railCommunity`/`titleCommunity` keys
+        to the existing `countryDossier` namespace (950/950 parity after) and
+        wiring both props through `t()`. Re-ran `pnpm --filter web typecheck`
+        and `lint` clean after both fixes; re-verified in the browser that
+        `/ru/account/migration-board` and `/ru/countries/argentina` now
+        render fully translated. Confirmed the still-English CII/scenario
+        methodology disclaimer text and the mixed English/Russian scenario
+        names in dropdowns are backend-seeded content data
+        (`database/fixtures/demo_countries/country_scores.json`, the
+        `scenarios` API), not a frontend gap — same explicit content-vs-chrome
+        scope boundary as everywhere else in this task, confirmed by grepping
+        the exact disclaimer string to that fixture file and by curling
+        `/api/v1/scenarios?locale=en` and finding literal Russian names mixed
+        with English ones already at the data layer.
 
 - [ ] Knowledge + AI Assistant + Search (14 files + 4 pages) — not yet
       surveyed this session. Before starting: glob
