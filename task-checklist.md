@@ -873,6 +873,44 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         results, expanding a methodology accordion section) — flagged here
         honestly, matching Stage 9's own precedent, rather than claimed as
         done; owed before Final verification's full walkthrough.
+      - **Real browser walkthrough done in a follow-up session**, closing the
+        gap above: `/methodology` (accordion fully translated chrome —
+        section meta-labels, glossary teaser, disclaimer — in all 3 locales;
+        the accordion's actual question/answer body text is confirmed
+        backend content fetched via `toApiLocale()`, correctly Russian on
+        `/ru` and correctly falling back to English on `/es` per the Stage 1
+        design — verified by reading `MethodologyAccordion.tsx`'s source,
+        not just observing the page, since English content appearing on
+        `/es` looks identical to a missed-translation bug at a glance),
+        `/glossary` (all 19 terms, categories, and the search/filter chrome
+        fully translated in all 3 locales), `/assistant` (chrome fully
+        translated in all 3 locales; the AI-assistant components themselves
+        — `AIAnswerCard`/`AICitationsList`/`AIRefusalState` — could not be
+        exercised live, see bug below, but a static re-read confirmed all
+        three call `useTranslations()` with zero remaining hardcoded
+        strings), `/search` (chrome, result-type filter, and entity-type
+        badges on live search results all fully translated in `/ru` and
+        `/es`, result content itself correctly staying in its original data
+        language). No translation bugs found this pass — Stage 10's own
+        self-check held up under real interaction, unlike Stage 9's.
+      - **Real, pre-existing functional bug found (unrelated to translation,
+        not fixed in this branch — flagged as a separate background task
+        instead, per this project's scope-control rule against mixing
+        unrelated fixes into one diff)**: submitting the `/assistant` "Ask a
+        question" form always fails with HTTP 403 `"CSRF token is missing or
+        invalid."` from `POST /api/v1/ai/ask`. Root cause confirmed by
+        reading `shared/api/ai.ts`: its `askAI`/`explainNumber`/
+        `parseDecisionIntent` functions call `apiPost(path, payload)`
+        without the third `{ headers: csrfHeaders() }` argument that every
+        other mutating API module in the app (`migrationBoard.ts`, etc.)
+        passes on every `apiPost`/`apiPatch`/`apiDelete` call, per the
+        backend's global CSRF middleware
+        (`apps/api/app/bootstrap/app_factory.py`). This means the AI
+        Assistant feature has likely never worked end-to-end regardless of
+        locale or of any stage in this task — pure pre-existing backend/
+        frontend wiring gap, nothing to do with hardcoded text. Not fixed
+        here; a background task was spawned to fix `shared/api/ai.ts`
+        separately from this i18n branch.
       - This is the last content stage — every string budget in the
         original ~154-file survey (`## Scope survey` above) is now
         accounted for across Stages 1-10.
