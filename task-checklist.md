@@ -126,8 +126,64 @@ giant diff.
 
 ## Stage 2 — Fixes (incremental commits, one group at a time)
 
-- [ ] Frontend: wire any remaining hardcoded UI strings into the message
-      catalog (en/ru/es, parity-checked).
+- [+] Frontend: wired all 9 confirmed hardcoded-string bugs into the
+      message catalog (en/ru/es, parity-checked at every step:
+      1023→1038→1045 keys/locale across 3 commits `9f8bbfd`/`0c3fa0b`,
+      then `08e5a1e` for the error-boundary fix below).
+      - `9f8bbfd`: `AppBreadcrumbs`/`DossierRail`/`LegalSignalTimeline`
+        `ariaLabel` props now wired (new `breadcrumbs` namespace,
+        `countryDossier.dossierRailAriaLabel`, `legalSignalsTimeline`
+        additions); both evidence drawers' `closeLabel` wired (new
+        `close` key in each namespace); `ChartFrame` gained a `labels`
+        prop (Stage 2-of-the-i18n-task's `DriftBoard` pattern) since it
+        previously had **no override mechanism at all** for several
+        strings, wired at its one real call site.
+      - `0c3fa0b`: `CountryLegalSignals.tsx`/`CountrySources.tsx` had raw
+        hardcoded Russian JSX text with zero `useTranslations()` —
+        fully wired (new `countryLegalSignals`/`countrySources`
+        namespaces, reused the existing `evidenceCard.openSource` key
+        rather than duplicating it). `adaptTimelineEvents.ts`'s
+        `IMPACT_LABELS` was a Russian-only plain `Record`, not
+        locale-aware — extracted `TimelineFilters.tsx`'s *already
+        correct* `Record<SupportedLocale,...>` version into a shared
+        `impact-direction-labels.ts` (de-duplicating a second inline
+        copy in the same motion) and threaded `locale` through the
+        function's signature and its one call site.
+        `[locale]/layout.tsx` gained a `generateMetadata()` so the
+        `<meta name="description">` is locale-aware (new `metadata`
+        namespace) instead of permanently inheriting the root layout's
+        static Russian description for every locale.
+      - `08e5a1e`: found a **previously orphaned message-catalog
+        namespace** (`error` — title/message/retry, present in the
+        catalog since Stage 1 but never wired to anything) while
+        investigating the audit's flagged "deliberately non-i18n"
+        root `error.tsx`/`not-found.tsx`. Added a segment-local
+        `[locale]/error.tsx` using that namespace — root `error.tsx`
+        stays deliberately non-i18n (still needed for `/internal/**`
+        and truly locale-less paths) but a real error inside the public
+        `[locale]` tree now shows correctly translated text. **Verified
+        live**, not just by reading the framework docs: temporarily
+        forced a `throw` in the home page, confirmed `/en` renders
+        "Something went wrong" and `/ru` renders "Что-то пошло не так"
+        via the new nested boundary, then reverted the test throw
+        immediately (`git status` confirmed clean before and after).
+        Also tried a matching `[locale]/not-found.tsx` using the
+        similarly-orphaned `notFound` namespace — **verified live that
+        it does NOT work**: Next.js's App Router falls through to the
+        root `not-found.tsx` for any genuinely unmatched path
+        regardless of a nested `not-found.tsx` file (tested both a
+        garbage path and an invalid `[locale]` segment); unlike
+        `error.tsx`, this isn't a real React error-boundary mechanism.
+        Reverted that file rather than ship dead code — a working fix
+        needs a catch-all route explicitly calling `notFound()`, a
+        larger change out of scope for this cleanup pass, noted here
+        for the record rather than silently dropped.
+      Deliberately left untouched (documented, not silently skipped):
+      `packages/ui`'s Storybook-only chart components confirmed never
+      imported by `apps/web` (`PassportCard`, `DriftBoard`,
+      `DivergingMeter`, `Heatmap`, `RankFlow`, `SparklineChart`) — same
+      "dead from a real user's perspective" precedent as the original
+      i18n task's `PassportCard` finding.
 - [ ] Frontend: extract/name real magic values found in Stage 1.
 - [ ] Backend: extract/name real magic values found in Stage 1 (constants
       module or local named constant, whichever fits the existing
