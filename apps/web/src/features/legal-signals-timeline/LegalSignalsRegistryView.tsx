@@ -11,7 +11,7 @@ import {
 } from "@country-decision-atlas/ui";
 import { parseAsString, parseAsStringEnum, useQueryState } from "nuqs";
 import { Suspense, useState } from "react";
-import { countryListQuery } from "../../entities/country/api";
+import { allCountriesQuery } from "../../entities/decision/api";
 import { legalSignalTimelineQuery } from "../../entities/legal-signals/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
@@ -75,9 +75,7 @@ function LegalSignalsRegistryViewInner() {
     year,
   };
 
-  const { data: countries } = useQuery(
-    countryListQuery(locale, { limit: 100 }),
-  );
+  const { data: countries } = useQuery(allCountriesQuery(apiLocale));
   const {
     data: timeline,
     isPending,

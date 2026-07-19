@@ -1,20 +1,17 @@
 import { useTranslations } from "next-intl";
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { SearchResultItem } from "../../shared/api/search";
-import { entityTypeLabel } from "../../shared/lib/entity-type-labels";
+import {
+  ENTITY_TYPE_LABELS,
+  entityTypeLabel,
+} from "../../shared/lib/entity-type-labels";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 
-const ENTITY_TYPE_VALUES: SearchResultItem["entity_type"][] = [
-  "country",
-  "route",
-  "route_checklist_item",
-  "legal_signal",
-  "source",
-  "evidence_item",
-  "country_pair_compatibility",
-  "methodology",
-  "glossary_term",
-];
+// Derived rather than a second hardcoded list -- ENTITY_TYPE_LABELS.en is
+// keyed by the exact same entity_type union, so this can't drift out of sync.
+const ENTITY_TYPE_VALUES = Object.keys(
+  ENTITY_TYPE_LABELS.en,
+) as SearchResultItem["entity_type"][];
 
 export function SearchFilters({
   selectedTypes,

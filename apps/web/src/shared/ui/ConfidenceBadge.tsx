@@ -1,11 +1,16 @@
-import { Badge, type BadgeVariant } from "@country-decision-atlas/ui";
+import {
+  Badge,
+  type BadgeVariant,
+  type Confidence,
+} from "@country-decision-atlas/ui";
 import type { SupportedLocale } from "../lib/locale";
 import { useAppLocale } from "../lib/useAppLocale";
 
-type Confidence = "low" | "medium" | "high" | string;
-
+// Widened to accept any string: the backend can send a confidence value
+// this frontend doesn't recognize yet, and every lookup below already
+// falls back to the raw value (`?? confidence`) rather than throwing.
 type ConfidenceBadgeProps = {
-  confidence: Confidence;
+  confidence: Confidence | string;
 };
 
 const CONFIDENCE_VARIANT: Record<string, BadgeVariant> = {

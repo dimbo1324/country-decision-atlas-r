@@ -1,4 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
+import type { Confidence } from "@country-decision-atlas/ui";
 
 import { apiGet, queryString } from "./http";
 
@@ -12,7 +13,7 @@ type ListEvidenceItemsParams = {
   countrySlug?: string;
   sourceId?: string;
   legalSignalId?: string;
-  confidence?: "low" | "medium" | "high";
+  confidence?: Confidence;
   status?: "published" | "archived";
   sort?: "retrieved_at" | "created_at" | "confidence";
   order?: "asc" | "desc";

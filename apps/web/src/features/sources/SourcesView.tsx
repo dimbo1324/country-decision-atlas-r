@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Kicker, VirtualList } from "@country-decision-atlas/ui";
 import { parseAsString, useQueryState } from "nuqs";
 import { Suspense, useMemo, useState } from "react";
-import { countryListQuery } from "../../entities/country/api";
+import { allCountriesQuery } from "../../entities/decision/api";
 import { sourceListQuery } from "../../entities/sources/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
@@ -36,9 +36,7 @@ function SourcesViewInner() {
     title: string;
   } | null>(null);
 
-  const { data: countries } = useQuery(
-    countryListQuery(locale, { limit: 100 }),
-  );
+  const { data: countries } = useQuery(allCountriesQuery(toApiLocale(locale)));
   const {
     data: sources,
     isPending,

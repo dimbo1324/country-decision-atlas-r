@@ -15,11 +15,20 @@ type CountryScoresProps = {
   sources: CountryReadModelResponse["sources"];
 };
 
+// This block's own score→label bands -- CountryCiiBlock.tsx's
+// scoreAccent() draws the same 0-100 CII score with different cut points
+// (65/40 vs. this block's 65/50/35/20); a pre-existing divergence, not
+// something introduced here, named rather than left as bare numbers.
+const SCORE_LABEL_EXCELLENT_THRESHOLD = 65;
+const SCORE_LABEL_STRONG_THRESHOLD = 50;
+const SCORE_LABEL_MODERATE_THRESHOLD = 35;
+const SCORE_LABEL_LIMITED_THRESHOLD = 20;
+
 function scoreToLabel(score: number): string {
-  if (score >= 65) return "excellent";
-  if (score >= 50) return "strong";
-  if (score >= 35) return "moderate";
-  if (score >= 20) return "limited";
+  if (score >= SCORE_LABEL_EXCELLENT_THRESHOLD) return "excellent";
+  if (score >= SCORE_LABEL_STRONG_THRESHOLD) return "strong";
+  if (score >= SCORE_LABEL_MODERATE_THRESHOLD) return "moderate";
+  if (score >= SCORE_LABEL_LIMITED_THRESHOLD) return "limited";
   return "weak";
 }
 

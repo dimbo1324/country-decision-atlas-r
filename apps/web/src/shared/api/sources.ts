@@ -1,4 +1,5 @@
 import type { components } from "@country-decision-atlas/contracts/generated/types";
+import type { Confidence } from "@country-decision-atlas/ui";
 
 import { DEFAULT_API_LOCALE } from "../lib/locale";
 import { apiGet, queryString } from "./http";
@@ -12,7 +13,7 @@ type ListSourcesParams = {
   countrySlug?: string;
   sourceType?: string;
   language?: string;
-  confidence?: "low" | "medium" | "high";
+  confidence?: Confidence;
   status?: "published" | "archived";
   sort?:
     | "title"

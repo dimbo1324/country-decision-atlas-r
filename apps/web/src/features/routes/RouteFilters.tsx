@@ -10,16 +10,9 @@ export type RouteFilterValues = {
   leads_to_pr: EligibilityFlag | "";
 };
 
-const ROUTE_TYPE_VALUES: RouteType[] = [
-  "temporary_residence",
-  "permanent_residence",
-  "citizenship",
-  "digital_nomad",
-  "work",
-  "business",
-  "study",
-  "investment",
-];
+// Derived rather than a second hardcoded list -- ROUTE_TYPE_LABELS.en is
+// keyed by the exact same RouteType union, so this can't drift out of sync.
+const ROUTE_TYPE_VALUES = Object.keys(ROUTE_TYPE_LABELS.en) as RouteType[];
 
 const ELIGIBILITY_VALUES: EligibilityFlag[] = ["yes", "no", "unknown"];
 

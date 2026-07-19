@@ -49,9 +49,16 @@ const METRIC_LABELS: Record<SupportedLocale, Record<string, string>> = {
   },
 };
 
+// This block's own score→accent bands -- CountryScores.tsx's
+// scoreToLabel() below draws the same 0-100 CII score with different cut
+// points (65/50/35/20 vs. this block's 65/40); a pre-existing divergence,
+// not something introduced here, named rather than left as bare numbers.
+const SCORE_ACCENT_SAGE_THRESHOLD = 65;
+const SCORE_ACCENT_GOLD_THRESHOLD = 40;
+
 function scoreAccent(score: number): "sage" | "gold" | "terra" {
-  if (score >= 65) return "sage";
-  if (score >= 40) return "gold";
+  if (score >= SCORE_ACCENT_SAGE_THRESHOLD) return "sage";
+  if (score >= SCORE_ACCENT_GOLD_THRESHOLD) return "gold";
   return "terra";
 }
 

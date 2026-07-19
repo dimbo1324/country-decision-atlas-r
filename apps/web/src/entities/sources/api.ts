@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import type { Confidence } from "@country-decision-atlas/ui";
 import { sourcesApi } from "../../shared/api/sources";
 import { evidenceApi } from "../../shared/api/evidence";
 import type { LocaleCode } from "../../shared/api/countries";
@@ -7,7 +8,7 @@ export type SourceFilters = {
   countrySlug?: string;
   sourceType?: string;
   language?: string;
-  confidence?: "low" | "medium" | "high";
+  confidence?: Confidence;
   status?: "published" | "archived";
   sort?:
     | "title"

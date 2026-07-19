@@ -65,6 +65,10 @@ const TEXTAREA_CLASS =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
 const INPUT_CLASS =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
+// Shared cap for the two free-text community textareas below (data-issue
+// report message, reality-gap rating comment) -- same limit, named once
+// instead of repeated as a bare literal at each field.
+const COMMUNITY_TEXT_MAX_LENGTH = 2000;
 
 const RATING_FIELDS = [
   "official_expectation_score",
@@ -488,7 +492,7 @@ export function CommunityCountryBlock({
                   value={reportMessage}
                   onChange={(event) => setReportMessage(event.target.value)}
                   required
-                  maxLength={2000}
+                  maxLength={COMMUNITY_TEXT_MAX_LENGTH}
                   data-testid="community-report-message"
                   className={TEXTAREA_CLASS}
                 />
@@ -551,7 +555,7 @@ export function CommunityCountryBlock({
                 <textarea
                   value={ratingComment}
                   onChange={(event) => setRatingComment(event.target.value)}
-                  maxLength={2000}
+                  maxLength={COMMUNITY_TEXT_MAX_LENGTH}
                   data-testid="community-rating-comment"
                   className={TEXTAREA_CLASS}
                 />
