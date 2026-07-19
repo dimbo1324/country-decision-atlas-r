@@ -522,27 +522,160 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         by re-reading the DOM value (correctly set) and by dispatching a
         real `.click()` via `javascript_tool`, which always succeeded.
 - [ ] Community: Migration Board, User Stories, Author Metrics, Country
-      Proposals (12 files + 6 pages).
-- [ ] Community: Migration Board, User Stories, Author Metrics, Country
-      Proposals (12 files + 6 pages).
-- [ ] Knowledge + AI Assistant + Search (14 files + 4 pages).
+      Proposals (12 public files + 9 pages — the "6 pages" estimate needs
+      re-checking against the actual public route tree, same as Stages 7/8
+      undercounted their page count; recount before starting).
+
+      **Public feature files to migrate** (confirmed via `errorMessage.ts`
+      grep and by checking each `*ModerationView.tsx`'s importers — those
+      three are internal-only, exactly like Stage 2's `ModerationQueue`,
+      and must stay untouched):
+      - `features/migration-board/` (6 of 7 files — `MigrationBoardModerationView.tsx`
+        is excluded, confirmed used only by `app/internal/migration-board-moderation/page.tsx`):
+        `MigrationBoardListView.tsx`, `MigrationBoardDetailView.tsx`,
+        `MigrationBoardFormView.tsx`, `AccountMigrationBoardView.tsx`,
+        `CountryMigrationBoardBlock.tsx`, `RouteMigrationBoardBlock.tsx`.
+        Also `features/migration-board/errorMessage.ts` — the shared
+        `migrationBoardErrorMessage()` helper has one hardcoded fallback
+        string (`"Произошла ошибка."`) reused by all 6 files; needs a
+        `locale: SupportedLocale` parameter threaded through every call
+        site (same shape as Stage 3a's `trustLabel`/`confidenceLabel`
+        parameterization). `MigrationBoardListView.tsx` and
+        `MigrationBoardFormView.tsx` each have local `TIMELINES`/`GOALS`
+        (and `MigrationBoardFormView.tsx` additionally has inline
+        `<option>` literals for stage/visibility) that duplicate the same
+        enum sets three times across the two files — worth a shared
+        `migration-board-labels.ts` (route-labels.ts/trip-labels.ts
+        precedent) rather than three separate copies.
+      - `features/user-stories/UserStoriesView.tsx` (1 file) — not yet
+        read this session; read it fresh before assuming its shape.
+      - `features/author-metrics/` (2 of 3 files — `AuthorMetricsModerationView.tsx`
+        is excluded, used only by `app/internal/author-metrics-moderation/page.tsx`):
+        `AuthorProfileView.tsx`, `AuthorMetricsStudioView.tsx`.
+      - `features/country-proposals/` (2 files, both public):
+        `CountryProposalListView.tsx`, `CountryProposalWizardView.tsx`.
+        Note `app/internal/country-proposals/page.tsx` is a *separate*,
+        internal-only page — don't confuse it with
+        `app/[locale]/account/country-proposals/page.tsx`, which is public
+        and in scope.
+      - `features/community/` (1 of 2 files — `CommunityModerationView.tsx`
+        is excluded, internal-only): `CommunityCountryBlock.tsx`.
+
+      **Public pages to migrate** (9, found via `apps/web/src/app/**/*.tsx`
+      glob, cross-checked against `app/internal/**` to exclude admin-only
+      routes):
+      `[locale]/migration-board/page.tsx`,
+      `[locale]/migration-board/new/page.tsx`,
+      `[locale]/migration-board/[id]/page.tsx`,
+      `[locale]/account/migration-board/page.tsx`,
+      `[locale]/user-stories/page.tsx`,
+      `[locale]/authors/[userId]/page.tsx`,
+      `[locale]/account/author-metrics/page.tsx`,
+      `[locale]/account/country-proposals/page.tsx`,
+      `[locale]/account/country-proposals/[id]/page.tsx`.
+
+      **Not yet read this session** (do this first): `UserStoriesView.tsx`,
+      `AuthorProfileView.tsx`, `AuthorMetricsStudioView.tsx`,
+      `CountryProposalListView.tsx`, `CountryProposalWizardView.tsx`,
+      `CommunityCountryBlock.tsx`, and all 9 pages above. Only the 6
+      migration-board feature files were actually read and diagnosed this
+      session (see file contents already reviewed; strings identified but
+      **no edits made yet** — the branch's working tree is clean, nothing
+      to revert).
+
+      Follow the same per-stage loop as Stages 3a–8: read each file, pick
+      enum-dict vs `useTranslations()` per string (enum-dict for anything
+      needing a `?? rawValue` fallback on an unrecognized backend value;
+      `useTranslations()` for everything else), add new message-catalog
+      namespaces to all three of `apps/web/src/messages/{en,ru,es}.json`
+      with real hand-written translations (not machine-translated
+      placeholders — this task's whole point is translation quality),
+      run `python scripts/dev_tools/i18n_parity_check.py`, `pnpm
+      --filter @country-decision-atlas/web typecheck`, `... lint`, `...
+      test -- run`, `pnpm format:check` (then `prettier --write` on
+      anything flagged), `pnpm --filter @country-decision-atlas/web
+      build`, then an actual interactive browser walkthrough (not just a
+      page load) in all 3 locales — every prior stage found at least one
+      real bug only that way. Update this checklist's Stage 9 entry with
+      what actually shipped (namespaces, key counts, bugs found), commit
+      as `feat: i18n Stage 9 -- Community content migration`, mark task
+      #59 completed, start #60.
+
+- [ ] Knowledge + AI Assistant + Search (14 files + 4 pages) — not yet
+      surveyed this session. Before starting: glob
+      `apps/web/src/features/{methodology,glossary,scenarios,assistant,search}/**/*.tsx`
+      (or whatever the actual folder names turn out to be — methodology,
+      glossary, and scenarios pages already exist per the route list seen
+      in every `next build` output this session:
+      `/methodology`, `/methodology/parameters`, `/glossary`, `/scenarios`,
+      `/assistant`, `/search`) and cross-check each file's importers
+      against `app/internal/**` the same way Stage 9 does, in case any of
+      these also have an internal-only sibling. This is the last content
+      stage — after it lands, every string budget in the original ~154-file
+      survey (`## Scope survey` above) should be accounted for; if the
+      actual file count comes in noticeably different from the "14 files"
+      estimate, that's expected (every stage this session did) — just
+      record the real number.
 
 ## Final verification (after all stages land)
 
-- [ ] Full typecheck/lint/format (`ui` + `web`).
-- [ ] `next build` clean, JS-budget script passes.
-- [ ] Full Vitest, Storybook build.
-- [ ] Full Playwright e2e suite + visual regression (expect real, reviewed
-      baseline changes this time — English is now the default locale
-      shown in every "no explicit locale" screenshot).
-- [ ] Contrast + i18n-parity audits (parity now covers 3 locales).
-- [ ] Browser walkthrough of all 3 locales across every migrated area.
-- [ ] Update `docs/_arch_/08_Открытые_вопросы.md`'s Р-12 (documented
+- [ ] Full typecheck/lint/format (`ui` + `web`) — run
+      `python dev_tools_scripts_runner.py` (default full profile) rather
+      than the piecemeal per-stage commands used mid-task; it also covers
+      Python/Go/Docker/pre-commit that individual stages didn't need to
+      touch.
+- [ ] `next build` clean, JS-budget script passes (the budget script is
+      part of the full quality gate; check its output specifically since
+      English becoming the default locale changes which bundle is
+      measured as the "default" route).
+- [ ] Full Vitest, Storybook build (`packages/ui` — not touched since
+      Stage 2, should still be clean, but confirm).
+- [ ] Full Playwright e2e suite + visual regression — **expect real,
+      reviewed baseline changes**: English is now the default locale for
+      every "no explicit locale" screenshot, so `pnpm web:mvp:visual`
+      baselines from before this task will show diffs on purpose, not by
+      regression. Review each diff before running
+      `web:mvp:visual:update` — a diff that isn't just
+      Russian-text-becoming-English-text is a real bug.
+- [ ] Contrast + i18n-parity audits (parity now covers 3 locales — rerun
+      `i18n_parity_check.py` one final time across the fully-merged
+      namespace set from all 10 stages, not just the last stage's delta).
+- [ ] Browser walkthrough of all 3 locales across every migrated area —
+      not just Stage 9/10's new areas; a final end-to-end pass of the
+      whole `[locale]` tree (nav, footer, home, catalog, compare, country
+      dossier, decision flow, legal signals, sources, routes, trips,
+      watchlist, subscriptions, account, migration board, stories, author
+      metrics, country proposals, methodology, glossary, scenarios,
+      assistant, search) in `/en`, `/ru`, `/es`.
+- [ ] Update `docs/_arch_/08_Открытые_вопросов.md`'s Р-12 (documented
       "ru-only interface, next-intl scoped to chrome" as the accepted
-      state) — supersede with the new decision and date.
+      state) — supersede with the new decision and date: English default,
+      Russian and Spanish as full peers, `es` falls back to `en` for
+      backend *data* (not chrome) per the Stage 1 `toApiLocale` design.
+- [ ] Known non-blocking gaps to note in the final report, not silently
+      fix mid-verification (each already flagged in its stage's checklist
+      entry, listed here for one place to check they're either accepted
+      or filed separately): the pre-existing `Негативное`/`Отрицательное`
+      Russian wording inconsistency for the same "negative" impact-
+      direction enum value across two different label sources (flagged in
+      Stage 7's browser walkthrough, not introduced by this task); backend
+      *content* (country names, scenario names, source excerpts, event
+      summaries) staying in its original language regardless of interface
+      locale — this is the explicit, owner-confirmed scope boundary for
+      this whole task, not a bug.
 
 ## Completion
 
-- [ ] Checklist filled (`+`/`-`).
-- [ ] Incremental commits on this branch, one per stage.
-- [ ] Final report.
+- [ ] Checklist filled (`+`/`-`) — stages 1–8 above are already `[+]`
+      with full writeups; only Stage 9, Stage 10, Final verification, and
+      this Completion section remain `[ ]`.
+- [ ] Incremental commits on this branch, one per stage (8 of 10 done;
+      commits so far: `6554d7f` Stage 1, `47fc596` Stage 2, `425c199`
+      Stage 3a, `8747a19` Stage 4, `1461d77` Stage 5, `58781f0` Stage 6,
+      `e538e6f` Stage 7, `71ff01f` Stage 8).
+- [ ] Final report — summarize what shipped, total namespaces/keys added
+      across all 10 stages, any deferred tech debt (the two items in the
+      Final-verification gaps list above), and confirm the branch's
+      relationship to `main` (currently pushed to `origin` only, per
+      owner's 2026-07-19 decision to defer the `main` merge until this
+      checklist and the full quality gate are both green).
