@@ -1,4 +1,7 @@
 {
+  "metadata": {
+    "description": "Платформа для сравнения стран и принятия решений о переезде."
+  },
   "nav": {
     "countries": "Страны",
     "decision": "Подбор",
@@ -259,6 +262,16 @@
     "pipelineKicker": "Карточка → оценка → доказательство → источник",
     "legalSignalsLink": "Правовые сигналы",
     "allSourcesLink": "Все источники"
+  },
+  "countryLegalSignals": {
+    "empty": "Правовые сигналы для этой страны пока отсутствуют.",
+    "published": "Опубликовано: {date}",
+    "effectiveFrom": "Действует с: {date}"
+  },
+  "countrySources": {
+    "empty": "К этой стране источники не прикреплены.",
+    "verified": "Проверено: {date}",
+    "published": "Опубликовано: {date}"
   },
   "countryProfileSections": {
     "sectionExecutiveSummary": "Обзор",

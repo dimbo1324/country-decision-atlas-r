@@ -1,17 +1,11 @@
 import type { LegalSignalEvent } from "@country-decision-atlas/ui";
 import type { LegalSignalTimelineEvent } from "../../shared/api/legal-signals";
+import type { SupportedLocale } from "../../shared/lib/locale";
+import { impactDirectionLabel } from "./impact-direction-labels";
 
 const IMPACT_MAP: Record<string, LegalSignalEvent["impact"]> = {
   positive: "up",
   negative: "down",
-};
-
-const IMPACT_LABELS: Record<string, string> = {
-  positive: "Положительное",
-  negative: "Негативное",
-  neutral: "Нейтральное",
-  mixed: "Смешанное",
-  uncertain: "Неопределённое",
 };
 
 /** The chart primitive (Stage 4) only distinguishes up/down/info — real
@@ -19,6 +13,7 @@ const IMPACT_LABELS: Record<string, string> = {
  * to "info" for marker color while the tooltip/label keeps the real word. */
 export function adaptTimelineEvents(
   events: LegalSignalTimelineEvent[],
+  locale: SupportedLocale,
 ): LegalSignalEvent[] {
   return events.map((event) => ({
     id: event.id,
@@ -26,7 +21,6 @@ export function adaptTimelineEvents(
     country: event.country_name,
     title: event.title,
     impact: IMPACT_MAP[event.impact_direction] ?? "info",
-    impactLabel:
-      IMPACT_LABELS[event.impact_direction] ?? event.impact_direction,
+    impactLabel: impactDirectionLabel(locale, event.impact_direction),
   }));
 }

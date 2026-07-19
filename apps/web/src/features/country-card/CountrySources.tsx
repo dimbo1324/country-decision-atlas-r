@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -12,9 +13,11 @@ type CountrySourcesProps = {
 };
 
 export function CountrySources({ sources }: CountrySourcesProps) {
+  const t = useTranslations("countrySources");
+  const tEvidenceCard = useTranslations("evidenceCard");
   const locale = useAppLocale();
   if (!sources || sources.length === 0) {
-    return <EmptyState message="К этой стране источники не прикреплены." />;
+    return <EmptyState message={t("empty")} />;
   }
 
   return (
@@ -48,12 +51,16 @@ export function CountrySources({ sources }: CountrySourcesProps) {
           <div className="flex flex-wrap gap-2">
             {source.last_checked_at && (
               <Badge variant="default">
-                Проверено: {formatDate(source.last_checked_at, locale)}
+                {t("verified", {
+                  date: formatDate(source.last_checked_at, locale),
+                })}
               </Badge>
             )}
             {source.published_at && (
               <Badge variant="default">
-                Опубликовано: {formatDate(source.published_at, locale)}
+                {t("published", {
+                  date: formatDate(source.published_at, locale),
+                })}
               </Badge>
             )}
           </div>
@@ -63,7 +70,7 @@ export function CountrySources({ sources }: CountrySourcesProps) {
             rel="noreferrer"
             className="text-gold3 hover:text-gold text-sm transition-colors duration-300"
           >
-            Открыть источник <ArrowExternal />
+            {tEvidenceCard("openSource")} <ArrowExternal />
           </a>
         </Card>
       ))}

@@ -3,6 +3,7 @@ import { FilterChipGroup } from "@country-decision-atlas/ui";
 import type { CountryListResponse } from "../../shared/api/countries";
 import type { SupportedLocale } from "../../shared/lib/locale";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { IMPACT_DIRECTION_LABELS } from "./impact-direction-labels";
 
 type Filters = {
   countrySlug: string;
@@ -59,33 +60,6 @@ const IMPACT_DIRECTION_VALUES = [
   "mixed",
   "uncertain",
 ] as const;
-
-const IMPACT_DIRECTION_LABELS: Record<
-  SupportedLocale,
-  Record<string, string>
-> = {
-  en: {
-    positive: "Positive",
-    negative: "Negative",
-    neutral: "Neutral",
-    mixed: "Mixed",
-    uncertain: "Uncertain",
-  },
-  ru: {
-    positive: "Положительное",
-    negative: "Негативное",
-    neutral: "Нейтральное",
-    mixed: "Смешанное",
-    uncertain: "Неопределённое",
-  },
-  es: {
-    positive: "Positivo",
-    negative: "Negativo",
-    neutral: "Neutral",
-    mixed: "Mixto",
-    uncertain: "Incierto",
-  },
-};
 
 const IMPACT_LEVEL_VALUES = ["low", "medium", "high", "critical"] as const;
 

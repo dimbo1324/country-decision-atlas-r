@@ -1,4 +1,7 @@
 {
+  "metadata": {
+    "description": "A platform for comparing countries and making relocation decisions."
+  },
   "nav": {
     "countries": "Countries",
     "decision": "Decision",
@@ -259,6 +262,16 @@
     "pipelineKicker": "Card → score → evidence → source",
     "legalSignalsLink": "Legal signals",
     "allSourcesLink": "All sources"
+  },
+  "countryLegalSignals": {
+    "empty": "No legal signals for this country yet.",
+    "published": "Published: {date}",
+    "effectiveFrom": "In effect from: {date}"
+  },
+  "countrySources": {
+    "empty": "No sources attached to this country.",
+    "verified": "Verified: {date}",
+    "published": "Published: {date}"
   },
   "countryProfileSections": {
     "sectionExecutiveSummary": "Overview",

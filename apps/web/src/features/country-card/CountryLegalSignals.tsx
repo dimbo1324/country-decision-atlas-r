@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge, Card } from "@country-decision-atlas/ui";
 import type { CountryReadModelResponse } from "../../shared/api/countries";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -17,11 +18,10 @@ type CountryLegalSignalsProps = {
 export function CountryLegalSignals({
   legalSignals,
 }: CountryLegalSignalsProps) {
+  const t = useTranslations("countryLegalSignals");
   const locale = useAppLocale();
   if (!legalSignals || legalSignals.length === 0) {
-    return (
-      <EmptyState message="Правовые сигналы для этой страны пока отсутствуют." />
-    );
+    return <EmptyState message={t("empty")} />;
   }
 
   return (
@@ -62,12 +62,16 @@ export function CountryLegalSignals({
             )}
             {signal.published_date && (
               <Badge variant="default">
-                Опубликовано: {formatDate(signal.published_date, locale)}
+                {t("published", {
+                  date: formatDate(signal.published_date, locale),
+                })}
               </Badge>
             )}
             {signal.effective_date && (
               <Badge variant="default">
-                Действует с: {formatDate(signal.effective_date, locale)}
+                {t("effectiveFrom", {
+                  date: formatDate(signal.effective_date, locale),
+                })}
               </Badge>
             )}
           </div>

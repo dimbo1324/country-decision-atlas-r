@@ -1,4 +1,7 @@
 {
+  "metadata": {
+    "description": "Una plataforma para comparar países y tomar decisiones de mudanza."
+  },
   "nav": {
     "countries": "Países",
     "decision": "Decisión",
@@ -259,6 +262,16 @@
     "pipelineKicker": "Ficha → puntuación → evidencia → fuente",
     "legalSignalsLink": "Señales legales",
     "allSourcesLink": "Todas las fuentes"
+  },
+  "countryLegalSignals": {
+    "empty": "Todavía no hay señales legales para este país.",
+    "published": "Publicado: {date}",
+    "effectiveFrom": "Vigente desde: {date}"
+  },
+  "countrySources": {
+    "empty": "No hay fuentes vinculadas a este país.",
+    "verified": "Verificado: {date}",
+    "published": "Publicado: {date}"
   },
   "countryProfileSections": {
     "sectionExecutiveSummary": "Resumen",

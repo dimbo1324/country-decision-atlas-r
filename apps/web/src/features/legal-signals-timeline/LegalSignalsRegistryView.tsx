@@ -109,7 +109,10 @@ function LegalSignalsRegistryViewInner() {
   }
 
   const chartEvents = timeline
-    ? adaptTimelineEvents(timeline.groups.flatMap((group) => group.events))
+    ? adaptTimelineEvents(
+        timeline.groups.flatMap((group) => group.events),
+        locale,
+      )
     : [];
 
   return (
