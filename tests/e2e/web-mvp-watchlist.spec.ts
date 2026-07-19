@@ -41,9 +41,9 @@ test.describe("watchlist authenticated flow", () => {
 
     const toggleButton = page.getByTestId("watchlist-toggle-button");
     await expect(toggleButton).toBeVisible({ timeout: 10_000 });
-    await expect(toggleButton).toHaveText(/Сохранить в watchlist/);
+    await expect(toggleButton).toHaveText(/Save to watchlist/);
     await toggleButton.click();
-    await expect(toggleButton).toHaveText(/В watchlist/);
+    await expect(toggleButton).toHaveText(/In watchlist/);
 
     await page.goto(e2eRoutes.watchlist);
     await expect(page.getByTestId("watchlist-list")).toBeVisible();
@@ -56,7 +56,7 @@ test.describe("watchlist authenticated flow", () => {
 
     await page.goto(e2eRoutes.country("uruguay", "en"));
     await expect(page.getByTestId("watchlist-toggle-button")).toHaveText(
-      /Сохранить в watchlist/,
+      /Save to watchlist/,
       { timeout: 10_000 },
     );
   });
@@ -70,7 +70,7 @@ test.describe("watchlist authenticated flow", () => {
     const toggleButton = page.getByTestId("watchlist-toggle-button");
     await expect(toggleButton).toBeVisible({ timeout: 10_000 });
     await toggleButton.click();
-    await expect(toggleButton).toHaveText(/В watchlist/);
+    await expect(toggleButton).toHaveText(/In watchlist/);
 
     await page.goto(e2eRoutes.watchlist);
     const item = page.getByTestId("watchlist-item").first();

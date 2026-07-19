@@ -62,10 +62,10 @@ test.describe("MVP page availability", () => {
 
   test("/decision?locale=en shows decision form", async ({ page }) => {
     await page.goto(e2eRoutes.decision("en"));
-    await expectHasMainHeading(page, /запустить подбор страны/i);
+    await expectHasMainHeading(page, /run a country decision/i);
     await goToDecisionStep(page, 4);
     await expect(
-      page.getByRole("button", { name: /запустить подбор/i }),
+      page.getByRole("button", { name: /run the decision engine/i }),
     ).toBeVisible();
     await expectNoAppCrash(page);
   });

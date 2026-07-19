@@ -51,7 +51,7 @@ test.describe("legal signals page", () => {
         locale: "en",
       }),
     );
-    await expectHasMainHeading(page, /лента правовых сигналов/i);
+    await expectHasMainHeading(page, /legal signals feed/i);
     await expectNoAppCrash(page);
   });
 
@@ -59,8 +59,8 @@ test.describe("legal signals page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.legalSignals({ locale: "en" }));
-    await expectHasMainHeading(page, /лента правовых сигналов/i);
-    await expect(page.getByText(/событий:/i)).toBeVisible({ timeout: 10_000 });
+    await expectHasMainHeading(page, /legal signals feed/i);
+    await expect(page.getByText(/events/i)).toBeVisible({ timeout: 10_000 });
     await expectNoAppCrash(page);
   });
 
@@ -70,14 +70,14 @@ test.describe("legal signals page", () => {
     await page.goto(
       e2eRoutes.legalSignals({ country_slug: "russia", locale: "en" }),
     );
-    await expectHasMainHeading(page, /лента правовых сигналов/i);
+    await expectHasMainHeading(page, /legal signals feed/i);
     const hasItems = await page
       .locator('[data-testid="legal-signals-timeline"]')
       .isVisible()
       .catch(() => false);
     if (hasItems) {
       await expect(
-        page.getByRole("link", { name: /карточка страны/i }).first(),
+        page.getByRole("link", { name: /country card/i }).first(),
       ).toBeVisible();
     }
   });
@@ -120,7 +120,7 @@ test.describe("sources page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.sources({ confidence: "high", locale: "en" }));
-    await expectHasMainHeading(page, /источники доказательств/i);
+    await expectHasMainHeading(page, /evidence sources/i);
     await expectNoAppCrash(page);
   });
 
@@ -128,7 +128,7 @@ test.describe("sources page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
-    await expectHasMainHeading(page, /источники доказательств/i);
+    await expectHasMainHeading(page, /evidence sources/i);
 
     const hasItems = await page
       .locator('[data-testid="sources-list"]')
@@ -152,14 +152,14 @@ test.describe("sources page", () => {
     page,
   }) => {
     await page.goto(e2eRoutes.sources({ locale: "en" }));
-    await expectHasMainHeading(page, /источники доказательств/i);
+    await expectHasMainHeading(page, /evidence sources/i);
     const hasItems = await page
       .locator('[data-testid="sources-list"]')
       .isVisible()
       .catch(() => false);
     if (hasItems) {
       await expect(
-        page.getByRole("link", { name: /страна:/i }).first(),
+        page.getByRole("link", { name: /country:/i }).first(),
       ).toBeVisible();
     }
   });
@@ -226,7 +226,7 @@ test.describe("accessibility semantics", () => {
   }) => {
     await page.goto("/countries");
     await expect(page.locator("h1").first()).toBeVisible();
-    const cardLinks = page.getByRole("link", { name: /открыть досье/i });
+    const cardLinks = page.getByRole("link", { name: /open dossier/i });
     await expect(cardLinks.first()).toBeVisible();
   });
 
@@ -236,15 +236,15 @@ test.describe("accessibility semantics", () => {
     // Scenario (step 1, the default) is a RadioCards radiogroup, labeled
     // via aria-label rather than a <label for=...> association.
     await expect(
-      page.getByRole("radiogroup", { name: /сценарий/i }),
+      page.getByRole("radiogroup", { name: /scenario/i }),
     ).toBeVisible();
 
     await goToDecisionStep(page, 2);
-    await expect(page.getByLabel(/страна отправления/i)).toBeVisible();
+    await expect(page.getByLabel(/country of origin/i)).toBeVisible();
 
     await goToDecisionStep(page, 4);
     await expect(
-      page.getByRole("button", { name: /запустить подбор/i }),
+      page.getByRole("button", { name: /run the decision engine/i }),
     ).toBeVisible();
   });
 });

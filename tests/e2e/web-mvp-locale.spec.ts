@@ -58,7 +58,7 @@ test.describe("locale preservation", () => {
     await countriesLink.click();
     await expectPageReady(page);
     const countryCardLink = page
-      .getByRole("link", { name: /открыть досье/i })
+      .getByRole("link", { name: /open dossier/i })
       .first();
     const href = await countryCardLink.getAttribute("href");
     expect(href).toMatch(/^\/en\/countries\//);
