@@ -64,7 +64,7 @@ export function MigrationBoardModerationView() {
       data-testid="migration-board-moderation"
     >
       {loadError != null && (
-        <ErrorState error={migrationBoardErrorMessage(loadError)} />
+        <ErrorState error={migrationBoardErrorMessage(loadError, "ru")} />
       )}
       <Card
         interactive={false}

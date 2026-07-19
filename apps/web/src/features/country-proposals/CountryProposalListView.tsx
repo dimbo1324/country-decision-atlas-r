@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -21,6 +22,9 @@ import {
 } from "../../entities/country-proposals/api";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
+import { moderationStatusLabel } from "../../shared/lib/moderation-status-labels";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -29,32 +33,23 @@ import { LoadingState } from "../../shared/ui/LoadingState";
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  submitted: "На модерации",
-  published: "Опубликована",
-  rejected: "Отклонена",
-  archived: "В архиве",
-};
-
-const createProposalSchema = z.object({
-  slug: z
-    .string()
-    .min(1, "Введите slug")
-    .regex(
-      /^[a-z0-9_-]+$/,
-      "Только строчные буквы, цифры, дефис и подчёркивание",
-    ),
-  nameEn: z.string().min(1, "Введите название (en)"),
-  nameRu: z.string().min(1, "Введите название (ru)"),
-  iso2: z.string().length(2, "ISO2 — ровно 2 символа"),
-  iso3: z.string().length(3, "ISO3 — ровно 3 символа"),
-  justification: z.string().min(1, "Опишите обоснование"),
-});
-type CreateProposalValues = z.infer<typeof createProposalSchema>;
-
 function CreateProposalForm() {
+  const t = useTranslations("countryProposals");
   const createProposal = useCreateCountryProposalMutation();
+
+  const createProposalSchema = z.object({
+    slug: z
+      .string()
+      .min(1, t("slugRequired"))
+      .regex(/^[a-z0-9_-]+$/, t("slugPattern")),
+    nameEn: z.string().min(1, t("nameEnRequired")),
+    nameRu: z.string().min(1, t("nameRuRequired")),
+    iso2: z.string().length(2, t("iso2Length")),
+    iso3: z.string().length(3, t("iso3Length")),
+    justification: z.string().min(1, t("justificationRequired")),
+  });
+  type CreateProposalValues = z.infer<typeof createProposalSchema>;
+
   const {
     register,
     handleSubmit,
@@ -75,12 +70,12 @@ function CreateProposalForm() {
         justification: values.justification,
       });
       reset();
-      toast.success("Заявка страны создана как черновик.");
+      toast.success(t("proposalCreatedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось создать заявку.")
-          : "Не удалось создать заявку.",
+          ? (err.error?.message ?? t("proposalCreateErrorToast"))
+          : t("proposalCreateErrorToast"),
       );
     }
   }
@@ -93,7 +88,7 @@ function CreateProposalForm() {
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field>
-          <FieldLabel htmlFor="proposal-slug">Slug</FieldLabel>
+          <FieldLabel htmlFor="proposal-slug">{t("slugLabel")}</FieldLabel>
           <input
             id="proposal-slug"
             className={inputClass}
@@ -104,7 +99,7 @@ function CreateProposalForm() {
           <FieldError>{errors.slug?.message}</FieldError>
         </Field>
         <Field>
-          <FieldLabel htmlFor="proposal-name-en">Название (en)</FieldLabel>
+          <FieldLabel htmlFor="proposal-name-en">{t("nameEnLabel")}</FieldLabel>
           <input
             id="proposal-name-en"
             className={inputClass}
@@ -114,7 +109,7 @@ function CreateProposalForm() {
           <FieldError>{errors.nameEn?.message}</FieldError>
         </Field>
         <Field>
-          <FieldLabel htmlFor="proposal-name-ru">Название (ru)</FieldLabel>
+          <FieldLabel htmlFor="proposal-name-ru">{t("nameRuLabel")}</FieldLabel>
           <input
             id="proposal-name-ru"
             className={inputClass}
@@ -149,7 +144,9 @@ function CreateProposalForm() {
         </div>
       </div>
       <Field>
-        <FieldLabel htmlFor="proposal-justification">Обоснование</FieldLabel>
+        <FieldLabel htmlFor="proposal-justification">
+          {t("justificationLabel")}
+        </FieldLabel>
         <textarea
           id="proposal-justification"
           className={inputClass}
@@ -164,13 +161,16 @@ function CreateProposalForm() {
         disabled={createProposal.isPending}
         data-testid="country-proposal-create-submit"
       >
-        Создать заявку
+        {t("createProposal")}
       </Button>
     </form>
   );
 }
 
 export function CountryProposalListView() {
+  const t = useTranslations("countryProposals");
+  const locale = useAppLocale();
+  const apiLocale = toApiLocale(locale);
   const { user, isLoading: authLoading } = useAuth();
   const proposals = useQuery({
     ...myCountryProposalsQuery(),
@@ -178,7 +178,7 @@ export function CountryProposalListView() {
   });
 
   if (authLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -188,12 +188,12 @@ export function CountryProposalListView() {
         data-testid="country-proposals-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы предложить страну.{" "}
+          {t("loginRequired")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("loginLabel")}
           </Link>
         </p>
       </div>
@@ -209,21 +209,21 @@ export function CountryProposalListView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Новая заявка</Kicker>
+        <Kicker>{t("newProposalKicker")}</Kicker>
         <CreateProposalForm />
       </Card>
 
       <div className="flex flex-col gap-4">
-        <Kicker>Мои заявки</Kicker>
+        <Kicker>{t("myProposalsKicker")}</Kicker>
         {proposals.isPending ? (
-          <LoadingState message="Загрузка заявок…" />
+          <LoadingState message={t("loadingProposals")} />
         ) : proposals.isError ? (
           <ErrorState
             error={isApiError(proposals.error) ? proposals.error : undefined}
           />
         ) : (proposals.data.items ?? []).length === 0 ? (
           <div data-testid="country-proposals-empty-state">
-            <EmptyState message="Заявок пока нет." />
+            <EmptyState message={t("emptyProposals")} />
           </div>
         ) : (
           <div
@@ -238,13 +238,13 @@ export function CountryProposalListView() {
               >
                 <Card className="flex h-full flex-col gap-3">
                   <span className="font-display text-lg font-semibold">
-                    {proposal.name_ru}
+                    {apiLocale === "ru" ? proposal.name_ru : proposal.name_en}
                   </span>
                   <span className="text-c4 font-mono text-xs">
                     {proposal.slug}
                   </span>
                   <Badge variant="default">
-                    {STATUS_LABELS[proposal.status] ?? proposal.status}
+                    {moderationStatusLabel(proposal.status, locale)}
                   </Badge>
                 </Card>
               </Link>

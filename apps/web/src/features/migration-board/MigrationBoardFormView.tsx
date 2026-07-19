@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
@@ -17,10 +17,17 @@ import {
 } from "../../entities/migration-board/api";
 import type { CreateMigrationBoardPostRequest } from "../../shared/api/migrationBoard";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
+import {
+  GOAL_LABELS,
+  STAGE_LABELS,
+  TIMELINE_LABELS,
+  VISIBILITY_LABELS,
+} from "./migration-board-labels";
 
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
@@ -46,8 +53,9 @@ const initialPayload: CreateMigrationBoardPostRequest = {
 };
 
 export function MigrationBoardFormView() {
+  const t = useTranslations("migrationBoardForm");
   const { user, isLoading } = useAuth();
-  const locale = useLocale();
+  const locale = useAppLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [payload, setPayload] = useState<CreateMigrationBoardPostRequest>({
@@ -61,15 +69,15 @@ export function MigrationBoardFormView() {
   const isSaving = createBoardPost.isPending || submitBoardPost.isPending;
 
   if (isLoading) {
-    return <LoadingState message="Проверка доступа…" />;
+    return <LoadingState message={t("loadingAccess")} />;
   }
 
   if (!user) {
     return (
       <ErrorState
-        error="Войдите, чтобы создать запись на доске переезда."
+        error={t("loginRequired")}
         backHref={getPathname({ href: routes.login, locale })}
-        backLabel="Войти"
+        backLabel={t("loginLabel")}
       />
     );
   }
@@ -106,6 +114,7 @@ export function MigrationBoardFormView() {
         <ErrorState
           error={migrationBoardErrorMessage(
             createBoardPost.error ?? submitBoardPost.error,
+            locale,
           )}
         />
       )}
@@ -115,7 +124,9 @@ export function MigrationBoardFormView() {
         className="flex flex-col gap-5"
       >
         <Field>
-          <FieldLabel htmlFor="board-destination">Страна назначения</FieldLabel>
+          <FieldLabel htmlFor="board-destination">
+            {t("destinationLabel")}
+          </FieldLabel>
           <input
             id="board-destination"
             className={inputClass}
@@ -129,7 +140,7 @@ export function MigrationBoardFormView() {
           />
         </Field>
         <Field>
-          <FieldLabel htmlFor="board-origin">Страна отправления</FieldLabel>
+          <FieldLabel htmlFor="board-origin">{t("originLabel")}</FieldLabel>
           <input
             id="board-origin"
             className={inputClass}
@@ -141,7 +152,7 @@ export function MigrationBoardFormView() {
           />
         </Field>
         <Field>
-          <FieldLabel htmlFor="board-route-id">Route ID</FieldLabel>
+          <FieldLabel htmlFor="board-route-id">{t("routeIdLabel")}</FieldLabel>
           <input
             id="board-route-id"
             className={inputClass}
@@ -153,7 +164,9 @@ export function MigrationBoardFormView() {
         </Field>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="board-scenario">Scenario</FieldLabel>
+            <FieldLabel htmlFor="board-scenario">
+              {t("scenarioLabel")}
+            </FieldLabel>
             <input
               id="board-scenario"
               className={inputClass}
@@ -164,7 +177,7 @@ export function MigrationBoardFormView() {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="board-persona">Persona</FieldLabel>
+            <FieldLabel htmlFor="board-persona">{t("personaLabel")}</FieldLabel>
             <input
               id="board-persona"
               className={inputClass}
@@ -176,7 +189,7 @@ export function MigrationBoardFormView() {
           </Field>
         </div>
         <Field>
-          <FieldLabel htmlFor="board-title">Заголовок</FieldLabel>
+          <FieldLabel htmlFor="board-title">{t("titleLabel")}</FieldLabel>
           <input
             id="board-title"
             className={inputClass}
@@ -189,7 +202,7 @@ export function MigrationBoardFormView() {
           />
         </Field>
         <Field>
-          <FieldLabel htmlFor="board-summary">Описание</FieldLabel>
+          <FieldLabel htmlFor="board-summary">{t("summaryLabel")}</FieldLabel>
           <textarea
             id="board-summary"
             className={inputClass}
@@ -201,13 +214,13 @@ export function MigrationBoardFormView() {
             required
             data-testid="migration-board-summary-input"
           />
-          <FieldHint>
-            Не публикуйте контакты (email, телефон, Telegram) в открытом тексте.
-          </FieldHint>
+          <FieldHint>{t("summaryHint")}</FieldHint>
         </Field>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Field>
-            <FieldLabel htmlFor="board-timeline">Срок</FieldLabel>
+            <FieldLabel htmlFor="board-timeline">
+              {t("timelineLabel")}
+            </FieldLabel>
             <select
               id="board-timeline"
               className={selectClass}
@@ -216,15 +229,20 @@ export function MigrationBoardFormView() {
                 update("timeline_window", event.target.value)
               }
             >
-              <option value="unknown">Пока не знаю</option>
-              <option value="0_3_months">0-3 месяца</option>
-              <option value="3_6_months">3-6 месяцев</option>
-              <option value="6_12_months">6-12 месяцев</option>
-              <option value="12_plus_months">12+ месяцев</option>
+              {Object.entries(TIMELINE_LABELS[locale])
+                .filter(([value]) => value !== "")
+                .map(([value, label]) => (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                ))}
             </select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="board-stage">Стадия</FieldLabel>
+            <FieldLabel htmlFor="board-stage">{t("stageLabel")}</FieldLabel>
             <select
               id="board-stage"
               className={selectClass}
@@ -233,48 +251,61 @@ export function MigrationBoardFormView() {
                 update("migration_stage", event.target.value)
               }
             >
-              <option value="researching">Изучаю</option>
-              <option value="preparing_documents">Готовлю документы</option>
-              <option value="applying">Подаюсь</option>
-              <option value="waiting_decision">Жду решение</option>
-              <option value="relocating_soon">Скоро переезжаю</option>
-              <option value="already_relocated">Уже переехал</option>
-              <option value="on_hold">На паузе</option>
+              {Object.entries(STAGE_LABELS[locale]).map(([value, label]) => (
+                <option
+                  key={value}
+                  value={value}
+                >
+                  {label}
+                </option>
+              ))}
             </select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="board-goal">Цель</FieldLabel>
+            <FieldLabel htmlFor="board-goal">{t("goalLabel")}</FieldLabel>
             <select
               id="board-goal"
               className={selectClass}
               value={payload.companion_goal}
               onChange={(event) => update("companion_goal", event.target.value)}
             >
-              <option value="info_exchange">Обмен информацией</option>
-              <option value="travel_together">Поездка вместе</option>
-              <option value="housing_search">Поиск жилья</option>
-              <option value="document_support">Документы</option>
-              <option value="study_group">Учёба</option>
-              <option value="business_network">Бизнес</option>
-              <option value="family_network">Семья</option>
+              {Object.entries(GOAL_LABELS[locale])
+                .filter(([value]) => value !== "")
+                .map(([value, label]) => (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                ))}
             </select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="board-visibility">Видимость</FieldLabel>
+            <FieldLabel htmlFor="board-visibility">
+              {t("visibilityLabel")}
+            </FieldLabel>
             <select
               id="board-visibility"
               className={selectClass}
               value={payload.visibility}
               onChange={(event) => update("visibility", event.target.value)}
             >
-              <option value="members_only">Только участники</option>
-              <option value="public">Публично</option>
-              <option value="private">Приватно</option>
+              {Object.entries(VISIBILITY_LABELS[locale]).map(
+                ([value, label]) => (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                ),
+              )}
             </select>
           </Field>
         </div>
         <Field>
-          <FieldLabel htmlFor="board-tags">Теги через запятую</FieldLabel>
+          <FieldLabel htmlFor="board-tags">{t("tagsLabel")}</FieldLabel>
           <input
             id="board-tags"
             className={inputClass}
@@ -293,7 +324,7 @@ export function MigrationBoardFormView() {
             }
             data-testid="migration-board-risk-checkbox"
           />
-          Я понимаю риски переезда и публичной записи.
+          {t("riskLabel")}
         </label>
         <label className="text-c2 flex items-center gap-2 text-sm">
           <input
@@ -305,7 +336,7 @@ export function MigrationBoardFormView() {
             }
             data-testid="migration-board-legal-checkbox"
           />
-          Я понимаю, что это не юридическая консультация.
+          {t("legalLabel")}
         </label>
         <label className="text-c2 flex items-center gap-2 text-sm">
           <input
@@ -316,7 +347,7 @@ export function MigrationBoardFormView() {
               update("contact_requests_enabled", event.target.checked)
             }
           />
-          Разрешить contact requests через платформу.
+          {t("contactRequestsLabel")}
         </label>
         <div className="flex gap-3">
           <Button
@@ -326,7 +357,7 @@ export function MigrationBoardFormView() {
             onClick={() => void save(false)}
             data-testid="migration-board-save-draft"
           >
-            Сохранить черновик
+            {t("saveDraft")}
           </Button>
           <Button
             type="button"
@@ -334,7 +365,7 @@ export function MigrationBoardFormView() {
             onClick={() => void save(true)}
             data-testid="migration-board-submit"
           >
-            Отправить на модерацию
+            {t("submitForModeration")}
           </Button>
         </div>
       </Card>

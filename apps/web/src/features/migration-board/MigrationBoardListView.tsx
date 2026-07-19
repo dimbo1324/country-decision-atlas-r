@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
@@ -14,38 +15,22 @@ import { Link } from "../../i18n/navigation";
 import { boardPostsQuery } from "../../entities/migration-board/api";
 import type { BoardPostFilters } from "../../shared/api/migrationBoard";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
+import { GOAL_LABELS, TIMELINE_LABELS } from "./migration-board-labels";
 
 const selectClass =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const TIMELINES = [
-  ["", "Любой срок"],
-  ["0_3_months", "0-3 месяца"],
-  ["3_6_months", "3-6 месяцев"],
-  ["6_12_months", "6-12 месяцев"],
-  ["12_plus_months", "12+ месяцев"],
-  ["unknown", "Пока не знаю"],
-];
-
-const GOALS = [
-  ["", "Любая цель"],
-  ["info_exchange", "Обмен информацией"],
-  ["travel_together", "Поездка вместе"],
-  ["housing_search", "Поиск жилья"],
-  ["document_support", "Документы"],
-  ["study_group", "Учёба"],
-  ["business_network", "Бизнес"],
-  ["family_network", "Семья"],
-];
-
 export function MigrationBoardListView() {
+  const t = useTranslations("migrationBoard");
+  const locale = useAppLocale();
   const searchParams = useSearchParams();
   const { user, isLoading: authLoading } = useAuth();
   const [filters, setFilters] = useState<BoardPostFilters>({
@@ -58,11 +43,13 @@ export function MigrationBoardListView() {
   const posts = useQuery(boardPostsQuery({ ...filters, limit: 40 }));
 
   if (posts.isPending) {
-    return <LoadingState message="Загрузка доски переезда…" />;
+    return <LoadingState message={t("loadingList")} />;
   }
 
   if (posts.isError) {
-    return <ErrorState error={migrationBoardErrorMessage(posts.error)} />;
+    return (
+      <ErrorState error={migrationBoardErrorMessage(posts.error, locale)} />
+    );
   }
 
   const items = posts.data.items ?? [];
@@ -78,12 +65,12 @@ export function MigrationBoardListView() {
       >
         <Field>
           <FieldLabel htmlFor="board-destination-filter">
-            Страна назначения
+            {t("destinationCountryLabel")}
           </FieldLabel>
           <input
             id="board-destination-filter"
             className={inputClass}
-            placeholder="например uruguay"
+            placeholder={t("destinationPlaceholder")}
             value={filters.destination_country ?? ""}
             onChange={(event) =>
               setFilters((current) => ({
@@ -96,7 +83,7 @@ export function MigrationBoardListView() {
         </Field>
         <Field>
           <FieldLabel htmlFor="board-origin-filter">
-            Страна отправления
+            {t("originCountryLabel")}
           </FieldLabel>
           <input
             id="board-origin-filter"
@@ -111,7 +98,9 @@ export function MigrationBoardListView() {
           />
         </Field>
         <Field>
-          <FieldLabel htmlFor="board-timeline-filter">Срок</FieldLabel>
+          <FieldLabel htmlFor="board-timeline-filter">
+            {t("timelineLabel")}
+          </FieldLabel>
           <select
             id="board-timeline-filter"
             className={selectClass}
@@ -124,7 +113,7 @@ export function MigrationBoardListView() {
             }
             data-testid="migration-board-timeline-filter"
           >
-            {TIMELINES.map(([value, label]) => (
+            {Object.entries(TIMELINE_LABELS[locale]).map(([value, label]) => (
               <option
                 key={value}
                 value={value}
@@ -135,7 +124,7 @@ export function MigrationBoardListView() {
           </select>
         </Field>
         <Field>
-          <FieldLabel htmlFor="board-goal-filter">Цель</FieldLabel>
+          <FieldLabel htmlFor="board-goal-filter">{t("goalLabel")}</FieldLabel>
           <select
             id="board-goal-filter"
             className={selectClass}
@@ -148,7 +137,7 @@ export function MigrationBoardListView() {
             }
             data-testid="migration-board-goal-filter"
           >
-            {GOALS.map(([value, label]) => (
+            {Object.entries(GOAL_LABELS[locale]).map(([value, label]) => (
               <option
                 key={value}
                 value={value}
@@ -160,32 +149,29 @@ export function MigrationBoardListView() {
         </Field>
       </Card>
 
-      <p className="text-c3 text-sm">
-        Контакты, email и Telegram не публикуются. Записи появляются в общем
-        списке только после модерации и подтверждения рисков.
-      </p>
+      <p className="text-c3 text-sm">{t("privacyNotice")}</p>
 
       <div className="flex flex-wrap gap-3">
         {authLoading ? null : user ? (
           <>
             <Link href={routes.migrationBoardNew}>
-              <Button>Создать запись</Button>
+              <Button>{t("createPost")}</Button>
             </Link>
             <Link href={routes.accountMigrationBoard}>
-              <Button variant="ghost">Мои записи</Button>
+              <Button variant="ghost">{t("myPosts")}</Button>
             </Link>
           </>
         ) : (
           <Link href={routes.login}>
             <Button data-testid="migration-board-login-cta">
-              Войти, чтобы создать запись
+              {t("loginToCreate")}
             </Button>
           </Link>
         )}
       </div>
 
       {items.length === 0 ? (
-        <EmptyState message="Пока нет опубликованных записей." />
+        <EmptyState message={t("emptyList")} />
       ) : (
         <div
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"

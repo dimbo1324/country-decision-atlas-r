@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -41,6 +42,7 @@ function StoryCard({
   story: UserStory;
   countryName: string;
 }) {
+  const t = useTranslations("userStories");
   const excerpt =
     story.positive_outcome || story.advice || story.problems || story.notes;
 
@@ -67,12 +69,12 @@ function StoryCard({
         )}
         {story.advice && story.advice !== excerpt && (
           <p className="text-c3 text-sm">
-            <span className="text-c4">Совет:</span> {story.advice}
+            <span className="text-c4">{t("adviceLabel")}</span> {story.advice}
           </p>
         )}
         {story.satisfaction_score && (
           <p className="text-c4 text-xs">
-            Удовлетворённость: {story.satisfaction_score}/10
+            {t("satisfactionLabel", { score: story.satisfaction_score })}
           </p>
         )}
       </Card>
@@ -80,20 +82,22 @@ function StoryCard({
   );
 }
 
-const submitStorySchema = z.object({
-  destinationCountrySlug: z.string().min(1, "Выберите страну"),
-  scenario: z.string().min(1, "Укажите сценарий"),
-  positiveOutcome: z.string().optional(),
-  advice: z.string().optional(),
-});
-type SubmitStoryValues = z.infer<typeof submitStorySchema>;
-
 function SubmitStoryForm() {
+  const t = useTranslations("userStories");
   const locale = useAppLocale();
   const apiLocale = toApiLocale(locale);
   const countries = useQuery(allCountriesQuery(apiLocale));
   const scenarios = useQuery(scenariosQuery(apiLocale));
   const createStory = useCreateUserStoryMutation();
+
+  const submitStorySchema = z.object({
+    destinationCountrySlug: z.string().min(1, t("chooseCountryError")),
+    scenario: z.string().min(1, t("chooseScenarioError")),
+    positiveOutcome: z.string().optional(),
+    advice: z.string().optional(),
+  });
+  type SubmitStoryValues = z.infer<typeof submitStorySchema>;
+
   const {
     register,
     handleSubmit,
@@ -112,14 +116,12 @@ function SubmitStoryForm() {
         notes: "Synthetic example submitted via the community stories form.",
       });
       reset();
-      toast.success(
-        "История сохранена и будет опубликована после проверки модератором.",
-      );
+      toast.success(t("storySavedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось отправить историю.")
-          : "Не удалось отправить историю.",
+          ? (err.error?.message ?? t("storyErrorToast"))
+          : t("storyErrorToast"),
       );
     }
   }
@@ -132,14 +134,16 @@ function SubmitStoryForm() {
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="story-destination">Страна назначения</FieldLabel>
+          <FieldLabel htmlFor="story-destination">
+            {t("destinationCountryLabel")}
+          </FieldLabel>
           <select
             id="story-destination"
             className={selectClass}
             data-testid="user-story-destination-select"
             {...register("destinationCountrySlug")}
           >
-            <option value="">Выберите страну</option>
+            <option value="">{t("chooseCountryOption")}</option>
             {countries.data?.items.map((c) => (
               <option
                 key={c.slug}
@@ -152,14 +156,14 @@ function SubmitStoryForm() {
           <FieldError>{errors.destinationCountrySlug?.message}</FieldError>
         </Field>
         <Field>
-          <FieldLabel htmlFor="story-scenario">Сценарий</FieldLabel>
+          <FieldLabel htmlFor="story-scenario">{t("scenarioLabel")}</FieldLabel>
           <select
             id="story-scenario"
             className={selectClass}
             data-testid="user-story-scenario-input"
             {...register("scenario")}
           >
-            <option value="">Выберите сценарий</option>
+            <option value="">{t("chooseScenarioOption")}</option>
             {scenarios.data?.items.map((s) => (
               <option
                 key={s.slug}
@@ -173,7 +177,9 @@ function SubmitStoryForm() {
         </Field>
       </div>
       <Field>
-        <FieldLabel htmlFor="story-positive">Что получилось хорошо</FieldLabel>
+        <FieldLabel htmlFor="story-positive">
+          {t("positiveOutcomeLabel")}
+        </FieldLabel>
         <textarea
           id="story-positive"
           className={textareaClass}
@@ -183,7 +189,7 @@ function SubmitStoryForm() {
         />
       </Field>
       <Field>
-        <FieldLabel htmlFor="story-advice">Совет другим</FieldLabel>
+        <FieldLabel htmlFor="story-advice">{t("adviceFieldLabel")}</FieldLabel>
         <textarea
           id="story-advice"
           className={textareaClass}
@@ -191,22 +197,21 @@ function SubmitStoryForm() {
           data-testid="user-story-advice-input"
           {...register("advice")}
         />
-        <FieldHint>
-          Не публикуйте контакты (email, телефон, Telegram) в открытом тексте.
-        </FieldHint>
+        <FieldHint>{t("privacyNotice")}</FieldHint>
       </Field>
       <Button
         type="submit"
         disabled={createStory.isPending}
         data-testid="user-story-submit"
       >
-        {createStory.isPending ? "Отправляем…" : "Отправить историю"}
+        {createStory.isPending ? t("submitting") : t("submitStory")}
       </Button>
     </form>
   );
 }
 
 export function UserStoriesView() {
+  const t = useTranslations("userStories");
   const locale = useAppLocale();
   const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const stories = useQuery(userStoriesQuery());
@@ -224,21 +229,21 @@ export function UserStoriesView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Поделиться историей</Kicker>
+        <Kicker>{t("shareStoryKicker")}</Kicker>
         <SubmitStoryForm />
       </Card>
 
       <div className="flex flex-col gap-4">
-        <Kicker>Истории сообщества</Kicker>
+        <Kicker>{t("communityStoriesKicker")}</Kicker>
         {stories.isPending ? (
-          <LoadingState message="Загрузка историй…" />
+          <LoadingState message={t("loadingStories")} />
         ) : stories.isError ? (
           <ErrorState
             error={isApiError(stories.error) ? stories.error : undefined}
           />
         ) : (stories.data.items ?? []).length === 0 ? (
           <div data-testid="user-stories-empty-state">
-            <EmptyState message="Историй пока нет." />
+            <EmptyState message={t("emptyStories")} />
           </div>
         ) : (
           <div
@@ -251,7 +256,7 @@ export function UserStoriesView() {
                 story={story}
                 countryName={
                   countryNameById.get(story.destination_country_id) ??
-                  "Неизвестная страна"
+                  t("unknownCountry")
                 }
               />
             ))}

@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Button,
@@ -65,13 +66,13 @@ const TEXTAREA_CLASS =
 const INPUT_CLASS =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
 
-const RATING_AXES = [
-  { field: "official_expectation_score", label: "Official expectation" },
-  { field: "real_experience_score", label: "Real experience" },
-  { field: "bureaucracy_score", label: "Bureaucracy" },
-  { field: "cost_surprise_score", label: "Cost surprise" },
-  { field: "banking_difficulty_score", label: "Banking difficulty" },
-  { field: "safety_feeling_score", label: "Safety feeling" },
+const RATING_FIELDS = [
+  "official_expectation_score",
+  "real_experience_score",
+  "bureaucracy_score",
+  "cost_surprise_score",
+  "banking_difficulty_score",
+  "safety_feeling_score",
 ] as const;
 
 function QuestionCard({
@@ -83,6 +84,7 @@ function QuestionCard({
   identityId: string;
   onStatus: (status: StatusState) => void;
 }) {
+  const t = useTranslations("communityCountryBlock");
   const [draft, setDraft] = useState("");
   const { data: answers } = useQuery(communityAnswersQuery(question.id));
   const createAnswer = useCreateCommunityAnswerMutation(question.id);
@@ -102,12 +104,12 @@ function QuestionCard({
       setDraft("");
       onStatus({
         kind: "success",
-        message: `Answer received with status ${created.status}; moderation is required before publication.`,
+        message: t("answerReceived", { status: created.status }),
       });
     } catch (error: unknown) {
       onStatus({
         kind: "error",
-        message: errorMessage(error, "Answer could not be submitted."),
+        message: errorMessage(error, t("answerSubmitError")),
       });
     }
   }
@@ -133,14 +135,16 @@ function QuestionCard({
             <p className="text-c2 text-sm">{answer.body}</p>
             <div className="flex flex-wrap gap-2">
               {answer.source_backed && (
-                <Badge variant="trust">source-backed</Badge>
+                <Badge variant="trust">{t("sourceBacked")}</Badge>
               )}
               {answer.consensus?.controversial && (
-                <Badge variant="warning">controversial</Badge>
+                <Badge variant="warning">{t("controversial")}</Badge>
               )}
               {answer.consensus && (
                 <Badge variant="default">
-                  consensus {Math.round(answer.consensus.score)}
+                  {t("consensus", {
+                    score: Math.round(answer.consensus.score),
+                  })}
                 </Badge>
               )}
             </div>
@@ -160,20 +164,19 @@ function QuestionCard({
                     });
                     onStatus({
                       kind: "success",
-                      message: `Vote recorded. Consensus score: ${Math.round(summary.score)}.`,
+                      message: t("voteRecorded", {
+                        score: Math.round(summary.score),
+                      }),
                     });
                   } catch (error: unknown) {
                     onStatus({
                       kind: "error",
-                      message: errorMessage(
-                        error,
-                        "Vote could not be submitted.",
-                      ),
+                      message: errorMessage(error, t("voteSubmitError")),
                     });
                   }
                 }}
               >
-                Up
+                {t("up")}
               </Button>
               <Button
                 type="button"
@@ -190,20 +193,19 @@ function QuestionCard({
                     });
                     onStatus({
                       kind: "success",
-                      message: `Vote recorded. Consensus score: ${Math.round(summary.score)}.`,
+                      message: t("voteRecorded", {
+                        score: Math.round(summary.score),
+                      }),
                     });
                   } catch (error: unknown) {
                     onStatus({
                       kind: "error",
-                      message: errorMessage(
-                        error,
-                        "Vote could not be submitted.",
-                      ),
+                      message: errorMessage(error, t("voteSubmitError")),
                     });
                   }
                 }}
               >
-                Helpful
+                {t("helpful")}
               </Button>
             </div>
           </div>
@@ -213,8 +215,8 @@ function QuestionCard({
         <textarea
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
-          placeholder="Add an answer for moderation"
-          aria-label="Community answer"
+          placeholder={t("addAnswerPlaceholder")}
+          aria-label={t("communityAnswerAriaLabel")}
           className={TEXTAREA_CLASS}
         />
         <Button
@@ -223,7 +225,7 @@ function QuestionCard({
           onClick={submitAnswer}
           disabled={!draft.trim()}
         >
-          Submit answer
+          {t("submitAnswer")}
         </Button>
       </div>
     </Card>
@@ -233,6 +235,7 @@ function QuestionCard({
 export function CommunityCountryBlock({
   countrySlug,
 }: CommunityCountryBlockProps) {
+  const t = useTranslations("communityCountryBlock");
   const identityId = useMemo(() => anonymousIdentity("community"), []);
 
   const { data: questionsData, isPending } = useQuery(
@@ -250,7 +253,7 @@ export function CommunityCountryBlock({
   const [reportMessage, setReportMessage] = useState("");
   const [ratingComment, setRatingComment] = useState("");
   const [ratingScores, setRatingScores] = useState<
-    Record<(typeof RATING_AXES)[number]["field"], number>
+    Record<(typeof RATING_FIELDS)[number], number>
   >({
     official_expectation_score: 50,
     real_experience_score: 50,
@@ -259,6 +262,11 @@ export function CommunityCountryBlock({
     banking_difficulty_score: 50,
     safety_feeling_score: 50,
   });
+
+  const ratingAxes = RATING_FIELDS.map((field) => ({
+    field,
+    label: t(`ratingAxis.${field}`),
+  }));
 
   const createQuestion = useCreateCommunityQuestionMutation(countrySlug);
   const createReport = useCreateDataErrorReportMutation();
@@ -282,12 +290,12 @@ export function CommunityCountryBlock({
       setQuestionBody("");
       setStatus({
         kind: "success",
-        message: `Question received with status ${created.status}; it will appear after moderation.`,
+        message: t("questionReceived", { status: created.status }),
       });
     } catch (error: unknown) {
       setStatus({
         kind: "error",
-        message: errorMessage(error, "Question could not be submitted."),
+        message: errorMessage(error, t("questionSubmitError")),
       });
     }
   }
@@ -309,12 +317,12 @@ export function CommunityCountryBlock({
       setReportMessage("");
       setStatus({
         kind: "success",
-        message: `Report received with status ${created.status}; editors will review it.`,
+        message: t("reportReceived", { status: created.status }),
       });
     } catch (error: unknown) {
       setStatus({
         kind: "error",
-        message: errorMessage(error, "Report could not be submitted."),
+        message: errorMessage(error, t("reportSubmitError")),
       });
     }
   }
@@ -335,12 +343,12 @@ export function CommunityCountryBlock({
       setRatingComment("");
       setStatus({
         kind: "success",
-        message: `Reality-gap input received with status ${created.status}.`,
+        message: t("ratingReceived", { status: created.status }),
       });
     } catch (error: unknown) {
       setStatus({
         kind: "error",
-        message: errorMessage(error, "Rating could not be submitted."),
+        message: errorMessage(error, t("ratingSubmitError")),
       });
     }
   }
@@ -352,20 +360,15 @@ export function CommunityCountryBlock({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h3 className="font-display text-xl font-semibold">
-            Community intelligence
-          </h3>
-          <p className="text-c3 text-sm leading-relaxed">
-            Human experience is separated from trusted source-backed content and
-            appears publicly only after moderation.
-          </p>
+          <h3 className="font-display text-xl font-semibold">{t("title")}</h3>
+          <p className="text-c3 text-sm leading-relaxed">{t("subtitle")}</p>
         </div>
         <div data-testid="community-review-badge">
           <Badge
             variant="default"
-            title="review gate"
+            title={t("reviewGate")}
           >
-            review gate
+            {t("reviewGate")}
           </Badge>
         </div>
       </div>
@@ -392,10 +395,10 @@ export function CommunityCountryBlock({
             className="flex flex-col gap-4 lg:col-span-2"
             data-testid="community-qna-panel"
           >
-            <Kicker>Q&A</Kicker>
+            <Kicker>{t("qnaKicker")}</Kicker>
             {questions.length === 0 ? (
               <div data-testid="community-empty">
-                <EmptyState message="No published community questions yet." />
+                <EmptyState message={t("emptyQuestions")} />
               </div>
             ) : (
               <div className="flex flex-col gap-4">
@@ -415,7 +418,7 @@ export function CommunityCountryBlock({
               onSubmit={submitQuestion}
             >
               <Field>
-                <FieldLabel>Question title</FieldLabel>
+                <FieldLabel>{t("questionTitleLabel")}</FieldLabel>
                 <input
                   value={questionTitle}
                   onChange={(event) => setQuestionTitle(event.target.value)}
@@ -426,7 +429,7 @@ export function CommunityCountryBlock({
                 />
               </Field>
               <Field>
-                <FieldLabel>Question details</FieldLabel>
+                <FieldLabel>{t("questionDetailsLabel")}</FieldLabel>
                 <textarea
                   value={questionBody}
                   onChange={(event) => setQuestionBody(event.target.value)}
@@ -441,7 +444,7 @@ export function CommunityCountryBlock({
                 disabled={!questionTitle.trim() || !questionBody.trim()}
                 data-testid="community-question-submit"
               >
-                Submit for review
+                {t("submitForReview")}
               </Button>
             </form>
           </section>
@@ -450,13 +453,13 @@ export function CommunityCountryBlock({
             className="flex flex-col gap-4"
             data-testid="community-report-panel"
           >
-            <Kicker accent="terra">Report data issue</Kicker>
+            <Kicker accent="terra">{t("reportDataIssueKicker")}</Kicker>
             <form
               className="flex flex-col gap-3"
               onSubmit={submitReport}
             >
               <Field>
-                <FieldLabel>Issue type</FieldLabel>
+                <FieldLabel>{t("issueTypeLabel")}</FieldLabel>
                 <select
                   value={reportType}
                   onChange={(event) =>
@@ -465,16 +468,22 @@ export function CommunityCountryBlock({
                   data-testid="community-report-type"
                   className={INPUT_CLASS}
                 >
-                  <option value="outdated">Outdated</option>
-                  <option value="wrong">Wrong</option>
-                  <option value="missing_source">Missing source</option>
-                  <option value="contradiction">Contradiction</option>
-                  <option value="translation_issue">Translation issue</option>
-                  <option value="other">Other</option>
+                  <option value="outdated">{t("issueType.outdated")}</option>
+                  <option value="wrong">{t("issueType.wrong")}</option>
+                  <option value="missing_source">
+                    {t("issueType.missing_source")}
+                  </option>
+                  <option value="contradiction">
+                    {t("issueType.contradiction")}
+                  </option>
+                  <option value="translation_issue">
+                    {t("issueType.translation_issue")}
+                  </option>
+                  <option value="other">{t("issueType.other")}</option>
                 </select>
               </Field>
               <Field>
-                <FieldLabel>Message</FieldLabel>
+                <FieldLabel>{t("messageLabel")}</FieldLabel>
                 <textarea
                   value={reportMessage}
                   onChange={(event) => setReportMessage(event.target.value)}
@@ -489,7 +498,7 @@ export function CommunityCountryBlock({
                 disabled={!reportMessage.trim()}
                 data-testid="community-report-submit"
               >
-                Send to review
+                {t("sendToReview")}
               </Button>
             </form>
           </section>
@@ -498,17 +507,14 @@ export function CommunityCountryBlock({
             className="flex flex-col gap-4"
             data-testid="community-rating-panel"
           >
-            <Kicker accent="plum">Reality gap preview</Kicker>
-            <p className="text-c4 text-xs">
-              Limited community input only; no trusted ERG score is calculated
-              yet.
-            </p>
+            <Kicker accent="plum">{t("realityGapPreviewKicker")}</Kicker>
+            <p className="text-c4 text-xs">{t("realityGapNotice")}</p>
             <RadarChart
-              axes={RATING_AXES.map((axis) => axis.label)}
+              axes={ratingAxes.map((axis) => axis.label)}
               series={[
                 {
-                  label: "Your input",
-                  values: RATING_AXES.map((axis) => ratingScores[axis.field]),
+                  label: t("yourInput"),
+                  values: ratingAxes.map((axis) => ratingScores[axis.field]),
                   accent: "gold",
                 },
               ]}
@@ -518,7 +524,7 @@ export function CommunityCountryBlock({
               className="flex flex-col gap-3"
               onSubmit={submitRating}
             >
-              {RATING_AXES.map((axis) => (
+              {ratingAxes.map((axis) => (
                 <Field key={axis.field}>
                   <FieldLabel>{axis.label}</FieldLabel>
                   <input
@@ -541,7 +547,7 @@ export function CommunityCountryBlock({
                 </Field>
               ))}
               <Field>
-                <FieldLabel>Optional note</FieldLabel>
+                <FieldLabel>{t("optionalNoteLabel")}</FieldLabel>
                 <textarea
                   value={ratingComment}
                   onChange={(event) => setRatingComment(event.target.value)}
@@ -554,7 +560,7 @@ export function CommunityCountryBlock({
                 type="submit"
                 data-testid="community-rating-submit"
               >
-                Submit limited input
+                {t("submitLimitedInput")}
               </Button>
             </form>
           </section>

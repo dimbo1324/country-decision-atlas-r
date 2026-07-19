@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -29,6 +30,7 @@ import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
+import { moderationStatusLabel } from "../../shared/lib/moderation-status-labels";
 import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -38,26 +40,20 @@ import { LoadingState } from "../../shared/ui/LoadingState";
 const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Черновик",
-  submitted: "На модерации",
-  published: "Опубликована",
-  rejected: "Отклонена",
-  archived: "В архиве",
-};
-
-const createMetricSchema = z.object({
-  slug: z
-    .string()
-    .min(1, "Введите slug")
-    .regex(/^[a-z0-9_]+$/, "Только строчные буквы, цифры и подчёркивания"),
-  nameEn: z.string().min(1, "Введите название (en)"),
-  nameRu: z.string().min(1, "Введите название (ru)"),
-});
-type CreateMetricValues = z.infer<typeof createMetricSchema>;
-
 function CreateMetricForm() {
+  const t = useTranslations("authorMetricsStudio");
   const createMetric = useCreateAuthorMetricMutation();
+
+  const createMetricSchema = z.object({
+    slug: z
+      .string()
+      .min(1, t("slugRequired"))
+      .regex(/^[a-z0-9_]+$/, t("slugPattern")),
+    nameEn: z.string().min(1, t("nameEnRequired")),
+    nameRu: z.string().min(1, t("nameRuRequired")),
+  });
+  type CreateMetricValues = z.infer<typeof createMetricSchema>;
+
   const {
     register,
     handleSubmit,
@@ -82,12 +78,12 @@ function CreateMetricForm() {
         visibility: "private",
       });
       reset();
-      toast.success("Метрика создана как черновик.");
+      toast.success(t("metricCreatedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось создать метрику.")
-          : "Не удалось создать метрику.",
+          ? (err.error?.message ?? t("metricCreateErrorToast"))
+          : t("metricCreateErrorToast"),
       );
     }
   }
@@ -99,7 +95,7 @@ function CreateMetricForm() {
       noValidate
     >
       <Field>
-        <FieldLabel htmlFor="metric-slug">Slug</FieldLabel>
+        <FieldLabel htmlFor="metric-slug">{t("slugLabel")}</FieldLabel>
         <input
           id="metric-slug"
           className={inputClass}
@@ -110,7 +106,7 @@ function CreateMetricForm() {
         <FieldError>{errors.slug?.message}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor="metric-name-en">Название (en)</FieldLabel>
+        <FieldLabel htmlFor="metric-name-en">{t("nameEnLabel")}</FieldLabel>
         <input
           id="metric-name-en"
           className={inputClass}
@@ -120,7 +116,7 @@ function CreateMetricForm() {
         <FieldError>{errors.nameEn?.message}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor="metric-name-ru">Название (ru)</FieldLabel>
+        <FieldLabel htmlFor="metric-name-ru">{t("nameRuLabel")}</FieldLabel>
         <input
           id="metric-name-ru"
           className={inputClass}
@@ -134,13 +130,14 @@ function CreateMetricForm() {
         disabled={createMetric.isPending}
         data-testid="author-metric-create-submit"
       >
-        Создать
+        {t("create")}
       </Button>
     </form>
   );
 }
 
 function MetricValuesEditor({ metric }: { metric: MyAuthorMetricDefinition }) {
+  const t = useTranslations("authorMetricsStudio");
   const locale = useAppLocale();
   const countries = useQuery(allCountriesQuery(toApiLocale(locale)));
   const values = useQuery(myAuthorMetricValuesQuery(metric.id));
@@ -163,12 +160,12 @@ function MetricValuesEditor({ metric }: { metric: MyAuthorMetricDefinition }) {
     try {
       await upsertValues.mutateAsync(items);
       setDraftValues({});
-      toast.success("Значения сохранены.");
+      toast.success(t("valuesSavedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось сохранить значения.")
-          : "Не удалось сохранить значения.",
+          ? (err.error?.message ?? t("valuesSaveErrorToast"))
+          : t("valuesSaveErrorToast"),
       );
     }
   }
@@ -212,13 +209,16 @@ function MetricValuesEditor({ metric }: { metric: MyAuthorMetricDefinition }) {
         disabled={upsertValues.isPending}
         data-testid="author-metric-values-save"
       >
-        Сохранить значения
+        {t("saveValues")}
       </Button>
     </div>
   );
 }
 
 function MetricRow({ metric }: { metric: MyAuthorMetricDefinition }) {
+  const t = useTranslations("authorMetricsStudio");
+  const locale = useAppLocale();
+  const apiLocale = toApiLocale(locale);
   const [expanded, setExpanded] = useState(false);
   const submitMetric = useSubmitAuthorMetricMutation();
   const archiveMetric = useArchiveAuthorMetricMutation();
@@ -232,19 +232,19 @@ function MetricRow({ metric }: { metric: MyAuthorMetricDefinition }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
             <span className="font-display text-lg font-semibold">
-              {metric.name_ru}
+              {apiLocale === "ru" ? metric.name_ru : metric.name_en}
             </span>
             <span className="text-c4 font-mono text-xs">{metric.slug}</span>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="default">
-              {STATUS_LABELS[metric.status] ?? metric.status}
+              {moderationStatusLabel(metric.status, locale)}
             </Badge>
             <Button
               variant="ghost"
               onClick={() => setExpanded((current) => !current)}
             >
-              {expanded ? "Скрыть значения" : "Значения по странам"}
+              {expanded ? t("hideValues") : t("valuesByCountry")}
             </Button>
             <Button
               variant="ghost"
@@ -252,14 +252,14 @@ function MetricRow({ metric }: { metric: MyAuthorMetricDefinition }) {
               disabled={metric.status !== "draft" || submitMetric.isPending}
               data-testid="author-metric-submit"
             >
-              На модерацию
+              {t("submitToModeration")}
             </Button>
             <Button
               variant="ghost"
               onClick={() => archiveMetric.mutate(metric.id)}
               disabled={metric.status === "archived" || archiveMetric.isPending}
             >
-              Архив
+              {t("archive")}
             </Button>
           </div>
         </div>
@@ -270,6 +270,7 @@ function MetricRow({ metric }: { metric: MyAuthorMetricDefinition }) {
 }
 
 export function AuthorMetricsStudioView() {
+  const t = useTranslations("authorMetricsStudio");
   const { user, isLoading: authLoading } = useAuth();
   const metrics = useQuery({
     ...myAuthorMetricsQuery(),
@@ -277,7 +278,7 @@ export function AuthorMetricsStudioView() {
   });
 
   if (authLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -287,12 +288,12 @@ export function AuthorMetricsStudioView() {
         data-testid="author-metrics-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы вести студию авторских метрик.{" "}
+          {t("loginRequired")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("loginLabel")}
           </Link>
         </p>
       </div>
@@ -308,21 +309,21 @@ export function AuthorMetricsStudioView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Новая метрика</Kicker>
+        <Kicker>{t("newMetricKicker")}</Kicker>
         <CreateMetricForm />
       </Card>
 
       <div className="flex flex-col gap-4">
-        <Kicker>Мои метрики</Kicker>
+        <Kicker>{t("myMetricsKicker")}</Kicker>
         {metrics.isPending ? (
-          <LoadingState message="Загрузка метрик…" />
+          <LoadingState message={t("loadingMetrics")} />
         ) : metrics.isError ? (
           <ErrorState
             error={isApiError(metrics.error) ? metrics.error : undefined}
           />
         ) : (metrics.data.items ?? []).length === 0 ? (
           <div data-testid="author-metrics-empty-state">
-            <EmptyState message="У вас пока нет метрик." />
+            <EmptyState message={t("emptyMetrics")} />
           </div>
         ) : (
           <div

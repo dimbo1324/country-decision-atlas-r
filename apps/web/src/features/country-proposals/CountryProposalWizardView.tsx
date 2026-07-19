@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Button,
@@ -26,6 +27,9 @@ import {
 } from "../../entities/country-proposals/api";
 import { isApiError } from "../../shared/api/http";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
+import { toApiLocale } from "../../shared/lib/locale";
+import { moderationStatusLabel } from "../../shared/lib/moderation-status-labels";
 import { Link } from "../../i18n/navigation";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -35,16 +39,6 @@ const inputClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 const selectClass =
   "border-warm bg-bg2 text-c2 focus-visible:border-gold w-full border px-3 py-2 text-sm outline-none";
-
-const SECTIONS = [
-  { id: "proposal-section-sources", label: "Источники" },
-  { id: "proposal-section-evidence", label: "Доказательства" },
-  { id: "proposal-section-signals", label: "Правовые сигналы" },
-  { id: "proposal-section-timeline", label: "Таймлайн" },
-  { id: "proposal-section-metrics", label: "Метрики" },
-  { id: "proposal-section-card", label: "Карточка страны" },
-  { id: "proposal-section-submit", label: "Отправка" },
-];
 
 /** Every section below only has a create endpoint on the backend -- there is
  * no GET/list for country-proposal sources, evidence items, legal signals,
@@ -79,6 +73,7 @@ function SessionAddedList({ items }: { items: string[] }) {
 }
 
 function SourcesSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const createSource = useCreateCountryProposalSourceMutation(proposalId);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -96,12 +91,12 @@ function SourcesSection({ proposalId }: { proposalId: string }) {
       setAdded((current) => [...current, title]);
       setTitle("");
       setUrl("");
-      toast.success("Источник добавлен.");
+      toast.success(t("sourceAddedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить источник.")
-          : "Не удалось добавить источник.",
+          ? (err.error?.message ?? t("sourceAddErrorToast"))
+          : t("sourceAddErrorToast"),
       );
     }
   }
@@ -112,11 +107,11 @@ function SourcesSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Источники</Kicker>
+        <Kicker>{t("sourcesKicker")}</Kicker>
         <SessionAddedList items={added} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_2fr_auto] sm:items-end">
           <Field>
-            <FieldLabel htmlFor="source-title">Название</FieldLabel>
+            <FieldLabel htmlFor="source-title">{t("titleLabel")}</FieldLabel>
             <input
               id="source-title"
               className={inputClass}
@@ -140,7 +135,7 @@ function SourcesSection({ proposalId }: { proposalId: string }) {
             disabled={createSource.isPending || !title.trim()}
             data-testid="proposal-source-add"
           >
-            Добавить
+            {t("add")}
           </Button>
         </div>
       </Card>
@@ -149,6 +144,7 @@ function SourcesSection({ proposalId }: { proposalId: string }) {
 }
 
 function EvidenceSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const createEvidence =
     useCreateCountryProposalEvidenceItemMutation(proposalId);
   const [claim, setClaim] = useState("");
@@ -160,12 +156,12 @@ function EvidenceSection({ proposalId }: { proposalId: string }) {
       await createEvidence.mutateAsync({ claim, confidence: "medium" });
       setAdded((current) => [...current, claim]);
       setClaim("");
-      toast.success("Доказательство добавлено.");
+      toast.success(t("evidenceAddedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить доказательство.")
-          : "Не удалось добавить доказательство.",
+          ? (err.error?.message ?? t("evidenceAddErrorToast"))
+          : t("evidenceAddErrorToast"),
       );
     }
   }
@@ -176,11 +172,11 @@ function EvidenceSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Доказательства</Kicker>
+        <Kicker>{t("evidenceKicker")}</Kicker>
         <SessionAddedList items={added} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_auto] sm:items-end">
           <Field>
-            <FieldLabel htmlFor="evidence-claim">Утверждение</FieldLabel>
+            <FieldLabel htmlFor="evidence-claim">{t("claimLabel")}</FieldLabel>
             <input
               id="evidence-claim"
               className={inputClass}
@@ -194,7 +190,7 @@ function EvidenceSection({ proposalId }: { proposalId: string }) {
             disabled={createEvidence.isPending || !claim.trim()}
             data-testid="proposal-evidence-add"
           >
-            Добавить
+            {t("add")}
           </Button>
         </div>
       </Card>
@@ -203,6 +199,7 @@ function EvidenceSection({ proposalId }: { proposalId: string }) {
 }
 
 function LegalSignalsSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const createSignal = useCreateCountryProposalLegalSignalMutation(proposalId);
   const [titleEn, setTitleEn] = useState("");
   const [added, setAdded] = useState<string[]>([]);
@@ -217,12 +214,12 @@ function LegalSignalsSection({ proposalId }: { proposalId: string }) {
       });
       setAdded((current) => [...current, titleEn]);
       setTitleEn("");
-      toast.success("Правовой сигнал добавлен.");
+      toast.success(t("signalAddedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить сигнал.")
-          : "Не удалось добавить сигнал.",
+          ? (err.error?.message ?? t("signalAddErrorToast"))
+          : t("signalAddErrorToast"),
       );
     }
   }
@@ -233,11 +230,13 @@ function LegalSignalsSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Правовые сигналы</Kicker>
+        <Kicker>{t("signalsKicker")}</Kicker>
         <SessionAddedList items={added} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_auto] sm:items-end">
           <Field>
-            <FieldLabel htmlFor="signal-title">Заголовок (en)</FieldLabel>
+            <FieldLabel htmlFor="signal-title">
+              {t("signalTitleLabel")}
+            </FieldLabel>
             <input
               id="signal-title"
               className={inputClass}
@@ -251,7 +250,7 @@ function LegalSignalsSection({ proposalId }: { proposalId: string }) {
             disabled={createSignal.isPending || !titleEn.trim()}
             data-testid="proposal-signal-add"
           >
-            Добавить
+            {t("add")}
           </Button>
         </div>
       </Card>
@@ -260,6 +259,7 @@ function LegalSignalsSection({ proposalId }: { proposalId: string }) {
 }
 
 function TimelineSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const createEvent = useCreateCountryProposalTimelineEventMutation(proposalId);
   const [legalSignalId, setLegalSignalId] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -279,12 +279,12 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
       });
       setAdded((current) => [...current, title]);
       setTitle("");
-      toast.success("Событие таймлайна добавлено.");
+      toast.success(t("timelineEventAddedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось добавить событие.")
-          : "Не удалось добавить событие.",
+          ? (err.error?.message ?? t("timelineEventAddErrorToast"))
+          : t("timelineEventAddErrorToast"),
       );
     }
   }
@@ -295,16 +295,13 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Таймлайн</Kicker>
-        <p className="text-c4 text-xs">
-          Требует ID уже добавленного правового сигнала (виден в ответе сервера
-          после добавления).
-        </p>
+        <Kicker>{t("timelineKicker")}</Kicker>
+        <p className="text-c4 text-xs">{t("timelineHint")}</p>
         <SessionAddedList items={added} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr_2fr_auto] sm:items-end">
           <Field>
             <FieldLabel htmlFor="timeline-signal-id">
-              ID правового сигнала
+              {t("legalSignalIdLabel")}
             </FieldLabel>
             <input
               id="timeline-signal-id"
@@ -315,7 +312,9 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="timeline-date">Дата события</FieldLabel>
+            <FieldLabel htmlFor="timeline-date">
+              {t("eventDateLabel")}
+            </FieldLabel>
             <input
               id="timeline-date"
               type="date"
@@ -326,7 +325,7 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="timeline-title">Заголовок</FieldLabel>
+            <FieldLabel htmlFor="timeline-title">{t("titleLabel")}</FieldLabel>
             <input
               id="timeline-title"
               className={inputClass}
@@ -345,7 +344,7 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
             }
             data-testid="proposal-timeline-add"
           >
-            Добавить
+            {t("add")}
           </Button>
         </div>
       </Card>
@@ -354,6 +353,7 @@ function TimelineSection({ proposalId }: { proposalId: string }) {
 }
 
 function MetricsSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const upsertValues = useUpsertCountryProposalMetricValuesMutation(proposalId);
   const [metricSlug, setMetricSlug] = useState("");
   const [rawValue, setRawValue] = useState("");
@@ -374,12 +374,12 @@ function MetricsSection({ proposalId }: { proposalId: string }) {
       setAdded((current) => [...current, `${metricSlug}: ${raw}`]);
       setMetricSlug("");
       setRawValue("");
-      toast.success("Значение метрики сохранено.");
+      toast.success(t("metricValueSavedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось сохранить значение.")
-          : "Не удалось сохранить значение.",
+          ? (err.error?.message ?? t("metricValueSaveErrorToast"))
+          : t("metricValueSaveErrorToast"),
       );
     }
   }
@@ -390,11 +390,13 @@ function MetricsSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Метрики</Kicker>
+        <Kicker>{t("metricsKicker")}</Kicker>
         <SessionAddedList items={added} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr_auto] sm:items-end">
           <Field>
-            <FieldLabel htmlFor="metric-slug">Slug метрики</FieldLabel>
+            <FieldLabel htmlFor="metric-slug">
+              {t("metricSlugLabel")}
+            </FieldLabel>
             <input
               id="metric-slug"
               className={inputClass}
@@ -404,7 +406,9 @@ function MetricsSection({ proposalId }: { proposalId: string }) {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="metric-value">Значение</FieldLabel>
+            <FieldLabel htmlFor="metric-value">
+              {t("metricValueLabel")}
+            </FieldLabel>
             <input
               id="metric-value"
               type="number"
@@ -419,7 +423,7 @@ function MetricsSection({ proposalId }: { proposalId: string }) {
             disabled={upsertValues.isPending || !metricSlug.trim() || !rawValue}
             data-testid="proposal-metric-add"
           >
-            Сохранить
+            {t("save")}
           </Button>
         </div>
       </Card>
@@ -428,6 +432,7 @@ function MetricsSection({ proposalId }: { proposalId: string }) {
 }
 
 function CardSection({ proposalId }: { proposalId: string }) {
+  const t = useTranslations("countryProposalWizard");
   const upsertCard = useUpsertCountryProposalCardMutation(proposalId);
   const [locale, setLocale] = useState<"ru" | "en">("ru");
   const [executiveSummary, setExecutiveSummary] = useState("");
@@ -449,12 +454,12 @@ function CardSection({ proposalId }: { proposalId: string }) {
           source_summary: "",
         },
       });
-      toast.success("Карточка страны сохранена.");
+      toast.success(t("cardSavedToast"));
     } catch (err: unknown) {
       toast.error(
         isApiError(err)
-          ? (err.error?.message ?? "Не удалось сохранить карточку.")
-          : "Не удалось сохранить карточку.",
+          ? (err.error?.message ?? t("cardSaveErrorToast"))
+          : t("cardSaveErrorToast"),
       );
     }
   }
@@ -465,10 +470,10 @@ function CardSection({ proposalId }: { proposalId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Карточка страны (превью локали)</Kicker>
+        <Kicker>{t("cardKicker")}</Kicker>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_3fr]">
           <Field>
-            <FieldLabel htmlFor="card-locale">Локаль</FieldLabel>
+            <FieldLabel htmlFor="card-locale">{t("localeLabel")}</FieldLabel>
             <select
               id="card-locale"
               className={selectClass}
@@ -481,7 +486,9 @@ function CardSection({ proposalId }: { proposalId: string }) {
             </select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="card-summary">Executive summary</FieldLabel>
+            <FieldLabel htmlFor="card-summary">
+              {t("executiveSummaryLabel")}
+            </FieldLabel>
             <textarea
               id="card-summary"
               className={inputClass}
@@ -497,7 +504,7 @@ function CardSection({ proposalId }: { proposalId: string }) {
           disabled={upsertCard.isPending || !executiveSummary.trim()}
           data-testid="proposal-card-save"
         >
-          Сохранить карточку
+          {t("saveCard")}
         </Button>
       </Card>
     </div>
@@ -511,6 +518,8 @@ function SubmitSection({
   proposalId: string;
   status: string;
 }) {
+  const t = useTranslations("countryProposalWizard");
+  const locale = useAppLocale();
   const submitProposal = useSubmitCountryProposalMutation(proposalId);
 
   return (
@@ -519,14 +528,18 @@ function SubmitSection({
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Отправка на модерацию</Kicker>
-        <Badge variant="default">Текущий статус: {status}</Badge>
+        <Kicker>{t("submitKicker")}</Kicker>
+        <Badge variant="default">
+          {t("currentStatus", {
+            status: moderationStatusLabel(status, locale),
+          })}
+        </Badge>
         <Button
           onClick={() => submitProposal.mutate()}
           disabled={status !== "draft" || submitProposal.isPending}
           data-testid="proposal-submit"
         >
-          Отправить на модерацию
+          {t("submitToModeration")}
         </Button>
       </Card>
     </div>
@@ -538,14 +551,27 @@ export function CountryProposalWizardView({
 }: {
   proposalId: string;
 }) {
+  const t = useTranslations("countryProposalWizard");
+  const locale = useAppLocale();
+  const apiLocale = toApiLocale(locale);
   const { user, isLoading: authLoading } = useAuth();
   const proposal = useQuery({
     ...myCountryProposalQuery(proposalId),
     enabled: Boolean(user),
   });
 
+  const SECTIONS = [
+    { id: "proposal-section-sources", label: t("sourcesKicker") },
+    { id: "proposal-section-evidence", label: t("evidenceKicker") },
+    { id: "proposal-section-signals", label: t("signalsKicker") },
+    { id: "proposal-section-timeline", label: t("timelineKicker") },
+    { id: "proposal-section-metrics", label: t("metricsKicker") },
+    { id: "proposal-section-card", label: t("cardKicker") },
+    { id: "proposal-section-submit", label: t("submitKicker") },
+  ];
+
   if (authLoading) {
-    return <LoadingState message="Загрузка…" />;
+    return <LoadingState message={t("loading")} />;
   }
 
   if (!user) {
@@ -555,12 +581,12 @@ export function CountryProposalWizardView({
         data-testid="country-proposal-wizard-unauthenticated"
       >
         <p className="text-c3 text-sm">
-          Войдите, чтобы редактировать заявку.{" "}
+          {t("loginRequired")}{" "}
           <Link
             href={routes.login}
             className="text-c1 hover:text-gold3 underline decoration-dotted underline-offset-2 transition-colors duration-200"
           >
-            Войти
+            {t("loginLabel")}
           </Link>
         </p>
       </div>
@@ -568,7 +594,7 @@ export function CountryProposalWizardView({
   }
 
   if (proposal.isPending) {
-    return <LoadingState message="Загрузка заявки…" />;
+    return <LoadingState message={t("loadingProposal")} />;
   }
 
   if (proposal.isError) {
@@ -594,7 +620,7 @@ export function CountryProposalWizardView({
         <div className="mt-6">
           <ProgressRing
             value={0}
-            label="Готовность"
+            label={t("readinessLabel")}
             active
             size={120}
           />
@@ -604,7 +630,7 @@ export function CountryProposalWizardView({
       <div className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center gap-3">
           <span className="font-display text-2xl font-bold">
-            {item.name_ru}
+            {apiLocale === "ru" ? item.name_ru : item.name_en}
           </span>
           <Badge variant="default">{item.slug}</Badge>
         </div>

@@ -521,85 +521,180 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
         tracking, not a translation or logic defect. Confirmed each time
         by re-reading the DOM value (correctly set) and by dispatching a
         real `.click()` via `javascript_tool`, which always succeeded.
-- [ ] Community: Migration Board, User Stories, Author Metrics, Country
-      Proposals (12 public files + 9 pages — the "6 pages" estimate needs
-      re-checking against the actual public route tree, same as Stages 7/8
-      undercounted their page count; recount before starting).
-
-      **Public feature files to migrate** (confirmed via `errorMessage.ts`
-      grep and by checking each `*ModerationView.tsx`'s importers — those
-      three are internal-only, exactly like Stage 2's `ModerationQueue`,
-      and must stay untouched):
-      - `features/migration-board/` (6 of 7 files — `MigrationBoardModerationView.tsx`
-        is excluded, confirmed used only by `app/internal/migration-board-moderation/page.tsx`):
-        `MigrationBoardListView.tsx`, `MigrationBoardDetailView.tsx`,
-        `MigrationBoardFormView.tsx`, `AccountMigrationBoardView.tsx`,
-        `CountryMigrationBoardBlock.tsx`, `RouteMigrationBoardBlock.tsx`.
-        Also `features/migration-board/errorMessage.ts` — the shared
-        `migrationBoardErrorMessage()` helper has one hardcoded fallback
-        string (`"Произошла ошибка."`) reused by all 6 files; needs a
-        `locale: SupportedLocale` parameter threaded through every call
-        site (same shape as Stage 3a's `trustLabel`/`confidenceLabel`
-        parameterization). `MigrationBoardListView.tsx` and
-        `MigrationBoardFormView.tsx` each have local `TIMELINES`/`GOALS`
-        (and `MigrationBoardFormView.tsx` additionally has inline
-        `<option>` literals for stage/visibility) that duplicate the same
-        enum sets three times across the two files — worth a shared
-        `migration-board-labels.ts` (route-labels.ts/trip-labels.ts
-        precedent) rather than three separate copies.
-      - `features/user-stories/UserStoriesView.tsx` (1 file) — not yet
-        read this session; read it fresh before assuming its shape.
-      - `features/author-metrics/` (2 of 3 files — `AuthorMetricsModerationView.tsx`
-        is excluded, used only by `app/internal/author-metrics-moderation/page.tsx`):
-        `AuthorProfileView.tsx`, `AuthorMetricsStudioView.tsx`.
-      - `features/country-proposals/` (2 files, both public):
-        `CountryProposalListView.tsx`, `CountryProposalWizardView.tsx`.
-        Note `app/internal/country-proposals/page.tsx` is a *separate*,
-        internal-only page — don't confuse it with
-        `app/[locale]/account/country-proposals/page.tsx`, which is public
-        and in scope.
-      - `features/community/` (1 of 2 files — `CommunityModerationView.tsx`
-        is excluded, internal-only): `CommunityCountryBlock.tsx`.
-
-      **Public pages to migrate** (9, found via `apps/web/src/app/**/*.tsx`
-      glob, cross-checked against `app/internal/**` to exclude admin-only
-      routes):
-      `[locale]/migration-board/page.tsx`,
-      `[locale]/migration-board/new/page.tsx`,
-      `[locale]/migration-board/[id]/page.tsx`,
-      `[locale]/account/migration-board/page.tsx`,
-      `[locale]/user-stories/page.tsx`,
-      `[locale]/authors/[userId]/page.tsx`,
-      `[locale]/account/author-metrics/page.tsx`,
-      `[locale]/account/country-proposals/page.tsx`,
-      `[locale]/account/country-proposals/[id]/page.tsx`.
-
-      **Not yet read this session** (do this first): `UserStoriesView.tsx`,
-      `AuthorProfileView.tsx`, `AuthorMetricsStudioView.tsx`,
-      `CountryProposalListView.tsx`, `CountryProposalWizardView.tsx`,
-      `CommunityCountryBlock.tsx`, and all 9 pages above. Only the 6
-      migration-board feature files were actually read and diagnosed this
-      session (see file contents already reviewed; strings identified but
-      **no edits made yet** — the branch's working tree is clean, nothing
-      to revert).
-
-      Follow the same per-stage loop as Stages 3a–8: read each file, pick
-      enum-dict vs `useTranslations()` per string (enum-dict for anything
-      needing a `?? rawValue` fallback on an unrecognized backend value;
-      `useTranslations()` for everything else), add new message-catalog
-      namespaces to all three of `apps/web/src/messages/{en,ru,es}.json`
-      with real hand-written translations (not machine-translated
-      placeholders — this task's whole point is translation quality),
-      run `python scripts/dev_tools/i18n_parity_check.py`, `pnpm
-      --filter @country-decision-atlas/web typecheck`, `... lint`, `...
-      test -- run`, `pnpm format:check` (then `prettier --write` on
-      anything flagged), `pnpm --filter @country-decision-atlas/web
-      build`, then an actual interactive browser walkthrough (not just a
-      page load) in all 3 locales — every prior stage found at least one
-      real bug only that way. Update this checklist's Stage 9 entry with
-      what actually shipped (namespaces, key counts, bugs found), commit
-      as `feat: i18n Stage 9 -- Community content migration`, mark task
-      #59 completed, start #60.
+- [+] Community: Migration Board, User Stories, Author Metrics, Country
+      Proposals (13 public feature files + 9 pages — the "12 public files"
+      estimate undercounted by one: `features/migration-board/errorMessage.ts`
+      is itself a real file needing an edit, distinct from the "6 of 7"
+      component count it was listed alongside. The "9 pages" estimate,
+      already re-checked at the top of this session against a fresh
+      `apps/web/src/app/**/*.tsx` glob, was exactly right this time —
+      first stage since 7/8 where the page count didn't need correcting).
+      - `features/migration-board/` (6 components + `errorMessage.ts` = 7
+        files; `MigrationBoardModerationView.tsx` re-confirmed internal-only
+        via its sole importer, `app/internal/migration-board-moderation/page.tsx`,
+        touched only for a one-line call-site fix, not translated — see
+        below): new shared
+        `features/migration-board/migration-board-labels.ts` (the
+        route-labels.ts/trip-labels.ts precedent) exporting
+        `TIMELINE_LABELS`/`GOAL_LABELS`/`STAGE_LABELS`/`VISIBILITY_LABELS`
+        (`Record<SupportedLocale, Record<string,string>>`, `""` included as
+        an explicit "any" filter option for `TIMELINE_LABELS`/`GOAL_LABELS`)
+        — de-duplicates what was three separate hardcoded Russian copies of
+        the same enum sets across `MigrationBoardListView.tsx`'s filters and
+        `MigrationBoardFormView.tsx`'s create form (including its inline
+        `<option>` literals for stage/visibility, which had never been
+        deduplicated against the filter dropdowns at all). New namespaces:
+        `migrationBoard` (shared by `MigrationBoardListView`,
+        `CountryMigrationBoardBlock`, `RouteMigrationBoardBlock` — all three
+        render the same "no posts yet" / "create a post" vocabulary),
+        `migrationBoardDetail`, `migrationBoardForm`, `migrationBoardAccount`.
+        `errorMessage.ts`'s `migrationBoardErrorMessage()` gained a
+        `locale: SupportedLocale` parameter (the Stage 3a `trustLabel`
+        shape) backing a `FALLBACK_MESSAGE` dict; all 5 public call sites
+        updated to pass the real interface locale, plus the one call site in
+        the excluded `MigrationBoardModerationView.tsx` (internal-only, not
+        translated) fixed to pass a literal `"ru"` — the same "keep the
+        untouched internal caller compiling with its current Russian output"
+        pattern as Stage 3a's `formatDate` default.
+      - `features/user-stories/UserStoriesView.tsx` (1 file): new
+        `userStories` namespace covering the share-story form (including its
+        zod schema's two validation messages, moved inside the component body
+        to call `t()` — the `DecisionRunForm`/trip-form precedent), the
+        community story list, and the story card's advice/satisfaction lines.
+      - `features/author-metrics/` (2 of 3 files, `AuthorMetricsModerationView.tsx`
+        re-confirmed internal-only): new `authorProfile` and
+        `authorMetricsStudio` namespaces.
+        `AuthorMetricsStudioView.tsx`'s local `STATUS_LABELS` (draft/
+        submitted/published/rejected/archived, with a `?? metric.status`
+        fallback) converted to a new **shared** enum-dict,
+        `shared/lib/moderation-status-labels.ts`
+        (`MODERATION_STATUS_LABELS`/`moderationStatusLabel()`, the
+        `entity-type-labels.ts`/`TrustBadge.trustLabel` shape) — not kept
+        local, because `CountryProposalListView.tsx` (a different feature
+        folder, also touched this stage) has the exact same enum with the
+        exact same five values and the exact same defensive-fallback need;
+        same "worth extracting" reasoning as `route-labels.ts`/
+        `trip-labels.ts`, just cross-feature instead of cross-file-in-one-
+        feature this time. **Real bug found and fixed while reading the
+        code, before any browser testing**: both `AuthorProfileView.tsx` and
+        `AuthorMetricsStudioView.tsx` always rendered a metric's
+        `metric.name_ru` (and `AuthorProfileView`'s `methodology_ru ||
+        methodology_en`) unconditionally, regardless of interface locale —
+        harmless while the interface was Russian-only, but means an
+        `en`/`es` visitor to an author's profile would see Russian metric
+        names even though the backend's `MyAuthorMetricDefinition` /
+        `AuthorMetricDefinitionBase` schemas carry both `name_en` and
+        `name_ru` (confirmed in `packages/contracts/generated/types.ts`).
+        Fixed both call sites to pick `name_en`/`name_ru` (and
+        `methodology_en`/`methodology_ru`) via `toApiLocale(locale) ===
+        "ru"`, the same `es`-falls-back-to-`en` rule Stage 1 established for
+        every other backend-content read.
+      - `features/country-proposals/` (2 files, both public, confirmed
+        `app/internal/country-proposals/page.tsx` is a separate internal-only
+        page as the plan flagged): new `countryProposals` and
+        `countryProposalWizard` namespaces. Same `name_en`/`name_ru`
+        locale-aware display fix as author-metrics, applied to
+        `CountryProposalListView.tsx`'s list cards and
+        `CountryProposalWizardView.tsx`'s header (`CountryProposal` schema
+        also carries both fields). `CountryProposalListView.tsx`'s
+        `STATUS_LABELS` converted to reuse the same new
+        `moderationStatusLabel()` helper; `CountryProposalWizardView.tsx`'s
+        `SubmitSection` (`Текущий статус: {status}`) also switched from a
+        raw status string to the same helper for consistency, since it's the
+        identical enum. `CountryProposalWizardView.tsx`'s `SECTIONS` array
+        (rail labels) moved from module scope into the component body so its
+        labels can call `t()` — the `DecisionRunForm`/`STEP_LABELS`
+        precedent from Stage 6.
+      - `features/community/CommunityCountryBlock.tsx` (1 of 2 files,
+        `CommunityModerationView.tsx` re-confirmed internal-only): new
+        `communityCountryBlock` namespace (46 keys, the largest single
+        namespace this stage, including a nested `issueType.*` object for
+        the 6 fixed `ReportType` values and a nested `ratingAxis.*` object
+        for the 6 fixed reality-gap score fields — both built from an
+        exhaustive local `as const` array rather than a backend enum, so
+        neither needed the `?? rawValue` defensive-fallback treatment that
+        would have pushed them into an enum-dict instead). Unlike every
+        other file in this stage, this component's hardcoded strings were
+        already in **English**, not Russian (its own header comment already
+        called it out as intentionally English-first) — still needed full
+        extraction into `t()` calls, since a `ru`/`es` interface visitor was
+        getting untranslated English strings for the entire community Q&A
+        panel, the data-issue report form, and the reality-gap radar chart
+        labels. `RATING_AXES`'s per-field label array was restructured from
+        a module-level constant into a `ratingAxes` value built inside the
+        component body (`RATING_FIELDS.map((field) => ({ field, label:
+        t(\`ratingAxis.${field}\`) }))`), since the labels need `t()`.
+      - 9 pages, each a thin `Kicker`/`h1` wrapper switched to
+        `getTranslations()` (Server Components, matching the Stage 4-8
+        pattern): `migrationBoardPage`, `migrationBoardNewPage`,
+        `accountMigrationBoardPage`, `userStoriesPage`,
+        `authorProfilePage`, `authorMetricsStudioPage`,
+        `countryProposalsPage`, `countryProposalWizardPage` (all simple);
+        `migrationBoardPostPage` also carries the page's `AppBreadcrumbs`
+        labels (`breadcrumbBoard`/`breadcrumbPost`), the Stage 7
+        `routePage` pattern.
+      - **Pre-existing cross-cutting gap found, not fixed this stage (out of
+        scope for a minimal diff)**: `AppBreadcrumbs`/`Breadcrumbs`'
+        `aria-label` defaults to a hardcoded Russian string
+        (`"Хлебные крошки"`, set in Stage 2's `packages/ui` pass and never
+        wired to a translated value by any later stage) on **every**
+        locale, not just `ru` — confirmed via HTTP smoke test on
+        `/en/migration-board/[id]` (this stage's own new `AppBreadcrumbs`
+        call site) and by grepping all 4 call sites across the app
+        (`migration-board/[id]`, `routes/[id]` from Stage 7,
+        `trips/[id]` from Stage 8, `decision/passports/[token]` from
+        Stage 4). Screen-reader-only, not visible text, and touching it
+        properly means either changing the `packages/ui` default or wiring
+        an `ariaLabel` prop at 4 call sites spanning 3 already-shipped
+        stages — deliberately left as a separately-tracked accessibility gap
+        rather than folded into this stage's diff; flagged again in Final
+        verification below.
+      - **Real bug found and fixed via HTTP-level walkthrough**: the new
+        `communityCountryBlock.title` key was translated in `en`/`es` but
+        the `ru` entry was accidentally left as the literal English
+        "Community intelligence" (copy-paste slip while drafting the
+        message catalogs) — caught by curling `/ru/countries/argentina` and
+        finding the English string where `subtitle` right below it was
+        correctly in Russian. Fixed to "Аналитика сообщества"; re-verified
+        via the same curl before moving on.
+      - **Browser-automation tooling gap this session**: this session's
+        tool access did not include the Browser-pane tools
+        (`preview_start`/`navigate`/`computer`/`read_page`) the plan
+        prescribes for the interactive walkthrough — only Read/Edit/Write/
+        Bash/Grep/Glob were available. Substituted the best available
+        equivalent: started the real `pnpm dev` server against the
+        already-running Docker stack (API + Postgres + Redis, confirmed
+        healthy via `docker ps`), then drove it with `curl` — registered a
+        real throwaway account via the auth API, created a real migration
+        board post through `/api/v1/me/migration-board/posts` with the
+        exact enum values `MigrationBoardFormView.tsx` sends (confirmed
+        `3_6_months`/`preparing_documents`/`housing_search`/`members_only`
+        are all accepted, not just plausible-looking), hit its detail page
+        and confirmed the expected not-yet-moderated 404 in all 3 locales,
+        checked the same throwaway user's `/authors/[userId]` profile
+        (empty-metrics / reputation-not-computed states) in all 3 locales,
+        and checked `CommunityCountryBlock`/`CountryMigrationBoardBlock` on
+        a real country page and `RouteMigrationBoardBlock` on a real route
+        page in all 3 locales. This caught the `ru` `title` bug above and
+        confirmed no leaked `namespace.key` fallback strings anywhere, but
+        it is **not** a substitute for an actual interactive click-through
+        (no toast/error-state assertions after a real form submit, no
+        multi-step wizard interaction, no visual/layout check) — flagged
+        here honestly rather than silently claimed as done; a real browser
+        walkthrough of this stage's areas is still owed before Final
+        verification's full walkthrough, and should be cheap to fold into
+        that pass since it covers the same areas plus everything else.
+      - Verify: `i18n_parity_check.py` 948/948 keys across en/ru/es (19 new
+        namespaces: 10 feature + 9 page namespaces, 256 new keys, from 692
+        after Stage 8); `pnpm --filter web typecheck` clean
+        (needed the `MigrationBoardModerationView.tsx` one-line fix above to
+        pass, since it's a real caller of the now-reparametrized
+        `migrationBoardErrorMessage`); `pnpm --filter web lint` clean;
+        Vitest 5/5; `pnpm format:check` clean (6 files needed a
+        `prettier --write` pass after editing); fresh `next build` clean
+        (45 routes, unchanged from before this stage — no route added or
+        removed); `python -m pytest tests/test_frontend_contract.py -q`
+        clean.
 
 - [ ] Knowledge + AI Assistant + Search (14 files + 4 pages) — not yet
       surveyed this session. Before starting: glob
@@ -646,7 +741,15 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
       dossier, decision flow, legal signals, sources, routes, trips,
       watchlist, subscriptions, account, migration board, stories, author
       metrics, country proposals, methodology, glossary, scenarios,
-      assistant, search) in `/en`, `/ru`, `/es`.
+      assistant, search) in `/en`, `/ru`, `/es`. **Must include a real
+      interactive click-through of Stage 9's areas specifically** (create a
+      migration board post through the actual form UI, submit an author
+      metric, step through the country-proposal wizard, post a community
+      question/answer/report/rating) — Stage 9 itself only had HTTP-level
+      tool access (no Browser-pane tools that session) and substituted
+      `curl`-driven checks against a real running stack, which is not
+      equivalent to a real click-through; see Stage 9's own entry above for
+      exactly what was and wasn't covered that way.
 - [ ] Update `docs/_arch_/08_Открытые_вопросов.md`'s Р-12 (documented
       "ru-only interface, next-intl scoped to chrome" as the accepted
       state) — supersede with the new decision and date: English default,
@@ -662,17 +765,26 @@ against new message-catalog namespaces (en/ru/es), verify, commit.
       *content* (country names, scenario names, source excerpts, event
       summaries) staying in its original language regardless of interface
       locale — this is the explicit, owner-confirmed scope boundary for
-      this whole task, not a bug.
+      this whole task, not a bug; `packages/ui`'s `Breadcrumbs` component's
+      `ariaLabel` prop still defaults to the hardcoded Russian
+      `"Хлебные крошки"` regardless of interface locale on all 4
+      `AppBreadcrumbs` call sites app-wide (`routes/[id]`,
+      `trips/[id]`, `decision/passports/[token]`, and Stage 9's own
+      `migration-board/[id]`) — a Stage 2 default nobody has wired to a
+      translated value yet, screen-reader-only (flagged, not fixed, in
+      Stage 9's entry above since fixing it touches pages from 3 different
+      already-shipped stages).
 
 ## Completion
 
 - [ ] Checklist filled (`+`/`-`) — stages 1–8 above are already `[+]`
       with full writeups; only Stage 9, Stage 10, Final verification, and
       this Completion section remain `[ ]`.
-- [ ] Incremental commits on this branch, one per stage (8 of 10 done;
+- [ ] Incremental commits on this branch, one per stage (9 of 10 done;
       commits so far: `6554d7f` Stage 1, `47fc596` Stage 2, `425c199`
       Stage 3a, `8747a19` Stage 4, `1461d77` Stage 5, `58781f0` Stage 6,
-      `e538e6f` Stage 7, `71ff01f` Stage 8).
+      `e538e6f` Stage 7, `71ff01f` Stage 8, Stage 9 — see the commit this
+      task-checklist update ships in).
 - [ ] Final report — summarize what shipped, total namespaces/keys added
       across all 10 stages, any deferred tech debt (the two items in the
       Final-verification gaps list above), and confirm the branch's

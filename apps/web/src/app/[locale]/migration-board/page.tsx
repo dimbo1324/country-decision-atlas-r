@@ -1,17 +1,18 @@
+import { getTranslations } from "next-intl/server";
 import { Kicker } from "@country-decision-atlas/ui";
 import { MigrationBoardListView } from "../../../features/migration-board";
 
 export const dynamic = "force-dynamic";
 
-export default function MigrationBoardPage() {
+export default async function MigrationBoardPage() {
+  const t = await getTranslations("migrationBoardPage");
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <Kicker>Migration board</Kicker>
-        <h1 className="font-display text-4xl font-bold">Доска переезда</h1>
+        <Kicker>{t("kicker")}</Kicker>
+        <h1 className="font-display text-4xl font-bold">{t("title")}</h1>
         <p className="text-c3 max-w-2xl text-sm leading-relaxed">
-          Найдите людей с похожим направлением переезда без публичного раскрытия
-          контактов.
+          {t("description")}
         </p>
       </header>
       <MigrationBoardListView />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link, getPathname } from "../../i18n/navigation";
 import {
@@ -15,6 +15,7 @@ import {
   useSubmitBoardPostMutation,
 } from "../../entities/migration-board/api";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { routes } from "../../shared/lib/routes";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
@@ -22,8 +23,9 @@ import { LoadingState } from "../../shared/ui/LoadingState";
 import { migrationBoardErrorMessage } from "./errorMessage";
 
 export function AccountMigrationBoardView() {
+  const t = useTranslations("migrationBoardAccount");
   const { user, isLoading: authLoading } = useAuth();
-  const locale = useLocale();
+  const locale = useAppLocale();
 
   const posts = useQuery({ ...myBoardPostsQuery(), enabled: Boolean(user) });
   const incoming = useQuery({
@@ -42,21 +44,21 @@ export function AccountMigrationBoardView() {
   const cancelRequest = useCancelContactRequestMutation();
 
   if (authLoading) {
-    return <LoadingState message="Загрузка migration board…" />;
+    return <LoadingState message={t("loadingBoard")} />;
   }
 
   if (!user) {
     return (
       <ErrorState
-        error="Войдите, чтобы видеть свои записи."
+        error={t("loginRequired")}
         backHref={getPathname({ href: routes.login, locale })}
-        backLabel="Войти"
+        backLabel={t("loginLabel")}
       />
     );
   }
 
   if (posts.isPending || incoming.isPending || outgoing.isPending) {
-    return <LoadingState message="Загрузка migration board…" />;
+    return <LoadingState message={t("loadingBoard")} />;
   }
 
   const loadError = posts.error ?? incoming.error ?? outgoing.error;
@@ -70,14 +72,14 @@ export function AccountMigrationBoardView() {
       data-testid="account-migration-board"
     >
       {loadError != null && (
-        <ErrorState error={migrationBoardErrorMessage(loadError)} />
+        <ErrorState error={migrationBoardErrorMessage(loadError, locale)} />
       )}
       <div className="flex flex-wrap gap-3">
         <Link href={routes.migrationBoardNew}>
-          <Button>Создать запись</Button>
+          <Button>{t("createPost")}</Button>
         </Link>
         <Link href={routes.migrationBoard}>
-          <Button variant="ghost">Публичная доска</Button>
+          <Button variant="ghost">{t("publicBoard")}</Button>
         </Link>
       </div>
 
@@ -85,9 +87,9 @@ export function AccountMigrationBoardView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Мои записи</Kicker>
+        <Kicker>{t("myPostsKicker")}</Kicker>
         {postItems.length === 0 ? (
-          <EmptyState message="Записей пока нет." />
+          <EmptyState message={t("emptyPosts")} />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {postItems.map((post) => (
@@ -118,7 +120,7 @@ export function AccountMigrationBoardView() {
                     }
                     data-testid="migration-board-account-submit"
                   >
-                    На модерацию
+                    {t("submitToModeration")}
                   </Button>
                   <Button
                     variant="ghost"
@@ -127,7 +129,7 @@ export function AccountMigrationBoardView() {
                       post.status === "archived" || archivePost.isPending
                     }
                   >
-                    Архив
+                    {t("archive")}
                   </Button>
                 </div>
               </Card>
@@ -140,9 +142,9 @@ export function AccountMigrationBoardView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Входящие requests</Kicker>
+        <Kicker>{t("incomingKicker")}</Kicker>
         {incomingItems.length === 0 ? (
-          <p className="text-c3 text-sm">Нет входящих requests.</p>
+          <p className="text-c3 text-sm">{t("noIncoming")}</p>
         ) : (
           incomingItems.map((request) => (
             <div
@@ -150,8 +152,11 @@ export function AccountMigrationBoardView() {
               className="border-warm flex items-center justify-between gap-4 border-b py-3 last:border-b-0"
             >
               <span className="text-c2 text-sm">
-                {request.post_title} от {request.from_user_display_name}:{" "}
-                {request.status}
+                {t("fromRequestLine", {
+                  post: request.post_title,
+                  name: request.from_user_display_name,
+                  status: request.status,
+                })}
               </span>
               <div className="flex gap-3">
                 <Button
@@ -159,14 +164,14 @@ export function AccountMigrationBoardView() {
                   onClick={() => acceptRequest.mutate(request.id)}
                   disabled={acceptRequest.isPending}
                 >
-                  Accept
+                  {t("accept")}
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() => declineRequest.mutate(request.id)}
                   disabled={declineRequest.isPending}
                 >
-                  Decline
+                  {t("decline")}
                 </Button>
               </div>
             </div>
@@ -178,9 +183,9 @@ export function AccountMigrationBoardView() {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Исходящие requests</Kicker>
+        <Kicker>{t("outgoingKicker")}</Kicker>
         {outgoingItems.length === 0 ? (
-          <p className="text-c3 text-sm">Нет исходящих requests.</p>
+          <p className="text-c3 text-sm">{t("noOutgoing")}</p>
         ) : (
           outgoingItems.map((request) => (
             <div
@@ -188,8 +193,11 @@ export function AccountMigrationBoardView() {
               className="border-warm flex items-center justify-between gap-4 border-b py-3 last:border-b-0"
             >
               <span className="text-c2 text-sm">
-                {request.post_title} для {request.to_user_display_name}:{" "}
-                {request.status}
+                {t("toRequestLine", {
+                  post: request.post_title,
+                  name: request.to_user_display_name,
+                  status: request.status,
+                })}
               </span>
               <Button
                 variant="ghost"
@@ -198,7 +206,7 @@ export function AccountMigrationBoardView() {
                   request.status !== "pending" || cancelRequest.isPending
                 }
               >
-                Cancel
+                {t("cancel")}
               </Button>
             </div>
           ))

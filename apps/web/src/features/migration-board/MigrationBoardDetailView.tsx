@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Badge, Button, Card, Kicker } from "@country-decision-atlas/ui";
 import { Link } from "../../i18n/navigation";
@@ -10,6 +11,7 @@ import {
   useReportPostMutation,
 } from "../../entities/migration-board/api";
 import { useAuth } from "../../shared/auth/AuthProvider";
+import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { routes } from "../../shared/lib/routes";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -19,6 +21,8 @@ const textareaClass =
   "border-warm bg-bg2 text-c1 font-body border px-4 py-2.5 text-sm outline-none focus-visible:border-gold transition-colors duration-200";
 
 export function MigrationBoardDetailView({ postId }: { postId: string }) {
+  const t = useTranslations("migrationBoardDetail");
+  const locale = useAppLocale();
   const { user } = useAuth();
   const post = useQuery(boardPostQuery(postId));
   const [message, setMessage] = useState("");
@@ -32,7 +36,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
     try {
       await createContactRequest.mutateAsync({ postId, payload: { message } });
       setMessage("");
-      setStatus("Contact request отправлен.");
+      setStatus(t("contactRequestSent"));
     } catch {
       // surfaced via createContactRequest.error below
     }
@@ -46,18 +50,20 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         payload: { reason: "other", details: reportDetails || null },
       });
       setReportDetails("");
-      setStatus("Жалоба отправлена на модерацию.");
+      setStatus(t("reportSent"));
     } catch {
       // surfaced via reportPost.error below
     }
   }
 
   if (post.isPending) {
-    return <LoadingState message="Загрузка записи…" />;
+    return <LoadingState message={t("loadingPost")} />;
   }
 
   if (post.isError) {
-    return <ErrorState error={migrationBoardErrorMessage(post.error)} />;
+    return (
+      <ErrorState error={migrationBoardErrorMessage(post.error, locale)} />
+    );
   }
 
   const detail = post.data;
@@ -71,6 +77,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         <ErrorState
           error={migrationBoardErrorMessage(
             createContactRequest.error ?? reportPost.error,
+            locale,
           )}
         />
       )}
@@ -90,18 +97,20 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
           <Badge variant="default">{detail.companion_goal}</Badge>
         </div>
         <p className="text-c3 text-sm">
-          Направление:{" "}
+          {t("destinationLabel")}{" "}
           <Link
             href={routes.country(detail.destination_country.slug)}
             className="text-gold3 hover:text-gold"
           >
             {detail.destination_country.name}
           </Link>
-          {detail.origin_country ? ` из ${detail.origin_country.name}` : ""}
+          {detail.origin_country
+            ? t("originSuffix", { country: detail.origin_country.name })
+            : ""}
         </p>
         {detail.route && (
           <p className="text-c3 text-sm">
-            Route:{" "}
+            {t("routeLabel")}{" "}
             <Link
               href={`/routes/${detail.route.id}`}
               className="text-gold3 hover:text-gold"
@@ -128,16 +137,16 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Contact request</Kicker>
+        <Kicker>{t("contactRequestKicker")}</Kicker>
         {!user ? (
           <p className="text-c3 text-sm">
             <Link
               href={routes.login}
               className="text-gold3 hover:text-gold"
             >
-              Войдите
+              {t("loginToContact")}
             </Link>
-            , чтобы отправить request через платформу.
+            {t("loginToContactSuffix")}
           </p>
         ) : detail.contact_requests_enabled ? (
           <>
@@ -148,23 +157,20 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               maxLength={800}
               value={message}
               onChange={(event) => setMessage(event.target.value)}
-              placeholder="Коротко опишите, почему хотите связаться."
+              placeholder={t("contactPlaceholder")}
               data-testid="migration-board-contact-message"
             />
-            <p className="text-c4 text-xs">
-              Не публикуйте контакты (email, телефон, Telegram) в открытом
-              тексте.
-            </p>
+            <p className="text-c4 text-xs">{t("contactPrivacyNotice")}</p>
             <Button
               onClick={() => void sendContactRequest()}
               disabled={message.length < 20 || createContactRequest.isPending}
               data-testid="migration-board-contact-submit"
             >
-              Отправить request
+              {t("sendRequest")}
             </Button>
           </>
         ) : (
-          <p className="text-c3 text-sm">Автор отключил contact requests.</p>
+          <p className="text-c3 text-sm">{t("contactDisabled")}</p>
         )}
       </Card>
 
@@ -172,9 +178,9 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
         interactive={false}
         className="flex flex-col gap-4"
       >
-        <Kicker>Жалоба</Kicker>
+        <Kicker>{t("reportKicker")}</Kicker>
         {!user ? (
-          <p className="text-c3 text-sm">Жалобы доступны после входа.</p>
+          <p className="text-c3 text-sm">{t("reportLoginRequired")}</p>
         ) : (
           <>
             <textarea
@@ -182,7 +188,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               rows={3}
               value={reportDetails}
               onChange={(event) => setReportDetails(event.target.value)}
-              placeholder="Опишите проблему без персональных данных."
+              placeholder={t("reportPlaceholder")}
               data-testid="migration-board-report-message"
             />
             <Button
@@ -191,7 +197,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               disabled={reportPost.isPending}
               data-testid="migration-board-report-submit"
             >
-              Пожаловаться
+              {t("reportSubmit")}
             </Button>
           </>
         )}
