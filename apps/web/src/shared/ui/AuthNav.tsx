@@ -130,19 +130,33 @@ export function AuthNav({
   const router = useRouter();
   const links = useAuthLinks();
 
+  // Fixed min-width sized for the longest translation ("Iniciar sesión")
+  // so this slot's own footprint -- and the gap between it and the rest
+  // of the header -- doesn't shift when the interface locale changes OR
+  // when the session check resolves. `invisible` (not `hidden`) keeps the
+  // reserved width in the layout while a session-hint holder's refresh()
+  // is still in flight, so the header doesn't collapse then re-expand a
+  // beat later (see AuthProvider's isLoading/hydration notes).
   if (isLoading) {
-    return null;
+    return (
+      <span
+        aria-hidden="true"
+        className={cn(
+          linkClass,
+          "invisible inline-block min-w-[8rem]",
+          className,
+        )}
+      >
+        {t("signIn")}
+      </span>
+    );
   }
 
   if (!user) {
     return (
-      // Fixed min-width sized for the longest translation ("Iniciar
-      // sesión") so this link's own footprint -- and the gap between it
-      // and the rest of the header -- doesn't shift when the interface
-      // locale changes. Right-aligned only from `lg` up (the desktop
-      // header copy): the mobile drawer copy (below `lg`) keeps its
-      // original left-aligned look, since this same component also
-      // renders there via MobileNav.
+      // Right-aligned only from `lg` up (the desktop header copy): the
+      // mobile drawer copy (below `lg`) keeps its original left-aligned
+      // look, since this same component also renders there via MobileNav.
       <Link
         href={routes.login}
         onClick={onNavigate}
