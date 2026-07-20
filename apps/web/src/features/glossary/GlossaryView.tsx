@@ -8,6 +8,7 @@ import { Suspense, useMemo } from "react";
 import { glossaryTermsQuery } from "../../entities/glossary/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
+import { ClientOnly } from "../../shared/ui/ClientOnly";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -95,9 +96,12 @@ function GlossaryViewInner() {
 
 export function GlossaryView() {
   const t = useTranslations("glossaryView");
+  const fallback = <LoadingState message={t("loading")} />;
   return (
-    <Suspense fallback={<LoadingState message={t("loading")} />}>
-      <GlossaryViewInner />
-    </Suspense>
+    <ClientOnly fallback={fallback}>
+      <Suspense fallback={fallback}>
+        <GlossaryViewInner />
+      </Suspense>
+    </ClientOnly>
   );
 }

@@ -9,6 +9,7 @@ import { allCountriesQuery } from "../../entities/decision/api";
 import { sourceListQuery } from "../../entities/sources/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
+import { ClientOnly } from "../../shared/ui/ClientOnly";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -130,8 +131,10 @@ function SourcesLoadingFallback() {
 
 export function SourcesView() {
   return (
-    <Suspense fallback={<SourcesLoadingFallback />}>
-      <SourcesViewInner />
-    </Suspense>
+    <ClientOnly fallback={<SourcesLoadingFallback />}>
+      <Suspense fallback={<SourcesLoadingFallback />}>
+        <SourcesViewInner />
+      </Suspense>
+    </ClientOnly>
   );
 }

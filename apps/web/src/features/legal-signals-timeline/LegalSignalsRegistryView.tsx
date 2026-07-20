@@ -15,6 +15,7 @@ import { allCountriesQuery } from "../../entities/decision/api";
 import { legalSignalTimelineQuery } from "../../entities/legal-signals/api";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
 import { toApiLocale } from "../../shared/lib/locale";
+import { ClientOnly } from "../../shared/ui/ClientOnly";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { ErrorState } from "../../shared/ui/ErrorState";
 import { LoadingState } from "../../shared/ui/LoadingState";
@@ -236,8 +237,10 @@ function LegalSignalsLoadingFallback() {
 
 export function LegalSignalsRegistryView() {
   return (
-    <Suspense fallback={<LegalSignalsLoadingFallback />}>
-      <LegalSignalsRegistryViewInner />
-    </Suspense>
+    <ClientOnly fallback={<LegalSignalsLoadingFallback />}>
+      <Suspense fallback={<LegalSignalsLoadingFallback />}>
+        <LegalSignalsRegistryViewInner />
+      </Suspense>
+    </ClientOnly>
   );
 }
