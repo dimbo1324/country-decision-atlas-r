@@ -6,6 +6,7 @@ import { e2eRoutes } from "./helpers/routes";
 test.describe("locale preservation", () => {
   test("public default locale is ru", async ({ page }) => {
     await page.goto(e2eRoutes.countries);
+    await page.getByTestId("locale-switcher-trigger").click();
     await expect(page.getByTestId("locale-switch-ru")).toHaveAttribute(
       "data-active",
       "true",
@@ -21,6 +22,7 @@ test.describe("locale preservation", () => {
 
   test("locale switcher preserves the current route", async ({ page }) => {
     await page.goto(e2eRoutes.country("uruguay", "ru"));
+    await page.getByTestId("locale-switcher-trigger").click();
     await page.getByTestId("locale-switch-en").click();
     await expect(page).toHaveURL(/\/en\/countries\/uruguay/);
     const sourcesLink = page.locator("nav a[href*='/sources']");
