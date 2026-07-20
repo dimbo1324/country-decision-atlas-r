@@ -45,12 +45,14 @@ export function DonutChart({
     }
     const start = performance.now();
     const durationMs = 1300;
+    let raf = 0;
     const step = (now: number) => {
       const p = Math.min(1, (now - start) / durationMs);
       setProgress(1 - (1 - p) ** 3);
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) raf = requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
   }, [active, reducedMotion]);
 
   // Live mode: each segment's *drawn* arc length breathes gently around its

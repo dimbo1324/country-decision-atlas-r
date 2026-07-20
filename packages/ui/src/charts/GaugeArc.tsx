@@ -64,13 +64,15 @@ export function GaugeArc({
     }
     const start = performance.now();
     const durationMs = 1400;
+    let raf = 0;
     const step = (now: number) => {
       const p = Math.min(1, (now - start) / durationMs);
       setArcProgress((value / 100) * (1 - (1 - p) ** 3));
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) raf = requestAnimationFrame(step);
       else setSettled(true);
     };
-    requestAnimationFrame(step);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
   }, [active, reducedMotion, value]);
 
   useEffect(() => {
