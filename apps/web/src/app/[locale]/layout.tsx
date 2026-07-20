@@ -38,7 +38,17 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    // `locale` is passed explicitly (not left to next-intl's auto-
+    // inheritance): the header lives inside a `<Suspense>` streaming
+    // boundary, and without the explicit prop the client provider can
+    // initialize before the inherited locale is available and fall back to
+    // `defaultLocale`. That made every next-intl `<Link>` in the header
+    // build `/en/...` hrefs on a `/ru` (or `/es`) page, diverging from the
+    // server-rendered `/ru/...` HTML — the header hydration mismatch.
+    <NextIntlClientProvider
+      locale={locale}
+      messages={messages}
+    >
       <GlossaryProvider>
         <AppShell>{children}</AppShell>
       </GlossaryProvider>
