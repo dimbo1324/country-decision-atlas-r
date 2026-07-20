@@ -59,7 +59,14 @@ docker compose up -d postgres redis api
 # 4. Apply database migrations
 python scripts/apply_migrations.py
 
-# 5. Generate frontend API types from the OpenAPI contract
+# 5. Make the conserved demo countries (Russia, Uruguay, Argentina) visible
+#    -- migrations seed them with is_demo=TRUE (hidden) by design (see
+#    "Project status notes" below), so skipping this step leaves the
+#    countries list empty even though the data is there. Reads DATABASE_URL
+#    from .env (via get_settings()), same as apply_migrations.py.
+python scripts/dev_tools/restore_demo_countries.py --visible
+
+# 6. Generate frontend API types from the OpenAPI contract
 corepack pnpm@9.12.0 contracts:generate
 ```
 
@@ -132,7 +139,10 @@ cd apps/notifier && go vet ./... && go test ./...    # Go (drop -race locally on
 
 - The three countries currently in the data (Russia, Uruguay, Argentina)
   are a manually-curated test set, conserved as a hidden, restorable demo
-  dataset rather than deleted.
+  dataset rather than deleted. Migrations seed them with `is_demo=TRUE`
+  (hidden from the public API/UI) — run
+  `python scripts/dev_tools/restore_demo_countries.py --visible` after
+  `apply_migrations.py` (see Quick start above) to make them visible.
 - The project runs in **autonomous development mode**: no real external
   service integrations (AI providers, translation, Telegram) are wired in
   yet — everything works offline through fake-by-default provider seams

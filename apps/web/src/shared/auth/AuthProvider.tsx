@@ -27,7 +27,15 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(() => hasSessionHint());
+  // Must start `false` unconditionally, matching SSR (no `document` there,
+  // so `hasSessionHint()` would always read `false` server-side). Reading
+  // the real cookie value in the useState initializer instead made the
+  // client's first hydration pass diverge from the server-rendered HTML
+  // for any visitor who already had the hint cookie -- exactly the
+  // "server/client branch on typeof window/document" case React's own
+  // hydration-mismatch warning describes. The mount effect below still
+  // synchronously decides whether to load the real session before paint.
+  const [isLoading, setIsLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
