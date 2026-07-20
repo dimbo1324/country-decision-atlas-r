@@ -34,3 +34,23 @@ class MockResizeObserver implements ResizeObserver {
   unobserve(): void {}
 }
 vi.stubGlobal("ResizeObserver", MockResizeObserver);
+
+// jsdom has no matchMedia either; `useReducedMotion` (packages/ui) reads
+// `prefers-reduced-motion` on mount, so every animated primitive that
+// honours it — Counter, DonutChart, GaugeArc and the chart family — needs
+// this to render under test. `matches: false` keeps animations enabled,
+// which is the behaviour the existing assertions were written against.
+vi.stubGlobal(
+  "matchMedia",
+  (query: string): MediaQueryList =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as unknown as MediaQueryList,
+);
