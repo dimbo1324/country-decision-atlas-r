@@ -21,7 +21,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-country_atlas}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
     ports:
-      - "${POSTGRES_PORT:-5433}:5432"
+      # Bound to loopback: no requirepass/auth on this dev instance, so a
+      # 0.0.0.0 bind would let anyone on the same network read/write the
+      # database. Containers still reach each other over the compose
+      # network by service name regardless (AUDIT_2026-07-20.md SEC-1).
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -33,7 +37,8 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      # See postgres above (AUDIT_2026-07-20.md SEC-1) -- no requirepass set.
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -116,8 +121,10 @@ services:
       - --mode=dev-container
       - --default-log-level=warn
     ports:
-      - "19092:19092"
-      - "19644:9644"
+      # See postgres above (AUDIT_2026-07-20.md SEC-1) -- unauthenticated
+      # dev broker.
+      - "127.0.0.1:19092:19092"
+      - "127.0.0.1:19644:9644"
     profiles:
       - alerts
     healthcheck:
@@ -129,7 +136,8 @@ services:
   mongo:
     image: mongo:7
     ports:
-      - "27017:27017"
+      # See postgres above (AUDIT_2026-07-20.md SEC-1) -- no --auth set.
+      - "127.0.0.1:27017:27017"
     volumes:
       - mongo-data:/data/db
     profiles:
@@ -157,8 +165,11 @@ services:
       GRPC_ADDR: ${GRPC_ADDR:-:9090}
       GRPC_AUTH_TOKEN: ${GRPC_AUTH_TOKEN:-dev-grpc-token}
     ports:
-      - "8081:8081"
-      - "9090:9090"
+      # gRPC (9090) is token-gated (see grpcserver's auth interceptor), but
+      # bound to loopback anyway for consistency with the rest of this
+      # dev-only infra (AUDIT_2026-07-20.md SEC-1).
+      - "127.0.0.1:8081:8081"
+      - "127.0.0.1:9090:9090"
     depends_on:
       redpanda:
         condition: service_healthy
