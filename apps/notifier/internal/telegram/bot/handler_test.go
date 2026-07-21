@@ -258,3 +258,61 @@ func TestHandleWebLinkMentionsExpiryMinutes(t *testing.T) {
 		t.Errorf("expected reply to mention 10 minute expiry, got: %s", tg.Sent[0].Text)
 	}
 }
+
+func makeUpdateWithLocale(text string, userID int64, username string, languageCode string) *telegram.TelegramUpdate {
+	return &telegram.TelegramUpdate{
+		UpdateID: 1,
+		Message: &telegram.TelegramMessage{
+			Text: text,
+			Chat: telegram.TelegramChat{ID: userID},
+			From: &telegram.TelegramUser{ID: userID, Username: username, LanguageCode: languageCode},
+		},
+	}
+}
+
+func TestHandleSubscribeRepliesInEnglishForEnglishLanguageCode(t *testing.T) {
+	h, tg := makeHandler()
+	_ = h.Handle(context.Background(), makeUpdateWithLocale("/subscribe argentina", 100, "dima", "en-US"))
+	if !strings.Contains(tg.Sent[0].Text, "You are now subscribed") {
+		t.Errorf("expected English reply, got: %s", tg.Sent[0].Text)
+	}
+	if !strings.Contains(tg.Sent[0].Text, "This is not legal advice.") {
+		t.Errorf("expected English disclaimer, got: %s", tg.Sent[0].Text)
+	}
+}
+
+func TestHandleSubscribeRepliesInSpanishForSpanishLanguageCode(t *testing.T) {
+	h, tg := makeHandler()
+	_ = h.Handle(context.Background(), makeUpdateWithLocale("/subscribe argentina", 100, "dima", "es"))
+	if !strings.Contains(tg.Sent[0].Text, "Te has suscrito") {
+		t.Errorf("expected Spanish reply, got: %s", tg.Sent[0].Text)
+	}
+}
+
+func TestHandleUnknownLanguageCodeFallsBackToRussian(t *testing.T) {
+	h, tg := makeHandler()
+	_ = h.Handle(context.Background(), makeUpdateWithLocale("/subscribe argentina", 100, "dima", "fr-FR"))
+	if !strings.Contains(tg.Sent[0].Text, disclaimer) {
+		t.Errorf("expected Russian (default) disclaimer for unrecognized language, got: %s", tg.Sent[0].Text)
+	}
+}
+
+func TestSetTelegramLocalePersistsAcrossInteractions(t *testing.T) {
+	subsRepo := mongostore.NewInMemorySubscriptionRepository(nil)
+	identities := mongostore.NewInMemoryTelegramIdentityRepository()
+	svc := subscriptions.New(subsRepo, identities)
+	tg := &telegram.FakeClient{}
+	linkCodes := mongostore.NewInMemoryTelegramLinkCodeRepository()
+	h := New(svc, tg, linkCodes, 10*time.Minute)
+
+	ctx := context.Background()
+	_ = h.Handle(ctx, makeUpdateWithLocale("/help", 100, "dima", "en"))
+
+	got, err := svc.TelegramLocale(ctx, "100")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if got != "en" {
+		t.Errorf("want stored locale %q got %q", "en", got)
+	}
+}

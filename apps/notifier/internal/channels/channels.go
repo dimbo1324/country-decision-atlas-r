@@ -3,6 +3,7 @@ package channels
 import (
 	"context"
 
+	"github.com/country-decision-atlas/notifier/internal/locale"
 	"github.com/country-decision-atlas/notifier/internal/telegram"
 )
 
@@ -85,7 +86,12 @@ func (c *TelegramChannel) Deliver(ctx context.Context, recipient Recipient, mess
 	}
 	text := message.Body
 	if text == "" {
-		text = telegram.FormatMessage(message.CountrySlug, message.EventType, message.Title)
+		// Defensive fallback for a NotificationMessage built without a
+		// pre-formatted Body -- the real delivery path (notifier/handler.go)
+		// always formats Body per-recipient with the recipient's own
+		// locale before calling Deliver, so this has no per-recipient
+		// locale to use and falls back to locale.Default.
+		text = telegram.FormatMessage(message.CountrySlug, message.EventType, message.Title, locale.Default)
 	}
 	if err := c.client.SendMessage(ctx, chatID, text); err != nil {
 		return DeliveryResult{Status: "failed", Error: err}

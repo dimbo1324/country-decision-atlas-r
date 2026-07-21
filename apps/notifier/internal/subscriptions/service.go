@@ -63,3 +63,19 @@ func (s *Service) DeleteSubscription(ctx context.Context, telegramUserID string,
 func (s *Service) ListSubscriptions(ctx context.Context, telegramUserID string) ([]*mongostore.Subscription, error) {
 	return s.subs.ListActive(ctx, telegramUserID)
 }
+
+// SetTelegramLocale persists the notification locale resolved from a live
+// bot interaction's `language_code` (internal/telegram/bot.Handler calls
+// this on every incoming update). Deliberately separate from
+// CreateSubscription: subscriptions can also be created via gRPC on behalf
+// of a web user, which has no Telegram update -- and therefore no
+// language_code -- to resolve a locale from at all.
+func (s *Service) SetTelegramLocale(ctx context.Context, telegramUserID string, resolvedLocale string) error {
+	return s.identities.SetLocale(ctx, telegramUserID, resolvedLocale)
+}
+
+// TelegramLocale returns the recipient's stored notification locale
+// (locale.Default if never captured).
+func (s *Service) TelegramLocale(ctx context.Context, telegramUserID string) (string, error) {
+	return s.identities.GetLocale(ctx, telegramUserID)
+}

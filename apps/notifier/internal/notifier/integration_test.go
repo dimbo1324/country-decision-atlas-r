@@ -3,9 +3,11 @@ package notifier
 import (
 	"context"
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
+	"github.com/country-decision-atlas/notifier/internal/channels"
 	"github.com/country-decision-atlas/notifier/internal/events"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/subscriptions"
@@ -26,7 +28,13 @@ func makeIntegrationSetup() (
 	dedup := mongostore.NewInMemoryDedupRepository()
 	tg := &telegram.FakeClient{}
 	svc := subscriptions.New(subsRepo, identities)
-	h := NewTelegramHandler(dedup, subsRepo, dl, tg)
+	// NewHandler directly, not the NewTelegramHandler test shortcut: that
+	// helper builds its own throwaway identities store internally, which
+	// would silently desync from svc's -- svc.SetTelegramLocale writes
+	// would never be visible to the handler's per-recipient locale lookup.
+	registry := channels.NewRegistry()
+	registry.Register(channels.NewTelegramChannel(tg))
+	h := NewHandler(dedup, subsRepo, identities, dl, mongostore.NewInMemoryDeadLetterRepository(), registry, nil)
 	return h, subsRepo, dl, dedup, tg, svc
 }
 
@@ -179,5 +187,35 @@ func TestIntegrationDeliveryLogFailedOnTelegramError(t *testing.T) {
 	}
 	if dl.Entries[0].Status != "failed" {
 		t.Errorf("want status=failed got %s", dl.Entries[0].Status)
+	}
+}
+
+func TestIntegrationDeliversInEachRecipientsOwnLocale(t *testing.T) {
+	h, _, _, _, tg, svc := makeIntegrationSetup()
+	ctx := context.Background()
+
+	_, _ = svc.CreateSubscription(ctx, "user-ru", "dima", "argentina")
+	_, _ = svc.CreateSubscription(ctx, "user-en", "john", "argentina")
+	if err := svc.SetTelegramLocale(ctx, "user-en", "en"); err != nil {
+		t.Fatalf("set locale: %v", err)
+	}
+
+	e := makeEvent("key-locale", "argentina")
+	if err := h.Handle(ctx, e); err != nil {
+		t.Fatalf("handle: %v", err)
+	}
+
+	if len(tg.Sent) != 2 {
+		t.Fatalf("want 2 messages sent got %d", len(tg.Sent))
+	}
+	byChat := map[string]string{}
+	for _, m := range tg.Sent {
+		byChat[m.ChatID] = m.Text
+	}
+	if !strings.Contains(byChat["user-ru"], "Новое правовое событие") {
+		t.Errorf("want Russian text for user-ru, got: %s", byChat["user-ru"])
+	}
+	if !strings.Contains(byChat["user-en"], "New legal signal") {
+		t.Errorf("want English text for user-en, got: %s", byChat["user-en"])
 	}
 }

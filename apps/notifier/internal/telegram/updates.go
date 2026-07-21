@@ -18,4 +18,8 @@ type TelegramChat struct {
 type TelegramUser struct {
 	ID       int64  `json:"id"`
 	Username string `json:"username"`
+	// LanguageCode is the client-reported IETF language tag (e.g. "en",
+	// "es-MX") Telegram sends on every message's `from` -- the source for
+	// per-recipient notification locale (internal/locale.Resolve).
+	LanguageCode string `json:"language_code"`
 }

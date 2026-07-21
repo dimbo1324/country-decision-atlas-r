@@ -7,6 +7,7 @@ import (
 	"github.com/country-decision-atlas/notifier/internal/channels"
 	"github.com/country-decision-atlas/notifier/internal/dlq"
 	"github.com/country-decision-atlas/notifier/internal/events"
+	"github.com/country-decision-atlas/notifier/internal/locale"
 	"github.com/country-decision-atlas/notifier/internal/metrics"
 	mongostore "github.com/country-decision-atlas/notifier/internal/mongo"
 	"github.com/country-decision-atlas/notifier/internal/telegram"
@@ -90,15 +91,6 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 	h.metrics.IncEventsProcessed()
 	h.metrics.AddSubscriptionsMatched(len(recipients))
 
-	text := telegram.FormatMessage(e.CountrySlug, e.EventType, e.Title())
-	message := channels.NotificationMessage{
-		EventKey:    e.EventKey,
-		EventType:   e.EventType,
-		CountrySlug: e.CountrySlug,
-		Title:       e.Title(),
-		Body:        text,
-	}
-
 	for _, recipient := range recipients {
 		already, err := h.alreadyDelivered(ctx, e.EventKey, recipient)
 		if err != nil {
@@ -108,6 +100,24 @@ func (h *Handler) Handle(ctx context.Context, e *events.DomainEvent) error {
 		if already {
 			h.metrics.IncEventsSkipped()
 			continue
+		}
+
+		// Formatted per-recipient (not once for the whole event): each
+		// Telegram user has their own stored notification locale, resolved
+		// from their bot interactions' language_code.
+		recipientLocale := locale.Default
+		if recipient.ChannelType == channels.ChannelTelegram && recipient.TelegramUserID != "" {
+			if resolved, err := h.identities.GetLocale(ctx, recipient.TelegramUserID); err == nil {
+				recipientLocale = resolved
+			}
+		}
+		text := telegram.FormatMessage(e.CountrySlug, e.EventType, e.Title(), recipientLocale)
+		message := channels.NotificationMessage{
+			EventKey:    e.EventKey,
+			EventType:   e.EventType,
+			CountrySlug: e.CountrySlug,
+			Title:       e.Title(),
+			Body:        text,
 		}
 
 		channel, ok := h.registry.Get(recipient.ChannelType)
