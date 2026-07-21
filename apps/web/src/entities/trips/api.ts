@@ -18,7 +18,9 @@ import type {
   TripWaypointListResponse,
   TripWaypointUpdateRequest,
 } from "../../shared/api/trips";
+import { toast } from "@country-decision-atlas/ui";
 import { tripsApi } from "../../shared/api/trips";
+import { mutationErrorMessage } from "../../shared/api/http";
 
 const TRIPS_QUERY_KEY = ["trips", "list"] as const;
 const tripQueryKey = (tripId: string) => ["trips", "detail", tripId] as const;
@@ -172,10 +174,11 @@ export function useReorderWaypointsMutation(tripId: string) {
       }
       return { previous };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(tripQueryKey(tripId), context.previous);
       }
+      toast.error(mutationErrorMessage(error));
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: tripQueryKey(tripId) });
@@ -248,10 +251,11 @@ export function useUpdateChecklistItemMutation(tripId: string) {
       }
       return { previous };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(tripQueryKey(tripId), context.previous);
       }
+      toast.error(mutationErrorMessage(error));
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: tripQueryKey(tripId) });

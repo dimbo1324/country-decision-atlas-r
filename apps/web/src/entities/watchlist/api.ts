@@ -4,7 +4,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { components } from "@country-decision-atlas/contracts/generated/types";
+import { toast } from "@country-decision-atlas/ui";
 import { apiClient, unwrap } from "../../shared/api/client";
+import { mutationErrorMessage } from "../../shared/api/http";
 import { csrfHeaders } from "../../shared/auth/session";
 
 type WatchlistResponse = components["schemas"]["WatchlistResponse"];
@@ -96,10 +98,11 @@ export function useToggleWatchlistMutation() {
       );
       return { previous };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(WATCHLIST_QUERY_KEY, context.previous);
       }
+      toast.error(mutationErrorMessage(error));
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: WATCHLIST_QUERY_KEY });
@@ -148,10 +151,11 @@ export function useUpdateWatchlistPreferencesMutation() {
       );
       return { previous };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(WATCHLIST_QUERY_KEY, context.previous);
       }
+      toast.error(mutationErrorMessage(error));
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: WATCHLIST_QUERY_KEY });

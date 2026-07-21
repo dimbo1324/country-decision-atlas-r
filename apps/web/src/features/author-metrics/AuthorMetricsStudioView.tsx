@@ -182,8 +182,14 @@ function MetricValuesEditor({ metric }: { metric: MyAuthorMetricDefinition }) {
             key={country.slug}
             className="flex items-center gap-3"
           >
-            <span className="text-c3 w-32 text-sm">{country.name}</span>
+            <label
+              htmlFor={`author-metric-value-${country.slug}`}
+              className="text-c3 w-32 text-sm"
+            >
+              {country.name}
+            </label>
             <input
+              id={`author-metric-value-${country.slug}`}
               type="number"
               className={inputClass}
               placeholder={

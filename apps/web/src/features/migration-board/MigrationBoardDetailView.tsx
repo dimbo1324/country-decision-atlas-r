@@ -158,6 +158,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               value={message}
               onChange={(event) => setMessage(event.target.value)}
               placeholder={t("contactPlaceholder")}
+              aria-label={t("contactRequestKicker")}
               data-testid="migration-board-contact-message"
             />
             <p className="text-c4 text-xs">{t("contactPrivacyNotice")}</p>
@@ -189,6 +190,7 @@ export function MigrationBoardDetailView({ postId }: { postId: string }) {
               value={reportDetails}
               onChange={(event) => setReportDetails(event.target.value)}
               placeholder={t("reportPlaceholder")}
+              aria-label={t("reportKicker")}
               data-testid="migration-board-report-message"
             />
             <Button

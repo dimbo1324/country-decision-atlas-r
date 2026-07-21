@@ -84,10 +84,14 @@ function UserDetailPanel({ user }: { user: AdminUser }) {
   return (
     <div className="flex flex-col gap-5 text-sm">
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase">
+        <label
+          htmlFor="admin-user-role-select"
+          className="font-mono text-c4 text-[9px] tracking-[0.2em] uppercase"
+        >
           Роль
-        </span>
+        </label>
         <select
+          id="admin-user-role-select"
           className={selectClass}
           value={user.role}
           onChange={(event) =>

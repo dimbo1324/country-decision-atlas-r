@@ -90,6 +90,7 @@ function CreateReminderForm({ tripId }: { tripId: string }) {
       <Field className="flex-1">
         <input
           type="datetime-local"
+          aria-label={t("remindAtLabel")}
           className={inputClass}
           data-testid="reminder-datetime-input"
           {...register("remindAt")}

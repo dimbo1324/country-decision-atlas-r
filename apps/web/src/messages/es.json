@@ -719,6 +719,7 @@
     "checklistEmpty": "La lista de verificación está vacía."
   },
   "tripReminders": {
+    "remindAtLabel": "Fecha y hora del recordatorio",
     "dateTimeRequired": "Indica la fecha y la hora.",
     "reminderCreated": "Recordatorio creado.",
     "createError": "No se pudo crear el recordatorio.",

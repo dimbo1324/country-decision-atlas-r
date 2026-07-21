@@ -1,8 +1,5 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import {
   Badge,
   Button,
@@ -13,14 +10,17 @@ import {
   RadarChart,
   Skeleton,
 } from "@country-decision-atlas/ui";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { FormEvent, useMemo, useState } from "react";
 import {
-  communityQuestionsQuery,
   communityAnswersQuery,
-  useCreateCommunityQuestionMutation,
+  communityQuestionsQuery,
   useCreateCommunityAnswerMutation,
-  useVoteCommunityAnswerMutation,
+  useCreateCommunityQuestionMutation,
   useCreateDataErrorReportMutation,
   useCreateUserStoryRatingMutation,
+  useVoteCommunityAnswerMutation,
 } from "../../entities/community/api";
 import { isApiError, type CommunityQuestion } from "../../shared/api";
 import { EmptyState } from "../../shared/ui/EmptyState";
@@ -422,8 +422,11 @@ export function CommunityCountryBlock({
               onSubmit={submitQuestion}
             >
               <Field>
-                <FieldLabel>{t("questionTitleLabel")}</FieldLabel>
+                <FieldLabel htmlFor="community-question-title">
+                  {t("questionTitleLabel")}
+                </FieldLabel>
                 <input
+                  id="community-question-title"
                   value={questionTitle}
                   onChange={(event) => setQuestionTitle(event.target.value)}
                   required
@@ -433,8 +436,11 @@ export function CommunityCountryBlock({
                 />
               </Field>
               <Field>
-                <FieldLabel>{t("questionDetailsLabel")}</FieldLabel>
+                <FieldLabel htmlFor="community-question-body">
+                  {t("questionDetailsLabel")}
+                </FieldLabel>
                 <textarea
+                  id="community-question-body"
                   value={questionBody}
                   onChange={(event) => setQuestionBody(event.target.value)}
                   required
@@ -463,8 +469,11 @@ export function CommunityCountryBlock({
               onSubmit={submitReport}
             >
               <Field>
-                <FieldLabel>{t("issueTypeLabel")}</FieldLabel>
+                <FieldLabel htmlFor="community-report-type">
+                  {t("issueTypeLabel")}
+                </FieldLabel>
                 <select
+                  id="community-report-type"
                   value={reportType}
                   onChange={(event) =>
                     setReportType(event.target.value as ReportType)
@@ -487,8 +496,11 @@ export function CommunityCountryBlock({
                 </select>
               </Field>
               <Field>
-                <FieldLabel>{t("messageLabel")}</FieldLabel>
+                <FieldLabel htmlFor="community-report-message">
+                  {t("messageLabel")}
+                </FieldLabel>
                 <textarea
+                  id="community-report-message"
                   value={reportMessage}
                   onChange={(event) => setReportMessage(event.target.value)}
                   required
@@ -530,8 +542,11 @@ export function CommunityCountryBlock({
             >
               {ratingAxes.map((axis) => (
                 <Field key={axis.field}>
-                  <FieldLabel>{axis.label}</FieldLabel>
+                  <FieldLabel htmlFor={`community-rating-${axis.field}`}>
+                    {axis.label}
+                  </FieldLabel>
                   <input
+                    id={`community-rating-${axis.field}`}
                     type="range"
                     min="0"
                     max="100"
@@ -551,8 +566,11 @@ export function CommunityCountryBlock({
                 </Field>
               ))}
               <Field>
-                <FieldLabel>{t("optionalNoteLabel")}</FieldLabel>
+                <FieldLabel htmlFor="community-rating-comment">
+                  {t("optionalNoteLabel")}
+                </FieldLabel>
                 <textarea
+                  id="community-rating-comment"
                   value={ratingComment}
                   onChange={(event) => setRatingComment(event.target.value)}
                   maxLength={COMMUNITY_TEXT_MAX_LENGTH}

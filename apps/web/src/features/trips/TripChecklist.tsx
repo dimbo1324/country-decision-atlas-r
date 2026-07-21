@@ -35,6 +35,7 @@ function ChecklistItemRow({
       data-testid="checklist-item"
     >
       <input
+        id={`checklist-item-checkbox-${item.id}`}
         type="checkbox"
         className="accent-gold"
         checked={done}
@@ -46,7 +47,8 @@ function ChecklistItemRow({
         }
         data-testid="checklist-item-checkbox"
       />
-      <span
+      <label
+        htmlFor={`checklist-item-checkbox-${item.id}`}
         className={
           done
             ? "text-c4 flex-1 text-sm line-through"
@@ -54,7 +56,7 @@ function ChecklistItemRow({
         }
       >
         {item.title}
-      </span>
+      </label>
       <Button
         variant="ghost"
         onClick={() => deleteItem.mutate(item.id)}
@@ -105,6 +107,7 @@ function AddChecklistItemForm({ tripId }: { tripId: string }) {
         <input
           type="text"
           placeholder={t("newItemPlaceholder")}
+          aria-label={t("newItemPlaceholder")}
           className={inputClass}
           data-testid="checklist-item-input"
           {...register("title")}
@@ -162,6 +165,7 @@ function ImportChecklistForm({ tripId }: { tripId: string }) {
         <input
           type="text"
           placeholder={t("importRouteIdPlaceholder")}
+          aria-label={t("importRouteIdPlaceholder")}
           className={inputClass}
           data-testid="checklist-import-route-id-input"
           {...register("routeId")}

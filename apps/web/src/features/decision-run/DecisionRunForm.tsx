@@ -11,6 +11,7 @@ import {
   cn,
   Field,
   FieldLabel,
+  FieldGroupLabel,
   RadioCards,
 } from "@country-decision-atlas/ui";
 import { useAppLocale } from "../../shared/lib/useAppLocale";
@@ -323,7 +324,9 @@ function DecisionFormInner() {
               className="flex flex-col gap-2"
               data-testid="decision-step-panel-1"
             >
-              <FieldLabel>{t("scenario")}</FieldLabel>
+              <FieldGroupLabel id="decision-scenario-label">
+                {t("scenario")}
+              </FieldGroupLabel>
               {noScenariosAvailable ? (
                 <p
                   role="alert"
@@ -378,8 +381,14 @@ function DecisionFormInner() {
               </Field>
 
               <Field>
-                <FieldLabel>{t("candidateCountries")}</FieldLabel>
-                <div className="flex flex-col gap-2">
+                <FieldGroupLabel id="decision-candidates-label">
+                  {t("candidateCountries")}
+                </FieldGroupLabel>
+                <div
+                  role="group"
+                  aria-labelledby="decision-candidates-label"
+                  className="flex flex-col gap-2"
+                >
                   {countries.items.map((c) => (
                     <label
                       key={c.slug}

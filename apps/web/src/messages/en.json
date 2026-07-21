@@ -719,6 +719,7 @@
     "checklistEmpty": "The checklist is empty."
   },
   "tripReminders": {
+    "remindAtLabel": "Reminder date and time",
     "dateTimeRequired": "Pick a date and time.",
     "reminderCreated": "Reminder created.",
     "createError": "Could not create the reminder.",

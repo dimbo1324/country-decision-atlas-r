@@ -73,7 +73,13 @@ export {
 export { Slider } from "./primitives/Slider";
 
 export { Toaster, toast } from "./primitives/Toast";
-export { Field, FieldLabel, FieldHint, FieldError } from "./primitives/Field";
+export {
+  Field,
+  FieldLabel,
+  FieldGroupLabel,
+  FieldHint,
+  FieldError,
+} from "./primitives/Field";
 export { RadioCards, type RadioCardOption } from "./primitives/RadioCards";
 export {
   FilterChipGroup,

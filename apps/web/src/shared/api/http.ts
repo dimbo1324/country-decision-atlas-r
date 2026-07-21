@@ -103,6 +103,23 @@ export function isApiError(e: unknown): e is ApiErrorResponse {
   );
 }
 
+const GENERIC_MUTATION_ERROR: Record<SupportedLocale, string> = {
+  en: "The action could not be completed. Please try again.",
+  ru: "Не удалось выполнить действие. Попробуйте ещё раз.",
+  es: "No se pudo completar la acción. Inténtalo de nuevo.",
+};
+
+/** Best-effort human-readable message for a failed mutation, for the many
+ * modules (entities/*'s `useMutation` `onError`s) that aren't React
+ * components and so can't call `useTranslations()` -- same
+ * `currentPathLocale()` fallback the network-error messages above use. */
+export function mutationErrorMessage(err: unknown): string {
+  if (isApiError(err) && err.error?.message) {
+    return err.error.message;
+  }
+  return GENERIC_MUTATION_ERROR[currentPathLocale()];
+}
+
 async function parseJsonSafe<T>(response: Response): Promise<T> {
   const text = await response.text();
   if (text === "") {

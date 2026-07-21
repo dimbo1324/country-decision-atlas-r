@@ -23,7 +23,10 @@ export function FieldLabel({
   className,
 }: {
   children: ReactNode;
-  htmlFor?: string;
+  /** Required: an unlinked `<label>` is visible but not programmatically
+   * associated with its control (no screen-reader name, no click-to-focus).
+   * Must match the `id` of the field this label describes. */
+  htmlFor: string;
   className?: string;
 }) {
   return (
@@ -36,6 +39,34 @@ export function FieldLabel({
     >
       {children}
     </label>
+  );
+}
+
+/** Visible heading for a *group* of controls (radio group, checkbox list) --
+ * deliberately not `FieldLabel`: a native `<label>` can only describe one
+ * control by spec, so pairing it with a group was invalid HTML semantics
+ * even before `FieldLabel.htmlFor` became required. Pair this with
+ * `aria-labelledby` on the group's container (`role="group"`/
+ * `role="radiogroup"`), matching text styling but as a plain heading. */
+export function FieldGroupLabel({
+  children,
+  id,
+  className,
+}: {
+  children: ReactNode;
+  id: string;
+  className?: string;
+}) {
+  return (
+    <p
+      id={id}
+      className={cn(
+        "font-mono text-c3 text-[10px] tracking-[0.2em] uppercase",
+        className,
+      )}
+    >
+      {children}
+    </p>
   );
 }
 

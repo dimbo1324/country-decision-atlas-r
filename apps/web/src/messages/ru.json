@@ -719,6 +719,7 @@
     "checklistEmpty": "Чек-лист пуст."
   },
   "tripReminders": {
+    "remindAtLabel": "Дата и время напоминания",
     "dateTimeRequired": "Укажите дату и время",
     "reminderCreated": "Напоминание создано.",
     "createError": "Не удалось создать напоминание.",
