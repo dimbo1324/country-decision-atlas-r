@@ -4,16 +4,16 @@ import "testing"
 
 func TestResolve(t *testing.T) {
 	cases := map[string]string{
-		"":       Default,
-		"ru":     RU,
-		"en":     EN,
-		"es":     ES,
-		"en-US":  EN,
-		"es-MX":  ES,
-		"RU":     RU,
-		" en ":   EN,
-		"fr":     Default,
-		"fr-FR":  Default,
+		"":        Default,
+		"ru":      RU,
+		"en":      EN,
+		"es":      ES,
+		"en-US":   EN,
+		"es-MX":   ES,
+		"RU":      RU,
+		" en ":    EN,
+		"fr":      Default,
+		"fr-FR":   Default,
 		"zh-Hans": Default,
 	}
 	for input, want := range cases {
