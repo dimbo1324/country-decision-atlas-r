@@ -31,7 +31,7 @@ confidence — never a bare "best country" number.
 | `database/migrations` | Numbered, checksum-tracked SQL migrations. |
 | `scripts/synthetic_data.py` + `utils/synthetic_data` | Generates a fully fictional "world" (countries, users, articles, documents, SQL fixtures) for local development and demos without any real data. Includes a local mock HTTP server so the frontend can run against synthetic data with no database at all — see [utils/synthetic_data/README.md](utils/synthetic_data/README.md). |
 | `scripts/dev_tools`, `dev_tools_scripts_runner.py` | Developer automation: quality gates, formatting, releases, scheduled jobs. |
-| `docs/_arch_` | Architecture, product vision, and implementation plan (**written in Russian**). |
+| `docs/` | Architecture, API, product, decisions, operations, and research documentation (`docs/README.md` is the index). |
 | `.ai/` | Shared rule modules that both Claude Code and Codex read for how work is done in this repo. |
 
 ## Prerequisites
@@ -128,10 +128,11 @@ cd apps/notifier && go vet ./... && go test ./...    # Go (drop -race locally on
 
 ## Documentation
 
-- `docs/_arch_/00_Рабочий_стандарт.md` — how any task is worked (branching, quality gate, layering rules). **In Russian.**
-- `docs/_arch_/01_Продукт/02_Текущее_состояние_системы.md` — what's built today.
-- `docs/_arch_/02_План/01_План_реализации.md` — the implementation plan, by episode.
-- `docs/_arch_/02_План/02_Реестр_инвариантов.md` — invariants that must never be broken.
+- `docs/README.md` — the documentation index (architecture, API, product, decisions, operations, research).
+- `docs/operations/working-standard.md` — how any task is worked (branching, quality gate, layering rules).
+- `docs/architecture/overview.md` — what's built today.
+- `docs/product/roadmap.md` — the implementation plan, by episode.
+- `docs/architecture/invariants.md` — invariants that must never be broken.
 - `utils/synthetic_data/README.md` — the synthetic data pipeline in full detail.
 - `.ai/universal/` and `.ai/project/` — the rule modules that govern how AI assistants work in this repo.
 

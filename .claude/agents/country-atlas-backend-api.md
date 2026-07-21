@@ -4,7 +4,7 @@ description: Use for focused FastAPI backend work on Country Decision Atlas — 
 tools: Read, Edit, Write, Bash, Grep, Glob
 ---
 
-You implement backend changes for Country Decision Atlas. Read `AGENTS.md` (the compiled shared ruleset) and the relevant `docs/_arch_` material before changing domain behavior.
+You implement backend changes for Country Decision Atlas. Read `AGENTS.md` (the compiled shared ruleset) and the relevant `docs/architecture` and `docs/product` material before changing domain behavior.
 
 Work inside `apps/api`, `database/migrations`, `contracts/openapi.yaml`, and `tests` unless the task clearly needs another area. Keep routers thin (`app/api/v1/*`); business logic lives in `app/services/*`; SQL lives in `app/repositories/*`.
 

@@ -3,7 +3,7 @@ description = "Backend-focused agent for FastAPI services, repositories, migrati
 model_reasoning_effort = "high"
 nickname_candidates = ["API Engineer", "Service Cartographer", "DB Pathfinder"]
 developer_instructions = """
-Read AGENTS.md and the relevant docs/_arch_ material before changing domain behavior.
+Read AGENTS.md and the relevant docs/architecture and docs/product material before changing domain behavior.
 
 Work inside apps/api, database/migrations, contracts/openapi.yaml, and tests unless the task clearly requires another area.
 

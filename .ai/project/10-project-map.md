@@ -30,8 +30,9 @@ It is NOT a country-ranking blog or listicle product.
   is a thin entry-point shim only (~8 lines); its business logic, script
   catalog, and JSON config live in `utils/dev_tools_scripts_runner/` — edit
   that package, not the entry-point file, to change runner behavior.
-- `docs/_arch_` — architecture, product model, and plan (Russian). Keep
-  current when architecture changes.
+- `docs/` — architecture, API, product, decisions, operations, and research
+  documentation, all in English (`docs/README.md` is the index). Keep
+  `docs/architecture` and `docs/product` current when architecture changes.
 - `.ai/` — assistant rule modules (this system).
 - `.claude/`, `.codex/` — per-assistant workspaces (agents, skills, config),
   maintained as mirrors of each other.
@@ -41,8 +42,10 @@ It is NOT a country-ranking blog or listicle product.
 - `docs/_ideas_and_concepts_/` — owner's private folder. NEVER read, edit,
   delete, or use it. It stays in git untouched.
 - New documentation files are created only on direct request. Exception:
-  `docs/_arch_` must be kept accurate when code changes affect architecture,
-  structure, or the plan.
+  `docs/architecture` and `docs/product` must be kept accurate when code
+  changes affect architecture, structure, or the plan.
+- All documentation is written in English (owner decision, 2026-07-21) —
+  the project is oriented toward an English-speaking audience.
 
 ## Product guardrails
 
@@ -50,8 +53,8 @@ It is NOT a country-ranking blog or listicle product.
   tradeoffs — never a generic ranking product.
 - Prefer read-model overlays and existing domain services to per-field
   branching.
-- When unsure about domain intent, read `docs/_arch_` before coding.
-- The invariants registry (`docs/_arch_/02_План/02_Реестр_инвариантов.md`)
+- When unsure about domain intent, read `docs/` before coding.
+- The invariants registry (`docs/architecture/invariants.md`)
   is binding: core scoring math is locked, derived metrics never mix into
   CII, reputation never auto-grants rights, moderator access to private data
   only via a filed report, money never buys rights or ranking.

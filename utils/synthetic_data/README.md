@@ -14,7 +14,7 @@ are now implemented and merged, so this document describes the system as
 it actually is. The package itself moved from `scripts/synthetic_data` /
 `docs/synthetic_data` to `scripts/synthetic_data.py` (thin entry point) +
 `utils/synthetic_data/` (full implementation) — see
-`docs/_arch_/SYNTHETIC_DATA_PLAN.md` Stage 0.
+`docs/operations/synthetic-data-plan.md` Stage 0.
 
 ## Safety rules and non-goals
 

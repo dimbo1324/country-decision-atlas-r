@@ -2,8 +2,7 @@
 
 `column::text = %s` defeats the b-tree index on `column` (the cast is applied to
 every row before compare), forcing a sequential scan. The correct form casts the
-parameter instead: `column = %s::uuid`. See docs/_arch_/audit_result.txt, finding
-P0-1, and docs/_arch_/09_План_устранения_аудита.md, Аудит-эпизод 1.
+parameter instead: `column = %s::uuid`. A hardening-audit finding, P0-1.
 """
 
 import re

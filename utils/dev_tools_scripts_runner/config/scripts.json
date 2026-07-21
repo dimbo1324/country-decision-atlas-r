@@ -318,8 +318,8 @@
       "ru": "Восстановление консервированных демо-стран из фикстур."
     },
     "description": {
-      "en": "Idempotently restores the conserved demo country dataset (russia, uruguay, argentina) from database/fixtures/demo_countries/ JSON fixtures. Accepts --dry-run. --visible additionally lifts is_demo for the restored rows (used by CI/E2E jobs only — see docs/_arch_/08_Открытые_вопросы.md, Р-11).",
-      "ru": "Идемпотентно восстанавливает консервированный демо-набор стран (russia, uruguay, argentina) из JSON-фикстур в database/fixtures/demo_countries/. Принимает --dry-run. --visible дополнительно снимает is_demo для восстановленных строк (используется только CI/E2E-джобами — см. docs/_arch_/08_Открытые_вопросы.md, Р-11)."
+      "en": "Idempotently restores the conserved demo country dataset (russia, uruguay, argentina) from database/fixtures/demo_countries/ JSON fixtures. Accepts --dry-run. --visible additionally lifts is_demo for the restored rows (used by CI/E2E jobs only — see docs/decisions/open-questions.md, D-11).",
+      "ru": "Идемпотентно восстанавливает консервированный демо-набор стран (russia, uruguay, argentina) из JSON-фикстур в database/fixtures/demo_countries/. Принимает --dry-run. --visible дополнительно снимает is_demo для восстановленных строк (используется только CI/E2E-джобами — см. docs/decisions/open-questions.md, D-11)."
     },
     "cadence": {
       "en": "On-demand — whenever the local demo dataset needs restoring.",

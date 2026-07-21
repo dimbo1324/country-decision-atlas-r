@@ -22,7 +22,7 @@ Subagents should read `AGENTS.md` — it is the compiled single-file ruleset.
 Do task-owning work on the main thread; spawn a subagent only for
 independent work that doesn't need the main thread's full context:
 
-- `country-atlas-domain-architect` — read `docs/_arch_`, scope an episode,
+- `country-atlas-domain-architect` — read `docs/`, scope an episode,
   surface invariants and risks, before any code is written.
 - `country-atlas-backend-api` — backend/API/migration work.
 - `country-atlas-frontend-web` — frontend and contract-consumption work.

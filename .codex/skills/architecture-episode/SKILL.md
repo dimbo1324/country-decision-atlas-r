@@ -1,6 +1,6 @@
 ---
 name: country-atlas-architecture-episode
-description: Use when implementing a planned Country Decision Atlas architecture episode from docs/_arch_.
+description: Use when implementing a planned Country Decision Atlas architecture episode from docs/product/roadmap.md.
 ---
 
 # Architecture Episode Workflow
@@ -12,8 +12,8 @@ trust, passports, or marketplace work.
 
 1. Run the orientation ritual from `.ai/project/13-progress-tracking.md`: git
    state, episode statuses in the plan, previous `task-checklist.md`.
-2. Read the relevant `docs/_arch_` episode description and the invariants
-   registry (`docs/_arch_/02_План/02_Реестр_инвариантов.md`) before editing.
+2. Read the relevant `docs/product/roadmap.md` episode description and the
+   invariants registry (`docs/architecture/invariants.md`) before editing.
    Files are the source of truth, not memory of a prior session.
 3. Create a feature branch (`feat/<episode-slug>`) from up-to-date `main`.
 4. Write `task-checklist.md` for the episode per

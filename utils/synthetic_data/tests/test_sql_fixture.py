@@ -282,7 +282,7 @@ def test_every_user_password_hash_verifies_against_the_real_app() -> None:
 
 
 def test_user_metadata_marks_every_row_as_synthetic() -> None:
-    """Invariant #26 (docs/_arch_/02_План/02_Реестр_инвариантов.md):
+    """Invariant #26 (docs/architecture/invariants.md):
     synthetic content is always marked."""
     world = _world()
     sql_text = build_seed_sql(world)

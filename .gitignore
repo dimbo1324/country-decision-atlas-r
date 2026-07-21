@@ -304,7 +304,7 @@ moderation_exports/
 !compose.yml
 !Dockerfile
 !Dockerfile.*
-!docs/_arch_/**
+!docs/**
 mongo-data/
 redpanda-data/
 apps/notifier/notifier
