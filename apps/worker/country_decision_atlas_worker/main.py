@@ -1,12 +1,27 @@
 import argparse
-import os
 import sys
+from pathlib import Path
 
 
-_repo_root = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-)
-_api_path = os.path.join(_repo_root, "apps", "api")
+def _find_repo_root(start: Path) -> Path:
+    """Walk up from `start` to the nearest ancestor containing the
+    workspace's `pyproject.toml`. `apps/api/app` isn't packaged for
+    distribution (only the `country_decision_atlas_*` packages are, per
+    `pyproject.toml`'s `packages.find`), so it's only importable by adding
+    `apps/api` to `sys.path` directly -- this locates the repo root by
+    marker file instead of a fixed chain of `dirname` calls, so it keeps
+    working if this file's own nesting depth ever changes."""
+    for candidate in (start, *start.parents):
+        if (candidate / "pyproject.toml").is_file():
+            return candidate
+    raise RuntimeError(
+        f"could not locate the repository root (no pyproject.toml found "
+        f"above {start})"
+    )
+
+
+_repo_root = _find_repo_root(Path(__file__).resolve())
+_api_path = str(_repo_root / "apps" / "api")
 if _api_path not in sys.path:
     sys.path.insert(0, _api_path)
 
